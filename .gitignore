@@ -1,0 +1,5 @@
+.DS_Store
+site*
+dist/
+_site/
+_cache/
