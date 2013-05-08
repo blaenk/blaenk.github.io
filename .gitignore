@@ -1,5 +1,6 @@
 .DS_Store
-site*
+/site
+/site.exe
 dist/
 _site/
 _cache/
