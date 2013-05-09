@@ -1,0 +1,53 @@
+.post{
+  h2.title {
+    a{
+      color: #666;
+      transition: color 0.3s;
+      &:hover { color: $color-main; }
+    }
+  }
+
+	h1.title, .entry-content{
+		@media screen and (max-width: 766px){
+			margin-left: 0;
+		}
+	}
+	.meta{
+		position: absolute;
+		top: 85px;
+		line-height: 2;
+		font-size: 0.9em;
+		color: $color-gray02;
+		width: 230px;
+		@media screen and (max-width: 766px){
+			margin-top: 15px;
+			position: static;
+			width: auto;
+		}
+		a{
+      color: $color-gray02;
+			&:hover {
+        text-decoration: underline;
+        color: $color-gray01;
+      }
+		}
+		.date, .tags, .comments{
+			padding-left: 30px;
+			position: relative;
+			&:before{
+				color: $color-gray03;
+				font: 1.3em $font-icon;
+				line-height: 1.6em;
+				position: absolute;
+				left: 0;
+			}
+			@media screen and (max-width: 766px){
+        display: inline-block;
+				margin-right: 30px;
+			}
+		}
+		.date:before{content: "\f073";}
+		.tags:before{content: "\f02c";}
+		.comments:before{content: "\f075";}
+	}
+}

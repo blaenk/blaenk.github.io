@@ -1,15 +1,14 @@
 ---
 layout: post
-title: "Naive Convolution in Haskell"
-date: 2013-01-04 18:21
-updated: 2013-01-17 18:21
+title: Naive Convolution in Haskell
+date: 2013-01-04
+updated: 2013-01-17
 comments: true
 excerpt: Functional implementation of convolution in Haskell
 categories: Haskell, Digital Signal Processing
 ---
 
 * Table of Contents
-{:toc}
 
 [Convolution](http://en.wikipedia.org/wiki/Convolution) is a mathematical method of combining two signals to form a third signal. Passing the [Dirac delta function](http://en.wikipedia.org/wiki/Dirac_delta_function) (unit impulse) $\delta[n]$ through a linear system results in the impulse response $h[n]$. The impulse response is simply the signal resulting from passing the unit impulse (Dirac delta function) through a linear system.
 
@@ -41,7 +40,7 @@ All this says is that a given sample $y[i]$ in the output signal $y[n]$ is deter
 
 Natural imperative instinct might lead you to conclude that this can be easily implemented using nested iterations and arrays:
 
-``` cpp
+~~~ {lang="cpp"}
 const int outputLength = M + N - 1;
 int *y = new int[outputLength]();
 
@@ -50,7 +49,7 @@ for (int i = 0; i < outputLength; ++i) {
     if (i - j >= 0) y[i] += x[i - j] * h[j];
   }
 }
-```
+~~~
 
 But wait up! We are using Haskell, a functional programming language which typically does without both arrays and iteration. This means that to implement convolution in Haskell without the use of [Arrays](http://hackage.haskell.org/package/array) or imperative iteration loops, we need to really understand the operation occurring in the convolution summation.
 
@@ -72,10 +71,10 @@ Implementing the convolution machine is pretty straightforward once we are able 
 
 Let's start with the type signature. Since we're not using arrays, we'll represent the signals as lists of numbers. Convolution does something with two signals to produce a third signal, so the type signature is pretty straightforward:
 
-``` haskell
+~~~ {lang="haskell"}
 convolve :: (Num a) => [a] -> [a] -> [a]
 convolve hs xs = undefined
-```
+~~~
 
 In the signature, `xs` refers to the input signal and `hs` refers to the impulse response.
 
@@ -89,7 +88,7 @@ When we are computing the first sample, such that $i = 0$, in the output signal 
 
 So what we have to do is prepad the input signal with $M-1$ samples of value $0$. This padding has the added benefit of allowing us to simply map over the padded input signal to generate the output signal. This is because the convolution operation's output signal length is $M + N - 1$ where $M$ is the length of the impulse response and $N$ is the length of the input signal. The padding can be achieved with:
 
-``` haskell
+``` {lang="haskell"}
 let pad = replicate ((length hs) - 1) 0
     ts  = pad ++ xs
 ```
@@ -98,7 +97,7 @@ Once we prepad the input signal with enough zero samples, we can pass the padded
 
 ### Let's Roll
 
-``` haskell
+``` {lang="haskell"}
 roll :: (Num a) => [a] -> [a] -> [a]
 roll _  [] = []
 roll hs ts = undefined
@@ -116,7 +115,7 @@ We construct the complete output signal by cons'ing the sample with a recursive 
 
 With this information, we can finish the definition of `roll`:
 
-``` haskell
+``` {lang="haskell"}
 roll :: (Num a) => [a] -> [a] -> [a]
 roll _  [] = []
 roll hs ts = let sample = sum $ zipWith (*) ts hs
@@ -125,7 +124,7 @@ roll hs ts = let sample = sum $ zipWith (*) ts hs
 
 Here is the whole convolution function `convolve` put together:
 
-~~~ {.haskell text="naive convolution in Haskell through the convolution machine"}
+~~~ {lang="haskell" text="naive convolution in Haskell through the convolution machine"}
 convolve :: (Num a) => [a] -> [a] -> [a]
 convolve hs xs =
   let pad = replicate ((length hs) - 1) 0
@@ -146,7 +145,7 @@ The observation we should make is that the `roll` function acts like `map`, spec
 
 However, `tails` considers `[]` to be a tail of any list -- which is technically correct -- so we'll always have a trailing `0` element if we do it this way. That's why we simply take the `init` of the result of `tails`, which returns every element in a list except the last one. We also still need to prepad the signal, so those lines remain:
 
-~~~ {.haskell text="a reduced form of the convolution machine implementation"}
+~~~ {lang="haskell" text="a reduced form of the convolution machine implementation"}
 convolve :: (Num a) => [a] -> [a] -> [a]
 convolve hs xs =
   let pad = replicate ((length hs) - 1) 0
@@ -162,19 +161,19 @@ There's something to be said about how the various properties of the Haskell lan
 
 The [parallel](http://hackage.haskell.org/package/parallel) Haskell package contains various tools for parallelization. One of these is the [Control.Parallel.Strategies](http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html) module, which defines the [`parMap`](http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#v:parMap) function, which maps over list elements in parallel, in essence, a parallel map:
 
-``` haskell
+~~~ {lang="haskell"}
 parMap :: Strategy b -> (a -> b) -> [a] -> [b]
-```
+~~~
 
 `parMap` takes an [evaluation strategy](http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#t:Strategy) which is used to actually perform the evaluation in parallel. We use the [`rdeepseq`](http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#v:rdeepseq) evaluation strategy, which fully evaluates the argument to Normal Form (i.e. fully evaluated), as opposed to [`rseq`](http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#v:rseq) which merely evaluates the argument to [Weak Head Normal Form](http://en.wikibooks.org/wiki/Haskell/Graph_reduction#Weak_Head_Normal_Form) (WHNF). The `rdeepseq` strategy can only operate on arguments it knows it can fully evaluate, those that conform to the [`NFData`](http://hackage.haskell.org/packages/archive/deepseq/latest/doc/html/Control-DeepSeq.html#t:NFData) typeclass from the [Control.Deepseq](http://hackage.haskell.org/package/deepseq) module. To conform to this, we add another type constraint to our convolution parameters:
 
-``` haskell
+~~~ {lang="haskell"}
 parConvolve :: (NFData a, Num a) => [a] -> [a] -> [a]
-```
+~~~
 
 Continuing forward, all we have to do now is make a drop-in replacement of `map` with `parMap`. Actually, it's not quite a drop-in replacement, because we need to supply `parMap` with the `rdeepseq` evaluation strategy:
 
-~~~ {.haskell text="a parallelized version of the reduced naive convolution algorithm"}
+~~~ {lang="haskell" text="a parallelized version of the reduced naive convolution algorithm"}
 parConvolve :: (NFData a, Num a) => [a] -> [a] -> [a]
 parConvolve hs xs =
   let pad = replicate ((length hs) - 1) 0
@@ -205,15 +204,15 @@ main = defaultMain [
 
 Compile the benchmark with:
 
-``` bash
+~~~ {lang="bash"}
 $ ghc --make -O2 -threaded -o conv conv.hs
-```
+~~~
 
 Run it with:
 
-``` bash
+~~~ {lang="bash"}
 $ ./conv -o bench.html -r out.csv +RTS -N4
-```
+~~~
 
 The `-o` parameter specifies an output file for generated [charts and graphs](../../../../static/html/convolution-criterion.html). The `-r` parameter specifies a comma separated value (CSV) file to output relative statistics which we use to measure performance relative to the reference, non-reduced naive implementation.
 

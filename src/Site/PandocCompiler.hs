@@ -31,9 +31,10 @@ pygments (CodeBlock (_, _, namevals) contents) =
                Nothing -> ""
       colored = pygmentize lang contents
       code = numberedCode colored lang
-      composed = ("<figure class=\"code\">\n" ++
-                     code ++ "<figcaption><span>" ++
-                     text ++ "</span></figcaption></figure>")
+      caption = if text /= ""
+                  then "<figcaption><span>" ++ text ++ "</span></figcaption>"
+                  else ""
+      composed = "<figure class=\"code\">\n" ++ code ++ caption ++ "</figure>"
   in RawBlock "html" composed
 pygments x = x
 
@@ -51,7 +52,7 @@ numberedCode code lang =
           let (_, res) = mapAccumL numberLine 1 codeLines
           in res
             where numberLine :: Integer -> String -> (Integer, String)
-                  numberLine num _ = (num + 1, "<span class='line-number'>" ++ show num ++ "</span>\n")
+                  numberLine num _ = (num + 1, "<span class='line-number'>" ++ show num ++ "</span>")
 
 extractCode :: String -> String
 extractCode pygmentsResult =
