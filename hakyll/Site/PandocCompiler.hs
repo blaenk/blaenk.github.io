@@ -7,11 +7,9 @@ import Text.Pandoc
 import qualified Data.Set as S
 import Hakyll.Core.Compiler
 import Hakyll.Core.Item
-import Hakyll.Web.Pandoc.FileType
-import Control.Applicative ((<$>))
 import System.IO.Unsafe
 import System.Process
-import System.IO (Handle, hClose, hGetContents, hPutStr, hSetEncoding, localeEncoding)
+import System.IO (hClose, hGetContents, hPutStr, hSetEncoding, localeEncoding)
 import Control.Concurrent (forkIO)
 import Data.List
 import Text.Regex.TDFA
@@ -24,12 +22,12 @@ pygmentsTransformer :: Pandoc -> Pandoc
 pygmentsTransformer = bottomUp pygments
 
 pygments :: Block -> Block
-pygments cb@(CodeBlock (ident, classes, namevals) contents) =
+pygments (CodeBlock (_, _, namevals) contents) =
   let lang = case lookup "lang" namevals of
-               Just lang -> lang
+               Just lang_ -> lang_
                Nothing -> "text"
       text = case lookup "text" namevals of
-               Just text -> text
+               Just text_ -> text_
                Nothing -> ""
       colored = pygmentize lang contents
       code = numberedCode colored lang
@@ -52,7 +50,8 @@ numberedCode code lang =
         numberLines codeLines =
           let (_, res) = mapAccumL numberLine 1 codeLines
           in res
-            where numberLine num line = (num + 1, "<span class='line-number'>" ++ show num ++ "</span>\n")
+            where numberLine :: Integer -> String -> (Integer, String)
+                  numberLine num _ = (num + 1, "<span class='line-number'>" ++ show num ++ "</span>\n")
 
 extractCode :: String -> String
 extractCode pygmentsResult =
