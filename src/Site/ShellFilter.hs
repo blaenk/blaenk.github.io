@@ -1,8 +1,6 @@
 module Site.ShellFilter (shellFilter) where
 
 import           Control.Concurrent   (forkIO)
-import           Data.ByteString.Lazy (ByteString)
-import qualified Data.ByteString.Lazy as LB
 import           System.IO            (Handle, hClose, hGetContents, hPutStr,
                                        hSetEncoding, localeEncoding)
 import           System.Process
@@ -22,19 +20,6 @@ shellFilter = shellFilterWith writer reader
     reader handle = do
         hSetEncoding handle localeEncoding
         hGetContents handle
-
-
---------------------------------------------------------------------------------
--- | Variant of 'unixFilter' that should be used for binary files
---
--- > match "music.wav" $ do
--- >     route   $ setExtension "ogg"
--- >     compile $ getResourceLBS >>= withItemBody (unixFilter "oggenc" ["-"])
-shellFilterLBS :: String               -- ^ Program name
-              -> ByteString           -- ^ Program input
-              -> Compiler ByteString  -- ^ Program output
-shellFilterLBS = shellFilterWith LB.hPutStr LB.hGetContents
-
 
 --------------------------------------------------------------------------------
 -- | Overloaded compiler

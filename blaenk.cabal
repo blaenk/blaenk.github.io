@@ -13,7 +13,7 @@ cabal-version:       >=1.8
 
 executable site
   main-is:           site.hs
-  hs-source-dirs:    hakyll/
+  hs-source-dirs:    src/
   ghc-options:       -O2 -Wall -o site
   -- other-modules:
   build-depends:       base,
