@@ -11,23 +11,23 @@ categories: Haskell, Digital Signal Processing
 * Table of Contents
 {:toc}
 
-[Convolution](http://en.wikipedia.org/wiki/Convolution) is a mathematical method of combining two signals to form a third signal. Passing the [Dirac delta function](http://en.wikipedia.org/wiki/Dirac_delta_function) (unit impulse) $$\delta[n]$$ through a linear system results in the impulse response $$h[n]$$. The impulse response is simply the signal resulting from passing the unit impulse (Dirac delta function) through a linear system.
+[Convolution](http://en.wikipedia.org/wiki/Convolution) is a mathematical method of combining two signals to form a third signal. Passing the [Dirac delta function](http://en.wikipedia.org/wiki/Dirac_delta_function) (unit impulse) $\delta[n]$ through a linear system results in the impulse response $h[n]$. The impulse response is simply the signal resulting from passing the unit impulse (Dirac delta function) through a linear system.
 
 ## Principle
 
 The properties of [homogeneity](http://www.cns.nyu.edu/~david/handouts/linear-systems/linear-systems.html) and [shift-invariance](http://en.wikipedia.org/wiki/Shift-invariant_system) in [Linear Time-Invariant System Theory](http://en.wikipedia.org/wiki/LTI_system_theory) holds that scaling and shifting the input results in the same scaling and shifting in the output. Because of these properties, we can represent any impulse as a shifted and scaled delta function and consequently know what the impulse response will be for that scaled and shifted impulse.
 
-An impulse of $$-3$$ at the $$8^{th}$$ sample would be represented as a unit impulse by scaling the delta function by $$-3$$ and shifting it to the right by $$8$$ samples: $$-3\delta[n-8]$$, where $$n-8$$ means the $$8^{th}$$ sample is now the $$0^{th}$$. Due to homogeneity and shift invariance, we can determine the impulse response of this impulse by simply scaling and shifting the unit impulse response in the same manner. In other words:
+An impulse of $-3$ at the $8^{th}$ sample would be represented as a unit impulse by scaling the delta function by $-3$ and shifting it to the right by $8$ samples: $-3\delta[n-8]$, where $n-8$ means the $8^{th}$ sample is now the $0^{th}$. Due to homogeneity and shift invariance, we can determine the impulse response of this impulse by simply scaling and shifting the unit impulse response in the same manner. In other words:
 
 $$-3\delta[n-8] \mapsto -3h[n-8]$$
 
 What this means is that if we know the unit impulse response of a system, we consequently know how the system will react to _any_ impulse. These impulse responses can then be synthesized to form the output signal that would result from running the input signal through the actual system. An example of the powerful implications of this method is [convolution reverb](http://en.wikipedia.org/wiki/Convolution_reverb), in which an impulse response of a physical or virtual space is generated and then convolved with any input signal to simulate the effect of reverberation in that space.
 
-In short, the input signal _convolved_ with the unit impulse response results in the output signal. Convolution of input signal $$x[n]$$ with unit impulse $$h[n]$$ to generate output signal $$y[n]$$ is denoted as:
+In short, the input signal _convolved_ with the unit impulse response results in the output signal. Convolution of input signal $x[n]$ with unit impulse $h[n]$ to generate output signal $y[n]$ is denoted as:
 
 $$x[n] * h[n] = y[n]$$
 
-Since convolution allows us to go from input signal $$x[n]$$ to output signal $$y[n]$$, we can conclude that convolution involves the generation of the impulse response for each impulse in the input signal as decomposed by [impulse decomposition](http://www.dspguide.com/ch5/7.htm), _as well as_ the subsequent synthesis of each impulse response, to generate the output signal.
+Since convolution allows us to go from input signal $x[n]$ to output signal $y[n]$, we can conclude that convolution involves the generation of the impulse response for each impulse in the input signal as decomposed by [impulse decomposition](http://www.dspguide.com/ch5/7.htm), _as well as_ the subsequent synthesis of each impulse response, to generate the output signal.
 
 ## Definition
 
@@ -35,9 +35,9 @@ Convolution can be described by the so-called convolution _summation_. The convo
 
 $$y[i] = \sum_{j=0}^{M-1}h[j]x[i-j]$$
 
-Where the length of the output signal $$y[n]$$ is defined as $$M + N - 1$$ where $$M$$ is the length of the unit impulse response and $$N$$ is the length of the input signal.
+Where the length of the output signal $y[n]$ is defined as $M + N - 1$ where $M$ is the length of the unit impulse response and $N$ is the length of the input signal.
 
-All this says is that a given sample $$y[i]$$ in the output signal $$y[n]$$ is determined by the summation of every $$i^{th}$$ sample in every resultant impulse response. In effect, the summation above encodes how different samples in the resulting impulse responses contribute to a single output sample.
+All this says is that a given sample $y[i]$ in the output signal $y[n]$ is determined by the summation of every $i^{th}$ sample in every resultant impulse response. In effect, the summation above encodes how different samples in the resulting impulse responses contribute to a single output sample.
 
 Natural imperative instinct might lead you to conclude that this can be easily implemented using nested iterations and arrays:
 
@@ -85,9 +85,9 @@ Now for the implementation of `convolve`. First, consider this component of the 
 
 $$x[i-j]$$
 
-When we are computing the first sample, such that $$i = 0$$, in the output signal $$y[n]$$, then at one point we need to refer to the $$x[-(M-1)]$$ sample where $$M$$ is length of impulse response. However, there are no samples to the left of the first sample.
+When we are computing the first sample, such that $i = 0$, in the output signal $y[n]$, then at one point we need to refer to the $x[-(M-1)]$ sample where $M$ is length of impulse response. However, there are no samples to the left of the first sample.
 
-So what we have to do is prepad the input signal with $$M-1$$ samples of value $$0$$. This padding has the added benefit of allowing us to simply map over the padded input signal to generate the output signal. This is because the convolution operation's output signal length is $$M + N - 1$$ where $$M$$ is the length of the impulse response and $$N$$ is the length of the input signal. The padding can be achieved with:
+So what we have to do is prepad the input signal with $M-1$ samples of value $0$. This padding has the added benefit of allowing us to simply map over the padded input signal to generate the output signal. This is because the convolution operation's output signal length is $M + N - 1$ where $M$ is the length of the impulse response and $N$ is the length of the input signal. The padding can be achieved with:
 
 ``` haskell
 let pad = replicate ((length hs) - 1) 0
@@ -125,7 +125,7 @@ roll hs ts = let sample = sum $ zipWith (*) ts hs
 
 Here is the whole convolution function `convolve` put together:
 
-``` haskell naive convolution in Haskell through the convolution machine
+~~~ {.haskell text="naive convolution in Haskell through the convolution machine"}
 convolve :: (Num a) => [a] -> [a] -> [a]
 convolve hs xs =
   let pad = replicate ((length hs) - 1) 0
@@ -136,7 +136,7 @@ convolve hs xs =
     roll _  [] = []
     roll hs ts = let sample = sum $ zipWith (*) ts hs
                  in sample : roll hs (tail ts)
-```
+~~~
 
 ## Reduction
 
@@ -146,13 +146,13 @@ The observation we should make is that the `roll` function acts like `map`, spec
 
 However, `tails` considers `[]` to be a tail of any list -- which is technically correct -- so we'll always have a trailing `0` element if we do it this way. That's why we simply take the `init` of the result of `tails`, which returns every element in a list except the last one. We also still need to prepad the signal, so those lines remain:
 
-``` haskell a reduced form of the convolution machine implementation
+~~~ {.haskell text="a reduced form of the convolution machine implementation"}
 convolve :: (Num a) => [a] -> [a] -> [a]
 convolve hs xs =
   let pad = replicate ((length hs) - 1) 0
       ts  = pad ++ xs
   in map (sum . zipWith (*) (reverse hs)) (init $ tails ts)
-```
+~~~
 
 ## Parallelization
 
@@ -174,13 +174,13 @@ parConvolve :: (NFData a, Num a) => [a] -> [a] -> [a]
 
 Continuing forward, all we have to do now is make a drop-in replacement of `map` with `parMap`. Actually, it's not quite a drop-in replacement, because we need to supply `parMap` with the `rdeepseq` evaluation strategy:
 
-``` haskell a parallelized version of the reduced naive convolution algorithm
+~~~ {.haskell text="a parallelized version of the reduced naive convolution algorithm"}
 parConvolve :: (NFData a, Num a) => [a] -> [a] -> [a]
 parConvolve hs xs =
   let pad = replicate ((length hs) - 1) 0
       ts  = pad ++ xs
   in parMap rdeepseq (sum . zipWith (*) (reverse hs)) (init $ tails ts)
-```
+~~~
 
 ### Benchmark
 
@@ -188,7 +188,7 @@ The [`criterion`](http://hackage.haskell.org/packages/archive/criterion) Haskell
 
 In the following code, `conv` is the naive implementation, `conv'` is the reduced naive implementation, and `parConv` is the parallel implementation:
 
-``` haskell criterion benchmarking code
+~~~ {lang="haskell" text="criterion benchmarking code"}
 data ConvType = Naive | Reduced | Parallel deriving (Eq, Ord)
 convTypes = Data.Map.fromList [(Naive, conv), (Reduced, conv'), (Parallel, parConv)]
 
@@ -201,7 +201,7 @@ main = defaultMain [
               ts = [1..1000 :: Int]
               convfn = fromJust $ Data.Map.lookup ctype convTypes
           in nf (convfn hs) ts
-```
+~~~
 
 Compile the benchmark with:
 

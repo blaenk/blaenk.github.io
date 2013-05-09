@@ -4,6 +4,7 @@ import           Data.Monoid (mappend)
 import           Hakyll
 
 import           Site.ShellFilter
+import           Site.PandocCompiler
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -24,7 +25,7 @@ main = hakyll $ do
 
     match "posts/*" $ do
         route $ setExtension "html"
-        compile $ pandocCompiler
+        compile $ myPandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"    postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
@@ -55,7 +56,6 @@ main = hakyll $ do
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
-
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
