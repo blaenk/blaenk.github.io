@@ -18,6 +18,9 @@ import Text.Regex.TDFA.String
 myPandocCompiler :: Compiler (Item String)
 myPandocCompiler = pandocCompilerWithTransform readerOptions writerOptions pygmentsTransformer
 
+--tableOfContents :: Block -> Block
+--tableOfContents ()
+
 pygmentsTransformer :: Pandoc -> Pandoc
 pygmentsTransformer = bottomUp pygments
 
@@ -62,7 +65,7 @@ extractCode pygmentsResult =
 
 pygmentize :: String -> String -> String
 pygmentize lang contents = unsafePerformIO $ do
-  let process = (shell ("pygmentize -f html -l " ++ lang)) {std_in = CreatePipe, std_out = CreatePipe, close_fds = True}
+  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -P encoding=utf-8")) {std_in = CreatePipe, std_out = CreatePipe, close_fds = True}
       writer handle input = do
         hSetEncoding handle localeEncoding
         hPutStr handle input

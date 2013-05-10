@@ -20,20 +20,20 @@
 	<div id="strip"></div>
   <header id="header" class="inner">
     <div id="stamp">
-      <h1><a href="{{ root_url }}/">Jorge Israel Peña</a></h1>
-      <h4>AKA Blaenk Denum</h4>
+      <h1><a href="/">Jorge Israel Peña</a></h1>
+      <h4>AKA BLAENK DENUM</h4>
     </div>
     <nav id="main-nav">
       <ul class="main">
-        <li><a href="{{ root_url }}/about">About</a></li>
-        <li><a href="{{ root_url }}/uses-this">Uses This</a></li>
-        <li><a href="{{ root_url }}/work">Work</a></li>
-        <li><a href="{{ root_url }}/lately">Lately</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/uses-this">Uses This</a></li>
+        <li><a href="/work">Work</a></li>
+        <li><a href="/lately">Lately</a></li>
         <li><a id="search_btn">Search</a></li>
       </ul>
-      <form class="desk_search" action="{{ site.simple_search }}" method="get">
+      <form class="desk_search" action="http://google.com/search" method="get">
         <input type="text" name="q" results="0" placeholder="Search... (Click 'Search' to hide)" autocomplete="off" spellcheck="false">
-        <input type="hidden" name="q" value="site:{{ site.url | shorthand_url }}">
+        <input type="hidden" name="q" value="site:blaenkdenum.com">
       </form>
     </nav>
     <nav id="mobile-nav">
@@ -41,10 +41,10 @@
         <a class="button">Menu</a>
         <div class="container">
           <ul class="main">
-            <li><a href="{{ root_url }}/about">About</a></li>
-            <li><a href="{{ root_url }}/uses-this">Uses This</a></li>
-            <li><a href="{{ root_url }}/work">Work</a></li>
-            <li><a href="{{ root_url }}/lately">Lately</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/uses-this">Uses This</a></li>
+            <li><a href="/work">Work</a></li>
+            <li><a href="/lately">Lately</a></li>
             <li><a id="search_btn">Search</a></li>
           </ul>
         </div>
@@ -52,28 +52,25 @@
       <div class="alignright search">
         <a class="button"></a>
         <div class="container">
-          <form action="{{ site.simple_search }}" method="get">
+          <form action="http://google.com/search" method="get">
             <input type="text" name="q" results="0">
-            <input type="hidden" name="q" value="site:{{ site.url | shorthand_url }}">
+            <input type="hidden" name="q" value="site:blaenkdenum.com">
           </form>
         </div>
       </div>
     </nav>
   </header>
   <div id="content" class="inner">
-    <article class="post">
-      <h2 class="title"><a href="{{ root_url }}{{ post.url }}"><span>$title$</span></a></h2>
-      <div class="entry-content">$body$</div>
-    </article>
+    $body$
   </div>
   <footer id="footer" class="inner">
-  { <span id="braces">commit blaenk/blaenk.github.com</span> }
+  { <span id="braces">$git$</span> }
   </footer>
   <script async="true" type="text/javascript">
         var disqus_shortname = 'blaenkdenum';
         // var disqus_developer = 1;
-        var disqus_identifier = 'blaenkdenum.com';
-        var disqus_url = 'blaenkdenum.com';
+        var disqus_identifier = 'http://blaenkdenum.com$url$'; // this and next full url to post
+        var disqus_url = 'http://blaenkdenum.com$url$';
         var disqus_script = 'embed.js';
       (function () {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

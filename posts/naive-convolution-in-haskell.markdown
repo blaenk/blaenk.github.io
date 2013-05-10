@@ -1,8 +1,7 @@
 ---
 layout: post
 title: Naive Convolution in Haskell
-date: 2013-01-04
-updated: 2013-01-17
+published: 2013-01-04
 comments: true
 excerpt: Functional implementation of convolution in Haskell
 categories: Haskell, Digital Signal Processing

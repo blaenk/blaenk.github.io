@@ -1,14 +1,14 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid (mappend)
-import           Hakyll
-import           Hakyll.Core.Configuration
+import Data.Monoid (mconcat)
+import Control.Monad (forM_)
+import Hakyll
 
-import           Site.ShellFilter
-import           Site.PandocCompiler
+import Site.ShellFilter
+import Site.PandocCompiler
 
-import           System.FilePath
-import           Data.List
+import System.FilePath
+import System.Process
 
 --------------------------------------------------------------------------------
 
@@ -17,92 +17,123 @@ myHakyllConf = defaultConfiguration
 
 main :: IO ()
 main = hakyllWith myHakyllConf $ do
-    match "images/*" $ do
-        route   idRoute
-        compile copyFileCompiler
-
-    match "font/*" $ do
-        route   idRoute
-        compile copyFileCompiler
-
-    match "js/*" $ do
-        route   idRoute
-        compile copyFileCompiler
-
-    match "css/*" $ do
-        route   idRoute
-        compile compressCssCompiler
+    forM_ ["images/*", "font/*", "js/*"] $ \matched ->
+      match matched $ do
+          route   idRoute
+          compile copyFileCompiler
 
     match "scss/screen.scss" $ do
         route   $ gsubRoute "scss/" (const "css/") `composeRoutes` setExtension "css"
         compile $ sassCompiler
 
-    match (fromList ["about.rst", "contact.markdown"]) $ do
-        route   $ setExtension "html"
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= relativizeUrls
-            >>= removeIndexHtml
-
     match "posts/*" $ do
-        route $ niceRoute
+        route $ nicePostRoute
         compile $ myPandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
-            >>= loadAndApplyTemplate "templates/default.html" postCtx
+            >>= loadAndApplyTemplate "templates/post.html"   postCtx
+            >>= loadAndApplyTemplate "templates/layout.html" postCtx
             >>= relativizeUrls
             >>= removeIndexHtml
 
-    create ["archive.html"] $ do
+    match "pages/*" $ do
+        route $ nicePageRoute
+        compile $ myPandocCompiler
+            >>= loadAndApplyTemplate "templates/page.html"    postCtx
+            >>= loadAndApplyTemplate "templates/layout.html" postCtx
+            >>= relativizeUrls
+            >>= removeIndexHtml
+
+    create ["404.html"] $ do
         route idRoute
         compile $ do
-            let archiveCtx =
-                    field "posts" (\_ -> postList recentFirst) `mappend`
-                    constField "title" "Archives"              `mappend`
-                    defaultContext
-
             makeItem ""
-                >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
-                >>= loadAndApplyTemplate "templates/default.html" archiveCtx
+                >>= loadAndApplyTemplate "templates/404.html" archiveCtx
+                >>= loadAndApplyTemplate "templates/layout.html" archiveCtx
                 >>= relativizeUrls
                 >>= removeIndexHtml
 
-
-    match "index.html" $ do
+    create ["index.html"] $ do
         route idRoute
         compile $ do
-            let indexCtx = field "posts" $ \_ ->
-                                postList $ fmap (take 3) . recentFirst
-
-            getResourceBody
-                >>= applyAsTemplate indexCtx
-                >>= loadAndApplyTemplate "templates/default.html" postCtx
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/index.html" archiveCtx
+                >>= loadAndApplyTemplate "templates/layout.html" archiveCtx
                 >>= relativizeUrls
                 >>= removeIndexHtml
 
     match "templates/*" $ compile templateCompiler
 
-templateContext :: Context String
-templateContext =
-  defaultContext
+nillaCtx :: Context String
+nillaCtx = mconcat
+  [ bodyField "body"
+  , metadataField
+  , niceUrlField "url"
+  , pathField "path"
+  , titleField "title"
+  , gitTag "git"
+  , missingField
+  ]
 
---------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx =
-    dateField "date" "%B %e, %Y" `mappend`
-    defaultContext
+postCtx = mconcat
+  [ dateField "datePost" "%B %e, %Y"
+  , dateField "dateArchive" "%b %e"
+  , commentsTag "comments"
+  , nillaCtx
+  ]
 
+archiveCtx :: Context String
+archiveCtx = mconcat
+  [ field "posts" (\_ -> archivesList recentFirst)
+  , constField "title" "Archives"
+  , nillaCtx
+  ]
+
+-- url field without /index.html
+niceUrlField :: String -> Context a
+niceUrlField key = field key $
+  fmap (maybe "" (removeIndexStr . toUrl)) . getRoute . itemIdentifier
+  where removeIndexStr url = case splitFileName url of
+          (dir, "index.html") -> dir
+          _ -> url
+
+-- gets passed the key and the item apparently
+commentsTag :: String -> Context String
+commentsTag key = field key $ \item -> do
+    commentsMeta <- getMetadataField (itemIdentifier item) "comments"
+    let comments = case commentsMeta of
+                     Just "false" -> False
+                     Just "off" -> False
+                     _ -> True
+    if comments
+      then unsafeCompiler $ readFile "templates/comments.html"
+      else return ""
+
+gitTag :: String -> Context String
+gitTag key = field key $ \_ -> do
+  unsafeCompiler $ do
+    sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%H"] []
+    message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s"] []
+    return ("<a href=\"https://github.com/" ++ sha ++ "/commit/" ++ sha ++
+           "\" title=\"" ++ message ++"\">" ++ (take 8 sha) ++ "</a>")
 
 --------------------------------------------------------------------------------
-postList :: ([Item String] -> Compiler [Item String]) -> Compiler String
-postList sortFilter = do
+archivesList :: ([Item String] -> Compiler [Item String]) -> Compiler String
+archivesList sortFilter = do
     posts   <- sortFilter =<< loadAll "posts/*"
-    itemTpl <- loadBody "templates/post-item.html"
+    itemTpl <- loadBody "templates/index-post.html"
     list    <- applyTemplateList itemTpl postCtx posts
     return list
 
 -- from http://yannesposito.com/Scratch/en/blog/Hakyll-setup/
-niceRoute :: Routes
-niceRoute = customRoute createIndexRoute
+nicePageRoute :: Routes
+nicePageRoute = customRoute createIndexRoute
+  where
+    createIndexRoute ident =
+      takeDirectory (takeDirectory p) </> takeBaseName p </> "index.html"
+        where p = toFilePath ident
+
+nicePostRoute :: Routes
+nicePostRoute = customRoute createIndexRoute
   where
     createIndexRoute ident =
       takeDirectory p </> takeBaseName p </> "index.html"
@@ -116,16 +147,10 @@ removeIndexHtml item = return $ fmap (withUrls removeIndexStr) item
     removeIndexStr url = case splitFileName url of
         (dir, "index.html") -> dir
         _ -> url
+
 --------------------------------------------------------------------------------
 sassCompiler :: Compiler (Item String)
 sassCompiler = getResourceString >>= withItemBody (shellFilter "sass -s --scss -I scss/ --cache-location _cache/sass")
 
 --------------------------------------------------------------------------------
 
-{--
-newtype CanonicalFile = CanonicalFile FilePath
-  deriving (Typeable)
-
-instance Writable CanonicalFile where
-  write dst (Item _ (CanonicalFile fp)) = renameFile fp dst
---}

@@ -7,6 +7,8 @@
   text-align: center;
 }
 
+.footnotes { hr { display: none; } }
+
 .entry-content code {
   background-color: #EEE;
   padding: 1px 5px;
@@ -192,7 +194,7 @@ article .entry-content > ol {
 .footnotes {
   font-size: 12px;
 
-  a[rel="reference"] {
+  a[href^="#fnref"] {
     margin-left: 8px;
   }
 }
