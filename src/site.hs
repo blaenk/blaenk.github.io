@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import Data.Monoid (mconcat)
-import Control.Monad (forM_)
 import Hakyll
 
 import Site.ShellFilter
@@ -17,10 +16,9 @@ myHakyllConf = defaultConfiguration
 
 main :: IO ()
 main = hakyllWith myHakyllConf $ do
-    forM_ ["images/*", "font/*", "js/*"] $ \matched ->
-      match matched $ do
-          route   idRoute
-          compile copyFileCompiler
+    match ("images/**" .||. "font/*" .||. "js/*") $ do
+        route   idRoute
+        compile copyFileCompiler
 
     match "scss/screen.scss" $ do
         route   $ gsubRoute "scss/" (const "css/") `composeRoutes` setExtension "css"
@@ -68,7 +66,6 @@ nillaCtx = mconcat
   , metadataField
   , niceUrlField "url"
   , pathField "path"
-  , titleField "title"
   , gitTag "git"
   , missingField
   ]
