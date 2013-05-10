@@ -36,7 +36,7 @@ Creating these binds is possible on Windows via a registry hack, facilitated usi
 
 On Linux I initially did this using `xmodmap`:
 
-``` plain
+~~~ {lang="text"}
 remove Control = Control_R
 keycode 105 = XF86AudioRaiseVolume
 add Control = Control_R
@@ -46,15 +46,15 @@ keycode 135 = XF86AudioLowerVolume
 remove mod4 = Super_R
 keycode 134 = XF86AudioMute
 add mod4 = Super_R
-```
+~~~
 
 Binding to these `XF86Audio*` keys automatically adds support for these keys in different applications like [mplayer2](http://www.mplayer2.org/), but I wanted system-wide volume support. This is typically accomplished by wiring them up in your given Desktop Environment or Window Manager. So I went ahead and did so in `xmonad.hs`:
 
-``` haskell
+~~~ {lang="haskell"}
 ((0, xF86XK_AudioMute), spawn "amixer -q set Master,0 toggle"),
 ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master,0 5%- unmute"),
 ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master,0 5%+ unmute")
-```
+~~~
 
 ## The Problem
 
@@ -62,12 +62,11 @@ The problem was that xmonad would only react to the Right Control key (Volume Up
 
 To rule out that it wasn't something with the system-level (xmodmap) binds, I decided to check if it worked in [Awesome](http://awesome.naquadah.org/):
 
-``` lua
+~~~ {lang="lua"}
 awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn("amixer -q set Master,0 5%- unmute", false) end),
 awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer -q set Master,0 5%+ unmute", false) end),
 awful.key({}, "XF86AudioMute", function () awful.util.spawn("amixer set Master,0 toggle", false) end),
-
-```
+~~~
 
 Indeed it worked perfectly. So now I had narrowed down the problem to xmonad.
 
@@ -85,13 +84,13 @@ To test this theory, Paul had me run [`ltrace`](http://en.wikipedia.org/wiki/Ltr
 
 Now that we were pretty sure of the cause of this, the workaround was to remove the other keycodes (for keys I didn't even have on my keyboard). At this time I decided I might as well switch over to XKB. The first order of business was to [dump my XKB map](http://unix.stackexchange.com/a/65600/10163):
 
-``` bash
+~~~ {lang="bash"}
 $ setxkbmap -print > ~/.xkb/keymap/mymap
-```
+~~~
 
 Then I created a `~/.xkb/symbols/volume_keys` file to store my media key binds. It took me a long while to figure out how to remove/unbind the default-bound keys. One problem was that XKB sets different aliases for keys. For example, `<I0D>` (I guess that's a media key) was aliased to `<MUTE>`. I looked around in `/usr/share/X11/xkb/rules/evdev` to see what was aliased and made sure to unbind those too. As for unbinding, at first Paul suggested to bind the keys to `NoSymbol` but that apparently had no effect. Eventually I found out it was possible with [`VoidSymbol`](http://madduck.net/docs/extending-xkb/#attaching_symbols_to_keys).
 
-``` plain
+~~~ {lang="text"}
 partial modifier_keys
 xkb_symbols "volume_keys" {
   // mute
@@ -111,13 +110,13 @@ xkb_symbols "volume_keys" {
   replace key <RWIN> { [ XF86AudioMute ] };
   replace key <RALT> { [ Multi_key ] };
 };
-```
+~~~
 
 Now I loaded my XKB map in `~/.xinitrc`:
 
-``` bash
+~~~ {lang="bash"}
 xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mymap $DISPLAY
-```
+~~~
 
 I restarted xmonad with `Mod-Shift-Q` (so that `~/.xinitrc` is rerun) and everything now worked perfectly.
 

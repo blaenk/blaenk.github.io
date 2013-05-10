@@ -29,16 +29,12 @@ main = hakyllWith myHakyllConf $ do
         compile $ myPandocCompiler
             >>= loadAndApplyTemplate "templates/post.html"   postCtx
             >>= loadAndApplyTemplate "templates/layout.html" postCtx
-            >>= relativizeUrls
-            >>= removeIndexHtml
 
     match "pages/*" $ do
         route $ nicePageRoute
         compile $ myPandocCompiler
             >>= loadAndApplyTemplate "templates/page.html"    postCtx
             >>= loadAndApplyTemplate "templates/layout.html" postCtx
-            >>= relativizeUrls
-            >>= removeIndexHtml
 
     create ["404.html"] $ do
         route idRoute
@@ -46,8 +42,6 @@ main = hakyllWith myHakyllConf $ do
             makeItem ""
                 >>= loadAndApplyTemplate "templates/404.html" archiveCtx
                 >>= loadAndApplyTemplate "templates/layout.html" archiveCtx
-                >>= relativizeUrls
-                >>= removeIndexHtml
 
     create ["index.html"] $ do
         route idRoute
@@ -55,8 +49,6 @@ main = hakyllWith myHakyllConf $ do
             makeItem ""
                 >>= loadAndApplyTemplate "templates/index.html" archiveCtx
                 >>= loadAndApplyTemplate "templates/layout.html" archiveCtx
-                >>= relativizeUrls
-                >>= removeIndexHtml
 
     match "templates/*" $ compile templateCompiler
 
@@ -75,6 +67,7 @@ postCtx = mconcat
   [ dateField "datePost" "%B %e, %Y"
   , dateField "dateArchive" "%b %e"
   , commentsTag "comments"
+  , commentsJS "commentsJS"
   , nillaCtx
   ]
 
@@ -82,6 +75,7 @@ archiveCtx :: Context String
 archiveCtx = mconcat
   [ field "posts" (\_ -> archivesList recentFirst)
   , constField "title" "Archives"
+  , constField "commentsJS" ""
   , nillaCtx
   ]
 
@@ -93,16 +87,27 @@ niceUrlField key = field key $
           (dir, "index.html") -> dir
           _ -> url
 
+commentsOn :: (MonadMetadata m) => Item a -> m Bool
+commentsOn item = do
+  commentsMeta <- getMetadataField (itemIdentifier item) "comments"
+  return $ case commentsMeta of
+    Just "false" -> False
+    Just "off" -> False
+    _ -> True
+
 -- gets passed the key and the item apparently
 commentsTag :: String -> Context String
 commentsTag key = field key $ \item -> do
-    commentsMeta <- getMetadataField (itemIdentifier item) "comments"
-    let comments = case commentsMeta of
-                     Just "false" -> False
-                     Just "off" -> False
-                     _ -> True
+    comments <- commentsOn item
     if comments
       then unsafeCompiler $ readFile "templates/comments.html"
+      else return ""
+
+commentsJS :: String -> Context String
+commentsJS key = field key $ \item -> do
+    comments <- commentsOn item
+    if comments
+      then unsafeCompiler $ readFile "templates/comments-js.html"
       else return ""
 
 gitTag :: String -> Context String
@@ -122,28 +127,20 @@ archivesList sortFilter = do
     return list
 
 -- from http://yannesposito.com/Scratch/en/blog/Hakyll-setup/
-nicePageRoute :: Routes
-nicePageRoute = customRoute createIndexRoute
-  where
-    createIndexRoute ident =
-      takeDirectory (takeDirectory p) </> takeBaseName p </> "index.html"
-        where p = toFilePath ident
-
+-- avoid </> because it uses os-dependent separator even though this is for a url
 nicePostRoute :: Routes
 nicePostRoute = customRoute createIndexRoute
   where
     createIndexRoute ident =
-      takeDirectory p </> takeBaseName p </> "index.html"
+      (takeDirectory p) ++ "/" ++ (takeBaseName p) ++ "/index.html"
         where p = toFilePath ident
 
--- replace url of the form foo/bar/index.html by foo/bar
-removeIndexHtml :: Item String -> Compiler (Item String)
-removeIndexHtml item = return $ fmap (withUrls removeIndexStr) item
+nicePageRoute :: Routes
+nicePageRoute = customRoute createIndexRoute
   where
-    removeIndexStr :: String -> String
-    removeIndexStr url = case splitFileName url of
-        (dir, "index.html") -> dir
-        _ -> url
+    createIndexRoute ident =
+      (takeDirectory (takeDirectory p)) ++  "/" ++ (takeBaseName p) ++ "/index.html"
+        where p = toFilePath ident
 
 --------------------------------------------------------------------------------
 sassCompiler :: Compiler (Item String)
