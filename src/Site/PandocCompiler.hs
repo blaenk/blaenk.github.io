@@ -1,4 +1,8 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Site.PandocCompiler (pandocCompiler) where
+
+import Prelude hiding (div, span)
 
 import Hakyll.Web.Pandoc hiding (pandocCompiler)
 
@@ -11,8 +15,12 @@ import System.IO.Unsafe
 import System.Process
 import System.IO (hClose, hGetContents, hPutStr, hSetEncoding, localeEncoding)
 import Control.Concurrent (forkIO)
-import Data.List
+import Data.List hiding (span)
 import Text.Regex.TDFA
+
+import Text.Blaze.Html.Renderer.String (renderHtml)
+import Text.Blaze.Html5 hiding (map)
+import Text.Blaze.Html5.Attributes hiding (span)
 
 import Control.Applicative((<$>))
 
@@ -54,49 +62,38 @@ pygments (CodeBlock (_, _, namevals) contents) =
       colored = pygmentize lang contents
       code = numberedCode colored lang
       caption = if text /= ""
-                  then "<figcaption><span>" ++ text ++ "</span></figcaption>"
+                  then renderHtml $ figcaption $ span $ toHtml text
                   else ""
-      composed = "<figure class=\"code\">\n" ++ code ++ caption ++ "</figure>"
+      composed = renderHtml $ figure ! class_ "code" $ preEscapedToHtml $ code ++ caption
   in RawBlock "html" composed
 pygments x = x
 
-{-
-import           Text.Blaze.Html.Renderer.String (renderHtml)
-import qualified Text.Blaze.Html5                as H
-
-main :: IO ()
-main = hakyll $ do
-  create ["index.html"] $ do
-    route idRoute
-      compile $
-        makeItem $ renderHtml $
-          H.html $ do
-            H.header $
-              H.title "An example page"
-            H.body $
-              H.p "Hello world!" 
--}
-
 numberedCode :: String -> String -> String
-numberedCode code lang =
-  let codeLines = lines $ extractCode code
+numberedCode codeHtml lang =
+  let codeLines = lines $ extractCode codeHtml
       wrappedCode = unlines $ wrapCodeLines codeLines
       numbers = unlines $ numberLines codeLines
-  in "<div class='highlight'><table><tr><td class='gutter'><pre class='line-numbers'>" ++
-     numbers ++ "</pre></td><td class='code'><pre><code class='" ++ lang ++ "'>" ++ wrappedCode ++
-     "</code></pre></td></tr></table></div>"
+  in renderHtml $ do
+      div ! class_ "highlight" $ do
+        table $ tr $ do
+          td ! class_ "gutter" $ do
+            pre ! class_ "line-numbers" $ do
+              preEscapedToHtml numbers
+          td ! class_ "code" $ do
+            pre $ do
+              code ! class_ (toValue lang) $ do
+                preEscapedToHtml wrappedCode
   where wrapCodeLines codeLines = map wrapCodeLine codeLines
-          where wrapCodeLine line = "<span class='line'>" ++ line ++ "</span>"
+          where wrapCodeLine line = renderHtml $ span ! class_ "line" $ preEscapedToHtml line
         numberLines codeLines =
           let (_, res) = mapAccumL numberLine 1 codeLines
           in res
             where numberLine :: Integer -> String -> (Integer, String)
-                  numberLine num _ = (num + 1, "<span class='line-number'>" ++ show num ++ "</span>")
+                  numberLine num _ = (num + 1, renderHtml $ span ! class_ "line-number" $ toHtml $ show num)
 
 extractCode :: String -> String
 extractCode pygmentsResult =
-  let preRegex = makeRegexOpts (defaultCompOpt { multiline = False }) defaultExecOpt "<pre>(.+)</pre>"
-      -- extract [["haystack", "needle"]
+  let preRegex = makeRegexOpts (defaultCompOpt { multiline = False }) defaultExecOpt ("<pre>(.+)</pre>" :: String)
       matched = (match preRegex pygmentsResult :: [[String]]) !! 0 !! 1
   in matched
 
