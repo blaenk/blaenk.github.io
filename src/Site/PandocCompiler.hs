@@ -20,13 +20,39 @@ myPandocCompiler :: Item String -> Compiler (Item String)
 myPandocCompiler = myPandocCompilerWithTransform readerOptions writerOptions pygmentsTransformer
 
 myPandocCompilerWithTransform :: ReaderOptions -> WriterOptions
-                            -> (Pandoc -> Pandoc)
-                            -> Item String
-                            -> Compiler (Item String)
-myPandocCompilerWithTransform ropt wopt f item = cached cacheName $
-    writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
+                              -> (Pandoc -> Pandoc)
+                              -> Item String
+                              -> Compiler (Item String)
+myPandocCompilerWithTransform ropt wopt f item =
+    -- writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
+    let ast :: Item Pandoc
+        ast = readPandocWith ropt item
+        headers :: Item [Block]
+        headers = queryWith queryHeaders <$> ast
+        toc :: Item Pandoc
+        toc = bottomUp (tableOfContents $ itemBody headers) <$> ast
+        pygment :: Item Pandoc
+        pygment = bottomUp pygments <$> toc
+    in  cached cacheName $ return (writePandocWith wopt pygment)
   where
     cacheName = "Hakyll.Web.Page.pageCompilerWithPandoc"
+
+queryHeaders :: Block -> [Block]
+queryHeaders hdr@(Header level attr text) = [hdr]
+queryHeaders _ = []
+
+tableOfContents :: [Block] -> (Block -> Block)
+tableOfContents headers = genToc
+  where genToc :: Block -> Block
+        genToc bl@(BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
+          let toc = map convertHeader headers
+          in BulletList toc
+          where convertHeader header@(Header level attr text) =
+                  case level of
+                    _ -> [Plain text]
+                convertHeader _ = [Plain [Str "what"]]
+        genToc x = x
+tableOfContents [] = (\x -> x)
 
 pygmentsTransformer :: Pandoc -> Pandoc
 pygmentsTransformer = bottomUp pygments
@@ -99,6 +125,7 @@ writerOptions =
   let extensions = S.fromList [
         Ext_literate_haskell,
         Ext_tex_math_dollars
+        -- Ext_abbreviations -- enable once pandoc gets abbreviation support
         ]
   in def {
     writerTableOfContents = True,

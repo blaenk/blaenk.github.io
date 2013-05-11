@@ -7,7 +7,7 @@ excerpt: Functional implementation of convolution in Haskell
 categories: Haskell, Digital Signal Processing
 ---
 
-* Table of Contents
+* toc
 
 [Convolution](http://en.wikipedia.org/wiki/Convolution) is a mathematical method of combining two signals to form a third signal. Passing the [Dirac delta function](http://en.wikipedia.org/wiki/Dirac_delta_function) (unit impulse) $\delta[n]$ through a linear system results in the impulse response $h[n]$. The impulse response is simply the signal resulting from passing the unit impulse (Dirac delta function) through a linear system.
 
