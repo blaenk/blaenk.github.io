@@ -79,7 +79,7 @@ gitTag key = field key $ \_ -> do
   unsafeCompiler $ do
     sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%H"] []
     message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s"] []
-    return ("<a href=\"https://github.com/" ++ sha ++ "/commit/" ++ sha ++
+    return ("<a href=\"https://github.com/blaenk/hakyll/commit/" ++ sha ++
            "\" title=\"" ++ message ++"\">" ++ (take 8 sha) ++ "</a>")
 
 --------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ myHakyllConf = defaultConfiguration
 
 main :: IO ()
 main = hakyllWith myHakyllConf $ do
-  match ("images/**" .||. "font/*" .||. "js/*") $ do
+  match ("images/**" .||. "font/*" .||. "js/*" .||. "favicon.png") $ do
     route idRoute
     compile copyFileCompiler
 
