@@ -1,6 +1,6 @@
-module Site.PandocCompiler (myPandocCompiler) where
+module Site.PandocCompiler (pandocCompiler) where
 
-import Hakyll.Web.Pandoc
+import Hakyll.Web.Pandoc hiding (pandocCompiler)
 
 import Text.Pandoc
 
@@ -16,26 +16,15 @@ import Text.Regex.TDFA
 
 import Control.Applicative((<$>))
 
-myPandocCompiler :: Item String -> Compiler (Item String)
-myPandocCompiler = myPandocCompilerWithTransform readerOptions writerOptions pygmentsTransformer
+pandocCompiler :: Item String -> Compiler (Item String)
+pandocCompiler = pandocTransformer readerOptions writerOptions transformer
+  where transformer = (bottomUp pygments) . tocTransformer
+        tocTransformer ast = let headers = queryWith queryHeaders ast
+                             in bottomUp (tableOfContents headers) ast
 
-myPandocCompilerWithTransform :: ReaderOptions -> WriterOptions
-                              -> (Pandoc -> Pandoc)
-                              -> Item String
-                              -> Compiler (Item String)
-myPandocCompilerWithTransform ropt wopt f item =
-    -- writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
-    let ast :: Item Pandoc
-        ast = readPandocWith ropt item
-        headers :: Item [Block]
-        headers = queryWith queryHeaders <$> ast
-        toc :: Item Pandoc
-        toc = bottomUp (tableOfContents $ itemBody headers) <$> ast
-        pygment :: Item Pandoc
-        pygment = bottomUp pygments <$> toc
-    in  cached cacheName $ return (writePandocWith wopt pygment)
-  where
-    cacheName = "Hakyll.Web.Page.pageCompilerWithPandoc"
+pandocTransformer :: ReaderOptions -> WriterOptions -> (Pandoc -> Pandoc) -> Item String -> Compiler (Item String)
+pandocTransformer ropt wopt f item =
+  writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
 
 queryHeaders :: Block -> [Block]
 queryHeaders hdr@(Header level attr text) = [hdr]
@@ -54,9 +43,6 @@ tableOfContents headers = genToc
         genToc x = x
 tableOfContents [] = (\x -> x)
 
-pygmentsTransformer :: Pandoc -> Pandoc
-pygmentsTransformer = bottomUp pygments
-
 pygments :: Block -> Block
 pygments (CodeBlock (_, _, namevals) contents) =
   let lang = case lookup "lang" namevals of
@@ -73,6 +59,23 @@ pygments (CodeBlock (_, _, namevals) contents) =
       composed = "<figure class=\"code\">\n" ++ code ++ caption ++ "</figure>"
   in RawBlock "html" composed
 pygments x = x
+
+{-
+import           Text.Blaze.Html.Renderer.String (renderHtml)
+import qualified Text.Blaze.Html5                as H
+
+main :: IO ()
+main = hakyll $ do
+  create ["index.html"] $ do
+    route idRoute
+      compile $
+        makeItem $ renderHtml $
+          H.html $ do
+            H.header $
+              H.title "An example page"
+            H.body $
+              H.p "Hello world!" 
+-}
 
 numberedCode :: String -> String -> String
 numberedCode code lang =

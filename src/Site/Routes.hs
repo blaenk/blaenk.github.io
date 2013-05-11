@@ -21,4 +21,3 @@ nicePageRoute = customRoute createIndexRoute
     createIndexRoute ident =
       (takeDirectory (takeDirectory p)) ++  "/" ++ (takeBaseName p) ++ "/index.html"
         where p = toFilePath ident
-

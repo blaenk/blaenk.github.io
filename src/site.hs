@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-import Hakyll
+import Hakyll hiding (pandocCompiler)
 
 import Site.Filters
 import Site.Fields
@@ -24,7 +24,7 @@ main = hakyllWith myHakyllConf $ do
     route $ nicePostRoute
     compile $ getResourceBody
       >>= withItemBody (abbreviationFilter)
-      >>= myPandocCompiler
+      >>= pandocCompiler
       >>= loadAndApplyTemplate "templates/post.html" postCtx
       >>= loadAndApplyTemplate "templates/layout.html" postCtx
 
@@ -32,7 +32,7 @@ main = hakyllWith myHakyllConf $ do
     route $ nicePageRoute
     compile $ getResourceBody
       >>= withItemBody (abbreviationFilter)
-      >>= myPandocCompiler
+      >>= pandocCompiler
       >>= loadAndApplyTemplate "templates/page.html" postCtx
       >>= loadAndApplyTemplate "templates/layout.html" postCtx
 

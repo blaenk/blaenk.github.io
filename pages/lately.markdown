@@ -8,8 +8,7 @@ footer: true
 
 {% include post/date.html %}
 
-* Table of Contents
-{:toc}
+* toc
 
 This page lists some of the things I've been up to lately, updated {{ updated }}.
 
