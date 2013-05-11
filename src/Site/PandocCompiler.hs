@@ -13,13 +13,20 @@ import System.IO (hClose, hGetContents, hPutStr, hSetEncoding, localeEncoding)
 import Control.Concurrent (forkIO)
 import Data.List
 import Text.Regex.TDFA
-import Text.Regex.TDFA.String
 
-myPandocCompiler :: Compiler (Item String)
-myPandocCompiler = pandocCompilerWithTransform readerOptions writerOptions pygmentsTransformer
+import Control.Applicative((<$>))
 
---tableOfContents :: Block -> Block
---tableOfContents ()
+myPandocCompiler :: Item String -> Compiler (Item String)
+myPandocCompiler = myPandocCompilerWithTransform readerOptions writerOptions pygmentsTransformer
+
+myPandocCompilerWithTransform :: ReaderOptions -> WriterOptions
+                            -> (Pandoc -> Pandoc)
+                            -> Item String
+                            -> Compiler (Item String)
+myPandocCompilerWithTransform ropt wopt f item = cached cacheName $
+    writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
+  where
+    cacheName = "Hakyll.Web.Page.pageCompilerWithPandoc"
 
 pygmentsTransformer :: Pandoc -> Pandoc
 pygmentsTransformer = bottomUp pygments
@@ -59,8 +66,9 @@ numberedCode code lang =
 
 extractCode :: String -> String
 extractCode pygmentsResult =
-  let (Right pat) = compile blankCompOpt defaultExecOpt "<pre>(.+)</pre>"
-      (Right (Just (_, _, _, matched:_))) = regexec pat pygmentsResult
+  let preRegex = makeRegexOpts (defaultCompOpt { multiline = False }) defaultExecOpt "<pre>(.+)</pre>"
+      -- extract [["haystack", "needle"]
+      matched = (match preRegex pygmentsResult :: [[String]]) !! 0 !! 1
   in matched
 
 pygmentize :: String -> String -> String
