@@ -28,7 +28,7 @@ import Data.Tree
 
 pandocCompiler :: Item String -> Compiler (Item String)
 pandocCompiler = pandocTransformer readerOptions writerOptions transformer
-  where transformer = (bottomUp pygments) . tocTransformer
+  where transformer = (bottomUp pygments) . tocTransformer . (bottomUp linkImages)
         tocTransformer ast = let headers = queryWith queryHeaders ast
                              in bottomUp (tableOfContents headers) ast
 
@@ -71,15 +71,21 @@ genToc forest = foldl genStr' "" forest
           let nest = case subForest of
                        [] -> genToc subForest
                        _ -> "<ul>" ++ (genToc subForest) ++ "</ul>"
-          in str ++ "<li><a href='testing'>" ++ text ++ "</a>" ++ nest ++ "</li>"
+          in str ++ "<li><a href='#" ++ ident ++ "'>" ++ text ++ "</a>" ++ nest ++ "</li>"
 
 tableOfContents :: [TocItem] -> (Block -> Block)
 tableOfContents [] = (\x -> x)
 tableOfContents headers = tocInsert
   where tocInsert :: Block -> Block
         tocInsert bl@(BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
-          (RawBlock "html") . (\list -> "<ul id='markdown-toc'>" ++ list ++ "</ul>") . genToc . tocTree $ headers
+          (RawBlock "html") . (\list -> "<ul id='markdown-toc'>" ++ list ++ "</ul>") .
+          genToc . tocTree . filter (\(TocItem level _ _) -> level <= 2) . normalizeTocs $ headers
         tocInsert x = x
+
+-- doesn't work with raw html <img> tag since that's just RawInline
+linkImages :: Inline -> Inline
+linkImages img@(Image inlines target) = (Link [img] target)
+linkImages x = x
 
 pygments :: Block -> Block
 pygments (CodeBlock (_, _, namevals) contents) =

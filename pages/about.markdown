@@ -5,7 +5,7 @@ published: 2012-09-21
 footer: false
 ---
 
-{% img right /images/me.png 128 %}
+<img src="/images/me.png" class="right" width="128">
 
 I'm Jorge Israel Peña, also known as Blaenk Denum. I currently live in Southern California and speak English, Spanish, and French.
 

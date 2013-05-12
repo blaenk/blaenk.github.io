@@ -7,8 +7,7 @@ excerpt: Directories and Links in the POSIX standards
 categories: Linux, Notes, POSIX
 ---
 
-* Table of Contents
-{:toc}
+* toc
 
 Notes for chapter 18 concerning directories and links.
 

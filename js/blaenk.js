@@ -14,22 +14,6 @@ $(function() {
 		});
 	};
 
-	// Append caption after pictures
-	var appendCaption = function(){
-		$('.entry-content').each(function(i){
-			var _i = i;
-			$(this).find('img').each(function(){
-				var alt = this.alt;
-
-				if (alt != ''){
-					$(this).after('<span class="caption">'+alt+'</span>');
-				}
-
-				$(this).wrap('<a href="'+this.src+'" title="'+alt+'"/>');
-			});
-		});
-	};
-
 	externalLinks(); // Delete or comment this line to disable opening external links in new window
 	appendCaption(); // Delete or comment this line to disable caption
 
@@ -61,17 +45,6 @@ $(function() {
 	});
 
 	//$("[rel=footnote]").inlineFootnote();
-
-	/*$('.desk_search input[type="text"]').blur(function() {
-		var $nav = $('#main-nav .main');
-		var $search = $('.desk_search');
-
-		if ($(this).val() == "") {
-			$nav.removeClass('searching');
-			$search.hide();
-			$nav.data('blurred', 1);
-		}
-	});*/
 
 	var $nav = $('#main-nav .main');
 	var $search = $('.desk_search');

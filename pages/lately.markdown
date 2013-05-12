@@ -6,11 +6,9 @@ comments: true
 footer: true
 ---
 
-{% include post/date.html %}
-
 * toc
 
-This page lists some of the things I've been up to lately, updated {{ updated }}.
+This page lists some of the things I've been up to lately.
 
 ### Currently Working On
 

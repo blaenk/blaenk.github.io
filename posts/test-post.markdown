@@ -24,7 +24,7 @@ $$R_{ab} - {\textstyle 1 \over 2}R\,g_{ab} + \Lambda\ g_{ab} = \kappa\, T_{ab}$$
 
 Nulla facilisi. Cras lectus velit, rhoncus et mollis eget, ultricies quis ligula. Integer ornare nibh in est molestie tempus. Praesent bibendum placerat diam id gravida. Fusce et velit eget dui laoreet interdum eget id arcu. Ut et massa nibh, ut mollis augue. In hac habitasse platea dictumst. Sed massa orci, venenatis vitae dapibus sit amet, varius ut nibh. Ut vel enim leo, at posuere nisi. In elementum sem vel nibh malesuada sagittis.
 
-~~~ {lang="ruby" text="an example of base64 decoding in ruby https://gist.github.com/3759076"}
+~~~ {lang="ruby" text="an example of base64 decoding in ruby"}
 require 'base64'
 
 File.open('favicon.png', 'wb') do |f|
@@ -34,17 +34,16 @@ end
 
 Donec vitae turpis non augue pulvinar imperdiet eu non erat. Integer mollis diam ac quam lobortis luctus. Suspendisse scelerisque sodales massa sit amet pharetra. $\Delta S = \pi$ [^2] Donec cursus, velit in mollis dapibus, nunc elit pharetra erat, et dictum sem sapien pretium ligula. Cras nibh elit, mollis eu eleifend sed, faucibus in velit. Aliquam gravida tristique molestie. Donec gravida, diam ac auctor auctor, nulla enim varius sem, non auctor urna mi vitae enim. Cras aliquam semper nibh, quis viverra urna ultrices et. Nunc rhoncus fringilla dapibus.
 
-{% img center http://placekitten.com/720/250 %}
+<img src="http://placekitten.com/720/250" class="center">
 
 # Immortal Words #
 
-{% blockquote Thomas Hildern http://fallout.wikia.com/wiki/Thomas_Hildern Fallout Wiki %}
-Too many people have opinions on things they know nothing about. And the more ignorant they are, the more opinions they have.
-{% endblockquote %}
+> Too many people have opinions on things they know nothing about. And the more ignorant they are, the more opinions they have.
+> <footer><strong>Thomas Hildern</strong> <cite><a href="http://fallout.wikia.com/wiki/Thomas_Hildern">Fallout Wiki</a></cite></footer>
 
 ## The Meaning of Life ##
 
-{% img right http://placekitten.com/150/100 Place Kitten #3 %}
+<img src="http://placekitten.com/150/100" class="right" title="Place Kitten #3">
 Aenean tristique, magna a semper venenatis, orci odio tempor lorem, ac molestie ligula enim ac urna. Fusce egestas nisl id massa porta vitae pretium tellus aliquet. Morbi tempor arcu sit amet felis hendrerit aliquam. Nulla facilisi. Suspendisse diam tortor, pharetra ac porta eu, ullamcorper nec lectus. Sed nulla turpis, blandit et tincidunt vel, `condimentum` et sapien. Aliquam dignissim blandit pharetra. Mauris ornare accumsan libero at bibendum. Morbi dui nisl, aliquet sit amet gravida sit amet, mollis commodo nulla. Quisque eu felis purus.
 
 $$ \forall x, y : \mathbb{Z}, x > 3 \land y < 2 \Rightarrow x^2 - 2y > 5$$

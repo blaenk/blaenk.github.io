@@ -7,14 +7,13 @@ excerpt: Various urxvt and zsh customizations
 categories: urxvt, zsh
 ---
 
-* Table of Contents
-{:toc}
+* toc
 
 A while back I switched over to [zsh](http://en.wikipedia.org/wiki/Z_shell) as my shell and used [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) to get up and running quickly. I barely used any of the features it provided, so I recently decided to do away with it and get zsh setup from scratch. At the same time I decided it'd be a good idea to do the same for [urxvt](http://en.wikipedia.org/wiki/Rxvt-unicode). These initiatives had the consequence that I ended up completely redoing the way I maintained my dotfiles which had the effect of greatly improving my overall setup.
 
 Before I go any further I'd like to point out that all of the things that I'll talk about in this post are available in my [dotfiles](https://github.com/blaenk/dots) repository. I'll make an effort to link to the relevant individual files from the repository for each topic I cover. Here is the end result:
 
-{% img center /images/terminal/urxvt.png %}
+<img src="/images/terminal/urxvt.png" class="center">
 
 ## dotfiles
 
@@ -60,7 +59,7 @@ My prompt is inspired by the Haskell [lambda syntax](http://www.haskell.org/hask
 
 Here's what the actual prompt looks like:
 
-{% img center /images/terminal/basic-prompt.png %}
+<img src="/images/terminal/basic-prompt.png" class="center">
 
 Here it is in text:
 
@@ -74,7 +73,7 @@ Like any self-respecting modern prompt, mine [incorporates git information](http
 
 All of these features were done using zsh's [vcsinfo](http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information) with the help of [Arjan van der Gaag](http://arjanvandergaag.nl/blog/customize-zsh-prompt-with-vcs-info.html) and -- once again -- [sunaku](https://github.com/sunaku/home/blob/master/.zsh/config/prompt.zsh). Here's what it looks like [^echo]:
 
-{% img center /images/terminal/git-prompt.png %}
+<img src="/images/terminal/git-prompt.png" class="center">
 
 Again in text:
 
@@ -88,7 +87,7 @@ The branch is `master` and apparently there's unstaged files, modifed files, and
 
 The prompt also detects if it's being viewed through SSH. I don't like viewing hostname in my prompt on machines I'm on locally as I feel it's pointless. However, when I'm connected to a remote server via SSH, it's often handy to have the hostname around to differentiate between your computer and the remote host. For this reason my prompt only shows the hostname when it detects that it's being viewed through an SSH connection. Here's what it looks like:
 
-{% img center /images/terminal/ssh-prompt.png %}
+<img src="/images/terminal/ssh-prompt.png" class="center">
 
 Once again in text:
 
