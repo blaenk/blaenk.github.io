@@ -15,7 +15,6 @@ $(function() {
 	};
 
 	externalLinks(); // Delete or comment this line to disable opening external links in new window
-	appendCaption(); // Delete or comment this line to disable caption
 
 	var mobilenav = $('#mobile-nav');
 
@@ -43,8 +42,6 @@ $(function() {
 	}).click(function(e){
 		e.stopPropagation();
 	});
-
-	//$("[rel=footnote]").inlineFootnote();
 
 	var $nav = $('#main-nav .main');
 	var $search = $('.desk_search');
