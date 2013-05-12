@@ -19,10 +19,12 @@ import Data.List hiding (span)
 import Text.Regex.TDFA
 
 import Text.Blaze.Html.Renderer.String (renderHtml)
-import Text.Blaze.Html5 hiding (map)
-import Text.Blaze.Html5.Attributes hiding (span)
+import Text.Blaze.Html5 hiding (map, header, contents, caption, input)
+import Text.Blaze.Html5.Attributes hiding (span, headers, item, lang)
 
 import Control.Applicative((<$>))
+
+import Data.Tree
 
 pandocCompiler :: Item String -> Compiler (Item String)
 pandocCompiler = pandocTransformer readerOptions writerOptions transformer
@@ -30,26 +32,54 @@ pandocCompiler = pandocTransformer readerOptions writerOptions transformer
         tocTransformer ast = let headers = queryWith queryHeaders ast
                              in bottomUp (tableOfContents headers) ast
 
+-- this compiler reads the item instead of the resourceBody, allowing
+-- it to be preceded by a filter (e.g. abbreviationFilter)
 pandocTransformer :: ReaderOptions -> WriterOptions -> (Pandoc -> Pandoc) -> Item String -> Compiler (Item String)
 pandocTransformer ropt wopt f item =
   writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
 
-queryHeaders :: Block -> [Block]
-queryHeaders hdr@(Header level attr text) = [hdr]
+data TocItem = TocItem {
+  tocLevel :: Int,
+  tocIdent :: String,
+  tocInline :: String
+  }
+
+instance Eq TocItem where
+  (TocItem a _ _) == (TocItem b _ _) = a == b
+
+instance Ord TocItem where
+  compare (TocItem a _ _) (TocItem b _ _) = compare a b
+
+normalizeTocs :: [TocItem] -> [TocItem]
+normalizeTocs tocs = map normalize tocs
+  where minLevel :: Int
+        minLevel = subtract 1 . tocLevel . minimum $ tocs
+        normalize item@(TocItem level _ _) = item {tocLevel = level - minLevel}
+
+queryHeaders :: Block -> [TocItem]
+queryHeaders hdr@(Header level (ident, _, _) text) = [TocItem level ident (writeHtmlString def (Pandoc (Meta [] [] []) [(Plain text)]))]
 queryHeaders _ = []
 
-tableOfContents :: [Block] -> (Block -> Block)
-tableOfContents headers = genToc
-  where genToc :: Block -> Block
-        genToc bl@(BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
-          let toc = map convertHeader headers
-          in BulletList toc
-          where convertHeader header@(Header level attr text) =
-                  case level of
-                    _ -> [Plain text]
-                convertHeader _ = [Plain [Str "what"]]
-        genToc x = x
+tocTree :: [TocItem] -> Forest TocItem
+tocTree x = (map (\(x : xs) -> Node x (tocTree xs)) . groupBy (comp)) x
+  where comp (TocItem a _ _) (TocItem b _ _) = a < b
+
+genToc :: Forest TocItem -> String
+genToc forest = foldl genStr' "" forest
+  where genStr' :: String -> Tree TocItem -> String
+        genStr' str (Node root@(TocItem level ident text) subForest) =
+          let nest = case subForest of
+                       [] -> genToc subForest
+                       _ -> "<ul>" ++ (genToc subForest) ++ "</ul>"
+          in str ++ "<li><a href='testing'>" ++ text ++ "</a>" ++ nest ++ "</li>"
+
+tableOfContents :: [TocItem] -> (Block -> Block)
 tableOfContents [] = (\x -> x)
+tableOfContents headers = tocInsert
+  where tocInsert :: Block -> Block
+        tocInsert bl@(BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
+          (RawBlock "html") . (\list -> "<ul id='markdown-toc'>" ++ list ++ "</ul>") . genToc . tocTree $ headers
+        tocInsert x = x
 
 pygments :: Block -> Block
 pygments (CodeBlock (_, _, namevals) contents) =
@@ -60,11 +90,11 @@ pygments (CodeBlock (_, _, namevals) contents) =
                Just text_ -> text_
                Nothing -> ""
       colored = pygmentize lang contents
-      code = numberedCode colored lang
+      codeHtml = numberedCode colored lang
       caption = if text /= ""
                   then renderHtml $ figcaption $ span $ toHtml text
                   else ""
-      composed = renderHtml $ figure ! class_ "code" $ preEscapedToHtml $ code ++ caption
+      composed = renderHtml $ figure ! class_ "code" $ preEscapedToHtml $ codeHtml ++ caption
   in RawBlock "html" composed
 pygments x = x
 
@@ -99,7 +129,8 @@ extractCode pygmentsResult =
 
 pygmentize :: String -> String -> String
 pygmentize lang contents = unsafePerformIO $ do
-  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -P encoding=utf-8")) {std_in = CreatePipe, std_out = CreatePipe, close_fds = True}
+  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -P encoding=utf-8")) {
+                  std_in = CreatePipe, std_out = CreatePipe, close_fds = True}
       writer handle input = do
         hSetEncoding handle localeEncoding
         hPutStr handle input
