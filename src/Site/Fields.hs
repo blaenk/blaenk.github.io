@@ -27,6 +27,8 @@ defaultCtx = mconcat
   , niceUrlField "url"
   , pathField "path"
   , gitTag "git"
+  , constField "title" "Blaenk Denum"
+  , constField "commentsJS" ""
   , missingField
   ]
 
@@ -121,7 +123,7 @@ yearArchives = do
 
 groupByYear :: (MonadMetadata m, Functor m) => [Item a] -> m [(Integer, [Item a])]
 groupByYear items =
-    fmap reverse . groupByYearM . sortByM (getItemUTC defaultTimeLocale . itemIdentifier) $ items
+    groupByYearM . fmap reverse . sortByM (getItemUTC defaultTimeLocale . itemIdentifier) $ items
   where
     sortByM :: (Monad m) => (a -> m UTCTime) -> [a] -> m [(Integer, a)]
     sortByM f xs = -- sort the list comparing the UTCTime
