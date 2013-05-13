@@ -18,8 +18,8 @@ executable site
   -- other-modules:
   build-depends:       base,
                        process >= 1.1.0.2 && < 2,
-                       old-locale >= 1.0.0.5 && < 2,
-                       time >= 1.4.0.1 && < 2,
+                       old-locale >= 1.0.0.4 && < 2,
+                       time >= 1.4 && < 2,
                        blaze-html >= 0.6.1.1 && < 1,
                        containers >= 0.4.2.1 && < 1,
                        regex-tdfa >= 1.1.8 && < 2,
