@@ -4,7 +4,7 @@ title: POSIX Directories and Links
 published: 2013-03-06
 comments: true
 excerpt: Directories and Links in the POSIX standards
-categories: Linux, Notes, POSIX
+tags: Linux, Notes, POSIX
 ---
 
 * toc

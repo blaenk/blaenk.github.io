@@ -4,7 +4,7 @@ title: xmonad Ignores Bindings
 published: 2013-02-24
 excerpt: Tracking down a bug in xmonad
 comments: true
-categories: Awesome, Linux, xmonad
+tags: Awesome, Linux, xmonad
 ---
 
 * toc

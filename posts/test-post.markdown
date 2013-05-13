@@ -4,7 +4,7 @@ title: Test Post
 published: 2012-09-19
 comments: true
 excerpt: Site design and Markdown test
-categories: Octopress, Markdown, Math, Ruby
+tags: Octopress, Markdown, Math, Ruby
 ---
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dolor nisi, feugiat sit amet egestas sit amet, mattis sit amet velit. Proin quis metus id mi vulputate adipiscing eget et **sapien**. Sed iaculis auctor sem ac convallis [^1]. Cras nisi libero, dignissim quis facilisis et, bibendum eget enim. Vivamus est leo, tristique ut adipiscing vitae, malesuada adipiscing tellus. Integer nec aliquam justo. Nam ac lacus erat. In ***hac habitasse platea*** dictumst. Donec pharetra, lectus sit amet ultrices fringilla, metus mi auctor ligula, in hendrerit dui arcu eu leo.

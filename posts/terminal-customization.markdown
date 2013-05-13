@@ -4,7 +4,7 @@ title: Terminal Customization
 published: 2013-02-12
 comments: true
 excerpt: Various urxvt and zsh customizations
-categories: urxvt, zsh
+tags: urxvt, zsh
 ---
 
 * toc
