@@ -25,6 +25,7 @@ import Text.Blaze.Html5.Attributes hiding (span, headers, item, lang)
 import Control.Applicative((<$>))
 
 import Data.Tree
+import Data.Ord
 
 pandocCompiler :: Item String -> Compiler (Item String)
 pandocCompiler = pandocTransformer readerOptions writerOptions transformer
@@ -48,7 +49,7 @@ instance Eq TocItem where
   (TocItem a _ _) == (TocItem b _ _) = a == b
 
 instance Ord TocItem where
-  compare (TocItem a _ _) (TocItem b _ _) = compare a b
+  compare = comparing tocLevel
 
 normalizeTocs :: [TocItem] -> [TocItem]
 normalizeTocs tocs = map normalize tocs
