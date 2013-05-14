@@ -18,9 +18,10 @@ import Control.Concurrent (forkIO)
 import Data.List hiding (span)
 import Text.Regex.TDFA
 
+import Text.Blaze.Html (preEscapedToHtml, (!), toHtml, toValue)
 import Text.Blaze.Html.Renderer.String (renderHtml)
-import Text.Blaze.Html5 hiding (map, header, contents, caption, input)
-import Text.Blaze.Html5.Attributes hiding (span, headers, item, lang)
+import qualified Text.Blaze.Html5 as H
+import qualified Text.Blaze.Html5.Attributes as A
 
 import Control.Applicative((<$>))
 
@@ -41,8 +42,8 @@ pandocTransformer ropt wopt f item =
 
 data TocItem = TocItem {
   tocLevel :: Int,
-  tocIdent :: String,
-  tocInline :: String
+  _tocIdent :: String,
+  _tocInline :: String
   }
 
 instance Eq TocItem where
@@ -58,34 +59,34 @@ normalizeTocs tocs = map normalize tocs
         normalize item@(TocItem level _ _) = item {tocLevel = level - minLevel}
 
 queryHeaders :: Block -> [TocItem]
-queryHeaders hdr@(Header level (ident, _, _) text) = [TocItem level ident (writeHtmlString def (Pandoc (Meta [] [] []) [(Plain text)]))]
+queryHeaders (Header level (ident, _, _) text) = [TocItem level ident (writeHtmlString def (Pandoc (Meta [] [] []) [(Plain text)]))]
 queryHeaders _ = []
 
 tocTree :: [TocItem] -> Forest TocItem
-tocTree x = (map (\(x : xs) -> Node x (tocTree xs)) . groupBy (comp)) x
+tocTree = map (\(x:xs) -> Node x (tocTree xs)) . groupBy (comp)
   where comp (TocItem a _ _) (TocItem b _ _) = a < b
 
 genToc :: Forest TocItem -> String
 genToc forest = foldl genStr' "" forest
   where genStr' :: String -> Tree TocItem -> String
-        genStr' str (Node root@(TocItem level ident text) subForest) =
-          let nest = case subForest of
-                       [] -> genToc subForest
-                       _ -> "<ul>" ++ (genToc subForest) ++ "</ul>"
+        genStr' str (Node (TocItem _level ident text) sub) =
+          let nest = case sub of
+                       [] -> genToc sub
+                       _ -> "<ul>" ++ (genToc sub) ++ "</ul>"
           in str ++ "<li><a href='#" ++ ident ++ "'>" ++ text ++ "</a>" ++ nest ++ "</li>"
 
 tableOfContents :: [TocItem] -> (Block -> Block)
 tableOfContents [] = (\x -> x)
 tableOfContents headers = tocInsert
   where tocInsert :: Block -> Block
-        tocInsert bl@(BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
+        tocInsert (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
           (RawBlock "html") . (\list -> "<ul id='markdown-toc'>" ++ list ++ "</ul>") .
           genToc . tocTree . filter (\(TocItem level _ _) -> level <= 2) . normalizeTocs $ headers
         tocInsert x = x
 
 -- doesn't work with raw html <img> tag since that's just RawInline
 linkImages :: Inline -> Inline
-linkImages img@(Image inlines target) = (Link [img] target)
+linkImages img@(Image _inlines target) = (Link [img] target)
 linkImages x = x
 
 pygments :: Block -> Block
@@ -99,9 +100,9 @@ pygments (CodeBlock (_, _, namevals) contents) =
       colored = pygmentize lang contents
       codeHtml = numberedCode colored lang
       caption = if text /= ""
-                  then renderHtml $ figcaption $ span $ toHtml text
+                  then renderHtml $ H.figcaption $ H.span $ H.toHtml text
                   else ""
-      composed = renderHtml $ figure ! class_ "code" $ preEscapedToHtml $ codeHtml ++ caption
+      composed = renderHtml $ H.figure ! A.class_ "code" $ preEscapedToHtml $ codeHtml ++ caption
   in RawBlock "html" composed
 pygments x = x
 
@@ -111,22 +112,22 @@ numberedCode codeHtml lang =
       wrappedCode = unlines $ wrapCodeLines codeLines
       numbers = unlines $ numberLines codeLines
   in renderHtml $ do
-      div ! class_ "highlight" $ do
-        table $ tr $ do
-          td ! class_ "gutter" $ do
-            pre ! class_ "line-numbers" $ do
+      H.div ! A.class_ "highlight" $ do
+        H.table $ H.tr $ do
+          H.td ! A.class_ "gutter" $ do
+            H.pre ! A.class_ "line-numbers" $ do
               preEscapedToHtml numbers
-          td ! class_ "code" $ do
-            pre $ do
-              code ! class_ (toValue lang) $ do
+          H.td ! A.class_ "code" $ do
+            H.pre $ do
+              H.code ! A.class_ (toValue lang) $ do
                 preEscapedToHtml wrappedCode
   where wrapCodeLines codeLines = map wrapCodeLine codeLines
-          where wrapCodeLine line = renderHtml $ span ! class_ "line" $ preEscapedToHtml line
+          where wrapCodeLine line = renderHtml $ H.span ! A.class_ "line" $ preEscapedToHtml line
         numberLines codeLines =
           let (_, res) = mapAccumL numberLine 1 codeLines
           in res
             where numberLine :: Integer -> String -> (Integer, String)
-                  numberLine num _ = (num + 1, renderHtml $ span ! class_ "line-number" $ toHtml $ show num)
+                  numberLine num _ = (num + 1, renderHtml $ H.span ! A.class_ "line-number" $ toHtml $ show num)
 
 extractCode :: String -> String
 extractCode pygmentsResult =

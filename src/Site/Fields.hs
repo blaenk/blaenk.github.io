@@ -5,6 +5,7 @@ module Site.Fields (
   defaultCtx,
   postCtx,
   archiveCtx,
+  tagsCtx
 ) where
 
 import Hakyll
@@ -13,12 +14,36 @@ import System.Process
 import System.FilePath
 
 -- for groupByYear
-import Data.List (sortBy, groupBy)
+import Data.List (sortBy, groupBy, intersperse)
+import Data.Maybe (catMaybes)
 import Data.Ord (comparing)
-import Control.Monad (liftM)
+import Control.Monad (liftM, forM)
 import System.Locale (defaultTimeLocale)
 import Data.Time.Clock
 import Data.Time.Calendar
+
+import           Text.Blaze.Html                 (toHtml, toValue, (!))
+import           Text.Blaze.Html.Renderer.String (renderHtml)
+import qualified Text.Blaze.Html5                as H
+import qualified Text.Blaze.Html5.Attributes     as A
+
+import Site.Routes
+
+sluggedTagsField :: String                             -- ^ Destination field
+                 -> Tags                               -- ^ Tags structure
+                 -> Context a                          -- ^ Resulting context
+sluggedTagsField key tags = field key $ \item -> do
+    tags' <- getTags $ itemIdentifier item
+    links <- forM tags' $ \tag -> do
+        route' <- getRoute $ tagsMakeId tags $ slugify tag
+        return $ renderLink tag route'
+
+    return $ renderHtml $ mconcat $ intersperse ", " $ catMaybes $ links
+  where
+    -- Render one tag link
+    renderLink _   Nothing         = Nothing
+    renderLink tag (Just filePath) = Just $
+        H.a ! A.href (toValue $ toUrl $ (takeDirectory filePath) ++ "/") $ toHtml tag
 
 defaultCtx :: Context String
 defaultCtx = mconcat
@@ -42,13 +67,16 @@ postCtx = mconcat
   ]
 
 --[ field "posts" (\_ -> archivesList recentFirst)
-archiveCtx :: Context String
-archiveCtx = mconcat
-  [ field "archives" (\_ -> yearArchives) :: Context String
+archiveCtx :: Pattern -> Context String
+archiveCtx pat = mconcat
+  [ field "archives" (\_ -> yearArchives pat) :: Context String
   , constField "title" "Archives"
   , constField "commentsJS" ""
   , defaultCtx
   ]
+
+tagsCtx :: Tags -> Context String
+tagsCtx tags = sluggedTagsField "tags" tags
 
 -- url field without /index.html
 niceUrlField :: String -> Context a
@@ -89,17 +117,10 @@ gitTag key = field key $ \_ -> do
     return ("<a href=\"https://github.com/blaenk/hakyll/commit/" ++ sha ++
            "\" title=\"" ++ message ++ "\">" ++ (take 8 sha) ++ "</a>")
 
-archivesList :: ([Item String] -> Compiler [Item String]) -> Compiler String
-archivesList sortFilter = do
-    posts   <- sortFilter =<< loadAll "posts/*"
-    itemTpl <- loadBody "templates/index-post.html"
-    list    <- applyTemplateList itemTpl postCtx posts
-    return list
-
-yearArchives :: Compiler String
-yearArchives = do
+yearArchives :: Pattern -> Compiler String
+yearArchives pat = do
     thisYear <- unsafeCompiler . fmap yearFromUTC $ getCurrentTime
-    posts    <- groupByYear =<< loadAll "posts/*"    :: Compiler [(Integer, [Item String])]
+    posts    <- groupByYear =<< loadAll pat    :: Compiler [(Integer, [Item String])]
     itemTpl  <- loadBody "templates/index-post.html" :: Compiler Template
     archiveTpl <- loadBody "templates/archive.html" :: Compiler Template
     list     <- mapM (genArchives itemTpl archiveTpl thisYear) posts :: Compiler [String]
@@ -114,7 +135,6 @@ yearArchives = do
                 ctx' :: Context String
                 ctx' = mconcat [ yearCtx
                                , constField "posts" templatedPosts
-                               , archiveCtx
                                , missingField
                                ]
             itm <- makeItem "" :: Compiler (Item String)
