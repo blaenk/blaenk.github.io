@@ -6,8 +6,6 @@ comments: true
 footer: true
 ---
 
-* toc
-
 This page lists some of the things I've been up to lately.
 
 ### Currently Working On
