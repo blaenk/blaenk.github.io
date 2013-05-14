@@ -36,7 +36,7 @@ git_check() {
 # setup procedure:
 #   - cd _site/
 #   - git init
-#   - git branch -m gh-pages
+#   - git branch -m master
 #   - git remote add origin {url}
 
 setup() {
@@ -51,8 +51,8 @@ setup() {
 
   git init -q
   info "initialized git"
-  git checkout --orphan gh-pages -q
-  info "established gh-pages branch"
+  git checkout --orphan master -q
+  info "established master branch"
   git remote add origin $REMOTE
   info "established git remote"
 
@@ -91,7 +91,7 @@ deploy() {
   git commit -m "built from $SHA" -q
   info "committed site"
 
-  git push origin gh-pages --force -q
+  git push origin master --force -q
   success "deployed site"
 }
 
