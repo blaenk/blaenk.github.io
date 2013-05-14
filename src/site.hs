@@ -10,7 +10,9 @@ import Site.PandocCompiler
 import Data.Monoid ((<>))
 
 myHakyllConf :: Configuration
-myHakyllConf = defaultConfiguration
+myHakyllConf = defaultConfiguration {
+  deployCommand = "bash src/deploy.sh deploy"
+  }
 
 main :: IO ()
 main = hakyllWith myHakyllConf $ do
