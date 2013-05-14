@@ -30,7 +30,7 @@ import Data.Ord
 
 pandocCompiler :: Item String -> Compiler (Item String)
 pandocCompiler = pandocTransformer readerOptions writerOptions transformer
-  where transformer = (bottomUp pygments) . tocTransformer . (bottomUp linkImages)
+  where transformer = (bottomUp pygments) . tocTransformer
         tocTransformer ast = let headers = queryWith queryHeaders ast
                              in bottomUp (tableOfContents headers) ast
 
@@ -66,28 +66,33 @@ tocTree :: [TocItem] -> Forest TocItem
 tocTree = map (\(x:xs) -> Node x (tocTree xs)) . groupBy (comp)
   where comp (TocItem a _ _) (TocItem b _ _) = a < b
 
-genToc :: Forest TocItem -> String
-genToc forest = foldl genStr' "" forest
-  where genStr' :: String -> Tree TocItem -> String
-        genStr' str (Node (TocItem _level ident text) sub) =
-          let nest = case sub of
-                       [] -> genToc sub
-                       _ -> "<ul>" ++ (genToc sub) ++ "</ul>"
-          in str ++ "<li><a href='#" ++ ident ++ "'>" ++ text ++ "</a>" ++ nest ++ "</li>"
+genToc :: String -> Forest TocItem -> String
+genToc iter forest = let (_, str) = foldl (genStr' iter) (1, "") forest in str
+  where genStr' :: String -> (Integer, String) -> Tree TocItem -> (Integer, String)
+        genStr' parent (current, str) (Node (TocItem _level ident text) sub) =
+          let num = if parent == "1"
+                    then show current ++ "."
+                    else parent ++ show current ++ "."
+              nest = case sub of
+                       [] -> ""
+                       _  -> "<ul>" ++ (genToc num sub) ++ "</ul>"
+              out = str ++ "<li><span class='toc-section'>"  ++ num ++
+                    "</span><a href='#" ++ ident ++ "'>" ++ text ++ "</a>" ++ nest ++ "</li>"
+          in (current + 1, out)
 
 tableOfContents :: [TocItem] -> (Block -> Block)
 tableOfContents [] = (\x -> x)
 tableOfContents headers = tocInsert
   where tocInsert :: Block -> Block
         tocInsert (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
-          (RawBlock "html") . (\list -> "<ul id='markdown-toc'>" ++ list ++ "</ul>") .
-          genToc . tocTree . filter (\(TocItem level _ _) -> level <= 2) . normalizeTocs $ headers
+          (RawBlock "html") . (\list -> "<ul id='toc'>" ++ list ++ "</ul>") .
+          (genToc "1") . tocTree . normalizeTocs $ headers
         tocInsert x = x
 
 -- doesn't work with raw html <img> tag since that's just RawInline
-linkImages :: Inline -> Inline
-linkImages img@(Image _inlines target) = (Link [img] target)
-linkImages x = x
+_linkImages :: Inline -> Inline
+_linkImages img@(Image _inlines target) = (Link [img] target)
+_linkImages x = x
 
 pygments :: Block -> Block
 pygments (CodeBlock (_, _, namevals) contents) =

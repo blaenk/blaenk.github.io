@@ -166,19 +166,20 @@ article .entry-content > ol {
   }
 }
 
-#markdown-toc {
+#toc {
   li {
     margin-top: 0;
 
-    a {
-      display: inline-block;
-      width: 100%;
+    &:before {
+      content: '';
+      position: static;
+      margin-left: 0;
     }
+
+    a { margin-left: 4px; }
   }
 
-  border: 2px solid #8ccaff;
-  background-color: #F2F9FF;
-  padding: 5px 10px 5px 25px;
+  padding: 0 10px 5px 10px;
   float: right;
   margin-left: 10px;
   margin-top: 0;
