@@ -14,7 +14,7 @@ myHakyllConf = defaultConfiguration
 
 main :: IO ()
 main = hakyllWith myHakyllConf $ do
-  tags <- buildTagsWith (fmap (map slugify) . getTags) "posts/*" (fromCapture "tags/*.html")
+  tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
   match ("images/**" .||. "font/*" .||. "js/*" .||. "favicon.png") $ do
     route idRoute
@@ -54,12 +54,11 @@ main = hakyllWith myHakyllConf $ do
         >>= loadAndApplyTemplate "templates/index.html" (archiveCtx "posts/*")
         >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
 
-  tagsRules tags $ \tag pattern -> do
-    let title = "Posts tagged " ++ tag
+  niceTags tags $ \tag pattern -> do
     route nicePostRoute
     compile $ do
       makeItem ""
-        >>= loadAndApplyTemplate "templates/index.html" (tagsCtx tags <> archiveCtx pattern)
+        >>= loadAndApplyTemplate "templates/tags.html" (constField "tag" tag <> tagsCtx tags <> archiveCtx pattern)
         >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
 
   match "templates/*" $ compile templateCompiler
