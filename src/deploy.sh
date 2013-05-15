@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 REMOTE="git@github.com:blaenk/blaenk.github.io.git"
-SITE="generated/site/"
+SITE="generated/preview/"
 DEPLOY="deploy/"
 
 info() {
