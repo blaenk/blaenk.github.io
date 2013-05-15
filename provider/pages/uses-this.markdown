@@ -10,6 +10,14 @@ footer: true
 
 This page is setup in the spirit of the website [of the same name](http://usesthis.com/). In my [about page](/about) I vaguely hint, in general terms, of the tools I like to use. I do this so that my about page doesn't get littered with what might end up being fads and hipster tools. Instead this page is here to list the specific tools I use at any given moment.
 
+### Site
+
+This site is built with [Hakyll](http://jaspervdj.be/hakyll/), the static site generator written in Haskell. The site and its source code are hosted [on Github](https://github.com/blaenk/blaenk.github.io). The site utilizes [Pandoc](http://johnmacfarlane.net/pandoc/) for converting Markdown (and any of the various other formats Pandoc supports), [SCSS](http://sass-lang.com/) for processing stylesheets, [Pygments](http://pygments.org/) for syntax highlighting, and [MathJax](http://www.mathjax.org/) for math notation.
+
+It is heavily modified from plain Hakyll, although that's more or less the point. Hakyll is more of a library for static site generation which one employs how they see fit, rather than a framework that is worked under. I created various Pandoc [abstract syntax tree](http://en.wikipedia.org/wiki/Abstract_syntax_tree) (AST) transformers to implement features such as table of contents generation and pygments syntax highlighting integration. I also implemented a Haskell compiler for automatic abbreviation substitution.
+
+I originally started this site with [Jekyll](http://jekyllrb.com/), but I had been wanting to switch to Hakyll so that I could keep my knowledge of Haskell fresh. This seemed like the perfect project to use it for. I feel that Haskell maps to the problem very appropriately, especially with amazing tools like Pandoc and Hakyll. The fact that Haskell is compiled also makes for a very appreciable difference in speed.
+
 ### Hardware
 
 Most of my life I've had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.
@@ -68,6 +76,8 @@ I use [many plugins](https://github.com/blaenk/dots/blob/master/vim/vim.ln/conf/
 
 ### Development Tools
 
+I use [zsh](http://en.wikipedia.org/wiki/Z_shell) as my main shell and [urxvt](http://en.wikipedia.org/wiki/Rxvt-unicode) as my main terminal. More information on my configuration for zsh and urxvt is available in my [terminal customization](/posts/terminal-customization/) post.
+
 My favorite source control system so far is [git](http://git-scm.com/). I regularly spend time learning about its internals.
 
 My compiler of choice is [clang](http://clang.llvm.org/) paired with [GDB](http://www.gnu.org/software/gdb/) (until [LLDB](http://lldb.llvm.org/) matures on Linux).
@@ -86,3 +96,4 @@ I mainly use [mumble](http://mumble.info/) for voice communication.
 
 *[DE]: Desktop Environment
 *[WM]: Window Manager
+*[AST]: Abstract Syntax Tree

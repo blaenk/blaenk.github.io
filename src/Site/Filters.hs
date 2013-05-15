@@ -23,6 +23,7 @@ abbreviationReplace body =
                                        (replaceAll ("\\*\\[" ++ abbr ++ "\\]: " ++ def ++ "\n?") $ const "") . acc
         traverseDoc _ acc = (++ "ERROR: abbreviation substitution") . acc
 
+-- TODO: preferably use patterns/rules here
 sassCompiler :: Compiler (Item String)
-sassCompiler = getResourceString >>= withItemBody (shellFilter "sass -s --scss -I scss/ --cache-location _cache/sass")
+sassCompiler = getResourceString >>= withItemBody (shellFilter "sass -s --scss -I provider/scss/ --cache-location generated/cache/sass")
 

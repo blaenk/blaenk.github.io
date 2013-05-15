@@ -94,19 +94,21 @@ commentsOn item = do
     Just "off" -> False
     _ -> True
 
+-- TODO: use Rules/Patterns and toFilePath to read the files instead
+
 -- gets passed the key and the item apparently
 commentsTag :: String -> Context String
 commentsTag key = field key $ \item -> do
     comments <- commentsOn item
     if comments
-      then unsafeCompiler $ readFile "templates/comments.html"
+      then unsafeCompiler $ readFile "provider/templates/comments.html"
       else return ""
 
 commentsJS :: String -> Context String
 commentsJS key = field key $ \item -> do
     comments <- commentsOn item
     if comments
-      then unsafeCompiler $ readFile "templates/comments-js.html"
+      then unsafeCompiler $ readFile "provider/templates/comments-js.html"
       else return ""
 
 gitTag :: String -> Context String
@@ -114,7 +116,7 @@ gitTag key = field key $ \_ -> do
   unsafeCompiler $ do
     sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%H"] []
     message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s"] []
-    return ("<a href=\"https://github.com/blaenk/hakyll/commit/" ++ sha ++
+    return ("<a href=\"https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
            "\" title=\"" ++ message ++ "\">" ++ (take 8 sha) ++ "</a>")
 
 yearArchives :: Pattern -> Compiler String

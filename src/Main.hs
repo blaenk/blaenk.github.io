@@ -5,13 +5,17 @@ import Hakyll hiding (pandocCompiler)
 import Site.Filters
 import Site.Fields
 import Site.Routes
-import Site.PandocCompiler
+import Site.Pandoc
 
 import Data.Monoid ((<>))
 
 myHakyllConf :: Configuration
-myHakyllConf = defaultConfiguration {
-  deployCommand = "bash src/deploy.sh deploy"
+myHakyllConf = defaultConfiguration
+  { deployCommand = "bash src/deploy.sh deploy"
+  , providerDirectory = "provider"
+  , destinationDirectory = "generated/preview"
+  , storeDirectory = "generated/cache"
+  , tmpDirectory = "generated/cache/tmp"
   }
 
 main :: IO ()

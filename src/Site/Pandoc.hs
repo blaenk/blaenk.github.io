@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Site.PandocCompiler (pandocCompiler) where
+module Site.Pandoc (pandocCompiler) where
 
 import Prelude hiding (div, span)
 

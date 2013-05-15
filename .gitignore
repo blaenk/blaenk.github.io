@@ -2,6 +2,5 @@
 /site
 /site.exe
 dist/
-_site/
-_cache/
-_deploy/
+generated/
+deploy/

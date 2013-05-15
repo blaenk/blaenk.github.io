@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 
 REMOTE="git@github.com:blaenk/blaenk.github.io.git"
-SITE="_site/"
-DEPLOY="_deploy/"
+SITE="generated/site/"
+DEPLOY="deploy/"
 
 info() {
   printf "  [ \033[00;34m..\033[0m ] $1\n"
-}
-
-user() {
-  printf "  [ \033[0;33m?\033[0m ] $1\n"
 }
 
 success() {
@@ -24,7 +20,7 @@ fail() {
 # shouldn't happen since `site` binary is usually at root to
 # begin with, but doesn't hurt to check
 dir_check() {
-  if [ ! -d "$SITE" ]; then
+  if [ ! -f "Setup.hs" ]; then
     fail "not at root dir"
   fi
 }
@@ -33,19 +29,13 @@ git_check() {
   git rev-parse || fail "$PWD is already under git control"
 }
 
-# setup procedure:
-#   - cd _site/
-#   - git init
-#   - git branch -m master
-#   - git remote add origin {url}
-
 setup() {
   dir_check
 
   rm -rf $DEPLOY
   mkdir $DEPLOY
 
-  info "created _deploy/"
+  info "created $DEPLOY"
   cd $DEPLOY
   git_check
 
@@ -59,15 +49,6 @@ setup() {
   success "setup complete"
 }
 
-# deploy procedure:
-#   - remove everything in _site/
-#   - cd _site/
-#   - git add .
-#   - git commit -m "pushing based off of {commit}"
-#   - git push origin gh-pages --force
-#      - perhaps use rsync instead of cp -r
-#      - rsync -ai a/ b/
-
 deploy() {
   dir_check
 
@@ -78,17 +59,17 @@ deploy() {
 
   # clean out _deploy and move in the new files
   rm -rf "$DEPLOY/*"
-  info "cleaned out _deploy/"
+  info "cleaned out $DEPLOY"
 
   cp -r "$SITE"/* $DEPLOY
-  info "copied _site/ into _deploy/"
+  info "copied $SITE into $DEPLOY"
 
   cd $DEPLOY
 
   git add .
   info "added files to git"
 
-  git commit -m "built from $SHA" -q
+  git commit -m "generated from $SHA" -q
   info "committed site"
 
   git push origin master --force -q
