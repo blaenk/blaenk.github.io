@@ -14,7 +14,7 @@ cabal-version:       >=1.8
 executable site
   main-is:           Main.hs
   hs-source-dirs:    src/
-  ghc-options:       -O2 -Wall -o site
+  ghc-options:       -O2 -Wall -o site -threaded
   -- other-modules:
   build-depends:       base,
                        process >= 1.1.0.2 && < 2,
