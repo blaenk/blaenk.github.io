@@ -7,9 +7,9 @@ footer: false
 
 <img src="/images/me.png" class="right" width="128">
 
-I'm Jorge Israel Peña, also known as Blaenk Denum. I currently live in Southern California and speak English, Spanish, and French.
+I'm Jorge Israel Peña, also known as Blaenk Denum. I'm a software developer currently living in Southern California. I speak English, Spanish, and French.
 
-My areas of interest are [Artificial Intelligence](http://en.wikipedia.org/wiki/Artificial_intelligence), [Machine Learning](http://en.wikipedia.org/wiki/Machine_learning), and [Digital Signal Processing](http://en.wikipedia.org/wiki/Digital_signal_processing). More specifically, I'm interested in the combination of each of these fields in the interdisciplinary science of [Music Information Retrieval](http://en.wikipedia.org/wiki/Music_information_retrieval), particularly for music visualization.
+I have an interest in the fields of [Artificial Intelligence](http://en.wikipedia.org/wiki/Artificial_intelligence), [Machine Learning](http://en.wikipedia.org/wiki/Machine_learning), and [Digital Signal Processing](http://en.wikipedia.org/wiki/Digital_signal_processing). More specifically, I'm interested in the combination of each of these fields in the interdisciplinary science of [Music Information Retrieval](http://en.wikipedia.org/wiki/Music_information_retrieval), particularly for music visualization.
 
 You can check out what I'm up to [lately](/lately) or find me on [github](http://github.com/blaenk) and [stackoverflow](http://stackoverflow.com/users/101090/jorge-israel-pena).
 
@@ -33,6 +33,6 @@ While I primarily listen to EDM, I'm open to and enjoy a wide variety of music. 
 
 ### Fitness
 
-I work out religiously, every other day without fail, specifically doing strength training. I do [squats](http://www.exrx.net/WeightExercises/Quadriceps/BBFullSquat.html), [overhead presses](http://www.exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress.html), [bench presses](http://www.exrx.net/WeightExercises/PectoralSternal/BBBenchPress.html), [deadlifts](http://www.exrx.net/WeightExercises/ErectorSpinae/BBDeadlift.html), and [barbell rows](http://www.exrx.net/WeightExercises/BackGeneral/BBBentOverRow.html). I don't do max weight during my work outs and instead opt for a natural weight increase progression. That said, while I originally began with an empty bar, at the time of writing I'm at 285 lbs. on squats, bench presses, and deadlifts. Overhead presses are at 145 lbs. Barbell rows are at 170 lbs.
+I work out religiously, every other day without fail, specifically doing strength training. I do [squats](http://www.exrx.net/WeightExercises/Quadriceps/BBFullSquat.html), [overhead presses](http://www.exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress.html), [bench presses](http://www.exrx.net/WeightExercises/PectoralSternal/BBBenchPress.html), [deadlifts](http://www.exrx.net/WeightExercises/ErectorSpinae/BBDeadlift.html), and [barbell rows](http://www.exrx.net/WeightExercises/BackGeneral/BBBentOverRow.html). I don't do max weight during my work outs and instead opt for a natural weight increase progression. That said, while I originally began with an empty bar, at the time of writing I'm at 285 lbs. on squats, bench presses, and deadlifts. Overhead presses are at 145 lbs. Barbell rows are at 175 lbs.
 
 [^1]: Why bother with futile attempts at obfuscation?
