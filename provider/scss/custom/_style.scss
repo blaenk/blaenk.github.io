@@ -237,7 +237,7 @@ article .entry-content > ol {
   }
 }
 
-.highlight {
+.highlighter {
   background-color: #ffc;
 }
 
@@ -264,8 +264,8 @@ figure.code {
   border: 2px solid #8ccaff;
   border-radius: 0;
   margin: 15px -28px;
-  background-color: #F2F9FF;
   cursor: default;
+  background-color: #F2F9FF;
 
   @media screen and (max-width: 600px) {
     margin-left: 0;
@@ -289,6 +289,11 @@ figure.code {
     padding: 5px 28px; // 5px 10px;
     color: #00427B;
 
+    abbr {
+      border-bottom: 1px dotted #00427B;
+
+      &:hover { border-bottom: 1px solid #00427B; }
+    }
     span {
       background: none;
       padding: 0;
@@ -303,8 +308,15 @@ figure.code {
     }
   }
 
-  .highlight {
-    .line-numbers {
+  .code-container {
+    overflow-x: auto;
+  }
+
+  .highlighttable {
+    background-color: #F2F9FF;
+    line-height: 18px;
+
+    .linenodiv {
       @media screen and (max-width: 600px) {
         display: none;
       }
@@ -315,10 +327,12 @@ figure.code {
       border-right: 2px solid #DDD;
       padding: 5px;
       text-align: right;
+
+      a { color: #AAA; }
     }
 
     .code {
-        padding-left: 6px;
+      padding-left: 6px;
 
       @media screen and (max-width: 600px) {
         padding-left: 2px;

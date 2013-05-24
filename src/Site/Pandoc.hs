@@ -16,9 +16,8 @@ import System.Process
 import System.IO (hClose, hGetContents, hPutStr, hSetEncoding, localeEncoding)
 import Control.Concurrent (forkIO)
 import Data.List hiding (span)
-import Text.Regex.TDFA
 
-import Text.Blaze.Html (preEscapedToHtml, (!), toHtml, toValue)
+import Text.Blaze.Html (preEscapedToHtml, (!))
 import Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
@@ -27,6 +26,7 @@ import Control.Applicative((<$>))
 
 import Data.Tree
 import Data.Ord
+import Data.Maybe (fromMaybe)
 
 pandocCompiler :: Item String -> Compiler (Item String)
 pandocCompiler = pandocTransformer readerOptions writerOptions transformer
@@ -89,60 +89,24 @@ tableOfContents headers = tocInsert
           (genToc "1") . tocTree . normalizeTocs $ headers
         tocInsert x = x
 
--- doesn't work with raw html <img> tag since that's just RawInline
-_linkImages :: Inline -> Inline
-_linkImages img@(Image _inlines target) = (Link [img] target)
-_linkImages x = x
-
 pygments :: Block -> Block
 pygments (CodeBlock (_, _, namevals) contents) =
-  let lang = case lookup "lang" namevals of
-               Just lang_ -> lang_
-               Nothing -> "text"
-      text = case lookup "text" namevals of
-               Just text_ -> text_
-               Nothing -> ""
-      colored = pygmentize lang contents
-      codeHtml = numberedCode colored lang
+  let lang = fromMaybe "text" $ lookup "lang" namevals
+      text = fromMaybe "" $ lookup "text" namevals
+      colored = renderHtml $ H.div ! A.class_ "code-container" $ do
+                  preEscapedToHtml $ pygmentize lang contents
       caption = if text /= ""
-                  then renderHtml $ H.figcaption $ H.span $ H.toHtml text
-                  else ""
-      composed = renderHtml $ H.figure ! A.class_ "code" $ preEscapedToHtml $ codeHtml ++ caption
+                then renderHtml $ H.figcaption $ H.span $ preEscapedToHtml text
+                else ""
+      composed = renderHtml $ H.figure ! A.class_ "code" $ do
+                   preEscapedToHtml $ colored ++ caption
   in RawBlock "html" composed
 pygments x = x
 
-numberedCode :: String -> String -> String
-numberedCode codeHtml lang =
-  let codeLines = lines $ extractCode codeHtml
-      wrappedCode = unlines $ wrapCodeLines codeLines
-      numbers = unlines $ numberLines codeLines
-  in renderHtml $ do
-      H.div ! A.class_ "highlight" $ do
-        H.table $ H.tr $ do
-          H.td ! A.class_ "gutter" $ do
-            H.pre ! A.class_ "line-numbers" $ do
-              preEscapedToHtml numbers
-          H.td ! A.class_ "code" $ do
-            H.pre $ do
-              H.code ! A.class_ (toValue lang) $ do
-                preEscapedToHtml wrappedCode
-  where wrapCodeLines codeLines = map wrapCodeLine codeLines
-          where wrapCodeLine line = renderHtml $ H.span ! A.class_ "line" $ preEscapedToHtml line
-        numberLines codeLines =
-          let (_, res) = mapAccumL numberLine 1 codeLines
-          in res
-            where numberLine :: Integer -> String -> (Integer, String)
-                  numberLine num _ = (num + 1, renderHtml $ H.span ! A.class_ "line-number" $ toHtml $ show num)
-
-extractCode :: String -> String
-extractCode pygmentsResult =
-  let preRegex = makeRegexOpts (defaultCompOpt { multiline = False }) defaultExecOpt ("<pre>(.+)</pre>" :: String)
-      matched = (match preRegex pygmentsResult :: [[String]]) !! 0 !! 1
-  in matched
-
 pygmentize :: String -> String -> String
 pygmentize lang contents = unsafePerformIO $ do
-  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -P encoding=utf-8")) {
+  -- ,lineanchors=anchorident,anchorlinenos=True
+  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -O linenos=table -P encoding=utf-8")) {
                   std_in = CreatePipe, std_out = CreatePipe, close_fds = True}
       writer handle input = do
         hSetEncoding handle localeEncoding
