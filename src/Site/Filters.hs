@@ -13,7 +13,7 @@ abbreviationFilter input = return $ abbreviationReplace input
 
 abbreviationReplace :: String -> String
 abbreviationReplace body =
-  let pat = "^\\*\\[(.+)\\]: (.+)$"  :: String
+  let pat = "^\\*\\[(.+)\\]: (.+)$" :: String
       found = body =~ pat :: [[String]]
       definitions = map (\(_:def) -> def) found
       abbrFilter = foldr traverseDoc id definitions
@@ -26,4 +26,3 @@ abbreviationReplace body =
 -- TODO: preferably use patterns/rules here
 sassCompiler :: Compiler (Item String)
 sassCompiler = getResourceString >>= withItemBody (shellFilter "sass -s --scss -I provider/scss/ --cache-location generated/cache/sass")
-
