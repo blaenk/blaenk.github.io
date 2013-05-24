@@ -63,7 +63,7 @@ img.center {
 
 article .entry-content > table {
   cursor: default;
-  margin: 10px auto 0 auto;
+  margin: 25px auto;
   background: #F2F9FF;
   border: 2px solid #8ccaff;
 
@@ -420,5 +420,18 @@ figure.code {
 
 article .entry-content blockquote {
   padding-top: 0;
-  border-left: 2px solid #8ccaff;
+  border-left: 2px solid #ECECEC;
+}
+
+kbd {
+  background-color: #dddddd;
+  background-image: linear-gradient(#f1f1f1, #ddd);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  border-bottom-color: #ccc;
+  border-right-color: #ccc;
+  padding: 1px 4px;
+  line-height: 10px;
+  cursor: default;
 }
