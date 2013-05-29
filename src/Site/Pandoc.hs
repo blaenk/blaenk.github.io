@@ -36,7 +36,11 @@ pandocCompiler = pandocTransformer readerOptions writerOptions transformer
 
 -- this compiler reads the item instead of the resourceBody, allowing
 -- it to be preceded by a filter (e.g. abbreviationFilter)
-pandocTransformer :: ReaderOptions -> WriterOptions -> (Pandoc -> Pandoc) -> Item String -> Compiler (Item String)
+pandocTransformer :: ReaderOptions
+                  -> WriterOptions
+                  -> (Pandoc -> Pandoc)
+                  -> Item String
+                  -> Compiler (Item String)
 pandocTransformer ropt wopt f item =
   writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
 
