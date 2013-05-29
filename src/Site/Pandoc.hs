@@ -136,7 +136,10 @@ writerOptions =
         -- Ext_abbreviations -- enable once pandoc gets abbreviation support
         ]
   in def {
-    writerTableOfContents = True,
+    -- writerTableOfContents = True,
+    -- writerTOCDepth = 5,
+    -- writerTemplate = "$toc$\n$body$",
+    -- writerStandalone = True,
     writerHTMLMathMethod = MathJax "",
     writerExtensions = S.union extensions (writerExtensions def)
     }
