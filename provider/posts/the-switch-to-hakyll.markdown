@@ -271,13 +271,13 @@ Finally, the commit is force pushed to the repository, replacing everything alre
 
 ## Conclusion
 
-Preliminary migration to Hakyll only took a few hours. This included porting all of my posts, pages, and other assets to the Hakyll and Pandoc Markdown formats. The rest of the week was spent implementing the various features, some outlined above, and refining the code base.
+Preliminary migration to Hakyll was pretty quick. This included porting all of my posts, pages, and other assets to the Hakyll and Pandoc Markdown formats. The rest of the week was spent implementing the various features, some outlined above, and refining the code base.
 
-At first I was a little bit rusty with my Haskell and found myself at odds with the seemingly capricious compiler, trying to find one way or another to appease it. I quickly remembered that patience prevailed when concerning Haskell, and eventually came to really enjoy reasoning out the problems and solving them.
+At first I was a little rusty with my Haskell and found myself at odds with the seemingly capricious compiler, trying to find one way or another to appease it. I quickly remembered that patience prevailed when concerning Haskell, and eventually came to really enjoy reasoning out the problems and solving them with Haskell.
 
 The site binary which is in charge of generation, previewing, etc. is compiled. Once you have configured Hakyll to your liking, you have a very fast binary -- compared to other site generators which are known not to scale well with the amount of posts. The `Compiler` Monad in Hakyll takes care of dependency tracking, allowing re-generation of only those items which are affected by those which were changed, instead of the whole site.
 
-But perhaps my favorite aspect of Hakyll is that it's more like a library for static site generation which you use as you see fit. Your site is entirely customizable. Haskell is perfectly suited for text manipulation as is evidenced by top tier libraries like Pandoc.
+But perhaps my favorite aspect of Hakyll is that it's more like a library for static site generation which you use as you see fit, and as a result, your site is entirely customizable.
 
 *[GHC]: Glasgow Haskell Compiler
 *[AST]: Abstract Syntax Tree

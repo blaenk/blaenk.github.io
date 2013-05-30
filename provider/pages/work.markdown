@@ -9,6 +9,26 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
+#### Hakyll: Fix preview functionality on Windows {#hakyll .collapse}
+
+<div class="collapsible">
+
+[Hakyll](http://jaspervdj.be/hakyll/) is a static site generator, like [Jekyll](http://jekyllrb.com/), written in Haskell. At one point I decided to clean up my site source's directory structure by creating a separate provider directory. This triggered a bug in the latest stable release at the time (4.2.2.0) which caused the preview component to enter an infinite loop. The preview component simply watches files and recompiles them when you edit them for quick previewing on a locally-hosted web server. I found that this problem was indirectly solved in the unreleased master branch as a result of a significant change to the preview component that used specific operating systems' file notification APIs. That is, instead of the previous manual polling of the files, it would use [inotify](http://en.wikipedia.org/wiki/Inotify) on Linux for example.
+
+All worked perfectly well on Linux, however, when I tried it on Windows I experienced very odd behavior in which the program seemed to freeze right after generating/compiling the site. Sometimes it would manage to output a single "L". I remembered that previously, it displayed a message such as "Listening on http://0.0.0.0:8000," so I concluded that somehow it was being interrupted. I found more evidence to back this hypothesis when I noticed that saving a file -- thereby generating a file system event and triggering the callback established in the preview component of Hakyll (which simply recompiled the file that had been modified) -- would cause the program to print a bit more of the message. "L" became "Lis" became "Listeni" and so on. Furthermore, attempting to load a page would time out unless a file was excessively saved to trigger the file system event callback -- which presumably afforded the server thread with enough time slices for it to respond to the request before the time out.
+
+Upon analyzing the Hakyll source and noticing that it indirectly used the [foreign function interface](http://www.haskell.org/haskellwiki/FFI_Introduction) for interfacing with the host OS' file system events API, I found this relevant bit of information in the [GHC documentation](http://www.haskell.org/ghc/docs/latest/html/libraries/base/Control-Concurrent.html#g:5):
+
+> Different Haskell implementations have different characteristics with regard to which operations block all threads.
+> 
+> Using GHC without the -threaded option, all foreign calls will block all other Haskell threads in the system, although I/O operations will not. With the `-threaded` option, only foreign calls with the unsafe attribute will block all other threads.
+
+Compiling with the `-threaded` flag solved that problem. However, now the problem was that saving a file would yield a "permission denied" error in the Hakyll program. I eventually [came to realize](https://github.com/mdittmer/win32-notify/issues/3#issuecomment-18260415) that this was inherent behavior in the file system events API abstracted by the file system events Haskell package. The problem consisted of there being the possibility that the notification for a file having been modified, for example, would be sent and received/processed before the program (that caused that event to fire) had a chance to finish the actual writing that triggered the event to begin with. The workaround I [came up with](https://github.com/jaspervdj/hakyll/pull/155) consisted of simply attempting to open the file -- success of which would indicate that the other process had already finished writing to the file -- and if this was not possible, sleep for a bit before trying again.
+
+The only other alternative we could think of was switching to a polling system for Windows. This was unfeasible because the file system events package didn't expose a way to force this, which would require us to implement it ourselves and would add significant overhead in performance, since every file would be polled periodically for changes, as opposed to this workaround which would poll a single file only if it wasn't able to open it on the first try.
+
+</div>
+
 #### rtorrent: Fix unportable signal disposition establishment for Solaris {#rtorrent .collapse}
 
 <div class="collapsible">
@@ -54,6 +74,8 @@ My [patch](https://github.com/rakshasa/rtorrent/pull/127) simply consisted of sw
 <div class="collapsible">
 
 I was interested in modifying [MPC-HC](http://mpc-hc.org/) to allow people to watch things in sync with each other, i.e. pause when someone pauses, seek when someone seeks, etc. I pulled the source from github and began looking for a good way to implement this functionality. I found the source for the web UI component of MPC-HC, which essentially provides an interface for which a web UI can be developed to control MPC-HC. I figured I could make use of this and began testing it when a friend noticed that the seeking in the existing web UI didn't work. After finding the relevant code in the MPC-HC source I found that it was a simple problem of failing to URL decode the seek parameter sent from the web UI. I submitted a [patch](https://github.com/mpc-hc/mpc-hc/pull/38) which was ultimately merged in and pushed out in [version 1.6.6](http://mpc-hc.org/changelog/).
+
+As for the original intent of implementing the functionality for synced playback, the MPC-HC developers told me about [Syncplay](http://syncplay.pl/) which I have used for months now to much success. The added benefit is that it isn't specific to any particular media player and is cross-platform.
 
 </div>
 
