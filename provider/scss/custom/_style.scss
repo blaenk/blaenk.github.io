@@ -38,7 +38,7 @@ p.notfound { margin: 15px 0; }
 
   #braces {
     font-family: Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
-    font-size: 0.7em;
+    font-size: 0.8em;
     color: #999;
     
     a {
@@ -202,7 +202,7 @@ article .entry-content > ol {
 }
 
 #main-nav > ul > li > a {
-  padding: 33px 0 36px 0;
+  padding: 31px 0 35px 0;
   text-transform: uppercase;
 
   &::after { padding-left: 0; }
@@ -216,7 +216,7 @@ article .entry-content > ol {
   }
 
 	@media screen and (max-width: 766px){
-    padding: 17px 0;
+    padding: 16px 0;
   }
 }
 
@@ -373,7 +373,6 @@ figure.code {
     &:hover .hash { color: #ccc; }
 
     .hash {
-      cursor: default;
       color: #ddd;
       position: absolute;
       left: -20px;
@@ -391,7 +390,7 @@ figure.code {
     }
   }
 
-  h2 a { border-bottom: 2px solid #8ccaff; }
+  h2 a.header-link { border-bottom: 2px solid #8ccaff; }
 }
 
 /*#content {
@@ -429,7 +428,7 @@ figure.code {
 }
 
 #main-nav > ul.searching > li > a {
-  padding: 34px 0 0 0;
+  padding: 31px 0 0 0;
 }
 
 article .entry-content blockquote {

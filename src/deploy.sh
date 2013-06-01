@@ -61,6 +61,9 @@ deploy() {
   rm -rf "$DEPLOY/*"
   info "cleaned out $DEPLOY"
 
+  info "rebuilding site"
+  ./site rebuild > /dev/null
+
   cp -r "$SITE"/* $DEPLOY
   info "copied $SITE into $DEPLOY"
 

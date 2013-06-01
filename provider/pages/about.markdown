@@ -13,7 +13,7 @@ I have an interest in the fields of [Artificial Intelligence](http://en.wikipedi
 
 You can check out what I'm up to [lately](/lately) or find me on [github](http://github.com/blaenk) and [stackoverflow](http://stackoverflow.com/users/101090/jorge-israel-pena).
 
-If you'd like to get in touch you can email me at jorgepblank@gmail.com [^1]
+If you'd like to get in touch you can email me at jorgepblank@gmail.com
 
 ### Technology
 
@@ -34,5 +34,3 @@ While I primarily listen to EDM, I'm open to and enjoy a wide variety of music. 
 ### Fitness
 
 I work out religiously, every other day without fail, specifically doing strength training. I do [squats](http://www.exrx.net/WeightExercises/Quadriceps/BBFullSquat.html), [overhead presses](http://www.exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress.html), [bench presses](http://www.exrx.net/WeightExercises/PectoralSternal/BBBenchPress.html), [deadlifts](http://www.exrx.net/WeightExercises/ErectorSpinae/BBDeadlift.html), and [barbell rows](http://www.exrx.net/WeightExercises/BackGeneral/BBBentOverRow.html). I don't do max weight during my work outs and instead opt for a natural weight increase progression. That said, while I originally began with an empty bar, at the time of writing I'm at 285 lbs. on squats, bench presses, and deadlifts. Overhead presses are at 145 lbs. Barbell rows are at 175 lbs.
-
-[^1]: Why bother with futile attempts at obfuscation?

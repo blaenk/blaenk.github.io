@@ -18,28 +18,6 @@ It is heavily modified from plain Hakyll, although that's more or less the point
 
 I originally started this site with [Jekyll](http://jekyllrb.com/), but I had been wanting to switch to Hakyll so that I could keep my knowledge of Haskell fresh. This seemed like the perfect project to use it for. I feel that Haskell maps to the problem very appropriately, especially with amazing tools like Pandoc and Hakyll. The fact that Haskell is compiled also makes for a very appreciable difference in speed.
 
-### Hardware
-
-Most of my life I've had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.
-
-Core:
-
-* Intel Core i7 2600k @ 4.2 GHz with Cooler Master Hyper 212 Plus
-* Asus P8Z68-V Pro
-* G.Skill RipJaws Series 4 x 4 GB DDR3 1600
-* EVGA GeForce GTX 460 SuperClocked EE 1 GB
-* 3 SSDs (120 GB Windows, 60 GB Mac OS X, 60 GB Arch Linux)
-* 3 HDDs (2 x 1 TB, 1.5 TB)
-
-Peripherals:
-
-* Dell UltraSharp 23" 1080p IPS
-* [Das Keyboard Model S Ultimate](http://www.daskeyboard.com/model-s-ultimate/) (Mechanical)
-* Logitech G500 Laser Mouse
-* Cooler Master CM 690 II Advanced
-* [Zalman Zm-Mic1 Microphone](http://amzn.com/B00029MTMQ)
-* [Shure SE215-K](http://amzn.com/B004PNZFZ8)
-
 ### Operating System
 
 Exemplifying my ideology of non-fanaticism, I have Windows 8, Arch Linux, and Mac OS X 10.8 Mountain Lion installed on my computer. This [picture](http://i.imgur.com/Xa5suXo.jpg) shows the custom boot screen I designed which I'm greeted with upon booting. This is not just for show; I actually use each one regularly for different things.
@@ -53,8 +31,6 @@ Windows is my casual-use operating system which I boot into when I want to watch
 #### Linux
 
 When I need to get work done, I usually boot into Linux. The distribution I have installed is [Arch Linux](http://www.archlinux.org/). This is so far my favorite distribution out of the many I've used over the years. It offers a compromise between [LFS](http://www.linuxfromscratch.org/index.html)/[Gentoo](http://www.gentoo.org/) level of flexibility and leanness with very good package management consisting of bleeding-edge packages.
-
-I've noticed that some people seem to treat it as the "elite" distribution that "all the cool people" use. It's touted as being complicated to install and use due to its lean state out-of-the-box, the implication being that anyone who installs it must be some sort of genius, completely disregarding the fact that most people simply follow the step-by-step instructions in the wiki -- which anyone is capable of following. [This comment](http://www.reddit.com/r/linux/comments/qa4ia/linus_there_is_no_way_in_hell_i_can_honestly/c3w0v2p) sums up my opinion about this reputation of Arch. I don't participate in this kind of fanaticism (nor do I believe it's true) -- it's simply the distribution I've come to genuinely like.
 
 My preferred WM is [xmonad](http://xmonad.org/) + [xmobar](https://github.com/jaor/xmobar) + [dmenu](http://tools.suckless.org/dmenu/). Continuing the theme of Haskell software, I also use [aura](https://github.com/fosskers/aura) as my [pacman](https://wiki.archlinux.org/index.php/Pacman) wrapper for seamless integration with the [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository). I am very interested in and regularly read about the POSIX standard ([SUS](http://en.wikipedia.org/wiki/Single_UNIX_Specification)) and the Linux Userspace Interface.
 
@@ -93,6 +69,28 @@ I use [Syncplay](http://syncplay.pl/) regularly to watch movies with friends, in
 [MPC-HC](http://mpc-hc.org/) is my primary -- and favorite by _far_ (so much that I've contributed to it) -- media player on Windows. [mplayer2](http://www.mplayer2.org/) on Linux. Both work with Syncplay.
 
 I mainly use [mumble](http://mumble.info/) for voice communication.
+
+### Hardware
+
+Most of my life I've had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.
+
+Core:
+
+* Intel Core i7 2600k @ 4.2 GHz with Cooler Master Hyper 212 Plus
+* Asus P8Z68-V Pro
+* G.Skill RipJaws Series 4 x 4 GB DDR3 1600
+* EVGA GeForce GTX 460 SuperClocked EE 1 GB
+* 3 SSDs (120 GB Windows, 60 GB Mac OS X, 60 GB Arch Linux)
+* 3 HDDs (2 x 1 TB, 1.5 TB)
+
+Peripherals:
+
+* Dell UltraSharp 23" 1080p IPS
+* [Das Keyboard Model S Ultimate](http://www.daskeyboard.com/model-s-ultimate/) (Mechanical)
+* Logitech G500 Laser Mouse
+* Cooler Master CM 690 II Advanced
+* [Zalman Zm-Mic1 Microphone](http://amzn.com/B00029MTMQ)
+* [Shure SE215-K](http://amzn.com/B004PNZFZ8)
 
 *[DE]: Desktop Environment
 *[WM]: Window Manager

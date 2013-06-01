@@ -22,7 +22,7 @@ This page lists some of the things I've been up to lately.
 
 * [The Art of Debugging with GDB, DDD, and Eclipse](http://amzn.com/1593271743): Another great book by No Starch Press, publishers of TLPI (mentioned below). I unfortunately never really spent the time to really understand how to use debuggers, in this case [GDB](http://www.gnu.org/software/gdb/). I knew enough to get by, but it always seemed a little archaic or very complicated, instead opting for so-called "printf debugging," in which one simply adds a bunch of print statements to find the source of various problems. This, I've come to realize, is an exercise in masochism. Really learning the various tools available to one through a debugger is enlightening.
 * [The Linux Programming Inteface](http://amzn.com/1593272200): This book is amazing. It concerns the userspace API of Linux. It probably should be named "The POSIX Programming Inteface" because although it focuses on Linux, it's always very clear about which topics apply to which standards, treating Linux-specific funcitonality more like edge-cases within the POSIX ecosystem. This is perhaps a reasonable approach, considering that Linux is not POSIX compliant. The reverse approach would probably lessen the scope of material of which the majority probably applies to many other systems anyways, not just Linux. It's one of my favorite books currently on my shelf.
-	* Currently on Chapter 38: Writing Secure Privileged Programs
+	* Currently on Chapter 45: Introduction to System V IPC
 
 ### Currently Studying
 
