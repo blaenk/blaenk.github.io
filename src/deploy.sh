@@ -61,8 +61,11 @@ deploy() {
   rm -rf "$DEPLOY/*"
   info "cleaned out $DEPLOY"
 
-  info "rebuilding site"
-  ./site rebuild > /dev/null
+  # handle rebuild logic; breaks on windows
+  # because msys bash on windows doesn't support
+  # utf-8. alternatives?
+  # info "rebuilding site"
+  # ./site rebuild > /dev/null
 
   cp -r "$SITE"/* $DEPLOY
   info "copied $SITE into $DEPLOY"
