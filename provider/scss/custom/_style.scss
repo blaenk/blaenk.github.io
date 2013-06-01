@@ -376,6 +376,7 @@ figure.code {
       color: #ddd;
       position: absolute;
       left: -20px;
+      width: auto;
 
       @media screen and (max-width: 766px) {
         display: none;
