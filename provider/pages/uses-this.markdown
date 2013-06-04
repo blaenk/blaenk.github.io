@@ -1,9 +1,7 @@
 ---
-layout: page
 title: Uses This
 published: 2013-04-21
 comments: true
-footer: true
 ---
 
 * toc

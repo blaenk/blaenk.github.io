@@ -44,7 +44,7 @@ main = hakyllWith myHakyllConf $ do
       >>= withItemBody (abbreviationFilter)
       >>= pandocCompiler
       >>= loadAndApplyTemplate "templates/page.html" postCtx
-      >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+      >>= loadAndApplyTemplate "templates/layout.html" postCtx
 
   create ["404.html"] $ do
     route idRoute

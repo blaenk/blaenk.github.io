@@ -1,8 +1,7 @@
 ---
-layout: page
 title: Work
 published: 2012-12-29
-footer: true
+comments: off
 ---
 
 This is an aggregation of the different work I've done in terms of open source contributions and projects.

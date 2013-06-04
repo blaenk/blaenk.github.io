@@ -1,9 +1,7 @@
 ---
-layout: page
 title: Lately
 published: 2012-12-28
 comments: true
-footer: true
 ---
 
 This page lists some of the things I've been up to lately.

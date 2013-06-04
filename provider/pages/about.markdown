@@ -1,8 +1,7 @@
 ---
-layout: page
 title: About
 published: 2012-09-21
-footer: false
+comments: off
 ---
 
 <img src="/images/me.png" class="right" width="128">
