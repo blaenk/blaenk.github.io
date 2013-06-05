@@ -66,7 +66,6 @@ postCtx = mconcat
   , defaultCtx
   ]
 
---[ field "posts" (\_ -> archivesList recentFirst)
 archiveCtx :: Pattern -> Context String
 archiveCtx pat = mconcat
   [ field "archives" (\_ -> yearArchives pat) :: Context String
@@ -80,7 +79,10 @@ tagsCtx tags = sluggedTagsField "tags" tags
 
 -- url field without /index.html
 niceUrlField :: String -> Context a
-niceUrlField key = field key $
+niceUrlField key = field key niceItemUrl
+
+niceItemUrl :: Item a -> Compiler String
+niceItemUrl =
   fmap (maybe "" (removeIndexStr . toUrl)) . getRoute . itemIdentifier
   where removeIndexStr url = case splitFileName url of
           (dir, "index.html") -> dir
@@ -94,8 +96,6 @@ commentsOn item = do
     Just "off" -> False
     _ -> True
 
--- TODO: use Rules/Patterns and toFilePath to read the files instead
-
 -- gets passed the key and the item apparently
 commentsTag :: String -> Context String
 commentsTag key = field key $ \item -> do
@@ -108,7 +108,12 @@ commentsJS :: String -> Context String
 commentsJS key = field key $ \item -> do
     comments <- commentsOn item
     if comments
-      then unsafeCompiler $ readFile "provider/templates/comments-js.html"
+      then do
+          url <- niceItemUrl item
+          tmpl <- loadBody "templates/comments-js.html" :: Compiler Template
+          itm <- makeItem "" :: Compiler (Item String)
+          gend <- applyTemplate tmpl (constField "url" url) itm :: Compiler (Item String)
+          return $ itemBody gend
       else return ""
 
 gitTag :: String -> Context String

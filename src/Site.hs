@@ -22,7 +22,7 @@ main :: IO ()
 main = hakyllWith myHakyllConf $ do
   tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
-  match ("images/**" .||. "font/*" .||. "js/*" .||. "favicon.png" .||. "CNAME") $ do
+  match ("images/**" .||. "font/*" .||. "js/*" .||. "static/**" .||. "favicon.png" .||. "CNAME") $ do
     route idRoute
     compile copyFileCompiler
 

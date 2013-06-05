@@ -13,9 +13,6 @@ import Data.List
 
 import Control.Monad (forM_)
 
--- from http://yannesposito.com/Scratch/en/blog/Hakyll-setup/
--- avoid </> because it uses os-dependent separator even though this is for a url
-
 niceTags :: Tags -> (String -> Pattern -> Rules ()) -> Rules ()
 niceTags tags rules =
     forM_ (tagsMap tags) $ \(tag, identifiers) ->
@@ -29,14 +26,8 @@ slugify = intercalate "-" . words . map (\x -> if x `elem` allowedChars then toL
 
 nicePostRoute :: Routes
 nicePostRoute = customRoute createIndexRoute
-  where
-    createIndexRoute ident =
-      (takeDirectory p) ++ "/" ++ (takeBaseName p) ++ "/index.html"
-        where p = toFilePath ident
+  where createIndexRoute ident = "posts/" ++ (takeBaseName . toFilePath $ ident) ++ "/index.html"
 
 nicePageRoute :: Routes
 nicePageRoute = customRoute createIndexRoute
-  where
-    createIndexRoute ident =
-      (takeDirectory (takeDirectory p)) ++  "/" ++ (takeBaseName p) ++ "/index.html"
-        where p = toFilePath ident
+  where createIndexRoute ident = (takeBaseName . toFilePath $ ident) ++ "/index.html"
