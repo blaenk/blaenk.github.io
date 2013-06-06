@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 REMOTE="git@github.com:blaenk/blaenk.github.io.git"
-SITE="generated/preview/"
+SITE="generated/deploy/"
 DEPLOY="deploy/"
 
 info() {
@@ -58,15 +58,18 @@ deploy() {
   info "commencing deploy operation based off of $SHA"
 
   # clean out _deploy and move in the new files
-  rm -rf "$DEPLOY/*"
+  rm -rf "$DEPLOY"/*
   info "cleaned out $DEPLOY"
 
-  # handle rebuild logic; breaks on windows
-  # because msys bash on windows doesn't support
-  # utf-8. alternatives?
-  # info "rebuilding site"
-  # ./site rebuild > /dev/null
-
+  info "rebuilding site"
+  
+  if [[ "$OSTYPE"x == "msys"x ]]; then
+    # no unicode support in msys, so invoke powershell and establishe code page
+    powershell "chcp 65001; ./site rebuild" > /dev/null
+  else
+    ./site rebuild > /dev/null
+  fi
+  
   cp -r "$SITE"/* $DEPLOY
   info "copied $SITE into $DEPLOY"
 

@@ -1,6 +1,5 @@
 module Site.Routes (
-  nicePostRoute,
-  nicePageRoute,
+  niceRoute,
   niceTags,
   slugify
 ) where
@@ -24,10 +23,5 @@ slugify :: String -> String
 slugify = intercalate "-" . words . map (\x -> if x `elem` allowedChars then toLower x else ' ')
   where allowedChars = (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ " ")
 
-nicePostRoute :: Routes
-nicePostRoute = customRoute createIndexRoute
-  where createIndexRoute ident = "posts/" ++ (takeBaseName . toFilePath $ ident) ++ "/index.html"
-
-nicePageRoute :: Routes
-nicePageRoute = customRoute createIndexRoute
-  where createIndexRoute ident = (takeBaseName . toFilePath $ ident) ++ "/index.html"
+niceRoute :: String -> Routes
+niceRoute prefix = customRoute $ \ident -> prefix ++ (takeBaseName . toFilePath $ ident) ++ "/index.html"

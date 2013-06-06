@@ -8,64 +8,101 @@ import Site.Routes
 import Site.Pandoc
 
 import Data.Monoid ((<>))
+import GHC.IO.Encoding
+import System.Environment
+import System.Cmd
+import Control.Monad (when, void)
 
 myHakyllConf :: Configuration
 myHakyllConf = defaultConfiguration
   { deployCommand = "bash src/deploy.sh deploy"
   , providerDirectory = "provider"
-  , destinationDirectory = "generated/preview"
+  , destinationDirectory = "generated/deploy"
   , storeDirectory = "generated/cache"
   , tmpDirectory = "generated/cache/tmp"
   }
 
 main :: IO ()
-main = hakyllWith myHakyllConf $ do
-  tags <- buildTags "posts/*" (fromCapture "tags/*.html")
+main = do
+  setLocaleEncoding utf8
+  setFileSystemEncoding utf8
+  setForeignEncoding utf8
+  
+  (action:_) <- getArgs
 
-  match ("images/**" .||. "font/*" .||. "js/*" .||. "static/**" .||. "favicon.png" .||. "CNAME") $ do
-    route idRoute
-    compile copyFileCompiler
+  {-
 
-  match "scss/screen.scss" $ do
-    route $ gsubRoute "scss/" (const "css/") `composeRoutes` setExtension "css"
-    compile $ sassCompiler
+  Problems with using separate directories:
+    - clean operation doesn't get rid of it
+      -- fix with cheap hack
 
-  match "posts/*" $ do
-    route $ nicePostRoute
-    compile $ getResourceBody
-      >>= withItemBody (abbreviationFilter)
-      >>= pandocCompiler
-      >>= loadAndApplyTemplate "templates/post.html" (tagsCtx tags <> postCtx)
-      >>= loadAndApplyTemplate "templates/layout.html" postCtx
+  Alternative: use same directory, like Octopress
+    - on deploy arg, set flag
+    - rebuild with this flag?
+    - use posts route that checks metadata for 'unpublished' field
+  -}
 
-  match "pages/*" $ do
-    route $ nicePageRoute
-    compile $ getResourceBody
-      >>= withItemBody (abbreviationFilter)
-      >>= pandocCompiler
-      >>= loadAndApplyTemplate "templates/page.html" postCtx
-      >>= loadAndApplyTemplate "templates/layout.html" postCtx
+  -- establish configuration based on preview-mode
+  let previewMode = action == "preview"
+      hakyllConf   = if previewMode
+                     then myHakyllConf { destinationDirectory = "generated/preview" }
+                     else myHakyllConf
+      postsPattern = if previewMode
+                     then "posts/*" .||. "drafts/*"
+                     else "posts/*"
 
-  create ["404.html"] $ do
-    route idRoute
-    compile $ do
-      makeItem ""
-        >>= loadAndApplyTemplate "templates/404.html" defaultCtx
-        >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+  -- cheap hack for preview edge-case
+  when (action == "clean") $ do
+    putStrLn "Removing generated/preview..."
+    void . system $ "bash -c \"rm -rfv generated/preview > /dev/null\""
 
-  create ["index.html"] $ do
-    route idRoute
-    compile $ do
-      makeItem ""
-        >>= loadAndApplyTemplate "templates/index.html" (archiveCtx "posts/*")
-        >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+  hakyllWith hakyllConf $ do
+    tags <- buildTags postsPattern (fromCapture "tags/*.html")
 
-  niceTags tags $ \tag pattern -> do
-    route nicePostRoute
-    compile $ do
-      makeItem ""
-        >>= loadAndApplyTemplate "templates/tags.html" (constField "tag" tag <> tagsCtx tags <> archiveCtx pattern)
-        >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+    match ("images/**" .||. "font/*" .||. "js/*" .||. "static/**" .||. "favicon.png" .||. "CNAME") $ do
+      route idRoute
+      compile copyFileCompiler
 
-  match "templates/*" $ compile templateCompiler
+    match "scss/screen.scss" $ do
+      route $ gsubRoute "scss/" (const "css/") `composeRoutes` setExtension "css"
+      compile $ sassCompiler
+
+    match postsPattern $ do
+      route $ niceRoute "posts/"
+      compile $ getResourceBody
+        >>= withItemBody (abbreviationFilter)
+        >>= pandocCompiler
+        >>= loadAndApplyTemplate "templates/post.html" (tagsCtx tags <> postCtx)
+        >>= loadAndApplyTemplate "templates/layout.html" postCtx
+
+    match "pages/*" $ do
+      route $ niceRoute ""
+      compile $ getResourceBody
+        >>= withItemBody (abbreviationFilter)
+        >>= pandocCompiler
+        >>= loadAndApplyTemplate "templates/page.html" postCtx
+        >>= loadAndApplyTemplate "templates/layout.html" postCtx
+
+    create ["404.html"] $ do
+      route idRoute
+      compile $ do
+        makeItem ""
+          >>= loadAndApplyTemplate "templates/404.html" defaultCtx
+          >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+
+    create ["index.html"] $ do
+      route idRoute
+      compile $ do
+        makeItem ""
+          >>= loadAndApplyTemplate "templates/index.html" (archiveCtx postsPattern)
+          >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+
+    niceTags tags $ \tag pattern -> do
+      route $ niceRoute "tags/"
+      compile $ do
+        makeItem ""
+          >>= loadAndApplyTemplate "templates/tags.html" (constField "tag" tag <> tagsCtx tags <> archiveCtx pattern)
+          >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+
+    match "templates/*" $ compile templateCompiler
 
