@@ -1,8 +1,6 @@
 ---
-layout: post
 title: Learning the ffmpeg Libraries
-published: 2013-03-17
-comments: true
+published: March 17, 2013
 excerpt: Comprehending the behemoth that is ffmpeg
 tags: ffmpeg, Notes
 ---

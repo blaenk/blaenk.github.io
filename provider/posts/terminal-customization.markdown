@@ -1,8 +1,6 @@
 ---
-layout: post
 title: Terminal Customization
-published: 2013-02-12
-comments: true
+published: February 12, 2013
 excerpt: Various urxvt and zsh customizations
 tags: urxvt, zsh
 ---

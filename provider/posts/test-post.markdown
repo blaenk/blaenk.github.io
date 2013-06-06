@@ -1,8 +1,6 @@
 ---
-layout: post
 title: Test Post
-published: 2012-09-19
-comments: true
+published: September 19, 2012
 excerpt: Site design and Markdown test
 tags: Octopress, Markdown, Math, Ruby
 ---

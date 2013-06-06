@@ -10,8 +10,8 @@ import Site.Pandoc
 import Data.Monoid ((<>))
 import GHC.IO.Encoding
 import System.Environment
-import System.Cmd
-import Control.Monad (when, void)
+import Control.Monad (when)
+import System.Directory
 
 myHakyllConf :: Configuration
 myHakyllConf = defaultConfiguration
@@ -30,20 +30,8 @@ main = do
   
   (action:_) <- getArgs
 
-  {-
-
-  Problems with using separate directories:
-    - clean operation doesn't get rid of it
-      -- fix with cheap hack
-
-  Alternative: use same directory, like Octopress
-    - on deploy arg, set flag
-    - rebuild with this flag?
-    - use posts route that checks metadata for 'unpublished' field
-  -}
-
   -- establish configuration based on preview-mode
-  let previewMode = action == "preview"
+  let previewMode  = action == "preview"
       hakyllConf   = if previewMode
                      then myHakyllConf { destinationDirectory = "generated/preview" }
                      else myHakyllConf
@@ -54,7 +42,7 @@ main = do
   -- cheap hack for preview edge-case
   when (action == "clean") $ do
     putStrLn "Removing generated/preview..."
-    void . system $ "bash -c \"rm -rfv generated/preview > /dev/null\""
+    removeDirectoryRecursive "generated/preview"
 
   hakyllWith hakyllConf $ do
     tags <- buildTags postsPattern (fromCapture "tags/*.html")

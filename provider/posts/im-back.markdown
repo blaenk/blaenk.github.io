@@ -1,8 +1,6 @@
 ---
-layout: post
 title: I'm Back
-published: 2012-12-25
-comments: true
+published: December 26, 2012
 excerpt: Breaking back into blogging
 tags: Octopress, Haskell, Digital Signal Processing
 ---

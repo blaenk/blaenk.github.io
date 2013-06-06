@@ -1,8 +1,6 @@
 ---
-layout: post
 title: POSIX Directories and Links
-published: 2013-03-06
-comments: true
+published: March 6, 2013
 excerpt: Directories and Links in the POSIX standards
 tags: Linux, Notes, POSIX
 ---
