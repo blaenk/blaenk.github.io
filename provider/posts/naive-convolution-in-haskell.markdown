@@ -11,15 +11,15 @@ tags: Haskell, Digital Signal Processing
 
 ## Principle
 
-The properties of [homogeneity](http://www.cns.nyu.edu/~david/handouts/linear-systems/linear-systems.html) and [shift-invariance](http://en.wikipedia.org/wiki/Shift-invariant_system) in [Linear Time-Invariant System Theory](http://en.wikipedia.org/wiki/LTI_system_theory) holds that scaling and shifting the input results in the same scaling and shifting in the output. Because of these properties, we can represent any impulse as a shifted and scaled delta function and consequently know what the impulse response will be for that scaled and shifted impulse.
+The properties of [homogeneity](http://www.cns.nyu.edu/~david/handouts/linear-systems/linear-systems.html) and [shift-invariance](http://en.wikipedia.org/wiki/Shift-invariant_system) in [Linear Time-Invariant System Theory](http://en.wikipedia.org/wiki/LTI_system_theory) hold that scaling and shifting an input signal in a linear system results in the same scaling and shifting in the output signal. Because of these properties, we can represent any impulse as a shifted and scaled delta function and consequently know what the impulse response -- i.e. output signal in response to an impulse input signal -- will be for that scaled and shifted impulse.
 
-An impulse of $-3$ at the $8^{th}$ sample would be represented as a unit impulse by scaling the delta function by $-3$ and shifting it to the right by $8$ samples: $-3\delta[n-8]$, where $n-8$ means the $8^{th}$ sample is now the $0^{th}$. Due to homogeneity and shift invariance, we can determine the impulse response of this impulse by simply scaling and shifting the unit impulse response in the same manner. In other words:
+An impulse of $-3$ at the $8^{th}$ sample would be represented as a unit impulse $h$ by scaling the delta function $\delta$ by $-3$ and shifting it to the right by $8$ samples: $-3\delta[n-8]$, where $n-8$ means the $8^{th}$ sample is now the $0^{th}$. Due to homogeneity and shift invariance, we can determine the impulse response of this impulse by simply scaling and shifting the unit impulse response in the same manner. In other words:
 
 $$-3\delta[n-8] \mapsto -3h[n-8]$$
 
-What this means is that if we know the unit impulse response of a system, we consequently know how the system will react to _any_ impulse. These impulse responses can then be synthesized to form the output signal that would result from running the input signal through the actual system. An example of the powerful implications of this method is [convolution reverb](http://en.wikipedia.org/wiki/Convolution_reverb), in which an impulse response of a physical or virtual space is generated and then convolved with any input signal to simulate the effect of reverberation in that space.
+What this means is that if we know the unit impulse response of a system, we consequently know how the system will react to _any_ impulse, not just a unit impulse. These impulse responses can then be synthesized to form the output signal that would result from running the input signal through the actual system. An example of the powerful implications of this property is [convolution reverb](http://en.wikipedia.org/wiki/Convolution_reverb), in which an impulse response of a physical or virtual space is generated and then convolved with any input signal to simulate the effect of reverberation in that space.
 
-In short, the input signal _convolved_ with the unit impulse response results in the output signal. Convolution of input signal $x[n]$ with unit impulse $h[n]$ to generate output signal $y[n]$ is denoted as:
+In short, the input signal **convolved** with the unit impulse response results in the output signal. Convolution of input signal $x[n]$ with unit impulse $h[n]$ to generate output signal $y[n]$ is denoted as:
 
 $$x[n] * h[n] = y[n]$$
 
@@ -27,7 +27,7 @@ Since convolution allows us to go from input signal $x[n]$ to output signal $y[n
 
 ## Definition
 
-Convolution can be described by the so-called convolution _summation_. The convolution summation is pretty simple, and is defined as follows:
+Convolution can be described by the so-called **convolution summation**. The convolution summation is pretty simple, and is defined as follows:
 
 $$y[i] = \sum_{j=0}^{M-1}h[j] \: x[i-j]$$
 

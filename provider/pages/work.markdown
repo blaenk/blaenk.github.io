@@ -28,7 +28,7 @@ The only other alternative we could think of was switching to a polling system f
 
 </div>
 
-#### rtorrent: Fix unportable signal disposition establishment for Solaris {#rtorrent .collapse}
+#### rtorrent: Fix unportable signal disposition establishment on Solaris {#rtorrent .collapse}
 
 <div class="collapsible">
 
@@ -78,13 +78,27 @@ As for the original intent of implementing the functionality for synced playback
 
 </div>
 
+#### node-xmlrpc: Add support for buffer & i8 datatypes, chunked responses, HTTP basic authentication {#node-xmlrpc .collapse}
+
+<div class="collapsible">
+
+I contributed a [series of features](https://github.com/baalexander/node-xmlrpc/pulls/blaenk?direction=desc&page=1&sort=created&state=closed) to [node-xmlrpc](https://github.com/baalexander/node-xmlrpc) because I needed them in one of my projects at the time. node-xmlrpc is a package for [node.js](http://nodejs.org/) which provides an interface for [XML-RPC](http://en.wikipedia.org/wiki/XML-RPC) communication.
+
+I added `i8` datatype support (8-byte integers, i.e. 64-bit integers) because the application I was interfacing with always used that datatype when responding with integers, regardless of whether or not it was necessary. I added `buffer` datatype support (Base64 encoded data) just a volunteer contribution, though I had no need for it.
+
+The original stream XML-RPC parser was unable to handle chunked responses correctly for element inner-text. This meant that if a chunk ended inside an element, that inner-text would become truncated. I fixed it by continuing to collect the inner-text until an end-of-element event was fired by the XML parser.
+
+Finally, I added support for basic HTTP authentication.
+
+</div>
+
 ## Projects
 
 #### Pulse Visualizer: Visualizer for PulseAudio in Haskell {#pulse-visualizer .collapse}
 
 <div class="collapsible">
 
-This was my first Haskell application (aside from exercise solutions to Haskell books). During my final semester of college in 2012, I wanted to do some Independent Study to round out full-time student status. A [professor](http://kevinwortman.com/) agreed to mentor me in two different independent studies: [digital signal processing](http://en.wikipedia.org/wiki/Digital_signal_processing) and [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming_language)). At first I had intended on treating them separately with the goal of writing a music visualizer for iTunes for the DSP study and perhaps a web application for the Haskell study. My professor suggested I try and merge them to make it easier on myself and that is exactly what I did.
+This was my first Haskell application, aside from exercise solutions to Haskell books. During my final semester of college in 2012, I wanted to do some Independent Study to round out full-time student status. A [professor](http://kevinwortman.com/) agreed to mentor me in two different independent studies: [digital signal processing](http://en.wikipedia.org/wiki/Digital_signal_processing) and [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming_language)). At first I had intended on treating them separately with the goal of writing a music visualizer for iTunes for the DSP study and perhaps a web application for the Haskell study. My professor suggested I try and merge them to make it easier on myself and that is exactly what I did.
 
 I had already gotten a barebones iTunes visualizer up and running with C, so I figured I would write some hooks with the [foreign function interface](http://en.wikipedia.org/wiki/Foreign_function_interface) to delegate most of the work to Haskell. The way of going about this was pretty messy however, as it involved (at the time, and most likely even now) compiling the Haskell code into dynamic link libraries because the Haskell code had to be compiled with gcc, who's symbols differed from the ones Visual Studio produced, which I wanted to use to take advantage of DirectX 11 and DirectCompute.
 
@@ -156,7 +170,7 @@ After I had done all this, one of the friends I showed it to said, "Oh, so it's 
 
 <div class="collapsible">
 
-This was my first C# application which I wrote back in 2006-2007. I created it in response to an instance in which I wanted to back-up some of the music I had transferred to my iPod. The application understood the file structure of the iPod back then, which consisted of several nested directories each storing about four audio files with seemingly randomly generated names. MyPod simply walked this file structure and used [TagLib](http://taglib.github.io/) to expose the actual file information to the user in a data list. The user then specified which files they wanted to back up and were then transferred to a location and naming template (i.e. artist - title) of their choosing.
+This was my first C# application which I wrote back in 2006-2007. I created it in response to an instance in which I wanted to back-up some of the music I had transferred to my iPod. The application understood the file structure of the iPod as it was back then, which consisted of several nested directories each storing about four audio files with seemingly randomly generated names. MyPod simply walked this file structure and used [TagLib](http://taglib.github.io/) to expose the actual file information to the user in a data list. The user then specified which files they wanted to back up and were then transferred to a location and naming template (i.e. artist - title) of their choosing.
 
 </div>
 

@@ -6,7 +6,7 @@ comments: true
 
 * toc
 
-This page is setup in the spirit of the website [of the same name](http://usesthis.com/). In my [about page](/about) I vaguely hint, in general terms, of the tools I like to use. I do this so that my about page doesn't get littered with what might end up being fads and hipster tools. Instead this page is here to list the specific tools I use at any given moment.
+This page is setup in the spirit of the website [of the same name](http://usesthis.com/). This page is here to list the specific tools I use at any given moment.
 
 ### Site
 
