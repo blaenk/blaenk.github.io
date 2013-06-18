@@ -22,6 +22,15 @@ myHakyllConf = defaultConfiguration
   , tmpDirectory = "generated/cache/tmp"
   }
 
+feedConf :: FeedConfiguration
+feedConf = FeedConfiguration
+  { feedTitle = "Jorge Israel Peña aka BLAENK DENUM"
+  , feedDescription = "Personal Site"
+  , feedAuthorName = "Jorge Israel Peña"
+  , feedAuthorEmail = "jorge.israel.p@gmail.com"
+  , feedRoot = "http://blaenkdenum.com"
+  }
+
 main :: IO ()
 main = do
   setLocaleEncoding utf8
@@ -60,6 +69,7 @@ main = do
       compile $ getResourceBody
         >>= withItemBody (abbreviationFilter)
         >>= pandocCompiler
+        >>= saveSnapshot "content"
         >>= loadAndApplyTemplate "templates/post.html" (tagsCtx tags <> postCtx)
         >>= loadAndApplyTemplate "templates/layout.html" postCtx
 
@@ -84,6 +94,13 @@ main = do
         makeItem ""
           >>= loadAndApplyTemplate "templates/index.html" (archiveCtx postsPattern)
           >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+
+    create ["atom.xml"] $ do
+      route idRoute
+      compile $ do
+        let feedCtx = postCtx <> bodyField "description"
+        posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots postsPattern "content"
+        renderAtom feedConf feedCtx posts
 
     niceTags tags $ \tag pattern -> do
       route $ niceRoute "tags/"

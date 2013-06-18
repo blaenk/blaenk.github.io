@@ -187,7 +187,7 @@ pygmentize :: String -> String -> String
 pygmentize lang contents = unsafePerformIO $ do
 ~~~
 
-I don't feel particularly worried about it, given my justification. It's a similar justification used by Real World Haskell when [creating bindings](http://book.realworldhaskell.org/read/interfacing-with-c-the-ffi.html#id655783) for PCRE with the foreign function interface:
+I don't feel particularly worried about it, given my justification. It's a similar justification used by Real World Haskell when [creating bindings](http://book.realworldhaskell.org/read/interfacing-with-c-the-ffi.html#id655783) for [PCRE](http://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions) with the foreign function interface:
 
 > It lets us say to the compiler, "I know what I'm doing - this code really is pure". For regular expression compilation, we know this to be the case: given the same pattern, we should get the same regular expression matcher every time. However, proving that to the compiler is beyond the Haskell type system, so we're forced to assert that this code is pure.
 

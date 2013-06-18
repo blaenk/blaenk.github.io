@@ -72,7 +72,7 @@ I mainly use [mumble](http://mumble.info/) for voice communication.
 
 Most of my life I've had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.
 
-Core:
+#### Core
 
 * Intel Core i7 2600k @ 4.2 GHz with Cooler Master Hyper 212 Plus
 * Asus P8Z68-V Pro
@@ -81,7 +81,7 @@ Core:
 * 3 SSDs (120 GB Windows, 60 GB Mac OS X, 60 GB Arch Linux)
 * 3 HDDs (2 x 1 TB, 1.5 TB)
 
-Peripherals:
+#### Peripherals
 
 * Dell UltraSharp 23" 1080p IPS
 * [Das Keyboard Model S Ultimate](http://www.daskeyboard.com/model-s-ultimate/) (Mechanical)

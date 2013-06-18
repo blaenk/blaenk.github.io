@@ -8,9 +8,11 @@ comments: off
 
 My name is Jorge Israel Peña, though online I sometimes use the pseudonym Blaenk Denum. I'm a software developer currently living in Southern California. I speak English, Spanish, and French.
 
-My interests include [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming_language)), C and [C++11](http://en.wikipedia.org/wiki/C%2B%2B11), the [POSIX](http://en.wikipedia.org/wiki/POSIX) standards and the Linux Programming Interface, [LLVM](http://en.wikipedia.org/wiki/LLVM), [Digital Signal Processing](http://en.wikipedia.org/wiki/Digital_signal_processing) and [Music Visualization](http://en.wikipedia.org/wiki/Music_visualization), [Artificial Intelligence](http://en.wikipedia.org/wiki/Artificial_intelligence) and [Machine Learning](http://en.wikipedia.org/wiki/Machine_learning), [Music Information Retrieval](http://en.wikipedia.org/wiki/Music_information_retrieval), [Web Development](http://en.wikipedia.org/wiki/Web_development), and [Real-Time Rendering](http://en.wikipedia.org/wiki/Real_Time_rendering).
+My interests include [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming_language)), C and [C++11](http://en.wikipedia.org/wiki/C%2B%2B11), the [POSIX](http://en.wikipedia.org/wiki/POSIX) standards and the Linux Programming Interface, [LLVM](http://en.wikipedia.org/wiki/LLVM), [Digital Signal Processing](http://en.wikipedia.org/wiki/Digital_signal_processing) and [Music Visualization](http://en.wikipedia.org/wiki/Music_visualization), [Artificial Intelligence](http://en.wikipedia.org/wiki/Artificial_intelligence) and [Machine Learning](http://en.wikipedia.org/wiki/Machine_learning), [Music Information Retrieval](http://en.wikipedia.org/wiki/Music_information_retrieval), [Web Development](http://en.wikipedia.org/wiki/Web_development), [GPGPU Programming](http://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units), and [Real-Time Rendering](http://en.wikipedia.org/wiki/Real_Time_rendering).
 
 You can check out what I'm up to [lately](/lately) or find me on [github](http://github.com/blaenk) and [stackoverflow](http://stackoverflow.com/users/101090/jorge-israel-pena).
+
+There's also an [atom feed](/atom.xml) for this site.
 
 If you'd like to get in touch you can email me at **jorge.israel.p@gmail.com**
 
@@ -18,7 +20,7 @@ If you'd like to get in touch you can email me at **jorge.israel.p@gmail.com**
 
 I try to be a [pragmatic programmer](http://en.wikipedia.org/wiki/The_Pragmatic_Programmer). I love to learn different technologies, most recently [Haskell and Digital Signal Processing](/posts/naive-convolution-in-haskell/). I do it because I have a genuine interest in gaining different perspectives on software development in order to maintain an open and malleable mind, with the hope that it'll help to prepare me for future technological disruptions.
 
-While I do take pride in my work, I don't waste time with being prideful. Instead I always defer to experience, but I ensure a proper understanding instead of [cargo culting](http://en.wikipedia.org/wiki/Cargo_cult_programming).
+While I do take pride in my work, I don't waste time with being prideful. Instead I always defer to experience, but I ensure that I achieve a proper understanding instead of [cargo culting](http://en.wikipedia.org/wiki/Cargo_cult_programming).
 
 I prefer to use the best tool for the job. For this reason I try to be agnostic when it comes to technologies: I'm open to any operating system, tool, language, and framework. But don't mistake this neutrality for indifference. I simply strive to appreciate the benefits of different technologies. Whenever possible, however, I prefer to use tools at which I'm already adept, such as [vim](http://en.wikipedia.org/wiki/Vim_(text_editor)), [git](http://git-scm.com/), and a [POSIX](http://en.wikipedia.org/wiki/POSIX) environment.
 
@@ -26,9 +28,11 @@ Check out [this page](/uses-this) for more specifics on my preferences.
 
 ### Background
 
-My family didn't have a computer before I was 12 years old. In fact, all of my life I had largely avoided computers, aside from specific instances in school when we were given time to work with them. This was a natural result of being warned and scolded not to play around with computers lest I break them. However, by the age of 11 I was at a point in school where computers were a necessity.
+My family didn't have a computer before I was 12 years old. In fact, all of my life I had largely avoided computers, aside from specific instances in school when we were given time to work with them. This was a natural result of being warned and scolded not to play around with computers lest I break them.
 
-Without a computer, I usually had to go to the library to type up school assignments. This wasn't always possible on short-notice assignments, however. In these situations, I would have to write up assignments in ink, attempting to appease draconian requirements which demanded no mistakes at all -- no white-out allowed. You see, as the only student in their class without a computer capable of producing neatly printed assignments, I was inconveniencing _the teacher_. So while other students could lazily type up assignments in a matter of minutes, I had to meticulously obsess over my writing [^writing].
+However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I usually had to go to the library to type up school assignments. This wasn't always possible on short-notice assignments, however. In these situations, I would have to write up assignments in ink, attempting to appease draconian requirements which demanded no mistakes at all -- no white-out allowed.
+
+See, as the only student in their class without a computer capable of producing neatly printed assignments, I was inconveniencing _the teacher_. So while other students could lazily type up assignments in a matter of minutes, I had to meticulously obsess over my writing [^writing].
 
 This led to late nights, many rewrites, and stress -- since I always cared for doing things right in school. I was tired of it, and somewhat embarrassed for not being "with the times," making me a bit economically self-conscious [^tma].
 
