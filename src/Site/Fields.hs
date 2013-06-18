@@ -127,7 +127,7 @@ gitTag key = field key $ \_ -> do
 yearArchives :: Pattern -> Compiler String
 yearArchives pat = do
     thisYear <- unsafeCompiler . fmap yearFromUTC $ getCurrentTime
-    posts    <- groupByYear =<< loadAll pat    :: Compiler [(Integer, [Item String])]
+    posts    <- groupByYear =<< loadAll (pat .&&. hasNoVersion) :: Compiler [(Integer, [Item String])]
     itemTpl  <- loadBody "templates/index-post.html" :: Compiler Template
     archiveTpl <- loadBody "templates/archive.html" :: Compiler Template
     list     <- mapM (genArchives itemTpl archiveTpl thisYear) posts :: Compiler [String]

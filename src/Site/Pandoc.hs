@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Site.Pandoc (pandocCompiler) where
+module Site.Pandoc (pandocCompiler, pandocFeedCompiler) where
 
 import Prelude hiding (div, span)
 
@@ -27,6 +27,10 @@ import Control.Applicative((<$>))
 import Data.Tree
 import Data.Ord
 import Data.Maybe (fromMaybe)
+
+pandocFeedCompiler :: Item String -> Compiler (Item String)
+pandocFeedCompiler = pandocTransformer readerOptions writerOptions' (bottomUp tocRemover)
+  where writerOptions' = writerOptions { writerHTMLMathMethod = PlainMath }
 
 pandocCompiler :: Item String -> Compiler (Item String)
 pandocCompiler = pandocTransformer readerOptions writerOptions transformer
@@ -92,6 +96,10 @@ tableOfContents headers = tocInsert
           (RawBlock "html") . (\list -> "<ul id='toc'>" ++ list ++ "</ul>") .
           (genToc "1") . tocTree . normalizeTocs $ headers
         tocInsert x = x
+
+tocRemover :: Block -> Block
+tocRemover (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) = Null
+tocRemover x = x
 
 pygments :: Block -> Block
 pygments (CodeBlock (_, _, namevals) contents) =

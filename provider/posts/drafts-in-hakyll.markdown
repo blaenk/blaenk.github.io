@@ -13,13 +13,13 @@ I usually take my time writing posts. Sometimes it can take me days, during whic
 
 A draft system is able to clearly distinguish draft posts from regular posts. This way, when it comes to deploying the site, draft posts aren't deployed along with it.
 
-## Implementation Considerations
+## Considerations
 
 I believe that the fundamental problem with draft systems in static site generators is that drafts -- like regular posts -- come to permeate the entire site. They accomplish this by showing up on index pages, tag pages, and any other place you might expect regular posts to show up in. This is something to keep in mind when creating a draft system because it means that simply deleting the compiled page won't suffice, as there will still be traces in other pages.
 
 One approach to this problem is to quarantine the draft posts such that they don't show up on any of these things and instead only show them when you visit them directly. This is not an option for me because when I preview drafts I want to see how they will affect the entire site. I don't preview drafts simply to check how my post is formatted.
 
-## Existing Implementations
+## Examples
 
 The following two draft system implementations exemplify the two approaches I can think of for a draft system. These are approaches taken by static site generators. There are other ad hoc solutions, such as creating a separate `drafts` branch in git.
 
@@ -31,7 +31,7 @@ Octopress' draft system was pretty straightforward in my opinion, despite being 
 
 The other solution I could think of consisted of detecting when the site was being previewed, and if that were the case, establish a different output directory and a different posts pattern which would include the posts in a separate **drafts/** directory. When the site _wasn't_ being previewed, the regular output directory would be used.
 
-## My Implementation
+## Implementation
 
 Both approaches amount to hacks on top of Hakyll, but after some consideration, it seems to me that the second option is a lot less messy.
 
