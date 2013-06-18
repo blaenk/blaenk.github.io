@@ -207,14 +207,6 @@ article .entry-content > ol {
   text-transform: uppercase;
 
   &::after { padding-left: 0; }
-  &:hover {
-    border-top: 5px solid #d01040;
-
-    @media screen and (max-width: 766px) {
-      border-top: none;
-    }
-    border-bottom: 5px solid #258FB8;
-  }
 
 	@media screen and (max-width: 766px){
     padding: 16px 0;
