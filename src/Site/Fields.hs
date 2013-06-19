@@ -83,7 +83,7 @@ niceUrlField key = field key niceItemUrl
 
 niceItemUrl :: Item a -> Compiler String
 niceItemUrl =
-  fmap (maybe "" (removeIndexStr . toUrl)) . getRoute . itemIdentifier
+  fmap (maybe "" (removeIndexStr . toUrl)) . getRoute . setVersion Nothing . itemIdentifier
   where removeIndexStr url = case splitFileName url of
           (dir, "index.html") -> dir
           _ -> url

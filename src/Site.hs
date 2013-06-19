@@ -104,7 +104,8 @@ main = do
       route idRoute
       compile $ do
         let feedCtx = postCtx <> bodyField "description"
-        posts <- fmap (take 10) . recentFirst =<< loadAll (postsPattern .&&. hasVersion "feed")
+        posts <- fmap (take 10) . recentFirst
+          =<< loadAll (postsPattern .&&. hasVersion "feed")
         renderAtom feedConf feedCtx posts
 
     niceTags tags $ \tag pattern -> do
