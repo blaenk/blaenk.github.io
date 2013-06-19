@@ -15,7 +15,7 @@ I knew Hakyll exposed a module specifically for this: [Hakyll.Web.Feed](http://h
 
 ### Considerations
 
-If I used my custom post compiler, it would include the table of contents and pygments highlighted code. This was a problem because the table of contents didn't work correctly in [the feed reader](https://yoleoreader.com/) I tested with and so just served to wast space. Worse, pygments highlighted code was completely absent from the feed reader -- that is, not that it wasn't highlighted, but the code itself was completely missing. Finally, posts containing math type -- which is rendered with [MathJax](http://www.mathjax.org/) on this site -- obviously did not render at all in the feed reader.
+If I used my custom post compiler, it would include the table of contents and Pygments highlighted code. This was a problem because the table of contents didn't work correctly in [the feed reader](https://yoleoreader.com/) I tested with and so just served to waste space. Worse, Pygments highlighted code was completely absent from the feed reader -- that is, not that it wasn't highlighted, but the code itself was completely missing. Finally, posts containing math type -- which is rendered with [MathJax](http://www.mathjax.org/) on this site -- obviously did not render at all in the feed reader.
 
 So it was obvious to me that I had to compile the posts meant for the syndication feed with a more vanilla Pandoc compiler. However, I did want to keep the abbreviation substitution filter as that seemed to work perfectly fine.
 
