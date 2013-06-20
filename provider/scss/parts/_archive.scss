@@ -1,4 +1,11 @@
 #category-title { margin-bottom: 15px; }
+
+[class^="icon-"], [class*="icon-"] {
+	line-height: inherit;
+	position: absolute;
+	left: 0;
+}
+
 .archives{
 	position: relative;
 	&:last-of-type{
@@ -37,6 +44,7 @@
 		.meta{
 			color: $color-gray02;
 			font-size: 0.9em;
+			line-height: 34px;
 			@media screen and (max-width: 600px){
 				display: none;
 			}
@@ -46,7 +54,9 @@
 				&:before{
 					color: $color-gray03;
 					font: 1.3em $font-icon;
-					padding-right: 10px;
+					line-height: 34px;
+					position: absolute;
+					left: 0;
 				}
         		vertical-align: baseline;
 			}
@@ -57,10 +67,15 @@
 					color: #258FB8;
 				}
 			}
-			.date { cursor: default; }
-			.date:before{content: "\f073";}
-			.tags:before{content: "\f02c";}
-			.comments:before{content: "\f075";}
+			.date {
+				cursor: default;
+				padding-left: 22px;
+
+				i {
+					font-size: 1.3em;
+					color: #cccccc
+				}
+			}
 		}
     .post-info {
       margin-left: 85px;

@@ -3,6 +3,7 @@ title: Drafts in Hakyll
 published: June 5, 2013
 excerpt: Implementing a simple drafts system for Hakyll
 tags: Hakyll, Haskell
+icon: lightbulb
 ---
 
 * toc

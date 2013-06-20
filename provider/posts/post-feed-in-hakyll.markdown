@@ -3,6 +3,7 @@ title: Post Feed in Hakyll
 published: June 19, 2013
 excerpt: Implementing an atom feed in Hakyll
 tags: Hakyll, Haskell
+icon: rss-sign
 ---
 
 * toc

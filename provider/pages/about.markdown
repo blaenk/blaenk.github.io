@@ -12,8 +12,6 @@ My interests include [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming
 
 You can check out what I'm up to [lately](/lately) or find me on [github](http://github.com/blaenk) and [stackoverflow](http://stackoverflow.com/users/101090/jorge-israel-pena).
 
-There's also an [atom feed](/atom.xml) for this site.
-
 If you'd like to get in touch you can email me at **jorge.israel.p@gmail.com**
 
 ### Technology

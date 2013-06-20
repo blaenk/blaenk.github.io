@@ -198,7 +198,8 @@ article .entry-content > ol {
   font-size: 12px;
 
   a[href^="#fnref"] {
-    margin-left: 8px;
+    font: 1em FontAwesome;
+    margin-left: 5px;
   }
 }
 
@@ -240,7 +241,7 @@ article .entry-content > ol {
     position: static;
     width: auto;
 
-    .date, .tags, .comments {
+    .date, .tags, .commit {
       display: inline-block;
       margin-right: 30px;
     }

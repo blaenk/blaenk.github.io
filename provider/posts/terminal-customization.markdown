@@ -3,6 +3,7 @@ title: Terminal Customization
 published: February 12, 2013
 excerpt: Various urxvt and zsh customizations
 tags: urxvt, zsh
+icon: terminal
 ---
 
 * toc

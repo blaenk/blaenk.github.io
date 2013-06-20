@@ -51,7 +51,6 @@ defaultCtx = mconcat
   , metadataField
   , niceUrlField "url"
   , pathField "path"
-  , gitTag "git"
   , constField "title" "Blaenk Denum"
   , constField "commentsJS" ""
   , missingField
@@ -63,6 +62,8 @@ postCtx = mconcat
   , dateField "dateArchive" "%b %e"
   , commentsTag "comments"
   , commentsJS "commentsJS"
+  , gitTag "git"
+  , iconTag "icon"
   , defaultCtx
   ]
 
@@ -87,6 +88,10 @@ niceItemUrl =
   where removeIndexStr url = case splitFileName url of
           (dir, "index.html") -> dir
           _ -> url
+
+iconTag :: String -> Context String
+iconTag key = field key $ \item -> do
+  fmap (maybe "icon-chevron-right" ("icon-" ++)) $ getMetadataField (itemIdentifier item) "icon"
 
 commentsOn :: (MonadMetadata m) => Item a -> m Bool
 commentsOn item = do
@@ -117,12 +122,15 @@ commentsJS key = field key $ \item -> do
       else return ""
 
 gitTag :: String -> Context String
-gitTag key = field key $ \_ -> do
+gitTag key = field key $ \item -> do
+  let fp = "provider/" ++ (toFilePath $ itemIdentifier item)
   unsafeCompiler $ do
-    sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%H"] []
-    message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s"] []
+    sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%h", fp] []
+    message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s", fp] []
     return ("<a href=\"https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
-           "\" title=\"" ++ message ++ "\">" ++ (take 8 sha) ++ "</a>")
+           "\" title=\"" ++ message ++ "\">" ++ sha ++ "</a> :: " ++
+           "<a href=\"https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "\">" ++
+           "history</a>")
 
 yearArchives :: Pattern -> Compiler String
 yearArchives pat = do

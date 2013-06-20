@@ -87,4 +87,6 @@ $(function() {
 		e.preventDefault();
 		$(this).next('.collapsible').slideToggle('fast');
 	});
+
+	$('a[href^="#fnref"]').text('\uf148');
 });
