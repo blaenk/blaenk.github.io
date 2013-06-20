@@ -25,4 +25,4 @@ abbreviationReplace body =
 
 -- TODO: preferably use patterns/rules here
 sassCompiler :: Compiler (Item String)
-sassCompiler = getResourceString >>= withItemBody (shellFilter "sass -s --scss -I provider/scss/ --cache-location generated/cache/sass")
+sassCompiler = getResourceString >>= withItemBody (shellFilter "sass -s --scss -I provider/scss/ --cache-location generated/scss")

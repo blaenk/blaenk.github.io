@@ -17,9 +17,9 @@ myHakyllConf :: Configuration
 myHakyllConf = defaultConfiguration
   { deployCommand = "bash src/deploy.sh deploy"
   , providerDirectory = "provider"
-  , destinationDirectory = "generated/deploy"
-  , storeDirectory = "generated/cache"
-  , tmpDirectory = "generated/cache/tmp"
+  , destinationDirectory = "generated/deploy/out"
+  , storeDirectory = "generated/deploy/cache"
+  , tmpDirectory = "generated/deploy/cache/tmp"
   }
 
 feedConf :: FeedConfiguration
@@ -42,7 +42,11 @@ main = do
   -- establish configuration based on preview-mode
   let previewMode  = action == "preview"
       hakyllConf   = if previewMode
-                     then myHakyllConf { destinationDirectory = "generated/preview" }
+                     then myHakyllConf
+                          { destinationDirectory = "generated/preview/out"
+                          , storeDirectory = "generated/preview/cache"
+                          , tmpDirectory = "generated/preview/cache/tmp"
+                          }
                      else myHakyllConf
       postsPattern = if previewMode
                      then "posts/*" .||. "drafts/*"
@@ -52,6 +56,8 @@ main = do
   when (action == "clean") $ do
     putStrLn "Removing generated/preview..."
     removeDirectoryRecursive "generated/preview"
+    putStrLn "Removing generated/scss..."
+    removeDirectoryRecursive "generated/scss"
 
   hakyllWith hakyllConf $ do
     tags <- buildTags postsPattern (fromCapture "tags/*.html")
