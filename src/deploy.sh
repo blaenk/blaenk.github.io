@@ -57,11 +57,11 @@ deploy() {
 
   info "commencing deploy operation based off of $SHA"
 
-  # clean out _deploy and move in the new files
+  # clean out deploy and move in the new files
   rm -rf "$DEPLOY"/*
   info "cleaned out $DEPLOY"
 
-  info "rebuilding site"
+  info "building site"
   
   if [[ "$OSTYPE"x == "msys"x ]]; then
     # no unicode support in msys, so invoke powershell and establishe code page
