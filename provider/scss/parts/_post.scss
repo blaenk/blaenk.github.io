@@ -5,6 +5,16 @@
       transition: color 0.3s;
       &:hover { color: $color-main; }
     }
+
+    i {
+    	position: absolute;
+    	left: -30px;
+    	font-size: 18px;
+
+    	@media screen and (max-width: 766px){
+			display: none;
+		}
+    }
   }
 
 	h1.title, .entry-content{

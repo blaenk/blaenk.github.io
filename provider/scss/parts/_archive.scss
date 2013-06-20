@@ -42,10 +42,11 @@
       line-height: 35px;
     }
 		.meta{
-			color: $color-gray02;
-			font-size: 0.9em;
+			font-size: 1.3em;
 			line-height: 34px;
-			@media screen and (max-width: 600px){
+			position: absolute;
+			left: -30px;
+			@media screen and (max-width: 766px){
 				display: none;
 			}
 			span{
@@ -78,9 +79,7 @@
 			}
 		}
     .post-info {
-      margin-left: 85px;
-
-			@media screen and (max-width: 600px){
+      @media screen and (max-width: 600px){
         margin-left: 0;
       }
 

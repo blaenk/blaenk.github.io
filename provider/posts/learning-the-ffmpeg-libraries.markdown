@@ -3,7 +3,7 @@ title: Learning the ffmpeg Libraries
 published: March 17, 2013
 excerpt: Comprehending the behemoth that is ffmpeg
 tags: ffmpeg, Notes
-icon: file-text-alt
+icon: save
 ---
 
 I've been trying to understand some of the [ffmpeg](http://www.ffmpeg.org/) libraries enough to use for decoding audio in a personal application I'm working on. Documentation and resources to learn it are a bit low and inconsistent or usually outdated. Here I try to maintain a list of resources and information I've learned about the library.
