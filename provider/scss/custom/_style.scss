@@ -38,14 +38,12 @@ p.notfound { margin: 15px 0; }
 
   #braces {
     font-family: Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
-    font-size: 0.8em;
     color: #999;
     
     a {
       color: $color-gray02;
       transition: color 0.3s;
       &:hover {
-        text-decoration: underline;
         color: $color-gray01;
       }
     }
@@ -141,12 +139,6 @@ sup { line-height: 1em; }
 article .entry-content > ul,
 article .entry-content > ol {
   /* li { margin-top: 10px; } */
-  margin-left: 0;
-
-  @media screen and (max-width: 600px) {
-    margin-left: 2px;
-  }
-
   li > p {
     margin-top: 0;
     margin-bottom: 10px;

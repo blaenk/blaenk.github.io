@@ -127,8 +127,8 @@ gitTag key = field key $ \item -> do
   unsafeCompiler $ do
     sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%h", fp] []
     message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s", fp] []
-    return ("<a href=\"https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
-           "\" title=\"" ++ message ++ "\">" ++ sha ++ "</a> :: " ++
+    return ("<span class=\"hash\"><a href=\"https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
+           "\" title=\"" ++ message ++ "\">" ++ sha ++ "</a> :: </span>" ++
            "<a href=\"https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "\">" ++
            "history</a>")
 

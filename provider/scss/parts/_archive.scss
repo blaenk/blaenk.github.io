@@ -1,11 +1,5 @@
 #category-title { margin-bottom: 15px; }
 
-[class^="icon-"], [class*="icon-"] {
-	line-height: inherit;
-	position: absolute;
-	left: 0;
-}
-
 .archives{
 	position: relative;
 	&:last-of-type{
@@ -48,6 +42,11 @@
 			left: -30px;
 			@media screen and (max-width: 766px){
 				display: none;
+			}
+			i {
+				line-height: inherit;
+				position: absolute;
+				left: 0;
 			}
 			span{
         display: inline-block;
