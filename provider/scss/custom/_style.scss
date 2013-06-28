@@ -98,7 +98,6 @@ abbr {
 
   p {
     margin-bottom: 15px;
-    &:last-child { margin-bottom: 0; }
     a[rel="reference"] { display: none; }
   }
 }
@@ -136,14 +135,16 @@ sup { line-height: 1em; }
 .content > .page:first-child { margin-top: 15px; }
 */
 
+dt {
+  font-weight: bold;
+}
+
 article .entry-content > ul,
 article .entry-content > ol {
   /* li { margin-top: 10px; } */
   li > p {
     margin-top: 0;
     margin-bottom: 10px;
-
-    &:last-child { margin-bottom: 0; }
   }
 }
 
@@ -229,7 +230,6 @@ article .entry-content > ol {
 
 .post {
   .meta {
-    margin-top: 10px;
     position: static;
     width: auto;
 

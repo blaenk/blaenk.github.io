@@ -30,8 +30,8 @@
 		font-size: 0.9em;
 		color: $color-gray02;
 		width: 230px;
+		margin-top: 15px;
 		@media screen and (max-width: 766px){
-			margin-top: 15px;
 			position: static;
 			width: auto;
 		}
