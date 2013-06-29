@@ -1,7 +1,7 @@
 ---
 title: Post Feed in Hakyll
 published: June 19, 2013
-excerpt: Implementing an atom feed in Hakyll
+excerpt: Implementing an atom feed
 tags: Hakyll, Haskell
 icon: rss-sign
 ---
@@ -20,7 +20,7 @@ If I used my custom post compiler, it would include the table of contents and Py
 
 So it was obvious to me that I had to compile the posts meant for the syndication feed with a more vanilla Pandoc compiler. However, I did want to keep the abbreviation substitution filter as that seemed to work perfectly fine.
 
-Because I needed to compile the posts with an entirely different Pandoc compiler, I knew that already I was duplicating some effort, although the feed only compiles the ten most recent posts so it's not too large of a sacrifice. Knowing this, I wanted to make sure to save as much work as possible to avoid further duplicate effort.
+Because I needed to compile the posts with an entirely different Pandoc compiler, I knew that already I was duplicating some effort. Knowing this, I wanted to make sure to save as much work as possible to avoid further duplicate effort.
 
 ### Drying Up
 
@@ -106,7 +106,5 @@ This successfully retrieves the correct URL of the post, just make sure you `map
 ### Conclusion
 
 It's a shame that some duplicate work seems necessary when it comes to compiling the post. That is, I have to compile every post using my special Pandoc compiler, and then again using the more vanilla feed compiler I made. I tried to balance this by saving effort at the very least with the abbreviation substitution filter, so that it only runs once on every post.
-
-Ideally, what I had hoped for, was for lazy evaluation to save most of the trouble. Since I only ask for the ten most recent posts, I was hoping that only those ten most recent posts would have a separate "feed" version compiled, saving the unnecessary work of having to compile a "feed" version for _every_ post. Perhaps something like this is achievable, and I am simply approaching the problem incorrectly. I'll update the post if I come up with something better.
 
 [^1]: If you're wondering what `postsPattern` is, refer to my [Drafts in Hakyll](/posts/drafts-in-hakyll) post, in which this value is used to determine from where to pull posts in, in order to facilitate a draft preview system.
