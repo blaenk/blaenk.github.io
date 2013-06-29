@@ -61,14 +61,16 @@ main = do
 
   hakyllWith hakyllConf $ do
     tags <- buildTags postsPattern (fromCapture "tags/*.html")
+    scssDependencies <- makePatternDependency "scss/**.scss"
 
     match ("images/**" .||. "js/*" .||. "static/**" .||. "favicon.png" .||. "CNAME") $ do
       route idRoute
       compile copyFileCompiler
 
-    match "scss/screen.scss" $ do
-      route $ gsubRoute "scss/" (const "css/") `composeRoutes` setExtension "css"
-      compile $ sassCompiler
+    rulesExtraDependencies [scssDependencies] $ do
+      match "scss/screen.scss" $ do
+        route $ constRoute "css/screen.css"
+        compile $ sassCompiler
 
     match postsPattern $ do
       route $ niceRoute "posts/"

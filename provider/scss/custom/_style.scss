@@ -75,10 +75,6 @@ article .entry-content > table {
   tr:nth-of-type(2n) { background: #D0E9FF; }
 }
 
-blockquote footer {
-  border-top: none;
-}
-
 abbr {
   cursor: help;
   border-bottom: 1px dotted #ddd;
@@ -426,7 +422,19 @@ figure.code {
 article .entry-content blockquote {
   padding-top: 0;
   margin: 15px 0;
-  border-left: 2px solid #CCCCCC;
+
+  &:before {
+    position: absolute;
+    font-family: FontAwesome;
+    left: 0px;
+    content: "\f10d";
+  }
+
+  footer {
+    border-top: none;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 kbd {
