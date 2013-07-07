@@ -8,13 +8,12 @@ icon: rss-sign
 
 * toc
 
-When I made my site, specifically when I [switched to Hakyll](/posts/the-switch-to-hakyll), I didn't bother to include a [syndication feed](http://en.wikipedia.org/wiki/Web_feed) because I didn't expect that anyone would care to want to subscribe to my site. However, someone [filed an issue](https://github.com/blaenk/blaenk.github.io/issues/1) concerning this on github:
+When I made my site, specifically when I [switched to Hakyll](/posts/the-switch-to-hakyll), I didn't bother to include a [syndication feed](http://en.wikipedia.org/wiki/Web_feed) because I didn't expect that anyone would care to want to subscribe to my site. However, someone [filed an issue](https://github.com/blaenk/blaenk.github.io/issues/1) concerning this on github. I knew Hakyll exposed a module specifically for this: [Hakyll.Web.Feed](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Feed.html). It was more a matter of implementing it in a straightforward manner with the least duplication of work.
 
 > I'd like to subscribe to your blog, but I can't seem to find an RSS feed (nor the Hakyll code to generate one). Would you consider adding one?
+> <footer><strong>Nathan</strong> <cite><a href="https://github.com/blaenk/blaenk.github.io/issues/1">Issue #1</a></cite></footer>
 
-I knew Hakyll exposed a module specifically for this: [Hakyll.Web.Feed](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Feed.html). It was more a matter of implementing it in a straightforward manner with the least duplication of work.
-
-### Considerations
+## Considerations
 
 If I used my custom post compiler, it would include the table of contents and Pygments highlighted code. This was a problem because the table of contents didn't work correctly in [the feed reader](https://yoleoreader.com/) I tested with and so just served to waste space. Worse, Pygments highlighted code was completely absent from the feed reader -- that is, not that it wasn't highlighted, but the code itself was completely missing. Finally, posts containing math type -- which is rendered with [MathJax](http://www.mathjax.org/) on this site -- obviously did not render at all in the feed reader.
 
@@ -22,7 +21,7 @@ So it was obvious to me that I had to compile the posts meant for the syndicatio
 
 Because I needed to compile the posts with an entirely different Pandoc compiler, I knew that already I was duplicating some effort. Knowing this, I wanted to make sure to save as much work as possible to avoid further duplicate effort.
 
-### Drying Up
+## Drying Up
 
 Since I wanted to use the abbreviation substitution filter in both the feed and regular post compiler, I knew that it was a potential location of duplicate effort. Both compilers would start something like this:
 
@@ -46,7 +45,7 @@ match postsPattern $ do
     -- ...
 ~~~
 
-### Implementation
+## Implementation
 
 This meant that I could now refer to the "abbreviated" snapshot of any post. All I had to do now was to define a `Rule` to compile posts specifically for the syndication feed. Hakyll also has support for this in the form of **versions**, in which one can compile different versions of the same thing and refer to them later on.
 
@@ -75,7 +74,7 @@ create ["atom.xml"] $ do
     renderAtom feedConf feedCtx posts
 ~~~
 
-### Caveat
+## Caveat
 
 Notice that we are using the "feed" versions of posts to render the syndication feed. This poses a problem, because the [atom feed template](https://github.com/jaspervdj/hakyll/blob/master/data/templates/atom-item.xml) requires access to the `$url` field, but notice that the "feed" version is _not_ routed.
 
@@ -103,7 +102,7 @@ urlField' key = field key $
 
 This successfully retrieves the correct URL of the post, just make sure you `mappend` this alternate function in your feed's `Context`.
 
-### Conclusion
+## Conclusion
 
 It's a shame that some duplicate work seems necessary when it comes to compiling the post. That is, I have to compile every post using my special Pandoc compiler, and then again using the more vanilla feed compiler I made. I tried to balance this by saving effort at the very least with the abbreviation substitution filter, so that it only runs once on every post.
 
