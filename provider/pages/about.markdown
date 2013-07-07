@@ -6,15 +6,15 @@ comments: off
 
 <img src="/images/me.png" class="right" width="128">
 
-My name is Jorge Israel Peña, though online I sometimes use the pseudonym Blaenk Denum. I'm a software developer currently living in Southern California. I speak English, Spanish, and French.
+My name is Jorge Israel Peña, though online I sometimes use the pseudonym Blaenk Denum. I'm a developer currently living in Southern California. I speak English, Spanish, French, and am trying to learn Portuguese.
 
-My interests include [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming_language)), C and [C++11](http://en.wikipedia.org/wiki/C%2B%2B11), the [POSIX](http://en.wikipedia.org/wiki/POSIX) standards and the Linux Programming Interface, [LLVM](http://en.wikipedia.org/wiki/LLVM), [Digital Signal Processing](http://en.wikipedia.org/wiki/Digital_signal_processing) and [Music Visualization](http://en.wikipedia.org/wiki/Music_visualization), [Artificial Intelligence](http://en.wikipedia.org/wiki/Artificial_intelligence) and [Machine Learning](http://en.wikipedia.org/wiki/Machine_learning), [Music Information Retrieval](http://en.wikipedia.org/wiki/Music_information_retrieval), [Web Development](http://en.wikipedia.org/wiki/Web_development), [GPGPU Programming](http://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units), and [Real-Time Rendering](http://en.wikipedia.org/wiki/Real_Time_rendering).
+My interests include [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming_language)), C and [C++11](http://en.wikipedia.org/wiki/C%2B%2B11), the [POSIX](http://en.wikipedia.org/wiki/POSIX) standards and the Linux Programming Interface, [LLVM](http://en.wikipedia.org/wiki/LLVM), [Digital Signal Processing](http://en.wikipedia.org/wiki/Digital_signal_processing) and [Music Visualization](http://en.wikipedia.org/wiki/Music_visualization), [Artificial Intelligence](http://en.wikipedia.org/wiki/Artificial_intelligence) and [Machine Learning](http://en.wikipedia.org/wiki/Machine_learning), [Music Information Retrieval](http://en.wikipedia.org/wiki/Music_information_retrieval), [Web Development](http://en.wikipedia.org/wiki/Web_development), [GPGPU Programming](http://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units), and [Real-Time Rendering](http://en.wikipedia.org/wiki/Real_Time_rendering). I love to [read](/reads/) about these and other subjects.
 
 You can check out what I'm up to [lately](/lately) or find me on [github](http://github.com/blaenk) and [stackoverflow](http://stackoverflow.com/users/101090/jorge-israel-pena).
 
-If you'd like to get in touch you can email me at **jorge.israel.p@gmail.com**
+To get in touch you can email me at **jorge.israel.p@gmail.com** or message me on [twitter](https://twitter.com/blaenk).
 
-### Technology
+## Technology
 
 I try to be a [pragmatic programmer](http://en.wikipedia.org/wiki/The_Pragmatic_Programmer). I love to learn different technologies, most recently [Haskell and Digital Signal Processing](/posts/naive-convolution-in-haskell/). I do it because I have a genuine interest in gaining different perspectives on software development in order to maintain an open and malleable mind, with the hope that it'll help to prepare me for future technological disruptions.
 
@@ -24,7 +24,7 @@ I prefer to use the best tool for the job. For this reason I try to be agnostic 
 
 Check out [this page](/uses-this) for more specifics on my preferences.
 
-### Background
+## Background
 
 My family didn't have a computer before I was 12 years old. In fact, all of my life I had largely avoided computers, aside from specific instances in school when we were given time to work with them. This was a natural result of being warned and scolded not to play around with computers lest I break them.
 
@@ -40,13 +40,13 @@ Armed with this information, I made a deal with my dad which consisted of me mai
 
 A few months of hard work later I went to a small computer shop I discovered in the ad magazine to purchase my first computer. Shortly afterward, I learned that software development was a "thing" and there began my insatiable interest in all related subjects [^window].
 
-### Music
+## Music
 
 I love and have been listening to Electronic Dance Music for years, mainly Trance, which I primarily listen to by filtering various EDM radio shows for the best tracks. Shows I listen to are Armin van Buuren's [A State of Trance](http://www.astateoftrance.com/), Sander van Doorn's [Identity](http://www.sandervandoorn.com/radio/), and Tiësto's [Club Life](http://www.tiesto.com/Tiesto-club-life-podcasts).
 
 While I primarily listen to EDM, I'm open to and enjoy a wide variety of music. I never really understood why some people hate on certain genres.
 
-### Fitness
+## Fitness
 
 I work out religiously, every other day without fail, specifically doing strength training. I do [squats](http://www.exrx.net/WeightExercises/Quadriceps/BBFullSquat.html), [overhead presses](http://www.exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress.html), [bench presses](http://www.exrx.net/WeightExercises/PectoralSternal/BBBenchPress.html), [deadlifts](http://www.exrx.net/WeightExercises/ErectorSpinae/BBDeadlift.html), and [barbell rows](http://www.exrx.net/WeightExercises/BackGeneral/BBBentOverRow.html). I don't do max weight during my work outs and instead opt for a natural weight increase progression. That said, while I originally began with an empty bar, at the time of writing I'm at 300 lbs. on squats, bench presses, and deadlifts. Overhead presses are at 155 lbs. Barbell rows are at 175 lbs.
 
