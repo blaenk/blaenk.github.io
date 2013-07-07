@@ -8,11 +8,11 @@ icon: link
 
 I use [scss](http://sass-lang.com/) for my site's stylesheets. scss is a language very similar to [CSS](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) that adds support for variables, nesting, mixins, selector inheritance, and more -- while retaining a syntax very similar to CSS itself.
 
-### Stylesheet Splits
+## Split Stylesheets
 
 A common practice I've noticed with the use of scss is to avoid having one monolithic stylesheet and instead opt to split it out into separate semantic files. For example, **post.scss** would concern styling for posts, **syntax.scss** would concern styling for Pygments syntax highlighting, etc. These files are then imported into one stylesheet -- e.g., **screen.scss** -- using the `@import` directive. It is this stylesheet that gets compiled by the scss compiler into the monolithic CSS.
 
-### Problem
+## Problem
 
 In Hakyll, rules are generally designated by a pattern that matches a resource coupled with a route and a compiler. So this was the rule I originally had for **scss/screen.scss**:
 
@@ -30,7 +30,7 @@ The rule simply states that Hakyll should:
 
 This worked fine, but it meant that when I built or previewed the site, if I modified one of the split stylesheets, such as **post.scss**, it wouldn't regenerate the monolithic stylesheet. It would only do so if **scss/screen.scss** itself was modified.
 
-### Solution
+## Solution
 
 With the help of Hakyll's creator, Jasper, I learned that the solution involves the use of [`makePatternDependency`](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Metadata.html#v:makePatternDependency) to create a `Dependency` from a given `Pattern`, and [`rulesExtraDependencies`](http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies) to associate the dependencies with a specific `Compiler`.
 
