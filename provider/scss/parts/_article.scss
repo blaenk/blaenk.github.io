@@ -93,6 +93,7 @@ article{
         font-size: 15px;
         font-style: italic;
         cite {
+          color: #aaa !important; word-wrap: break-word;
           a { color: #aaa !important; word-wrap: break-word; }
           &:before { content: '\2014'; padding:{right: .3em;} color: $color-gray03; }
         }
