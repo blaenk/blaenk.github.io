@@ -8,6 +8,9 @@ icon: github-alt
 
 I've been touching up my site and I got to the footer, where I used to display the last time the site was generated, such as "generated March 22nd, 2013." I decided this was pretty tacky and removed it, but I did want to have something in the footer. Eventually I got the idea to instead put a short SHA1 hash of the latest commit for the site. It would link to the github page for said commit, and on hover of the link it would show the commit message.
 
+Update
+  ~ I have since [moved](/posts/the-switch-to-hakyll/) on to Hakyll and I stopped inserting the commit at the footer as this meant that I had to regenerate every page after every commit, as was the case in Jekyll as well. Instead, I have adopted a per-post commit tag and history link which I feel is a lot more meaningful and solves the aforementioned regeneration problem.
+
 After having seen previous plugin implementations, it seemed pretty simple enough. I quickly brought up the page for [rugged](https://github.com/libgit2/rugged), [libgit2's](http://libgit2.github.com/) ruby bindings.
 
 > libgit2 is a portable, pure C implementation of the Git core methods provided as a re-entrant linkable library with a solid API, allowing you to write native speed custom Git applications in any language which supports C bindings.
