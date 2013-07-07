@@ -38,13 +38,14 @@ All this says is that a given sample $y[i]$ in the output signal $y[n]$ is deter
 
 Natural imperative instinct might lead you to conclude that this can be easily implemented using nested iterations and arrays:
 
-~~~ {lang="cpp"}
+~~~ {lang="cpp" text="imperative convolution in C++ with arrays"}
 const int outputLength = M + N - 1;
 int *y = new int[outputLength]();
 
 for (int i = 0; i < outputLength; ++i) {
   for (int j = 0; j < M; ++j) {
-    if (i - j >= 0) y[i] += x[i - j] * h[j];
+    if (i - j >= 0)
+      y[i] += x[i - j] * h[j];
   }
 }
 ~~~
