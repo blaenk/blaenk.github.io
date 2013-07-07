@@ -8,11 +8,10 @@ icon: bug
 
 * toc
 
-**Disclaimer**: This post is titled to make it easy for people who are experiencing the same problem to find this post. xmonad does not ignore _all_ bindings.
-
-**Update**: Shortly after posting in the [issue tracker entry](https://code.google.com/p/xmonad/issues/detail?id=273) for this issue relating my experience and affirming that the proposed patch fixed the problem, the gracious developers merged the patch into the main tree. This problem should no longer affect anyone!
-
 In my [previous post](/posts/terminal-customization/) I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up [xmonad](http://xmonad.org). I've finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.
+
+Update
+  ~ Shortly after posting in the [issue tracker entry](https://code.google.com/p/xmonad/issues/detail?id=273) for this issue relating my experience and affirming that the proposed patch fixed the problem, the gracious developers merged the patch into the main tree. This problem should no longer affect anyone!
 
 ## Media Keys
 
@@ -121,4 +120,3 @@ I restarted xmonad with `Mod-Shift-Q` (so that `~/.xinitrc` is rerun) and everyt
 ## Bug Report
 
 Over the course of my transition to XKB, Paul found that there was already [an issue](https://code.google.com/p/xmonad/issues/detail?id=273) opened back in 2009 concerning this. The issue report has a patch attached that fixes this, but the patch has yet to be applied to xmonad. Paul suggested I try the patch myself and communicate my results back to the issue report. So I went ahead and got xmonad and xmonadContrib from the darcs repository, ran a simple `darcs apply keycode.dpatch`, and installed each with a `--prefix` to prevent clashing with the ones already installed with pacman. Indeed, the patch worked perfectly.
-
