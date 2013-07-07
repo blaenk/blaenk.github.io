@@ -7,8 +7,6 @@
   text-align: center;
 }
 
-.footnotes { hr { display: none; } }
-
 .entry-content code {
   background-color: #EEE;
   padding: 1px 5px;
@@ -35,8 +33,9 @@ p.notfound { margin: 15px 0; }
 #footer {
   font-size: 1.3em;
   color: #999;
+  margin-top: 2px;
 
-  #braces {
+  #social {
     font-family: Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
     color: #999;
     
@@ -125,11 +124,6 @@ sup { line-height: 1em; }
 		width: 100%;
 	}
 }
-/*
-.content > .post:first-child,
-.content > .archives:first-child,
-.content > .page:first-child { margin-top: 15px; }
-*/
 
 dt {
   font-weight: bold;
@@ -137,8 +131,7 @@ dt {
 
 article .entry-content > ul,
 article .entry-content > ol {
-  /* li { margin-top: 10px; } */
-  li > p {
+  li p {
     margin-top: 0;
     margin-bottom: 10px;
   }
@@ -190,6 +183,33 @@ article .entry-content > ol {
     font: 1em FontAwesome;
     margin-left: 5px;
   }
+
+  hr {
+    padding: 0;
+    text-align: center;
+    width: 75%;
+
+    &:after {
+      content: "§";
+      display: inline-block;
+      position: relative;
+      font-size: 2em;
+      padding: 0 0.25em;
+      background: white;
+      top: -1em;
+    }
+  }
+}
+
+
+hr {
+  background-color: #cccccc;
+  border: 0;
+  height: 2px;
+  color: #cccccc;
+  margin: 35px auto;
+  width: 50%;
+  clear: both;
 }
 
 #main-nav > ul > li > a {
@@ -207,6 +227,7 @@ article .entry-content > ol {
   padding-top: 15px;
   margin-top: 5px;
   border-top: 5px solid #8ccaff;
+  clear: both;
 }
 
 #content {
@@ -379,11 +400,10 @@ figure.code {
   }
 
   h2 a.header-link { border-bottom: 2px solid #8ccaff; }
+  h3 a.header-link { border-bottom: 2px solid #e4e4e4; }
+  h4 { font-size: 16px; }
+  h5 { font-size: 14px; }
 }
-
-/*#content {
-  border-bottom: 5px solid #8ccaff;
-}*/
 
 #footer {
   border-top: 5px solid #ddd;
@@ -434,6 +454,7 @@ article .entry-content blockquote {
     border-top: none;
     padding-top: 0;
     padding-bottom: 0;
+    font-size: 16px;
   }
 }
 
