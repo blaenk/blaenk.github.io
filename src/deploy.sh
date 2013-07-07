@@ -52,7 +52,7 @@ setup() {
 deploy() {
   dir_check
 
-  COMMIT="`git log -1 HEAD --pretty=format:%H`"
+  COMMIT=$(git log -1 HEAD --pretty=format:%H)
   SHA=${COMMIT:0:8}
 
   info "commencing deploy operation based off of $SHA"
