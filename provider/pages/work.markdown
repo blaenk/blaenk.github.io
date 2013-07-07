@@ -8,7 +8,7 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
-#### Hakyll: Fix preview functionality on Windows {#hakyll .collapse}
+##### Hakyll: Fix preview functionality on Windows {#hakyll .collapse}
 
 <div class="collapsible">
 
@@ -28,7 +28,7 @@ The only other alternative we could think of was switching to a polling system f
 
 </div>
 
-#### rtorrent: Fix unportable signal disposition establishment on Solaris {#rtorrent .collapse}
+##### rtorrent: Fix unportable signal disposition establishment on Solaris {#rtorrent .collapse}
 
 <div class="collapsible">
 
@@ -68,7 +68,7 @@ My [patch](https://github.com/rakshasa/rtorrent/pull/127) simply consisted of sw
 
 </div>
 
-#### MPC-HC: Fix web UI seeking {#mpc-hc .collapse}
+##### MPC-HC: Fix web UI seeking {#mpc-hc .collapse}
 
 <div class="collapsible">
 
@@ -78,7 +78,7 @@ As for the original intent of implementing the functionality for synced playback
 
 </div>
 
-#### node-xmlrpc: Add support for buffer & i8 datatypes, chunked responses, HTTP basic authentication {#node-xmlrpc .collapse}
+##### node-xmlrpc: Add support for buffer & i8 datatypes, chunked responses, HTTP basic authentication {#node-xmlrpc .collapse}
 
 <div class="collapsible">
 
@@ -94,7 +94,7 @@ Finally, I added support for basic HTTP authentication.
 
 ## Projects
 
-#### Pulse Visualizer: Visualizer for PulseAudio in Haskell {#pulse-visualizer .collapse}
+##### Pulse Visualizer: Visualizer for PulseAudio in Haskell {#pulse-visualizer .collapse}
 
 <div class="collapsible">
 
@@ -110,7 +110,7 @@ Source is available [on github](https://github.com/blaenk/pulse-visualizer).
 
 </div>
 
-#### Phoenix: Web Interface for rtorrent {#phoenix .collapse}
+##### Phoenix: Web Interface for rtorrent {#phoenix .collapse}
 
 <div class="collapsible">
 
@@ -124,7 +124,7 @@ This interface tends to be a sort of rite of passage for me when learning a lang
 
 </div>
 
-#### WP-reCAPTCHA: Official reCAPTCHA plug-in for WordPress {#wp-recaptcha .collapse}
+##### WP-reCAPTCHA: Official reCAPTCHA plug-in for WordPress {#wp-recaptcha .collapse}
 
 <div class="collapsible">
 
@@ -140,7 +140,7 @@ reCAPTCHA was acquired by Google in 2009, and the original team seems to have la
 
 </div>
 
-#### The Instagib Project: Standalone Instagib game based on Quake 3 engine (id Tech 3) {#the-instagib-project .collapse}
+##### The Instagib Project: Standalone Instagib game based on Quake 3 engine (id Tech 3) {#the-instagib-project .collapse}
 
 <div class="collapsible">
 
@@ -156,7 +156,7 @@ Recently, however -- as a result of Disney [shutting down](http://en.wikipedia.o
 
 </div>
 
-#### Musicaster: Homemade last.fm {#musicaster .collapse}
+##### Musicaster: Homemade last.fm {#musicaster .collapse}
 
 <div class="collapsible">
 
@@ -166,7 +166,7 @@ After I had done all this, one of the friends I showed it to said, "Oh, so it's 
 
 </div>
 
-#### MyPod: iPod music navigator and retriever {#mypod .collapse}
+##### MyPod: iPod music navigator and retriever {#mypod .collapse}
 
 <div class="collapsible">
 
