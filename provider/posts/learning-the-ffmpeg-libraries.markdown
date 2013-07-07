@@ -10,7 +10,7 @@ I've been trying to understand some of the [ffmpeg](http://www.ffmpeg.org/) libr
 
 These notes will be updated as I learn more about ffmpeg.
 
-### Resources
+## Resources
 
 A problem I've encountered with ffmpeg is that many articles posted about it or open source found online is already outdated. Many modern applications like [MPC-HC](http://mpc-hc.org/) and [Chromium](http://www.chromium.org/Home) do seem to use the latest version of the APIs. I also quickly learned that most learning is done through looking at the examples in ffmpeg as well as the ffplay source.
 
