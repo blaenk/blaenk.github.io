@@ -8,8 +8,6 @@ icon: terminal
 
 * toc
 
-**Update**: I have changed my prompt to be multiline. All that has changed is that the ➜ is on its own line.
-
 A while back I switched over to [zsh](http://en.wikipedia.org/wiki/Z_shell) as my shell and used [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) to get up and running quickly. I barely used any of the features it provided, so I recently decided to do away with it and get zsh setup from scratch. At the same time I decided it'd be a good idea to do the same for [urxvt](http://en.wikipedia.org/wiki/Rxvt-unicode). These initiatives had the consequence that I ended up completely redoing the way I maintained my dotfiles which had the effect of greatly improving my overall setup.
 
 Before I go any further I'd like to point out that all of the things that I'll talk about in this post are available in my [dotfiles](https://github.com/blaenk/dots) repository. I'll make an effort to link to the relevant individual files from the repository for each topic I cover. Here is the end result:
@@ -50,7 +48,7 @@ My zsh prompt is actually pretty simple. I played around with multiline prompts 
 
 #### Basic
 
-The basic prompt consists of a lambda followed by the path (which [auto-collapses](http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/#current-directory) `$HOME` to `~`) with [highlighted path separators](http://superuser.com/questions/49092/how-to-format-the-path-in-a-zsh-prompt) followed by a right arrow. Pretty simple and easy on the colors in my opinion, aside from the unconventional highlighting of the path separators, which was something I had long wanted and took me a while to get right.
+The basic prompt consists of a lambda followed by the path -- which [auto-collapses](http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/#current-directory) `$HOME` to `~` -- with [highlighted path separators](http://superuser.com/questions/49092/how-to-format-the-path-in-a-zsh-prompt) followed by a right arrow. Pretty simple and easy on the colors in my opinion, aside from the unconventional highlighting of the path separators, which was something I had long wanted and took me a while to get right.
 
 My prompt is inspired by the Haskell [lambda syntax](http://www.haskell.org/haskellwiki/Lambda_abstraction) so that it looks like every line is a lambda operating on the current directory whose code is the command you type:
 
@@ -67,6 +65,8 @@ Here it is in text:
 ~~~ {lang="text"}
 λ ~/code/haskell ➜
 ~~~
+
+**Update**: I have changed my prompt to be multiline. All that has changed is that the ➜ is on its own line.
 
 #### git
 
