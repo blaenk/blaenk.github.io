@@ -58,7 +58,9 @@ The situation on Linux is such that the kernel's `signal()` system call provides
 
 Solaris doesn't have such a wrapper for `signal()`, instead exposing its bare, System V semantics system call with [`signal()`](http://docs.oracle.com/cd/E26502_01/html/E29034/signal-3c.html):
 
-> `void (*signal(int sig, void (*disp)(int)))(int);`
+> ~~~ {lang="c"}
+> void (*signal(int sig, void (*disp)(int)))(int);
+> ~~~
 > 
 > If `signal()` is used, disp is the address of a signal handler, and sig is not `SIGILL`, `SIGTRAP`, or `SIGPWR`, the system first sets the signal's disposition to `SIG_DFL` before executing the signal handler.
 
