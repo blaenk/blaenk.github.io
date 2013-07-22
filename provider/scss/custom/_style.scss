@@ -25,11 +25,6 @@
 h1.notfound { font-size: 4em; }
 p.notfound { margin: 15px 0; }
 
-.left {
-  float: left;
-  margin-right: 1.5em;
-}
-
 #footer {
   font-size: 1.3em;
   color: #999;
@@ -54,11 +49,23 @@ p.notfound { margin: 15px 0; }
   margin-right: auto;
 }
 
+.left {
+  float: left;
+  margin-right: 1.5em;
+  & > * { margin-top: 10px !important; }
+}
+
+.right {
+  float: right;
+  margin-left: 1.5em;
+  & > * { margin-top: 10px !important; }
+}
+
 img.center {
   display: block;
 }
 
-article .entry-content > table {
+article .entry-content table {
   cursor: default;
   margin: 25px auto;
   background: #F2F9FF;
@@ -111,11 +118,6 @@ sup {
 
 sup { line-height: 1em; }
 
-.right {
-  float: right;
-  margin-left: 1.5em;
-}
-
 .inner {
 	width: 720px;
 	margin: 0 auto;
@@ -148,7 +150,22 @@ article .entry-content > ol {
   }
 }
 
+#toc.right-toc {
+  float: right;
+  margin-top: 0;
+  margin-left: 10px;
+  padding: 0 10px 5px 10px;
+
+  @media screen and (max-width: 600px) {
+    float: none;
+    padding: 0 10px 5px 0px;
+    margin-left: 0;
+  }
+}
+
 #toc {
+  margin-left: 0;
+
   li {
     margin-top: 0;
 
@@ -160,19 +177,6 @@ article .entry-content > ol {
 
     .toc-section { cursor: default; }
     a { margin-left: 4px; }
-  }
-
-  padding: 0 10px 5px 10px;
-  float: right;
-  margin-left: 10px;
-  margin-top: 0;
-
-  @media screen and (max-width: 600px) {
-    float: none;
-    padding: 0 10px 5px 0px;
-    display: inline-block;
-    margin-left: 0;
-    margin-top: 0px;
   }
 }
 
@@ -247,6 +251,7 @@ hr {
 
 .post {
   .meta {
+    clear: both;
     position: static;
     width: auto;
 
@@ -262,13 +267,8 @@ hr {
   }
 }
 
-figure.code {
-  padding: 0;
-  border: none;
-  border-radius: 0;
+.entry-content > figure.code {
   margin: 15px -28px;
-  cursor: default;
-  background-color: #F2F9FF;
 
   @media screen and (max-width: 600px) {
     margin-left: 0;
@@ -280,6 +280,15 @@ figure.code {
     margin-left: 0;
     margin-right: 0;
   }
+}
+
+figure.code {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  margin: 15px 0;
+  cursor: default;
+  background-color: #F2F9FF;
 
   figcaption {
     @media screen and (max-width: 600px) {
@@ -291,6 +300,7 @@ figure.code {
     border-top: 2px solid #8CCAFF;
     padding: 5px 28px; // 5px 10px;
     color: #00427B;
+    position: relative;
 
     abbr {
       border-bottom: 1px dotted #00427B;
@@ -302,12 +312,19 @@ figure.code {
       padding: 0;
       margin: 0;
       font-weight: bold;
-    }
-    a,
-    a:visited {
-      right: 28px; // 15px;
-      color: #00427B;
-      font-weight: bold;
+      display: block;
+
+      &:empty{
+        display: none;
+      }
+
+      a, a:visited {
+        position: absolute;
+        top: 5px;
+        right: 28px; // 15px;
+        color: #00427B;
+        font-weight: bold;
+      }
     }
   }
 
@@ -318,6 +335,9 @@ figure.code {
   .highlighttable {
     background-color: #F2F9FF;
     line-height: 18px;
+    margin: 0;
+    border: 0;
+
 
     .linenodiv {
       @media screen and (max-width: 600px) {
@@ -351,6 +371,8 @@ figure.code {
     }
 
     .code, .gutter { line-height: 18px; }
+
+    td { padding: 0; }
   }
 }
 
@@ -375,7 +397,6 @@ figure.code {
     margin-top: 0;
     overflow: hidden;
     position: static !important;
-    left: -20px;
 
     &:hover .hash { color: #ccc; }
 
@@ -399,6 +420,7 @@ figure.code {
     }
   }
 
+  h1 .hash { left: -25px; }
   h2 a.header-link { border-bottom: 2px solid #8ccaff; }
   h3 a.header-link { border-bottom: 2px solid #e4e4e4; }
   h4 { font-size: 16px; }
