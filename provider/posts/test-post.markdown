@@ -43,6 +43,7 @@ Donec vitae turpis non augue pulvinar imperdiet eu non erat. Integer mollis diam
 ## The Meaning of Life ##
 
 <img src="http://placekitten.com/150/100" class="right" title="Place Kitten #3">
+
 Aenean tristique, magna a semper venenatis, orci odio tempor lorem, ac molestie ligula enim ac urna. Fusce egestas nisl id massa porta vitae pretium tellus aliquet. Morbi tempor arcu sit amet felis hendrerit aliquam. Nulla facilisi. Suspendisse diam tortor, pharetra ac porta eu, ullamcorper nec lectus. Sed nulla turpis, blandit et tincidunt vel, `condimentum` et sapien. Aliquam dignissim blandit pharetra. Mauris ornare accumsan libero at bibendum. Morbi dui nisl, aliquet sit amet gravida sit amet, mollis commodo nulla. Quisque eu felis purus.
 
 $$ \forall x, y : \mathbb{Z}, x > 3 \land y < 2 \Rightarrow x^2 - 2y > 5$$
