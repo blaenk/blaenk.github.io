@@ -9,6 +9,7 @@ This page lists some of the things I've been up to lately.
 ## Working On
 
 * An audio player, though it'll ultimately be used for something else other than general audio playback. I'm decoding audio frames using [ffmpeg](http://www.ffmpeg.org/)'s libavcodec, libavformat, libavutil, and libswresample. Playback is currently done using [PulseAudio](http://www.freedesktop.org/wiki/Software/PulseAudio) although I intend to switch to a cross-platform library like [PortAudio](http://www.portaudio.com/). It works with any format/container/codec supported by ffmpeg. Source will be up soon.
+    * Ported to [PortAudio](http://www.portaudio.com/)!
 
 ## Reading
 
