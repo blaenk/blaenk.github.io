@@ -93,6 +93,9 @@ tableOfContents [] = (\x -> x)
 tableOfContents headers = tocInsert
   where tocInsert :: Block -> Block
         tocInsert (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
+          (RawBlock "html") . (\list -> "<ul id='toc' class='right-toc'>" ++ list ++ "</ul>") .
+          (genToc "1") . tocTree . normalizeTocs $ headers
+        tocInsert (BulletList (( (( Plain ((Str "toc-center"):_)):_)):_)) =
           (RawBlock "html") . (\list -> "<ul id='toc'>" ++ list ++ "</ul>") .
           (genToc "1") . tocTree . normalizeTocs $ headers
         tocInsert x = x
