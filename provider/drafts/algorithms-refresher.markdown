@@ -4,13 +4,14 @@ published: July 15, 2013
 excerpt: Notes on common algorithms
 tags: Algorithms, Notes
 icon: lightbulb
+comments: off
 ---
 
-* toc
+What follows are some notes on algorithms I've been reviewing from [Algorithms]() by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual]() by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I can be sure I understand the material -- since I have to understand it to explain it.
 
-What follows are some notes on algorithms I've been reviewing from [Algorithms]() by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual]() by Steven S. Skiena.
+* toc-center
 
-## Dynamic Connectivity
+# Dynamic Connectivity
 
 **Answers**: Is a pair of nodes connected?
 
@@ -18,13 +19,16 @@ What follows are some notes on algorithms I've been reviewing from [Algorithms](
 
 **General Flow**: Sites are all partitioned into singleton sets. Successive `union()` operations merge sets together. The `find()` operation determines if a given pair of sites are from the same component.
 
-Term      Definition
------     -----------
-Site      Element/Node
-Component Set/Graph
-Connected Sites are in the same component
+Terms:
 
-### Quick-Find
+Site
+  ~ Element/Node
+Component
+  ~ Set/Graph
+Connected
+  ~ Sites are in the same component
+
+## Quick-Find
 
 <div class="right">
 
@@ -44,7 +48,7 @@ Union operates as follows:
 2. goes through the whole array, setting sites which were part of $P$'s component to now be part of $Q$'s
 3. decrements the number of components in the disjoint-set
 
-~~~ {lang="java"}
+~~~ {lang="java" text="quick-find"}
 public int find(int site) { return id[site]; }
 
 public void union(int a, int b) {
@@ -60,7 +64,7 @@ public void union(int a, int b) {
 }
 ~~~
 
-### Quick-Union
+## Quick-Union
 
 <div class="right">
 
@@ -77,7 +81,7 @@ This is accomplished by creating a tree-like relationship between sites. With a 
 
 As a result of this, the `find()` operation needs to walk up the tree from any given site to find the root note which designates the component to which the given site belongs to. The walk is terminated when it encounters a site whose component is itself.
 
-~~~ {lang="java"}
+~~~ {lang="java" text="quick-union"}
 public int find(int p) {
   while (p != id[p]) p = id[p];
   return p;
@@ -95,7 +99,7 @@ public void union(int p, int q) {
 }
 ~~~
 
-### Weighted Quick-Union
+## Weighted Quick-Union
 
 <div class="right">
 
@@ -120,7 +124,7 @@ Weighted Quick-Union fixes this by keeping track of each component's size in a s
 
 In the example above, by step 2, component 1 is size 2, so component 2, being size 1, is merged under component 1 and not the other way around.
 
-~~~ {lang="java"}
+~~~ {lang="java" text="weighted quick-union"}
 public void union(int p, int q) {
   int i = find(p);
   int j = find(q);
@@ -134,7 +138,7 @@ public void union(int p, int q) {
 }
 ~~~
 
-#### Path Compression
+### Path Compression
 
 <div class="right">
 
@@ -146,7 +150,7 @@ Union            $1\ (amortized)$
 
 A further improvement can be done called **path compression** in which every site traversed due to a call to `find()` is directly linked to the component root.
 
-~~~ {lang="java"}
+~~~ {lang="java" text="path compression"}
 public int find(int p) {
   if (p != id[p])
     id[p] = find(id[p]);
@@ -155,7 +159,7 @@ public int find(int p) {
 }
 ~~~
 
-## Sorting
+# Sorting
 
 Many problems can be reduced to sorting.
 
@@ -167,7 +171,12 @@ The following algorithms are described with the assumption that the sequence is 
 
 For example, selection sort backed by a priority queue or balanced binary tree can help to speed up the operation of finding the smallest element in the unsorted region. Instead of being linear, the operation would be $\lg(n)$. Given that this is done at every element in the sequence, of which there are $N$, this means that selection sort backed by such a structure can be improved from $O(n^2)$ to $O(n\lg(n))$ [^data_structures].
 
-### Selection Sort
+Terms:
+
+Stability
+  ~ maintaining relative order of equal keys
+
+## Selection Sort
 
 <div class="right">
 
@@ -202,7 +211,7 @@ public void sort(Comparable[] seq) {
 }
 ~~~
 
-### Insertion Sort
+## Insertion Sort
 
 <div class="right">
 
@@ -213,7 +222,7 @@ Best   $\Theta(n)$
 
 </div>
 
-This algorithm is still pretty straightforward but somewhat improves upon selection sort if the array is already sorted or if it's nearly sorted.
+This is a **stable** algorithm that is still pretty straightforward but somewhat improves upon selection sort if the array is already sorted or if it's nearly sorted.
 
 It operates as follows:
 
@@ -233,7 +242,7 @@ public void sort(Comparable[] seq) {
 }
 ~~~
 
-### Shell Sort
+## Shell Sort
 
 <div class="right">
 
@@ -280,7 +289,7 @@ public void sort(Comparable[] seq) {
 }
 ~~~
 
-### Merge Sort
+## Merge Sort
 
 <div class="right">
 
@@ -291,7 +300,7 @@ Space  $O(n)$
 
 </div>
 
-This is the first algorithm that is linearithmic in complexity. The general idea is that the sequence is split into many pieces and then they're all merged back together. The sorting occurs during the merging phase. The merging algorithm works such that the resultant merged piece is sorted.
+This is a **stable** algorithm and the first algorithm that is linearithmic in complexity. The general idea is that the sequence is split into many pieces and then they're all merged back together. The sorting occurs during the merging phase. The merging algorithm works such that the resultant merged piece is sorted.
 
 The main drawback is that it has $O(n)$ space complexity because an auxiliary sequence has to be created to facilitate the merging process.
 
@@ -310,7 +319,7 @@ public void merge(Comparable[] seq, int lo, int mid, int hi) {
 }
 ~~~
 
-#### Top-Down
+### Top-Down
 
 This is a recursive approach that works by splitting the array into two pieces until the pieces consist of pairs of elements. On each recurrence, the two pieces that were split for that recurrence are merged back.
 
@@ -332,14 +341,14 @@ private void sort(Comparable[] seq, int lo, int hi) {
 }
 ~~~
 
-##### Improvements
+#### Improvements {#merge-sort-improvements}
 
 There are a couple of improvements that can be made to top-down merge sort:
 
 * **use insertion sort for small sub-arrays**: create a cut-off, e.g. 15 elements, where the pieces are sorted with insertion sort instead of being broken down further
 * **test if sequence is already in order**: skip the merging phase if `seq[mid] <= seq[mid + 1]`
 
-#### Bottom-Up
+### Bottom-Up
 
 The other approach to merge sort is bottom-up, that is, starting with arrays consisting of one element and merging them together, then merging all of the arrays of size two, and so on until the entire array is merged.
 
@@ -359,7 +368,7 @@ public void sort(Comparable[] seq) {
 }
 ~~~
 
-### Quick Sort
+## Quick Sort
 
 <div class="right">
 
@@ -389,12 +398,17 @@ private void sort(Comparable[] seq, int lo, int hi) {
 
 The partition algorithm is similar to merge in merge sort in that it is what actually does the sorting.
 
-1. choose a partition element separator, e.g. `seq[0]`
-2. scan through the array from `seq[1]` to `seq[N]` in both directions
-    1. if the currently considered elements on either side are out of order, swap them
-    2. continue until the iterations cross
-    3. swap the partition element `seq[0]` with the final position of the right-side iterator
-3. recurse step 1-2 for the left and right sides of the partition element
+<img class="center" src="/images/algorithms/partition.png">
+
+1. choose a partition element separator $v$
+2. scan through the array from $i$ to $j$ in both directions
+    1. while $i < v$ do `i++`
+    2. while $j > v$ do `j--`
+    3. swap $i$ and $j$
+3. repeat step 2 until the iterators $i$ and $j$ cross
+4. swap the partition element $v$ with the final position of the right-side iterator $j$
+
+The sorting algorithm then recurses on the two partitions.
 
 ~~~ {lang="java" text="partition algorithm"}
 private int partition(Comparable[] seq, int lo, int hi) {
@@ -414,5 +428,169 @@ private int partition(Comparable[] seq, int lo, int hi) {
   return j;
 }
 ~~~
+
+### Improvements {#quick-sort-improvements}
+
+* **use insertion sort for small sub-arrays**: Adding a cutoff size for which to apply insertion sort to small sub-arrays can improve the performance of the algorithm.
+
+    Instead of:
+
+    ~~~ {lang="java"}
+    if (hi <= lo) return;
+    ~~~
+
+    use:
+
+    ~~~ {lang="java"}
+    if (hi <= lo + M) { insertionSort(seq, lo, hi); return; }
+    ~~~
+
+    where `M` is the cutoff. Recommended sizes are between 5 and 15.
+
+* **median-of-three partitioning**: Choose a sample of size 3 from the sequence and choose the middle element as the partitioning element.
+
+### Three-way Partitioning
+
+One problem with quick sort as it is implemented above is that items with keys equal to that of the partition item are nonetheless swapped, unnecessarily. Three-way partitioning aims to resolve this by partitioning into three separate sub-arrays, the middle of which corresponds to those items with keys equal to the partition point. E. W. Dijkstra popularized this as the _Dutch National Flag_ problem.
+
+<img class="center" src="/images/algorithms/3waypartition.png">
+
+1. perform a 3-way comparison between element $i$ and $v$
+    1. $seq[i] < v$: swap $lt$ and $i$ and `lt++` and `i++`
+    2. $seq[i] > v$: swap $i$ and $gt$ and `gt--`
+    3. $seq[i] = v$: `i++`
+2. repeat step 1 until $i$ and $gt$ cross, i.e. while $i \leq gt$
+3. recurse on the left and right segments
+
+Quick sort performs a lot better than merge sort in sequences that have duplicate keys. Its time is reduced from linearithmic to linear for sequences with large numbers of duplicate keys.
+
+~~~ {lang="java" text="three-way partitioning"}
+private void sort(Comparable[] seq, int lo, int hi) {
+  if (hi <= lo) return;
+
+  int lt = lo, i = lo + 1, gt = hi;
+  Comparable v = seq[lo];
+
+  while (i <= gt) {
+    int cmp = (seq[i] > seq[v]) - (seq[i] < seq[v]);
+
+    if      (cmp < 0) swap(seq[lt++], seq[i++]);
+    else if (cmp > 0) swap(seq[i],    seq[gt--]);
+    else              i++;
+  }
+
+  sort(seq, lo, lt - 1);
+  sort(seq, gt + 1, hi);
+}
+~~~
+
+## Priority Queues
+
+A priority queue is an abstract data type that allows adding elements and retrieving the smallest or largest element. Priority queues are useful for an unbounded sequence for which we want to retrieve the $M$ smallest elements at any given moment.
+
+### Data Structure {#priority-queue-data-structure}
+
+The data structure commonly used to back a priority queue is an array, with the first element `seq[0]` unused, embedding the contents of a **complete binary tree** in level-order that maintains two invariants:
+
+1. the parent of $k$ is $k / 2$
+2. the children of $k$ are at $2k$ and $2k + 1$
+
+#### Insertion {#priority-queue-insertion}
+
+<div class="right">
+
+Case   Growth
+-----  --------
+Worst  $O(\lg{n})$
+
+</div>
+
+To insert into the heap:
+
+1. add element to the end of the array
+2. increment heap size
+3. swim up the heap to restore heap order
+
+~~~ {lang="java" text="swim"}
+private void swim(Comparable[] seq, int k) {
+  while (k > 1 && seq[k / 2] < seq[k]) {
+    swap(seq[k / 2], seq[k]);
+    k = k / 2;
+  }
+}
+~~~
+
+#### Removal {#priority-queue-removal}
+
+<div class="right">
+
+Case   Growth
+-----  --------
+Worst  $O(\lg{n})$
+
+</div>
+
+To remove the maximum from the heap:
+
+1. take the largest item off of the top
+2. put the item from the end of the heap at the top
+3. decrement heap size
+4. sink down the heap to restore heap order
+
+~~~ {lang="java" text="sink"}
+private void sink(Comparable[] seq, int k) {
+  while (2 * k <= N) {
+    int j = 2 * k;
+
+    if (j < N && seq[j] < seq[j + 1]) j++;
+    if (k >= j) break;
+
+    swap(seq[k], seq[j]);
+    k = j
+  }
+}
+~~~
+
+### Heap Sort
+
+<div class="right">
+
+Case   Growth
+-----  --------
+Worst  $O(n\lg{n})$
+
+</div>
+
+Heap sort is a sorting algorithm facilitated by a priority queue which performs well when backed by a binary heap. Heap sort more or less amounts to:
+
+1. feeding the sequence into a priority queue
+2. extracting the sequence out of the priority queue
+
+However, there are certain details involved to make it operate faster. Usually these operations are performed in place to avoid using extra space.
+
+First, the sequence has to be put into heap order, which is accomplished by walking up the tree (bottom-up) and sinking every root node with more than one child. The starting point for this is always $N / 2$.
+
+Assuming a maximum-oriented priority queue, the sorting is then accomplished by:
+
+1. remove the maximum, thus decrementing the heap size
+2. swap the maximum with the last item in the heap
+3. sink the new root
+4. repeat 1-3 until the priority queue becomes empty
+
+~~~ {lang="java" text="heap sort"}
+public void sort(Comparable[] seq) {
+  int N = seq.length;
+
+  for (int k = N / 2; k >= 1; k--)
+    sink(seq, k, N);
+
+  while (N > 1) {
+    swap(seq[1], seq[N--]);
+    sink(seq, 1, N);
+  }
+}
+~~~
+
+# Searching
 
 [^data_structures]: Skiena p. 109, § 4.3
