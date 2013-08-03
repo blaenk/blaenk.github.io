@@ -5,10 +5,12 @@ module Site.Fields (
   defaultCtx,
   postCtx,
   archiveCtx,
-  tagsCtx
+  tagsCtx,
+  sluggedTagsField,
+  customTitleField
 ) where
 
-import Hakyll
+import Hakyll hiding (titleField)
 import Data.Monoid (mconcat)
 import System.Process
 import System.FilePath
@@ -49,10 +51,11 @@ defaultCtx :: Context String
 defaultCtx = mconcat
   [ bodyField "body"
   , metadataField
+  , titleField
   , niceUrlField "url"
   , pathField "path"
-  , constField "title" "Blaenk Denum"
   , constField "commentsJS" ""
+  , constField "title" "Blaenk Denum"
   , missingField
   ]
 
@@ -70,13 +73,24 @@ postCtx = mconcat
 archiveCtx :: Pattern -> Context String
 archiveCtx pat = mconcat
   [ field "archives" (\_ -> yearArchives pat) :: Context String
-  , constField "title" "Archives"
   , constField "commentsJS" ""
   , defaultCtx
   ]
 
-tagsCtx :: Tags -> Context String
-tagsCtx tags = sluggedTagsField "tags" tags
+tagsCtx :: Pattern -> String -> Context String
+tagsCtx pat tag = mconcat
+  [ constField "tag" tag
+  , customTitleField $ "Tagged: " ++ tag
+  , archiveCtx pat
+  ]
+
+titleField :: Context String
+titleField = field "pageTitle" $ \item -> do
+  title <- getMetadataField (itemIdentifier item) "title"
+  maybe (return "Blaenk Denum") (return . (++ " - Blaenk Denum")) title
+
+customTitleField :: String -> Context String
+customTitleField value = constField "pageTitle" $ value ++ " - Blaenk Denum"
 
 -- url field without /index.html
 niceUrlField :: String -> Context a

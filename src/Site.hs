@@ -78,7 +78,7 @@ main = do
         >>= withItemBody (abbreviationFilter)
         >>= saveSnapshot "abbreviated"
         >>= pandocCompiler
-        >>= loadAndApplyTemplate "templates/post.html" (tagsCtx tags <> postCtx)
+        >>= loadAndApplyTemplate "templates/post.html" (sluggedTagsField "tags" tags <> postCtx)
         >>= loadAndApplyTemplate "templates/layout.html" postCtx
 
     match "pages/*" $ do
@@ -94,7 +94,7 @@ main = do
       compile $ do
         makeItem ""
           >>= loadAndApplyTemplate "templates/404.html" defaultCtx
-          >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+          >>= loadAndApplyTemplate "templates/layout.html" (customTitleField "Not Found" <> defaultCtx)
 
     create ["index.html"] $ do
       route idRoute
@@ -120,8 +120,8 @@ main = do
       route $ niceRoute "tags/"
       compile $ do
         makeItem ""
-          >>= loadAndApplyTemplate "templates/tags.html" (constField "tag" tag <> tagsCtx tags <> archiveCtx pattern)
-          >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+          >>= loadAndApplyTemplate "templates/tags.html" (tagsCtx pattern tag)
+          >>= loadAndApplyTemplate "templates/layout.html" (tagsCtx pattern tag)
 
     match "templates/*" $ compile templateCompiler
 
