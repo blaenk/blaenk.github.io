@@ -7,7 +7,7 @@ icon: lightbulb
 comments: off
 ---
 
-What follows are some notes on algorithms I've been reviewing from [Algorithms]() by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual]() by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I can be sure I understand the material -- since I have to understand it to explain it.
+What follows are some notes on algorithms I've been reviewing from [Algorithms]() by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual]() by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material -- since I have to understand it to explain it.
 
 * toc-center
 
@@ -217,8 +217,8 @@ public void sort(Comparable[] seq) {
 
 Case   Growth
 -----  --------
-Worst  $O(n^2)$
 Best   $\Theta(n)$
+Worst  $O(n^2)$
 
 </div>
 
@@ -231,6 +231,8 @@ It operates as follows:
 3. repeat until the end of the sequence
 
 The benefit of insertion sort is that if the sequence is already sorted then the algorithm operates in linear time. Similarly, if the sequence is nearly sorted, the algorithm will perform better than the worst case.
+
+**Performance Factors**: order of the items
 
 ~~~ {lang="java" text="insertion sort <a href=\"http://www.sorting-algorithms.com/insertion-sort\">visualize</a>"}
 public void sort(Comparable[] seq) {
@@ -375,6 +377,7 @@ public void sort(Comparable[] seq) {
 Case   Growth
 -----  --------
 Worst  $O(n\lg{n})$
+Space  $O(\lg{n})$
 
 </div>
 
@@ -398,7 +401,7 @@ private void sort(Comparable[] seq, int lo, int hi) {
 
 The partition algorithm is similar to merge in merge sort in that it is what actually does the sorting.
 
-<img class="center" src="/images/algorithms/partition.png">
+<img class="center" src="/images/algorithms/quicksort/partition.png">
 
 1. choose a partition element separator $v$
 2. scan through the array from $i$ to $j$ in both directions
@@ -451,9 +454,21 @@ private int partition(Comparable[] seq, int lo, int hi) {
 
 ### Three-way Partitioning
 
+<div class="right">
+
+Case   Growth
+-----  --------
+Best   $O(n)$
+Worst  $O(n\lg{n})$
+Space  $O(\lg{n})$
+
+</div>
+
 One problem with quick sort as it is implemented above is that items with keys equal to that of the partition item are nonetheless swapped, unnecessarily. Three-way partitioning aims to resolve this by partitioning into three separate sub-arrays, the middle of which corresponds to those items with keys equal to the partition point. E. W. Dijkstra popularized this as the _Dutch National Flag_ problem.
 
-<img class="center" src="/images/algorithms/3waypartition.png">
+**Performance Factors**: distribution of the keys
+
+<img class="center" src="/images/algorithms/quicksort/3waypartition.png">
 
 1. perform a 3-way comparison between element $i$ and $v$
     1. $seq[i] < v$: swap $lt$ and $i$ and `lt++` and `i++`
@@ -591,6 +606,506 @@ public void sort(Comparable[] seq) {
 }
 ~~~
 
+## Selection
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Average $\Theta(n)$
+
+</div>
+
+Selecting the $k$ smallest items in a sequence can be accomplished by using the quick sort algorithm's partition algorithm. This is guaranteed by the invariant held by quick sort's partition algorithm which states that given the partition index $j$, all elements to the left are less than or equal to $j$ and all elements to the right are greater than or equal to $j$, effectively making the sub-sequence up to $j$ consist of the smallest $j$ elements in the sequence.
+
+~~~ {lang="java" text="selection"}
+public Comparable select(Comparable[] seq, int k) {
+  shuffle(seq);
+
+  int lo = 0, hi = seq.length - 1;
+
+  while (hi > lo) {
+    int j = partition(seq, lo, hi);
+
+    if      (j == k) return seq[k];
+    else if  (j > k) hi = j - 1;
+    else if  (j < k) lo = j + 1;
+  }
+
+  return seq[k];
+}
+~~~
+
 # Searching
 
+**Answers**: Finding a certain element in a collection.
+
+## Binary Search Trees
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(n)$
+
+</div>
+
+This is the classical data structure consisting of a binary tree where each node has two children. The sub-tree to the left of each node consists of elements smaller than the node and the sub-tree to the right of each node consists of elements greater than the node.
+
+The performance of BSTs greatly depends on the shape of the tree, which is a result of the distribution and order of the elements that are input.
+
+#### Deletion
+
+Most operations such as insertion and lookup are very straightforward. Deletion is somewhat more involved.
+
+To delete node $z$:
+
+1. $z$ **has no children**: transplant it with a child, which is $nil$
+2. $z$ **has just one child**: transplant it with the child
+3. $z$ **has two children**: find successor $y$ -- which must be in $z$'s right subtree
+    1. if $y$ is $z$'s right child then transplant $z$ by $y$, leaving $y$'s right child alone
+    2. else transplant $y$ by its own right child, then transplant $z$ by $y$
+
+The transplant operation can be handled by simply associating the parent with the new child and vice versa:
+
+~~~ {lang="c"}
+void replace_node(tree *t, node *u, node *v) {
+  if (u->p == t->nil)
+    t->root = v;
+  else if (u == u->p->left)
+    u->p->left = v;
+  else
+    u->p->right = v;
+
+  // ignore this check in red-black trees
+  if (v != NULL)
+    v->p = u->p;
+}
+~~~
+
+## 2-3 Search Trees {#two-three-search-trees}
+
+While **2-3 search tree** can be implemented, they're mainly used to help understand the implementation of [Red-Black Trees](#red-black-trees), which have better performance.
+
+A **2-3 tree** is either empty or:
+
+* **2-node**: one key and two links
+    * left for keys smaller than the left key
+    * right for keys larger than the right key
+* **3-node**: two keys and three links
+    * left for keys smaller than the left key
+    * middle for keys between the node's keys
+    * right for keys larger than the right key
+
+### Searching {#two-three-tree-searching}
+
+Searching follows simply from the structure of the tree.
+
+1. **search hit** if the key is in the node
+2. if not, recurse into the appropriate link
+3. **search miss** if a null link is reached
+
+### Insertion {#two-three-tree-insertion}
+
+Insertion needs to take into consideration the fact that the tree must remain balanced after the operation. The general procedure is that the key is searched for until a node with a null link is reached at the bottom of the tree.
+
+* **single 2-node**
+    1. replace the 2-node with a 3-node containing the new key
+* **single 3-node**
+    1. create two 2-nodes out of each of the two keys
+    2. replace the 3-node with a 2-node consisting of the new key
+    3. set the 2-node's links to the two new 2-nodes
+* **3-node with 2-node parent** -- _same as above with slight variation_
+    1. create two 2-nodes out of each of the two keys
+    2. move the new key into the parent 2-node to make it a 3-node
+    3. set the middle link to the 3-node's left key and right link to the right key
+* **3-node with 3-node parent**
+    1. propagate the above operation until the root or a 2-node is encountered
+    2. if the root is encountered, split it as in the case of a single 3-node
+
+Perfect balance is preserved because tree height increase occurs at the root, and additions at the bottom of the tree are performed in the form of splitting existing nodes such that the height remains the same.
+
+The **problem** with implementing a direct representation of 2-3 trees is that there are many cases to handle and nodes have to be converted between various types. These operations can incur overhead that nullifies or even makes worse the performance of 2-3 trees compared to regular BSTs.
+
+## Red-Black Trees
+
+[Red-Black trees](http://en.wikipedia.org/wiki/Red–black_tree) are trees that guarantee near-perfect balance by maintaining 5 invariants:
+
+1. a node is either **red** or **black**
+2. root is **black**
+3. all leaves -- represented as nil -- are **black**
+4. both children of every red node are **black**
+5. every path from a given node to any of its descendant leaves contains the same number of **black** nodes
+
+These properties allow red-black trees to be nearly balanced in even the worst case, allowing them more performance than regular BSTs. A very neat implementation is [available here](https://github.com/prasanthmadhavan/Red-Black-Tree/blob/master/rbtree.c).
+
+### Insertion {#red-black-tree-insertion}
+
+The inserted node is attached in the same manner as for BSTs, except that every node is painted **red** on insertion. However, the inserted node has the possibility of violating any one of the 5 invariants, in which case the situation must be remedied. The following code representing the different cases that must be remedied are split into corresponding individual functions for didactic purposes.
+
+There are three main scenarios that may arise from adding a node:
+
+1. first node added creates a **red** root, violating property **2** (root is **black**) 
+2. node is added as child of **black** node, operation completes successfully
+3. consecutive **red** nodes, violating properties **4** (both children of **red** nodes are **black**) and **5** (equal number of **black** nodes per path)
+
+Note that scenarios 1 and 3 violate the properties of red-black trees.
+
+**First**, the inserted node may be the only node in the tree, making it the root. Since all nodes are inserted as **red**, it should be repainted **black** to satisfy property **2** (root is **black**):
+
+~~~ {lang="c"}
+void insert_case1(node *n) {
+  if (n->parent == NULL)
+    n->color = BLACK;
+  else
+    insert_case2(n);
+}
+~~~
+
+**Second**, if the parent of the inserted node is **black**, the insertion is complete because it is not possible for that to have violated any of the properties:
+
+~~~ {lang="c"}
+void insert_case2(node *n) {
+  if (n->parent->color == BLACK)
+    return;
+  else
+    insert_case3(n);
+}
+~~~
+
+**Third**, it is possible that the inserted node creates two consecutive **red** nodes, violating property **3** (both children of **red** nodes are **black**). For this, there are three different scenarios:
+
+A.  parent and uncle are both red
+B.  direction in which new node and parent lean differ
+C.  new node and parent lean in the same direction
+
+**First**, if the parent and its uncle are **red**, flip their colors and make the grandparent **red** instead. This allows the newly added **red** node to satisfy all properties, since its parent is **black**. However, making the grandparent **red** may possibly violate properties **2** (root is **black**) and **4** (both children of **red** nodes are **black**), so recurse the enforcement algorithm on the grandparent starting from case 1:
+
+<img src="/images/algorithms/red-black-trees/insert_1.png" class="center">
+
+~~~ {lang="c"}
+void insert_case3a(node *n) {
+  node *u = uncle(n), *g;
+
+  if (u != NULL && u->color == RED) {
+    n->parent->color = BLACK;
+    u->color = BLACK;
+
+    g = grandparent(n);
+    g->color = RED;
+
+    insert_case1(g);
+  } else
+    insert_case4(n);
+}
+~~~
+
+**Second**, the new node could be added diagonal to a **red** parent node, meaning for example the parent node being **red** and the **left child** of its parent and the new node could be **red** (as always) and the **right child** of its parent.
+
+This is ultimately resolved by two rotations, but the first rotation is made to get the new node leaning in the same direction as its parent. This is accomplished by rotating the new node in the direction of the parent's direction from its parent. In the above example, the new node is its parent's **right child** and the parent is the grandparent's **left child**, so the new node is **rotated left**.
+
+There are still consecutive **red** nodes after this rotation, albeit leaning in the same direction. This makes it simple for case 3c to handle, provided it is applied to the ex-parent, i.e. the now-bottom node, since case 3c operates in a more general sense from the perspective of the grandchild.
+
+<img src="/images/algorithms/red-black-trees/insert_2.png" class="center">
+
+~~~ {lang="c"}
+void insert_case3b(node *n) {
+  node *g = grandparent(n);
+
+  if (n == n->parent->right && n->parent == g->left) {
+    rotate_left(n->parent);
+    n = n->left;
+  } else if (n == n->parent->left && n->parent == g->right) {
+    rotate_right(n->parent);
+    n = n->right;
+  }
+
+  insert_case5(n);
+}
+~~~
+
+**Third**, the new node could be added below a **red** parent node and leaning in the same direction. For example, the new node is the **left child** of its parent and its parent is the **left child** of its parent (grandparent of the new node) as well.
+
+This is resolved by rotating the grandparent in the direction **opposite** to the direction in which the consecutive **red** links lean. This has the effect of making the parent be the new root of the subtree previously rooted by the grandparent.
+
+The grandparent was known to be **black**, since the **red** parent could not have been a child of it otherwise. Knowing this, the parent -- now the root -- switches colors with the grandparent, such that the subtree now consists of the **black** root and two **red** children.
+
+<img src="/images/algorithms/red-black-trees/insert_3.png" class="center">
+
+~~~ {lang="c"}
+void insert_case3c(node *n) {
+  node *g = grandparent(n);
+
+  n->parent->color = BLACK;
+  g->color = RED;
+
+  if (n == n->parent->left)
+    rotate_right(g);
+  else
+    rotate_left(g);
+}
+~~~
+
+### Deletion {#red-black-tree-deletion}
+
+Deletion is handled similar to deletion in BSTs, but is a _lot_ more complicated because the tree has to be re-balanced if removing a node from the tree causes it to become unbalanced.
+
+Every resource I looked at -- books, sites, university slides, etc. -- simply hand-waived the deletion process presumably due to its complexity. The one place that managed to somewhat explain it well was the classic CLRS book, but its implementation consisted of a big, difficult-to-follow while-loop. Instead I decided to go with [wikipedia's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) long and dense explanation of its relatively simple implementation which even the [Linux kernel uses](https://github.com/torvalds/linux/blob/master/lib/rbtree.c).
+
+**First**, if the node to be deleted has two children then it is replaced by its successor. The successor then has to be deleted, and by definition the successor will have at most one non-leaf child -- otherwise it would not be the minimum in that subtree and the left child would have been followed.
+
+~~~ {lang="c"}
+void delete(node *m, void *key) {
+  if (node == NULL) return;
+
+  if      (*key < m->key) delete(m->left,  key);
+  else if (*key > m->key) delete(m->right, key);
+  else {
+    if (m->left != NULL && m->right != NULL) {
+      // replace with successor
+      node *c = minimum_node(m->right);
+      m->key = c->key;
+      delete(c, c->key);
+~~~
+
+**Second**, if the node to be deleted has a child, simply replace the successor with its child.
+
+~~~ {lang="c"}
+    } else if (m->left != NULL || m->right != NULL) {
+      // replace with child, delete child
+      delete_one_child(m);
+~~~
+
+**Third**, if the node to be deleted has no children, then it is possible to simply delete it.
+
+~~~ {lang="c"}
+    } else {
+      // no children, just delete
+      free(m);
+    }
+  }
+}
+~~~
+
+#### Balance {#red-black-tree-deletion-balance}
+
+If the node is replaced with a successor, that successor is essentially removed from its original location, thereby possibly causing tree unbalanced. For this reason, the original successor node is removed using `delete_one_child` which re-balances the tree if necessary.
+
+* node $M$: successor to the node to be deleted
+* node $C$: child of $M$, prioritized to be a non-leaf child if possible
+* node $N$: child $C$ in its new position
+* node $P$: $N$'s parent
+* node $S$: $N$'s sibling
+* nodes $S_{L}$ and $S_{R}$: $S$'s left and right child respectively
+
+**First**, if $M$ is **red**, then simply replace it with its child $C$ which must be **black** by property 4 (both children of **red** nodes are **black**). Any paths that passed through the deleted node will simply pass through one fewer **red** node, maintaining balance:
+
+~~~ {lang="c"}
+void delete_one_child(node *n) {
+  node *child = is_leaf(n->right) ? n->left : n->right;
+
+  replace_node(n, child);
+~~~
+
+**Second**, if $M$ is **black** and $C$ is **red**, paint $C$ **black** and put it in $M$'s place. This preserves the same amount of **black** nodes along that path:
+
+~~~ {lang="c"}
+  if (n->color == BLACK)
+    if (child->color == RED)
+      child->color = BLACK;
+~~~
+
+**Third**, the most complex case is when both $M$ and $C$ are **black**. Replacing one with the other effectively removes one black node along that path, unbalancing the tree. Begin by replacing $M$ with its child $C$, then proceed to the first re-balancing case:
+
+~~~ {lang="c"}
+    else
+      delete_case1(child);
+
+  free(n);
+}
+~~~
+
+When both $M$ and $C$ are **black** nodes, four situations [^case_merge] can arise that require re-balancing, unless $C$'s new position $N$ is the new root. If $C$ becomes the root it simply means that a **black** node was removed from all paths, effectively decreasing the black-height of every path by one and the tree therefore requires no re-balancing.
+
+**First**: $N$'s sibling $S$ is **red**. In this case, reverse the colors of $P$ and $S$ and rotate $P$ left. Although all paths still have the same black-height, $N$'s sibling $S$ is now **black** and its parent $P$ is **red**, allowing fall-through to case 4, 5, or 6:
+
+<img src="/images/algorithms/red-black-trees/delete_1.png" class="center">
+
+~~~ {lang="c"}
+void delete_case1(node *n) {
+  if (n->parent == NULL) return;
+
+  node *s = sibling(n);
+
+  if (s->color == RED) {
+    n->parent->color = RED;
+    s->color = BLACK;
+
+    if (n == n->parent->left)
+      rotate_left(n->parent);
+    else
+      rotate_right(n->parent);
+  }
+
+  delete_case2(n);
+}
+~~~
+
+**Second**: $P$, $S$, and $S$'s children are all **black**. Repaint $S$ **red** so that all paths passing through $S$ have the same black-height as those that go through $N$.
+
+<img src="/images/algorithms/red-black-trees/delete_2a.png" class="center">
+
+If $P$ is **red**, then the tree is violating property **4** (both children of **red** nodes are **black**), fix it by simply painting $P$ **black**.
+
+<img src="/images/algorithms/red-black-trees/delete_2b.png" class="center">
+
+Otherwise, if $P$ was already **black**, however, then after the painting of $S$ to **red**, $P$ now has effectively lost one level from its black-height, so case 1 should be applied to $P$:
+
+~~~ {lang="c"}
+void delete_case2(node *n) {
+  node *s = sibling(n);
+
+  if (s->color == BLACK &&
+      s->left->color == BLACK &&
+      s->right->color == BLACK) {
+    s->color = RED;
+
+    if (n->parent->color == RED)
+      n->parent->color = BLACK
+    else
+      delete_case1(n->parent);
+  } else
+    delete_case3(n);
+}
+~~~
+
+**Third**: $S$ is **black**, $S_{L}$ is **red**, $S_{R}$ is **black**, $N$ is left child of its $P$. Rotate $S$ right, then exchange colors of $S$ and its new parent. This case just prepares the tree for falling into case 6, since $N$ now has a **black** sibling -- $S_{L}$ -- whose right child is **red**.
+
+<img src="/images/algorithms/red-black-trees/delete_3.png" class="center">
+
+~~~ {lang="c"}
+void delete_case3(node *n) {
+  node *s = sibling(n);
+
+  if (s->color == BLACK) {
+    if (n == n->parent->left &&
+        s->right->color == BLACK &&
+        s->left->color == RED) {
+      s->color = RED;
+      s->left->color = BLACK;
+      rotate_right(s);
+    } else if (/* symmetric to above */) { }
+  }
+
+  delete_case4(n);
+}
+~~~
+
+**Fourth**: $S$ is **black**, $S_{R}$ is **red**, $N$ is left child of its $P$. Rotate $P$ left, exchange colors of $P$ and $S$, and make $S_{R}$ **black**.
+
+This unbalances the tree by increasing black-height of paths through $N$ by one because either $P$ became **black** or it was **black** and $S$ became a **black** grandparent.
+
+<img src="/images/algorithms/red-black-trees/delete_4.png" class="center">
+
+~~~ {lang="c"}
+void delete_case4(node *n) {
+  node *s = sibling(n);
+
+  s->color = n->parent->color;
+  n->parent->color = BLACK;
+
+  if (n == n->parent->left) {
+    s->right->color = BLACK;
+    rotate_left(n->parent);
+  } else {
+    s->left->color = BLACK;
+    rotate_right(n->parent);
+  }
+}
+~~~
+
+## Left-Leaning Red-Black Trees {#llrb-trees}
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(\lg{n})$
+
+</div>
+
+Red-Black trees are like regular binary trees, except that they encode 3-nodes as two 2-nodes joined with a **red link**, where one of the 2-nodes is the **left child** of the other. The other kind of link, **black links**, act like regular links in a tree which point to children.
+
+* **red links** lean left
+* no node has two **red links** connected to it
+* **perfect black balance**: every path from the root to a null link has the same number of **black links**. This can be observed if all red links are drawn horizontally
+
+Considering that links are from parents to children, the color of the link is stored in the child, which can be thought of as "following the link to discover its color."
+
+### Rotations {#llrb-tree-rotations}
+
+Insertion algorithms may leave the tree such that it contains right-leaning **red links** or consecutive **red-links**, both of which violate the structural rules of red-black trees. Rotation operations form the basis of the method of fixing these situations.
+
+**Rotating left** is used to fix the case where there is a **right-leaning red-link**. This is fixed by simply replacing the node with its successor and making the new node's left child be the original node attached with a **red-link**. The left child's right child becomes the old node's left child.
+
+~~~ {lang="java" text="rotate left"}
+Node rotateLeft(Node h) {
+  Node x = h.right;
+  h.right = x.left;
+
+  x.color = h.color;
+  h.color = RED;
+
+  x.N = h.N;
+  h.N = 1 + size(h.left) + size(h.right);
+
+  return x;
+}
+~~~
+
+**Rotate right** is used to fix the case where there are **consecutive red-links**. This rotation is the analog to the rotate left operation. The node is replaced by its left child, and the new node's right child becomes the original node.
+
+### Insertion {#llrb-tree-insertion}
+
+Nodes are always inserted at the bottom using red links.
+
+* **2-node**
+    1. if the new key is smaller than the root, then add normally, producing a left-leaning red-link
+    2. otherwise, add the key normally, producing a right-leaning red-link, then rotate the root left
+* **3-node**
+    A.  new key is **larger** than both keys
+        1. add it normally as the right child of the root with a red link
+        2. **flip the colors** of the links from the root
+    B.  new key is **smaller** than both keys
+        1. add it normally as the left child of the left key
+        2. this creates two **consecutive red links**
+        3. **rotate** the middle node to the **right**
+        4. continue at A.2
+    C.  new key is **between** both keys
+        1. add it normally as the right child of the left key
+        2. this creates two **consecutive red links**
+        3. **rotate** the middle node **left**
+        4. continue at C.3
+
+Flipping the colors of a node entails flipping the links from red to black, but also the color of the parent from black to red.
+
+However, a root's color should always be kept black. When it is changed to red, it should be interpreted as the height of the tree increasing by 1, and then the color of the link should be changed back to black.
+
+~~~ {lang="java" text="flipping colors"}
+void flipColors(Node h) {
+  h.color = RED;
+  h.left.color = BLACK;
+  h.right.color = BLACK;
+}
+~~~
+
+### Balance {#llrb-tree-balance}
+
+The insert operations are performed recursively, i.e. if the node should be added to the left, the insert operation is recursed into the left child. The balancing operations are done after the recursing, in effect meaning that the balancing operations are done on the way back up the tree.
+
+### Deletion {#llrb-tree-deletion}
+
 [^data_structures]: Skiena p. 109, § 4.3
+[^case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
+
+*[BST]: Binary Search Trees
