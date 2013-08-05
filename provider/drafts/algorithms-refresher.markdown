@@ -169,7 +169,7 @@ Many problems can be reduced to sorting.
 
 The following algorithms are described with the assumption that the sequence is an array of contiguous memory and constant access time. This is **noteworthy** because it is important to recognize algorithms can have different speeds depending on the underlying data structure.
 
-For example, selection sort backed by a priority queue or balanced binary tree can help to speed up the operation of finding the smallest element in the unsorted region. Instead of being linear, the operation would be $\lg(n)$. Given that this is done at every element in the sequence, of which there are $N$, this means that selection sort backed by such a structure can be improved from $O(n^2)$ to $O(n\lg(n))$ [^data_structures].
+For example, selection sort backed by a priority queue or balanced binary tree can help to speed up the operation of finding the smallest element in the unsorted region. Instead of being linear, the operation would be $\lg(n)$. Given that this is done at every element in the sequence, of which there are $N$, this means that selection sort backed by such a structure can be improved from $O(n^2)$ to $O(n\lg(n))$ [^sorting_improvements].
 
 Terms:
 
@@ -729,6 +729,13 @@ The **problem** with implementing a direct representation of 2-3 trees is that t
 
 ## Red-Black Trees
 
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(2 \lg {n})$
+
+</div>
 [Red-Black trees](http://en.wikipedia.org/wiki/Red–black_tree) are trees that guarantee near-perfect balance by maintaining 5 invariants:
 
 1. a node is either **red** or **black**
@@ -1030,7 +1037,7 @@ void delete_case4(node *n) {
 
 Case    Growth
 -----   --------
-Worst   $O(\lg{n})$
+Worst   $O(2 \lg {n})$
 
 </div>
 
@@ -1099,13 +1106,93 @@ void flipColors(Node h) {
 }
 ~~~
 
-### Balance {#llrb-tree-balance}
-
-The insert operations are performed recursively, i.e. if the node should be added to the left, the insert operation is recursed into the left child. The balancing operations are done after the recursing, in effect meaning that the balancing operations are done on the way back up the tree.
-
 ### Deletion {#llrb-tree-deletion}
 
-[^data_structures]: Skiena p. 109, § 4.3
-[^case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
+TODO
+
+## Hash Tables
+
+Hash tables consist of an array coupled with a **hash function** -- such as [MurmurHash](http://en.wikipedia.org/wiki/MurmurHash) or [CityHash](http://en.wikipedia.org/wiki/CityHash) -- and a **collision resolution** scheme, both of which help map the key to an index within the array.
+
+### Hash Functions
+
+Hash functions need to be consistent, efficient, and should uniformly distribute the set of keys.
+
+A popular and simple hashing function is modular hashing of the form:
+
+$$h(k) = k \bmod M$$
+
+where $k$ is the key and $M$ is the array size, usually chosen to be prime. Multiple pieces of data can be combined into one hash by doing:
+
+$$R * H + D \bmod M$$
+
+where $R$ is a prime number such as a 31, $H$ is the hash as constructed so far (initially set to some prime number) and $D$ is the new piece of data.
+
+### Separate Chaining
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(\lg {n})$
+
+</div>
+
+This collision resolution strategy involves storing a linked-list at every entry in the array. The intent is to choose the size of the array large enough so that the linked-lists are sufficiently short.
+
+Separate chaining consists of a two-step process:
+
+1. hash the key to get the index to retrieve the list
+2. sequentially search the list for the key
+
+A property of separate chaining is that the average length of the lists is always $N/M$ in a hash table with $M$ lists and $N$ keys.
+
+### Linear Probing
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(c \lg {n})$
+
+</div>
+
+Linear probing is a form of open addressing that relies on empty entries in the array for collision resolution. Linear probing simply consists of:
+
+1. hash the key to get the index
+2. the element at the index determines three outcomes:
+    1. if it's an empty position, insert the element
+    2. if the position is not empty and the key is equal, replace the value
+    3. if the key is not equal, try the next entry and repeat until it can be inserted
+
+#### Deletion {#hash-table-deletion}
+
+The insert and retrieval operations retrieve the index and perform the same operation until the entry is null. This has the consequence that deleting a node cannot _simply_ entail setting the entry to null, or it would prematurely stop the lookup of other keys.
+
+As a result, after setting the entry to null, every key to the right of the removed key also has to be removed -- i.e. set to null -- and then re-inserted into the hash table using the regular insertion operation.
+
+#### Load Factor {#hash-table-load-factor}
+
+The **load factor** is defined by $\alpha = N/M$ where $\alpha$ is the percentage of table entries that are occupied, which can never be 1 since, if the table becomes full, a search miss would go into an infinite loop. Instead, array resizing is performed to ensure that the load factor is between $\frac {1} {8}$ and $\frac {1} {2}$.
+
+The average number of compares, or _probes_, in a linear-probing hash table of size $M$ and $N = \alpha M$ keys is:
+
+$$
+\text {hits: ~} \frac {1} {2} \left( 1 + \frac {1} {1 - \alpha} \right) \\
+\text {misses: ~} \frac {1} {2} \left( 1 + \frac {1} {\left( 1 - \alpha \right)^2} \right)
+$$
+
+Based on this, when $\alpha$ is about 0.5 there will be 1.5 compares for a search hit and 2.5 compares for a search miss on average. For this reason, $\alpha$ should be kept under 0.5 through the use of array resizing.
+
+### Sparse Vectors
+
+An application of hash tables can be to implement sparse vectors for the purpose of performing matrix-vector multiplications. In certain situations, the row-vector from a matrix can have a very small amount of non-zero elements. If the matrix was stored in a naive array format it would amount to an immense waste of space and computation.
+
+Instead, sparse vectors are vectors backed by hash tables where the keys correspond to the index of a given element and the value corresponds to that element's value.
+
+# Graphs
 
 *[BST]: Binary Search Trees
+
+[^sorting_improvements]: Skiena p. 109, § 4.3
+[^case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
