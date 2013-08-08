@@ -7,7 +7,7 @@ icon: lightbulb
 comments: off
 ---
 
-What follows are some notes on algorithms I've been reviewing from [Algorithms]() by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual]() by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material -- since I have to understand it to explain it.
+What follows are some notes on algorithms I've been reviewing from [Algorithms](http://amzn.com/032157351X) by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual](http://amzn.com/1849967202) by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material -- since I have to understand it to explain it.
 
 * toc-center
 
@@ -1188,11 +1188,288 @@ Based on this, when $\alpha$ is about 0.5 there will be 1.5 compares for a searc
 
 An application of hash tables can be to implement sparse vectors for the purpose of performing matrix-vector multiplications. In certain situations, the row-vector from a matrix can have a very small amount of non-zero elements. If the matrix was stored in a naive array format it would amount to an immense waste of space and computation.
 
-Instead, sparse vectors are vectors backed by hash tables where the keys correspond to the index of a given element and the value corresponds to that element's value.
+Instead, sparse vectors are vectors backed by hash tables where the keys correspond to the index of a given element and the value corresponds to that element's value. This solution is used in Google's PageRank algorithm.
 
 # Graphs
 
+A **graph** is a set of **vertices** and a collection of **edges** that each connect a pair of vertices. This definition allows for **self-loops** (edges that connect a vertex to itself) and **parallel edges** (multiple edges connecting the same vertex pair).
+
+Graphs with parallel edges are sometimes known as **multigraphs**, whereas graphs with no parallel edges or self-loops are **simple graphs**.
+
+Two vertices connected by an edge are **adjacent**, and the edge is **incident** to both vertices. A vertex' **degree** is the number of edges connected to it. A **subgraph** is a sub-set of edges and associated vertices that still constitutes a graph.
+
+Paths in graphs are sequences of vertices connected by edges. **Simple paths** have no repeated vertices. A path forms a **cycle** if it has at least one edge whose first and last vertices are the same, and a **simple cycle** if the cycle consists of no repeated edges or vertices. The number of edges in a path determines its **length**.
+
+A graph is **connected** if a path exists from every vertex to every other vertex. A graph that isn't connected consists of **connected components** which are connected subgraphs of the graph.
+
+**Acyclic graphs** are graphs with no cycles. A tree is an acyclic connected graph, and a disjoint set of trees is a **forest**.
+
+A graph $G$ with $V$ vertices is a tree if any of the following are satisfied:
+
+* $G$ has $V - 1$ edges and no cycles
+* $G$ has $V - 1$ edges and is connected
+* $G$ is connected but removing a single edge disconnects it
+* $G$ is acyclic but adding any edge creates a cycle
+* exactly one simple path connects each pair of vertices in $G$
+
+A **spanning tree** of a connected graph is a subgraph that contains all of the vertices as a single tree. A **spanning forest** of a graph is the union of all spanning trees of its connected components.
+
+A graph's **density** is its proportion of possible paris of vertices that are connected. A **sparse** graph has relatively few of the possible edges present, compared to a **dense** one.
+
+A **bipartite graph** is one whose vertices can be divided into two sets such that all edges connect a vertex in one set with a vertex in the other.
+
+**Answers**:
+
+* is there a way to connect one item to another by following the connections?
+* how many other items are connected to a given item?
+* what is the shortest chain of connections between two items?
+
+## Undirected Graphs
+
+An **undirected graph** is one in which the connections don't have an associated direction. There are various data structures that can be used represent graphs:
+
+* **adjacency matrix**: a $V \times V$ boolean array where row $v$ and column $w$ are set to true if vertices $v$ and $w$ are connected with an edge.
+* **array of adjacency lists**: a vertex-indexed array of lists of the vertices adjacent to each vertex, similar to hash tables with separate chaining
+* **array of edges**: a collection of Edge objects each containing two instance variables for each of the connected vertices
+
+Adjacency lists have the best balance between space and time performance. They have space usage proportional to $V + E$, constant time to add an edge, and time proportional to the degree of $v$ to iterate through adjacent vertices.
+
+### Depth-First Search
+
+Depth-First Search (DFS) is a graph traversal algorithm that visits a vertex, marks that vertex as visited, then visits all unmarked adjacent vertices.
+
+~~~ {lang="cpp" text="depth-first search"}
+void dfs(const Graph &G, int v) {
+  marked[v] = true;
+  count++;
+
+  for (int w : G.adj(v))
+    if (!marked[w]) {
+      edgeTo[w] = v; // v connects to w, i.e. v-w
+      dfs(G, w);
+    }
+}
+~~~
+
+To trace the paths in the graph, an array can be kept of sice $V$ indexed by a given vertex whose value is the vertex that connects to it. This array of edges represents a tree rooted at the source vertex.
+
+### Breadth-First Search
+
+Breadth-First Search (BST) traversal aids in finding the shortest path between two vertices. Its basic operation consists of:
+
+1. enqueue the source vertex
+2. dequeue the current vertex
+3. mark and enqueue all adjacent vertices
+4. repeat 2-3 until the queue is empty
+
+~~~ {lang="cpp" text="breadth-first search"}
+void bfs(const Graph &G, int s) {
+  queue<int> vertexQueue;
+  marked[s] = true;
+  vertexQueue.enqueue(s);
+
+  while (!vertexQueue.isEmpty()) {
+    int v = vertexQueue.dequeue();
+
+    for (int w : G.adj(v))
+      if (!marked[w]) {
+        edgeTo[w] = v;
+        marked[w] = true;
+        vertexQueue.enqueue(w);
+      }
+  }
+}
+~~~
+
+### Connected Components
+
+Depth-First Search can also be used to find connected components of a graph. This is accomplished by initiating DFS on every unmarked vertex and each time it is called on a vertex, set the vertex' connected component identifier.
+
+A run of DFS finds, and thus marks, every vertex in a connected component. Upon completing such a run, a counter variable signifying the connected componenet identifier is incremented and then it is called on the next unmarked vertex in the graph, i.e. a vertex not in a connected component found so far.
+
+~~~ {lang="cpp" text="finding connected components"}
+void findConnectedComponents(const Graph &G) {
+  vector<int> id(G.V());
+  vector<bool> marked(G.V());
+  int count = 0;
+
+  for (int s = 0; s < G.V(); s++)
+    if (!marked[s]) {
+      dfs(G, s, count);
+      count++;
+    }
+}
+
+void dfs(const Graph &G, int v, int count) {
+  marked[v] = true;
+  id[v] = count; // set connected component identifier
+
+  for (int w : G.adj(v))
+    if (!marked[w])
+      dfs(G, w, count);
+}
+~~~
+
+Compared to [Union-Find](#dynamic-connectivity), the DFS approach is theoretically faster because it provides a constant-time guarantee. However, in practice the difference is negligible and Union-Find tends to be faster because it doesn't have to build a full representation of a graph. Perhaps more importantly, the DFS approach has to preprocess the graph by running DFS on the separate connected components. As a result, Union-Find is an online algorithm where it can be queried even while new edges are added without having to re-preprocess the graph.
+
+### Cycle Detection
+
+DFS can also be used to determine if there are cycles present in a graph. This is accomplished by keeping track of the vertex previous to the one being focused on by the DFS. If one of the current vertex' neighbors is already marked and it is not the previous vertex, then it means that there is an edge to an already marked vertex, thus forming a cycle.
+
+~~~ {lang="cpp" text="cycle detection"}
+bool detectCycles(const Graph &G) {
+  for (int s = 0; s < G.V(); s++)
+    if (!marked[s])
+      dfs(G, s, s);
+}
+
+bool dfs(const Graph &G, int v, int u) {
+  marked[v] = true;
+
+  for (int w : G.adj(v))
+    if (!marked[w])
+      dfs(G, w, v);
+    else if (w != u)
+      hasCycle = true;
+}
+~~~
+
+### Bipartite Detection
+
+DFS can also be used to determine whether or not the graph is bipartite. Another way to frame the question is: can the vertices of the graph be assigned one of two colors such that no edge connects vertices of the game color?
+
+This is accomplished by maintaining a vertex-indexed array that will store that vertex' color. As DFS traverses the graph, it will alternate the color of every vertex it visits. The graph starts out as assumed to be bipartite, and only if DFS encounters a marked vertex whose color is the same as the current vertex does it conclude that the graph is not bipartite.
+
+~~~ {lang="cpp" text="bipartite detection"}
+bool bipartiteDetect(const Graph &G) {
+  for (int s = 0; s < G.V(); s++)
+    if (!marked[s])
+      dfs(G, s);
+}
+
+bool dfs(const Graph &G, int v) {
+  marked[v] = true;
+
+  for (int w : G.adj(v))
+    if (!marked[w]) {
+      color[w] = !color[v];
+      dfs(G, w);
+    } else if (color[w] == color[v]) isBipartite = false;
+}
+~~~
+
+## Directed Graphs
+
+The edges in **directed graphs** have an associated one-way direction, such that edges are defined by an ordered pair of vertices that define a one-way adjacency. A directed graph (or **digraph**) is a set of vertices and a collection of directed edges, each connecting an ordered pair of vertices. The **outdegree** of a vertex is the number of edges pointing from it, while the **indegree** is the number of edges pointing to it.
+
+The first vertex in a directed edge is the **head** and the second vertex is the **tail**. Edges are drawn as arrows pointing from head to tail, such as $v \rightarrow w$.
+
+Directed graphs can be represented by adjacency lists with the stricter property that if node $w$ is present in the adjacency list corresponding to $v$, it simply means that there is a directed edge $v \rightarrow w$, but not vice versa unless explicitly defined.
+
+### Reachability {#digraph-reachability}
+
+The same exact implementation of reachability testing by DFS used in undirected graphs can be used for digraphs, and can be expanded to allow for reachability testing from multiple sources which has applications in regular expression matchers or mark-and-sweep garbage collection strategies, for example.
+
+Mark-and-sweep garbage collection (GC) strategies typically reserve one bit per object for the purpose of garbage collection. The GC then periodically **marks** a set of potentially accessible objects by running digraph reachability tests on the graph of object references, then it **sweeps** through all of the unmarked objects, collecting them for reuse for new objects.
+
+### Cycle Detection {#directed-cycle-detection}
+
+A digraph with no directed cycles is known as a directed acyclic graph (DAG). For this reason, checking a digraph for directed cycles answers the question of whether the digraph is  DAG.
+
+Directed cycle detection is accomplished by maintaining a boolean array representing whether or not a directed path belongs to the same connected component. Then during DFS if the encountered vertex is already marked and is part of the same component, it returns the path from the current vertex through the cycle back to the current vertex. If no such cycle exists, the graph is a DAG.
+
+~~~ {lang="cpp" text="directed cycle detection"}
+void dfs(const Graph &G, int v) {
+  onStack[v] = true;
+  marked[v] = true;
+
+  for (int w : G.adj(v))
+    if (hasCycle()) return;
+    else if (!marked[w]) {
+      edgeTo[w] = v;
+      dfs(G, w);
+    }
+    else if (onStack[w]) {
+      cycle = new stack<int>();
+
+      for (int x = v; x != w; x = edgeTo[x])
+        cycle.push_back(x);
+
+      cycle.push_back(w);
+      cycle.push_back(v);
+    }
+
+  onStack[v] = false;
+}
+~~~
+
+### Topological Sort
+
+Topological sort puts the vertices of a digraph in order such that all of its directed edges point from a vertex earlier in the order to a vertex later in the order. Three different orders are possible, which are accomplished by saving each vertex covered by the DFS in a queue or stack, depending on the desired order:
+
+* **preorder**: put the vertex on a queue before the recursive calls
+* **postorder**: put the vertex on a queue after the recursive calls
+* **reverse postorder**: put the vertex on a stack after the recursive calls
+
+This ability of DFS follows from the fact that DFS covers each vertex exactly once when run on digraphs.
+
+### Strong Connectivity
+
+Two vertices $v$ and $w$ are **strongly connected** if they are mutually reachable, i.e. $v \leftrightarrow w$. Consequently, an entire digraph is **strongly connected** if _all_ of its vertices are strongly connected to one another. Further, **strong components** are connected components of a graph that are strongly connected.
+
+The [Kosaraju-Sharir](http://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) algorithm is able to find strongly connected components in digraphs. The algorithm operates as follows:
+
+1. given digraph $G$ and its reverse digraph $G^R$, compute the reverse postorder of $G^R$
+2. run standard DFS on $G$ on the vertices in the order generated by step 1
+3. all vertices visited on a recursive DFS call from the constructor are a strong component, so identify them
+
+The algorithm can answer the following questions:
+
+* are two given vertices strongly connected?
+* how many strong components does the digraph contain?
+
+~~~ {lang="cpp" text="kosaraju-sharir algorithm"}
+void findStrongComponents(const Digraph &G) {
+  Digraph reverse = G.reverse();
+
+  for (int s : reverse.reversePost())
+    if (!marked[s]) {
+      dfs(G, s);
+      count++;
+    }
+}
+
+void dfs(const Digraph &G, int v) {
+  marked[v] = true;
+  id[v] = count;
+
+  for (int w : G.adj(v))
+    if (!marked[w])
+      dfs(G, w);
+}
+~~~
+
+The algorithm can be understood by considering a kernel DAG, or _condensation digraph_, associated with each digraph, formed by collapsing all vertices in each strong component to a single vertex. This DAG can then be put into reverse topological order. Remember that reverse postorder of a DAG is equivalent to topological sort.
+
+The algorithm begins by finding a vertex that is in a sink component of the kernel DAG. A **sink component** is one that has no edges pointing from it. Running DFS from this vertex only visits the vertices in that component. DFS then marks the vertices in that component, effectively removing them from further consideration in that digraph. It then repeats this by finding another sink component in the resulting kernel DAG.
+
+The first vertex in a reverse postorder of $G$ is in a _source_ component of the kernel DAG, whereas the first vertex in a reverse postorder of the _reverse_ digraph $G^R$ is in a _sink_ component of the kernel DAG.
+
+### All-Pairs Reachability
+
+All-Pairs reachability asks: given a digraph, is there a directed path from a given vertex $v$ to another given vertex $w$?
+
+<img src="/images/algorithms/graphs/transitive-closure.png" class="right">
+
+The **transitive closure** of digraph $G$ is another digraph with the same set of vertices but with an edge from $v$ to $w$ in the transitive closure if and only if $w$ is reachable from $v$ in $G$. Transitive closures are generally represented as a matrix of booleans where row $v$ at column $w$ is true if $w$ is reachable from $v$ in the digraph.
+
+Finding the transitive closure of a digraph can be accomplished using DFS by running DFS on every vertex of the digraph and storing the resulting reachability array for each each vertex from which DFS was run. However, it can be impractical for large graphs because it uses space proportional to $V^2$ and time proportional to $V(V + E)$.
+
 *[BST]: Binary Search Trees
+*[DFS]: Depth-First Search
+*[BFS]: Breadth-First Search
+*[GC]: Garbage Collector
+*[DAG]: Directed Acyclic Graph
 
 [^sorting_improvements]: Skiena p. 109, § 4.3
 [^case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
