@@ -17,9 +17,9 @@ A common practice I've noticed with the use of scss is to avoid having one monol
 In Hakyll, rules are generally designated by a pattern that matches a resource coupled with a route and a compiler. So this was the rule I originally had for **scss/screen.scss**:
 
 ~~~ {lang="haskell"}
-    match "scss/screen.scss" $ do
-      route $ constRoute "css/screen.css"
-      compile $ sassCompiler
+  match "scss/screen.scss" $ do
+    route $ constRoute "css/screen.css"
+    compile $ sassCompiler
 ~~~
 
 The rule simply states that Hakyll should:
@@ -44,9 +44,8 @@ Now when I'm previewing my site -- or when I build the site in general -- and I 
 
 ~~~ {lang="haskell"}
   scssDependencies <- makePatternDependency "scss/**.scss"
-
   rulesExtraDependencies [scssDependencies] $ do
-    match "scss/screen.scss" $ do
-      route $ constRoute "css/screen.css"
+    create ["css/screen.css"] $ do
+      route $ idRoute
       compile $ sassCompiler
 ~~~
