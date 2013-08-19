@@ -6,8 +6,9 @@ $max-width: 1000px;
 }
 body{
 	font-family: $font-default;
-	font-weight: 300;
-	font-size: 14px;
+	font-weight: 400;
+	font-size: 16px;
+  line-height: 26px;
 	background: $color-background;
 	color: $color-gray01;
   margin: 0 20px;
@@ -17,13 +18,13 @@ body{
 	}
 }
 h1{
-	font-size: 1.8em;
+	font-size: 1.6em;
 }
 h2{
-	font-size: 1.5em;
+	font-size: 1.3em;
 }
 h3{
-	font-size: 1.3em;
+	font-size: 1.1em;
 }
 a{
 	text-decoration: none;

@@ -22,6 +22,8 @@ $header-height: 30px;
 	}
   #stamp {
     float: left;
+    font-size: 14px;
+
     @media screen and (max-width: 766px){
       float: none;
       text-align: center;
