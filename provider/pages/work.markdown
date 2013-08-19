@@ -60,7 +60,7 @@ Upon analyzing the Hakyll source and noticing that it indirectly used the [forei
 
 > Different Haskell implementations have different characteristics with regard to which operations block all threads.
 > 
-> Using GHC without the -threaded option, all foreign calls will block all other Haskell threads in the system, although I/O operations will not. With the `-threaded` option, only foreign calls with the unsafe attribute will block all other threads.
+> Using GHC without the `-threaded` option, all foreign calls will block all other Haskell threads in the system, although I/O operations will not. With the `-threaded` option, only foreign calls with the unsafe attribute will block all other threads.
 
 Compiling with the `-threaded` flag solved that problem. However, now the problem was that saving a file would yield a "permission denied" error in the Hakyll program. I eventually [came to realize](https://github.com/mdittmer/win32-notify/issues/3#issuecomment-18260415) that this was inherent behavior in the file system events API abstracted by the file system events Haskell package. The problem consisted of there being the possibility that the notification for a file having been modified, for example, would be sent and received/processed before the program (that caused that event to fire) had a chance to finish the actual writing that triggered the event to begin with. The workaround I [came up with](https://github.com/jaspervdj/hakyll/pull/155) consisted of simply attempting to open the file -- success of which would indicate that the other process had already finished writing to the file -- and if this was not possible, sleep for a bit before trying again.
 
@@ -102,7 +102,7 @@ Solaris doesn't have such a wrapper for `signal()`, instead exposing its bare, S
 > void (*signal(int sig, void (*disp)(int)))(int);
 > ~~~
 > 
-> If `signal()` is used, disp is the address of a signal handler, and sig is not `SIGILL`, `SIGTRAP`, or `SIGPWR`, the system first sets the signal's disposition to `SIG_DFL` before executing the signal handler.
+> If `signal()` is used, `disp` is the address of a signal handler, and `sig` is not `SIGILL`, `SIGTRAP`, or `SIGPWR`, the system first sets the signal's disposition to `SIG_DFL` before executing the signal handler.
 
 This clearly states that the signal disposition is reset to its default disposition before executing the signal handler. Taking a look at the [default signal disposition table](http://docs.oracle.com/cd/E26502_01/html/E29033/signal.h-3head.html) for Solaris, we can see that `SIGUSR1`'s default disposition is to exit the application. Presumably, Solaris users were crashing upon the second delivery of `SIGUSR1` or any other signal established with `signal()` who's default disposition was to exit or abort (core dump).
 
