@@ -1,7 +1,7 @@
 ---
 title: Algorithms Refresher 
 published: July 15, 2013
-excerpt: Notes on common algorithms
+excerpt: Notes about common algorithms
 tags: Algorithms, Notes
 icon: lightbulb
 comments: off
@@ -19,14 +19,7 @@ What follows are some notes on algorithms I've been reviewing from [Algorithms](
 
 **General Flow**: Sites are all partitioned into singleton sets. Successive `union()` operations merge sets together. The `find()` operation determines if a given pair of sites are from the same component.
 
-Terms:
-
-Site
-  ~ Element/Node
-Component
-  ~ Set/Graph
-Connected
-  ~ Sites are in the same component
+A **site** is an element or node in a disjoint set. The disjoint set is known as a **component**, which typically models a set or graph. Two sites are **connected** if they are part of the same component.
 
 ## Quick-Find
 
@@ -171,10 +164,7 @@ The following algorithms are described with the assumption that the sequence is 
 
 For example, selection sort backed by a priority queue or balanced binary tree can help to speed up the operation of finding the smallest element in the unsorted region. Instead of being linear, the operation would be $\lg(n)$. Given that this is done at every element in the sequence, of which there are $N$, this means that selection sort backed by such a structure can be improved from $O(n^2)$ to $O(n\lg(n))$ [^sorting_improvements].
 
-Terms:
-
-Stability
-  ~ maintaining relative order of equal keys
+A sorting algorithm is known as **stable** if it maintains the same relative order of equal keys as it was before the sorting operation.
 
 ## Selection Sort
 
@@ -654,7 +644,7 @@ This is the classical data structure consisting of a binary tree where each node
 
 The performance of BSTs greatly depends on the shape of the tree, which is a result of the distribution and order of the elements that are input.
 
-#### Deletion
+#### Deletion {#binary-search-tree-deletion}
 
 Most operations such as insertion and lookup are very straightforward. Deletion is somewhat more involved.
 
@@ -932,7 +922,7 @@ void delete_one_child(node *n) {
 }
 ~~~
 
-When both $M$ and $C$ are **black** nodes, four situations [^case_merge] can arise that require re-balancing, unless $C$'s new position $N$ is the new root. If $C$ becomes the root it simply means that a **black** node was removed from all paths, effectively decreasing the black-height of every path by one and the tree therefore requires no re-balancing.
+When both $M$ and $C$ are **black** nodes, four situations [^rbtree_case_merge] can arise that require re-balancing, unless $C$'s new position $N$ is the new root. If $C$ becomes the root it simply means that a **black** node was removed from all paths, effectively decreasing the black-height of every path by one and the tree therefore requires no re-balancing.
 
 **First**: $N$'s sibling $S$ is **red**. In this case, reverse the colors of $P$ and $S$ and rotate $P$ left. Although all paths still have the same black-height, $N$'s sibling $S$ is now **black** and its parent $P$ is **red**, allowing fall-through to case 4, 5, or 6:
 
@@ -1295,18 +1285,18 @@ void findConnectedComponents(const Graph &G) {
 
   for (int s = 0; s < G.V(); s++)
     if (!marked[s]) {
-      dfs(G, s, count);
+      dfs(G, s);
       count++;
     }
 }
 
-void dfs(const Graph &G, int v, int count) {
+void dfs(const Graph &G, int v) {
   marked[v] = true;
   id[v] = count; // set connected component identifier
 
   for (int w : G.adj(v))
     if (!marked[w])
-      dfs(G, w, count);
+      dfs(G, w);
 }
 ~~~
 
@@ -1403,13 +1393,13 @@ void dfs(const Graph &G, int v) {
 }
 ~~~
 
-### Topological Sort
+### Topological Order
 
 Topological sort puts the vertices of a digraph in order such that all of its directed edges point from a vertex earlier in the order to a vertex later in the order. Three different orders are possible, which are accomplished by saving each vertex covered by the DFS in a queue or stack, depending on the desired order:
 
 * **preorder**: put the vertex on a queue before the recursive calls
 * **postorder**: put the vertex on a queue after the recursive calls
-* **reverse postorder**: put the vertex on a stack after the recursive calls
+* **reverse postorder**, aka _topological order_: put the vertex on a stack after the recursive calls
 
 This ability of DFS follows from the fact that DFS covers each vertex exactly once when run on digraphs.
 
@@ -1457,19 +1447,713 @@ The first vertex in a reverse postorder of $G$ is in a _source_ component of the
 
 ### All-Pairs Reachability
 
-All-Pairs reachability asks: given a digraph, is there a directed path from a given vertex $v$ to another given vertex $w$?
+All-Pairs reachability asks: given a digraph, is there a directed path from a given vertex $v$ to another given vertex $w$? This can be answered by creating a separate graph representation known as a transitive closure, which allows for straightforward checking of which vertex is reachable by others.
 
 <img src="/images/algorithms/graphs/transitive-closure.png" class="right">
 
 The **transitive closure** of digraph $G$ is another digraph with the same set of vertices but with an edge from $v$ to $w$ in the transitive closure if and only if $w$ is reachable from $v$ in $G$. Transitive closures are generally represented as a matrix of booleans where row $v$ at column $w$ is true if $w$ is reachable from $v$ in the digraph.
 
-Finding the transitive closure of a digraph can be accomplished using DFS by running DFS on every vertex of the digraph and storing the resulting reachability array for each each vertex from which DFS was run. However, it can be impractical for large graphs because it uses space proportional to $V^2$ and time proportional to $V(V + E)$.
+Finding the transitive closure of a digraph can be accomplished by running DFS on every vertex of the digraph and storing the resulting reachability array for each each vertex from which DFS was run. However, it can be impractical for large graphs because it uses space proportional to $V^2$ and time proportional to $V(V + E)$.
 
-*[BST]: Binary Search Trees
-*[DFS]: Depth-First Search
+## Minimum Spanning Trees
+
+An **edge-weighted graph** is a graph where the edges have associated weights or costs. Edge-weighted graphs can be represented with adjacency lists containing edge objects which contain the two vertices, one of which is the index of the adjacency list, as well as the weight for that edge.
+
+A **spanning tree** is a connected subgraph with no cycles that includes all of the vertices in the graph. A **minimum spanning tree** (MST) is a spanning tree whose weight -- the sum of all of its edges' weights -- is no larger than the weight of any other spanning tree for that graph.
+
+Adding an edge to a tree creates a cycle and removing an edge from a tree breaks it into two separate subtrees. Knowing this, a **cut** of a graph is a partition of its vertices into two nonempty disjoint sets, connected by a **crossing edge**.
+
+### Prim's Algorithm
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(E \lg {E})$
+Space   $O(E)$
+
+</div>
+
+This method of finding the MST operates by attaching a new edge to a growing tree at each step. Starting with any vertex from the graph to create a single-vertex tree, each time taking the minimum-weight edge that connects a vertex on the tree to a vertex not yet on the tree.
+
+The vertices in the tree being built are represented using a vertex-indexed boolean array where an element is set to true if the vertex is in the tree. The edges in the tree can be represented with a queue that collects edges or a vertex-indexed array of edge objects. Crossing edges are held in a minimum priority queue, making the operation of choosing the edge with the lowest weight particularly straightforward.
+
+The act of adding an edge to the tree corresponds to adding a vertex to the tree. When this occurs, all edges from the newly added vertex to all vertices not in the tree must be added to the crossing edges priority queue. Furthermore, any edges previously in the priority queue that connected the newly added vertex to a vertex already in the tree become _ineligible_ -- or they would create a cycle -- and should be ignored or removed.
+
+~~~ {lang="java" text="prim's algorithm"}
+void prim(EdgeWeightedGraph G) {
+  visit(G, 0); // start at arbitrary vertex
+
+  while (!pq.empty()) {
+    Edge e = pq.delMin(); // fetch lowest weight edge from frontier
+    int v = e.either(), w = e.other(v);
+
+    if (marked[v] && marked[w]) continue; // skip ineligible edges
+
+    mst.enqueue(e); // add edge to result
+
+    // visit either v or w
+    if (!marked[v]) visit(G, v);
+    if (!marked[w]) visit(G, w);
+  }
+}
+
+void visit(EdgeWeightedGraph G, int v) {
+  marked[v] = true;
+
+  for (Edge e : G.adj(v))
+    if (!marked[e.other(v)]) pq.insert(e);
+}
+~~~
+
+#### Eager Prim's Algorithm {#eager-prims}
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(E \lg {E})$
+Space   $O(V)$
+
+</div>
+
+The above implementation is lazy with respect to ignoring ineligible edges in the priority queue. That approach leaves ineligible edges in the priority queue until they're dequeued for consideration and discarded if they are ineligible.
+
+By contrast, an **eager approach** would make sure those edges aren't present in the priority queue from the beginning. The eager version of Prim's algorithm uses two vertex-index arrays:
+
+* an array for the shortest edges to vertices which are reachable from the tree within one edge
+* an array for the weight of the shortest edge stored in the aforementioned array
+
+For each vertex present in the above arrays, the vertex index associated with its weight are stored in a minimum priority queue, such that when the minimum weight is removed the associated index is returned. The implication of maintaining the priority queue this way is that given the next minimum-weight crossing edge returned by the priority queue, its associated vertex is the next one to add to the MST.
+
+An improvement from the lazy implementation is that the eager implementation uses space proportional to $V$ whereas the lazy implementation uses $E$.
+
+~~~ {lang="java" text="eager prim's algorithm"}
+void primEager(EdgeWeightedGraph G) {
+  for (int v = 0; v < G.V(); v++) {
+    distTo[v] = Double.POSITIVE_INFINITY;
+  }
+
+  distTo[0] = 0.0;
+  pq.insert(0, 0.0);
+
+  while (!pq.empty())
+    visit(G, pq.delMin());
+}
+
+void visit(EdgeWeightedGraph G, int v) {
+  marked[v] = true;
+
+  for (Edge e : G.adj(v)) {
+    int w = e.other(v);
+    if (marked[w]) continue; // v-w is ineligible
+    if (e.weight() < distTo[w]) {
+      edgeTo[w] = e;
+      distTo[w] = e.weight();
+
+      if (pq.contains(w)) pq.changeKey(w, distTo[w]);
+      else                pq.insert(w, distTo[w]);
+    }
+  }
+}
+~~~
+
+### Kruskal's Algorithm
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(E \lg {E})$
+Space   $O(E)$
+
+</div>
+
+An alternative method for finding the MST is to process the edges in increasing order of their weight values, each time taking an edge for the MST that doesn't form a cycle, stopping once $V-1$ edges have been aggregated. The edges form a forest of trees, gradually growing into a single tree (the MST). The algorithm can be thought of as starting with a forest of $V$ single-vertex trees, and on each step finding an edge to connect two trees until there is only one left (the MST).
+
+The implementation uses a priority queue of edges based on their weight, a union-find data structure to identify potential cycles, and a queue to collect edges for for the MST.
+
+Despite the simplicity of Kruskal's algorithm, it is generally slower than Prim's because it has to check if an edge is already connected using the union-find data structure on each edge that is considered for the MST.
+
+~~~ {lang="java" text="kruskal's algorithm"}
+void kruskal(EdgeWeightedGraph G) {
+  mst = new Queue<Edge>();
+  pq = new MinPQ<Edge>();
+  uf = new UF(G.V());
+
+  for (Edge e : G.edges())
+    pq.insert(e);
+
+  while (!pq.empty() && mst.size() < G.V() - 1) {
+    Edge e = pq.delMin(); // fetch edge with lowest weight
+    int v = e.either(), w = e.other(v);
+    if (uf.connected(v, w)) continue; // check if already connected
+    uf.union(v, w); // if not, merge them in the union-find data structure
+    mst.enqueue(e); // add the edge to result
+  }
+}
+~~~
+
+## Shortest Paths
+
+The **shortest path** from vertex $s$ to $t$ in an edge-weighted digraph is a directed path from $s$ to $t$ such that no other such path has a lower weight. A **shortest-path tree** (SPT) for a source vertex $s$ is a subgraph containing $s$ and all the vertices reachable from $s$ that forms a directed tree rooted at $s$ such that every path is a shortest path in the digraph.
+
+**Edge relaxation** refers to replacing an existing edge that reaches $w$ with a new edge $v \rightarrow w$ if the new edge makes the path from the source vertex to $w$ be of lower cost than it was previously.
+
+~~~ {lang="java" text="edge relaxation"}
+void relax(DirectedEdge e) {
+  int v = e.from(), w = e.to();
+
+  if (distTo[w] > distTo[v] + e.weight()) {
+    distTo[w] = distTo[v] + e.weight();
+    edgeTo[w] = e;
+  }
+}
+~~~
+
+**Vertex relaxation** is similar to edge relaxation except that it relaxes all of the edges pointing from a given vertex.
+
+~~~ {lang="java" text="vertex relaxation"}
+void relax(EdgeWeightedDigraph G, int v) {
+  for (DirectedEdge e : G.adj(v)) {
+    int w = e.to();
+
+    if (distTo[w] > distTo[v] + e.weight()) {
+      distTo[w] = distTo[v] + e.weight();
+      edgeTo[w] = e;
+    }
+  }
+}
+~~~
+
+### Dijkstra's Algorithm
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(E \lg {V})$
+Space   $O(V)$
+
+</div>
+
+Dijkstra's alrogithm is similar to Prim's algorithm for finding the MST. Dijkstra's algorithm finds the SPT by finding the lowest-weight non-tree vertex as provided by an index minimum-priority queue and relaxing that vertex.
+
+Dijkstra's algorithm **requires** that edges be non-negative.
+
+~~~ {lang="java" text="dijkstra's algorithm"}
+void dijkstra(EdgeWeightedDigraph G, int s) {
+  for (int v = 0; v < G.V(); v++)
+    distTo[v] = Double.POSITIVE_INFINITY;
+  distTo[s] = 0.0;
+
+  pq.insert(s, 0.0);
+
+  while (!pg.empty())
+    relax(G, pq.delMin());
+}
+
+void relax(EdgeWeightedDigraph G, int v) {
+  for (DirectedEdge e : G.adj(v)) {
+    int w = e.to();
+
+    if (distTo[w] > distTo[v] + e.weight()) {
+      distTo[w] = distTo[v] + e.weight();
+      edgeTo[w] = e;
+
+      if (pq.contains(w)) pq.changeKey(w, distTo[w]);
+      else                pq.insert(w, distTo[w]);
+    }
+  }
+}
+~~~
+
+To specifically find the shortest path from the source vertex to an arbitrary vertex, simply terminate the search as soon as the target vertex comes off of the priority queue.
+
+### Topological Sort
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(E + V)$
+Space   $O(V)$
+
+</div>
+
+Shortest paths can be found much more efficiently in acyclic graphs, specifically, the single-source problem can be solved in linear time, negative edge weights are easily handled, and other related problems such as finding the longest paths are solvable. This is possible by relaxing vertices in topological order.
+
+~~~ {lang="java" text="shortest-paths in DAG"}
+void shortestPathAcyclic(EdgeWeightedDigraph G, int s) {
+  for (int v = 0; v < G.V(); v++) 
+    distTo[v] = Double.POSITIVE_INFINITY;
+  distTo[s] = 0.0;
+
+  for (int v : G.topologicalOrder())
+    relax(G, v);
+}
+~~~
+
+This approach can be used for finding the longest path between two vertices in a DAG, accomplished by creating a copy of the DAG and negating the weight of every edge.
+
+### Parallel Job Scheduling
+
+The **critical path method** for parallel job scheduling consists of encoding the constraints of the scheduling problem in a DAG. Both a source vertex $s$ and a sink vertex $t$ are created on either ends of the graph. Jobs are encoded in the graph as a pair of nodes connected by an edge whose weight corresponds to that job's duration. For each precedence constraint $v \rightarrow w$, add a zero-weight edge from $v$ to $w$. Finally, add a zero-weight edge from the source to every job's start vertex and from every job's end vertex to the sink.
+
+When the scheduling problem is encoded in this manner, it can be solved by scheduling each job at the time corresponding to its longest path from the source vertex.
+
+Relative deadlines can be encoded as a negative weighted edge going from the constrained job (vertex) to the job (vertex) which the deadline is relative to. However, relative deadlines can quickly make solutions infeasible with the aforementioned algorithms (Dijkstra's and Acyclic Shortest Paths).
+
+### Bellman-Ford Algorithm
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(VE)$
+Average $O(E + V)$
+Space   $O(V)$
+
+</div>
+
+The problem of finding the shortest paths can be generalized to graphs containing negative cycles. The Bellman-Ford algorithm accomplishes this by adding the source vertex to a queue and entering a loop where a vertex is dequeued and relaxed, and any vertex affected by that relaxation gets enqueue.
+
+A **negative cycle** is a directed cycle with net negative weight. No shortest path between $s$ and $v$ can consist of a vertex that lies within a negative cycle, or the weight of the path can be made arbitrarily low and a _shortest_ path would "never" be achieved.
+
+To prevent the Bellman-Ford algorithm from looping infinitely due to negative cycles, it has to ensure to terminate after $V$ passes either by keeping track with a counter or by detecting negative cycles within a subgraph.
+
+~~~ {lang="java" text="bellman-ford algorithm"}
+void bellmanFord(EdgeWeightedDigraph G, int s) {
+  queue.enqueue(s);
+  onQ[s] = true;
+
+  while (!queue.empty() && !this.hasNegativeCycle()) {
+    int v = queue.dequeue();
+    onQ[v] = false;
+    relax(G, v);
+  }
+}
+
+void relax(EdgeWeightedDigraph G, int v) {
+  for (DirectedEdge e : G.adj(v)) {
+    int w = e.to();
+
+    if (distTo[w] > distTo[v] + e.weight()) {
+      distTo[w] = distTo[v] + e.weight();
+      edgeTo[w] = e;
+
+      if (!onQ[w]) {
+        queue.enqueue(w);
+        onQ[w] = true;
+      }
+    }
+
+    if (cost++ % G.V() == 0)
+      findNegativeCycle();
+  }
+}
+~~~
+
+If the queue is not empty after $V$ passes through each edge then there is a negative cycle. By extension, if a negative cycle is present in a graph, the Bellman-Ford algorithm can end up in an infinite loop, continuously lowering the weight of each affected path.
+
+This is mitigated by checking for negative cycles on every $V^{th}$ call to relax, as on line 26 of the above code listing. On every such interval, a [cycle finder](#directed-cycle-detection) is initiated on the sub-graph denoted by the edges so-far considered by Bellman-Ford.
+
+~~~ {lang="java" text="negative cycle finder"}
+void findNegativeCycle() {
+  int V = edgeTo.length;
+  EdgeWeightedDigraph spt = new EdgeWeightedDigraph(V);
+
+  for (int v = 0; v < V; v++)
+    if (edgeTo[v] != null)
+      spt.addEdge(edgeTo[v]);
+
+  EdgeWeightedCycleFinder cf = new EdgeWeightedCycleFinder(spt);
+
+  cycle = cf.cycle();
+}
+~~~
+
+# Strings
+
+Strings have special properties which necessitate more efficient algorithms for sorting and searching. Other subjects concerning strings include tries, regular expressions, and data compression.
+
+## Sorting {#string-sorting}
+
+Certain properties of strings and alphabets can make for more efficient sorting algorithms for strings.
+
+### Counting Sort
+
+Counting sort, also known as key-indexed counting, essentially involves computing a histogram of the number of occurrences of each character, then regenerating the array in sorted order using that information.
+
+~~~ {lang="java" text="counting sort"}
+int N = a.length;
+
+int[] aux = new String[N];
+int[] count = new int[R + 1];
+
+// count occurrences
+for (int i = 0; i < N; i++)
+  count[a[i].key() + 1]++;
+
+// compute key ranges
+for (int r = 0; r < R; r++)
+  count[r + 1] += count[r];
+
+// populate sorted array
+for (int i = 0; i < N; i++)
+  aux[count[a[i].key()]++] = a[i];
+
+// copy back to original array
+for (int i = 0; i < N; i++)
+  a[i] aux[i];
+~~~
+
+### Least Significant Digit Sort
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Worst   $O(NW)$
+Space   $O(N)$
+
+</div>
+
+Least Significant Digit (LSD) sort works by sorting the strings based on the last character and then repeating this operation up until the first character. This is accomplished by modifying the counting sort algorithm so that it does a pass for every character in the string. This is mainly useful if all strings are the same length $W$ and relatively small alphabet size $R$.
+
+~~~ {lang="java" text="least significant digit sort"}
+void sort(String[] a, int W) {
+  int N = a.length;
+  int R = 256;
+
+  String[] aux = new String[N];
+
+  for (int d = W - 1; d >= 0; d--) {
+    int[] count = new int[R + 1];
+
+    // count occurrences
+    for (int i = 0; i < N; i++)
+      count[a[i].charAt(d) + 1]++;
+
+    // compute key ranges
+    for (int r = 0; r < R; r++)
+      count[r + 1] += count[r];
+
+    // populate sorted array
+    for (int i = 0; i < N; i++)
+      aux[count[a[i].charAt(d)]++] = a[i];
+
+    // copy back to original array
+    for (int i = 0; i < N; i++)
+      a[i] aux[i];
+  }
+}
+~~~
+
+### Most Significant Digit Sort
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Best    $\Omega (N)$
+Worst   $O(Nw)$
+Space   $O(N + WR)$
+
+Table: $w:$ average string length
+
+</div>
+
+Most Significant Digit (MSD) sort is similar to LSD except that it operates in left-to-right order instead, meaning it works fine for variable-length strings. This is accomplished by performing counting sort to sort the array of strings based on their first character, then recursively performing the same operation on the sub-array of strings with the same first letter.
+
+Because MSD works left-to-right and strings may be of variable -- not uniform -- length, the possibility of reaching the end of the string requires special handling. This is solved by observing the fact that a smaller string $S_1$ that is a prefix of larger string $S_2$ should naturally come before it in lexicographically sorted order. For example, _sea_ should come before _seashore_.
+
+This order is maintained by keeping a separate count of such strings that have had all of their characters sorted. This count is held at `count[1]`. A string has had all of its characters sorted if the character position currently being sorted is past the length of the string currently being considered. Once the counts are converted to key ranges, such strings will naturally be inserted at the beginning of the sorted sub-array.
+
+On each recursion of the sorting operation, an array for counts is allocated whose size is proportional to the alphabet size, occurrences are counted, transformed to key ranges, and so on. The point is that these operations can come to dominate the sorting operation, which makes having a cutoff for small sub-arrays crucial. After the cutoff, insertion sort takes over, with the slight modification that it only operates on the $d^{th}$ character position onward.
+
+~~~ {lang="java" text="most significant digit sort"}
+void charAt(String s, int d) {
+  if (d < s.length())
+    return s.charAt(d);
+  else
+    return -1;
+}
+
+void sort(String[] a) {
+  int N = a.length;
+  aux = new String[N];
+  sort(a, 0, N - 1, 0);
+}
+
+void sort(String[] a, int lo, int hi, int d) {
+  // cut off point for just running insertion sort
+  if (hi <= lo + M) {
+    Insertion.sort(a, lo, hi, d);
+    return;
+  }
+
+  int[] count = new int[R + 2];
+
+  // count occurrences
+  for (int i = lo; i <= hi; i++)
+    count[charAt(a[i], d) + 2]++;
+
+  // compute key ranges
+  for (int r = 0; r < R + 1; r++)
+    count[r + 1] += count[r];
+
+  // populate sorted array
+  for (int i = lo; i <= hi; i++)
+    aux[count[charAt(a[i], d) + 1]++] = a[i];
+
+  // copy back to original array
+  for (int i = lo; i <= hi; i++)
+    a[i] = aux[i - lo];
+
+  // recurse for each remaining character value
+  for (int r = 0; r < R; r++)
+    sort(a, lo + count[r], lo + count[r + 1] - 1, d + 1);
+}
+~~~
+
+### Three-way String QuickSort
+
+<div class="right">
+
+Case    Growth
+-----   --------
+Best    $\Omega (N)$
+Worst   $O(Nw \lg {R})$
+Space   $O(W + \lg {N})$
+
+Table: $w:$ average string length
+
+</div>
+
+Three-way quicksort can be adapted to work on a per-character basis similar to MSD. The advantages of this are that the algorithm doesn't use extra space -- unlike MSD -- and that the number of sub-arrays per recurse is bounded at three.
+
+A direct result of only splitting into three sub-arrays is that more data movements are required to get elements into their correct position compared to MSD. However, three-way quicksort's three-way splits adapt well to handling equal keys, keys with small arrays, and keys that fall into a small range.
+
+Research has shown that no algorithm can beat 3-way string quicksort by more than a constant factor.
+
+~~~ {lang="java" text="string quicksort"}
+void stringQuickSort(String[] a, int lo, int hi, int d) {
+  if (hi <= lo) return;
+
+  int lt = lo, gt = hi;
+  int v = charAt(a[lo], d);
+  int i = lo + 1;
+
+  while (i <= gt) {
+    int t = charAt(a[i], d);
+
+    if      (t < v) exch (a, lt++, i++);
+    else if (t > v) exch (a, i, gt--);
+    else            i++;
+  }
+
+  sort(a, lo, lt - 1, d);
+  if (v >= 0) sort(a, lt, gt, d + 1);
+  sort(a, gt + 1, hi, d);
+}
+~~~
+
+## Tries
+
+Trie structures exploit string properties to provide much faster string search, with hits taking time proportional to the length of the key and where misses require examining only a few characters.
+
+<img src="/images/algorithms/tries/trie.png" class="right">
+
+The structure of tries is comprised of a tree where every node has $R$ **links** where $R$ is the size of the alphabet. Every node also has an associated **label** corresponding to the character value consumed to reach the node. The root node has no such label as there is no link pointing to it. Every node also also has an associated **value** corresponding to the value associated with the key denoted by the path ending at the particular node.
+
+A **search hit** occurs when the trie search arrives at the final node and that node's value is not empty. A **search hit** occurs both if the final node's value is empty or if the search terminated on a null link.
+
+~~~ {lang="java" text="trie search"}
+Value get(String key) {
+  Node x = get(root, key, 0);
+  if (x == null) return null;
+  return x.val;
+}
+
+Node get(Node x, String key, int d) {
+  if (x == null) return null;
+  if (d == key.length()) return x;
+  char c = key.charAt(d);
+  return get(x.next[c], key, d + 1);
+}
+~~~
+
+Trie insertion simply consists of searching for the key and setting the value. If the key does not already exist, then create nodes for every character not yet in the trie.
+
+~~~ {lang="java" text="trie insertion"}
+void put(String key, Value val) { root = put(root, key, val, 0); }
+
+Node put(Node x, String key, Value val, int d) {
+  if (x == null) x = new Node();
+  if (d == key.length()) { x.val = val; return x; }
+  char c = key.charAt(d);
+  x.next[c] = put(x.next[c], key, val, d + 1);
+  return x;
+}
+~~~
+
+Tries also allow operations for collecting keys with a common prefix. This is accomplished by finding the node at the end of the prefix' path and then recursively performing BFS on every node and enqueueing any node that has a non-empty value.
+
+~~~ {lang="java" text="trie key collection"}
+Queue<String> keysWithPrefix(String prefix) {
+  Queue<String> q = new Queue<String>();
+  collect(get(root, prefix, 0), prefix, q);
+  return q;
+}
+
+void collect(Node x, String prefix, Queue<String> q) {
+  if (x == null) return;
+  if (x.val != null) q.enqueue(prefix);
+
+  for (char c = 0; c < R; c++)
+    collect(x.next[c], prefix + c, q);
+}
+~~~
+
+This can also be modified to allow wildcard pattern matches, for example, keys that match `fin.` could include `fine`, `find`, etc.
+
+~~~ {lang="java" text="trie key wildcards"}
+Queue<String> keysWithPrefix(String pattern) {
+  Queue<String> q = new Queue<String>();
+  collect(root, "", pattern, q);
+  return q;
+}
+
+void collect(Node x, String prefix, String pattern, Queue<String> q) {
+  int d = pre.length();
+
+  if (x == null) return;
+  if (d == pattern.length() && x.val != null) q.enqueue(prefix);
+  if (d == pattern.length()) return;
+
+  char next = pattern.charAt(d);
+  for (char c = 0; c < R; c++)
+    if (next == '.' || next == c)
+      collect(x.next[c], prefix + c, pattern, q);
+}
+~~~
+
+### Deletion {#trie-deletion}
+
+Deletion is a straightforward process in tries, simply involving finding the node and emptying its value. If this operation makes the node's parent's children all be null, then the same operation must be run on the parent.
+
+~~~ {lang="java" text="trie deletion"}
+void delete(String key) { root = delete(root, key, 0); }
+
+Node delete(Node x, String key, int d) {
+  if (x == null) return null;
+  if (d == key.length())
+    x.val = null;
+  else {
+    char c = key.charAt(d);
+    x.next[c] = delete(x.next[c], key, d + 1);
+  }
+
+  if (x.val != null) return x;
+
+  for (char c = 0; c < R; c++)
+    if (x.next[c] != null)
+      return x;
+
+  return null;
+}
+~~~
+
+### Ternary Search Trees
+
+Ternary Search Trees (TSTs) seek to avoid the excessive space cost of regular R-way tries demonstrated above. TSTs are structured such that each node has only three links for characters less than, equal to, and greater than the node.
+
+R-way tries can provide the fastest search, finishing the operation with a constant number of compares. However, space usage increases rapidly with larger alphabets TSTs are preferable, sacrificing a constant number of compares for a logarithmic number of compares.
+
+~~~ {lang="java" text="ternary search tree search"}
+Node get(Node x, String key, int d) {
+  if (x == null) return null;
+  char c = key.charAt(d);
+
+  if      (c < x.c) return get(x.left,  key, d);
+  else if (c > x.c) return get(x.right, key, d);
+  else if (d < key.length() - 1)
+                    return get(x.mid,   key, d);
+  else return x;
+}
+~~~
+
+Insertion is similar to insertion with tries except that only one of three links can be taken, instead of $R$ links.
+
+~~~ {lang="java" text="ternary search tree insertion"}
+void put(String key, Value val) { root = put(root, key, val, 0); }
+
+Node put(Node x, String key, Value val, int d) {
+  char c = key.charAt(d);
+
+  if (x == null) { x = new Node(); x.c = c; }
+
+  if      (c < x.c) x.left  = put(x.left,  key, val, d);
+  else if (c > x.c) x.right = put(x.right, key, val, d);
+  else if (d < key.length() - 1)
+                    x.mid   = put(x.mid,   key, val, d + 1);
+  else x.val = val;
+  return x;
+}
+~~~
+
+## Substring Search
+
+Searching for a string within another string is a very common operation that can also benefit from exploiting certain properties of strings.
+
+### Brute-Force {#brute-force-substring-search}
+
+The most straightforward approach is a brute-force algorithm where every character in the text is checked to see if the pattern's first character matches, and if so, checks to see if the second character in the pattern matches, and so on.
+
+If any character in the pattern matches during this check, the pattern iterator is not incremented and instead the text iterator is set back the amount of spaces equal to the pattern iterator, which essentially moves the text iterator one position past the position where the match checking was initiated. The pattern iterator is then reset to zero.
+
+~~~ {lang="java" text="brute-force substring search"}
+int search(String pattern, String text) {
+  int j, M = pattern.length();
+  int i, N = text.length();
+
+  for (i = 0, j = 0; i < N && j < M; i++) {
+    if (text.charAt(i) == pattern.charAt(j))
+      j++;
+    else {
+      i -= j;
+      j = 0;
+    }
+  }
+
+  if (j == M) return i - M;
+  else        return N;
+}
+~~~
+
+### Knuth-Morris-Pratt
+
+The Knuth-Morris-Pratt (KMP) substring search algorithm considers that it's probably not necessary to backtrack all the way to the beginning, since the characters along that stretch of the sequence have already been seen. Knowing the correct distance to backtrack is accomplished using a Deterministic Finite-State Automata (DFA).
+
+The DFA is constructed such that every state corresponds to the characters in the patterns, storing their position in the pattern. At each state there exists a transition to the next state corresponding with the character consumed in the pattern. At each state there are also transitions going back to previous states, corresponding to backtracking on a pattern mismatch. Finally, the end state corresponds to the halt state and as such has no transitions leaving it.
+
+#### DFA Construction {#kmp-dfa-construction}
+
+
+
 *[BFS]: Breadth-First Search
-*[GC]: Garbage Collector
+*[BST]: Binary Search Trees
 *[DAG]: Directed Acyclic Graph
+*[DFA]: Deterministic Finite-State Automata
+*[DFS]: Depth-First Search
+*[GC]: Garbage Collector
+*[KMP]: Knuth-Morris-Pratt
+*[LSD]: Least Significant Digit
+*[MSD]: Most Significant Digit
+*[MST]: Minimum Spanning Tree
+*[SPT]: Shortest-Paths Tree
+*[TST]: Ternary Search Trees
 
 [^sorting_improvements]: Skiena p. 109, § 4.3
-[^case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
+[^rbtree_case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
