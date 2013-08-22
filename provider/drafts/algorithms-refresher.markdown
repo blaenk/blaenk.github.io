@@ -7,7 +7,7 @@ icon: lightbulb
 comments: off
 ---
 
-What follows are some notes on algorithms I've been reviewing from [Algorithms](http://amzn.com/032157351X) by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual](http://amzn.com/1849967202) by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material -- since I have to understand it to explain it.
+What follows are some notes on algorithms I've been reviewing from [Algorithms](http://amzn.com/032157351X) by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual](http://amzn.com/1849967202) by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material --- since I have to understand it to explain it.
 
 * toc-center
 
@@ -15,7 +15,7 @@ What follows are some notes on algorithms I've been reviewing from [Algorithms](
 
 **Answers**: Is a pair of nodes connected?
 
-**Data Structure**: Array, indexed by any given site to the value corresponding to the component its a part of: `id[site] = component`. All sites are initially set to be members of their own component -- i.e. `id[5] = 5`.
+**Data Structure**: Array, indexed by any given site to the value corresponding to the component its a part of: `id[site] = component`. All sites are initially set to be members of their own component --- i.e. `id[5] = 5`.
 
 **General Flow**: Sites are all partitioned into singleton sets. Successive `union()` operations merge sets together. The `find()` operation determines if a given pair of sites are from the same component.
 
@@ -137,7 +137,7 @@ public void union(int p, int q) {
 
 Operation         Growth
 ----------       --------
-Union            $1\ (amortized)$
+Union            $\approx 1\ (amortized)$
 
 </div>
 
@@ -652,7 +652,7 @@ To delete node $z$:
 
 1. $z$ **has no children**: transplant it with a child, which is $nil$
 2. $z$ **has just one child**: transplant it with the child
-3. $z$ **has two children**: find successor $y$ -- which must be in $z$'s right subtree
+3. $z$ **has two children**: find successor $y$ --- which must be in $z$'s right subtree
     1. if $y$ is $z$'s right child then transplant $z$ by $y$, leaving $y$'s right child alone
     2. else transplant $y$ by its own right child, then transplant $z$ by $y$
 
@@ -705,7 +705,7 @@ Insertion needs to take into consideration the fact that the tree must remain ba
     1. create two 2-nodes out of each of the two keys
     2. replace the 3-node with a 2-node consisting of the new key
     3. set the 2-node's links to the two new 2-nodes
-* **3-node with 2-node parent** -- _same as above with slight variation_
+* **3-node with 2-node parent** --- _same as above with slight variation_
     1. create two 2-nodes out of each of the two keys
     2. move the new key into the parent 2-node to make it a 3-node
     3. set the middle link to the 3-node's left key and right link to the right key
@@ -730,7 +730,7 @@ Worst   $O(2 \lg {n})$
 
 1. a node is either **red** or **black**
 2. root is **black**
-3. all leaves -- represented as nil -- are **black**
+3. all leaves --- represented as nil --- are **black**
 4. both children of every red node are **black**
 5. every path from a given node to any of its descendant leaves contains the same number of **black** nodes
 
@@ -825,7 +825,7 @@ void insert_case3b(node *n) {
 
 This is resolved by rotating the grandparent in the direction **opposite** to the direction in which the consecutive **red** links lean. This has the effect of making the parent be the new root of the subtree previously rooted by the grandparent.
 
-The grandparent was known to be **black**, since the **red** parent could not have been a child of it otherwise. Knowing this, the parent -- now the root -- switches colors with the grandparent, such that the subtree now consists of the **black** root and two **red** children.
+The grandparent was known to be **black**, since the **red** parent could not have been a child of it otherwise. Knowing this, the parent --- now the root --- switches colors with the grandparent, such that the subtree now consists of the **black** root and two **red** children.
 
 <img src="/images/algorithms/red-black-trees/insert_3.png" class="center">
 
@@ -847,9 +847,9 @@ void insert_case3c(node *n) {
 
 Deletion is handled similar to deletion in BSTs, but is a _lot_ more complicated because the tree has to be re-balanced if removing a node from the tree causes it to become unbalanced.
 
-Every resource I looked at -- books, sites, university slides, etc. -- simply hand-waived the deletion process presumably due to its complexity. The one place that managed to somewhat explain it well was the classic CLRS book, but its implementation consisted of a big, difficult-to-follow while-loop. Instead I decided to go with [wikipedia's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) long and dense explanation of its relatively simple implementation which even the [Linux kernel uses](https://github.com/torvalds/linux/blob/master/lib/rbtree.c).
+Every resource I looked at --- books, sites, university slides, etc. --- simply hand-waived the deletion process presumably due to its complexity. The one place that managed to somewhat explain it well was the classic CLRS book, but its implementation consisted of a big, difficult-to-follow while-loop. Instead I decided to go with [wikipedia's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) long and dense explanation of its relatively simple implementation which even the [Linux kernel uses](https://github.com/torvalds/linux/blob/master/lib/rbtree.c).
 
-**First**, if the node to be deleted has two children then it is replaced by its successor. The successor then has to be deleted, and by definition the successor will have at most one non-leaf child -- otherwise it would not be the minimum in that subtree and the left child would have been followed.
+**First**, if the node to be deleted has two children then it is replaced by its successor. The successor then has to be deleted, and by definition the successor will have at most one non-leaf child --- otherwise it would not be the minimum in that subtree and the left child would have been followed.
 
 ~~~ {lang="c"}
 void delete(node *m, void *key) {
@@ -976,7 +976,7 @@ void delete_case2(node *n) {
 }
 ~~~
 
-**Third**: $S$ is **black**, $S_{L}$ is **red**, $S_{R}$ is **black**, $N$ is left child of its $P$. Rotate $S$ right, then exchange colors of $S$ and its new parent. This case just prepares the tree for falling into case 6, since $N$ now has a **black** sibling -- $S_{L}$ -- whose right child is **red**.
+**Third**: $S$ is **black**, $S_{L}$ is **red**, $S_{R}$ is **black**, $N$ is left child of its $P$. Rotate $S$ right, then exchange colors of $S$ and its new parent. This case just prepares the tree for falling into case 6, since $N$ now has a **black** sibling --- $S_{L}$ --- whose right child is **red**.
 
 <img src="/images/algorithms/red-black-trees/delete_3.png" class="center">
 
@@ -1102,7 +1102,7 @@ TODO
 
 ## Hash Tables
 
-Hash tables consist of an array coupled with a **hash function** -- such as [MurmurHash](http://en.wikipedia.org/wiki/MurmurHash) or [CityHash](http://en.wikipedia.org/wiki/CityHash) -- and a **collision resolution** scheme, both of which help map the key to an index within the array.
+Hash tables consist of an array coupled with a **hash function** --- such as [MurmurHash](http://en.wikipedia.org/wiki/MurmurHash) or [CityHash](http://en.wikipedia.org/wiki/CityHash) --- and a **collision resolution** scheme, both of which help map the key to an index within the array.
 
 ### Hash Functions
 
@@ -1159,7 +1159,7 @@ Linear probing is a form of open addressing that relies on empty entries in the 
 
 The insert and retrieval operations retrieve the index and perform the same operation until the entry is null. This has the consequence that deleting a node cannot _simply_ entail setting the entry to null, or it would prematurely stop the lookup of other keys.
 
-As a result, after setting the entry to null, every key to the right of the removed key also has to be removed -- i.e. set to null -- and then re-inserted into the hash table using the regular insertion operation.
+As a result, after setting the entry to null, every key to the right of the removed key also has to be removed --- i.e. set to null --- and then re-inserted into the hash table using the regular insertion operation.
 
 #### Load Factor {#hash-table-load-factor}
 
@@ -1459,7 +1459,7 @@ Finding the transitive closure of a digraph can be accomplished by running DFS o
 
 An **edge-weighted graph** is a graph where the edges have associated weights or costs. Edge-weighted graphs can be represented with adjacency lists containing edge objects which contain the two vertices, one of which is the index of the adjacency list, as well as the weight for that edge.
 
-A **spanning tree** is a connected subgraph with no cycles that includes all of the vertices in the graph. A **minimum spanning tree** (MST) is a spanning tree whose weight -- the sum of all of its edges' weights -- is no larger than the weight of any other spanning tree for that graph.
+A **spanning tree** is a connected subgraph with no cycles that includes all of the vertices in the graph. A **minimum spanning tree** (MST) is a spanning tree whose weight --- the sum of all of its edges' weights --- is no larger than the weight of any other spanning tree for that graph.
 
 Adding an edge to a tree creates a cycle and removing an edge from a tree breaks it into two separate subtrees. Knowing this, a **cut** of a graph is a partition of its vertices into two nonempty disjoint sets, connected by a **crossing edge**.
 
@@ -1478,7 +1478,7 @@ This method of finding the MST operates by attaching a new edge to a growing tre
 
 The vertices in the tree being built are represented using a vertex-indexed boolean array where an element is set to true if the vertex is in the tree. The edges in the tree can be represented with a queue that collects edges or a vertex-indexed array of edge objects. Crossing edges are held in a minimum priority queue, making the operation of choosing the edge with the lowest weight particularly straightforward.
 
-The act of adding an edge to the tree corresponds to adding a vertex to the tree. When this occurs, all edges from the newly added vertex to all vertices not in the tree must be added to the crossing edges priority queue. Furthermore, any edges previously in the priority queue that connected the newly added vertex to a vertex already in the tree become _ineligible_ -- or they would create a cycle -- and should be ignored or removed.
+The act of adding an edge to the tree corresponds to adding a vertex to the tree. When this occurs, all edges from the newly added vertex to all vertices not in the tree must be added to the crossing edges priority queue. Furthermore, any edges previously in the priority queue that connected the newly added vertex to a vertex already in the tree become _ineligible_ --- or they would create a cycle --- and should be ignored or removed.
 
 ~~~ {lang="java" text="prim's algorithm"}
 void prim(EdgeWeightedGraph G) {
@@ -1866,7 +1866,7 @@ Table: $w:$ average string length
 
 Most Significant Digit (MSD) sort is similar to LSD except that it operates in left-to-right order instead, meaning it works fine for variable-length strings. This is accomplished by performing counting sort to sort the array of strings based on their first character, then recursively performing the same operation on the sub-array of strings with the same first letter.
 
-Because MSD works left-to-right and strings may be of variable -- not uniform -- length, the possibility of reaching the end of the string requires special handling. This is solved by observing the fact that a smaller string $S_1$ that is a prefix of larger string $S_2$ should naturally come before it in lexicographically sorted order. For example, _sea_ should come before _seashore_.
+Because MSD works left-to-right and strings may be of variable --- not uniform --- length, the possibility of reaching the end of the string requires special handling. This is solved by observing the fact that a smaller string $S_1$ that is a prefix of larger string $S_2$ should naturally come before it in lexicographically sorted order. For example, _sea_ should come before _seashore_.
 
 This order is maintained by keeping a separate count of such strings that have had all of their characters sorted. This count is held at `count[1]`. A string has had all of its characters sorted if the character position currently being sorted is past the length of the string currently being considered. Once the counts are converted to key ranges, such strings will naturally be inserted at the beginning of the sorted sub-array.
 
@@ -1931,7 +1931,7 @@ Table: $w:$ average string length
 
 </div>
 
-Three-way quicksort can be adapted to work on a per-character basis similar to MSD. The advantages of this are that the algorithm doesn't use extra space -- unlike MSD -- and that the number of sub-arrays per recurse is bounded at three.
+Three-way quicksort can be adapted to work on a per-character basis similar to MSD. The advantages of this are that the algorithm doesn't use extra space --- unlike MSD --- and that the number of sub-arrays per recurse is bounded at three.
 
 A direct result of only splitting into three sub-arrays is that more data movements are required to get elements into their correct position compared to MSD. However, three-way quicksort's three-way splits adapt well to handling equal keys, keys with small arrays, and keys that fall into a small range.
 
@@ -2134,13 +2134,63 @@ int search(String pattern, String text) {
 
 ### Knuth-Morris-Pratt
 
-The Knuth-Morris-Pratt (KMP) substring search algorithm considers that it's probably not necessary to backtrack all the way to the beginning, since the characters along that stretch of the sequence have already been seen. Knowing the correct distance to backtrack is accomplished using a Deterministic Finite-State Automata (DFA).
+The Knuth-Morris-Pratt (KMP) substring search algorithm considers that it's probably not necessary to backtrack all the way to the beginning, since the characters along that stretch of the sequence have already been seen. One way to know the correct distance to backtrack is accomplished using a Deterministic Finite-State Automata (DFA). There are other methods that either [build an NFA](http://algs4.cs.princeton.edu/53substring/KMPplus.java.html) or build a [partial-match table](http://www.inf.fh-flensburg.de/lang/algorithmen/pattern/kmpen.htm).
+
+#### DFA Composition {#kmp-dfa-composition}
 
 The DFA is constructed such that every state corresponds to the characters in the patterns, storing their position in the pattern. At each state there exists a transition to the next state corresponding with the character consumed in the pattern. At each state there are also transitions going back to previous states, corresponding to backtracking on a pattern mismatch. Finally, the end state corresponds to the halt state and as such has no transitions leaving it.
 
+The DFA is essentially represented by a table `dfa[c][j]` such that `c` corresponds to the character in the text currently being considered and `j` corresponds to the position of the character currently being considered in the pattern, i.e. the state in the DFA. In effect, `dfa[c][j]` determines which state to proceed to when at state `j` considering character `c`.
+
+The value stored at `dfa[c][j]` therefore is the identifier of the state that the algorithm should jump to --- this could mean either backtracking in the case of a mismatch when $C \neq pattern[J]$ or a progression to the next state when $C = pattern[J]$.
+
+#### Preventing Backtracking {#kmp-prevent-backtracking}
+
+In a normal brute-force algorithm when a pattern matching a segment of the text starting at `t[i]` mismatches at position `j`, the entire pattern is re-checked starting on the character to the right: `t[i + 1]`, effectively having to re-check characters `t[i + 1]` to `t[i + j - 1]`.
+
+For example, the following mismatches at position 4:
+
+~~~
+0 1 2 3 4 5
+A B C D E F
+A B C D F
+~~~
+
+So in a brute-force algorithm the pattern would have to be shifted to the right by one position:
+
+~~~
+0 1 2 3 4 5
+A B C D E F
+  A B C D F
+~~~
+
+However, this essentially means that the text segment from position 1 to 3 has to be rechecked, which we would prefer to avoid. The important observation to make is that the text had **already matched** the pattern _up to_ (but not including) position `j` where the mismatch occurred. That is, the text segment `t[i .. i + j - 1]` is equal to `p[0 .. j - 1]` where `p` is the pattern. Since we would have to shift to the right one character, this means that the text that would have to be rechecked corresponds to `p[1 .. j - 1]`. Feeding this to the DFA takes us to the state where we can appropriately handle `t[i + j]`.
+
+**Based on this observation**, we can conclude that at every state we can add transitions for mismatch cases based on the transitions that would be made for the equivalent mismatch that would occur at the state we would arrive at if we had fed the input `p[0 .. j - 1]` to the DFA. For this reason, a "pointer" to this state is kept at every iteration of the DFA construction, where each iteration is comprised of defining all transitions for a given state.
+
 #### DFA Construction {#kmp-dfa-construction}
 
+Given the important observation above, the construction of the DFA is very straightforward. A pointer to a fall-back state `X` is maintained to appropriately establish transitions in the event of a mismatch.
 
+1. the first transition is established: `dfa[p[0]][0] = 1`
+2. for each character in the pattern, a state is created
+    1. for every character in the alphabet, a transition is established based on the transition that would be taken at state `X`, since these are the mismatch transitions
+    2. a match transition is created for the current pattern character
+    3. the pointer to the fall-back state is updated to the state arrived at by following the transition corresponding to the current pattern character from the previous fall-back state
+
+~~~ {lang="java" text="DFA construction"}
+void constructDFA(int[][] dfa, String pattern) {
+  dfa[pattern.charAt(0)][0] = 1;
+
+  for (int X = 0, j = 1; j < M; j++) {
+    for (int c = 0; c < R; c++)
+      dfa[c][j] = dfa[c][X];
+
+    dfa[pattern.charAt(j)][j] = j + 1;
+    X = dfa[pattern.charAt(j)][X];
+  }
+}
+~~~
 
 *[BFS]: Breadth-First Search
 *[BST]: Binary Search Trees
@@ -2152,6 +2202,7 @@ The DFA is constructed such that every state corresponds to the characters in th
 *[LSD]: Least Significant Digit
 *[MSD]: Most Significant Digit
 *[MST]: Minimum Spanning Tree
+*[NFA]: Non-Deterministic Finite Automata
 *[SPT]: Shortest-Paths Tree
 *[TST]: Ternary Search Trees
 
