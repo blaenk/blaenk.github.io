@@ -3,8 +3,6 @@ module Site.Filters (
 ) where
 
 import Hakyll
-import Text.Regex.TDFA ((=~))
-import qualified Data.Map as Map
 
 import Site.ShellFilter
 

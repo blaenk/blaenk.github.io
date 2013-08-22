@@ -58,6 +58,8 @@ main = do
     removeDirectoryRecursive "generated/preview"
     putStrLn "Removing generated/scss..."
     removeDirectoryRecursive "generated/scss"
+    putStrLn "Removing generated/pygments..."
+    removeDirectoryRecursive "generated/pygments"
 
   hakyllWith hakyllConf $ do
     tags <- buildTags postsPattern (fromCapture "tags/*.html")
