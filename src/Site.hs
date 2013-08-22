@@ -78,17 +78,14 @@ main = do
     match postsPattern $ do
       route $ niceRoute "posts/"
       compile $ getResourceBody
-        >>= withItemBody (abbreviationFilter)
-        >>= saveSnapshot "abbreviated"
-        >>= pandocCompiler
+        >>= pandocCompiler (storeDirectory hakyllConf)
         >>= loadAndApplyTemplate "templates/post.html" (sluggedTagsField "tags" tags <> postCtx)
         >>= loadAndApplyTemplate "templates/layout.html" postCtx
 
     match "pages/*" $ do
       route $ niceRoute ""
       compile $ getResourceBody
-        >>= withItemBody (abbreviationFilter)
-        >>= pandocCompiler
+        >>= pandocCompiler (storeDirectory hakyllConf)
         >>= loadAndApplyTemplate "templates/page.html" postCtx
         >>= loadAndApplyTemplate "templates/layout.html" postCtx
 
@@ -107,9 +104,9 @@ main = do
           >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
 
     match postsPattern $ version "feed" $
-      compile $ do
-        ident <- getUnderlying
-        loadSnapshot (setVersion Nothing ident) "abbreviated" >>= makeItem . itemBody >>= pandocFeedCompiler
+      compile $ getResourceBody
+        >>= makeItem . itemBody
+        >>= pandocFeedCompiler
 
     create ["atom.xml"] $ do
       route idRoute
