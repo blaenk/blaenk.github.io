@@ -89,15 +89,4 @@ $(function() {
 	});
 
 	$('a[href^="#fnref"]').text('\uf148');
-
-  $('blockquote').each(function() {
-    var quote = ' <i class="icon-quote-right"></i>';
-    var index = $(this).find('footer').length ? -2 : -1;
-    var $children = $(this).children();
-
-    if (index == -2 && $children.length == 1)
-      $(this).find('footer').before(quote);
-    else if ($children.eq(index).is('p'))
-      $children.eq(index).append(quote);
-  });
 });

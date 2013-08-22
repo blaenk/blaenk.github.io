@@ -170,6 +170,7 @@ article .entry-content ol {
 #toc {
   margin-left: 0;
   font-size: 14px;
+  font-family: 'Merriweather';
 
   li {
     margin-top: 0;
@@ -182,7 +183,6 @@ article .entry-content ol {
 
     .toc-section {
       cursor: default;
-      font-family: 'Merriweather';
     }
     a { margin-left: 4px; }
   }
@@ -195,6 +195,11 @@ article .entry-content ol {
 .footnotes {
   font-family: 'Merriweather';
   font-size: 12px;
+  padding: 0 25px;
+
+  @media screen and (max-width: 600px) {
+    padding: 0;
+  }
 
   a[href^="#fnref"] {
     font: 1em FontAwesome;
@@ -204,7 +209,9 @@ article .entry-content ol {
   hr {
     padding: 0;
     text-align: center;
-    width: 75%;
+    width: 100%;
+    background-color: #eee;
+    margin: 30px auto 20px;
 
     &:after {
       content: "§";
@@ -264,6 +271,7 @@ hr {
     clear: both;
     position: static;
     width: auto;
+    font-family: 'Merriweather';
 
     .date, .tags, .commit {
       display: inline-block;
@@ -277,7 +285,11 @@ hr {
   }
 }
 
-.entry-content > figure.code {
+.entry-content li > figure.code {
+  margin: 15px 0;
+}
+
+.entry-content figure.code {
   margin: 15px -28px;
 
   @media screen and (max-width: 600px) {
@@ -476,25 +488,68 @@ article .entry-content blockquote {
   font-size: 1.1em;
   line-height: 1.625em;
 
-  padding-top: 0;
-  margin: 15px 0;
+  & > *, & > figure.code {
+    margin-left: 30px;
+    margin-right: 30px;
 
-  .icon-quote-right { color: #eee; }
+    @media screen and (max-width: 600px) {
+      margin-left: 25px;
+      margin-right: 25px;
+    }
+  }
 
-  &:before {
-    position: absolute;
-    font-family: FontAwesome;
-    left: 0px;
-    content: "\f10d";
+  code {
+    background-color: inherit;
+    padding: 0;
+  }
+
+  hr {
+    padding: 0;
+    text-align: center;
+    width: 100%;
+    margin: 20px auto;
+    background-color: #eee;
     color: #eee;
   }
+
+  @mixin quote-bar {
+    cursor: default;
+    display: inline-block;
+    position: relative;
+    font-size: 1.5em;
+    padding: 0 0.25em;
+    background: white;
+    top: -0.5em;
+    font-family: FontAwesome;
+  }
+
+  hr:first-child {
+    text-align: left;
+
+    &:after {
+      @include quote-bar;
+      content: "\f10d";
+      padding-left: 0;
+    }
+  }
+
+  hr:last-child {
+    text-align: right;
+
+    &:after {
+      @include quote-bar;
+      content: "\f10e";
+      padding-right: 0;
+    }
+  }
+  .icon-quote-right { color: #eee; }
 
   footer {
     border-top: none;
     padding-top: 0;
     padding-bottom: 0;
     font-size: 16px;
-    margin-top: 5px;
+    margin-top: 15px;
   }
 }
 
