@@ -8,7 +8,7 @@ icon: wrench
 
 * toc
 
-This site was originally built with [Jekyll](http://jekyllrb.com/). Technically I began with the pre-packaged distribution known as [Octopress](http://octopress.org/) which offered a Rakefile for common tasks as well as an out-of-the-box directory structure. I didn't use many of these features, however, so I had been wanting to shed traces of Octopress -- partly motivated by the pursuit of increased speed in site generation. I found the opportunity to do this when Jekyll 1.0 was released recently.
+This site was originally built with [Jekyll](http://jekyllrb.com/). Technically I began with the pre-packaged distribution known as [Octopress](http://octopress.org/) which offered a Rakefile for common tasks as well as an out-of-the-box directory structure. I didn't use many of these features, however, so I had been wanting to shed traces of Octopress --- partly motivated by the pursuit of increased speed in site generation. I found the opportunity to do this when Jekyll 1.0 was released recently.
 
 To cut away the unnecessary components of Octopress, I decided to go through every file and keep only what I absolutely needed. This is evident in commits after [`712168ec`](https://github.com/blaenk/blaenk.github.com.jekyll/commit/712168ec33004b693cc8cfb553a6a861da6a8708).
 
@@ -94,7 +94,7 @@ The first customization I made was to allow support for [SCSS](http://sass-lang.
 getResourceString >>= withItemBody (unixFilter "sass" ["-s", "--scss"])
 ~~~
 
-This works fine in POSIX environments, of which Linux is my primary environment for development. However, it's very useful to me to have Windows support as well. The problem is that on Windows, ruby gem binaries -- such as `scss` -- are implemented using batch file stubs. The underlying function used for creating the process in `unixFilter` is [System.Process](http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html)' [`createProcess`](http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html#v:createProcess), specifically with the `proc` type. On Windows, this uses the [`CreateProcess`](http://msdn.microsoft.com/en-us/library/windows/desktop/ms682425.aspx) function. Using this function, batch files are not run unless they are run explicitly with `cmd.exe /c batchfile`. The problem is that there is no simple way to find the file path of the batch file stub for `scss`.
+This works fine in POSIX environments, of which Linux is my primary environment for development. However, it's very useful to me to have Windows support as well. The problem is that on Windows, ruby gem binaries --- such as `scss` --- are implemented using batch file stubs. The underlying function used for creating the process in `unixFilter` is [System.Process](http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html)' [`createProcess`](http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html#v:createProcess), specifically with the `proc` type. On Windows, this uses the [`CreateProcess`](http://msdn.microsoft.com/en-us/library/windows/desktop/ms682425.aspx) function. Using this function, batch files are not run unless they are run explicitly with `cmd.exe /c batchfile`. The problem is that there is no simple way to find the file path of the batch file stub for `scss`.
 
 The solution to this is to use the `shell` type with `createProcess` instead of `proc`. This has the effect of a `system` call, where the parameter is interpreted by the shell, in Windows' case, `cmd.exe`. As a result, the program can simply be called as `scss`, leaving the shell to automatically run the appropriate batch file stub.
 
@@ -106,7 +106,7 @@ getResourceString >>= withItemBody (shellFilter "sass -s --scss")
 
 ### Abbreviation Substitution {#abbrev}
 
-One feature I missed from [kramdown](http://kramdown.rubyforge.org/) that wasn't available in my new markdown processor -- [Pandoc](http://johnmacfarlane.net/pandoc/) -- was abbreviation substitution. It consists of writing abbreviation definitions which are then used to turn every occurrence of the abbreviation into a proper [`abbr`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr) HTML tag with an accompanying tooltip consisting of the definition.
+One feature I missed from [kramdown](http://kramdown.rubyforge.org/) that wasn't available in my new markdown processor --- [Pandoc](http://johnmacfarlane.net/pandoc/) --- was abbreviation substitution. It consists of writing abbreviation definitions which are then used to turn every occurrence of the abbreviation into a proper [`abbr`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr) HTML tag with an accompanying tooltip consisting of the definition.
 
 I had hardly used regular expressions in Haskell before, so the method of using it was pretty confusing to me at first. There's a base regex package called [regex-base](http://hackage.haskell.org/package/regex-base) which exposes a common interface API, and then there are a variety of backend implementations. Hakyll happens to use [regex-tdfa](http://hackage.haskell.org/package/regex-tdfa), a fast and popular backend, so I decided to use that one instead of introducing additional dependencies.
 
@@ -134,7 +134,7 @@ Update
 
 One thing I forgot to update the previous post about was that I ended up switching from using the Rugged git-bindings for Ruby to just using straight up commands and reading their output. The reason for doing this was that, while everything worked perfectly fine on Linux, Rugged had problems building on Windows. It turned out that taking this approach ended up being simpler and had the added benefit of decreasing my dependencies.
 
-The equivalent of a liquid tag in Jekyll would be a field, expressed as a `Context`. For this reason I created the `gitTag` function that takes a desired key, such as `git` -- which would be used as `$git$` in templates -- and returns a `Context` which returns the `String` of formatted HTML. One problem was that to do this I had to use `IO`, so I needed some way to escape the `Compiler` Monad. It turned out that Hakyll already had a function for something like this called `unsafeCompiler`, which it uses for `UnixFilter` for example.
+The equivalent of a liquid tag in Jekyll would be a field, expressed as a `Context`. For this reason I created the `gitTag` function that takes a desired key, such as `git` --- which would be used as `$git$` in templates --- and returns a `Context` which returns the `String` of formatted HTML. One problem was that to do this I had to use `IO`, so I needed some way to escape the `Compiler` Monad. It turned out that Hakyll already had a function for something like this called `unsafeCompiler`, which it uses for `UnixFilter` for example.
 
 Here's what `gitTag` looks like:
 
@@ -158,7 +158,7 @@ The very nature of how Pandoc transforms input documents into an AST lends itsel
 
 One of the things I needed to implement, however, was the abbreviation substitution described above. I would have implemented it as a Pandoc customization, but Pandoc has no representation for abbreviations in its abstract syntax tree. This was why I implemented it as a Hakyll compiler instead, using simple regular expressions.
 
-There is actually work towards implementing abbreviation substitution. The [readme](http://johnmacfarlane.net/pandoc/README.html) -- <kbd>CTRL</kbd> + <kbd>F</kbd> "Extension: abbrevations" [sic] -- however, says:
+There is actually work towards implementing abbreviation substitution. The [readme](http://johnmacfarlane.net/pandoc/README.html) --- <kbd>CTRL</kbd> + <kbd>F</kbd> "Extension: abbrevations" [sic] --- however, says:
 
 > Note that the pandoc document model does not support abbreviations, so if this extension is enabled, abbreviation keys are simply skipped (as opposed to being parsed as paragraphs).
 
@@ -229,7 +229,7 @@ Another reason was that it would require me to implement the fancy section numbe
 
 Implementing this involved many steps. In general terms, I had to make a pass through the document to collect all of the headers, then I had to make another pass to find a special sentinel marker I would manually place in the document to replace it with the generated table of contents. This effectively makes table of contents generation a two-pass transformer.
 
-Gathering all of the headers and their accompanying information -- i.e. HTML `id`, text, level -- proved to be a pretty straight-forward task using [`queryWith`](http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Generic.html#v:queryWith) from the [pandoc-types](http://hackage.haskell.org/package/pandoc-types) package:
+Gathering all of the headers and their accompanying information --- i.e. HTML `id`, text, level --- proved to be a pretty straight-forward task using [`queryWith`](http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Generic.html#v:queryWith) from the [pandoc-types](http://hackage.haskell.org/package/pandoc-types) package:
 
 ~~~ {lang="haskell"}
 queryWith :: (Data a, Monoid b, Data c) => (a -> b) -> c -> b
@@ -247,7 +247,7 @@ tocTree = map (\(x:xs) -> Node x (tocTree xs)) . groupBy (comp)
   where comp (TocItem a _ _) (TocItem b _ _) = a < b
 ~~~
 
-This `Tree` is finally passed to a recursive function that folds every level of the `Tree` -- known as a `Forest` -- into a numbered, unordered list. While that may sound like an oxymoron, the point is that I wanted to have nested numbering in my table of contents. For this reason, I create an unordered list with a `span` containing the section number concatenated to the parent's section number. This function generates the HTML.
+This `Tree` is finally passed to a recursive function that folds every level of the `Tree` --- known as a `Forest` --- into a numbered, unordered list. While that may sound like an oxymoron, the point is that I wanted to have nested numbering in my table of contents. For this reason, I create an unordered list with a `span` containing the section number concatenated to the parent's section number. This function generates the HTML.
 
 The final problem was finding a way to insert the table of contents on-demand, in a location of my choosing. In kramdown, this is achieved by writing `{:toc}`, which gets substituted with the table of contents. Pandoc has no such thing, however. For this reason, I chose a list with a single item, "toc," as the place holder for the table of contents. This means that I write the following wherever I want the table of contents to show up:
 
@@ -261,7 +261,7 @@ You can take a look at the beginning of this post to see what the generated tabl
 
 I host my site using GitHub Pages. Such sites are deployed by pushing the site to the master branch of the repository. I wrote a quick shell script that accomplishes this in a pretty straightforward manner. It creates a git ignored directory, **deploy/**, which itself is under git control, associated with the same repository, but its master branch instead.
 
-When I deploy the site with `./site deploy`, the contents of **deploy/** are removed -- except for **.git/** -- and then all of the new generated files are copied into it. A commit is then generated for the deployment, tagged with the SHA identifier of the commit from which the site was generated, to make it easy for me to track things down sometimes. An eight character, truncated SHA is used as follows:
+When I deploy the site with `./site deploy`, the contents of **deploy/** are removed --- except for **.git/** --- and then all of the new generated files are copied into it. A commit is then generated for the deployment, tagged with the SHA identifier of the commit from which the site was generated, to make it easy for me to track things down sometimes. An eight character, truncated SHA is used as follows:
 
 ~~~ {lang="bash"}
 COMMIT=$(git log -1 HEAD --pretty=format:%H)
@@ -277,7 +277,7 @@ Preliminary migration to Hakyll was pretty quick. This included porting all of m
 
 At first I was a little rusty with my Haskell and found myself at odds with the seemingly capricious compiler, trying to find one way or another to appease it. I quickly remembered that patience prevailed when concerning Haskell, and eventually came to really enjoy reasoning out the problems and solving them with Haskell.
 
-The site binary which is in charge of generation, previewing, etc. is compiled. Once you have configured Hakyll to your liking, you have a very fast binary -- compared to other site generators which are known not to scale well with the amount of posts. The `Compiler` Monad in Hakyll takes care of dependency tracking, allowing re-generation of only those items which are affected by those which were changed, instead of the whole site.
+The site binary which is in charge of generation, previewing, etc. is compiled. Once you have configured Hakyll to your liking, you have a very fast binary --- compared to other site generators which are known not to scale well with the amount of posts. The `Compiler` Monad in Hakyll takes care of dependency tracking, allowing re-generation of only those items which are affected by those which were changed, instead of the whole site.
 
 But perhaps my favorite aspect of Hakyll is that it's more like a library for static site generation which you use as you see fit, and as a result, your site is entirely customizable.
 

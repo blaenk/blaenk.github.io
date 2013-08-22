@@ -29,7 +29,7 @@ The commit tag is simple to use, taking only one parameter which denotes the rep
 {% raw %}{% commit blaenk/blaenk.github.com %}{% endraw %}
 ~~~
 
-This format is similar to [vundle's](https://github.com/gmarik/vundle), a plugin management plugin for vim. Alternatively, if no parameter is given -- i.e. just `{% raw %}{% commit %}{% endraw %}` -- then instead of a link it produces a `span` tag with the short-form hash and commit message as title text.
+This format is similar to [vundle's](https://github.com/gmarik/vundle), a plugin management plugin for vim. Alternatively, if no parameter is given --- i.e. just `{% raw %}{% commit %}{% endraw %}` --- then instead of a link it produces a `span` tag with the short-form hash and commit message as title text.
 
 Of course, this is a very simple plugin and makes many assumptions (i.e. that you're using github), but it's simple enough that you should be able to modify it to your purpose easily.
 
