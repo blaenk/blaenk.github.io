@@ -29,6 +29,7 @@ import Crypto.Hash
 import Data.Tree
 import Data.Ord
 import Data.Maybe (fromMaybe)
+import Data.Monoid ((<>), mconcat)
 import Text.Regex.TDFA ((=~))
 import qualified Data.Map as Map
 
@@ -55,7 +56,7 @@ pandocCompiler storePath item = do
                             (topDown $ abbreviations abbrs) .
                             (topDown $ pygments storePath) .
                             tocTransformer
-        tocTransformer ast = let headers = queryWith queryHeaders ast
+        tocTransformer ast = let headers = queryWith collectHeaders ast
                              in topDown (tableOfContents headers) ast
 
 pandocTransformer :: ReaderOptions
@@ -66,59 +67,51 @@ pandocTransformer :: ReaderOptions
 pandocTransformer ropt wopt f item =
   writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
 
-data TocItem = TocItem {
-  tocLevel :: Int,
-  _tocIdent :: String,
-  _tocInline :: String
-  }
+data THeader = THeader { headerLevel :: Int, _headerId :: String, _headerText :: String }
 
-instance Eq TocItem where
-  (TocItem a _ _) == (TocItem b _ _) = a == b
+instance Eq THeader where
+  (THeader a _ _) == (THeader b _ _) = a == b
 
-instance Ord TocItem where
-  compare = comparing tocLevel
+instance Ord THeader where
+  compare = comparing headerLevel
 
-normalizeTocs :: [TocItem] -> [TocItem]
-normalizeTocs tocs = map normalize tocs
+normalizeHeaders :: [THeader] -> [THeader]
+normalizeHeaders tocs = map normalize tocs
   where minLevel :: Int
-        minLevel = subtract 1 . tocLevel . minimum $ tocs
-        normalize item@(TocItem level _ _) = item {tocLevel = level - minLevel}
+        minLevel = subtract 1 . headerLevel . minimum $ tocs
+        normalize item@(THeader level _ _) = item {headerLevel = level - minLevel}
 
-queryHeaders :: Block -> [TocItem]
-queryHeaders (Header level (ident, _, _) text) =
+collectHeaders :: Block -> [THeader]
+collectHeaders (Header level (ident, _, _) text) =
   let inline = (writeHtmlString def (Pandoc (Meta [] [] []) [(Plain text)]))
-  in [TocItem level ident inline]
-queryHeaders _ = []
+  in [THeader level ident inline]
+collectHeaders _ = []
 
-tocTree :: [TocItem] -> Forest TocItem
-tocTree = map (\(x:xs) -> Node x (tocTree xs)) . groupBy (comp)
-  where comp (TocItem a _ _) (TocItem b _ _) = a < b
+groupByHierarchy :: [THeader] -> Forest THeader
+groupByHierarchy = map (\(x:xs) -> Node x (groupByHierarchy xs)) . groupBy (comp)
+  where comp (THeader a _ _) (THeader b _ _) = a < b
 
-genToc :: String -> Forest TocItem -> String
-genToc iter forest = let (_, str) = foldl (genStr iter) (1, "") forest in str
-  where genStr :: String -> (Integer, String) -> Tree TocItem -> (Integer, String)
-        genStr parent (current, str) (Node (TocItem _level ident text) sub) =
-          let num = if parent == "1"
-                      then show current ++ "."
-                      else parent ++ show current ++ "."
-              nest = case sub of
-                       [] -> ""
-                       _  -> "<ul>" ++ (genToc num sub) ++ "</ul>"
-              out = str ++ "<li><span class='toc-section'>"  ++ num ++
-                    "</span><a href='#" ++ ident ++ "'>" ++ text ++ "</a>" ++ nest ++ "</li>"
-          in (current + 1, out)
+markupHeader :: Tree THeader -> H.Html
+markupHeader (Node (THeader _level ident text) headers)
+  | headers == [] = link
+  | otherwise     = link <> (H.ol $ markupHeaders headers)
+  where link = H.li $ H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml text
 
-tableOfContents :: [TocItem] -> (Block -> Block)
-tableOfContents [] = (\x -> x)
-tableOfContents headers = tocInsert
-  where tocInsert :: Block -> Block
-        tocInsert (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) =
-          (RawBlock "html") . (\list -> "<ul id='toc' class='right-toc'>" ++ list ++ "</ul>") .
-          (genToc "1") . tocTree . normalizeTocs $ headers
-        tocInsert (BulletList (( (( Plain ((Str "toc-center"):_)):_)):_)) =
-          (RawBlock "html") . (\list -> "<ul id='toc'>" ++ list ++ "</ul>") .
-          (genToc "1") . tocTree . normalizeTocs $ headers
-        tocInsert x = x
+markupHeaders :: Forest THeader -> H.Html
+markupHeaders = mconcat . map markupHeader
+
+createTable :: Forest THeader -> H.Html
+createTable = (H.ol ! A.id "toc") . markupHeaders
+
+tableOfContents :: [THeader] -> Block -> Block
+tableOfContents [] x = x
+tableOfContents headers x@(BulletList (( (( Plain ((Str alignment):_)):_)):_))
+  | alignment == "toc"        = render . (! A.class_ "right-toc") . table $ headers
+  | alignment == "toc-center" = render . table $ headers
+  | otherwise                 = x
+  where render = (RawBlock "html") . renderHtml
+        table = createTable . groupByHierarchy . normalizeHeaders
+tableOfContents _ x = x
 
 quoteRulers :: Block -> Block
 quoteRulers (BlockQuote contents) = BlockQuote $ HorizontalRule : contents ++ [HorizontalRule]
@@ -137,7 +130,7 @@ abbreviations abbrs (Para inlines) = Para $ map substitute inlines
         findMatch [] _ = Nothing
         replaceWithAbbr string abbr =
           let definition = (fromMaybe "ERROR" $ Map.lookup abbr abbrs)
-              replacement = const $ "<abbr title='" ++ definition ++ "'>" ++ abbr ++ "</abbr>"
+              replacement = const $ renderHtml $ H.abbr ! A.title (H.toValue definition) $ preEscapedToHtml abbr
           in RawInline "html" $ replaceAll abbr replacement string
 abbreviations _ x = x
 

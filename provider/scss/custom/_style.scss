@@ -171,20 +171,18 @@ article .entry-content ol {
   margin-left: 0;
   font-size: 14px;
   font-family: 'Merriweather';
+  counter-reset: item;
+  
+  ol { counter-reset: item; }
 
   li {
     margin-top: 0;
+    display: block;
 
     &:before {
-      content: '';
-      position: static;
-      margin-left: 0;
+      content: counters(item, ".") ". ";
+      counter-increment: item;
     }
-
-    .toc-section {
-      cursor: default;
-    }
-    a { margin-left: 4px; }
   }
 
   &:after {
