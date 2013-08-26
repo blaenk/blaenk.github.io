@@ -93,9 +93,9 @@ groupByHierarchy = map (\(x:xs) -> Node x (groupByHierarchy xs)) . groupBy (comp
 
 markupHeader :: Tree THeader -> H.Html
 markupHeader (Node (THeader _level ident text) headers)
-  | headers == [] = link
-  | otherwise     = link <> (H.ol $ markupHeaders headers)
-  where link = H.li $ H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml text
+  | headers == [] = H.li $ link
+  | otherwise     = H.li $ link <> (H.ol $ markupHeaders headers)
+  where link = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml text
 
 markupHeaders :: Forest THeader -> H.Html
 markupHeaders = mconcat . map markupHeader
