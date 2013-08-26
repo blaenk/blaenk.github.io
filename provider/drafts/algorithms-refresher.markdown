@@ -2134,7 +2134,7 @@ int search(String pattern, String text) {
 
 ### Knuth-Morris-Pratt
 
-The Knuth-Morris-Pratt (KMP) substring search algorithm considers that it's probably not necessary to backtrack all the way to the beginning, since the characters along that stretch of the sequence have already been seen. One way to know the correct distance to backtrack is accomplished using a Deterministic Finite-State Automata (DFA). There are other methods that either [build an NFA](http://algs4.cs.princeton.edu/53substring/KMPplus.java.html) or build a [partial-match table](http://www.inf.fh-flensburg.de/lang/algorithmen/pattern/kmpen.htm).
+The Knuth-Morris-Pratt (KMP) substring search algorithm considers that it's probably not necessary to backtrack all the way to the beginning, since the characters along that stretch of the sequence have already been seen. One way to know the correct distance to backtrack is accomplished using a Deterministic Finite-State Automaton (DFA). There are other methods that either [build an NFA](http://algs4.cs.princeton.edu/53substring/KMPplus.java.html) or build a [partial-match table](http://www.inf.fh-flensburg.de/lang/algorithmen/pattern/kmpen.htm).
 
 #### DFA Composition {#kmp-dfa-composition}
 
@@ -2192,19 +2192,348 @@ void constructDFA(int[][] dfa, String pattern) {
 }
 ~~~
 
+#### KMP Search {#kmp-search}
+
+Now that the DFA is constructed, a string can be searched easily. It simply iterates the text pointer on each iteration, while the pattern's pointer iterates based on the output from the DFA given the current text character as input. Iteration ends when the full length of either the text or the pattern is exhausted. If the full pattern was consumed then there was a match and the pointer to the start of the match is returned.
+
+~~~ {lang="java" text="KMP search"}
+int search(String text, String pattern) {
+  int i, j, N = text.length(), M = pattern.length();
+  
+  for (i = 0, j = 0; i < N && j < M; i++)
+    j = dfa[text.charAt(i)][j];
+
+  if (j == M) return i - M;
+  else        return N;
+}
+~~~
+
+### Boyer-Moore
+
+The Boyer-Moore substring search algorithm works by reading the pattern for comparison in reverse order while skipping through the text accordingly to facilitate this. When a comparison mismatches, the algorithm looks in a skip table to determine how far ahead to jump forward to begin the next match attempt. This behavior is known as the mismatched character heuristic.
+
+#### Skip Table {#bm-skip-table}
+
+The mismatched character heuristic makes use of the aforementioned skip table. The table is indexed by a character from the alphabet and gives the index of its rightmost occurrence in the pattern, or -1 if not present. That very value defines how far ahead to skip if that character from the text caused the mismatch.
+
+The table is constructed by first setting all entries to -1, then for every character in the pattern, set that character's entry to its position in the pattern.
+
+~~~ {lang="java" text="skip table construction"}
+void constructSkipTable(String pattern) {
+  int[] right = new int[R];
+
+  for (int c = 0; c < R; c++)
+    right[c] = -1;
+
+  for (int j = 0; j < M; j++)
+    right[pattern.charAt(j)] = j;
+}
+~~~
+
+#### Search {#bm-search}
+
+The searching algorithm, as previously stated, iterates the text pointer `i` from left-to-right and the pattern pointer `j` right-to-left. If there is a mismatch with character `c` in the text, then one of three things can occur:
+
+1. **if `c` is not in the pattern**: increment `i` by `j + 1` to effectively skip that segment of the text that will not match
+2. **if `c` is in the pattern**: use the `right` array to line up the pattern with the text such that the right-most occurrence of `c` in the pattern is lined up with `c` in the text
+3. **if `i` is not increased due to the above case**: then just increment `i` instead so that the pattern always slides at least one position to the right
+
+The above cases are handled with the simple statement `skip = j - right[text.charAt(i + j)]`. Case 1 is handled because characters not present in the pattern are stored as -1 in the table, thereby turning the statement into `skip = j + 1`. Case 2 is handled normally by finding the right-most occurrence' position of `c` in the table and subtracting that from `j`. Case 3 is handled by simply checking if `skip` is less than one and if so setting it to one. If `skip` was never changed from its initial value of zero, then a match was found.
+
+~~~ {lang="java" text="boyer-moore search"}
+int search(String text, String pattern) {
+  int N = text.length();
+  int M = pattern.length();
+  int skip;
+
+  for (int i = 0; i <= N - M; i += skip) {
+    skip = 0;
+
+    for (int j = M - 1; j >= 0; j--)
+      if (pattern.charAt(j) != text.charAt(i + j)) {
+        skip = j - right[text.charAt(i + j)]; // determine skip distance
+        if (skip < 1) skip = 1; // ensure text traversal
+        break; // mismatch; stop trying to match the rest
+      }
+  
+    // no skip distance set, therefore text matched
+    // i is position where the match began
+    if (skip == 0) return i;
+  }
+
+  return N;
+}
+~~~
+
+### Rabin-Karp
+
+The Rabin-Karp algorithm conceptually works by computing a hash of the pattern and then hashing every equal-lengthed substring in the text to find a match. The key idea is that a string of length $M$ corresponds to an $M$-digit base-$R$ number. So a proper hash function would convert an $M$-digit base-$R$ number to an integer value between $0$ and $Q - 1$ where $Q$ is some very large prime number. This is possible with a simple modular hashing scheme, by taking the remainder of dividing the number by $Q$.
+
+~~~ {lang="java" text="modular hash function via horner's method"}
+long hash(String key, int M) {
+  long h = 0;
+  for (int j = 0; j < M; j++)
+    h = (R * h + key.charAt(j)) % Q;
+  return h;
+}
+~~~
+
+The problem with using the above approach for the text is that it incurs the cost of multiplication, addition, and remainder calculations for _each character_. Instead, for an $M$-character substring of the text where $t_i$ corresponds to `text.charAt(i)` the hash $x_i$ can be computed as:
+
+$$ x_i = t_i R^{M - 1} + t_{i + 1} R^{M - 2} + \ldots + t_{i + M - 1} R^0 $$
+
+From the above formula it's apparent that the hash is constructed by individual _hash components_ derived from each character in the text. It stands to reason, then, that the hash of the text shifted one character to the right is:
+
+$$ x_{i + 1} = \left( x_i - t_i R^{M - 1} \right) R + t_{i + M} $$
+
+That is, the original hash minus the hash component of the first character of the previous text, plus the hash component of the new ending character.
+
+~~~ {lang="java" text="rabin-karp"}
+int search(String pattern, String text) {
+  int M = pattern.length();
+  long Q = longRandomPrime();
+  long RM = 1;
+  for (int i = 1; i <= M - 1; i++)
+    RM = (R * RM) % Q; // compute R^(M - 1) % Q
+  long patHash = hash(pattern, M);
+
+  int N = text.length();
+  long txtHash = hash(txt, M);
+
+  if (patHash == txtHash) return 0; // match
+
+  for (int i = M; i < N && check(0); i++) {
+    txtHash = (txtHash + Q - RM * text.charAt(i - M) % Q) % Q;
+    txtHash = (txtHash * R + text.charAt(i)) % Q;
+
+    if (patHash == txtHash && check(i - M + 1))
+       return i - M + 1; // match
+  }
+
+  return N;
+}
+
+// return true for Monte Carlo
+// or check pattern vs text[i .. i - M + 1] for Las Vegas
+boolean check(int i) { return true; }
+~~~
+
+### Regular Expressions
+
+A Regular Expression pattern can be represented as a Non-Deterministic Finite-State Automaton (NFA) where every character in the pattern corresponds to a state in the NFA, followed by an accept state. Characters from the alphabet have an outgoing edge (match transition) going to the next state (character) in the pattern. Metacharacters such as parentheses, pipes, and asterisks have at least one outgoing edge ($\epsilon$-transition) going to another state that represents their purpose.
+
+NFA traversal in this context occurs as follows:
+
+* **match transitions**: if current state corresponds to a character in the alphabet and the current character in the text matches it, the automaton can transition from it, i.e. consume the character
+* **$\epsilon$-transitions**: if no match is made in the pattern, any transition can be taken from a metacharacter, so called for effectively matching the empty string $\epsilon$
+
+The traversal of the NFA is handled in the following manner:
+
+1. **at the start state**: find all set of states reachable via $\epsilon$ transitions
+2. consume pattern character if there's a match in one of the possible states
+3. **from each match state**:
+    1. add set of states reachable via match transitions
+    2. add set of states reachable via $\epsilon$ transitions
+4. repeat at 2
+
+As the text input is fed to the NFA, on input character the following conditions can arise:
+
+* **set of states contains accept state**: the NFA therefore _accepts_ the text, i.e. there was a match
+* **set of states doesn't contain the accept state**: feed it the next character
+* **the end of the text has been reached**: there was no match
+
+The NFA is simply represented by the pattern string and a digraph representing the $\epsilon$-transitions.
+
+#### Match Checking {#regex-match-checking}
+
+From this information, it is possible to create an algorithm that determines whether a regular expression matches the provided text. Reachability is determined by a Directed DFS implementation [^directed_dfs]. This is straightforward because the DFS would only operate on the digraph, which only represents $\epsilon$-transitions.
+
+First, the set of states reachable via $\epsilon$-transitions from the start state are collected:
+
+~~~ {lang="java"}
+boolean match(String text) {
+  Bag<Integer> pc = new Bag<Integer>();
+  DirectedDFS dfs = new DirectedDFS(G, 0);
+
+  for (int v = 0; v < G.V(); v++)
+    if (dfs.marked(v)) pc.add(v);
+
+  for (int i = 0; i < text.length(); i++) {
+    Bag<Integer> matches = new Bag<Integer>();
+~~~
+
+As the text is fed into the NFA one character at a time, the set of reachable states is checked for a match with the current character. For each match, its next state is added to the collection of matches representing the set of states reachable from the current state(s).
+
+~~~ {lang="java"}
+    for (int v : pc)
+      if (v < M && re[v] == text.charAt(i) || re[v] == '.')
+        matches.add(v + 1);
+~~~
+
+Each of the states reachable via $\epsilon$-transitions from each of the states collected are added to the collection:
+
+~~~ {lang="java"}
+    pc = new Bag<Integer>();
+    dfs = new DirectedDFS(G, matches);
+
+    for (int v = 0; v < G.V(); v++)
+      if (dfs.marked(v))
+        pc.add(v);
+  }
+~~~
+
+Once the entire text has been consumed, the final iteration of the above loop would leave the final set of reachable states intact. If this set contains the final, _accept_ state, then the NFA accepts the text --- that is, there was indeed a match. Otherwise, there wasn't a match.
+
+~~~ {lang="java" text="regular expression matching"}
+  for (int v : pc)
+    if (v == M)
+      return true;
+
+  return false;
+}
+~~~
+
+#### NFA Construction {#regex-nfa-construction}
+
+The construction of the NFA is accomplished similar to how Djikstra's [shunting-yard algorithm](http://en.wikipedia.org/wiki/Shunting-yard_algorithm) works for evaluating mathematical expressions in infix notation by using two stacks: one for operators and another for values.
+
+In this context, a stack is maintained for the operators and a digraph the size of the length of the pattern plus one (to account for the accept state) is maintained to represent the NFA's $\epsilon$-transitions. **Concatenation** is already handled implicitly by nature of how the pattern is stored.
+
+~~~ {lang="java"}
+Digraph NFA(String regex) {
+  Stack<Integer> ops = new Stack<Integer>();
+  re = regex.toCharArray();
+  M = re.length();
+  G = new Digraph(M + 1); // +1 for accept state
+
+  for (int i = 0; i < M; i++) {
+    int lp = i;
+~~~
+
+For **parentheses** and **or expressions**, the position of the `(` or `|` is pushed.
+
+~~~ {lang="java"}
+    if (re[i] == '(' || re[i] == '|')
+      ops.push(i);
+~~~
+
+If a `)` is encountered and it signified the end of an **or expression**, then the appropriate edges must be created. A regex `(A | B)` is handled by adding two $\epsilon$-transitions: one from the `(` to the `B` and the other from the `|` to the `)`. Push the position of the `|` (having previously pushed the `(`).
+
+~~~ {lang="java"}
+    else if (re[i] == ')') {
+      int or = ops.pop();
+
+      if (re[or] == '|') {
+        lp = ops.pop();
+        G.addEdge(lp, or + 1);
+        G.addEdge(or, i);
+      } else lp = or;
+    }
+~~~
+
+**Closures** are detected by looking ahead of the current state (if possible). If one is found, then an edge is created to the `*` and another is created from the `*` to the current state.
+
+~~~ {lang="java"}
+    if (i < M - 1 && re[i + 1] == '*') {
+      G.addEdge(lp, i + 1);
+      G.addEdge(i + 1, lp);
+    }
+~~~
+
+Finally, `)`, `*`, and `)` each also have an $\epsilon$-transition leading to the next state in the pattern.
+
+~~~ {lang="java" text="NFA construction"}
+    if (re[i] == '(' || re[i] == '*' || re[i] == ')')
+      G.addEdge(i, i + 1);
+  }
+
+  return G;
+}
+~~~
+
+### Data Compression
+
+Universally good lossless data compression is impossible because, for example, it would mean that data could be compressed over and over again until eventually reaching a compressed length of 0. Instead, lossless compression aims to exploit the known structure of the target data for the best compression ratio.
+
+#### Run-Length Encoding
+
+Run-Length Encoding (RLE) is a classic method of encryption that replaces repeat occurrences of characters with their repeat count. For example, the following consists of 15 zeros, 7 ones, 7 zeros, and 11 ones:
+
+~~~
+0000000000000001111111000000011111111111
+~~~
+
+With RLE, given a count size of 4 bits, it can be replaced with 15 (`1111`), 7 (`0111`), 7, and 11 (`1011`):
+
+~~~
+1111011101111011
+~~~
+
+In general, each count is encoded in one byte. If a run of repeated characters is greater than the maximum size representable by the count size (i.e. 255), the first 255 is encoded, then a zero-lengthed run of the alternate character, then again the next chunk of the original long repeated character.
+
+#### Huffman Compression
+
+Huffman Compression exploits the frequency of individual characters. For example, in `ABRACADABRA!`, the most frequently occurring character `A` could be represented by `0`, `B` by `1`, `R` with `00`, `C` with `01`, `D` with `10`, and `!` with `11`, resulting in `01000010100100011`.
+
+The problem with the above representation is that the interpretation of the above encoded data is ambiguous because the characters aren't delimited and some of the characters' codes are prefixes of others. For example, `A` is `0`, `B` is `1`, and `C` is `01`, so when `01` is read, it isn't clear if it is meant to be interpreted as `AB` or `C`.
+
+Instead, a property known as **prefix-free code** is enforced for the encodings, which prevents any code from being a prefix of another. In the above, a possible representation could be `A` with `0`, `B` with `1111`, `C` with `110`, `D` with `100`, `R` with `1110`, and `!` with `101`, yielding the encoding `011111110011001000111111100101`. While this is a slightly longer representation, it is unambiguous.
+
+Prefix-free codes can be easily represented using a trie where left links are `0` and right links are `1`. Leave nodes contain the character represented by the bits of the edges of the path used to reach them. Each node in the trie has an associated frequency (used during construction) and character (for leaves).
+
+Constructing the trie consists of first creating a forest of 1-node trees --- all of which are leaves --- one for each character in the input, with its frequency variable set to the number of times it appears in the input. The trie is then constructed from the bottom-up by merging the two least frequent characters (nodes) with a new parent node with its frequency set to their sum. This is greatly facilitated by a priority queue:
+
+~~~ {lang="java" text="trie construction"}
+Node buildTrie(int[] freq) {
+  MinPQ<Node> pq = new MinPQ<Node>();
+
+  for (char c = 0; c < R; c++)
+    if (freq[c] > 0)
+      pq.insert(new Node(c, freq[c], null, null));
+
+  while (pq.size() > 1) {
+    Node x = pq.delMin();
+    Node y = pq.delMin();
+
+    Node parent = new Node('\0', x.freq + y.freq, x, y);
+    pq.insert(parent);
+  }
+
+  return pq.delMin();
+}
+~~~
+
+The way in which the trie is constructed ensures that the more frequent characters (nodes) are closer to the root, and as a result are encoded with fewer bits.
+
+One thing to recognize is that the trie has to somehow be encoded in the compressed data so that it can then be decompressed. The trie can be encoded in a bitstream by performing pre-order traversal (root - left - right), and at each node:
+
+* if the node is a leaf, output a `1` and then the binary representation of the character
+* otherwise, write a `0` then recurse on the left node then the right (i.e. pre-order)
+
+Reading the trie into an actual trie structure is just as straightforward, where the type of node to create is determined by the leading bit.
+
+**Decompression** consists of simply traversing the trie as each bit is read. If a leaf is encountered, output the character and restart traversal from the root.
+
+**Compression** requires the existence of a code table mapping each character to the appropriate code. This table is derived from the trie by traversing the trie, keeping track of the bitstring along its path, and when a leaf node is encountered, the bitstring is associated with that character in the code table. Compression then simply requires looking up each character from the data in the code table and outputting the appropriate code.
+
+#### LZW Compression
+
 *[BFS]: Breadth-First Search
 *[BST]: Binary Search Trees
 *[DAG]: Directed Acyclic Graph
-*[DFA]: Deterministic Finite-State Automata
+*[DFA]: Deterministic Finite-State Automaton
 *[DFS]: Depth-First Search
 *[GC]: Garbage Collector
 *[KMP]: Knuth-Morris-Pratt
 *[LSD]: Least Significant Digit
 *[MSD]: Most Significant Digit
 *[MST]: Minimum Spanning Tree
-*[NFA]: Non-Deterministic Finite Automata
+*[NFA]: Non-Deterministic Finite-State Automaton
+*[RLE]: Run-Length Encoding
 *[SPT]: Shortest-Paths Tree
 *[TST]: Ternary Search Trees
 
 [^sorting_improvements]: Skiena p. 109, § 4.3
 [^rbtree_case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
+[^directed_dfs]: Sedgewick p. 570, algorithm 4.4
+

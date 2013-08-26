@@ -38,6 +38,7 @@ Donec vitae turpis non augue pulvinar imperdiet eu non erat. Integer mollis diam
 # Immortal Words #
 
 > Too many people have opinions on things they know nothing about. And the more ignorant they are, the more opinions they have.
+>
 > <footer><strong>Thomas Hildern</strong> <cite><a href="http://fallout.wikia.com/wiki/Thomas_Hildern">Fallout Wiki</a></cite></footer>
 
 ## The Meaning of Life ##

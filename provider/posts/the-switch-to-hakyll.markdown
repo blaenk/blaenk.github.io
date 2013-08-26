@@ -281,5 +281,6 @@ The site binary which is in charge of generation, previewing, etc. is compiled. 
 
 But perhaps my favorite aspect of Hakyll is that it's more like a library for static site generation which you use as you see fit, and as a result, your site is entirely customizable.
 
-*[GHC]: Glasgow Haskell Compiler
 *[AST]: Abstract Syntax Tree
+*[EDSL]: Embedded Domain Specific Language
+*[GHC]: Glasgow Haskell Compiler
