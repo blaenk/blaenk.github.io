@@ -3,7 +3,6 @@ title: Naive Convolution in Haskell
 published: January 4, 2013
 excerpt: Functional implementation of convolution in Haskell
 tags: Haskell, Digital Signal Processing
-icon: superscript
 ---
 
 * toc

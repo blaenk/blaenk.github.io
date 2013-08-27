@@ -3,7 +3,6 @@ title: The Switch to Hakyll
 published: May 14, 2013
 excerpt: Migrating from Jekyll to Hakyll
 tags: Hakyll, Haskell, Pandoc, Jekyll
-icon: wrench
 ---
 
 * toc

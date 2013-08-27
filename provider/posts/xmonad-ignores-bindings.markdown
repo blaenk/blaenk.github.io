@@ -3,7 +3,6 @@ title: xmonad Ignores Bindings
 published: February 24, 2013
 excerpt: Tracking down a bug in xmonad
 tags: Awesome, Linux, xmonad
-icon: bug
 ---
 
 * toc

@@ -3,7 +3,6 @@ title: Commit Tag for Jekyll
 published: March 22, 2013
 excerpt: Liquid tag that links to the latest commit for your Jekyll site
 tags: Git, Jekyll, Ruby
-icon: github-alt
 ---
 
 I've been touching up my site and I got to the footer, where I used to display the last time the site was generated, such as "generated March 22nd, 2013." I decided this was pretty tacky and removed it, but I did want to have something in the footer. Eventually I got the idea to instead put a short SHA1 hash of the latest commit for the site. It would link to the github page for said commit, and on hover of the link it would show the commit message.
