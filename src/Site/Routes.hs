@@ -14,10 +14,10 @@ import Control.Monad (forM_)
 
 niceTags :: Tags -> (String -> Pattern -> Rules ()) -> Rules ()
 niceTags tags rules =
-    forM_ (tagsMap tags) $ \(tag, identifiers) ->
-        create [tagsMakeId tags $ slugify tag] $
-            rulesExtraDependencies [tagsDependency tags] $
-                rules tag $ fromList identifiers
+  forM_ (tagsMap tags) $ \(tag, identifiers) ->
+    create [tagsMakeId tags $ slugify tag] $
+      rulesExtraDependencies [tagsDependency tags] $
+        rules tag $ fromList identifiers
 
 slugify :: String -> String
 slugify = intercalate "-" . words . map (\x -> if x `elem` allowedChars then toLower x else ' ')
