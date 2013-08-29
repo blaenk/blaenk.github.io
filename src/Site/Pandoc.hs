@@ -16,6 +16,7 @@ import System.IO (hClose, hGetContents, hPutStr, hSetEncoding, localeEncoding)
 import Control.Concurrent (forkIO)
 import Control.Exception
 import Data.List hiding (span)
+import Data.Function (on)
 
 import Text.Blaze.Html (preEscapedToHtml, (!))
 import Text.Blaze.Html.Renderer.String (renderHtml)
@@ -27,7 +28,6 @@ import Control.Applicative ((<$>))
 import qualified Data.ByteString.Char8 as C (ByteString, pack)
 import Crypto.Hash
 import Data.Tree
-import Data.Ord
 import Data.Maybe (fromMaybe)
 import Data.Monoid ((<>), mconcat)
 import Text.Regex.TDFA ((=~))
@@ -67,50 +67,39 @@ pandocTransformer :: ReaderOptions
 pandocTransformer ropt wopt f item =
   writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
 
-data THeader = THeader { headerLevel :: Int, _headerId :: String, _headerText :: String }
+headerLevel :: Block -> Int
+headerLevel (Header level _ _) = level
+headerLevel _ = error "not a header"
 
-instance Eq THeader where
-  (THeader a _ _) == (THeader b _ _) = a == b
-
-instance Ord THeader where
-  compare = comparing headerLevel
-
-normalizeHeaders :: [THeader] -> [THeader]
-normalizeHeaders tocs = map normalize tocs
-  where minLevel :: Int
-        minLevel = subtract 1 . headerLevel . minimum $ tocs
-        normalize item@(THeader level _ _) = item {headerLevel = level - minLevel}
-
-collectHeaders :: Block -> [THeader]
-collectHeaders (Header level (ident, _, _) text) =
-  let inline = (writeHtmlString def (Pandoc (Meta [] [] []) [(Plain text)]))
-  in [THeader level ident inline]
+collectHeaders :: Block -> [Block]
+collectHeaders header@(Header _ _ _) = [header]
 collectHeaders _ = []
 
-groupByHierarchy :: [THeader] -> Forest THeader
-groupByHierarchy = map (\(x:xs) -> Node x (groupByHierarchy xs)) . groupBy (comp)
-  where comp (THeader a _ _) (THeader b _ _) = a < b
+groupByHierarchy :: [Block] -> Forest Block
+groupByHierarchy = map (\(x:xs) -> Node x (groupByHierarchy xs)) . groupBy ((<) `on` headerLevel)
 
-markupHeader :: Tree THeader -> H.Html
-markupHeader (Node (THeader _level ident text) headers)
+markupHeader :: Tree Block -> H.Html
+markupHeader (Node (Header _ (ident, _, _) inline) headers)
   | headers == [] = H.li $ link
   | otherwise     = H.li $ link <> (H.ol $ markupHeaders headers)
-  where link = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml text
+  where inline'   = writeHtmlString def (Pandoc (Meta [] [] []) [(Plain inline)])
+        link      = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml inline'
+markupHeader _ = error "what"
 
-markupHeaders :: Forest THeader -> H.Html
+markupHeaders :: Forest Block -> H.Html
 markupHeaders = mconcat . map markupHeader
 
-createTable :: Forest THeader -> H.Html
+createTable :: Forest Block -> H.Html
 createTable = (H.ol ! A.id "toc") . markupHeaders
 
-tableOfContents :: [THeader] -> Block -> Block
+tableOfContents :: [Block] -> Block -> Block
 tableOfContents [] x = x
 tableOfContents headers x@(BulletList (( (( Plain ((Str alignment):_)):_)):_))
   | alignment == "toc"        = render . (! A.class_ "right-toc") . table $ headers
   | alignment == "toc-center" = render . table $ headers
   | otherwise                 = x
   where render = (RawBlock "html") . renderHtml
-        table = createTable . groupByHierarchy . normalizeHeaders
+        table = createTable . groupByHierarchy
 tableOfContents _ x = x
 
 quoteRulers :: Block -> Block
