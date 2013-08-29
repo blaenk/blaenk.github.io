@@ -1019,85 +1019,6 @@ void delete_case4(node *n) {
 }
 ~~~
 
-## Left-Leaning Red-Black Trees {#llrb-trees}
-
-<div class="right">
-
-Case    Growth
------   --------
-Worst   $O(2 \lg {n})$
-
-</div>
-
-Red-Black trees are like regular binary trees, except that they encode 3-nodes as two 2-nodes joined with a **red link**, where one of the 2-nodes is the **left child** of the other. The other kind of link, **black links**, act like regular links in a tree which point to children.
-
-* **red links** lean left
-* no node has two **red links** connected to it
-* **perfect black balance**: every path from the root to a null link has the same number of **black links**. This can be observed if all red links are drawn horizontally
-
-Considering that links are from parents to children, the color of the link is stored in the child, which can be thought of as "following the link to discover its color."
-
-### Rotations {#llrb-tree-rotations}
-
-Insertion algorithms may leave the tree such that it contains right-leaning **red links** or consecutive **red-links**, both of which violate the structural rules of red-black trees. Rotation operations form the basis of the method of fixing these situations.
-
-**Rotating left** is used to fix the case where there is a **right-leaning red-link**. This is fixed by simply replacing the node with its successor and making the new node's left child be the original node attached with a **red-link**. The left child's right child becomes the old node's left child.
-
-~~~ {lang="java" text="rotate left"}
-Node rotateLeft(Node h) {
-  Node x = h.right;
-  h.right = x.left;
-
-  x.color = h.color;
-  h.color = RED;
-
-  x.N = h.N;
-  h.N = 1 + size(h.left) + size(h.right);
-
-  return x;
-}
-~~~
-
-**Rotate right** is used to fix the case where there are **consecutive red-links**. This rotation is the analog to the rotate left operation. The node is replaced by its left child, and the new node's right child becomes the original node.
-
-### Insertion {#llrb-tree-insertion}
-
-Nodes are always inserted at the bottom using red links.
-
-* **2-node**
-    1. if the new key is smaller than the root, then add normally, producing a left-leaning red-link
-    2. otherwise, add the key normally, producing a right-leaning red-link, then rotate the root left
-* **3-node**
-    A.  new key is **larger** than both keys
-        1. add it normally as the right child of the root with a red link
-        2. **flip the colors** of the links from the root
-    B.  new key is **smaller** than both keys
-        1. add it normally as the left child of the left key
-        2. this creates two **consecutive red links**
-        3. **rotate** the middle node to the **right**
-        4. continue at A.2
-    C.  new key is **between** both keys
-        1. add it normally as the right child of the left key
-        2. this creates two **consecutive red links**
-        3. **rotate** the middle node **left**
-        4. continue at C.3
-
-Flipping the colors of a node entails flipping the links from red to black, but also the color of the parent from black to red.
-
-However, a root's color should always be kept black. When it is changed to red, it should be interpreted as the height of the tree increasing by 1, and then the color of the link should be changed back to black.
-
-~~~ {lang="java" text="flipping colors"}
-void flipColors(Node h) {
-  h.color = RED;
-  h.left.color = BLACK;
-  h.right.color = BLACK;
-}
-~~~
-
-### Deletion {#llrb-tree-deletion}
-
-TODO
-
 ## Hash Tables
 
 Hash tables consist of an array coupled with a **hash function** --- such as [MurmurHash](http://en.wikipedia.org/wiki/MurmurHash) or [CityHash](http://en.wikipedia.org/wiki/CityHash) --- and a **collision resolution** scheme, both of which help map the key to an index within the array.
@@ -2628,6 +2549,74 @@ void add(Page h, Key key) {
 ~~~
 
 ## Suffix Arrays
+
+Suffix arrays are arrays of suffixes of a given text which help with procedures such as finding the longest repeated substring in some text.
+
+~~~ {lang="java" text="suffix array"}
+class SuffixArray {
+  private final String[] suffixes;
+  private final int N;
+
+  public SuffixArray(String s) {
+    N = s.length();
+    suffixes = new String[N];
+    for (int i = 0; i < N; i++) suffixes[i] = s.substring(i);
+    Array.sort(suffixes);
+  }
+
+  public int lcp(String s, String t) {
+    int N = Math.min(s.length(), t.length());
+    for (int i = 0; i < N; i++) if (s.charAt(i) != t.charAt(i)) return i;
+    return N;
+  }
+
+  public int lcp(int i) { return lcp(suffixes[i], suffixes[i - 1]); }
+  public int rank(String key) { /* binary search */ }
+  public String select(int i) { return suffixes[i]; }
+  public int index(int i) { return N - suffixes[i].length(); }
+}
+~~~
+
+Using this suffix array class, the longest repeated substring can be found efficiently:
+
+~~~ {lang="java" text="longest repeated substring"}
+void main(String[] args) {
+  String text = StdIn.readAll();
+  int N = text.length();
+  SuffixArray sa = new SuffixArray(text);
+  String lrs = "";
+
+  for (int i = 1; i < N; i++) {
+    int length = sa.lcp(i);
+    if (length > lrs.length())
+      lrs = sa.select(i).substring(0, length);
+  }
+
+  StdOut.println(lrs);
+}
+~~~
+
+## Network-Flow
+
+The Network-Flow problem concerns itself with finding the settings in a network that maximize the flow from source to sink. At each junction in the network there are switches that control the flow's distribution between it's outgoing edges. The problem can be modeled as an edge-weighted digraph with a single source and sink pair, where the weights correspond to the capacity of the edge.
+
+An **st-flow** is a set of edge flows for the network that represent the distribution of flow values for each edge. An **st-flow value** is the sink's inflow. The network-flow problem can be described as finding an st-flow such that no other st-flow has a larger st-flow value. Such an st-flow can be referred to as a **maxflow**.
+
+### Ford-Fulkerson
+
+The Ford-Fulkerson algorithm, also known as the _augmenting-path algorithm_, works by increasing flows incrementally along paths from the source to the sink. It works by considering that each edge consists of a _forward edge_ and a _backward edge_.
+
+A path is found in the network in which there are no full forward edges and no empty backward edges. The flow of the network can then be increased by an amount $X$, by increasing flow in forward edges by $X$ and decreasing flow in backward edges by $X$ in this path. The value of $X$ is the minimum of the unused capacities in forward edges and backward edges in the path. This path that can be used to increase flow in the network is known as an **augmenting path**.
+
+Following from this, the maxflow can be found by starting with zero flow everywhere and gradually increase the flow along any augmenting path from source to sink until there are no more augmenting paths.
+
+A **residual network** has the same vertices as the original. For every edge in the original network: if its flow is positive, an edge should be created in the residual with an opposite direction and capacity equal to the flow. Also, if its flow is less than its capacity, an edge should be added in the same direction as the original edge with capacity equal to the difference between its capacity and flow.
+
+This means that if --- in the original -- an edge's flow is zero then there'll only be one edge (in the same direction) and if instead the flow is full there'll only be one edge (in the opposite direction).
+
+The residual network is useful because any path in it from source to sink corresponds directly to an augmenting path in the original network. As an augmenting path's flow is incremented, when an edge in the path becomes full or empty, it corresponds to changing direction or disappearing in the residual network.
+
+The **shortest-augmenting-path** method finds the maxflow by finding an augmenting path using BFS and incrementing it.
 
 *[BFS]: Breadth-First Search
 *[BST]: Binary Search Trees
