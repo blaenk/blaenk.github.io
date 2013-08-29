@@ -11,7 +11,6 @@ import Data.Monoid ((<>))
 import GHC.IO.Encoding
 import System.Environment
 import Control.Monad (when)
-import System.Directory
 import System.Exit (exitSuccess)
 
 myHakyllConf :: Configuration
@@ -80,11 +79,11 @@ main = do
        (not . null $ args) &&
        ((head args) == "preview")) $ do
     putStrLn "Removing generated/preview..."
-    removeDirectoryRecursive "generated/preview"
+    removeDirectory "generated/preview"
     putStrLn "Removing generated/scss..."
-    removeDirectoryRecursive "generated/scss"
+    removeDirectory "generated/scss"
     putStrLn "Removing generated/pygments..."
-    removeDirectoryRecursive "generated/pygments"
+    removeDirectory "generated/pygments"
     exitSuccess
 
   hakyllWith hakyllConf $ do
