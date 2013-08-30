@@ -15,18 +15,6 @@ This page lists some of the things I've been up to lately.
 
 This is what I'm currently reading, but I also keep a list of [books I've read](/reads).
 
-<img src="/images/books/algorithms.jpg" class="right" width="128">
-
-* [Algorithms](http://amzn.com/032157351X): I've been refreshing my knowledge of algorithms using this book by Sedgewick. I chose this one for this purpose because it seems to strike a balance between the catalog-formatted coverage of Skiena's book and the in-depth analysis of the classic CLRS. So far it has worked perfectly fine, at times looking to CLRS for more information.
-
-    Only one thing really bothered me about the book and that is that it teaches left-leaning red-black trees -- a creation of the author himself -- instead of classical red-black trees, _without_ warning the reader. The main claim to LLRBs that I'm aware of is that they're simpler to teach because they're more consistent, only allowing left-leaning red links, thereby reducing every imbalance to a matter of rotating into left-leaning red links.
-
-    I discovered that the book was teaching LLRBs and not classical RB trees when it got around to "explaining" deletion from LLRBs, in quotes because it left it as an "exercise to the reader." Granted, it provided solution code to the exercise but I figured that I would find some more information online to reinforce my understanding; RB tree deletion is notoriously complex. Of course, every explanation and implementation I found online was entirely different from the red-black trees the book explained.
-
-    I ended up reading through the wikipedia page on red-black trees, which is one of the most dense articles I've read, even just the deletion section was pretty dense. However, the actual implementation was pretty straightforward, so much so apparently that even the Linux kernel uses it.
-
-    I'm currently on the final chapter which covers string algorithms such as sorting, trie structures, substring search, regular expressions, and compression.
-
 <img src="/images/books/gof.jpg" class="right" width="128">
 
 * [Design Patterns](http://amzn.com/0201633612): This is also known as the classical gang of four (GoF) book. I had already read [a book on design patterns](/reads/#headfirst-designpatterns), but while being readable enough, the examples that were used to explain the design patterns were so heavily contrived and ridiculous that I had trouble retaining any of it. I wasn't a huge fan of the book's style either -- which I think is common to all "Head First" books -- because it seemed to treat the reader as if they had a maximum attention span of three seconds: every page was littered with figures and pictures and comic-strip style dialog bubbles and so on.
