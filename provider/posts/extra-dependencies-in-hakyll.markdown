@@ -42,6 +42,9 @@ With the help of Hakyll's creator, Jasper, I learned that the solution involves 
 Now when I'm previewing my site --- or when I build the site in general --- and I modify any scss file, it correctly regenerates the monolithic **css/screen.css** file. Here's my new scss compiler rule:
 
 ~~~ {lang="haskell"}
+  match "scss/**.scss" $ do
+    compile getResourceBody
+
   scssDependencies <- makePatternDependency "scss/**.scss"
   rulesExtraDependencies [scssDependencies] $ do
     create ["css/screen.css"] $ do
