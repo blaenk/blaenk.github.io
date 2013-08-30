@@ -153,7 +153,7 @@ pygments :: FilePath -> Block -> Block
 pygments storePath (CodeBlock (_, _, namevals) contents) =
   let lang = fromMaybe "text" $ lookup "lang" namevals
       text = lookup "text" namevals
-      colored = renderHtml $ H.div ! A.class_ "code-container" $ do
+      colored = renderHtml $ H.div ! A.class_ (H.toValue $ "code-container " ++ lang) $ do
                   preEscapedToHtml $ cache contents lang storePath
       caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) text
       composed = renderHtml $ H.figure ! A.class_ "code" $ do
