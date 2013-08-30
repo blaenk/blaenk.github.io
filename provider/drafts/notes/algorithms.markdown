@@ -2624,6 +2624,7 @@ The **shortest-augmenting-path** method finds the maxflow by finding an augmenti
 * **vertex cover**: find a set of vertices in a graph such that each edge in the graph is incident to at least one vertex in the set
 * **travelling salesman problem**: find the shortest possible path cycle that visits every vertex in a graph
 * **graph coloring**: color every vertex--edge in a graph such that no two adjacent vertices--edges have the same color
+* **knapsack**: given a set of items with different values and a container of a maximum capacity, find the combination of items that fits in the container and has the largest total value.
 
 *[BFS]: Breadth-First Search
 *[BST]: Binary Search Trees
