@@ -1867,8 +1867,8 @@ void stringQuickSort(String[] a, int lo, int hi, int d) {
   while (i <= gt) {
     int t = charAt(a[i], d);
 
-    if      (t < v) exch (a, lt++, i++);
-    else if (t > v) exch (a, i, gt--);
+    if      (t < v) exch(a, lt++, i++);
+    else if (t > v) exch(a, i, gt--);
     else            i++;
   }
 
@@ -2617,6 +2617,13 @@ This means that if --- in the original -- an edge's flow is zero then there'll o
 The residual network is useful because any path in it from source to sink corresponds directly to an augmenting path in the original network. As an augmenting path's flow is incremented, when an edge in the path becomes full or empty, it corresponds to changing direction or disappearing in the residual network.
 
 The **shortest-augmenting-path** method finds the maxflow by finding an augmenting path using BFS and incrementing it.
+
+## NP-Complete Problems
+
+* **clique problem**: find complete subgraphs, or _cliques_, in a graph
+* **vertex cover**: find a set of vertices in a graph such that each edge in the graph is incident to at least one vertex in the set
+* **travelling salesman problem**: find the shortest possible path cycle that visits every vertex in a graph
+* **graph coloring**: color every vertex--edge in a graph such that no two adjacent vertices--edges have the same color
 
 *[BFS]: Breadth-First Search
 *[BST]: Binary Search Trees
