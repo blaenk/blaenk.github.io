@@ -20,6 +20,7 @@ myHakyllConf = defaultConfiguration
   , destinationDirectory = "generated/deploy/out"
   , storeDirectory = "generated/deploy/cache"
   , tmpDirectory = "generated/deploy/cache/tmp"
+  , previewPort = 4000
   }
 
 feedConf :: FeedConfiguration

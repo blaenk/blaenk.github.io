@@ -5,6 +5,7 @@ module Site.Pandoc (pandocCompiler, pandocFeedCompiler) where
 import Hakyll.Web.Pandoc hiding (pandocCompiler)
 
 import Text.Pandoc
+import Text.Pandoc.Shared (stringify)
 
 import qualified Data.Set as S
 import Hakyll.Core.Compiler
@@ -82,8 +83,7 @@ markupHeader :: Tree Block -> H.Html
 markupHeader (Node (Header _ (ident, _, _) inline) headers)
   | headers == [] = H.li $ link
   | otherwise     = H.li $ link <> (H.ol $ markupHeaders headers)
-  where inline'   = writeHtmlString def (Pandoc (Meta [] [] []) [(Plain inline)])
-        link      = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml inline'
+  where link      = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml (stringify inline)
 markupHeader _ = error "what"
 
 markupHeaders :: Forest Block -> H.Html
