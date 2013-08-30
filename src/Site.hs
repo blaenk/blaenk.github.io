@@ -33,13 +33,13 @@ feedConf = FeedConfiguration
 
 indexCompiler :: String -> Routes -> Pattern -> Rules ()
 indexCompiler name route' itemsPattern =
-    create [name'] $ do
-      route route'
-      compile $ do
-        makeItem ""
-          >>= loadAndApplyTemplate "templates/index.html" (archiveCtx itemsPattern)
-          >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
-    where name' = fromFilePath $ name ++ ".html"
+  create [name'] $ do
+    route route'
+    compile $ do
+      makeItem ""
+        >>= loadAndApplyTemplate "templates/index.html" (archiveCtx itemsPattern)
+        >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
+  where name' = fromFilePath $ name ++ ".html"
 
 contentCompiler :: Configuration -> Pattern -> String -> String -> Context String -> Context String -> Rules ()
 contentCompiler conf pattern rewrite contentTmpl contentCtx layoutCtx =

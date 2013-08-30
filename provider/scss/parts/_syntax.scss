@@ -1,42 +1,97 @@
-$base03:          #002b36 !default; //darkest blue
-$base02:          #073642 !default; //dark blue
-$base01:          #586e75 !default; //darkest gray
-$base00:          #657b83 !default; //dark gray
-$base0:           #839496 !default; //medium gray
-$base1:           #93a1a1 !default; //medium light gray
-$base2:           #eee8d5 !default; //cream
-$base3:           #fdf6e3 !default; //white
-$solar-yellow:    #b58900 !default;
-$solar-orange:    #cb4b16 !default;
-$solar-red:       #dc322f !default;
-$solar-magenta:   #d33682 !default;
-$solar-violet:    #6c71c4 !default;
-$solar-blue:      #268bd2 !default;
-$solar-cyan:      #2aa198 !default;
-$solar-green:     #859900 !default;
+$base03:        #002b36 !default; //
+$base02:        #073642 !default; //
+$base01:        #586e75 !default; //
+$base00:        #657b83 !default; //
+$base0:         #839496 !default; //
+$base1:         #93a1a1 !default; // comment, string
+$base2:         #eee8d5 !default; //
+$base3:         #fdf6e3 !default; //
+$solar-yellow:  #b58900 !default; //
+$solar-orange:  #cb4b16 !default; //
+$solar-red:     #dc322f !default; // parentheses
+$solar-magenta: #d33682 !default; //
+$solar-violet:  #6c71c4 !default; //
+$solar-blue:    #268bd2 !default; // haskell: function
+$solar-cyan:    #2aa198 !default; // haskell: let, where, operator
+$solar-green:   #859900 !default; //
 
-$solarized: light !default;
-
-@if $solarized == light {
-
-  $_base03: $base03;
-  $_base02: $base02;
-  $_base01: $base01;
-  $_base00: $base00;
-  $_base0:  $base0;
-  $_base1:  $base1;
-  $_base2:  $base2;
-  $_base3:  $base3;
-
-  $base03:  $_base3;
-  $base02:  $_base2;
-  $base01:  $_base1;
-  $base00:  $_base0;
-  $base0:   $_base00;
-  $base1:   $_base01;
-  $base2:   $_base02;
-  $base3:   $_base03;
+.java .highlight {
+  .o { color: $solar-red; }
+  .nc { color: $solar-cyan; }
 }
 
-$pre-bg: $color-gray04;
-$pre-border: $color-gray03;
+.highlight {
+  .bp { color: $solar-blue }   // Name.Builtin.Pseudo
+  .c { color: $base01 }        // Comment
+  .c1 { color: $base01 }        // Comment.Single
+  .cm { color: $base01 }       // Comment.Multiline
+  .cp { color: $solar-green }  // Comment.Preproc
+  .cs { color: $solar-green }  // Comment.Special
+  .err { color: $base1 }       // Error
+  .g { color: $base1 }         // Generic
+  .gd { color: $solar-cyan }   // Generic.Deleted
+  .ge {                        // Generic.Emph
+    color: $base1;
+    font-style: italic }
+  .gh { color: $solar-orange } // Generic.Heading
+  .gi { color: $solar-green }  // Generic.Inserted
+  .go { color: $base1 }        // Generic.Output
+  .gp { color: $base1 }        // Generic.Prompt
+  .gr { color: $solar-red }    // Generic.Error
+  .gs {                        // Generic.Strong
+    color: $base1;
+    font-weight: bold }
+  .gt { color: $base1 }        // Generic.Traceback
+  .gu { color: $solar-orange } // Generic.Subheading
+  .il { color: $solar-cyan }   // Literal.Number.Integer.Long
+  .k { color: $solar-green }   // Keyword
+  .kc { color: $solar-orange } // Keyword.Constant
+  .kd { color: $solar-blue }   // Keyword.Declaration
+  .kn { color: $solar-green }  // Keyword.Namespace
+  .kp { color: $solar-green }  // Keyword.Pseudo
+  .kr { color: $solar-cyan }   // Keyword.Reserved
+  .kt { color: $solar-yellow } // Keyword.Type
+  .l { color: $base1 }         // Literal
+  .ld { color: $base1 }        // Literal.Date
+  .m { color: $solar-cyan }    // Literal.Number
+  .mf { color: $solar-cyan }   // Literal.Number.Float
+  .mh { color: $solar-cyan }   // Literal.Number.Hex
+  .mi { color: $solar-cyan }   // Literal.Number.Integer
+  .mo { color: $solar-cyan }   // Literal.Number.Oct
+  .n { color: $solar-blue }    // Name
+  .na { color: $solar-blue }        // Name.Attribute
+  .nb { color: $solar-yellow } // Name.Builtin
+  .nbp { color: $solar-red }   // Name.Builtin.Pseudo (self, this)
+  .nc { color: $solar-blue }   // Name.Class
+  .nd { color: $solar-blue }   // Name.Decorator
+  .ne { color: $solar-orange } // Name.Exception
+  .nf { color: $solar-blue }   // Name.Function
+  .ni { color: $solar-orange } // Name.Entity
+  .nl { color: $base1 }        // Name.Label
+  .nn { color: $base1 }        // Name.Namespace
+  .no { color: $solar-green }  // Name.Constant
+  .nt { color: $solar-blue }   // Name.Tag
+  .nv { color: $solar-blue }   // Name.Variable
+  .nx { color: $base1 }        // Name.Other
+  .o { color: $solar-cyan }    // Operator
+  .ow { color: $solar-cyan }   // Operator.Word
+  .p { color: $solar-red }     // Punctuation
+  .py { color: $base1 }        // Name.Property
+  .s { color: $solar-green }         // Literal.String
+  .s1 { color: $solar-cyan }   // Literal.String.Single
+  .s2 { color: $solar-cyan }   // Literal.String.Double
+  .sb { color: $base01 }       // Literal.String.Backtick
+  .sc { color: $solar-cyan }   // Literal.String.Char
+  .sd { color: $base1 }        // Literal.String.Doc
+  .se { color: $solar-orange } // Literal.String.Escape
+  .sh { color: $base1 }        // Literal.String.Heredoc
+  .si { color: $solar-cyan }   // Literal.String.Interpol
+  .sr { color: $solar-red }    // Literal.String.Regex
+  .ss { color: $solar-cyan }   // Literal.String.Symbol
+  .sx { color: $solar-cyan }   // Literal.String.Other
+  .vc { color: $solar-blue }   // Name.Variable.Class
+  .vg { color: $solar-blue }   // Name.Variable.Global
+  .vi { color: $solar-blue }   // Name.Variable.Instance
+  .w { color: $base1 }         // Text.Whitespace
+  .x { color: $solar-orange }  // Other
+}
