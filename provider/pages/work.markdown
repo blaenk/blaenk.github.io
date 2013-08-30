@@ -8,6 +8,18 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
+##### Hakyll: Add default port option {#hakyll-port .collapse}
+
+<div class="collapsible">
+
+Another [patch](https://github.com/jaspervdj/hakyll/pull/178) I created for [hakyll](http://jaspervdj.be/hakyll/), which was readily merged, adds a new field to Hakyll's `Configuration` [structure](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Configuration.html) that allows one to specify the default port to use when running the preview server in Hakyll.
+
+Before this patch, the default port was set to 8000 --- a port on which I already had a service listening on my system, and clients expected it there. It of course was possible to define a separate port as a command line argument, but this was necessary on every invocation of the preview server: `./site preview -p 4000`
+
+With this patch users of Hakyll could override the port field in the `Configuration` structure so that an invocation of `./site preview` automatically listens on that defined port. To avoid breaking existing configurations, the default configuration still sets the default port to 8000, the only difference now is that it can be changed.
+
+</div>
+
 ##### libtorrent: Fix I/O multiplexing error on Solaris {#libtorrent .collapse}
 
 <div class="collapsible">
@@ -48,7 +60,7 @@ The [fix I came up with](https://github.com/rakshasa/libtorrent/pull/40) involve
 
 </div>
 
-##### Hakyll: Fix preview functionality on Windows {#hakyll .collapse}
+##### Hakyll: Fix preview functionality on Windows {#hakyll-preview .collapse}
 
 <div class="collapsible">
 
