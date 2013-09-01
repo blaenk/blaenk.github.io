@@ -20,6 +20,11 @@ $solar-green:   #859900 !default; //
   .nc { color: $solar-cyan; }
 }
 
+.cmake .highlight {
+  .nb { color: $solar-green; }
+  .s { color: $solar-blue; }
+}
+
 .highlight {
   .bp { color: $solar-blue }   // Name.Builtin.Pseudo
   .c { color: $base01 }        // Comment
