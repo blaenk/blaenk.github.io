@@ -144,32 +144,48 @@ article .entry-content ol {
 
 #toc.right-toc {
   float: right;
-  margin-top: 10px;
   margin-left: 10px;
-  padding: 0 10px 5px 10px;
+  margin-top: 0;
+  padding: 0;
 
   @media screen and (max-width: 600px) {
     float: none;
     padding: 0;
     margin-left: 0;
+    margin-top: 10px;
   }
 }
 
 #toc {
-  margin-left: 0;
-  font-size: 14px;
   font-family: 'Merriweather';
-  counter-reset: item;
-  
-  @media screen and (max-width: 600px) {
-    font-size: 13px;
+  margin-top: 10px;
+
+  p {
+    font-weight: bold;
+    margin-top: 0;
   }
 
-  ol { counter-reset: item; }
+  & > ol {
+    margin-left: 0;
+    margin-top: 5px;
+    font-size: 14px;
+  
+    @media screen and (max-width: 600px) {
+      font-size: 13px;
+    }
+  }
+
+  ol {
+    counter-reset: item;
+  }
 
   li {
     margin-top: 0;
     display: block;
+
+    @media screen and (max-width: 600px) {
+      line-height: 22px;
+    }
 
     &:before {
       content: counters(item, ".") ". ";
@@ -265,7 +281,8 @@ hr {
     width: auto;
     font-family: 'Merriweather';
 
-    .date, .tags, .commit {
+    // TODO: move this to post.scss
+    .date, .tags, .commit, .notes {
       display: inline-block;
       margin-right: 30px;
     }

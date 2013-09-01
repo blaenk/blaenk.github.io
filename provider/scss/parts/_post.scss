@@ -32,7 +32,7 @@
         color: $color-gray01;
       }
 		}
-		.date, .tags, .commit{
+		.date, .tags, .commit, .notes{
 			padding-left: 30px;
 			position: relative;
 			&:before{
@@ -50,6 +50,7 @@
 		.date:before{content: "\f073";}
 		.tags:before{content: "\f02c";}
 		.commit:before{content: "\f126";}
+		.notes:before{content: "\f069";}
 		.commit .hash { font-family: Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace; }
 	}
 }

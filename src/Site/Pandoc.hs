@@ -90,7 +90,10 @@ markupHeaders :: Forest Block -> H.Html
 markupHeaders = mconcat . map markupHeader
 
 createTable :: Forest Block -> H.Html
-createTable = (H.ol ! A.id "toc") . markupHeaders
+createTable headers =
+  (H.nav ! A.id "toc") $ do
+    H.p "Contents"
+    H.ol $ markupHeaders headers
 
 tableOfContents :: [Block] -> Block -> Block
 tableOfContents [] x = x
