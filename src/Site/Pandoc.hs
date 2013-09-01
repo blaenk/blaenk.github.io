@@ -73,7 +73,10 @@ headerLevel (Header level _ _) = level
 headerLevel _ = error "not a header"
 
 collectHeaders :: Block -> [Block]
-collectHeaders header@(Header _ _ _) = [header]
+collectHeaders header@(Header _ (_, classes, _) _) =
+  if "notoc" `elem` classes
+    then []
+    else [header]
 collectHeaders _ = []
 
 groupByHierarchy :: [Block] -> Forest Block
