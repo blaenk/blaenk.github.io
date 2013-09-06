@@ -1,7 +1,7 @@
 ---
 title: Algorithms
 published: July 15, 2013
-excerpt: Notes about common algorithms
+excerpt: Classical and crucial algorithms
 comments: off
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: Design Patterns
-published: August 18, 2013
-excerpt: Notes about design patterns
+published: September 2, 2013
+excerpt: A tour of various software architecture design patterns
 ---
+
 
