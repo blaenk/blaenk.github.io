@@ -36,10 +36,8 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 However, in the Solaris man pages it's [prototyped as](docs.oracle.com/cd/E26502_01/html/E29034/select-3c.html):
 
 ~~~ {lang="cpp"}
-int select(int nfds,
-           fd_set *restrict readfds, fd_set *restrict writefds,
-           fd_set *restrict errorfds,
-           struct timeval *restrict timeout);
+int select(int nfds, fd_set *readfds, fd_set *writefds,
+           fd_set *errorfds, struct timeval *timeout);
 ~~~
 
 The key difference is that on Linux, the fourth argument is named `exceptfds` whereas on Solaris it's named `errorfds`. This innocent-looking difference mistakenly gives the impression that file descriptors present in that set indicate that an I/O error has occurred on that file descriptor. However, this is not necessarily the case, as is outlined in [`select_tut(2)`](http://man7.org/linux/man-pages/man2/select_tut.2.html):
