@@ -15,9 +15,15 @@ $solar-blue:    #268bd2 !default; // haskell: function
 $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
 $solar-green:   #859900 !default; //
 
+.highlight { color: $solar-blue; }
+
 .java .highlight {
   .o { color: $solar-red; }
   .nc { color: $solar-cyan; }
+}
+
+.lua .highlight {
+  .kd { color: $solar-green; } // local etc.
 }
 
 .cmake .highlight {

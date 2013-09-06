@@ -328,7 +328,6 @@ figure.code {
     background-color: #8ccaff;
     border-top: 2px solid #8CCAFF;
     padding: 5px 28px; // 5px 10px;
-    color: #00427B;
     position: relative;
     font-size: 87.5%;
 
@@ -394,8 +393,6 @@ figure.code {
         padding-left: 2px;
         line-height: 18px;
       }
-
-      color: #00427B;
     }
 
     .code, .gutter { line-height: 18px; }
@@ -493,7 +490,7 @@ article .entry-content blockquote {
   font-family: 'Merriweather';
   font-weight: 400;
   font-size: 1.1em;
-  line-height: 1.625em;
+  line-height: 1.5em;
 
   & > *, & > figure.code {
     margin-left: 30px;
@@ -532,6 +529,7 @@ article .entry-content blockquote {
 
   hr:first-child {
     text-align: left;
+    margin-bottom: 10px;
 
     &:after {
       @include quote-bar;
@@ -542,6 +540,7 @@ article .entry-content blockquote {
 
   hr:last-child {
     text-align: right;
+    margin-top: 10px;
 
     &:after {
       @include quote-bar;
