@@ -5,7 +5,7 @@ excerpt: Classical and crucial algorithms
 comments: off
 ---
 
-What follows are some notes on algorithms I've been reviewing from [Algorithms](http://amzn.com/032157351X) by Robert Sedgewick and Kevin Wayne as well as [The Algorithm Design Manual](http://amzn.com/1849967202) by Steven S. Skiena. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material --- since I have to understand it to explain it.
+What follows are some notes on algorithms I've been reviewing from [Algorithms](http://amzn.com/032157351X) by Robert Sedgewick and Kevin Wayne, [The Algorithm Design Manual](http://amzn.com/1849967202) by Steven S. Skiena, and other sources around the Internet [^mit] [^umd] [^umgd]. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material --- since I have to understand it to explain it.
 
 * toc-center
 
@@ -135,7 +135,7 @@ public void union(int p, int q) {
 
 Operation         Growth
 ----------       --------
-Union            $\approx 1\ (amortized)$
+Union            $\approx 1$
 
 </div>
 
@@ -1018,6 +1018,22 @@ void delete_case4(node *n) {
   }
 }
 ~~~
+
+## Interval Trees
+
+Interval trees are useful for efficiently finding all intervals that overlap with any given interval or point.
+
+To construct the tree, the median of the entire range of all of the set of ranges is found. Those ranges in the set that are intersected by the median are stored in the current node. Ranges that fall completely to the left of the median are stored in the left child node, and vice versa with the right node.
+
+At any given node representing the set of ranges intersected by the median at that node, two sorted lists are maintained: one containing all beginning points and the other containing all end points.
+
+### Intersection Queries
+
+The general operation for queries is to test the set of ranges in a node and then test those in the appropriate child node if the query isn't equal to the median.
+
+Given a **point** query, the current node is compared with the median. If it's equal, then every range in that node matches and the search is complete. If the query is less than the median, then the list of beginning points is searched for those beginning points that start before the query point, all of which are matches. Then the search continues into the left child.
+
+Given an **interval query**, the set of beginning and end points are searched to see if they fall within the query interval. These ranges are matches, and they have potential for duplicates if the matched interval begins and ends within the query interval. Finally, to match for ranges which possibly contain the query interval, a point is chosen in the query interval, perhaps the begin or end point, and that point is used as a point query as in the aforementioned point query algorithm.
 
 ## Hash Tables
 
@@ -2641,7 +2657,9 @@ The **shortest-augmenting-path** method finds the maxflow by finding an augmenti
 *[SPT]: Shortest-Paths Tree
 *[TST]: Ternary Search Trees
 
+[^mit]: [MIT CSAIL 6.861: Advanced Data Structures](http://courses.csail.mit.edu/6.851/spring12/)
+[^umd]: [University of Maryland, CMSC 420](http://www.cs.umd.edu/class/spring2008/cmsc420/)
+[^umgd]: [Universität Magdeburg, Geometric Datastructures](http://wwwisg.cs.uni-magdeburg.de/ag/lehre/WS1011/GDS/)
 [^sorting_improvements]: Skiena p. 109, § 4.3
 [^rbtree_case_merge]: The [Wikipedia implementation's](http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal) 6 cases were condensed to 4 as was done in the Linux kernel [Red-Black tree implementation](https://github.com/torvalds/linux/blob/master/lib/rbtree.c). Cases 1 and 2 were merged since case 1 is simply a check to see if the node is the root. Cases 3 and 4 were merged because they handle the same scenario, with case 4 simply being a handler for a special case of 3.
 [^directed_dfs]: Sedgewick p. 570, algorithm 4.4
-
