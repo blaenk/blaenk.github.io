@@ -12,6 +12,7 @@ import GHC.IO.Encoding
 import System.Environment
 import Control.Monad (when)
 import System.Exit (exitSuccess)
+import System.FilePath (takeFileName)
 
 myHakyllConf :: Configuration
 myHakyllConf = defaultConfiguration
@@ -21,7 +22,15 @@ myHakyllConf = defaultConfiguration
   , storeDirectory = "generated/deploy/cache"
   , tmpDirectory = "generated/deploy/cache/tmp"
   , previewPort = 4000
+  , ignoreFile = isIgnored
   }
+  where isIgnored path
+          | ignoreFile defaultConfiguration $ name = True
+          -- 4913 is a file vim creates on windows to verify
+          -- that it can indeed write to the specified path
+          | name == "4913"                         = True
+          | otherwise                              = False
+          where name = takeFileName path
 
 feedConf :: FeedConfiguration
 feedConf = FeedConfiguration
@@ -42,7 +51,13 @@ indexCompiler name route' itemsPattern =
         >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
   where name' = fromFilePath $ name ++ ".html"
 
-contentCompiler :: Configuration -> Pattern -> String -> String -> Context String -> Context String -> Rules ()
+contentCompiler :: Configuration ->
+                   Pattern ->
+                   String ->
+                   String ->
+                   Context String ->
+                   Context String ->
+                   Rules ()
 contentCompiler conf pattern rewrite contentTmpl contentCtx layoutCtx =
   match pattern $ do
     route $ niceRoute rewrite

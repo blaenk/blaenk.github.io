@@ -141,10 +141,9 @@ gitTag key = field key $ \item -> do
   unsafeCompiler $ do
     sha <- readProcess "git" (words $ "log -1 HEAD --pretty=format:%h " ++ fp) []
     message <- readProcess "git" (words $ "log -1 HEAD --pretty=format:%s " ++ fp) []
-    return $ "<span class='hash'><a href='https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
-             "' title='" ++ message ++ "'>" ++ sha ++ "</a> :: </span>" ++
-             "<a href='https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "'>" ++
-             "History</a>"
+    return $ "<a href='https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "'>History</a>" ++
+             "<span class='hash'>, <a href='https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
+             "' title='" ++ message ++ "'>" ++ sha ++ "</a></span>"
 
 yearArchives :: Pattern -> Compiler String
 yearArchives pat = do
