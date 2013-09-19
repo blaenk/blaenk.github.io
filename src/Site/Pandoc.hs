@@ -3,9 +3,11 @@
 module Site.Pandoc (pandocCompiler, pandocFeedCompiler) where
 
 import Hakyll.Web.Pandoc hiding (pandocCompiler)
+import Hakyll.Core.Metadata (getMetadataField)
 
 import Text.Pandoc
 import Text.Pandoc.Shared (stringify)
+import Text.Pandoc.Walk (walk, query)
 
 import qualified Data.Set as S
 import Hakyll.Core.Compiler
@@ -38,27 +40,35 @@ import System.Directory
 import System.FilePath (takeDirectory)
 import System.IO.Error (isDoesNotExistError)
 
-abbreviationCollector :: String -> Compiler (Map.Map String String)
-abbreviationCollector body =
+abbreviationCollector :: Item String -> Map.Map String String
+abbreviationCollector item =
   let pat = "^\\*\\[(.+)\\]: (.+)$" :: String
-      found = body =~ pat :: [[String]]
+      found = (itemBody item) =~ pat :: [[String]]
       definitions = map (\(_:abbr:definition:_) -> (abbr, definition)) found
-  in return $ Map.fromList definitions
+  in Map.fromList definitions
 
 pandocFeedCompiler :: Item String -> Compiler (Item String)
-pandocFeedCompiler = pandocTransformer readerOptions writerOptions' (topDown tocRemover)
+pandocFeedCompiler = pandocTransformer readerOptions writerOptions' (walk tocRemover)
   where writerOptions' = writerOptions { writerHTMLMathMethod = PlainMath }
 
 pandocCompiler :: FilePath -> Item String -> Compiler (Item String)
 pandocCompiler storePath item = do
-  abbrs <- withItemBody (abbreviationCollector) item
-  pandocTransformer readerOptions writerOptions (transformer $ itemBody abbrs) item
-  where transformer abbrs = (topDown quoteRulers) .
-                            (topDown $ abbreviations abbrs) .
-                            (topDown $ pygments storePath) .
-                            tocTransformer
-        tocTransformer ast = let headers = queryWith collectHeaders ast
-                             in topDown (tableOfContents headers) ast
+  alignmentM <- getMetadataField (itemIdentifier item) "toc"
+
+  let abbrs = abbreviationCollector item
+      alignment = fromMaybe "right" alignmentM
+      tableOfContents' ast =
+        if alignment == "off"
+          then walk noTocHeaders ast
+          else let headers = query collectHeaders ast
+               in walk (tableOfContents headers alignment) ast
+      transformer =
+        (walk quoteRulers) .
+        (walk $ abbreviations abbrs) .
+        (walk $ pygments storePath) .
+        tableOfContents'
+
+  pandocTransformer readerOptions writerOptions transformer item
 
 pandocTransformer :: ReaderOptions
                   -> WriterOptions
@@ -71,6 +81,12 @@ pandocTransformer ropt wopt f item =
 headerLevel :: Block -> Int
 headerLevel (Header level _ _) = level
 headerLevel _ = error "not a header"
+
+noTocHeaders :: Block -> Block
+noTocHeaders (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) = Null
+noTocHeaders (Header level (ident, classes, params) inline) =
+  Header level (ident, "notoc" : classes, params) inline
+noTocHeaders x = x
 
 collectHeaders :: Block -> [Block]
 collectHeaders header@(Header _ (_, classes, _) _) =
@@ -98,15 +114,15 @@ createTable headers =
     H.p "Contents"
     H.ol $ markupHeaders headers
 
-tableOfContents :: [Block] -> Block -> Block
-tableOfContents [] x = x
-tableOfContents headers x@(BulletList (( (( Plain ((Str alignment):_)):_)):_))
-  | alignment == "toc"        = render . (! A.class_ "right-toc") . table $ headers
-  | alignment == "toc-center" = render . table $ headers
-  | otherwise                 = x
+tableOfContents :: [Block] -> String -> Block -> Block
+tableOfContents [] _     x = x
+tableOfContents headers alignment x@(BulletList (( (( Plain ((Str "toc"):_)):_)):_))
+  | alignment == "right" = render . (! A.class_ "right-toc") . table $ headers
+  | alignment == "left"  = render . table $ headers
+  | otherwise            = x
   where render = (RawBlock "html") . renderHtml
-        table = createTable . groupByHierarchy
-tableOfContents _ x = x
+        table  = createTable . groupByHierarchy
+tableOfContents _ _ x = x
 
 quoteRulers :: Block -> Block
 quoteRulers (BlockQuote contents) = BlockQuote $ HorizontalRule : contents ++ [HorizontalRule]
@@ -156,8 +172,12 @@ cache code lang storePath = unsafePerformIO $ do
           | otherwise = throwIO e
 
 pygments :: FilePath -> Block -> Block
-pygments storePath (CodeBlock (_, _, namevals) contents) =
-  let lang = fromMaybe "text" $ lookup "lang" namevals
+pygments storePath (CodeBlock (_, classes, namevals) contents) =
+  let lang = case lookup "lang" namevals of
+               Just language -> language
+               Nothing -> if not . null $ classes
+                            then head classes
+                            else "text"
       text = lookup "text" namevals
       colored = renderHtml $ H.div ! A.class_ (H.toValue $ "code-container " ++ lang) $ do
                   preEscapedToHtml $ cache contents lang storePath
@@ -199,5 +219,5 @@ readerOptions =
     }
 
 writerOptions :: WriterOptions
-writerOptions = def { writerHTMLMathMethod = MathJax "" }
+writerOptions = def { writerHTMLMathMethod = MathJax "", writerHtml5 = True }
 
