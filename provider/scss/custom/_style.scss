@@ -3,6 +3,11 @@
 
 .post-info .excerpt { cursor: default; }
 
+.archives {
+  h2 {
+    font-family: $font-serif;
+    margin-bottom: 10px; } }
+
 .notfound {
   text-align: center;
 }
@@ -35,7 +40,7 @@ p.notfound { margin: 15px 0; }
   margin-top: 2px;
 
   #social {
-    font-family: Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+    font-family: $font-mono;
     font-size: 18px;
     color: #999;
     
@@ -96,7 +101,7 @@ abbr {
 }
 
 sup {
-  font-family: Menlo,Monaco,Consolas,"DejaVu Sans Mono", "Liberation Mono",monospace;
+  font-family: $font-mono;
   vertical-align: baseline;
   font-size: inherit;
 
@@ -107,7 +112,7 @@ sup {
   }
 }
 
-sup { line-height: 1em; }
+sup { line-height: 1; }
 
 .inner {
 	width: 720px;
@@ -124,7 +129,7 @@ dt {
 
 article .entry-content ul,
 article .entry-content ol {
-  li { line-height: 26px; }
+  li { line-height: 1.625; }
   li p {
     margin-top: 0;
     margin-bottom: 10px;
@@ -136,9 +141,10 @@ article .entry-content ol {
 
   &:before {
     content: '\00BB';
+    cursor: default;
     position: absolute;
     margin-left: -15px;
-    color: #258fb8;
+    color: #ccc; // #ddd
   }
 }
 
@@ -157,7 +163,7 @@ article .entry-content ol {
 }
 
 #toc {
-  font-family: 'Merriweather';
+  font-family: $font-serif;
   margin-top: 10px;
 
   p {
@@ -199,7 +205,7 @@ article .entry-content ol {
 }
 
 .footnotes {
-  font-family: 'Merriweather';
+  font-family: $font-serif;
   font-size: 12px;
   padding: 0 25px;
 
@@ -208,11 +214,14 @@ article .entry-content ol {
   }
 
   a[href^="#fnref"] {
-    font: 1em FontAwesome;
+    font: 1em $font-icon;
     margin-left: 5px;
   }
 
   p { line-height: 22px; }
+
+  li { margin-bottom: 5px; }
+  li p:last-child { margin-bottom: 0; }
 
   hr {
     padding: 0;
@@ -279,7 +288,7 @@ hr {
     clear: both;
     position: static;
     width: auto;
-    font-family: 'Merriweather';
+    font-family: $font-serif;
 
     // TODO: move this to post.scss
     .date, .tags, .commit, .notes {
@@ -404,7 +413,7 @@ figure.code {
 
 .entry-content code,
 .entry-content pre {
-  font-family: Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+  font-family: $font-mono;
 }
 
 .entry-content > pre {
@@ -416,15 +425,29 @@ figure.code {
   margin-right: -10px;
 }
 
-.page h1.title { margin-bottom: 20px; }
+.page h1.title {
+  margin-bottom: 15px;
+  margin-top: 5px;
+  font-family: $font-serif;
+  font-weight: 400;
+}
 .entry-content {
   h2 { border-bottom: none !important; }
   h1, h2, h3, h4, h5, {
     margin-top: 0;
     overflow: hidden;
     position: static !important;
+    font-weight: 400;
+    font-family: $font-serif;
 
-    &:hover .hash { color: #ccc; }
+    &:hover .hash {
+      color: #ccc;
+      display: block;
+
+      @media screen and (max-width: 766px) {
+        display: none;
+      }
+    }
 
     .hash {
       color: #ddd;
@@ -432,10 +455,7 @@ figure.code {
       position: absolute;
       left: -20px;
       width: auto;
-
-      @media screen and (max-width: 766px) {
-        display: none;
-      }
+      display: none;
     }
 
     a {
@@ -447,10 +467,75 @@ figure.code {
   }
 
   h1 .hash { left: -25px; }
-  h2 a.header-link { border-bottom: 2px solid #8ccaff; }
-  h3 a.header-link { border-bottom: 2px solid #e4e4e4; }
   h4 { font-size: 16px; }
   h5 { font-size: 14px; }
+
+  counter-reset: h1counter h2counter h3counter h4counter h5counter;
+
+  h1 {
+    counter-reset: h2counter;
+    .header-link:before {
+      content: counter(h1counter) ". ";
+      counter-increment: h1counter;
+    }
+    &.notoc .header-link:before {
+      content: none;
+      counter-increment: none;
+    }
+  }
+  h1 ~ h2 .header-link:before { content: counter(h1counter) "." counter(h2counter) ". "; }
+  h2 {
+    counter-reset: h3counter;
+    .header-link:before {
+      counter-increment: h2counter;
+      content: counter(h2counter) ". ";
+    }
+    &.notoc .header-link:before {
+      content: none;
+      counter-increment: none;
+    }
+  }
+  h1 ~ h2 ~ h3 .header-link:before { content: counter(h1counter) "." counter(h2counter) "." counter(h3counter) ". "; }
+  h2 ~ h3 .header-link:before { content: counter(h2counter) "." counter(h3counter) ". "; }
+  h3 {
+    counter-reset: h4counter;
+    .header-link:before {
+      content: counter(h3counter) ". ";
+      counter-increment: h3counter;
+    }
+    &.notoc .header-link:before {
+      content: none;
+      counter-increment: none;
+    }
+  }
+  h1 ~ h2 ~ h3 ~ h4 .header-link:before { content: counter(h1counter) "." counter(h2counter) "." counter(h3counter) "." counter(h4counter) ". "; }
+  h2 ~ h3 ~ h4 .header-link:before { content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) ". "; }
+  h3 ~ h4 .header-link:before { content: counter(h3counter) "." counter(h4counter) ". "; }
+  h4 {
+    counter-reset: h5counter;
+    .header-link:before {
+      content: counter(h4counter) ". ";
+      counter-increment: h4counter;
+    }
+    &.notoc .header-link:before {
+      content: none;
+      counter-increment: none;
+    }
+  }
+  h1 ~ h2 ~ h3 ~ h4 ~ h5 .header-link:before { content: counter(h1counter) "." counter(h2counter) "." counter(h3counter) "." counter(h4counter) "." counter(h5counter) ". "; }
+  h2 ~ h3 ~ h4 ~ h5 .header-link:before { content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) "." counter(h5counter) ". "; }
+  h3 ~ h4 ~ h5 .header-link:before { content: counter(h3counter) "." counter(h4counter) "." counter(h5counter) ". "; }
+  h4 ~ h5 .header-link:before { content: counter(h4counter) "." counter(h5counter) ". "; }
+  h5 {
+    .header-link:before {
+      content: counter(h5counter) ". ";
+      counter-increment: h5counter;
+    }
+    &.notoc .header-link:before {
+      content: none;
+      counter-increment: none;
+    }
+  }
 }
 
 #footer {
@@ -488,10 +573,10 @@ figure.code {
 }
 
 article .entry-content blockquote {
-  font-family: 'Merriweather';
+  font-family: $font-serif;
   font-weight: 400;
   font-size: 1.1em;
-  line-height: 1.5em;
+  line-height: 1.5;
 
   & > *, & > figure.code {
     margin-left: 30px;
@@ -525,7 +610,7 @@ article .entry-content blockquote {
     padding: 0 0.25em;
     background: white;
     top: -0.5em;
-    font-family: FontAwesome;
+    font-family: $font-icon;
   }
 
   hr:first-child {
@@ -556,7 +641,7 @@ article .entry-content blockquote {
     padding-top: 0;
     padding-bottom: 0;
     font-size: 16px;
-    margin-top: 15px;
+    margin-top: 5px;
   }
 }
 

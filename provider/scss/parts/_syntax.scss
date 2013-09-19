@@ -17,6 +17,10 @@ $solar-green:   #859900 !default; //
 
 .highlight { color: #00427b; }
 
+.cpp .highlight {
+  .nl { color: $solar-violet; }
+}
+
 .java .highlight {
   .o { color: $solar-red; }
   .nc { color: $solar-cyan; }
@@ -89,10 +93,10 @@ $solar-green:   #859900 !default; //
   .ow { color: $solar-cyan }   // Operator.Word
   .p { color: $solar-red }     // Punctuation
   .py { color: $base1 }        // Name.Property
-  .s { color: $solar-green }         // Literal.String
-  .s1 { color: $solar-cyan }   // Literal.String.Single
-  .s2 { color: $solar-cyan }   // Literal.String.Double
-  .sb { color: $base01 }       // Literal.String.Backtick
+  .s { color: $solar-green }   // Literal.String
+  .s1 { color: $solar-green }  // Literal.String.Single
+  .s2 { color: $solar-green }  // Literal.String.Double
+  .sb { color: $solar-green }  // Literal.String.Backtick
   .sc { color: $solar-cyan }   // Literal.String.Char
   .sd { color: $base1 }        // Literal.String.Doc
   .se { color: $solar-orange } // Literal.String.Escape

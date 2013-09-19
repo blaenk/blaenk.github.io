@@ -18,7 +18,7 @@ article{
 
             span {
                 padding-bottom: 2px;
-                font-weight: bold;
+                font-family: $font-serif;
             }
 
 	      	&:hover > span {
@@ -69,13 +69,6 @@ article{
 			font-weight: 300;
 			border-bottom: 1px solid $color-gray04;
 			position: relative;
-			&:before{
-				content: "";
-				position: absolute;
-				bottom: -2px;
-				border-bottom: 1px solid $color-gray05;
-				width: 100%;
-			}
 		}
 		img, video{
 			max-width: 100%;
