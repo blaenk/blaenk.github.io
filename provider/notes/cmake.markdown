@@ -3,6 +3,7 @@ title: CMake
 published: September 1, 2013
 excerpt: Making sense of scattered information
 comments: off
+toc: off
 ---
 
 [CMake](http://www.cmake.org/) seems to me like the best available cross-platform build tool. It can generate Visual Studio solutions on Windows and Make files on POSIX systems. While it's widely used and there exists thorough reference documentation for it, I feel like there aren't many resources for getting started. As a result, I've written up some notes from what I've been able to infer from a variety of project's CMake configurations as well as the scant introductory information I was able to find.

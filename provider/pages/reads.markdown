@@ -12,7 +12,7 @@ I'm [currently reading](/lately/#reading).
 
 <a href="http://amzn.com/032157351X" name="algorithms">Algorithms</a> --- I've been refreshing my knowledge of algorithms using this book by Sedgewick. I chose this one for this purpose because it seems to strike a balance between the catalog-formatted coverage of Skiena's book and the in-depth analysis of the classic CLRS. So far it has worked perfectly fine, at times looking to CLRS for more information.
 
-Only one thing really bothered me about the book and that is that it teaches left-leaning red-black trees -- a creation of the author himself -- instead of classical red-black trees, _without_ warning the reader. The main claim to LLRBs that I'm aware of is that they're simpler to teach because they're more consistent, only allowing left-leaning red links, thereby reducing every imbalance to a matter of rotating into left-leaning red links.
+Only one thing really bothered me about the book and that is that it teaches left-leaning red-black trees --- a creation of the author himself --- instead of classical red-black trees, _without_ warning the reader. The main claim to LLRBs that I'm aware of is that they're simpler to teach because they're more consistent, only allowing left-leaning red links, thereby reducing every imbalance to a matter of rotating into left-leaning red links.
 
 I discovered that the book was teaching LLRBs and not classical RB trees when it got around to "explaining" deletion from LLRBs, in quotes because it left it as an "exercise to the reader." Granted, it provided solution code to the exercise but I figured that I would find some more information online to reinforce my understanding; RB tree deletion is notoriously complex. Of course, every explanation and implementation I found online was entirely different from the red-black trees the book explained.
 
@@ -22,7 +22,7 @@ I ended up reading through the wikipedia page on red-black trees, which is one o
 
 <img src="/images/books/tlpi.jpg" class="right" width="128">
 
-<a href="http://amzn.com/1593272200" name="tlpi">The Linux Programming Interface</a> --- This book concerns the POSIX API as defined by various standards -- e.g., POSIX.1-2001/SUSv3, POSIX.1-2008/SUSv4 -- and platform-specific deviations. It has an emphasis on Linux, at times covering Linux-specific APIs such as epoll and inotify. The book comes in at a hefty 64 chapters and 1500+ pages, covering every possible topic including signals, processes, threads, interprocess-communication (IPC), sockets, terminals and pseudoterminals, evented I/O, and more.
+<a href="http://amzn.com/1593272200" name="tlpi">The Linux Programming Interface</a> --- This book concerns the POSIX API as defined by various standards --- e.g., POSIX.1-2001/SUSv3, POSIX.1-2008/SUSv4 --- and platform-specific deviations. It has an emphasis on Linux, at times covering Linux-specific APIs such as epoll and inotify. The book comes in at a hefty 64 chapters and 1500+ pages, covering every possible topic including signals, processes, threads, interprocess-communication (IPC), sockets, terminals and pseudoterminals, evented I/O, and more.
 
 > _The Linux Programming Interface_ is the most comprehensive single-volume work on the Linux and UNIX programming interface, and a book that's destined to become a new classic.
 >
@@ -38,7 +38,7 @@ My goal now is to dive even deeper by exploring the kernel space.
 
 <a href="http://amzn.com/0321714113" name="cpp-primer">C++ Primer</a> ---  The 5th edition of the book was specifically updated for the new C++11 standard release. At one point I came to the realization that I didn't have enough experience with C++, and that my understanding of it was hazy at best. Recognizing this, I dedicated myself to bettering my understanding of C++ by rereading a book I already had on C++. However, I felt I was missing out on the new C++11 features that were recently introduced.
 
-C++ Primer is what I look for in every programming book. It is direct -- to the point, thanks in part to the assumption that the reader is already familiar with programming, or even C++ itself. It diligently scours every nook and cranny of the C++11 standard, almost reading as a commentary of it, and in so doing, masterfully conveys the various intricacies of shared and unique pointers, move semantics, lambdas, variadic templates, and more.
+C++ Primer is what I look for in every programming book. It is direct --- to the point, thanks in part to the assumption that the reader is already familiar with programming, or even C++ itself. It diligently scours every nook and cranny of the C++11 standard, almost reading as a commentary of it, and in so doing, masterfully conveys the various intricacies of shared and unique pointers, move semantics, lambdas, variadic templates, and more.
 
 ---
 
@@ -54,7 +54,7 @@ After reading RWH, however, I had an insatiable interest in Haskell, and so I wa
 
 <a href="http://amzn.com/0596514980" name="rwh">Real World Haskell</a> --- This book is [freely available](http://book.realworldhaskell.org/read/) online, which is how I read it. I initially bought _Learn You A Haskell_, but I felt like it beat around the bush too much. Conversely, I found _Real World Haskell_ refreshingly direct and practical, living up to its name.
 
-For the longest time I had wanted to learn Haskell, but I wanted to learn it in a practical context so that I may develop a realistic idea of what I can do with it. Specifically, I learned Haskell for the purpose of doing some digital signal processing in order to create a music visualizer. This book was very direct with regard to its teaching practical usage of Haskell. As a result, I was able to see how functors, applicative functors, monoids, monads, monad transformers -- and other seemingly-abstract concepts -- actually helped in developing real-world applications.
+For the longest time I had wanted to learn Haskell, but I wanted to learn it in a practical context so that I may develop a realistic idea of what I can do with it. Specifically, I learned Haskell for the purpose of doing some digital signal processing in order to create a music visualizer. This book was very direct with regard to its teaching practical usage of Haskell. As a result, I was able to see how functors, applicative functors, monoids, monads, monad transformers --- and other seemingly-abstract concepts --- actually helped in developing real-world applications.
 
 ---
 
@@ -107,7 +107,7 @@ Admittedly, in my opinion, while it was fun to read and achieved its purpose, ul
 
 <img src="/images/books/metaruby.jpg" class="right" width="128">
 
-<a href="http://amzn.com/1934356476" name="metaprogramming-ruby">Metaprogramming Ruby</a> --- Ruby has a tradition of employing metaprogramming techniques in various libraries to create DSLs that make programming a lot simpler or straightforward, as is evident in libraries like Rails, Sinatra, Cucumber, etc. -- pretty much any Ruby library defines a form of DSL.
+<a href="http://amzn.com/1934356476" name="metaprogramming-ruby">Metaprogramming Ruby</a> --- Ruby has a tradition of employing metaprogramming techniques in various libraries to create DSLs that make programming a lot simpler or straightforward, as is evident in libraries like Rails, Sinatra, Cucumber, etc. --- pretty much any Ruby library defines a form of DSL.
 
 This book covers the details on how the language really lends itself to metaprogramming through mechanisms such as `method_missing()`, `instance_eval()`, and `define_method()` that allow one to dynamically add methods and functionality to classes at run-time. Perhaps most important is its coverage of the Ruby object model (hierarchy) complete with Eigenclasses, and how method calls are resolved in this grand context.
 

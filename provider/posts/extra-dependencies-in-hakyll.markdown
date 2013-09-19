@@ -3,6 +3,7 @@ title: Extra Dependencies in Hakyll
 published: June 28, 2013
 excerpt: Designating extra dependencies for compilers
 tags: Hakyll, Haskell
+toc: off
 ---
 
 I use [scss](http://sass-lang.com/) for my site's stylesheets. scss is a language very similar to [CSS](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) that adds support for variables, nesting, mixins, selector inheritance, and more --- while retaining a syntax very similar to CSS itself.

@@ -3,6 +3,7 @@ title: I'm Back
 published: December 26, 2012
 excerpt: Breaking back into blogging
 tags: Octopress, Haskell, Digital Signal Processing
+toc: off
 ---
 
 It's been a while since I last had a blog. In fact, I think it's been two, maybe three years now. I previously had a WordPress blog that I updated regularly. However, the things I was studying on my own at the time consumed me and I considered writing about those things to be a low priority. After all, who want's to hear what a noob thinks about something he's barely beginning to learn about? So instead I figured I'd continue reading and studying, and maintaining a blog kind of fell into the backburner.

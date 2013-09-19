@@ -64,7 +64,7 @@ My compiler of choice is [clang](http://clang.llvm.org/) paired with [GDB](http:
 
 I use [Syncplay](http://syncplay.pl/) regularly to watch movies with friends, in sync.
 
-[MPC-HC](http://mpc-hc.org/) is my primary -- and favorite by _far_ (so much that I've contributed to it) -- media player on Windows. [mplayer2](http://www.mplayer2.org/) on Linux. Both work with Syncplay.
+[MPC-HC](http://mpc-hc.org/) is my primary --- and favorite by _far_ (so much that I've contributed to it) --- media player on Windows. [mplayer2](http://www.mplayer2.org/) on Linux. Both work with Syncplay.
 
 I mainly use [mumble](http://mumble.info/) for voice communication.
 

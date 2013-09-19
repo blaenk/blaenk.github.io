@@ -2,14 +2,16 @@
 title: Lately
 published: 2012-12-28
 comments: true
+toc: off
 ---
 
 This page lists some of the things I've been up to lately.
 
 ## Working On
 
-* An audio player, though it'll ultimately be used for something else other than general audio playback. I'm decoding audio frames using [ffmpeg](http://www.ffmpeg.org/)'s libavcodec, libavformat, libavutil, and libswresample. Playback is currently done using [PulseAudio](http://www.freedesktop.org/wiki/Software/PulseAudio) although I intend to switch to a cross-platform library like [PortAudio](http://www.portaudio.com/). It works with any format/container/codec supported by ffmpeg. Source will be up soon.
-    * Ported to [PortAudio](http://www.portaudio.com/)!
+* A game I've been wanting to work on for a while now. It's being developed with CMake, C++11, LuaJIT, and architected from the beginning to facilitate cross-platform development.
+
+* An audio player, though it'll ultimately be used for something else other than general audio playback. I'm decoding audio frames using [ffmpeg](http://www.ffmpeg.org/)'s libavcodec, libavformat, libavutil, and libswresample. Playback is currently done using [PulseAudio](http://www.freedesktop.org/wiki/Software/PulseAudio) although I intend to switch to a cross-platform library like [PortAudio](http://www.portaudio.com/). It works with any format/container/codec supported by ffmpeg. Source will be up soon. **Update**: Ported to [PortAudio](http://www.portaudio.com/), now runs on Windows!
 
 ## Reading
 
@@ -17,9 +19,9 @@ This is what I'm currently reading, but I also keep a list of [books I've read](
 
 <img src="/images/books/gof.jpg" class="right" width="128">
 
-* [Design Patterns](http://amzn.com/0201633612): This is also known as the classical gang of four (GoF) book. I had already read [a book on design patterns](/reads/#headfirst-designpatterns), but while being readable enough, the examples that were used to explain the design patterns were so heavily contrived and ridiculous that I had trouble retaining any of it. I wasn't a huge fan of the book's style either -- which I think is common to all "Head First" books -- because it seemed to treat the reader as if they had a maximum attention span of three seconds: every page was littered with figures and pictures and comic-strip style dialog bubbles and so on.
+* [Design Patterns](http://amzn.com/0201633612): This is also known as the classical gang of four (GoF) book. I had already read [a book on design patterns](/reads/#headfirst-designpatterns), but while being readable enough, the examples that were used to explain the design patterns were so heavily contrived and ridiculous that I had trouble retaining any of it. I wasn't a huge fan of the book's style either --- which I think is common to all "Head First" books --- because it seemed to treat the reader as if they had a maximum attention span of three seconds: every page was littered with figures and pictures and comic-strip style dialog bubbles and so on.
 
-    On the other hand, the GoF book is the canonical book on the subject and gets straight to the point. Despite being a relatively old book -- the latest edition, which I purchased, was made in 1994 -- it's still very relevant, in fact I consider it a testament to the book's lasting relevance that the authors haven't deemed it necessary to release a new version. Patterns are explained with C++ (and sometimes Smalltalk) compared to Head First's Java.
+    On the other hand, the GoF book is the canonical book on the subject and gets straight to the point. Despite being a relatively old book --- the latest edition, which I purchased, was made in 1994 --- it's still very relevant, in fact I consider it a testament to the book's lasting relevance that the authors haven't deemed it necessary to release a new version. Patterns are explained with C++ (and sometimes Smalltalk) compared to Head First's Java.
 
 <img src="/images/books/got-pt.jpg" class="right" width="128">
 

@@ -3,11 +3,12 @@ title: Algorithms
 published: July 15, 2013
 excerpt: Classical and crucial algorithms
 comments: off
+toc: left
 ---
 
 What follows are some notes on algorithms I've been reviewing from [Algorithms](http://amzn.com/032157351X) by Robert Sedgewick and Kevin Wayne, [The Algorithm Design Manual](http://amzn.com/1849967202) by Steven S. Skiena, and other sources around the Internet [^mit] [^umd] [^umgd]. I wanted to write some notes on the material so that I could easily look back on it, but mainly so that I could be sure that I understand the material --- since I have to understand it to explain it.
 
-* toc-center
+* toc
 
 # Dynamic Connectivity
 

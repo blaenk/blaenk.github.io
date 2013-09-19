@@ -2,6 +2,7 @@
 title: About
 published: 2012-09-21
 comments: off
+toc: off
 ---
 
 <img src="/images/me.png" class="right" width="128">
@@ -28,11 +29,11 @@ Check out [this page](/uses-this) for more specifics on my preferences.
 
 My family didn't have a computer before I was 12 years old. In fact, all of my life I had largely avoided computers, aside from specific instances in school when we were given time to work with them. This was a natural result of being warned and scolded not to play around with computers lest I break them.
 
-However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I usually had to go to the library to type up school assignments. This wasn't always possible on short-notice assignments, however. In these situations, I would have to write up assignments in ink, attempting to appease draconian requirements which demanded no mistakes at all -- no white-out allowed.
+However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I usually had to go to the library to type up school assignments. This wasn't always possible on short-notice assignments, however. In these situations, I would have to write up assignments in ink, attempting to appease draconian requirements which demanded no mistakes at all --- no white-out allowed.
 
 See, as the only student in their class without a computer capable of producing neatly printed assignments, I was inconveniencing _the teacher_. So while other students could lazily type up assignments in a matter of minutes, I had to meticulously obsess over my writing [^writing].
 
-This led to late nights, many rewrites, and stress -- since I always cared for doing things right in school. I was tired of it, and somewhat embarrassed for not being "with the times," making me a bit economically self-conscious [^tma].
+This led to late nights, many rewrites, and stress --- since I always cared for doing things right in school. I was tired of it, and somewhat embarrassed for not being "with the times," making me a bit economically self-conscious [^tma].
 
 One day I was out on a construction job with my dad and noticed a computer ad magazine during lunch hour. Having nothing else to distract me, I began to read through it and naturally began to make connections between prices and components. This gave me an idea of which parts were absolutely crucial to a working computer and which weren't, which were the best parts for the money, and which places had them the cheapest.
 
