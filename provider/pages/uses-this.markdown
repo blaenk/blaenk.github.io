@@ -46,7 +46,7 @@ The truth is that the default configuration of vim is pretty ugly, and so are mo
 
 ### Plugins
 
-I use [many plugins](https://github.com/blaenk/dots/blob/master/vim/vim.ln/conf/bundles.vim). I believe the most noteworthy are [vundle](https://github.com/gmarik/vundle) for plugin management, [ctrlp](http://kien.github.io/ctrlp.vim/) for fuzzy file opening/switching, [powerline](https://github.com/Lokaltog/vim-powerline) for a beautiful and functional status line, [surround](https://github.com/tpope/vim-surround) to easily manipulate text's surrounding delimiters, and [YouCompleteMe](http://valloric.github.io/YouCompleteMe/) for clang-powered auto-complete.
+I use [many plugins](https://github.com/blaenk/dots/blob/master/vim/vim.ln/conf/bundles.vim). I believe the most noteworthy are [vundle](https://github.com/gmarik/vundle) for plugin management, [ctrlp](http://kien.github.io/ctrlp.vim/) for fuzzy file opening/switching, [airline](https://github.com/bling/vim-airline) for a beautiful and functional status line, [surround](https://github.com/tpope/vim-surround) to easily manipulate text's surrounding delimiters, and [YouCompleteMe](http://valloric.github.io/YouCompleteMe/) for clang-powered auto-complete.
 
 ## Development Tools
 
