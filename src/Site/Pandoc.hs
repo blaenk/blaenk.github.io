@@ -219,5 +219,8 @@ readerOptions =
     }
 
 writerOptions :: WriterOptions
-writerOptions = def { writerHTMLMathMethod = MathJax "", writerHtml5 = True }
+writerOptions = def {
+  writerHTMLMathMethod = MathJax "",
+  writerHighlight = False,
+  writerHtml5 = True }
 

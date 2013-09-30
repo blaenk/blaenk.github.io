@@ -151,6 +151,7 @@ article .entry-content ol {
 #toc.right-toc {
   float: right;
   margin-left: 10px;
+  margin-bottom: 10px;
   margin-top: 0;
   padding: 0;
 
@@ -377,6 +378,10 @@ figure.code {
     margin: 0;
     border: 0;
 
+    @media screen and (max-width: 600px) {
+      display: inline-block;
+    }
+
     .linenodiv {
       @media screen and (max-width: 600px) {
         display: none;
@@ -579,8 +584,7 @@ article .entry-content blockquote {
   line-height: 1.5;
 
   & > *, & > figure.code {
-    margin-left: 30px;
-    margin-right: 30px;
+    margin: 0 35px;
 
     @media screen and (max-width: 600px) {
       margin-left: 25px;

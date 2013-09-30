@@ -8,17 +8,19 @@
 
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densitydpi=device-dpi">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
   <link href="/favicon.png" rel="shortcut icon">
   <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400' rel='stylesheet' type='text/css'>
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
-  <!--[if lt IE 9]><script async="true" src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <script async='true' src='/js/blaenk.js' type='text/javascript'></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
   <div id="strip"></div>
@@ -94,18 +96,16 @@
     })();
   </script>
   <!--MathJax CDN-->
-  <script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  <script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
     MathJax.Hub.Config({
-      messageStyle: "none",
-      styles: {
-        ".MathJax_Display": {
-          "font-weight": "normal"
-        },
-        ".MathJax": {
-          "font-weight": "normal"
-        }
-      },
-      showMathMenu: false
+      showMathMenu: false,
+      messageStyle: "none"
+    });
+
+    MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready', function() {
+      var HTMLCSS = MathJax.OutputJax['HTML-CSS'];
+      HTMLCSS.Font.testSize = ['10px', '12px', '15px', '9px', '8px']
+      document.getElementById('MathJax_Font_Test').style.fontSize = '10px'
     });
   </script>
 </body>
