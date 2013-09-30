@@ -9,6 +9,16 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
+##### Hakyll: Update to work with Pandoc 1.12 {#hakyll-pandoc-update .collapse}
+
+<div class="collapsible">
+
+A [patch](https://github.com/jaspervdj/hakyll/pull/183) that updates Hakyll to relfect the fact that Pandoc 1.12 decoupled the citations features. The citation features were provided by the [citeproc-hs](http://hackage.haskell.org/package/citeproc-hs) whose developer had been missing for some time now. The citeproc-hs package was embedded into the [pandoc-citeproc](http://hackage.haskell.org/package/pandoc-citeproc) package which contains the Pandoc-to-citeproc-hs interface. I simply modified Hakyll to use the new pandoc-citeproc package instead of citeproc-hs, as well as conform to the new citations API.
+
+This change made it into [Hakyll 4.4.0.0](http://jaspervdj.be/hakyll/releases.html#hakyll-4.4.0.0).
+
+</div>
+
 ##### Hakyll: Add default port option {#hakyll-port .collapse}
 
 <div class="collapsible">
@@ -18,6 +28,8 @@ Another [patch](https://github.com/jaspervdj/hakyll/pull/178) I created for [hak
 Before this patch, the default port was set to 8000 --- a port on which I already had a service listening on my system, and clients expected it there. It of course was possible to define a separate port as a command line argument, but this was necessary on every invocation of the preview server: `./site preview -p 4000`
 
 With this patch users of Hakyll could override the port field in the `Configuration` structure so that an invocation of `./site preview` automatically listens on that defined port. To avoid breaking existing configurations, the default configuration still sets the default port to 8000, the only difference now is that it can be changed.
+
+This change made it into [Hakyll 4.4.0.0](http://jaspervdj.be/hakyll/releases.html#hakyll-4.4.0.0).
 
 </div>
 
@@ -76,6 +88,8 @@ Upon analyzing the Hakyll source and noticing that it indirectly used the [forei
 Compiling with the `-threaded` flag solved that problem. However, now the problem was that saving a file would yield a "permission denied" error in the Hakyll program. I eventually [came to realize](https://github.com/mdittmer/win32-notify/issues/3#issuecomment-18260415) that this was inherent behavior in the file system events API abstracted by the file system events Haskell package. The problem consisted of there being the possibility that the notification for a file having been modified, for example, would be sent and received/processed before the program (that caused that event to fire) had a chance to finish the actual writing that triggered the event to begin with. The workaround I [came up with](https://github.com/jaspervdj/hakyll/pull/155) consisted of simply attempting to open the file --- success of which would indicate that the other process had already finished writing to the file --- and if this was not possible, sleep for a bit before trying again.
 
 The only other alternative we could think of was switching to a polling system for Windows. This was unfeasible because the file system events package didn't expose a way to force this, which would require us to implement it ourselves and would add significant overhead in performance, since every file would be polled periodically for changes, as opposed to this workaround which would poll a single file only if it wasn't able to open it on the first try.
+
+This change made it into [Hakyll 4.3.0.0](http://jaspervdj.be/hakyll/releases.html#hakyll-4.3.0.0).
 
 </div>
 
