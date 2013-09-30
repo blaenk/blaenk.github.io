@@ -15,6 +15,8 @@ I try to take a pragmatic approach. I do appreciate C++'s advantage in striking 
 
 To that end, these are non-exhaustive notes about C++ --- particularly the trickier bits --- including C++11 and C++14 changes.
 
+For C++11 in particular, some compilers are faster than others at adopting the new feature set. [Visual Studio](http://msdn.microsoft.com/en-us/library/vstudio/hh567368%28v=vs.120%29.aspx) is particularly behind the rest, while [Clang](http://clang.llvm.org/cxx_status.html) and [GCC](http://gcc.gnu.org/projects/cxx0x.html) seem to be very quick on adopting the new features.
+
 * toc
 
 # Type Conversions
