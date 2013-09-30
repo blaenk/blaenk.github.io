@@ -1,6 +1,12 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
 
+.MathJax_Display {
+  @media screen and (max-width: 600px) {
+    overflow-x: auto;
+  }
+}
+
 .post-info .excerpt { cursor: default; }
 
 .archives {

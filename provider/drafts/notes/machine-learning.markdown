@@ -5,6 +5,10 @@ excerpt: Machine Learning concepts
 comments: off
 ---
 
+* toc
+
+# Learning Problem
+
 Essence of machine learning:
 
 1. pattern exists
@@ -15,7 +19,7 @@ A movie recommender system might be modeled such that there are a set of factors
 
 The machine learning aspect would take an actual user rating, and given two contributing-factor vectors for the movie and viewer full of random factors, it would modify each until a rating similar to the actual user rating is produced.
 
-# Learning Components
+## Learning Components
 
 * **Input**: $x = (x_1, x_2, \dots, x_n)$
     * feature vector
@@ -34,9 +38,9 @@ The machine learning aspect would take an actual user rating, and given two cont
 
 Together, $\cal A$ and $\cal H$ are known as the **learning model**.
 
-# Perceptrons
+## Perceptrons
 
-## Model {#perceptron-model}
+### Model {#perceptron-model}
 
 Given input $x = (x_1, x_2, \dots, x_n)$:
 
@@ -61,7 +65,7 @@ This operation is the same as the dot product of the two vectors:
 
 $$ h(x) = sign(w \bullet x) $$
 
-## Learning Algorithm {#perceptron-learning-algorithm}
+### Learning Algorithm {#perceptron-learning-algorithm}
 
 **Given the perceptron**:
 
@@ -82,6 +86,12 @@ $$ w' \gets w + y_n x_n $$
 Visualizing $\vec w$ and $\vec x$, it's apparent that the perceptron is equivalent to the dot product, which is equivalent to $\cos \theta$ where $\theta$ is the angle between $\vec w$ and $\vec x$. Given this, $\vec w$ is updated depending on what the intended result $y_n$ is.
 
 For example, if the perceptron modeled the result to be $-1$, then $\theta > 90^\circ$. However, if the intended result $y_n = +1$, then there is a mismatch, so the weight vector is "nudged" in the correct direction so that $\theta < 90^\circ$ by adding it to $x_n$.
+
+## Types of Learning
+
+* **Supervised learning**: when the input/output data is provided
+* **Unsupervised learning**: only the input is provided; "unlabeled data"
+* **Reinforcement learning**: input and _some_ output is provided
 
 # Resources
 
