@@ -53,6 +53,10 @@ Official FFI Resources
   * [API](http://luajit.org/ext_ffi_api.html)
   * [Semantics](http://luajit.org/ext_ffi_semantics.html)
 
+C wrapper development resources:
+
+  * [Beautiful Native Libraries](http://lucumr.pocoo.org/2013/8/18/beautiful-native-libraries/)
+
 # Callbacks
 
 There is a [heavy overhead](http://luajit.org/ext_ffi_semantics.html#callback_performance) with C-to-Lua calls, generally found in the form of callbacks in which a C FFI function is provided a callback function written in Lua. The overhead is seemingly similar to the C API calls.
