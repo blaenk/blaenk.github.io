@@ -93,6 +93,79 @@ For example, if the perceptron modeled the result to be $-1$, then $\theta > 90^
 * **Unsupervised learning**: only the input is provided; "unlabeled data"
 * **Reinforcement learning**: input and _some_ output is provided
 
+# Feasibility
+
+It seems as if it isn't feasible to learn an unknown function because the function can assume any value outside of the data available to us.
+
+To understand why it is indeed possible, consider a probabilistic example. Given a bin full of marbles that are either **red** or **green**:
+
+$$
+\begin{align}
+&\mathbb {P} \left[ \text {picking a } \textcolor{red} {red} \text { marble} \right] = \mu \\
+\\
+&\mathbb {P} \left[ \text {picking a } \textcolor{green} {green} \text { marble} \right] = 1 - \mu \\
+\end{align}
+$$
+
+If the value of $\mu$ is unknown, and we pick $N$ marbles independently, then:
+
+$$ \text {frequency of } \textcolor {red} {red} \text { red marbles in sample} = \nu $$
+
+The question is: does $\nu$ say anything about $\mu$? It might appear that it **doesn't**. For example, if there are 100 marbles in the bin and only 10 of them are red, just because we happen to take out all 10 ($\nu  = 1$) doesn't mean that that sample is representative of the distribution in the bin ($\mu = 1$).
+
+However, in a **big sample**, it's more probable that $\nu$ is close to $\mu$, that is, they are within $\epsilon$ of each other. This can be formally expressed as **Hoeffding's Inequality**:
+
+$$
+\mathbb {P} \left[ \left| \nu - \mu \right| \gt \epsilon \right] \leq 2e^{- 2\epsilon^2 N}
+$$
+
+As is apparent from the inequality, if we choose a very small $\epsilon$ value, it has the effect of setting the right-hand side to near 1, thus rendering the effort pointless since we already knew that the probability would be $\leq 1$. **Therefore**, if we want a smaller $\epsilon$, we will have to increase the input size $N$ to compensate.
+
+The appeal of Hoeffding's Inequality is that it is valid for any $N \in \mathbb {Z}^+$ and any $\epsilon > 0$. What we're trying to say with the inequality is that $\nu \approx \mu$ which means that $\mu \approx \nu$.
+
+This relates to learning in the following way. In the bin, $\mu$ is unknown, but in learning the unknown is the target function $f \colon \mathcal {X} \to \mathcal {Y}$. Now think of the bin as the input space, where every marble is a point $x \in \mathcal {X}$ such as a credit application. As a result, the bin is really $\mathcal {X}$, where the marbles are of different colors such as green and gray, where:
+
+* **green** represents that the hypothesis got it right, that is $h(x) = f(x)$
+* **red** represents that the hypothesis got it wrong, that is $h(x) \not= f(x)$
+
+However, in creating this analogy from the bin example to the learning model, the bin example has a probability component in picking a marble from the bin. This must be mapped to the learning model as well, in the form of introducing a probability distribution $P$, where $P$ is not restricted over $\mathcal {X}$, and $P$ doesn't have to be known. It is then assumed that the probability is used to generate the input data points.
+
+The problem so far is that the hypothesis $h$ is fixed, and for a given $h$, $\nu$ generalizes to $\mu$, which ends up being a **verification** of $h$, not learning.
+
+Instead, to make it a learning process, then there needs to be no guarantee that $\nu$ will be small, and we need to choose from multiple $h$'s. To generalize the bin model to more than one hypothesis, we can use multiple bins. Out of the many bins that were created, the hypothesis responsible for the bin with the smallest $\mu$ --- the fraction of red marbles in the bin --- is chosen.
+
+## Notation {#notation-for-learning}
+
+Marker: Lecture 2, 40:38
+
+Both $\mu$ and $\nu$ depend on which hypothesis $h$:
+
+$\nu$ is the error "**in sample**", which is denoted by $E_{in}(h)$
+
+$\mu$ is the error "**out of sample**", which is denoted by $E_{out}(h)$
+
+For clarification, if something performs well "out of sample" then it's likely that learning actually took place. This notation can be used to modify Hoeffding's Inequality:
+
+$$
+\mathbb {P} \left[ \left|E_{in}(h) - E_{out}(h)\right| \gt \epsilon \right] \leq 2e^{- 2\epsilon^2 N}
+$$
+
+The problem now is that Hoeffding's Inequality doesn't apply to multiple bins. To account for multiple bins, the inequality can be modified to be:
+
+$$
+\begin{align*}
+\mathbb {P} \left[ \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right] &\leq
+\mathbb {P} \begin{aligned}[t]
+              \left[ \vphantom {\epsilon} \right. &\hphantom {\text {or}}\
+                \left|E_{in}(h_1) - E_{out}(h_1)\right| \gt \epsilon \\
+              &\text {or}\ \left|E_{in}(h_2) - E_{out}(h_2)\right| \gt \epsilon \\
+              &\dots \\
+              &\left. \vphantom{E_{in}(h_1)} \text {or}\ \left|E_{in}(h_M) - E_{out}(h_M)\right| \gt \epsilon \right]
+            \end{aligned} \\
+&\leq \sum_{m=1}^M \mathbb {P} \left[ \left| E_{in}(h_m) - E_{out}(h_m) \right| > \epsilon \right]
+\end{align*}
+$$
+
 # Resources
 
 * Cal Tech [CS 1156x](https://www.edx.org/course/caltechx/cs1156x/learning-data/1120) by Yaser S. Abu-Mostafa

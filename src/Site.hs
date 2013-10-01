@@ -76,7 +76,7 @@ main = do
   (action:args) <- getArgs
 
   -- establish configuration based on preview-mode
-  let previewMode  = action == "preview"
+  let previewMode  = action == "watch"
       hakyllConf   = if previewMode
                      then myHakyllConf
                           { destinationDirectory = "generated/preview/out"
