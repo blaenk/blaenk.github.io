@@ -18,7 +18,7 @@ executable site
   -- other-modules:
   build-depends:       base,
                        process      >= 1.1.0.2 && < 2,
-                       cryptohash   >= 0.9.0   && < 1,
+                       cryptohash   >= 0.8.4   && < 1,
                        directory    >= 1.2.0.1 && < 2,
                        old-locale   >= 1.0.0.4 && < 2,
                        time         >= 1.4     && < 2,
