@@ -6,15 +6,17 @@ comments: off
 toc: left
 ---
 
+I've been wanting to learn about the subject of machine learning for a while now. I'm familiar with some basic concepts, as well as reinforcement learning. What follows are notes on my attempt to comprehend the subject. The primary learning resource I'm using is Cal Tech's CS 1156 on edX, with supplementary material from Stanford's CS 229 on Coursera.
+
 * toc
 
 # Learning Problem
 
-Essence of machine learning:
+The essence of machine learning:
 
 1. pattern exists
 2. cannot pin it down mathematically
-3. have data on it (to learn from)
+3. have data on it to learn from
 
 A movie recommender system might be modeled such that there are a set of factors of varying degrees of likability for the viewer, and varying degrees of presence in a given movie. These two sets of factors combine to produce a projected viewer rating for that given movie.
 
