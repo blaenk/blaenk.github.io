@@ -5,7 +5,7 @@ comments: off
 toc: off
 ---
 
-<img src="/images/me.png" class="right" width="128">
+<img src="/images/me.png" class="right" width="128" id="me">
 
 My name is Jorge Israel Peña, though online I sometimes use the pseudonym Blaenk Denum. I'm a developer currently living in Southern California. I speak English, Spanish, French, and am trying to learn Portuguese.
 

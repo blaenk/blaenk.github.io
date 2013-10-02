@@ -4,9 +4,11 @@
 	line-height: 20px;
 	position: relative;
 	a{
-		&:hover{
-			text-decoration: underline;
-		}
+    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      &:hover{
+        text-decoration: underline;
+      }
+    }
 	}
 	.prev, .next{
 		position: absolute;

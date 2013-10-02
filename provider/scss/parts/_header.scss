@@ -16,9 +16,11 @@ $header-height: 30px;
 	a{
 		color: #666;
 		transition: color 0.3s;
-		&:hover{
-			color: $color-main;
-		}
+    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      &:hover{
+        color: $color-main;
+      }
+    }
 	}
   #stamp {
     float: left;
@@ -66,11 +68,13 @@ $header-height: 30px;
 					margin-right: 0;
 				}
 			}
-			&:hover{
-				>a{
-					color: $color-main;
-				}
-			}
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover{
+          >a{
+            color: $color-main;
+          }
+        }
+      }
 			>a{
 				padding: 38px 0;
 				margin-top: -38px;
@@ -111,9 +115,11 @@ $header-height: 30px;
 			}
 			li{
         border-shadow: $color-background $color-gray03;
-				&:hover{
-					background: #d5d5d5;
-				}
+        @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+          &:hover{
+            background: #d5d5d5;
+          }
+        }
 				&:first-of-type{
 					border-top: none;
 					ul{
@@ -132,9 +138,11 @@ $header-height: 30px;
 						font: 12px $font-icon;
 						padding-left: 10px;
 					}
-					&:hover{
-						color: $color-gray01;
-					}
+          @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+            &:hover{
+              color: $color-gray01;
+            }
+          }
 					&:only-child{
 						&:after{
 							content: "";
@@ -149,11 +157,13 @@ $header-height: 30px;
 		}
 		li{
 			position: relative;
-			&:hover{
-				>ul{
-					display: block;
-				}
-			}
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover{
+          >ul{
+            display: block;
+          }
+        }
+      }
 		}
 	}
 	select{
@@ -191,9 +201,11 @@ $header-height: 30px;
 			padding: 0 60px 0 10px;
 			position: relative;
       border-radius: 5px;
-			&:hover{
-				color: #999;
-			}
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover{
+          color: #999;
+        }
+      }
 			&.on{
 				color: #666;
         border-radius: 5px 5px 5px 0;

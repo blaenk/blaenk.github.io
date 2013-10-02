@@ -6,7 +6,7 @@ published: July 5, 2013
 This is a list of books I've finished reading recently, in reverse chronological order. You can also see a list of books 
 I'm [currently reading](/lately/#reading).
 
----
+----
 
 <img src="/images/books/algorithms.jpg" class="right" width="128">
 
@@ -18,7 +18,7 @@ I discovered that the book was teaching LLRBs and not classical RB trees when it
 
 I ended up reading through the wikipedia page on red-black trees, which is one of the most dense articles I've read, even just the deletion section was pretty dense. However, the actual implementation was pretty straightforward, so much so apparently that even the Linux kernel uses it.
 
----
+----
 
 <img src="/images/books/tlpi.jpg" class="right" width="128">
 
@@ -32,7 +32,7 @@ At the time of writing, the book's reviews consist of 52 five-star reviews and o
 
 My goal now is to dive even deeper by exploring the kernel space.
 
----
+----
 
 <img src="/images/books/cppprimer.jpg" class="right" width="128">
 
@@ -40,7 +40,7 @@ My goal now is to dive even deeper by exploring the kernel space.
 
 C++ Primer is what I look for in every programming book. It is direct --- to the point, thanks in part to the assumption that the reader is already familiar with programming, or even C++ itself. It diligently scours every nook and cranny of the C++11 standard, almost reading as a commentary of it, and in so doing, masterfully conveys the various intricacies of shared and unique pointers, move semantics, lambdas, variadic templates, and more.
 
----
+----
 
 <img src="/images/books/lyah.jpg" class="right" width="128">
 
@@ -48,7 +48,7 @@ C++ Primer is what I look for in every programming book. It is direct --- to the
 
 After reading RWH, however, I had an insatiable interest in Haskell, and so I wanted to see if I had missed anything of note in this book, so I continued where I had left off. Indeed, after having seen practical uses of Haskell in RWH, I developed an appreciation for the theory that LYAH preoccupied itself with and came to appreciate it's more in-depth analysis of functors, applicative functors, monoids, and monads.
 
----
+----
 
 <img src="/images/books/rwh.jpg" class="right" width="128">
 
@@ -56,7 +56,7 @@ After reading RWH, however, I had an insatiable interest in Haskell, and so I wa
 
 For the longest time I had wanted to learn Haskell, but I wanted to learn it in a practical context so that I may develop a realistic idea of what I can do with it. Specifically, I learned Haskell for the purpose of doing some digital signal processing in order to create a music visualizer. This book was very direct with regard to its teaching practical usage of Haskell. As a result, I was able to see how functors, applicative functors, monoids, monads, monad transformers --- and other seemingly-abstract concepts --- actually helped in developing real-world applications.
 
----
+----
 
 <img src="/images/books/dspguide.jpg" class="right" width="128">
 
@@ -68,7 +68,7 @@ This book, on the other hand, was exactly what I needed, and best of all it was 
 
 Best of all, however, was that it provided example algorithm implementations of every concept it discussed. I feel this is a testament to the author's foresight, as the book was written during a transitional period in which DSP was beginning to shift from dedicated hardware to general purpose CPUs.
 
----
+----
 
 <img src="/images/books/direct3d11.jpg" class="right" width="128">
 
@@ -77,7 +77,7 @@ Best of all, however, was that it provided example algorithm implementations of 
 
 I decided to choose Direct3D 11 as the API to learn because I felt it would be a bit more organized and consistent than OpenGL (cf. extensions), OpenGL's advantages notwithstanding. Indeed, I found the Direct3D 11 API to be pretty clean and straightforward. With it I covered traditional lighting, texturing, blending, stenciling, as well as the newer functionality like geometry, compute, and tessellation shaders. The book also covered some more advanced topics such as cube, normal, and displacement mapping, particle systems with stream-out, shadow mapping, and ambient occlusion.
 
----
+----
 
 <img src="/images/books/3dmath.jpg" class="right" width="128">
 
@@ -87,7 +87,7 @@ This book helped me to not only understand it, but fall in love with it. This is
 
 This book helped me understand how matrices encode coordinate space transformations which can easily be concatenated, the utility of homogeneous coordinates in perspective projection, the pros & cons of various orientation representations (Polar Coordinates, Euler Angles, Axis-Angle, and Quaternions), Quaternion spherical linear interpolation ([slerp](http://en.wikipedia.org/wiki/Slerp#Quaternion_Slerp)), and many more concepts of the modern GPU pipeline within a mathematical context.
 
----
+----
 
 <img src="/images/books/iosnerdranch.jpg" class="right" width="128">
 
@@ -95,7 +95,7 @@ This book helped me understand how matrices encode coordinate space transformati
 
 Most of this information is easily available in the Apple documentation. Instead, I used this book more like a tour of various SDK features to get an idea of what kinds of things could be achieved.
 
----
+----
 
 <img src="/images/books/hfdesignpatterns.jpg" class="right" width="128">
 
@@ -103,7 +103,7 @@ Most of this information is easily available in the Apple documentation. Instead
 
 Admittedly, in my opinion, while it was fun to read and achieved its purpose, ultimately the over-use of pictures and figures, and the very contrived example use cases made it feel very indirect. I feel I could've saved more time by simply getting the classic Gang of Four [Design Patterns](http://amzn.com/0201633612) book, which serves as more of a catalog of different design patterns with direct explanations and examples.
 
----
+----
 
 <img src="/images/books/metaruby.jpg" class="right" width="128">
 

@@ -9,9 +9,12 @@
 
 .post-info .excerpt { cursor: default; }
 
+h2.title {
+  font-family: $font-serif;
+}
+
 .archives {
   h2 {
-    font-family: $font-serif;
     margin-bottom: 10px; } }
 
 .notfound {
@@ -53,8 +56,10 @@ p.notfound { margin: 15px 0; }
     a {
       color: $color-gray02;
       transition: color 0.3s;
-      &:hover {
-        color: $color-gray01;
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover {
+          color: $color-gray01;
+        }
       }
     }
   }
@@ -103,7 +108,9 @@ abbr {
   cursor: help;
   border-bottom: 1px dotted #ddd;
 
-  &:hover { border-bottom: 1px solid #ccc; }
+  @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+    &:hover { border-bottom: 1px solid #ccc; }
+  }
 }
 
 sup {
@@ -303,9 +310,11 @@ hr {
       margin-right: 30px;
     }
 
-    .entry-content a:hover {
-      color: #258FB8;
-      text-decoration: underline;
+    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      .entry-content a:hover {
+        color: #258FB8;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -351,7 +360,9 @@ figure.code {
     abbr {
       border-bottom: 1px dotted #00427B;
 
-      &:hover { border-bottom: 1px solid #00427B; }
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover { border-bottom: 1px solid #00427B; }
+      }
     }
     span {
       background: none;
@@ -451,12 +462,14 @@ figure.code {
     font-weight: 400;
     font-family: $font-serif;
 
-    &:hover .hash {
-      color: #ccc;
-      display: block;
+    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      &:hover .hash {
+        color: #ccc;
+        display: block;
 
-      @media screen and (max-width: 766px) {
-        display: none;
+        @media screen and (max-width: 766px) {
+          display: none;
+        }
       }
     }
 
@@ -596,6 +609,10 @@ article .entry-content blockquote {
       margin-left: 25px;
       margin-right: 25px;
     }
+  }
+
+  figure.code {
+    margin-bottom: 10px;
   }
 
   code {

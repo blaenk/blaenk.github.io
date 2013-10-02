@@ -3,7 +3,9 @@
     a{
       color: #666;
       transition: color 0.3s;
-      &:hover { color: $color-main; }
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover { color: $color-main; }
+      }
     }
   }
 
@@ -27,9 +29,11 @@
 		a{
       color: $color-gray02;
       transition: color 0.3s;
-			&:hover {
-        text-decoration: underline;
-        color: $color-gray01;
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover {
+          text-decoration: underline;
+          color: $color-gray01;
+        }
       }
 		}
 		.date, .tags, .commit, .notes{

@@ -3,6 +3,7 @@ title: Machine Learning
 published: September 30, 2013
 excerpt: Machine Learning concepts
 comments: off
+toc: left
 ---
 
 * toc
@@ -101,15 +102,15 @@ To understand why it is indeed possible, consider a probabilistic example. Given
 
 $$
 \begin{align}
-&\mathbb {P} \left[ \text {picking a } \textcolor{red} {red} \text { marble} \right] = \mu \\
+&\mathbb {P} \left[ \text {picking a red marble} \right] = \mu \\
 \\
-&\mathbb {P} \left[ \text {picking a } \textcolor{green} {green} \text { marble} \right] = 1 - \mu \\
+&\mathbb {P} \left[ \text {picking a green marble} \right] = 1 - \mu \\
 \end{align}
 $$
 
 If the value of $\mu$ is unknown, and we pick $N$ marbles independently, then:
 
-$$ \text {frequency of } \textcolor {red} {red} \text { red marbles in sample} = \nu $$
+$$ \text {frequency of red marbles in sample} = \nu $$
 
 The question is: does $\nu$ say anything about $\mu$? It might appear that it **doesn't**. For example, if there are 100 marbles in the bin and only 10 of them are red, just because we happen to take out all 10 ($\nu  = 1$) doesn't mean that that sample is representative of the distribution in the bin ($\mu = 1$).
 
@@ -118,6 +119,8 @@ However, in a **big sample**, it's more probable that $\nu$ is close to $\mu$, t
 $$
 \mathbb {P} \left[ \left| \nu - \mu \right| \gt \epsilon \right] \leq 2e^{- 2\epsilon^2 N}
 $$
+
+$\nu$ is generally varied, and $\mu$ is a constant.
 
 As is apparent from the inequality, if we choose a very small $\epsilon$ value, it has the effect of setting the right-hand side to near 1, thus rendering the effort pointless since we already knew that the probability would be $\leq 1$. **Therefore**, if we want a smaller $\epsilon$, we will have to increase the input size $N$ to compensate.
 
@@ -162,7 +165,9 @@ $$
               &\dots \\
               &\left. \vphantom{E_{in}(h_1)} \text {or}\ \left|E_{in}(h_M) - E_{out}(h_M)\right| \gt \epsilon \right]
             \end{aligned} \\
-&\leq \sum_{m=1}^M \mathbb {P} \left[ \left| E_{in}(h_m) - E_{out}(h_m) \right| > \epsilon \right]
+&\leq \sum_{m=1}^M \mathbb {P} \left[ \left| E_{in}(h_m) - E_{out}(h_m) \right| > \epsilon \right] \\
+&\leq \sum_{m=1}^M 2e^{- 2\epsilon^2 N} \\
+\mathbb {P} \left[ \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right] &\leq 2Me^{- 2\epsilon^2 N}
 \end{align*}
 $$
 

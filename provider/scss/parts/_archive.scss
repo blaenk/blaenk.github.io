@@ -24,7 +24,9 @@
 	        width: 100%;
           transition: color 0.3s;
 
-	        &:hover { color: $color-main; }
+          @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+            &:hover { color: $color-main; }
+          }
 	      }
 		}
     .excerpt {
@@ -57,9 +59,11 @@
 			a{
 				color: $color-gray02;
         transition: color 0.3s;
-				&:hover{
-					color: #258FB8;
-				}
+        @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+          &:hover{
+            color: #258FB8;
+          }
+        }
 			}
 			.date {
 				cursor: default;

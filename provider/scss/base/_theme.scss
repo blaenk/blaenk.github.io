@@ -63,14 +63,18 @@ $page-border-bottom: darken($footer-bg, 5) !default;
 
 a {
   color: $link-color;
-  &:hover { color: $link-color-hover; }
+  @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+    &:hover { color: $link-color-hover; }
+  }
   &:focus { color: $link-color-hover; }
   &:visited { color: $link-color-visited; }
   &:active { color: $link-color-active; }
 }
 aside.sidebar a {
   color: $sidebar-link-color;
-  &:hover { color: $sidebar-link-color-hover; }
+  @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+    &:hover { color: $sidebar-link-color-hover; }
+  }
   &:focus { color: $sidebar-link-color-hover; }
   &:active { color: $sidebar-link-color-active; }
 }
