@@ -89,7 +89,6 @@ img.center {
 
 article .entry-content table {
   cursor: default;
-  font-size: 0.875em;
   margin: 25px auto;
   background: #F2F9FF;
   border: 2px solid #8ccaff;
@@ -340,10 +339,9 @@ hr {
 
 figure.code {
   padding: 0;
-  border: none;
-  border-radius: 0;
   margin: 15px 0;
   cursor: default;
+  background: #F2F9FF;
 
   figcaption {
     @media screen and (max-width: 600px) {
@@ -351,9 +349,8 @@ figure.code {
     }
 
     background-color: #8ccaff;
-    border-top: 2px solid #8CCAFF;
     padding: 5px 28px; // 5px 10px;
-    position: relative;
+    //position: relative;
     font-size: 87.5%;
     color: #00427b;
 
@@ -364,6 +361,7 @@ figure.code {
         &:hover { border-bottom: 1px solid #00427B; }
       }
     }
+
     span {
       background: none;
       padding: 0;
@@ -391,39 +389,38 @@ figure.code {
   }
 
   .highlighttable {
+    background: none;
     line-height: 18px;
     margin: 0;
+    width: 100%;
     border: 0;
 
-    @media screen and (max-width: 600px) {
-      display: inline-block;
-    }
-
-    .linenodiv {
+    .linenos {
+      line-height: 18px;
+      width: 30px;
       @media screen and (max-width: 600px) {
         display: none;
       }
 
-      width: 17px;
-      background-color: #ECECEC;
-      color: #AAA;
-      border-right: 2px solid #DDD;
-      padding: 5px;
-      text-align: right;
 
-      a { color: #AAA; }
-    }
+      .linenodiv {
+        background-color: #ECECEC;
+        color: #AAA;
+        border-right: 2px solid #DDD;
+        padding: 5px;
+        text-align: right;
 
-    .linenos {
-      line-height: 18px;
+        a { color: #AAA; }
+      }
     }
 
     .code {
       padding-left: 6px;
+      padding-right: 6px;
 
       @media screen and (max-width: 600px) {
         padding-left: 2px;
-        line-height: 18px;
+        padding-right: 2px;
       }
     }
 
@@ -636,7 +633,6 @@ article .entry-content blockquote {
     font-size: 1.5em;
     padding: 0 0.25em;
     background: white;
-    top: -0.5em;
     font-family: $font-icon;
   }
 
@@ -648,6 +644,7 @@ article .entry-content blockquote {
       @include quote-bar;
       content: "\f10d";
       padding-left: 0;
+      top: -0.65em;
     }
   }
 
@@ -659,6 +656,7 @@ article .entry-content blockquote {
       @include quote-bar;
       content: "\f10e";
       padding-right: 0;
+      top: -0.75em;
     }
   }
   .icon-quote-right { color: #eee; }

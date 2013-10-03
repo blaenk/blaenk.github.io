@@ -3,9 +3,8 @@ title: Drafts in Hakyll
 published: June 5, 2013
 excerpt: Implementing a simple drafts system
 tags: Hakyll, Haskell
+toc: off
 ---
-
-* toc
 
 In the post about my [switch to Hakyll](/posts/the-switch-to-hakyll) I talked about the various features I implemented in my Hakyll blog. One feature that was sorely missing was support for drafts: posts which aren't supposed to be published when the site is deployed.
 

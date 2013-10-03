@@ -3,9 +3,8 @@ title: xmonad Ignores Bindings
 published: February 24, 2013
 excerpt: Tracking down a bug in xmonad
 tags: Awesome, Linux, xmonad
+toc: off
 ---
-
-* toc
 
 In my [previous post](/posts/terminal-customization/) I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up [xmonad](http://xmonad.org). I've finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.
 
@@ -111,7 +110,7 @@ xkb_symbols "volume_keys" {
 Now I loaded my XKB map in `~/.xinitrc`:
 
 ~~~ {lang="bash"}
-xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mymap $DISPLAY
+$ xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mymap $DISPLAY
 ~~~
 
 I restarted xmonad with `Mod-Shift-Q` (so that `~/.xinitrc` is rerun) and everything now worked perfectly.

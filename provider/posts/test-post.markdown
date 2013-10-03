@@ -2,7 +2,7 @@
 title: Test Post
 published: September 19, 2012
 excerpt: Site design and Markdown test
-tags: Octopress, Markdown, Math, Ruby
+tags: Markdown
 toc: off
 ---
 

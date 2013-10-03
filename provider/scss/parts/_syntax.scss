@@ -15,7 +15,16 @@ $solar-blue:    #268bd2 !default; // haskell: function
 $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
 $solar-green:   #859900 !default; //
 
-.highlight { color: #00427b; }
+.highlight { color: #2381c4; }
+
+.bash .highlight {
+  .nv { color: $solar-cyan; }
+}
+
+.ruby .highlight {
+  .k {color: $solar-cyan; }
+  .no { color: $solar-cyan; }
+}
 
 .cpp .highlight {
   .nl { color: $solar-violet; }
