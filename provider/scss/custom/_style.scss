@@ -89,6 +89,7 @@ img.center {
 
 article .entry-content table {
   cursor: default;
+  font-size: 0.875em;
   margin: 25px auto;
   background: #F2F9FF;
   border: 2px solid #8ccaff;
@@ -350,7 +351,7 @@ figure.code {
 
     background-color: #8ccaff;
     padding: 5px 28px; // 5px 10px;
-    //position: relative;
+    position: relative;
     font-size: 87.5%;
     color: #00427b;
 
@@ -397,7 +398,7 @@ figure.code {
 
     .linenos {
       line-height: 18px;
-      width: 30px;
+      width: 28px;
       @media screen and (max-width: 600px) {
         display: none;
       }
