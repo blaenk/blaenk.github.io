@@ -104,9 +104,9 @@ To understand why it is indeed possible, consider a probabilistic example. Given
 
 $$
 \begin{align}
-&\mathbb {P} \left[ \text {picking a red marble} \right] = \mu \\
+&P \left( \text {picking a red marble} \right) = \mu \\
 \\
-&\mathbb {P} \left[ \text {picking a green marble} \right] = 1 - \mu \\
+&P \left( \text {picking a green marble} \right) = 1 - \mu \\
 \end{align}
 $$
 
@@ -119,7 +119,7 @@ The question is: does $\nu$ say anything about $\mu$? It might appear that it **
 However, in a **big sample**, it's more probable that $\nu$ is close to $\mu$, that is, they are within $\epsilon$ of each other. This can be formally expressed as **Hoeffding's Inequality**:
 
 $$
-\mathbb {P} \left[ \left| \nu - \mu \right| \gt \epsilon \right] \leq 2e^{- 2\epsilon^2 N}
+P \left( \left| \nu - \mu \right| \gt \epsilon \right) \leq 2e^{- 2\epsilon^2 N}
 $$
 
 $\nu$ is generally varied, and $\mu$ is a constant.
@@ -152,24 +152,24 @@ $\mu$ is the error "**out of sample**", which is denoted by $E_{out}(h)$
 For clarification, if something performs well "out of sample" then it's likely that learning actually took place. This notation can be used to modify Hoeffding's Inequality:
 
 $$
-\mathbb {P} \left[ \left|E_{in}(h) - E_{out}(h)\right| \gt \epsilon \right] \leq 2e^{- 2\epsilon^2 N}
+P \left( \left|E_{in}(h) - E_{out}(h)\right| \gt \epsilon \right) \leq 2e^{- 2\epsilon^2 N}
 $$
 
 The problem now is that Hoeffding's Inequality doesn't apply to multiple bins. To account for multiple bins, the inequality can be modified to be:
 
 $$
 \begin{align*}
-\mathbb {P} \left[ \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right] &\leq
-\mathbb {P} \begin{aligned}[t]
-              \left[ \vphantom {\epsilon} \right. &\hphantom {\text {or}}\
+P \left( \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right) &\leq
+P \begin{aligned}[t]
+              \left( \vphantom {\epsilon} \right. &\hphantom {\text {or}}\
                 \left|E_{in}(h_1) - E_{out}(h_1)\right| \gt \epsilon \\
               &\text {or}\ \left|E_{in}(h_2) - E_{out}(h_2)\right| \gt \epsilon \\
               &\dots \\
-              &\left. \vphantom{E_{in}(h_1)} \text {or}\ \left|E_{in}(h_M) - E_{out}(h_M)\right| \gt \epsilon \right]
+              &\left. \vphantom{E_{in}(h_1)} \text {or}\ \left|E_{in}(h_M) - E_{out}(h_M)\right| \gt \epsilon \right)
             \end{aligned} \\
-&\leq \sum_{m=1}^M \mathbb {P} \left[ \left| E_{in}(h_m) - E_{out}(h_m) \right| > \epsilon \right] \\
+&\leq \sum_{m=1}^M P \left( \left| E_{in}(h_m) - E_{out}(h_m) \right| > \epsilon \right) \\
 &\leq \sum_{m=1}^M 2e^{- 2\epsilon^2 N} \\
-\mathbb {P} \left[ \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right] &\leq 2Me^{- 2\epsilon^2 N}
+P \left( \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right) &\leq 2Me^{- 2\epsilon^2 N}
 \end{align*}
 $$
 
