@@ -15,7 +15,7 @@ I was well on my way to making the site's source a lot leaner when I remembered 
 
 Ultimately, this site is now compiled with Hakyll. It took me about a week to implement every feature I wanted in Hakyll and Pandoc. The net effect is that the difference in speed and flexibility is highly appreciable.
 
-## Directory Structure
+## File Structure
 
 Oftentimes when new to a system, learning its directory structure can help one to get oriented. Unlike some other static site generators, Hakyll does not enforce any particular directory structure or convention. The one I have adopted for my [repository](https://github.com/blaenk/blaenk.github.io) looks like this:
 
@@ -85,7 +85,7 @@ An interesting thing to note is that when templates are applied, they are suppli
 
 In the above `Rule` for posts, I pass a pre-crafted post `Context`, `postCtx`, and [`mappend`](http://www.haskell.org/ghc/docs/latest/html/libraries/base/Data-Monoid.html#v:mappend) to it a special tags context, `tagsCtx` which encapsulates tags information for that post.
 
-### SCSS Compilation
+### SCSS
 
 The first customization I made was to allow support for [SCSS](http://sass-lang.com/). This is usually possible with a simple line:
 
@@ -103,7 +103,7 @@ To accomplish this, I had to implement what was essentially a mirror copy of [Ha
 getResourceString >>= withItemBody (shellFilter "sass -s --scss")
 ~~~
 
-### Abbreviation Substitution {#abbrev}
+### Abbreviations {#abbreviations}
 
 One feature I missed from [kramdown](http://kramdown.rubyforge.org/) that wasn't available in my new markdown processor --- [Pandoc](http://johnmacfarlane.net/pandoc/) --- was abbreviation substitution. It consists of writing abbreviation definitions which are then used to turn every occurrence of the abbreviation into a proper [`abbr`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr) HTML tag with an accompanying tooltip consisting of the definition.
 
@@ -147,7 +147,7 @@ gitTag key = field key $ \_ -> do
            "\" title=\"" ++ message ++ "\">" ++ (take 8 sha) ++ "</a>")
 ~~~
 
-## Pandoc: LLVM of Text {#pandoc}
+## Pandoc {#pandoc}
 
 Hakyll configuration is fairly straightforward. What took longer was the process of re-implementing some features that I had in [kramdown](http://kramdown.rubyforge.org/) when I used Jekyll that weren't available in my new document processor, [Pandoc](http://johnmacfarlane.net/pandoc/).
 
@@ -161,7 +161,7 @@ There is actually work towards implementing abbreviation substitution. The [read
 
 > Note that the pandoc document model does not support abbreviations, so if this extension is enabled, abbreviation keys are simply skipped (as opposed to being parsed as paragraphs).
 
-### Pygments Syntax Highlighting {#pygments}
+### Pygments {#pygments}
 
 One of the first things I wanted to implement right away was syntax highlighting with [Pygments](http://pygments.org/). There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for [kate](http://johnmacfarlane.net/highlighting-kate/): a Haskell package for syntax highlighting written by the author of Pandoc. However, I don't find it to be on par with Pygments. In the past, I simply posted code to [gist](https://gist.github.com/) and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.
 
@@ -212,7 +212,7 @@ pygments (CodeBlock (_, _, namevals) contents) =
 pygments x = x
 ~~~
 
-### Table of Contents Generation {#toc-generation}
+### Table of Contents {#table-of-contents}
 
 The more sophisticated and complex of the AST transformers I wrote for Pandoc is table of contents generation. This is something that kramdown had out of the box, though not as fancy. Paired with automatic id generation for headers, this meant that simply placing `{:toc}` in my page would replace that with automatically generated table of contents based on the headers used in the page.
 

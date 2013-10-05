@@ -96,7 +96,7 @@
     })();
   </script>
   <!--MathJax CDN-->
-  <script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+  <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
       showMathMenu: false,
       messageStyle: "none"
@@ -107,6 +107,12 @@
       HTMLCSS.Font.testSize = ['10px', '12px', '15px', '9px', '8px']
       document.getElementById('MathJax_Font_Test').style.fontSize = '10px'
     });
+
+    MathJax.Hub.Register.StartupHook('End', function() {
+      jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+    });
+  </script>
+  <script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
   </script>
 </body>
 </html>

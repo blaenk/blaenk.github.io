@@ -189,8 +189,7 @@ pygments _ x = x
 
 pygmentize :: String -> String -> IO String
 pygmentize lang contents = do
-  -- ,lineanchors=anchorident,anchorlinenos=True
-  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -O linenos=table -P encoding=utf-8")) {
+  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -P encoding=utf-8")) {
                   std_in = CreatePipe, std_out = CreatePipe, close_fds = True}
       writer h input = do
         hSetEncoding h localeEncoding

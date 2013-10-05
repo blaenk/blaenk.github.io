@@ -1,8 +1,9 @@
 // This File is imported last, and will override other styles in the cascade
 // Add styles here to make changes without digging in too much
 
-.MathJax_Display {
+.mobile-math {
   @media screen and (max-width: 600px) {
+    display: block;
     overflow-x: auto;
   }
 }
@@ -319,27 +320,8 @@ hr {
   }
 }
 
-.entry-content li > figure.code {
-  margin: 15px 0;
-}
-
-.entry-content figure.code {
-  margin: 15px -28px;
-
-  @media screen and (max-width: 600px) {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  // 28 gap on either side (= 56) + 720
-  @media screen and (max-width: 776px) {
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
-
 figure.code {
-  padding: 0;
+  padding: 5px;
   margin: 15px 0;
   cursor: default;
   background: #F2F9FF;
@@ -350,7 +332,7 @@ figure.code {
     }
 
     background-color: #8ccaff;
-    padding: 5px 28px; // 5px 10px;
+    padding: 5px 10px;
     position: relative;
     font-size: 87.5%;
     color: #00427b;
@@ -387,47 +369,16 @@ figure.code {
   .code-container {
     overflow-x: auto;
     background: #F2F9FF;
+    font-size: 0.875em;
   }
 
-  .highlighttable {
+  .highlight {
     background: none;
     line-height: 18px;
     margin: 0;
-    width: 100%;
     border: 0;
 
-    .linenos {
-      line-height: 18px;
-      width: 28px;
-      @media screen and (max-width: 600px) {
-        display: none;
-      }
-
-
-      .linenodiv {
-        background-color: #ECECEC;
-        color: #AAA;
-        border-right: 2px solid #DDD;
-        padding: 5px;
-        text-align: right;
-
-        a { color: #AAA; }
-      }
-    }
-
-    .code {
-      padding-left: 6px;
-      padding-right: 6px;
-
-      @media screen and (max-width: 600px) {
-        padding-left: 2px;
-        padding-right: 2px;
-      }
-    }
-
     .code, .gutter { line-height: 18px; }
-
-    td { padding: 0; }
   }
 }
 

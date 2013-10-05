@@ -2280,7 +2280,7 @@ As the text input is fed to the NFA, on input character the following conditions
 
 The NFA is simply represented by the pattern string and a digraph representing the $\epsilon$-transitions.
 
-#### Match Checking {#regex-match-checking}
+### Match Checking {#regex-match-checking}
 
 From this information, it is possible to create an algorithm that determines whether a regular expression matches the provided text. Reachability is determined by a Directed DFS implementation [^directed_dfs]. This is straightforward because the DFS would only operate on the digraph, which only represents $\epsilon$-transitions.
 
@@ -2329,7 +2329,7 @@ Once the entire text has been consumed, the final iteration of the above loop wo
 }
 ~~~
 
-#### NFA Construction {#regex-nfa-construction}
+### NFA Construction {#regex-nfa-construction}
 
 The construction of the NFA is accomplished similar to how Djikstra's [shunting-yard algorithm](http://en.wikipedia.org/wiki/Shunting-yard_algorithm) works for evaluating mathematical expressions in infix notation by using two stacks: one for operators and another for values.
 
