@@ -31,7 +31,7 @@ My family didn't have a computer before I was 12 years old. In fact, all of my l
 
 However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I usually had to go to the library to type up school assignments. This wasn't always possible on short-notice assignments, however. In these situations, I would have to write up assignments in ink, attempting to appease draconian requirements which demanded no mistakes at all --- no white-out allowed.
 
-See, as the only student in their class without a computer capable of producing neatly printed assignments, I was inconveniencing _the teacher_. So while other students could lazily type up assignments in a matter of minutes, I had to meticulously obsess over my writing [^writing].
+See, as the only student in their class without a computer capable of producing neatly printed assignments, I was inconveniencing _the teacher_. So while other students could lazily type up assignments in a matter of minutes, I had to meticulously obsess over my writing.
 
 This led to late nights, many rewrites, and stress --- since I always cared for doing things right in school. I was tired of it, and somewhat embarrassed for not being "with the times," making me a bit economically self-conscious [^tma].
 
@@ -51,6 +51,5 @@ While I primarily listen to EDM, I'm open to and enjoy a wide variety of music. 
 
 I work out religiously, every other day without fail, specifically doing strength training. I do [squats](http://www.exrx.net/WeightExercises/Quadriceps/BBFullSquat.html), [overhead presses](http://www.exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress.html), [bench presses](http://www.exrx.net/WeightExercises/PectoralSternal/BBBenchPress.html), [deadlifts](http://www.exrx.net/WeightExercises/ErectorSpinae/BBDeadlift.html), and [barbell rows](http://www.exrx.net/WeightExercises/BackGeneral/BBBentOverRow.html). I don't do max weight during my work outs and instead opt for a natural weight increase progression. That said, while I originally began with an empty bar, at the time of writing I'm at 300 lbs. on squats, bench presses, and deadlifts. Overhead presses are at 170 lbs. Barbell rows are at 200 lbs.
 
-[^writing]: This was at a school that required all writing to be in cursive. Ultimately I moved to another area where most people didn't even know how to write in cursive. I was relieved, but since then I've always been told that my print writing looks like cursive.
 [^tma]: This school was in a pretty affluent area which I was not from. I was able to attend due to my grades and collaboration between faculty from both my previous school and this new school.
 [^window]: I still remember the moment at which my curiosity sparked the question of how programs were created. I felt that I had some understanding of the basic functionality of various PC hardware components, but how was it that a window, with all of its buttons and functionality, came into existence?

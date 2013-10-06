@@ -321,10 +321,13 @@ hr {
 }
 
 figure.code {
-  padding: 5px;
   margin: 15px 0;
   cursor: default;
   background: #F2F9FF;
+
+  @media screen and (max-width: 600px) {
+    padding: 5px;
+  }
 
   figcaption {
     @media screen and (max-width: 600px) {
@@ -332,7 +335,7 @@ figure.code {
     }
 
     background-color: #8ccaff;
-    padding: 5px 10px;
+    padding: 5px;
     position: relative;
     font-size: 87.5%;
     color: #00427b;
@@ -377,6 +380,10 @@ figure.code {
     line-height: 18px;
     margin: 0;
     border: 0;
+
+    @media not screen and (max-width: 600px) {
+      padding: 5px;
+    }
 
     .code, .gutter { line-height: 18px; }
   }
@@ -558,6 +565,10 @@ article .entry-content blockquote {
       margin-left: 25px;
       margin-right: 25px;
     }
+  }
+
+  > p{
+    margin-top: 10px;
   }
 
   figure.code {
