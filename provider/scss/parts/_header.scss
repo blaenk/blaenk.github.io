@@ -4,7 +4,7 @@ $header-height: 30px;
 	height: $header-height;
 	padding: 25px 0 30px 0;
 	border-bottom: 5px solid #8ccaff;
-	line-height: $header-height;
+	line-height: 26px;
   @media screen and (max-width: 766px){
     text-align: center;
   }
@@ -177,6 +177,7 @@ $header-height: 30px;
 #mobile-nav{
 	display: none;
 	height: 37px;
+  line-height: 30px;
 	position: relative;
 	@media screen and (max-width: 600px){
 		display: block;

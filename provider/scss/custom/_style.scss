@@ -20,6 +20,7 @@ h2.title {
 
 .notfound {
   text-align: center;
+  line-height: 88px;
 }
 
 .entry-content code {
@@ -526,7 +527,7 @@ figure.code {
   display: none;
   float: right;
   input[type="text"] {
-    width: 390px;
+    width: 335px;
     padding: 2px;
 
     &:focus { outline: none; }
