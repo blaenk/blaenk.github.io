@@ -2,7 +2,10 @@
 title: Digital Signal Processing
 published: September 15, 2013
 excerpt: DSP
+comments: off
 ---
+
+Discrete signals have discrete time and discrete amplitude.
 
 Resources:
 
