@@ -29,7 +29,7 @@ Since convolution allows us to go from input signal $x[n]$ to output signal $y[n
 
 Convolution can be described by the so-called **convolution summation**. The convolution summation is pretty simple, and is defined as follows:
 
-$$y[i] = \sum_{j=0}^{M-1}h[j] \: x[i-j]$$
+$$y[i] = \sum_{j=0}^{M-1} h[j]\ x[i-j]$$
 
 Where the length of the output signal $y[n]$ is defined as $M + N - 1$ where $M$ is the length of the unit impulse response and $N$ is the length of the input signal.
 
