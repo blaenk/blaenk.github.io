@@ -99,10 +99,11 @@ groupByHierarchy :: [Block] -> Forest Block
 groupByHierarchy = map (\(x:xs) -> Node x (groupByHierarchy xs)) . groupBy ((<) `on` headerLevel)
 
 markupHeader :: Tree Block -> H.Html
-markupHeader (Node (Header _ (ident, _, _) inline) headers)
+markupHeader (Node (Header _ (ident, _, keyvals) inline) headers)
   | headers == [] = H.li $ link
   | otherwise     = H.li $ link <> (H.ol $ markupHeaders headers)
-  where link      = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml (stringify inline)
+  where section   = fromMaybe (stringify inline) (lookup "toc" keyvals)
+        link      = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml section
 markupHeader _ = error "what"
 
 markupHeaders :: Forest Block -> H.Html
@@ -172,13 +173,13 @@ cache code lang storePath = unsafePerformIO $ do
           | otherwise = throwIO e
 
 pygments :: FilePath -> Block -> Block
-pygments storePath (CodeBlock (_, classes, namevals) contents) =
-  let lang = case lookup "lang" namevals of
+pygments storePath (CodeBlock (_, classes, keyvals) contents) =
+  let lang = case lookup "lang" keyvals of
                Just language -> language
                Nothing -> if not . null $ classes
                             then head classes
                             else "text"
-      text = lookup "text" namevals
+      text = lookup "text" keyvals
       colored = renderHtml $ H.div ! A.class_ (H.toValue $ "code-container " ++ lang) $ do
                   preEscapedToHtml $ cache contents lang storePath
       caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) text
