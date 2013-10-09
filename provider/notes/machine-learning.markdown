@@ -173,9 +173,170 @@ P \left( \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right) &\leq 2Me^{- 2
 \end{align*}
 $$
 
+# Linear Model
+
+## Input Representation
+
+If we want to develop a system that can detect hand-written numbers, the input can be different examples of hand-written digits. However, if an example digit is a 16x16 bitmap, then that corresponds to an array of 256 real numbers, which becomes 257 when $x_0$ is added for the threshold. This means the problem is operating in 257 dimensions.
+
+Instead, the input can be represented in just three dimensions: $x_0$, intensity, and symmetry. The intensity corresponds to how many black pixels exist in the example, and the symmetry is a measure of how symmetric the digit is along the x and y axes. See slide 5 to see a plot of the data using these features.
+
+## Pocket Algorithm
+
+The PLA would never converge on non-linearly separable data, so it's common practice to forcefully terminate it after a certain number of iterations. However, this has the consequence that the hypothesis function ends up being whatever the result of the last iteration was. This is a problem because it could be that a better hypothesis function with lower in-sample error $E_{in}$ was discovered in a previous iteration.
+
+The Pocket algorithm is a simple modification to the PLA which simply keeps track of the hypothesis function with the least in-sample error $E_{in}$. When this is combined with forceful termination after a certain number of iterations, PLA becomes usable with non-linearly separable data.
+
+## Linear Regression
+
+The word **regression** simply means real-valued output. For example, in the scenario of credit approval, a classification problem would consist of determining whether or not to grant a credit line to an applicant. However, a regression problem would be determining the dollar amount for a particular credit line.
+
+The linear regression output is defined as:
+
+$$ h(x)  = \sum_{i = 0}^d w_i x_i = \mathbf {w^{\mathrm {T}}x} = \mathbf {w \bullet x} $$
+
+For example, the input may look something like this:
+
+$$ (x_1, y_1), (x_2, y_2), \dots, (x_n, y_n) $$
+
+Here $y_n \in \mathbb {R}$ is the credit line for customer $x_n$.
+
+The measure of how well $h$ approximates $f$ is referred to as the error. With linear regression, the standard error function used is the **squared error**, defined as:
+
+$$ \text {squared error} = (h(x) - f(x))^2 $$
+
+This means that the in-sample error $E_{in}$ is defined as:
+
+$$ E_{in}(h) = \frac {1} {N} \sum_{n = 1}^N (h(\mathbf {x}_n) - y_n)^2 $$
+
+This can be written in terms of $\vec {w}$:
+
+$$
+\begin{align}
+E_{in}(\mathbf w) &= \frac {1} {N} \sum_{n = 1}^N (\mathbf {w}^{\mathrm {T}} \mathbf {x}_n - y_n)^2 \\
+                  &= \frac {1} {N} \sum_{n = 1}^N (\mathbf {w} \bullet \mathbf {x}_n - y_n)^2
+\end{align}
+$$
+
+This can be written in vector form as:
+
+$$
+\begin{align}
+&E_{in}(w) = \frac {1} {N} \| \mathrm {X} \mathbf {w} - \mathbf {y} \|^2 \\[10pt]
+&\text {where}\ \mathrm {X} = \begin{bmatrix}
+                              —\ x_1^{\mathrm {T}}\ — \\
+                              —\ x_2^{\mathrm {T}}\ — \\
+                              \vdots \\
+                              —\ x_n^{\mathrm {T}}\ —
+                            \end{bmatrix},\ 
+              \mathrm {y} = \begin{bmatrix}
+                              y_1 \\
+                              y_2 \\
+                              \vdots \\
+                              y_n
+                            \end{bmatrix}
+\end{align}
+$$
+
+Since the goal is to minimize the in-sample error $E_{in}$, and $\mathrm {X}$ and $\mathrm {y}$ are constant since they were provided as input data, $E_{in}$ can be minimized by varying $\vec {w}$:
+
+$$
+\begin{align}
+&\phantom {\nabla} E_{in}(w) = \frac {1} {N} \| \mathrm {X} \mathbf {w} - \mathbf {y} \|^2 \\
+&\nabla E_{in}(w) = \frac {2} {N} \mathrm {X}^{\mathrm {T}} \left( \mathrm {X} \mathbf {w} - \mathbf {y} \right)^2 = 0 \\
+\end{align}
+$$
+
+Knowing this, an equation for the weight vector can be found by distributing the $\mathrm {X}^{\mathrm {T}}$ factor. The $\mathrm {w}$ factor can then be isolated by multiplying both sides by the inverse of $\mathrm {X}^{\mathrm {T}} \mathrm {X}$. The resulting factor $X^\dagger$ on the right side is known as the **pseudo-inverse** of $\mathrm {X}$.
+
+$$
+\begin{align}
+\mathrm {X}^{\mathrm {T}} \mathrm {Xw} &= \mathrm {X}^{\mathrm {T}} \mathrm {y} \\
+\text {if}\ \mathrm {X}^\dagger &= \left( \mathrm {X}^{\mathrm {T}} \mathrm {X} \right)^{-1} \mathrm {X}^{\mathrm {T}} \\
+\text {then}\ \mathrm {w} &= \mathrm {X}^\dagger \mathrm {y}
+\end{align}
+$$
+
+The dimension of $\mathrm {X}^\mathrm {T}$ is $(d + 1) \times N$, so the dimension of $\mathrm X$ is $N \times (d + 1)$. This means that even if $N$ is some large number, their product results in a small square matrix of dimensions $(d + 1) \times (d + 1)$. This means that the dimensions of $\mathrm {X}^\dagger$ will be $(d + 1) \times N$.
+
+### Algorithm
+
+The algorithm for linear regression is therefore:
+
+1. construct input data matrix $\mathrm {X}$ and target vector $\mathrm {y}$ from the data set $(x_1, y_1), (x_2, y_2), \dots, (x_n, y_n)$
+
+$$
+\mathrm {X} = \begin{bmatrix}
+                —\ x_1^{\mathrm {T}}\ — \\
+                —\ x_2^{\mathrm {T}}\ — \\
+                \vdots \\
+                —\ x_n^{\mathrm {T}}\ —
+              \end{bmatrix},\ 
+\mathrm {y} = \begin{bmatrix}
+                y_1 \\
+                y_2 \\
+                \vdots \\
+                y_n
+              \end{bmatrix}
+$$
+
+2. compute the pseudo inverse $\mathrm {X}^\dagger = \left( \mathrm {X}^{\mathrm {T}} \mathrm {X} \right)^{-1} \mathrm {X}^{\mathrm {T}}$
+3. return the weight vector $\mathrm {w} = \mathrm {X}^\dagger \mathrm {y}$
+
+### Classification {#lienar-regression-for-classification}
+
+Linear regression learns a real-valued function $y = f(x) \in \mathbb {R}$. However, binary-valued functions are also real-valued: $\pm 1 \in \mathbb {R}$. Therefore, we can use linear regression to find $\mathrm w$ where:
+
+$$ \mathrm {w}^{\mathrm {T}} \mathrm {x}_n \approx y_n = \pm 1 $$
+
+This way, $\text {sign} (\mathrm {w}^{\mathrm {T}} \mathrm {x}_n)$ is likely to agree with $y_n = \pm 1$. This provides good initial weights for classification.
+
+## Non-Linear Transformations
+
+Not all data is linearly separable. In fact, certain data features aren't linear. For example, a credit line is affected by "years in residence," but it doesn't affect it in a linear way where someone with 10 years in residence will get much more benefit than someone in 5. Instead, the feature can be defined as affecting it in a non-linear manner given the following conditions:
+
+$$ [\![ x_i < 1 ]\!] \text { and } [\![ x_i > 5 ]\!] $$
+
+Linear regression and classification work because they are linear in the weights. For this reason, data can be transformed non-linearly.
+
+For example, if a given data set has positive data points around the center of a region, a transformation could be applied to each point which simply measures the distance from the center of the region to a given point:
+
+$$ (x_1, x_2) \xrightarrow{\Phi} (x_1^2, x_2^2) $$
+
+This newly transformed data set --- which is now linearly separable --- is used as the new data set.
+
+# Error and Noise
+
+To recap, non-linear transformations can be used to transform data such that it becomes linearly separable:
+
+1. given original data
+    * $\mathrm {x}_n \in \mathcal X$
+2. transform the data
+    * $\mathrm {z}_n = \Phi (\mathrm {x}_n) \in \mathcal Z$
+3. separate data in the $\mathcal Z$-space
+    * $\tilde {g} (\mathrm {z}) = \text {sign} (\tilde {w}^{\mathrm {T}} \mathrm {z})$
+4. classify in $\mathcal X$-space
+    * $g(\mathrm {x}) = \tilde {g} (\Phi (\mathrm {x})) = \text {sign} (\tilde {w}^{\mathrm {T}} \Phi (\mathrm {x}))$
+
+A $\Phi$-transform transforms input data into the $\mathcal Z$-coordinate space:
+
+$$
+\begin{align}
+\mathrm {x} = (x_0, x_1, \dots, x_d)\ &\xrightarrow{\Phi}\ \mathrm {z} = (z_0, z_1, \dots \dots, z_{\tilde d}) \\
+\mathrm { x_1, x_2, \dots, x_n}\      &\xrightarrow{\Phi}\ \mathrm {z_1, z_2, \dots, z_n } \\
+\mathrm { y_1, y_2, \dots, y_n}\      &\xrightarrow{\Phi}\ \mathrm {y_1, y_2, \dots, y_n } \\
+\text {no weights in}\ \mathcal {X}\  &\phantom {\xrightarrow{\Phi}\ } \mathrm {\tilde {w}} = (w_0, w_1, \dots \dots, w_{\tilde {d}}) \\
+g(\mathrm {x}) &= \text {sign} (\mathrm {\tilde {w}^T z}) = \text {sign} (\mathrm {\tilde {w}^T \Phi (x)})
+\end{align}
+$$
+
+## Error Measures
+
 # Resources
 
 * Cal Tech [CS 1156x](https://www.edx.org/course/caltechx/cs1156x/learning-data/1120) by Yaser S. Abu-Mostafa
 * Stanford [CS 229](http://academicearth.org/courses/machine-learning/) by Andrew Ng
 * Coursera [Machine Learning](https://www.coursera.org/course/ml) by Andrew Ng, dumbed-down version of the above
 * [Data Mining and Analysis: Fundamental Concepts and Algorithms](http://www.dcc.ufmg.br/miningalgorithms/files/pdf/dmafca.pdf)
+
+*[PLA]: Perceptron Learning Algorithm
