@@ -336,7 +336,7 @@ figure.code {
     }
 
     background-color: #8ccaff;
-    padding: 5px;
+    padding: 5px 10px;
     position: relative;
     font-size: 87.5%;
     color: #00427b;
@@ -383,7 +383,7 @@ figure.code {
     border: 0;
 
     @media not screen and (max-width: 600px) {
-      padding: 5px;
+      padding: 10px;
     }
 
     .code, .gutter { line-height: 18px; }
