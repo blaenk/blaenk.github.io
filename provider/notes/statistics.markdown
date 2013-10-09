@@ -46,7 +46,12 @@ This is inferred from the problem. For example, in "draw without replacement" pr
 
 Conditional probability allows us to compute the probability of one event occurring followed by another. This is solved using the **multiplication rule**:
 
-$$ P(A \cap B) = P(A) \times P(B \mid A) $$
+$$
+\begin{align}
+P(A \cap B) &= P(A) \times P(B \mid A) \\
+            &= P(B) \times P(A \mid B)
+\end{align}
+$$
 
 This is simply read as the probability of $A$ occurring followed by $B$ is the simply the fraction $P(B \mid A)$ of the probability $P(A)$ occurring.
 
