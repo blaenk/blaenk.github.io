@@ -37,8 +37,12 @@ This is what I'm currently reading, but I also keep a list of [books I've read](
 
 ## Studying
 
+* [Machine Learning](https://www.edx.org/course/caltechx/cs1156x/learning-data/1120): Class from Cal Tech whose professor claims to be the same class being offered to Cal Tech students verbatim. They go on edX to do the same assignments, etc.
+
+* Statistics: Three courses offered by UC Berkeley covering [descriptive statistics](https://www.edx.org/course/uc-berkeley/stat2-1x/introduction-statistics/594), [probabilities](https://www.edx.org/course/uc-berkeley/stat2-2x/introduction-statistics/685), and [inference](https://www.edx.org/course/uc-berkeley/stat2-3x/introduction-statistics/825). I'm taking them to freshen up on the subjects, to reinforce my foundation for understanding machine learning.
+
 * [Digital Signal Processing](https://www.coursera.org/course/dsp): A DSP course taught by professors from [École Polytechnique Fédérale de Lausanne](https://en.wikipedia.org/wiki/%C3%89cole_Polytechnique_F%C3%A9d%C3%A9rale_de_Lausanne) in Switzerland.
-* [Machine Learning](https://class.coursera.org/ml-2012-002/lecture/index): My goal is to apply Machine Learning concepts to Digital Signal Processing, such as for [onset detection](http://www.cs.usc.edu/research/08-895.pdf).
+
 * [Parallel Programming with GPUs](https://www.udacity.com/course/cs344): A class that teaches GPGPU programming using [CUDA](http://en.wikipedia.org/wiki/CUDA).
 
 *[GPGPU]: General Purpose GPU
