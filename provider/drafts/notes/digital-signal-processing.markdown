@@ -162,6 +162,14 @@ $$ e^{j \omega n} \Longleftrightarrow \omega = \frac M N 2 \pi, \quad \text {whe
 
 $$ e^{j \omega} = e^{j (\omega + 2 k \pi)} \quad \forall k \in \mathbb N $$
 
+In discrete time, the $n$ has no physical dimension; it's just a counter. The periodicity how many samples before the pattern repeats.
+
+In continuous signals, periodicity is how many seconds before a pattern repeats. The frequency is measured in Hz ($s^{-1}$).
+
+Sometimes it's necessary to create a mapping from discrete time signals to continuous time signals. One example of when this is needed is a sound card on a computer. For this purpose, the time $T_s$ is the time in seconds between samples. A discrete periodicity of $M$ samples corresponds to a continuous periodicity of $MT_s$ seconds. With this information, it follows that the continuous frequency is:
+
+$$ f = \frac 1 {MT_s} $$
+
 # Resources
 
 * École Polytechnique Fédérale de Lausanne [Digital Signal Processing](https://www.coursera.org/course/dsp)
