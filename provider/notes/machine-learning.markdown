@@ -145,31 +145,31 @@ Marker: Lecture 2, 40:38
 
 Both $\mu$ and $\nu$ depend on which hypothesis $h$:
 
-$\nu$ is the error "**in sample**", which is denoted by $E_{in}(h)$
+$\nu$ is the error "**in sample**", which is denoted by $\def \insample {E_{\text {in}}} \insample(h)$
 
-$\mu$ is the error "**out of sample**", which is denoted by $E_{out}(h)$
+$\mu$ is the error "**out of sample**", which is denoted by $\def \outsample {E_{\text {out}}} \outsample(h)$
 
 For clarification, if something performs well "out of sample" then it's likely that learning actually took place. This notation can be used to modify Hoeffding's Inequality:
 
 $$
-P \left( \left|E_{in}(h) - E_{out}(h)\right| \gt \epsilon \right) \leq 2e^{- 2\epsilon^2 N}
+P \left( \left|\insample(h) - \outsample(h)\right| \gt \epsilon \right) \leq 2e^{- 2\epsilon^2 N}
 $$
 
 The problem now is that Hoeffding's Inequality doesn't apply to multiple bins. To account for multiple bins, the inequality can be modified to be:
 
 $$
 \begin{align*}
-P \left( \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right) &\leq
+P \left( \left|\insample(g) - \outsample(g)\right| \gt \epsilon \right) &\leq
 P \begin{aligned}[t]
               \left( \vphantom {\epsilon} \right. &\hphantom {\text {or}}\
-                \left|E_{in}(h_1) - E_{out}(h_1)\right| \gt \epsilon \\
-              &\text {or}\ \left|E_{in}(h_2) - E_{out}(h_2)\right| \gt \epsilon \\
+                \left|\insample(h_1) - \outsample(h_1)\right| \gt \epsilon \\
+              &\text {or}\ \left|\insample(h_2) - \outsample(h_2)\right| \gt \epsilon \\
               &\dots \\
-              &\left. \vphantom{E_{in}(h_1)} \text {or}\ \left|E_{in}(h_M) - E_{out}(h_M)\right| \gt \epsilon \right)
+              &\left. \vphantom{\insample(h_1)} \text {or}\ \left|\insample(h_M) - \outsample(h_M)\right| \gt \epsilon \right)
             \end{aligned} \\
-&\leq \sum_{m=1}^M P \left( \left| E_{in}(h_m) - E_{out}(h_m) \right| > \epsilon \right) \\
+&\leq \sum_{m=1}^M P \left( \left| \insample(h_m) - \outsample(h_m) \right| > \epsilon \right) \\
 &\leq \sum_{m=1}^M 2e^{- 2\epsilon^2 N} \\
-P \left( \left|E_{in}(g) - E_{out}(g)\right| \gt \epsilon \right) &\leq 2Me^{- 2\epsilon^2 N}
+P \left( \left|\insample(g) - \outsample(g)\right| \gt \epsilon \right) &\leq 2Me^{- 2\epsilon^2 N}
 \end{align*}
 $$
 
@@ -183,9 +183,9 @@ Instead, the input can be represented in just three dimensions: $x_0$, intensity
 
 ## Pocket Algorithm
 
-The PLA would never converge on non-linearly separable data, so it's common practice to forcefully terminate it after a certain number of iterations. However, this has the consequence that the hypothesis function ends up being whatever the result of the last iteration was. This is a problem because it could be that a better hypothesis function with lower in-sample error $E_{in}$ was discovered in a previous iteration.
+The PLA would never converge on non-linearly separable data, so it's common practice to forcefully terminate it after a certain number of iterations. However, this has the consequence that the hypothesis function ends up being whatever the result of the last iteration was. This is a problem because it could be that a better hypothesis function with lower in-sample error $\insample$ was discovered in a previous iteration.
 
-The Pocket algorithm is a simple modification to the PLA which simply keeps track of the hypothesis function with the least in-sample error $E_{in}$. When this is combined with forceful termination after a certain number of iterations, PLA becomes usable with non-linearly separable data.
+The Pocket algorithm is a simple modification to the PLA which simply keeps track of the hypothesis function with the least in-sample error $\insample$. When this is combined with forceful termination after a certain number of iterations, PLA becomes usable with non-linearly separable data.
 
 ## Linear Regression
 
@@ -205,15 +205,15 @@ The measure of how well $h$ approximates $f$ is referred to as the error. With l
 
 $$ \text {squared error} = (h(x) - f(x))^2 $$
 
-This means that the in-sample error $E_{in}$ is defined as:
+This means that the in-sample error $\insample$ is defined as:
 
-$$ E_{in}(h) = \frac {1} {N} \sum_{n = 1}^N (h(\mathbf {x}_n) - y_n)^2 $$
+$$ \insample(h) = \frac {1} {N} \sum_{n = 1}^N (h(\mathbf {x}_n) - y_n)^2 $$
 
 This can be written in terms of $\vec {w}$:
 
 $$
 \begin{align}
-E_{in}(\mathbf w) &= \frac {1} {N} \sum_{n = 1}^N (\mathbf {w}^{\mathrm {T}} \mathbf {x}_n - y_n)^2 \\
+\insample(\mathbf w) &= \frac {1} {N} \sum_{n = 1}^N (\mathbf {w}^{\mathrm {T}} \mathbf {x}_n - y_n)^2 \\
                   &= \frac {1} {N} \sum_{n = 1}^N (\mathbf {w} \bullet \mathbf {x}_n - y_n)^2
 \end{align}
 $$
@@ -222,7 +222,7 @@ This can be written in vector form as:
 
 $$
 \begin{align}
-&E_{in}(w) = \frac {1} {N} \| \mathrm {X} \mathbf {w} - \mathbf {y} \|^2 \\[10pt]
+&\insample(w) = \frac {1} {N} \| \mathrm {X} \mathbf {w} - \mathbf {y} \|^2 \\[10pt]
 &\text {where}\ \mathrm {X} = \begin{bmatrix}
                               —\ x_1^{\mathrm {T}}\ — \\
                               —\ x_2^{\mathrm {T}}\ — \\
@@ -238,12 +238,12 @@ $$
 \end{align}
 $$
 
-Since the goal is to minimize the in-sample error $E_{in}$, and $\mathrm {X}$ and $\mathrm {y}$ are constant since they were provided as input data, $E_{in}$ can be minimized by varying $\vec {w}$:
+Since the goal is to minimize the in-sample error $\insample$, and $\mathrm {X}$ and $\mathrm {y}$ are constant since they were provided as input data, $\insample$ can be minimized by varying $\vec {w}$:
 
 $$
 \begin{align}
-&\phantom {\nabla} E_{in}(w) = \frac {1} {N} \| \mathrm {X} \mathbf {w} - \mathbf {y} \|^2 \\
-&\nabla E_{in}(w) = \frac {2} {N} \mathrm {X}^{\mathrm {T}} \left( \mathrm {X} \mathbf {w} - \mathbf {y} \right)^2 = 0 \\
+&\phantom {\nabla} \insample(w) = \frac {1} {N} \| \mathrm {X} \mathbf {w} - \mathbf {y} \|^2 \\
+&\nabla \insample(w) = \frac {2} {N} \mathrm {X}^{\mathrm {T}} \left( \mathrm {X} \mathbf {w} - \mathbf {y} \right)^2 = 0 \\
 \end{align}
 $$
 
@@ -305,8 +305,6 @@ $$ (x_1, x_2) \xrightarrow{\Phi} (x_1^2, x_2^2) $$
 
 This newly transformed data set --- which is now linearly separable --- is used as the new data set.
 
-# Error and Noise
-
 To recap, non-linear transformations can be used to transform data such that it becomes linearly separable:
 
 1. given original data
@@ -330,7 +328,188 @@ g(\mathrm {x}) &= \text {sign} (\mathrm {\tilde {w}^T z}) = \text {sign} (\mathr
 \end{align}
 $$
 
-## Error Measures
+# Error and Noise
+
+Error measures explain what it means for $h \approx f$. It is defined as $E(h, f)$. It almost always has a pointwise definition $e(h(\mathbf x), f(\mathbf x))$ which takes as input the value of the same point for both the hypothesis and target functions. An example of this is the squared error and binary error:
+
+$$
+\def \xpoint {\mathbf x}
+\text {squared error}\colon \quad e(h(\xpoint), f(\xpoint)) = (h(\xpoint) - f(\xpoint))^2
+$$
+
+$$ \text {binary error}\colon \quad e(h(\xpoint), f(\xpoint)) = [\![ h(\xpoint) \not= f(\xpoint)]\!] $$
+
+To go from a pointwise error measure to overall, we take the average of pointwise errors.
+
+$$
+\begin{align}
+\insample(h)  &= \frac 1 N \sum_{n = 1}^N e(h(\xpoint_n), f(\xpoint_n)) \\ \\
+\outsample(h) &= \mathbb {E}_{\xpoint} \left[ e(h(\xpoint), f(\xpoint)) \right] \\
+              &\phantom {=}\ \text {where } \mathbb E \text { is the expected value}
+\end{align}
+$$
+
+It can therefore be said that $g \approx f$ if it is tested with the values from the same distribution that it was trained on and yields an acceptable pointwise error measure.
+
+## Choosing the Error Measure
+
+An example in which the choice of error measure is important is fingerprint verification, which returns $+1$ if it thinks it's you, and $-1$ if it thinks it's an intruder.
+
+There are two types of error:
+
+* **false accept**: something that shouldn't have been accepted was accepted (_false positive_)
+* **false reject**: something that shouldn't have been rejected was rejected (_false negative_)
+
+The question is, how much should each type of error be penalized?
+
+<table style="background-color: transparent !important; border-collapse: collapse; border: none; empty-cells: hide;">
+  <tr>
+    <td colspan="2" style="background-color: transparent;"></td>
+    <td colspan="2" style="text-align: center;">$f$</td>
+  </tr>
+  <tr style="background-color: transparent;">
+    <td colspan="2"></td>
+    <td style="text-align: center; border-bottom: 2px solid black;">$+1$</td>
+    <td style="text-align: center; border-bottom: 2px solid black;">$-1$</td>
+  </tr>
+  <tr>
+    <td rowspan="2">$h$</td>
+    <td style="border-right: 2px solid black;">$+1$</td>
+    <td style="text-align: center">no error</td>
+    <td style="text-align: center">**false accept**</td>
+  </tr>
+  <tr style="background-color: transparent;">
+    <td style="border-right: 2px solid black;">$-1$</td>
+    <td style="text-align: center">**false reject**</td>
+    <td style="text-align: center">no error</td>
+  </tr>
+</table>
+
+The choice of error measure is application specific. For example, in the scenario that fingerprint recognition is used to determine which customers in a particular supermarket can get discounts, the cost of false rejections or accepts are:
+
+* **false reject**: costly; customer gets annoyed, possibly switches to competitor
+* **false accept**: minor; give away discount to someone that didn't qualify for it, but the intruder has left their fingerprint behind (to later train the system to fix that mistake?)
+
+Given this particular application domain, we may want to penalize a candidate hypothesis function if it has a high rate of false rejects/negatives, in this case by a factor of $10$. False accepts/positives on the other hand are only penalized by a factor of $1$.
+
+<table style="background-color: transparent !important; border-collapse: collapse; border: none; empty-cells: hide;">
+  <tr>
+    <td colspan="2" style="background-color: transparent;"></td>
+    <td colspan="2" style="text-align: center;">$f$</td>
+  </tr>
+  <tr style="background-color: transparent;">
+    <td colspan="2"></td>
+    <td style="text-align: center; border-bottom: 2px solid black;">$+1$</td>
+    <td style="text-align: center; border-bottom: 2px solid black;">$-1$</td>
+  </tr>
+  <tr>
+    <td rowspan="2">$h$</td>
+    <td style="border-right: 2px solid black;">$+1$</td>
+    <td style="text-align: center">$0$</td>
+    <td style="text-align: center">$1$</td>
+  </tr>
+  <tr style="background-color: transparent;">
+    <td style="border-right: 2px solid black;">$-1$</td>
+    <td style="text-align: center">$10$</td>
+    <td style="text-align: center">$0$</td>
+  </tr>
+</table>
+
+In an alternative scenario, the fingerprint identification system is used by the CIA for security.
+
+* **false accept**: disaster
+* **false reject**: can be tolerated, you're an employee
+
+<table style="background-color: transparent !important; border-collapse: collapse; border: none; empty-cells: hide;">
+  <tr>
+    <td colspan="2" style="background-color: transparent;"></td>
+    <td colspan="2" style="text-align: center;">$f$</td>
+  </tr>
+  <tr style="background-color: transparent;">
+    <td colspan="2"></td>
+    <td style="text-align: center; border-bottom: 2px solid black;">$+1$</td>
+    <td style="text-align: center; border-bottom: 2px solid black;">$-1$</td>
+  </tr>
+  <tr>
+    <td rowspan="2">$h$</td>
+    <td style="border-right: 2px solid black;">$+1$</td>
+    <td style="text-align: center">$0$</td>
+    <td style="text-align: center">$1000$</td>
+  </tr>
+  <tr style="background-color: transparent;">
+    <td style="border-right: 2px solid black;">$-1$</td>
+    <td style="text-align: center">$1$</td>
+    <td style="text-align: center">$0$</td>
+  </tr>
+</table>
+
+This reinforces the fact that the error measure is application specific, and thus specified by the user. A question that should be asked to determine the error measure is how much does it cost the application to have a false positive or negative.
+
+However, it isn't always possible to determine a correct error measure. There are alternatives to this:
+
+* **plausible measures**: approximate e.g. squared error $\equiv$ Gaussian noise
+* **friendly measures**: closed-form solution e.g. linear regression, convex optimization
+
+In the learning diagram, the error measure goes into the learning algorithm so that it knows what value to minimize among the hypothesis set, and to determine the final hypothesis, to know if the hypothesis candidate approximates the target function.
+
+## Noise
+
+The "target function" is not always a _function_. In the mathematical sense, a function must return a unique value for any given input. However, going back to the credit-card approval system, it is entirely possible that two given applicants had the exact same feature set (e.g. age, annual salary, years in residence) but ended up having different outputs: one ended up having good credit and the other bad. This is possible because the feature set doesn't capture every possible factor.
+
+This is mitigated by having a target distribution. Instead of having a function $f$ that yields an exact answer $y$ for any given $\xpoint$:
+
+$$ y = f(\xpoint) $$
+
+We will use a target _distribution_, which still encodes $y$'s dependence on $\xpoint$, but in a probabilistic manner:
+
+$$ P(y \mid \xpoint) $$
+
+Now $(\xpoint, y)$ will be generated by the joint distribution:
+
+$$ P(\xpoint) P(y \mid \xpoint) $$
+
+This means that we will get a noisy target, which is equivalent to a deterministic target $f(\xpoint) = \mathbb {E} (y \mid \xpoint)$ **plus** noise $y - f(\xpoint)$.
+
+In fact, a deterministic target is a special case of a noisy target:
+
+$$ P(y \mid \xpoint) \text { is zero except for } y = f(\xpoint) $$
+
+This means that $P(y \mid \xpoint)$ is $1.0$ if $y = f(\xpoint)$ and $0$ otherwise.
+
+What this means is that in the learning diagram, we replace the "unknown target function $f\colon \mathcal {X \to Y}$" box with "unknown target distribution $P(y \mid \xpoint)$ target function: $f\colon \mathcal {X \to Y}$ plus noise".
+
+It's important to notice the distinction between $P(y \mid \xpoint)$ and $P(\xpoint)$. $P(\xpoint)$ is the probability that was introduced to satisfy Hoeffding's Inequality, derived from the unknown input distribution. $P(y \mid \xpoint)$ is the probability that was introduced to reflect the fact that real-world target functions are noisy. Both probabilities are derived from _unknown_ probability distributions, they're unknown because they don't need to be known.
+
+Both probabilities convey the probabilistic aspects of $\xpoint$ and $y$. The target distribution $P(y \mid \xpoint)$ is what we are trying to learn. The input distribution $P(\xpoint)$ is simply quantifying the relative example of $\xpoint$; we're not trying to learn it.
+
+The input distribution is the distribution of the feature set in the general population. For example, if the feature set simply consists of salary, then the input distribution says how many people make $70k, $100k, etc.
+
+For this reason, the probabilities can be merged as:
+
+$$ P(\xpoint) P(y \mid \xpoint) \equiv P(\xpoint \cap y) $$ 
+
+This merging mixes two concepts. $P(\xpoint \cap y)$ is not a target distribution for supervised learning. The target distribution that we are actually trying to learn is $P(y \mid \xpoint)$.
+
+# Learning Theory
+
+Learning is feasible because it is likely that:
+
+$$ \outsample(g) \approx \insample(g) $$
+
+However, is this _really_ learning?
+
+We've defined learning as being $g \approx f$, which effectively means that the out-of-sample error for $g$ should be close to zero:
+
+$$ \outsample(g) \approx 0 $$
+
+The above means that "we learned well," and it's achieved through:
+
+$$ \outsample(g) \approx \insample(g) \quad \text {and} \quad \insample(g) \approx 0 $$
+
+Learning thus reduces to two questions:
+
+1. Can we make sure that $\outsample(g)$ is close enough to $\insample(g)$?
+2. Can we make $\insample(g)$ small enough?
 
 # Resources
 

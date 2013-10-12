@@ -103,11 +103,6 @@ article{
 				background: $color-gray03;
 				padding: 0 15px;
 			}
-			tr{
-				&:nth-of-type(2n){
-					background: #d5d5d5;
-				}
-			}
 		}
 		.caption{
 			display: block;
