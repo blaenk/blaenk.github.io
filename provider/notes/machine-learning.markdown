@@ -470,11 +470,14 @@ $$ P(\xpoint) P(y \mid \xpoint) $$
 
 This means that we will get a noisy target, which is equivalent to a deterministic target $f(\xpoint) = \mathbb {E} (y \mid \xpoint)$ **plus** noise $y - f(\xpoint)$.
 
-In fact, a deterministic target is a special case of a noisy target:
+In fact, a deterministic target is a special case of a noisy target where:
 
-$$ P(y \mid \xpoint) \text { is zero except for } y = f(\xpoint) $$
-
-This means that $P(y \mid \xpoint)$ is $1.0$ if $y = f(\xpoint)$ and $0$ otherwise.
+$$
+P(y \mid \xpoint) = \begin{cases}
+                      1 & y = f(\xpoint) \\ \\
+                      0 & y \not= f(\xpoint)
+                    \end{cases}
+$$
 
 What this means is that in the learning diagram, we replace the "unknown target function $f\colon \mathcal {X \to Y}$" box with "unknown target distribution $P(y \mid \xpoint)$ target function: $f\colon \mathcal {X \to Y}$ plus noise".
 
