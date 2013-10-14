@@ -590,10 +590,12 @@ article .entry-content blockquote {
 
   hr {
     padding: 0;
+    height: 0;
     text-align: center;
     width: auto;
     margin: 20px auto;
-    background-color: #eee;
+    background-color: transparent;
+    border-top: 2px dashed #eee;
     color: #eee;
   }
 
