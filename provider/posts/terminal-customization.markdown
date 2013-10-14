@@ -9,7 +9,9 @@ tags: Linux
 
 A while back I switched over to [zsh](http://en.wikipedia.org/wiki/Z_shell) as my shell and used [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) to get up and running quickly. I barely used any of the features it provided, so I recently decided to do away with it and get zsh setup from scratch. At the same time I decided it'd be a good idea to do the same for [urxvt](http://en.wikipedia.org/wiki/Rxvt-unicode). These initiatives had the consequence that I ended up completely redoing the way I maintained my dotfiles which had the effect of greatly improving my overall setup.
 
-Before I go any further I'd like to point out that all of the things that I'll talk about in this post are available in my [dotfiles](https://github.com/blaenk/dots) repository. I'll make an effort to link to the relevant individual files from the repository for each topic I cover. Here is the end result:
+Before I go any further I'd like to point out that all of the things that I'll talk about in this post are available in my [dotfiles](https://github.com/blaenk/dots) repository. I'll make an effort to link to the relevant individual files from the repository for each topic I cover.
+
+Here is the end result:
 
 <img src="/images/terminal/urxvt.png" class="center">
 
