@@ -21,6 +21,11 @@ $solar-green:   #859900 !default; //
   .nv { color: $solar-cyan; }
 }
 
+.python .highlight {
+  .kn { color: $solar-violet; }
+  .nn { color: $solar-cyan; }
+}
+
 .ruby .highlight {
   .k {color: $solar-cyan; }
   .no { color: $solar-cyan; }
