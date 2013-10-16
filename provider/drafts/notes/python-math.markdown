@@ -19,3 +19,11 @@ What is:
 * [PyMC](https://github.com/pymc-devs/pymc)
 
 [Probabilistic Programming & Bayesian Methods for Hackers](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/)
+
+To use PySide with matplotlib ([pyside integration](http://wiki.scipy.org/Cookbook/Matplotlib/PySide), info on [matplotlibrc](http://matplotlib.org/users/customizing.html)):
+
+``` python
+matplotlib.use('Qt4Agg')
+matplotlib.rcParams['backend.qt4'] = 'PySide'
+import pylab
+```
