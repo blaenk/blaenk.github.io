@@ -170,6 +170,50 @@ Sometimes it's necessary to create a mapping from discrete time signals to conti
 
 $$ f = \frac 1 {MT_s} $$
 
+# Primitives
+
+An **adder** takes two signals and adds them together in a point-wise fashion.
+
+$$ z[n] = x[n] + y[n] $$
+
+A **multiplier** takes a signal and scales it by a certain amplitude $\alpha$.
+
+$$ y[n] = \alpha x[n] $$
+
+A **delay** takes a signal and delays it by a discrete amount, denoted as $z^{-N}$ so that the input signal $x[n]$ becomes $x[n - N]$.
+
+$$ y[n] = x[n - N] $$
+
+A **moving average** takes a local average:
+
+$$ y[n] = \frac {x[n] + x[n - 1]} 2 $$
+
+For example, compound interest can be represented as:
+
+$$ y[n] = \alpha\ y[n - M] + x[n] $$
+
+The $M$-tap delay is equivalent to an $M$-sample "periodicity". If a time $T$ is associated with a sample interval, then a periodic signal of frequency $f$ can be generated with the above system:
+
+$$ f = \frac 1 {MT} Hz $$
+
+For example, if $T = 22.7 \mu s$ and $M = 100$ then $f \approx 440 Hz$.
+
+This can be used to play a sine wave. Given $M = 100$, $\alpha = 1$, $\bar {x} [n] = sin(2 \pi \ n / 100)\ \text {for}\ 0 \leq n \lt 100$, a sine wave of 440 Hz is produced.
+
+In this instance, $M$ controls the frequency (pitch), $\alpha$ controls the envelope (decay), $\bar {x} [n]$ controls color (timbre).
+
+The Karplus-Strong algorithm can play a guitar sound given $M = 100$, $\alpha = 0.9$, $\bar {x} [n]: 100\ \text {random values between 0 and 99}$.
+
+# Hilbert Spaces
+
+Hilbert spaces are a generalization of Euclidean space from 2 or 3 dimensions to an infinite number of dimensions. The ingredients in a Hilbert space are:
+
+1. a vector space:  $H(V, \mathbb C)$
+    1. ability to resize vectors: scalar multiplication
+    2. ability to combine vectors: addition
+2. an inner product: $\langle \cdot , \cdot \rangle : V \times V \to \mathbb C$
+3. completeness
+
 # Resources
 
 * École Polytechnique Fédérale de Lausanne [Digital Signal Processing](https://www.coursera.org/course/dsp)
