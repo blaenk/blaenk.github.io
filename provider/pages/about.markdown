@@ -17,7 +17,7 @@ To get in touch you can email me at **jorge.israel.p@gmail.com** or message me o
 
 ## Technology
 
-I try to be a [pragmatic programmer](http://en.wikipedia.org/wiki/The_Pragmatic_Programmer). I love to learn different technologies, most recently [Haskell and Digital Signal Processing](/posts/naive-convolution-in-haskell/). I do it because I have a genuine interest in gaining different perspectives on software development in order to maintain an open and malleable mind, with the hope that it'll help to prepare me for future technological disruptions.
+I try to be a [pragmatic](http://en.wikipedia.org/wiki/The_Pragmatic_Programmer) and well-rounded developer. I love to learn different technologies out of a genuine interest in gaining different perspectives on software development, in order to maintain an open and malleable mind, with the hope that it'll help to prepare me for future technological disruptions.
 
 While I do take pride in my work, I don't waste time with being prideful. Instead I always defer to experience, but I ensure that I achieve a proper understanding instead of [cargo culting](http://en.wikipedia.org/wiki/Cargo_cult_programming).
 
@@ -29,7 +29,7 @@ Check out [this page](/uses-this) for more specifics on my preferences.
 
 My family didn't have a computer before I was 12 years old. In fact, all of my life I had largely avoided computers, aside from specific instances in school when we were given time to work with them. This was a natural result of being warned and scolded not to play around with computers lest I break them.
 
-However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I usually had to go to the library to type up school assignments. This wasn't always possible on short-notice assignments, however. In these situations, I would have to write up assignments in ink, attempting to appease draconian requirements which demanded no mistakes at all --- no white-out allowed.
+However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I usually had to go to the library to type up school assignments. This wasn't always possible on short-notice assignments, however. In these situations, I would have to write my assignments in ink, attempting to appease draconian requirements which demanded no mistakes at all --- no white-out allowed.
 
 See, as the only student in their class without a computer capable of producing neatly printed assignments, I was inconveniencing _the teacher_. So while other students could lazily type up assignments in a matter of minutes, I had to meticulously obsess over my writing.
 
