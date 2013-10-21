@@ -5,15 +5,15 @@ SITE="generated/deploy/out"
 DEPLOY="deploy/"
 
 info() {
-  printf "  [ \033[00;34m..\033[0m ] $1\n"
+  printf "  \033[00;34m+\033[0m $1\n"
 }
 
 success() {
-  printf "  [ \033[00;32mOK\033[0m ] $1\n"
+  printf "  \033[00;32m+\033[0m $1\n"
 }
 
 fail() {
-  printf "  [ \033[0;31mFAIL\033[0m ] $1\n"
+  printf "  \033[0;31m-\033[0m $1\n"
   exit
 }
 
