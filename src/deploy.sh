@@ -5,7 +5,7 @@ SITE="generated/deploy/out"
 DEPLOY="deploy/"
 
 info() {
-  printf "  \033[00;34m+\033[0m $1\n"
+  printf "  \033[00;32m+\033[0m $1\n"
 }
 
 success() {
