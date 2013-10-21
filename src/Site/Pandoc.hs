@@ -6,7 +6,6 @@ import Hakyll.Web.Pandoc hiding (pandocCompiler)
 import Hakyll.Core.Metadata (getMetadataField)
 
 import Text.Pandoc
-import Text.Pandoc.Shared (stringify)
 import Text.Pandoc.Walk (walk, query)
 
 import qualified Data.Set as S
@@ -102,7 +101,8 @@ markupHeader :: Tree Block -> H.Html
 markupHeader (Node (Header _ (ident, _, keyvals) inline) headers)
   | headers == [] = H.li $ link
   | otherwise     = H.li $ link <> (H.ol $ markupHeaders headers)
-  where section   = fromMaybe (stringify inline) (lookup "toc" keyvals)
+  where render x  = writeHtmlString writerOptions (Pandoc nullMeta [(Plain x)])
+        section   = fromMaybe (render inline) (lookup "toc" keyvals)
         link      = H.a ! A.href (H.toValue $ "#" ++ ident) $ preEscapedToHtml section
 markupHeader _ = error "what"
 
