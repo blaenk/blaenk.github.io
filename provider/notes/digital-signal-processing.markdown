@@ -211,8 +211,44 @@ Hilbert spaces are a generalization of Euclidean space from 2 or 3 dimensions to
 1. a vector space:  $H(V, \mathbb C)$
     1. ability to resize vectors: scalar multiplication
     2. ability to combine vectors: addition
-2. an inner product: $\langle \cdot , \cdot \rangle : V \times V \to \mathbb C$
+2. an inner product: $\newcommand{\vector}[2]{\langle \mathbf {#1}, \mathbf {#2} \rangle } \vector {\cdot} {\cdot} : V \times V \to \mathbb C$
 3. completeness
+
+The **inner product** measures the similarity between vectors. When the inner product is $0$, they are most different (orthogonal). In $\mathbb R^2$ the inner product is defined as:
+
+$$ \vector x y = x_0 y_0 + x_1 y_1 $$
+
+It can also be rewritten as:
+
+$$ \vector x y = \sqrt {(x_0^2 + x_1^2) (y_0^2 + y_1^2)} \cos \alpha $$
+
+Where $\alpha$ is the angle between the two vectors. In other words:
+
+$$ \vector x y = \lVert x \rVert \ \lVert y \rVert \cos \alpha $$
+
+The inner product can also be performed on signals, in which case it corresponds to correlation.
+
+Sinusoids with frequencies integer multiples of a fundamental are orthogonal.
+
+Properties of the inner product:
+
+* $\vector {x + y} z = \vector x z + \vector y z$
+* $\vector x y = \vector y x ^*$
+* $\vector {\alpha x} y = \alpha^* \vector x y$ <br/>
+  $\vector x {\alpha y} = \alpha \vector x y$
+* $\vector x x \geq 0$
+* $\vector x x = 0 \Leftrightarrow x = 0$
+* if $\vector x y = 0$ and $\mathbf {x, y} \not= 0$ then $\mathbf x$ and $\mathbf y$ are called orthogonal $\perp$
+
+Inner products for signals:
+
+$$ \vector x y = \sum_{n = 0}^{N - 1} x^*[n] y[n] $$
+
+**Square summable** sequences in space $\mathit l_2 (\mathbb Z)$ are those where:
+
+$$ \sum |x[n]|^2 < \infty $$
+
+The space $\mathit l_2 (\mathbb Z)$ refers to a sequence $l$ concerning the squared norm with an integer index.
 
 # Resources
 
