@@ -1,7 +1,7 @@
 ---
-title: Machine Learning Coursera
-published: October 14, 2013
-excerpt: Machine Learning concepts (coursera)
+title: Machine Learning
+published: September 28, 2013
+excerpt: Machine Learning concepts (Stanford)
 comments: off
 toc: left
 ---
