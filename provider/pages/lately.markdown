@@ -17,15 +17,19 @@ This page lists some of the things I've been up to lately.
 
 This is what I'm currently reading, but I also keep a list of [books I've read](/reads).
 
+<img src="/images/books/scala.jpg" class="right" width="128">
+
+* [Programming in Scala](http://amzn.com/0981531644) --- I've been interested in Scala as a promising compromise between a purely functional statically typed language like Haskell and an imperative dynamic language like Ruby or Python. I'm particularly interested in the possible benefits of leveraging a VM as time-tested and robust as the JVM compared to other languages' perhaps more ad-hoc solutions. I'm also interested in it from a multicore utilization perspective with its actor concurrency model which resembles Erlang's, but with access to Scala/Java's perhaps more numerous packages.
+
 <img src="/images/books/gof.jpg" class="right" width="128">
 
-* [Design Patterns](http://amzn.com/0201633612): This is also known as the classical gang of four (GoF) book. I had already read [a book on design patterns](/reads/#headfirst-designpatterns), but while being readable enough, the examples that were used to explain the design patterns were so heavily contrived and ridiculous that I had trouble retaining any of it. I wasn't a huge fan of the book's style either --- which I think is common to all "Head First" books --- because it seemed to treat the reader as if they had a maximum attention span of three seconds: every page was littered with figures and pictures and comic-strip style dialog bubbles and so on.
+* [Design Patterns](http://amzn.com/0201633612) --- This is also known as the classical gang of four (GoF) book. I had already read [a book on design patterns](/reads/#headfirst-designpatterns), but while being readable enough, the examples that were used to explain the design patterns were so heavily contrived and ridiculous that I had trouble retaining any of it. I wasn't a huge fan of the book's style either --- which I think is common to all "Head First" books --- because it seemed to treat the reader as if they had a maximum attention span of three seconds: every page was littered with figures and pictures and comic-strip style dialog bubbles and so on.
 
     On the other hand, the GoF book is the canonical book on the subject and gets straight to the point. Despite being a relatively old book --- the latest edition, which I purchased, was made in 1994 --- it's still very relevant, in fact I consider it a testament to the book's lasting relevance that the authors haven't deemed it necessary to release a new version. Patterns are explained with C++ (and sometimes Smalltalk) compared to Head First's Java.
 
 <img src="/images/books/got-pt.jpg" class="right" width="128">
 
-* [A Guerra dos Tronos](http://pt.wikipedia.org/wiki/A_Game_of_Thrones): The Portuguese translation of Game of Thrones, the first book in the [A Song of Ice and Fire](http://en.wikipedia.org/wiki/A_Song_of_Ice_and_Fire) series (pt: As Crônicas de Gelo e Fogo).
+* [A Guerra dos Tronos](http://pt.wikipedia.org/wiki/A_Game_of_Thrones) --- The Portuguese translation of Game of Thrones, the first book in the [A Song of Ice and Fire](http://en.wikipedia.org/wiki/A_Song_of_Ice_and_Fire) series (pt: As Crônicas de Gelo e Fogo).
 	
 	Even during my first read-through of all five books that are currently out, I had intended to re-read the series in a different language. A friend is currently listening to the audiobook, so I decided now was as good a time as any to start. I have always wanted to learn a bit of Portuguese, so I looked around and found the whole set of books for my Kindle.
 
@@ -33,7 +37,7 @@ This is what I'm currently reading, but I also keep a list of [books I've read](
 
 <img src="/images/books/debugging.jpg" class="right" width="128">
 
-* [The Art of Debugging with GDB, DDD, and Eclipse](http://amzn.com/1593271743): Another great book by No Starch Press, publishers of TLPI. I unfortunately never really spent the time to really understand how to use debuggers past basic functionality, in this case [GDB](http://www.gnu.org/software/gdb/). I knew enough to get by, but it always seemed a little archaic or very complicated, instead opting for so-called "printf debugging," in which one simply adds a bunch of print statements to find the source of various problems. This, I've come to realize, is an exercise in masochism. Really learning the various tools available to one through a debugger is enlightening.
+* [The Art of Debugging with GDB, DDD, and Eclipse](http://amzn.com/1593271743) --- Another great book by No Starch Press, publishers of TLPI. I unfortunately never really spent the time to really understand how to use debuggers past basic functionality, in this case [GDB](http://www.gnu.org/software/gdb/). I knew enough to get by, but it always seemed a little archaic or very complicated, instead opting for so-called "printf debugging," in which one simply adds a bunch of print statements to find the source of various problems. This, I've come to realize, is an exercise in masochism. Really learning the various tools available to one through a debugger is enlightening.
 
 ## Studying
 
