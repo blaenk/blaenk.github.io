@@ -24,7 +24,7 @@ The following two draft system implementations exemplify the two approaches I ca
 
 [Octopress](http://octopress.org/) had support for drafts hacked onto Jekyll by way of a plugin that allowed a metadata field `published` to be set that, if set to **false**, would establish an environment variable that would be detected on site generation in order to regenerate the site without the draft posts. This consequently meant that draft posts were stored in the same directory as regular posts.
 
-[Jekyll](http://jekyllrb.com) implemented support for this in its 1.0 version by allowing a new directory, **_drafts/**, to store draft posts which could be previewed by specifying the `--drafts` flag to most operations. However, it was right after Jekyll 1.0 was released that I decided to switch to Hakyll.
+[Jekyll](http://jekyllrb.com) implemented support for this in its 1.0 version by allowing a new directory, **\_drafts/**, to store draft posts which could be previewed by specifying the `--drafts` flag to most operations. However, it was right after Jekyll 1.0 was released that I decided to switch to Hakyll.
 
 Octopress' draft system was pretty straightforward in my opinion, despite being a pretty hack-ish implementation. I would create drafts in the same directory as all of the other posts, and would simply set metadata `published: false`. This would allow the draft to show up when I previewed the site, but not when it was ultimately deployed. This was accomplished by regenerating the site on deploy, this time without the preview posts.
 
@@ -36,10 +36,10 @@ Both approaches amount to hacks on top of Hakyll, but after some consideration, 
 
 My solution consists of some code that runs before the Hakyll driver. The code extracts the first argument from the program arguments, which by convention is the action to perform --- e.g. build, clean, preview --- and checks to see if it's the **preview** action.
 
-~~~ {lang="haskell"}
+``` haskell
 main = do
   (action:_) <- getArgs
-~~~
+```
 
 If the **preview** action is being run, the Hakyll configuration data structure's `destinationDirectory` field --- i.e. the output directory --- is changed to a separate one for previewing purposes. This implies that the field is set to the deployable output directory by default. This is important because it means that all actions other than **preview** will _ignore_ drafts.
 
