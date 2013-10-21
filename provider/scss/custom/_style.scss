@@ -248,7 +248,7 @@ article .entry-content ol {
     margin: 30px auto 20px;
 
     &:after {
-      content: "§";
+      content: "\00A7";
       cursor: default;
       display: inline-block;
       position: relative;
