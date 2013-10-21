@@ -35,9 +35,9 @@ build       Generate the entire site
 preview     Generate changes on-the-fly and serve them on a preview server
 deploy      Deploy the site using a custom deploy procedure
 
-`./site build` creates a top-level directory **generated/** with two sub-directories: a directory **cache/** for cached content and a directory **site/** where the compiled site is stored.
+**Build** creates a top-level directory **generated/** with two sub-directories: a directory **cache/** for cached content and a directory **site/** where the compiled site is stored.
 
-`./site deploy` puts the compiled site into top-level directory **deploy/** which is git-controlled and force pushes the content to the master branch, effectively deploying (on GitHub).
+**Deploy** puts the compiled site into top-level directory **deploy/** which is git-controlled and force pushes the content to the master branch, effectively deploying (on GitHub).
 
 ## Hakyll
 
@@ -147,7 +147,7 @@ gitTag key = field key $ \_ -> do
            "\" title=\"" ++ message ++ "\">" ++ (take 8 sha) ++ "</a>")
 ~~~
 
-## Pandoc {#pandoc}
+## Pandoc
 
 Hakyll configuration is fairly straightforward. What took longer was the process of re-implementing some features that I had in [kramdown](http://kramdown.rubyforge.org/) when I used Jekyll that weren't available in my new document processor, [Pandoc](http://johnmacfarlane.net/pandoc/).
 
