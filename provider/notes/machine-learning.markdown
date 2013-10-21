@@ -651,7 +651,12 @@ $$ \growthfunc(N) = {N + 1 \choose 2} $$
 
 However, this doesn't count the configuration in which the interval ends lie on the same line segment, making all points $-1$, so we add that:
 
-$$ \growthfunc(N) = {N + 1 \choose 2} + 1 = \frac 1 2 N^2 + \frac 1 2 N + 1 $$
+$$
+\begin{align}
+\growthfunc(N) &= {N + 1 \choose 2} + 1 \\
+&= \frac 1 2 N^2 + \frac 1 2 N + 1
+\end{align}
+$$
 
 ### Convex Sets
 
