@@ -894,4 +894,78 @@ $$ P(|\insample(g) - \outsample(g)| \gt \epsilon) \leq 4 \growthfunc(2N) e^{-{\f
 
 The growth function is parameterized with $2N$ because we are now considering two samples.
 
+# VC Dimension
+
+The **VC Dimension** is a quantity defined for a hypothesis set $\mathcal H$ denoted by $\def \vc {d_{\text {VC}}} \vc(\mathcal H)$ and is defined as the most points that $\mathcal H$ can shatter; the largest value of $N$ for which $\growthfunc(N) = 2^N$.
+
+$$
+\begin{align}
+N &\leq \vc(\mathcal H)\ \Longrightarrow\ \mathcal H \text { can shatter } N \text { points } \\
+N &\gt \vc(\mathcal H)\ \Longrightarrow\ N \text { is a break point for } H
+\end{align}
+$$
+
+Therefore, the growth function can be defined in terms of a break point $k$:
+
+$$ \growthfunc(N) \leq \upperbound $$
+
+It can also be defined in terms of the VC dimension $\vc$:
+
+$$ \growthfunc(N) \leq \underbrace {\sum_{i = 0}^{\vc} {N \choose i}}_{\text {maximum power is } N^{\vc}} $$
+
+With respect to learning, the effect of the VC dimension is that if the VC dimension is finite, then the hypothesis will generalize:
+
+$$ \vc(\mathcal H)\ \Longrightarrow\ g \in \mathcal H \text { will generalize } $$
+
+The key observation here is that this statement is **independent of**:
+
+* the learning algorithm
+* the input distribution
+* the target function
+
+The only things that factor into this are the training examples, the hypothesis set, and the final hypothesis.
+
+## Perceptrons {#vc-dimension-of-perceptrons}
+
+We already know that $\vc = 3$ for $d = 2$ (2D). However, we would like to generalize this for any dimension. We will argue that $\vc = d + 1$. We prove this by showing that $\vc \leq d + 1$ and $\vc \geq d + 1$.
+
+To do this we will first construct a set of $N = d + 1$ points in $\mathbb R^d$ in such a way that they can be shattered by the perceptron.
+
+$$
+\mathrm {X} = \begin{bmatrix}
+                —\ x_1^{\mathrm {T}}\ — \\
+                —\ x_2^{\mathrm {T}}\ — \\
+                \vdots \\
+                —\ x_{d + 1}^{\mathrm {T}}\ —
+              \end{bmatrix} = 
+              \begin{bmatrix}
+                1 & 0 & 0 & \cdots & 0 \\
+                1 & 1 & 0 & \cdots & 0 \\
+                1 & 0 & 1 & \cdots & 0 \\
+                & \vdots & & \ddots & 0 \\
+                1 & 0 & \cdots & 0 & 1
+              \end{bmatrix}
+$$
+
+The key observation is that $\mathrm X$ is invertible.
+
+$$
+\text {For any } \mathrm y = \begin{bmatrix}
+                               y_1 \\
+                               y_2 \\
+                               \vdots \\
+                               y_n
+                             \end{bmatrix} = 
+                             \begin{bmatrix}
+                               \pm 1 \\
+                               \pm 1 \\
+                               \vdots \\
+                               \pm 1 \\
+                             \end{bmatrix}
+$$
+ 
+The question is, can we find a vector $\mathbf w$ satisfying:
+
+$$ \text {sign}(\mathbf {Xw}) = \mathbf y $$
+
 *[VC]: Vapnik-Chervonenkis
