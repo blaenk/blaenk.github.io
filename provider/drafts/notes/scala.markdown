@@ -120,7 +120,7 @@ object Singleton {
 }
 ```
 
-When a singleton object is named after an existing class, it is referred to as the class' **companion object** (like Ruby eigenclasses?). They must both be defined in the same source file. They can access each other's private members.
+When a singleton object is named after an existing class, it is referred to as the class' **companion object** [^companion_ruby]. They must both be defined in the same source file. They can access each other's private members.
 
 A class is defined using the class keyword, and it can take parameters:
 
@@ -157,3 +157,33 @@ Implicit conversions can be defined so that values of a certain time are implici
 ``` scala
 implicit def intToRational(x: Int) = new Rational(x)
 ```
+
+# Functions
+
+## Partial Application
+
+It's not possible to assign methods or nested functions to values, or pass them as arguments to other functions. If this is intended, one can use the explicit partial application syntax:
+
+``` scala
+val partial = some.method _
+```
+
+This syntax creates an ephemeral class [^cpp_partialapplication] that defines an `apply` method that takes the appropriate amount of arguments. When the partially applied value is called, the arguments are forwarded to the underlying function and its result is returned.
+
+This can also be done for specific arguments, but the type must be stated explicitly, presumably to disambiguate overloads:
+
+``` scala
+val partial = func(1, _ : Int, 3)
+```
+
+If passing a partially applied function, where all parameters are unapplied, as an argument to another function, partial application can be written implicitly:
+
+``` scala
+someNumbers.foreach(println _)
+someNumbers.foreach(println)
+```
+
+Closures capture values by reference.
+
+[^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
+[^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
