@@ -76,7 +76,7 @@ This states that the compilation process for any given post is as follows:
 1. the post body (i.e. excluding post metadata) is read
 2. the result is passed to an abbreviation substitution filter
 3. the result is passed to my custom Pandoc compiler
-4. the result is embedded into a post template with a so called "post context" (more on that shortly)
+4. the result is embedded into a post template with a so called "post context"
 5. the result is embedded into the page layout
 
 A post is routed using the `nicePostRoute` function which is largely borrowed from [Yann Esposito](http://yannesposito.com/Scratch/en/blog/Hakyll-setup/). It simply routes a **posts/this-post.markdown** to **posts/this-post/index.html** so that the post can be viewed at **posts/this-post/**.
