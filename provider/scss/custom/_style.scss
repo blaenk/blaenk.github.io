@@ -235,7 +235,13 @@ article .entry-content ol {
     margin-left: 5px;
   }
 
-  p { line-height: 22px; }
+  p {
+    line-height: 20px;
+
+    @media screen and (max-width: 600px) {
+      line-height: 18px;
+    }
+  }
 
   li { margin-bottom: 5px; }
   li p:last-child { margin-bottom: 0; }
