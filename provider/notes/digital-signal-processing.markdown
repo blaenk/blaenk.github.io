@@ -250,6 +250,128 @@ $$ \sum |x[n]|^2 < \infty $$
 
 The space $\mathit l_2 (\mathbb Z)$ refers to a sequence $l$ concerning the squared norm with an integer index.
 
+The **norm** is defined by the inner product:
+
+$$ \lVert \mathbf {x} \rVert = \sqrt {\vector x x} $$
+
+The **distance** is defined by the norm:
+
+$$ d(\mathbf {x, y}) = \lVert \mathbf {x - y} \rVert $$
+
+So in $\mathbb R^2$, the norm of $\mathbf x$ is:
+
+$$ \lVert \mathbf x \rVert = \sqrt {\vector x x} = \sqrt {x_0^2 + x_1^2} $$
+
+And the distance:
+
+$$ \lVert \mathbf {x - y} \rVert = \sqrt {(x_0 - y_0)^2 + (x_1 - y_1)^2} $$
+
+So the same applies to continuous time functions in $L_2 [-1, 1]$, also known as the Mean Square Error:
+
+$$ \lVert \mathbf {x - y} \rVert^2 = \int_{-1}^1 |x(t) - y(t)|^2 dt $$
+
+## Bases
+
+A basis allows one to write any vector as a linear combination of the basis vectors.
+
+For example, the point:
+
+$$
+\mathbf x = \begin{bmatrix}
+              2 \\ 1
+            \end{bmatrix} \in \mathbb R^2
+$$
+
+Can be represented as:
+
+$$ \mathbf x = 2 \mathbf e^{(0)} + \mathbf e^{(1)} $$
+
+Where $\mathbf e^{(n)}$ is the basis vector for the corresponding dimension.
+
+However, this can't be done if the basis vectors are colinear. In this case, the vectors are linearly dependent such that their sum equals the origin/zero. So this can't be considered a basis.
+
+More generally, a basis consists of:
+
+* vector space $H$
+* set of $K$ vectors from $H\colon W = \{ \mathbf w^{(k)} \},\ k = 0,1,\dots,K - 1$
+
+$W$ is a basis for $H$ if:
+
+* we can write for all $\mathbf x \in H\colon \quad \mathbf x = \sum_{k = 0}^{K - 1} \alpha_k \mathbf w^{(k)}, \quad \alpha_k \in \mathbb C$
+* the coefficients $\alpha_k$ are unique
+
+Linear independence is defined as:
+
+$$ \sum_{k = 0}^{K - 1} \alpha_k \mathbf w^{(k)} = 0 \iff \alpha_k = 0, k = 0, 1, \dots, K - 1 $$
+
+An orthogonal basis is defined as the inner product between any two vectors is 0:
+
+$$ \vector {\mathbf w^{(k)}} {\mathbf w^{(n)}} = 0 \text { for } k \not= n $$
+
+An orthonormal basis consists of an orthogonal basis with normalized basis vectors:
+
+$$ \vector {\mathbf w^{(k)}} {\mathbf w^{(n)}} = \delta[n - k] $$
+
+We can orthonormalize any orthogonal basis via the Gram-Schmidt algorithm.
+
+Basis expansion:
+
+$$ \mathbf x = \sum_{k = 0}^{K - 1} \alpha_k \mathbf w^{(k)} $$
+
+How do we find the coefficients $\alpha$'s? It's straightforward with orthonormal bases:
+
+$$ \alpha_k = \vector {\mathbf w^{(k)}} x $$
+
+For example, for bases in $\mathbb C^N$. The basis will contain $N$ vectors. The canonical (orthonormal) basis:
+
+$$ 
+\mathbf e^{(k)} = \begin{bmatrix}
+                    0 \\ 0 \\ \vdots \\ 0 \\ 1 \\ 0 \\ \vdots \\ 0
+                  \end{bmatrix}
+$$
+
+Similarly, the bais for sequences in $l_2(\mathbb Z)$ consists of a basis with infinite vectors. The canonical (orthonormal) basis is:
+
+$$ 
+\mathbf e^{(k)} = \begin{bmatrix}
+                    \vdots \\ 0 \\ 0 \\ 1 \\ 0 \\ 0 \\ 0 \\ \vdots
+                  \end{bmatrix}
+$$
+
+## Completeness
+
+Limiting operations must yield vector space elements. For example, an incomplete space is the set of rational numbers:
+
+$$ \underbrace {\mathbf x_n = \sum_{k = 0}^n \frac 1 {k!} \in \mathbb Q}_{\text {limiting operation}} \quad \text {but} \quad \lim_{n \to \infty} \mathbf x_n = e \not\in \mathbb Q $$
+
+# Approximation
+
+## Parseval's Theorem
+
+Parseval's Theorem states that given:
+
+$$ \mathbf x = \sum_{k = 0}^{K - 1} \alpha_k \mathbf w^{(k)} $$
+
+Then for an orthonormal basis (e.g. Pythagorean Theorem in $\mathbb R^2$):
+
+$$ \lVert \mathbf x \rVert^2 = \sum_{k = 0}^{K - 1} |\alpha_k|^2 $$
+
+What it means is that given any vector, when viewed from different bases, the length of the vector doesn't change.
+
+## Projection
+
+Projection is a form of approximation. An orthogonal projection is the "best" approximation and is defined as:
+
+$$ \mathbf {\hat x} = \sum_{k = 0}^{K - 1} \vector {\mathbf s^{(k)}} x \mathbf s^{(k)} $$
+
+It is the best approximation in $l_2(\mathbb Z)$ because it has minimum-norm error:
+
+$$ \underset{\mathbf y \in S}{\operatorname{argmin}} \lVert \mathbf {x - y} \rVert = \mathbf {\hat x} $$
+
+The error is orthogonal to the approximation (**orthogonality principle**):
+
+$$ \vector {\mathbf {x - \hat x}} {\mathbf {\hat x}} = 0 $$
+
 # Resources
 
 * École Polytechnique Fédérale de Lausanne [Digital Signal Processing](https://www.coursera.org/course/dsp)
