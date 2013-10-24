@@ -71,5 +71,5 @@ $(function() {
     $(this).next('.collapsible').slideToggle('fast');
   });
 
-  $('a[href^="#fnref"]').text('\uf148');
+  $('a[href^="#fnref"]').html('<i class="fa fa-level-up"></i>');
 });

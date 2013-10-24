@@ -36,25 +36,24 @@
         }
       }
 		}
-		.date, .tags, .commit, .notes{
-			padding-left: 30px;
+		.date, .tags, .commit, .notes {
+      i {
+        color: $color-gray03;
+        margin-right: 2px;
+        font-size: 1.3em;
+        line-height: 1.6em;
+        cursor: default;
+
+        @media not screen and (max-width: 600px){
+          vertical-align: bottom;
+        }
+      }
 			position: relative;
-			&:before{
-				color: $color-gray03;
-				font: 1.3em $font-icon;
-				line-height: 1.6em;
-				position: absolute;
-				left: 0;
-			}
 			@media screen and (max-width: 766px){
         display: inline-block;
 				margin-right: 30px;
 			}
 		}
-		.date:before{content: "\f073";}
-		.tags:before{content: "\f02c";}
-		.commit:before{content: "\f126";}
-		.notes:before{content: "\f069";}
 		.commit .hash { font-family: $font-mono; }
 	}
 }
