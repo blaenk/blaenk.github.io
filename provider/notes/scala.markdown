@@ -95,6 +95,12 @@ Scala has symbols similar to Ruby's `:symbols` which are defined as:
 val someKey = 'symbol
 ```
 
+The `yield` keyword can be used in conjunction with `for` loops to generate new collections:
+
+``` scala
+val shouts = for (arg <- args) yield arg + "!"
+```
+
 # Classes and Objects
 
 Objects have members consisting of fields (data) and methods (code). Fields can be declared private.
@@ -185,5 +191,131 @@ someNumbers.foreach(println)
 
 Closures capture values by reference.
 
+Variable arguments can be specified with an asterisk `*`, and are treated as an `Array` inside the function:
+
+``` scala
+def echo(args: String*) = for (arg <- args) println(arg)
+echo("one", "two", "three")
+```
+
+Conversely, an `Array` can be expanded into multiple arguments using the `_*` symbol:
+
+``` scala
+val arr = Array("one", "two", "three")
+echo(arr: _*)
+```
+
+It's possible to pass named parameters to functions:
+
+``` scala
+def speed(distance: Float, time: Float): Float = distance / time
+speed(time = 10, distance = 100)
+```
+
+It's possible to define default parameter values:
+
+``` scala
+def printTime(out: java.io.PrintStream  Console.out) =
+  out.println("time = " + System.currentTimeMillis())
+```
+
+When used in combination with named parameters, it's possible to leave out all parameters except one.
+
+Scala supports tail recursion.
+
+Currying can be made explicit in a function definition by adding multiple parameter lists. This makes it possible to curry functions without having to specify the type of the holes as in partial application above.
+
+``` scala
+def curriedSum(x: Int)(y: Int) = x + y
+val three  = curriedSum(1)(2)
+
+def equivalentSum(x: Int) = (y: Int) => x = y
+val three_ = equivalentSum(1)(2)
+```
+
+Explicitly defining multiple parameter lists allows using braces for the last parameter:
+
+``` scala
+val braces = curriedSum(1) { 2 }
+```
+
+Parameters can be passed "by-name" so that parameters can be passed to a function and not evaluated until explicitly done so within the function. The syntax is simply to prepend the parameter with `=>`, I take this to mean that it's wrapping the parameter in a parameter-less lambda like `()` so that the expression passed as the parameter isn't evaluated until explicitly done so within the function:
+
+``` scala
+def byNameAssert(predicate: => Boolean) =
+  if (assertionsEnabled && !predicate)
+    throw new AssertionError
+
+byNameAssert(5 > 3)
+```
+
+# Composition and Inheritance
+
+Abstract classes are defined using the abstract keyword:
+
+``` scala
+abstract class Element {
+  def contents: Array[String]
+  def height: Int = contents.length
+  def width: Int = if (height == 0) 0 else contents(0).length
+}
+```
+
+Methods themselves are abstract if they have no defined implementation.
+
+Parameterless methods are those that take no parameters and their parentheses are omitted. The convention is to omit the parentheses when there are no parameters and the method accesses mutable state only by reading its class' fields. Further, empty parentheses in function calls can be omitted. The convention is to only omit them if they have no side-effects. I/O calls for example should always explicitly contain the parentheses.
+
+Classes can be extended other classes. This allows the sub-class to inherit all non-private members of the parent class, and makes the sub-class a sub-type of the parent type. All classes implicitly extend from `scala.AnyRef` which is equivalent to Java's `java.lang.Object`:
+
+``` scala
+class ArrayElement(conts: Array[String]) extends Element {
+  def contents: Array[String] = conts
+}
+```
+
+Class fields and methods belong to the same namespace, which makes it possible for a subclass to override one with the other:
+
+``` scala
+class ArrayElement(conts: Array[String]) extends Element {
+  val contents: Array[String] = conts
+}
+```
+
+Parametric fields are fields that are initialized through the primary constructor:
+
+``` scala
+class ArrayElement(
+  val contents: Array[String]
+) extends Element
+```
+
+It's possible to invoke superclass constructors by simply supplying the parameter in the extends section:
+
+``` scala
+class LineElement(s: String) extends ArrayElement(Array(s)) {
+  override def width  = s.length
+  override def height = 1
+}
+```
+
+Overriding must be explicitly denoted.
+
+The `final` keyword can be used to prevent subclass overriding on a particular method:
+
+``` scala
+class A extends B {
+  final override def method() { println "and that's final" }
+}
+```
+
+The `final` keyword can also be used to prevent subclassing of a particular class entirely:
+
+``` scala
+final class A extends B {
+  override def method() { println "final class" }
+}
+```
+
 [^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
 [^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
+
