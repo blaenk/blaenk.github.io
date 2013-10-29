@@ -142,7 +142,13 @@ This way, the sine and cosine "live" together, and a phase shift is a simple mul
 
 A complex exponential is:
 
-$$ e^{j \alpha} = cos\ \alpha + j\ sin\ \alpha $$
+$$ e^{j \alpha} = \underbrace {cos\ \alpha}_{\text {real}} + \underbrace {j\ sin\ \alpha}_{\text {imaginary}} $$
+
+Euler's formula is:
+
+$$ \cos \omega = \frac {e^{j \omega} + e^{-j \omega}} 2 $$
+
+The signal can be plotted in a 2D coordinate space where the x-axis corresponds to the imaginary component and the y-axis corresponds to the imaginary component. Think back to the unit circle, where the coordinates were (cos, sin).
 
 A point $\mathbf z$ on a complex plane can be rotated by angle $\alpha$:
 
@@ -372,7 +378,83 @@ The error is orthogonal to the approximation (**orthogonality principle**):
 
 $$ \vector {\mathbf {x - \hat x}} {\mathbf {\hat x}} = 0 $$
 
+# Fourier Basis
+
+We can claim that the set of $N$ signals in $\mathbb C^N$:
+
+$$ w_k[n] = e^{j \frac {2 \pi} N n k}, \quad n, k = 0, 1, \dots, N - 1 $$
+
+Where $k$ is the index of the signal and $n$ is the index of an element in the signal, is an orthogonal basis in $\mathbb C^N$.
+
+For example, in the set of $\mathbb C^{64}$, we can go up to $\mathbf w^{(32)}$ in which case the complex exponential as defined above comes out to $e^{j \pi}$. Any signal $k$ above this number can be related to the signal $j = 64 - k$, so that $k$ would have the same real component as $j$'s, it would also have the same imaginary component as $j$'s except it would have a sign inversion.
+
+To prove that this set is the basis of $\mathbb C^N$, we must show that the set is orthogonal:
+
+$$
+\begin{align}
+\vector {\mathbf w^{(k)}} {\mathbf w^{(h)}} &= \sum_{n = 0}^{N - 1} (e^{j \frac {2 \pi} N n k})^* e^{j \frac {2 \pi} N n h} \\
+&= \sum_{n = 0}^{N - 1} e^{j \frac {2 \pi} N (h - k) n} \\
+&= \begin{cases}
+      N & \text {for } h = k \\ \\
+      \frac {1 - e^{j 2 \pi (h - k)}} {1 - e^{j \frac {2 \pi} N (h - k)}} = 0 & \text {otherwise}
+    \end{cases}
+\end{align}
+$$
+
+# Discrete Fourier Transform
+
+We want to express a vector $\mathbf x \in \mathbb C^N$ in the Fourier basis, so we want to receive a list of coefficients $\mathrm X_k$ that go with the vectors of the Fourier basis $\mathbf w$. This is attained by simply performing the dot product of each Fourier basis vector $\mathbf w^{(k)}$ with $\mathbf x$. This is called the Discrete Fourier Transform (DFT):
+
+$$
+\mathrm X_k = \vector {\mathbf w^{(k)}} {\mathbf x} \\[10 pt]
+\text {or} \\ \\
+\mathrm X [k] = \sum_{n = 0}^{N - 1} x[n] e^{-j \frac {2 \pi} N n k}, \quad k = 0, 1, \dots, N - 1
+$$
+
+Given that analysis formula, we can create one that does the reverse: from Fourier basis back to $\mathbb C^N$. This is done by simply applying the coefficients $\mathrm X_k$ to each corresponding Fourier basis vector, taking the sum of these resulting vectors, and then applying the normalization factor:
+
+$$
+\mathbf x = \frac 1 N \sum_{k = 0}^{N - 1} \mathrm X_k \mathbf w^{(k)} \\[20pt]
+\text {or} \\ \\
+x[n] = \frac 1 N \sum_{k = 0}^{N - 1} \mathrm X [k] e^{j \frac {2 \pi} N n k}, \quad n = 0, 1, \dots, N - 1
+$$
+
+For example, we would like to compute the DFT for $x[n] = 3 \cos(2 \pi / 16n)$, where $x[n] \in \mathbb C^{64}$. To begin, we will express the signal in terms of the fundamental frequency $\omega = \frac {2 \pi} N = \frac {2 \pi} {64}$:
+
+$$
+\begin{align}
+x[n] &= 3 \cos \left( \frac {2 \pi} {16} n \right) \\
+&= 3 \cos \left( \frac {2 \pi} {64} 4n \right)
+\end{align}
+$$
+
+We can then use Euler's formula:
+
+$$
+\begin{align}
+&= \frac 3 2 \left[ e^{j \frac {2 \pi} {64} 4 n} + e^{-j \frac {2 \pi} {64} 4n} \right] \\
+&= \frac 3 2 \left[ e^{j \frac {2 \pi} {64} 4 n} + e^{j \frac {2 \pi} {64} 60n} \right] \\
+&= \frac 3 2 \left( w_4[n] + w_{60}[n] \right)
+\end{align}
+$$
+
+Now we can plug this signal into the analysis formula:
+
+$$
+\begin{align}
+\mathrm X [k] &= \langle {w_k[n]}, {x[n]} \rangle \\
+&= \langle {w_k[n]}, {\frac 3 2 \left( w_4[n] + w_{60}[n] \right)} \rangle \\
+&= \frac 3 2 \langle {w_k[n]}, {w_4[n]} \rangle + \frac 3 2 \langle {w_k[n]}, {w_{60}[n]} \rangle \\
+&= \begin{cases}
+      96 & \text {for } k = 4, 60 \\ \\
+      0 & \text {otherwise}
+    \end{cases}
+\end{align}
+$$
+
 # Resources
 
 * École Polytechnique Fédérale de Lausanne [Digital Signal Processing](https://www.coursera.org/course/dsp)
 * Rice [ELEC 301: Discrete Time Signals and Systems](https://www.edx.org/course/rice-university/elec301x/discrete-time-signals-and/1032)
+
+*[DFT]: Discrete Fourier Transform
