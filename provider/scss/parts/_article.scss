@@ -23,7 +23,7 @@ article{
 
           @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
             &:hover > span {
-              border-bottom: 2px solid #2A9AF9;
+              text-decoration: underline;
             }
           }
 		}
