@@ -1,7 +1,7 @@
 ---
 title: Lately
 published: 2012-12-28
-comments: true
+comments: off
 toc: off
 ---
 
