@@ -97,6 +97,13 @@ Once again in text:
 [someserver] λ ~/.dots (master) ➜ 
 ~~~
 
+**Update -- October 28, 2013**: I've actually done away with this component of the prompt. I didn't like how the lambda no longer aligned with the arrow symbol --- it created a sort of inconsistency. I've instead decided to add a pretty simple green `R` at the end of the current working path, to signify that I am on a "remote" machine, so it reads something like "currently on x path remotely."
+
+```
+λ ~/.dots R (master)
+➜
+```
+
 ### vi-Binds
 
 One thing that I can't live without now when using vi-bindings is binding `jj` to vi-mode. The default key for this is Escape, but Escape is [used for other hotkeys](http://unix.stackexchange.com/questions/23138/esc-key-causes-a-small-delay-in-terminal-due-to-its-alt-behavior) that the terminal (or shell?) intercepts. For this reason, a single keypress of Escape introduces a bit of lag, which I imagine is required to differentiate a hotkey (i.e. `Esc-C`) from a simple Escape keypress.
