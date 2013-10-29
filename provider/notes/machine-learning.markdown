@@ -862,11 +862,11 @@ $$ \growthfunc(N) \leq \underbrace {\upperbound}_{\text {maximum power is } N^{k
 To show that this holds, we can use it to determine the growth function $\growthfunc$ for:
 
 * $\mathcal H$ is **positive rays** (break point $k = 2$):
-    * $\growthfunc(N) = N + 1 \leq N + 1$
+    * $N + 1 \leq N + 1$
 * $\mathcal H$ is **positive intervals** (break point $k = 3$):
-    * $\growthfunc(N) = \frac 1 2 N^2 + \frac 1 2 N + 1 \leq \frac 1 2 N^2 + \frac 1 2 N + 1$
+    * $\frac 1 2 N^2 + \frac 1 2 N + 1 \leq \frac 1 2 N^2 + \frac 1 2 N + 1$
 * $\mathcal H$ is **2D perceptrons** (break point $k = 4$):
-    * $\growthfunc(N) = \text {?} \leq \frac 1 6 N^3 + \frac 5 6 N + 1$
+    * $\text {?} \leq \frac 1 6 N^3 + \frac 5 6 N + 1$
 
 ## Vapnik-Chervonenkis Inequality
 
@@ -892,7 +892,7 @@ With all of this in mind, the **Vapnik-Chervonenkis Inequality** is defined as:
 
 $$ P(|\insample(g) - \outsample(g)| \gt \epsilon) \leq 4 \growthfunc(2N) e^{-{\frac 1 8} \epsilon^2 N} $$
 
-The growth function is parameterized with $2N$ because we are now considering two samples.
+The growth function is parameterized with $2N$ because we are now considering two samples. This inequality more or less says that we are making a statement that is probably (RHS), approximately (LHS epsilon), correct.
 
 # VC Dimension
 
@@ -929,7 +929,7 @@ The only things that factor into this are the training examples, the hypothesis 
 
 We already know that $\vc = 3$ for $d = 2$ (2D). However, we would like to generalize this for any dimension. We will argue that $\vc = d + 1$. We prove this by showing that $\vc \leq d + 1$ and $\vc \geq d + 1$.
 
-To do this we will first construct a set of $N = d + 1$ points in $\mathbb R^d$ in such a way that they can be shattered by the perceptron.
+To do this we will first construct a set of $N = d + 1$ points in $\mathbb R^d$ in such a way that they can be shattered by the perceptron. We begin this by first setting the first element of every row vector to $1$ since it corresponds to $x_0$: the threshold weight which we have already established is always set to $1$. The rest of the rows are set so that they form an identity matrix which is easily invertible, which is a property that we will show to mean that every point can be shattered:
 
 $$
 \mathrm {X} = \begin{bmatrix}
@@ -968,4 +968,330 @@ The question is, can we find a vector $\mathbf w$ satisfying:
 
 $$ \text {sign}(\mathbf {Xw}) = \mathbf y $$
 
+We can do this by changing the requirement to be:
+
+$$ \mathbf {Xw} = \mathbf y $$
+
+This is valid because we're using a binary function.
+
+From here it's a straightforward process to finding the vector $\mathbf w$ by isolating it, made possible by multiplying both sides by the inverse of the feature matrix $\mathrm X$ --- we know it's invertible because we specifically constructed it to be:
+
+$$ \mathbf w = \mathbf {X^{-1}y} $$
+
+Since we were able to come up with $\mathbf w$, it means that we were able to shatter $d + 1$ points. More specifically, it means that we know for a fact that we can shatter _at least_ $d + 1$ points, but it's entirely possible that we can shatter more than that:
+
+$$ \vc \geq d + 1 $$
+
+Therefore, to prove that $\vc = d + 1$, we must now show that $\vc \leq d + 1$, since the combination of both of these proofs would prove that $\vc = d + 1$. To prove that $\vc \leq d + 1$, we must show that we **cannot** shatter _any_ set of $d + 2$ points.
+
+For any $d + 2$ points $\mathbf {x}_1, \dots, \mathbf {x}_{d + 1}, \mathbf {x}_{d + 2}$, it is obvious that there are more points than dimensions. This is because each feature vector $\mathbf x_i$ is a $d + 1$ vector. Since there are more vectors than dimensions, we know that the vectors are linearly dependent; one of the vectors $\mathbf x_j$ can be represented in terms of the other $\mathbf x_i$ vectors:
+
+$$ \mathbf x_j = \sum_{i \neq j} a_i \mathbf x_i $$
+
+It can be said that not all of the $a_i$ scalars are zeros, this follows from the fact that $x_0$ is always $1$.
+
+Now consider the specific dichotomy where the vectors in $\mathbf x_i$ with a non-zero $a_i$ get the value $y_i = \text {sign}(a_i)$, the vectors with zero-valued $a_i$ get the value $\pm 1$, and the vector $\mathbf x_j$ gets the value $y_i = -1$:
+
+$$
+\begin{align}
+y_i &= \text {sign}(\mathbf w^{\mathrm T} \mathbf x_i) =
+       \begin{cases}
+         \text {sign}(a_i) & \text {if } a_i \text { is non-zero} \\ \\
+         \pm 1 & \text {otherwise}
+       \end{cases} \\ \\
+y_j &= \text {sign}(\mathbf w^{\mathrm T} \mathbf x_j) = -1
+\end{align}
+$$
+
+We are going to argue that no perceptron can implement this dichotomy. Remember that $\mathbf x_j$ is the linear sum of the rest of the vectors $\mathbf x_i$, each scaled by a factor $a_i$. We now multiply them by a weight vector, in order to represent a perceptron:
+
+$$
+\mathbf x_j = \sum_{i \neq j} a_i \mathbf x_i\ \Longrightarrow\ \mathbf w^{\mathrm T} \mathbf x_j = \sum_{i \neq j} a_i \mathbf w^{\mathrm T} \mathbf x_i
+$$
+
+An observation to make is that if by definition of the dichotomy, $\text {sign}(\mathbf w^{\mathrm T} \mathbf x_i) = \text {sign}(a_i)$, then it means that the signs of both are the same. By extension, this means that their product will always be greater than zero:
+
+$$
+\begin{align}
+\text {if } &y_i = \text {sign}(\mathbf w^{\mathrm T} \mathbf x_i) = \text {sign}(a_i) \\
+\text {then } &a_i \mathbf w^{\mathrm T} \mathbf x_i \gt 0
+\end{align}
+$$
+
+This by extension means that the sum of the $\mathbf x_i$'s will also greater than zero:
+
+$$
+\mathbf w^{\mathrm T} \mathbf x_j = \sum_{i \neq j} a_i \mathbf w^{\mathrm T} \mathbf x_i > 0
+$$
+
+Therefore, since we defined $y_j = \text {sign}(\mathbf w^{\mathrm T} \mathbf x_j)$ in our dichotomy, the value of $y_j$ will always be:
+
+$$ y_j = \text {sign}(\mathbf w^{\mathrm T} \mathbf x_j) = +1 $$
+
+However, in our dichotomy we defined $y_j$ as being equal to $-1$:
+
+$$ y_j = \text {sign}(\mathbf w^{\mathrm T} \mathbf x_j) = -1 $$
+
+Therefore we cannot appropriately represent our dichotomy.
+
+Now we have proved that $\vc \leq d + 1$ and $\vc \geq d + 1$. Therefore:
+
+$$ \vc = d = 1 $$
+
+What is $d + 1$ in the perceptron? It is the number of parameters in the perceptron model: $w_0, w_1, \dots, w_d$. In essence, this means that when we have a higher number of parameters, we will have a higher $\vc$.
+
+## Interpretation {#vc-dimension-interpretation}
+
+The parameters in the weight vector correspond to degrees of freedom that allow us to create a specific hypothesis. The number of parameters correspond to **analog** degrees of freedom: varying any single parameter --- which is itself continuous --- yields an entirely new perceptron. The VC dimension translated these into **binary** degrees of freedom, since we're only trying to get a different dichotomy.
+
+This is important because it allows us to ascertain how expressive a model may be; how many different outputs we can actually get.
+
+There is a distinction between parameters and degrees of freedom. This is because parameters may not contribute degrees of freedom.
+
+For example, consider a 1D perceptron. This consists of a weight parameter and a threshold parameter, resulting in two degrees of freedom. This results in $\vc = d + 1 = 2$.
+
+Now consider the situation where the output of this model is fed as input into another perceptron, which is fed to another perceptron and so on, for a total of four linked perceptrons. This corresponds to $8$ parameters since each perceptron contains $2$. **However**, there are still only $2$ degrees of freedom because every perceptron after the first simply returns the input; they are redundant.
+
+For this reason, we can think of $\vc$ as measuring the **effective** number of parameters.
+
+## Minimum Sample Size
+
+Knowing all this, we would like to find a way to determine the number of training points needed to achieve a certain level of performance. The first realization is that merely having a finite VC dimension means it's even possible to learn. We should also remember that the VC inequality has two quantities that we would like to minimize: $\epsilon$ and $\delta$:
+
+$$ P(|\insample(g) - \outsample(g)| > \epsilon) \leq \underbrace {4 \growthfunc(2N) e^{- \frac 1 8 \epsilon^2 N}}_{\delta} $$
+
+What we would like to do is say that we want a particular $\epsilon$ and $\delta$. For example, we would like to be at most 10% away from $\outsample$ ($\epsilon = 10\% = 0.1$) and we want that statement to be correct at least 95% of the time ($\delta = 5\% = 0.05$). How many examples do we need to satisfy these constraints?
+
+The question is, how does $N$ depend on $\vc$? Consider a simplification of the RHS:
+
+$$ N^d e^{-N} $$
+
+An observation made from plotting the above for increasing values of $d$ with $N$ vs the logarithm of the probability shows that $N$ is proportional to $\vc$. A practical observation made by machine learning academics and practitioners is that the actual quantity we are trying to bound follows the same monotonicity as the actual bound, e.g. a bigger VC dimension yields bigger quantities, if not close to proportional. The higher the VC dimension, the more examples that are required.
+
+The **rule of thumb** is that for a large range of reasonable $\epsilon$ and $\delta$, and for a large range of practical applications, you need at least 10 times the VC dimension:
+
+$$ N \geq 10\ \vc $$
+
+## Generalization Bound
+
+We will now simplify the VC inequality. We'll begin by denoting the RHS as $\delta$:
+
+$$ P(|\insample(g) - \outsample(g)| > \epsilon) \leq \underbrace {4 \growthfunc(2N) e^{- \frac 1 8 \epsilon^2 N}}_{\delta} $$
+
+We want to get $\epsilon$ in terms of $\delta$, to allow us to state the reliability $\delta$ of the statement we would like to achieve, and have the equation output the tolerance $\epsilon$ that the statement can guarantee with that reliability constraint.
+
+$$
+\delta = 4 \growthfunc(2N) e^{- \frac 1 8 \epsilon^2 N}\ \Longrightarrow\ \epsilon = \underbrace {\sqrt {\frac 8 N \ln {\frac {4 \growthfunc(2N)} \delta}}}_{\Omega}
+$$
+
+This means that the probability that $\insample$ tracks $\outsample$ within $\Omega$ is at least $1 - \delta$:
+
+$$ P(|\outsample - \insample| \leq \Omega(N, \mathcal H, \delta)) \geq 1 - \delta $$
+
+The absolute value can be removed because $\insample$ is usually much smaller than $\outsample$, since $\insample$ is the value we minimize deliberately. The difference between $\outsample$ and $\insample$ is known as the **generalization error**:
+
+$$ P(\outsample - \insample \leq \Omega) \geq 1 - \delta $$
+
+This can then be rearranged and simplified further into the **generalization bound**:
+
+$$ P(\outsample \leq \insample + \Omega) \geq 1 - \delta $$
+
+The effect of the generalization bound is that it bounds the unknown value $\outsample$ by values we do know, namely $\insample$ and $\Omega$.
+
+# Bias-Variance Tradeoff
+
+We have noticed that there is a trade off between approximation and generalization. In other words, we want to minimize $\outsample$, such that we attain a good approximation of $f$ out of sample. The more complex the hypothesis set $\mathcal H$, the better chance we have of **approximating** $f$. However, the less complex of a hypothesis set $\mathcal H$, the better the chance of **generalizing** out of sample.
+
+$$
+\begin{align}
+\text {more complex } \mathcal H\ &\Longrightarrow\ \text {better chance of } \textbf {approximating }  f \\
+\text {less complex } \mathcal H\ &\Longrightarrow\ \text {better chance of } \textbf {generalizing } \text {out of sample}
+\end{align}
+$$
+
+We have already learned that VC analysis is one approach of decomposing $\outsample$:
+
+$$ \outsample \leq \insample + \Omega $$
+
+Bias-Variance analysis is another approach to decomposing $\outsample$, which does so into two components:
+
+* how well $\mathcal H$ can approximate $f$
+* how well we can zoom in on a good $h \in \mathcal H$
+
+Bias-Variance applies to **real-valued targets** and uses **squared error**.
+
+$$ \outsample(g^{(\mathcal D)}) = \mathbb E_{\mathrm x} \left[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \right] $$
+
+$g^{(\mathcal D)}$ refers to the fact that the hypothesis comes from the dataset $\mathcal D$.
+
+Given a budget of $N$ training examples, we want to generalize the above for any data set of size $N$:
+
+$$
+\begin{align}
+\mathbb E_{\mathcal D} \left[ \outsample(g^{(\mathcal D)}) \right] &= \mathbb E_{\mathcal D} \left[ \mathbb E_{\mathrm x} \left[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \right] \right] \\
+&= \mathbb E_{\mathrm x} \left[ \mathbb E_{\mathcal D} \left[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \right] \right]
+\end{align}
+$$
+
+We're only going to focus on the inner component of the RHS. We're going to consider the concept of an average hypothesis $\def \avghypo {\bar g} \avghypo$ so that:
+
+$$ \avghypo(\mathbf x) = \mathbb E_{\mathcal D} \left[ g^{(\mathcal D)}(\mathbf x) \right] $$
+
+The average hypothesis for a particular point $\mathbf x$, $\avghypo(\mathbf x)$, is equivalent to finding the hypothesis found from many different data sets, then averaging the result of each of those hypothesis on the point $\mathbf x$:
+
+$$
+\avghypo(\mathbf x) \approx \frac 1 K \sum_{k = 1}^K g^{(\mathcal D_k)}(\mathbf x)
+$$
+
+## Representation {#bias-variance-representation}
+
+We will now decompose the expected error into two components, bias and variance:
+
+$$
+\begin{align}
+\mathbb E_{\mathcal D} \Big[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \Big]
+&= \mathbb E_{\mathcal D} \left[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\mathbf x) + \bar g(\mathbf x) - f(\mathbf x))^2 \right] \\
+&= \mathbb E_{\mathcal D} \Big[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\mathbf x))^2 + (\bar g(\mathbf x) - f(\mathbf x))^2 \\
+&\phantom {= \mathbb E_{\mathcal D}} + 2\ (g^{(\mathcal D)}(\mathbf x) - \bar g(\mathbf x))\ (\bar g(\mathbf x) - f(\mathbf x)) \Big] \\
+&= \mathbb E_{\mathcal D} \left[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\mathbf x))^2 \right] + (\bar g(\mathbf x) - f(\mathbf x))^2
+\end{align}
+$$
+
+The result is an equation that says that the expected error $\mathbb E_{\mathcal D}$ for a particular data set $\mathcal D$ given the hypothesis $g^{(\mathcal D)}(\mathbf x)$ resulting from that given data set is measured against the actual target function $f(\mathbf x)$, and that error measure **is equivalent** to the **variance** --- the expected error of the hypothesis $g^{(\mathcal D)}(\mathbf x)$ measured against the average hypothesis $\bar g(\mathbf x)$ --- **plus** the **bias** --- the error measure of the average hypothesis $\bar g(\mathbf x)$ against the target function $f(\mathbf x)$:
+
+$$
+\def \bias {\textbf {bias} (\mathbf x)}
+\def \var {\textbf {var} (\mathbf x)}
+\mathbb E_{\mathcal D} \Big[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \Big] = \underbrace {\mathbb E_{\mathcal D} \left[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\mathbf x))^2 \right]}_{\var} + \underbrace {\vphantom {\Big[} (\bar g(\mathbf x) - f(\mathbf x))^2}_{\bias}
+$$
+
+Both the bias and the variance in the above equation are as measured from a particular point $\mathbf x$. The bias essentially represents the bias of the hypothesis set $\mathcal H$ away from the target function. The variance is essentially measuring the effect of the finite data set, where each finite data set will vary in its result. Therefore:
+
+$$
+\begin{align}
+\mathbb E_{\mathcal D} \left[ \outsample(g^{(\mathcal D)}) \right] &= \mathbb E_{\mathrm x} \left[ \mathbb E_{\mathcal D} \left[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \right] \right] \\
+&= \mathbb E_{\mathrm x} \Big[ \bias + \var \Big] \\
+&= \textbf {bias} + \textbf {var}
+\end{align}
+$$
+
+## Tradeoff
+
+There is a trade off between the bias and the variance:
+
+$$
+\textbf {bias} = \mathbb E_{\mathrm x} \Big[ (\bar g(\mathbf x) - f(\mathbf x))^2 \Big] \qquad \textbf {var} = \mathbb E_{\mathrm x} \Big[ \mathbb E_{\mathcal D} \Big[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\mathbf x))^2 \Big] \Big]
+$$
+
+If we go from a small hypothesis to a bigger one, the bias goes down but the variance goes up:
+
+$$ \mathcal H \uparrow\colon \qquad \textbf {bias} \downarrow \qquad \textbf {variance} \uparrow $$
+
+We will now use an example to prove that this is true. Given a target function that is a sinusoid:
+
+$$ f\colon [-1, 1] \to \mathbb R \qquad f(x) = \sin(\pi x) $$
+
+We are only given two examples $N = 2$. There are two hypothesis sets, one is a constant model and the other one is linear, and we would like to see which one is better:
+
+$$
+\begin{align}
+&\mathcal H_0 \colon \quad h(x) = b \\
+&\mathcal H_1 \colon \quad h(x) = ax + b
+\end{align}
+$$
+
+We will now see which one fares better by approximating what we think would be the best hypothesis from each set. In the case of the constant model, we would choose the line at $y = 0$ to minimize the MSE. The linear model would use a line that also tries to minimize the MSE. The following is the $\outsample$ for both:
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/bias-variance-tradeoff/constant-model.png">
+  <img src="/images/machine-learning/bias-variance-tradeoff/linear-model.png">
+</div>
+
+It's clear that from approximation, $\mathcal H_1$ seems to be better. We will now see which one fares better through machine learning. For example, for these particular two points we get the following result:
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/bias-variance-tradeoff/learning-constant-model.png">
+  <img src="/images/machine-learning/bias-variance-tradeoff/learning-linear-model.png">
+</div>
+
+The problem is that these results depend on the two points that we were given, so it complicates the task of comparing the two hypothesis sets. This is why we need bias-variance analysis, it gives us the expected error _with respect to_ the choice of the data set.
+
+If we were derive a hypothesis from any two points, for a large number of different two points, we would come up with something like the left image, where every line represents a derived hypothesis. It therefore stands to reason that the average hypothesis would fall somewhere near $y = 0$ --- the midpoint of the range of possible hypotheses. The error measure of the average hypothesis against the target function is the **bias**, and the **variance** is represented by the gray region which corresponds to the standard deviation of the possible hypotheses. It's apparent that this model has a **high bias** ($0.5$) and a **low variance** ($0.25$):
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/bias-variance-tradeoff/multiple-hypotheses.png">
+  <img src="/images/machine-learning/bias-variance-tradeoff/average-hypothesis.png">
+</div>
+
+The same is slightly more complicated with the second hypothesis $\mathcal H_1$ because of its linear model, which yields very different hypotheses --- that is, **high variance** ($1.69$). There is **low bias** ($0.21$) however, because it has many different hypotheses to average from:
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/bias-variance-tradeoff/linear-multiple-hypotheses.png">
+  <img src="/images/machine-learning/bias-variance-tradeoff/linear-average-hypothesis.png">
+</div>
+
+It's clear that when the two components are summed for both models, the expected error of the first hypothesis set $\mathcal H_0$ is much lower than $\mathcal H_1$'s.
+
+The **conclusion** from this example is that we are matching the **model complexity** to the **data resources**, not to the **target complexity**.
+
+## Learning Curves
+
+A learning curve plots the expected value of $\outsample$ and $\insample$ as a function of $N$. For a data set of size $N$, how does the expected $\outsample$ and expected $\insample$ vary with $N$?
+
+The following images are learning curves for a simple and complex model. The simple model shows that $\outsample$ decreases with the $N$, but so does $\insample$ --- which can be attributed to exceeding the degrees of freedom available in the hypothesis set. The second model has so many degrees of freedom that it can fit the training set perfectly until the part where the blue curve appears on the left side, however, $\outsample$ is very high before that point --- this corresponds to not learning anything; just memorizing the examples. Therefore if there are very few examples, then it's clear that the simple model would fare better. This is why we want to match the model's complexity to the data resources that we have.
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/bias-variance-tradeoff/simple-learning-curve.png">
+  <img src="/images/machine-learning/bias-variance-tradeoff/complex-learning-curve.png">
+</div>
+
+The following is a comparison of the learning curves for a given model using VC analysis and bias-variance analysis. In the VC analysis curve on the left, the blue region is $\insample$ and the red region is $\Omega$ --- what happens within the generalization bound. In the Bias-Variance curve, the black bar is the approximation. Everything below the approximation is the bias, so everything else under the $\outsample$ curve must be the variance. Both curves are talking about approximations. The Bias-Variance curve is concerning over-all approximation, whereas the VC analysis curve is concerning in-sample approximation.
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/bias-variance-tradeoff/vc-learning-curve.png">
+  <img src="/images/machine-learning/bias-variance-tradeoff/bias-variance-learning-curve.png">
+</div>
+
+## Analysis of Linear Regression
+
+Given a data set $\mathcal D = \{ (\mathbf x_1, y_1), \dots, (\mathbf x_n, y_n)\}$ and a noisy target function:
+
+$$y = \mathbf w^{* \mathrm T} \mathbf x + \text {noise}$$
+
+The linear regression solution is:
+
+$$ \mathbf w = \left( \mathrm {X}^{\mathrm {T}} \mathrm {X} \right)^{-1} \mathrm {X}^{\mathrm {T}} \mathbf y $$
+
+The in-sample error vector would be:
+
+$$ \mathrm X \mathbf w - \mathbf y $$
+
+The 'out-of-sample' error vector would be calculated by generating a new set of points from the same inputs but with different noise and would therefore be:
+
+$$ \mathrm X \mathbf w - \mathbf y' $$
+
+This yields the following analysis learning curve. Up until $d + 1$ data points, the data was being fit perfectly. The best approximation error, the variance of the noise, is denoted by $\sigma^2$.
+
+<img src="/images/machine-learning/bias-variance-tradeoff/linear-regression-learning-curve.png" class="center">
+
+We can observe the following characteristics:
+
+$$
+\begin{align}
+\text {best approximation error} &= \sigma^2 \vphantom {\left(1 - \frac {d + 1} N \right)} \\
+\text {expected in-sample error} &= \sigma^2 \left(1 - \frac {d + 1} N \right) \\
+\text {expected out-of-sample error} &= \sigma^2 \left(1 + \frac {d + 1} N\right) \\
+\text {expected generalization error} &= 2 \sigma^2 \left(\frac {d + 1} N\right)
+\end{align}
+$$
+
+# Resources
+
+* [Cambridge Information Theory](http://videolectures.net/course_information_theory_pattern_recognition/)
+* [Mathematical Monk](http://www.youtube.com/user/mathematicalmonk/videos?flow=grid&view=1)
+
 *[VC]: Vapnik-Chervonenkis
+*[MSE]: Mean-Squared Error
+*[RHS]: Right-Hand Side
+*[LHS]: Left-Hand Side
+
