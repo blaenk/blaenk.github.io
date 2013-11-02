@@ -1532,6 +1532,17 @@ $$
 \Delta \mathbf w = - \eta \frac {\nabla \insample(\mathbf w(0))} {\lVert \nabla \insample(\mathbf w(0)) \rVert} \lVert \nabla \insample(\mathbf w(0)) \rVert = - \eta \nabla \insample(\mathbf w(0))
 $$
 
+Now that we have all of the pieces we can construct the learning algorithm:
+
+1. initialize the weights at $t = 0$ to $\weight(0)$
+2. for $t = 0, 1, 2, \dots$ do
+    1. compute the gradient
+    $$ \nabla \insample = - \frac 1 N \sum_{n = 1}^N \frac {y_n \feature_n} {1 + e^{y_n \weightT(t) \feature_n}} $$
+
+    2. update the weights: $\weight(t + 1) = \weight(t) - \eta \nabla \insample$
+    3. repeat until it is time to stop
+3. return the final weights $\weight$
+
 # Resources
 
 * [Cambridge Information Theory](http://videolectures.net/course_information_theory_pattern_recognition/)
