@@ -1543,11 +1543,20 @@ Now that we have all of the pieces we can construct the learning algorithm:
     3. repeat until it is time to stop
 3. return the final weights $\weight$
 
+To recap the three linear models we've learned so far, here is a table for their possible uses within the context of credit analysis:
+
+task                   model               error measure        algorithm
+-----                  ------              --------------       ----------
+approve or deny        perceptron          classification error PLA, Pocket, ...
+amount of credit       linear regression   squared error        pseudo-inverse
+probability of default logistic regression cross-entropy error  gradient descent
+
 # Resources
 
 * [Cambridge Information Theory](http://videolectures.net/course_information_theory_pattern_recognition/)
 * [Mathematical Monk](http://www.youtube.com/user/mathematicalmonk/videos?flow=grid&view=1)
 
+*[PLA]: Perceptron Learning Algorithm
 *[VC]: Vapnik-Chervonenkis
 *[MSE]: Mean-Squared Error
 *[RHS]: Right-Hand Side
