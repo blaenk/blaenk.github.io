@@ -316,6 +316,29 @@ final class A extends B {
 }
 ```
 
+# Hierarchy
+
+Every class is a direct or indirect subclass of `Any`, which defines a variety of "universal methods" available to all subclasses. The `==` method is final and simply calls `equals`, which is the method that subclasses should override.
+
+`Any` has two direct subclasses. `AnyVal` is the parent class of every built-in value class in Scala: `Byte`, `Short`, `Char`, `Int`, `Long`, `Float`, `Double`, `Boolean`, and `Unit`. These can't be instantiated with `new` because they are defined as final and abstract. `AnyRef` is the base class of all reference classes, it's just an alias for `java.lang.Object`.
+
+There are two "bottom" types, which are subclasses of every kind of type. `Null` is the type of the `null` reference and it inherits from any class that inherits from `AnyRef`. `Nothing` is a type that simply signifies abnormal termination. For example, the `error` function is of type `Nothing`. Since it's a subclass of any class, the `error` function can be called from within any other function regardless of its type.
+
+# Traits
+
+Traits encapsulate methods and fields which can be mixed into other classes [^ruby_mixins]. Traits are defined as:
+
+``` scala
+trait SomeTrait {
+  def someMethod() {
+    println("printing")
+  }
+}
+```
+
+Traits can be mixed in using either the `extends` or `with` keywords, multiple mixins are simply chained using `with`. They also defined types, so a value of a certain trait type can be set to any object whose class mixes-in the particular trait.
+
 [^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
 [^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
+[^ruby_mixins]: Reminds me of Ruby's modules that can be included
 
