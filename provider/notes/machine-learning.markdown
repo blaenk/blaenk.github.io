@@ -45,46 +45,53 @@ Together, $\cal A$ and $\cal H$ are known as the **learning model**.
 
 ### Model {#perceptron-model}
 
-Given input $x = (x_1, x_2, \dots, x_n)$:
+Given input $\def \feature {\mathbf x} \feature = (x_1, x_2, \dots, x_n)$:
 
 $$
 \begin{align}
-approve &\colon \sum_{i=1}^{d} w_i x_i > threshold \\
-deny    &\colon \sum_{i=1}^{d} w_i x_i < threshold
+\text {approve} &\colon \sum_{i=1}^{d} w_i x_i > \text {threshold} \\
+\text {deny}    &\colon \sum_{i=1}^{d} w_i x_i < \text {threshold}
 \end{align}
 $$
 
 This can be expressed as a linear formula $h \in \cal H$:
 
-$$ h(x) = sign \left( \left( \sum_{i=1}^{d} w_i x_i \right) - threshold \right) $$
+$$
+\newcommand{sign}{\operatorname{sign}}
+h(x) = \sign \left( \left( \sum_{i=1}^{d} w_i x_i \right) - \text {threshold} \right)
+$$
 
 The factors that are varied to determine the hypothesis function are the weights and threshold.
 
 The threshold can be represented as a weight $w_0$ if an artificial constant $x_0$ is added to the feature vector where $x_0 = 1$. This simplifies the formula to:
 
-$$ h(x) = sign \left( \sum_{i=0}^{d} w_i x_i \right) $$
+$$ h(x) = \sign \left( \sum_{i=0}^{d} w_i x_i \right) $$
 
 This operation is the same as the dot product of the two vectors:
 
-$$ h(x) = sign(w \bullet x) $$
+$$
+\def \weight {\mathbf w}
+\def \weightT {\weight^\intercal}
+h(x) = \sign(\weight \bullet \feature)
+$$
 
 ### Learning Algorithm {#perceptron-learning-algorithm}
 
 **Given the perceptron**:
 
-$$ h(x) = sign(w \bullet x) $$
+$$ h(x) = \sign(\weight \bullet \feature) $$
 
 **Given the training set**:
 
-$$x = (x_1, x_2, \dots, x_n)$$
+$$\feature = (x_1, x_2, \dots, x_n)$$
 
 **Pick a misclassified point**. A point is misclassified if the perceptron's output doesn't match the recorded data's output given an input vector:
 
-$$ sign(w \bullet x_n) \not= y_n $$
+$$ \sign(w \bullet x_n) \not= y_n $$
 
 **Update the weight vector**: The algorithm must correct for this by updating the weight vector.
 
-$$ w' \gets w + y_n x_n $$
+$$ \weight' \gets \weight + y_n x_n $$
 
 Visualizing $\vec w$ and $\vec x$, it's apparent that the perceptron is equivalent to the dot product, which is equivalent to $\cos \theta$ where $\theta$ is the angle between $\vec w$ and $\vec x$. Given this, $\vec w$ is updated depending on what the intended result $y_n$ is.
 
@@ -213,8 +220,8 @@ This can be written in terms of $\vec {w}$:
 
 $$
 \begin{align}
-\insample(\mathbf w) &= \frac {1} {N} \sum_{n = 1}^N (\mathbf {w}^{\mathrm {T}} \mathbf {x}_n - y_n)^2 \\
-                  &= \frac {1} {N} \sum_{n = 1}^N (\mathbf {w} \bullet \mathbf {x}_n - y_n)^2
+\insample(\weight) &= \frac {1} {N} \sum_{n = 1}^N (\weightT \mathbf {x}_n - y_n)^2 \\
+                  &= \frac {1} {N} \sum_{n = 1}^N (\weight \bullet \mathbf {x}_n - y_n)^2
 \end{align}
 $$
 
@@ -243,7 +250,7 @@ Since the goal is to minimize the in-sample error $\insample$, and $\mathrm {X}$
 $$
 \begin{align}
 &\phantom {\nabla} \insample(w) = \frac {1} {N} \| \mathrm {X} \mathbf {w} - \mathbf {y} \|^2 \\
-&\nabla \insample(w) = \frac {2} {N} \mathrm {X}^{\mathrm {T}} \left( \mathrm {X} \mathbf {w} - \mathbf {y} \right)^2 = 0 \\
+&\nabla \insample(w) = \frac {2} {N} \mathrm {X}^{\mathrm {T}} \left( \mathrm {X} \mathbf {w} - \mathbf {y} \right) = 0 \\
 \end{align}
 $$
 
@@ -1187,6 +1194,12 @@ If we go from a small hypothesis to a bigger one, the bias goes down but the var
 
 $$ \mathcal H \uparrow\colon \qquad \textbf {bias} \downarrow \qquad \textbf {variance} \uparrow $$
 
+We can now formulate the relations between the hypothesis for a given dataset $\mathcal D$ known as $g^{(\mathcal D)}(\mathbf x)$, the average hypothesis $\bar g(\mathbf x)$, and the target function $f(\mathbf x)$:
+
+$$
+g^{(\mathcal D)}(\mathbf x)\ \xrightarrow[\text {variance}]{}\ \bar g(\mathbf x)\ \xrightarrow[\text {bias}]{}\ f(\mathbf x)
+$$
+
 We will now use an example to prove that this is true. Given a target function that is a sinusoid:
 
 $$ f\colon [-1, 1] \to \mathbb R \qquad f(x) = \sin(\pi x) $$
@@ -1285,6 +1298,240 @@ $$
 \end{align}
 $$
 
+# Linear Model II
+
+## Non-Linear Transformations II
+
+To recap, a transformation $\Phi$ transforms the input vector $\mathbf x$ to the feature space, resulting in a feature vector $\mathbf z$, where every element $z_i$ is the result of performing a non-linear transformation $\phi_i$ on the _entire_ input vector. Therefore, $\mathbf z$ can be of different size --- often longer --- than the input vector $\mathbf x$:
+
+$$
+\begin{align}
+\mathrm {x} = (x_0, x_1, \dots, x_d)\ \xrightarrow{\Phi}\ &\mathrm {z} = (z_0, z_1, \dots \dots, z_{\tilde d}) \\
+&\text {each } z_i = \phi_i(\mathbf x) \\
+&\mathbf z = \Phi(\mathbf x) \\
+\text {e.g. } &\mathbf z = (1, x_1, x_2, x_1 x_2, x_1^2, x_2^2)
+\end{align}
+$$
+
+It's important to remember that the final hypothesis $g(\mathbf x)$ will always be in the $\mathcal X$-space; the $\mathcal Z$-space is transparent to the user.
+
+$$ g(\mathbf x) = \text {sign}(\tilde w^{\mathrm T} \Phi(\mathbf x)) \qquad \text {or} \qquad \tilde w^{\mathrm T} \Phi(\mathbf x) $$
+
+What is the price paid in using a non-linear transformation? Well it has been established that the VC dimension of a $d + 1$ sized input vector is $d + 1$, therefore the feature vector $\mathbf z$, whose size is $\tilde d + 1$, will have a VC dimension of at most $\tilde d + 1$, where $\tilde d$ is generally larger than $d$. It's "at most" because the VC dimension is always measured in the $\mathcal X$-space, and this is the $\mathcal Z$-space. While this means that we will be able to better fit the data, we won't have much of a chance of generalization.
+
+For example considering the following **case 1** where there are two outliers in the data set. If we want to really fit the data, we could use a 4^th^ order surface in order to completely classify the data in the set. However, this increase in complexity would mean that it'd be very difficult to generalize. Sometimes it's best to accept that there will be an $\insample > 0$.
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/linear-model-ii/non-linear-case-1.png">
+  <img src="/images/machine-learning/linear-model-ii/non-linear-case-1-transformed.png">
+</div>
+
+Now consider **case 2**, where we don't stand a chance using a linear model to fit the data, which clearly falls inside a circular region:
+
+<img src="/images/machine-learning/linear-model-ii/non-linear-case-2.png" class="center">
+
+In this case, we can use a non-linear transformation to map the data to a general 2^nd^ order surface as follows:
+
+$$ \mathbf x = (1, x_1, x_2)\ \xrightarrow{\Phi}\ \mathbf z = (1, x_1, x_2, x_1 x_2, x_1^2, x_2^2) $$
+
+Note that with $\mathbf x$ we were only using three weights, however in $\mathbf z$ we are using six weights. This effectively translates to now requiring twice as many examples to achieve the same level of performance. So a natural conclusion is to try to find a way to avoid paying this increase in cost.
+
+First let's consider the following alternative model, since it seems we only need $x_1^2$ and $x_2^2$ to represent the circle. Now we only have three weights again, the same as with the linear model represented by $\mathbf x$:
+
+$$ \mathbf z = (1, x_1^2, x_2^2) $$
+
+We reduce the cost further by adopting the following model, which does away with representing the independence of $x_1^2$ and $x_2^2$, as they simply represent the radius:
+
+$$ \mathbf z = (1, x_1^2 + x_2^2) $$
+
+Now consider the extreme case, where we completely reduce to a single parameter --- completely doing away with the threshold weight:
+
+$$ \mathbf z = (x_1^2 + x_2^2 - 0.6) $$
+
+The problem with these reductions is that the guarantee of the VC inequality is forfeited if we look at the data. We can consider the concept of us simplifying the model for the machine as performing a hierarchical learning process, where we the human do some learning, and then pass the result for the machine to finish the learning process. From this perspective, it's apparent that the VC dimension resulting from this process is that of the entire hypothesis space that we as the human considered during the simplification process.
+
+The bottom line is that **looking at the data _before_ choosing the model can be hazardous to your** $\outsample$. The act of looking at the data before choosing the model is one of the many mistakes that fall under **data snooping**.
+
+## Logistic Regression
+
+We're already familiar with two linear models. The first is **linear classification** which classifies data points based on what side of a hyperplane they're on. The second is **linear regression**, which makes it straightforward to predict a regression, and is computed by skipping the last step of linear classification, the part where it determines the sign of the result.
+
+A third model called **logistic regression** can predict the probability of an event occurring, and is defined as:
+
+$$ h(\mathbf x) = \theta(s) $$
+
+Where $s$ is simply the dot product of the weight and feature vectors as is done in the other two linear models, and $\theta$ is a non-linear function that is often called a **sigmoid**, and looks something like this:
+
+<img src="/images/machine-learning/linear-model-ii/sigmoid.png" class="center">
+
+In our particular case, the formula we're going to use is:
+
+$$ \theta(s) = \frac {e^s} {1 + e^s} $$
+
+This kind of function is also called a "soft threshold," since it's a gradual increase rather than a hard increase as in linear classification. It is in this way that this kind of function expresses uncertainty.
+
+Given this functions' bounds $(0, 1)$ and the fact that it's a "soft threshold," it's clear that it can be interpreted as a probability. For example, when predicting heart attacks, we want to predict whether there's a small or big risk in having a heart attack anytime soon. If we used a binary function as in linear classification, it would be too hard of a threshold and thus wouldn't really convey as much meaningful information, since it isn't clear exactly which things definitely cause heart attacks.
+
+On the other hand, with a logistic regression model, we could predict the probability of having a heart attack in the next 12 months. In this context, the dot product between the weight and feature vector can be considered a "risk score," which can give one a general idea of the result but which must still be passed through the logistic function in order to determine the probability.
+
+A key point is that this probability is considered as a genuine probability. That is, not only does the logistic function have bounds of $(0, 1)$, but that the examples also have a probabilistic interpretation. For example, the input data consists of feature vectors and binary results. It's clear that there is some sort of probability embedded in yielding the binary results, but it is unknown to us. Therefore it can be said that the binary result is generated by a noisy target:
+
+$$
+P(y \mid \mathbf x) = \begin{cases}
+                        f(\mathbf x) & \text {for } y = +1; \\ \\
+                        1 - f(\mathbf x) & \text {for } y = -1.
+                      \end{cases}
+$$
+
+So the target $f$ is:
+
+$$ f\colon \mathbb R^d \to [0, 1] \text { is the probability} $$
+
+And we want to learn $g$:
+
+$$ g(\mathbf x) = \theta(\mathbf w^{\mathrm T} \mathbf x) \approx f(\mathbf x) $$
+
+### Error Measure {#linear-regression-error-measure}
+
+We have established that for each data point $(\mathbf x, y)$, $y$ is generated by the probability $f(\mathbf x)$. The plausible error measure is based on **likelihood**, that is, we are going to grade different hypotheses according tot he likelihood that they are actually the target that generated the data. In other words, we are going to assume that a given hypothesis is indeed the target function, and then we will determine how likely it is to get a result from its corresponding feature vector. Expressed mathematically:
+
+$$
+P(y \mid \mathbf x) = \begin{cases}
+                        h(\mathbf x) & \text {for } y = +1; \\ \\
+                        1 - h(\mathbf x) & \text {for } y = -1.
+                      \end{cases}
+$$
+
+Now substitute $h(\mathbf x)$ with $\theta(\weightT \feature)$, while noting that $\theta(-s) = 1 - \theta(s)$, since:
+
+$$
+\begin{align}
+\theta(-s) &= \frac {e^{-s}} {1 + e^{-s}} \\
+&= \frac {\frac 1 {e^s}} {1 + \frac 1 {e^s}} \\
+&= \frac 1 {e^s} * \frac 1 {1 + \frac 1 {e^s}} \\
+&= \frac 1 {e^s + 1} \\
+1 - \theta(s) &= 1 - \frac {e^s} {1 + e^s} \\
+&= \frac {1 + {e^s}} {1 + {e^s}} - \frac {e^s} {1 + e^s} \\
+&= \frac 1 {1 + e^s}
+\end{align}
+$$
+
+So now we can simplify the probability to:
+
+$$ P(y \mid \feature) = \theta(y \weightT \feature) $$
+
+Now we can determine the likelihood of the entire data set $\mathcal D = (\feature_1, y1), \dots, (\feature_N, y_N)$ is:
+
+$$
+\prod_{n = 1}^N P(y_n \mid \feature_n) =
+\prod_{n = 1}^N \theta(y_n \weightT \feature_n)
+$$
+
+It's noteworthy to observe that the same weight vector is being used for each of those products, so that if it's varied to better fit one data point, it might no longer fit another. Therefore, whatever maximizes this product would represent the likelihood that the weight vector is representing the underlying probability distribution.
+
+So now we want to see how to maximize the likelihood with respect to $\weight$. This corresponds to minimizing the error:
+
+$$
+\begin{align}
+&\phantom {=} \frac 1 N \ln \left( \prod_{n = 1}^N \theta(y_n \weightT \feature_n) \right) \\
+&= \frac 1 N \sum_{n = 1}^N \ln \left( \frac 1 {\theta(y_n \weightT \feature_n)} \right), \qquad \theta(s) = \frac {e^{-s} \left(e^s\right)} {e^{-s} \left(e^s + 1\right)} = \frac 1 {1 + e^{-s}} \\
+\insample(\weight) &= \frac 1 N \sum_{n = 1}^N \underbrace {\ln \left( 1 + e^{-y_n \weightT \feature_n} \right)}_{e\left( h(\feature_n), y_n \right) \rlap {\text {, the cross-entropy error}}}
+\end{align}
+$$
+
+### Learning Algorithm {#linear-regression-learning-algorithm}
+
+Now that we have the learning model and error measure we can define the learning algorithm. Compared to the closed-form solution from the other two models, we will have to use an iterative solution called **gradient descent**, which is a general method for non-linear optimization.
+
+Gradient descent starts at a point on the error function and iteratively takes steps along the steepest slope towards the minimum. So we'll have a direction unit vector $\hat v$ pointed in the direction of the steepest slope and a fixed step size $\eta$ which we will define as being small since we want to approximate the surface using the first order expansion of the Taylor series --- the linear approximation --- which works best when the distance between the two points is small. With this in mind, the new position after a step can be expressed as:
+
+$$ \weight(1) = \weight(0) + \eta \hat v $$
+
+To derive the direction unit vector $\hat v$, we first observe that the change in the value of the error is simply the difference between the error at the new point and the error at the original point:
+
+$$
+\Delta \insample = \insample(\mathbf w(0) + \eta \hat v) - \insample(\mathbf w(0))
+$$
+
+Remembering that the Taylor series is defined as:
+
+$$ \sum_{n = 0}^\infty \frac {f^{(n)}(a)} {n!} (x - a)^n $$
+
+Then the first-order approximation is defined as $n = 1$ so that the series is:
+
+$$ f(x) = f(a) + \frac {f'(a)} {1!} (x - a) + R_2 $$
+
+If we drop the remainder term $R_2$, then we are left with the linear approximation:
+
+$$ f(x) \approx f(a) + f'(a)(x - a) $$
+
+Therefore, for $f(x + a)$ it is defined as:
+
+$$
+\begin{align}
+f(a + x) &\approx f(a) + f'(a)x \\
+f'(a)x   &\approx f(a + x) - f(a)
+\end{align}
+$$
+
+This representation of the linear approximation is similar to our definition of the change in the value of the error between the two positions:
+
+$$
+\Delta \insample = \insample(\mathbf w(0) + \eta \hat v) - \insample(\mathbf w(0))
+$$
+
+However, we don't want to use the linear approximation just yet. There's another concept known as the [gradient](http://en.wikipedia.org/wiki/Gradient) which basically defines a vector field so that at any given point in the space, a vector is available at that point which points in the direction of the "steepest ascent." The gradient is simply defined as the vector of all of the possible partial derivatives. For example, given a function:
+
+$$ f(x, y, z) = 2x + 3y^2 - \sin(z) $$
+
+The gradient is denoted by the $\nabla$ symbol and is defined as:
+
+$$
+\begin{align}
+\nabla f &= \frac {\partial f} {\partial x} \hat i + \frac {\partial f} {\partial y} \hat j + \frac {\partial f} {\partial z} \hat k \\
+&= 2 \hat i + 6y \hat j - \cos(z) \hat k \\
+&= \begin{bmatrix} 2 & 6y & -\cos(z) \end{bmatrix}
+\end{align}
+$$
+
+It's obvious how the gradient can be useful here. It provides us with a way to determine --- at any point on the surface --- in what direction to move to go deeper towards the minimum. This is possible by finding the gradient vector --- which points in the direction of the "steepest ascent" --- and negate it so that it then points in the direction of the "steepest descent". This is clearly useful, and fortunately there is a similar linear approximation to a vector-taking function [for a gradient](http://en.wikipedia.org/wiki/Gradient#Linear_approximation_to_a_function):
+
+$$ f(\mathbf x) \approx f(\mathbf x_0) + \nabla f(\mathbf x_0) (\mathbf x - \mathbf x_0) $$
+
+This means that for $f(\mathbf x + \mathbf x_0)$:
+
+$$
+\begin{align}
+f(\mathbf x + \mathbf x_0) &\approx f(\mathbf x_0) + \nabla f(\mathbf x_0) \cdot (\mathbf x - \mathbf x_0) \\
+\nabla f(\mathbf x_0) \cdot \mathbf x &\approx f(\mathbf x + \mathbf x_0) - f(\mathbf x_0) \\
+\nabla f(\mathbf x_0)^{\mathrm T} \mathbf x &\approx f(\mathbf x + \mathbf x_0) - f(\mathbf x_0) \\
+\end{align}
+$$
+
+
+So we can replace the RHS with the dot product of the gradient and the unit vector $\hat v$ [^gradient_question]:
+
+$$
+\begin{align}
+\Delta \insample &= \insample(\mathbf w(0) + \eta \hat v) - \insample(\mathbf w(0)) \\
+&= \eta \nabla \insample(\mathbf w(0))^{\mathrm T} \hat v
+\end{align}
+$$
+
+Since we know that $\hat v$ is a unit vector, we know that regardless of the value of $\hat v$, the inner product between $\nabla \insample(\mathbf w(0))$ and $\hat v$ cannot exceed the norm $\lVert \nabla \insample(\mathbf w(0)) \rVert$, be it in the positive or negative direction. Therefore we can guarantee that $\Delta \insample$ must be greater than or equal to the negative norm:
+
+$$ \Delta \insample \geq -\eta \lVert \nabla \insample(\mathbf w(0)) \rVert $$
+
+We would therefore like to choose $\hat v$ that is closest to this lower bound, since we want to minimize the error, and a negative change in error corresponds to a big decrease in error, and therefore descending rapidly. Since $\hat v$ is by definition a unit vector, we can simply take the gradient itself and divide it by its norm to normalize it, then negate it to flip from ascent to descent.
+
+$$ \hat v = - \eta \frac {\nabla \insample(\mathbf w(0))} {\lVert \nabla \insample(\mathbf w(0)) \rVert} $$
+
+The above implies a fixed step. We could instead adopt a step distance based on the slope of the current position, easily accomplished by scaling the direction vector $\hat v$ by the norm of the gradient at the current position. This allows the algorithm to take bigger steps in steeper locations, and take smaller steps once it begins to near the minimum. In this case, $\eta$ now refers to the "learning rate":
+
+$$
+\Delta \mathbf w = - \eta \frac {\nabla \insample(\mathbf w(0))} {\lVert \nabla \insample(\mathbf w(0)) \rVert} \lVert \nabla \insample(\mathbf w(0)) \rVert = - \eta \nabla \insample(\mathbf w(0))
+$$
+
 # Resources
 
 * [Cambridge Information Theory](http://videolectures.net/course_information_theory_pattern_recognition/)
@@ -1295,3 +1542,4 @@ $$
 *[RHS]: Right-Hand Side
 *[LHS]: Left-Hand Side
 
+[^gradient_question]: [How is the gradient derived here? --- Math.StackExchange](http://math.stackexchange.com/questions/546388/how-is-the-gradient-derived-here)
