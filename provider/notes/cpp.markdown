@@ -2,6 +2,7 @@
 title: C++
 published: September 10, 2013
 excerpt: Keeping track of C++
+comments: off
 toc: left
 ---
 

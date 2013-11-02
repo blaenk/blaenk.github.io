@@ -2,6 +2,7 @@
 title: POSIX Directories and Links
 published: March 6, 2013
 excerpt: Directories and Links in the POSIX standards
+comments: off
 ---
 
 * toc
