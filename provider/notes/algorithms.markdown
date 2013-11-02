@@ -1181,7 +1181,7 @@ To trace the paths in the graph, an array can be kept of sice $V$ indexed by a g
 
 ### Breadth-First Search
 
-Breadth-First Search (BST) traversal aids in finding the shortest path between two vertices. Its basic operation consists of:
+Breadth-First Search (BFS) traversal aids in finding the shortest path between two vertices. Its basic operation consists of:
 
 1. enqueue the source vertex
 2. dequeue the current vertex
