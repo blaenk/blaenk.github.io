@@ -336,7 +336,23 @@ trait SomeTrait {
 }
 ```
 
+A trait can subclass a certain class, which essentially specifies a constraint on the trait such that it can only be mixed into classes that are or subclass the extended class.
+
 Traits can be mixed in using either the `extends` or `with` keywords, multiple mixins are simply chained using `with`. They also defined types, so a value of a certain trait type can be set to any object whose class mixes-in the particular trait.
+
+Traits can override methods implemented in the classes they're mixed into. This is accomplished with the `abstract override` directive. This combination of specifiers conveys the fact that it overrides a method that it's mixed into (hence `override`), and therefore that method must be defined in the class it's mixed into (hence `abstract`). Methods with these qualifiers can use `super` to access the class they're mixed into, specifically the same method they're overriding:
+
+``` scala
+class BasicIntQueue extends IntQueue {
+  private val buf = new ArrayBuffer[Int]
+  def get() = buf.remove(0)
+  def put(x: Int) { buf += x }
+}
+
+trait Doubling extends IntQueue {
+  abstract override def put(x: Int) { super.put(2 * x) }
+}
+```
 
 [^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
 [^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
