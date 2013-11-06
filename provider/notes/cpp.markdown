@@ -423,7 +423,7 @@ If the base-class is not initialized in this manner, then the base-class is defa
 It's possible to "inherit" constructors from the base class:
 
 ``` {lang="cpp"}
-struct B : struct A {
+struct B : public A {
   using A::A;
 };
 ```
