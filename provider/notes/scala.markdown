@@ -354,6 +354,8 @@ trait Doubling extends IntQueue {
 }
 ```
 
+Multiple mixins can be "stacked," in which case the same function is called in reverse order of the mixin list. That is, the right-most trait is treated as if a "superclass" of the one to its left, and `super` has that effect.
+
 [^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
 [^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
 [^ruby_mixins]: Reminds me of Ruby's modules that can be included
