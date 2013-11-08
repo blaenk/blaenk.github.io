@@ -76,13 +76,12 @@ main = do
   (action:args) <- getArgs
 
   -- establish configuration based on preview-mode
-  let previewMode  = action == "watch"
+  let previewMode  = action == "watch" || action == "preview"
       hakyllConf   = if previewMode
                      then myHakyllConf
                           { destinationDirectory = "generated/preview/out"
                           , storeDirectory = "generated/preview/cache"
-                          , tmpDirectory = "generated/preview/cache/tmp"
-                          }
+                          , tmpDirectory = "generated/preview/cache/tmp" }
                      else myHakyllConf
       previewPattern stem = if previewMode then normal .||. drafts else normal
                             where normal = fromGlob $ (stem) ++ "/*"
