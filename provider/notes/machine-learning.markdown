@@ -1319,7 +1319,7 @@ $$ g(\mathbf x) = \text {sign}(\tilde w^{\mathrm T} \Phi(\mathbf x)) \qquad \tex
 
 What is the price paid in using a non-linear transformation? Well it has been established that the VC dimension of a $d + 1$ sized input vector is $d + 1$, therefore the feature vector $\mathbf z$, whose size is $\tilde d + 1$, will have a VC dimension of at most $\tilde d + 1$, where $\tilde d$ is generally larger than $d$. It's "at most" because the VC dimension is always measured in the $\mathcal X$-space, and this is the $\mathcal Z$-space. While this means that we will be able to better fit the data, we won't have much of a chance of generalization.
 
-For example considering the following **case 1** where there are two outliers in the data set. If we want to really fit the data, we could use a 4^th^ order surface in order to completely classify the data in the set. However, this increase in complexity would mean that it'd be very difficult to generalize. Sometimes it's best to accept that there will be an $\insample > 0$.
+For example considering the following **case 1** where there are two outliers in the data set. If we want to really fit the data, we could use a 4th-order surface in order to completely classify the data in the set. However, this increase in complexity would mean that it'd be very difficult to generalize. Sometimes it's best to accept that there will be an $\insample > 0$.
 
 <div style="text-align: center; margin-top: 10px">
   <img src="/images/machine-learning/linear-model-ii/non-linear-case-1.png">
@@ -1330,7 +1330,7 @@ Now consider **case 2**, where we don't stand a chance using a linear model to f
 
 <img src="/images/machine-learning/linear-model-ii/non-linear-case-2.png" class="center">
 
-In this case, we can use a non-linear transformation to map the data to a general 2^nd^ order surface as follows:
+In this case, we can use a non-linear transformation to map the data to a general 2nd-order surface as follows:
 
 $$ \mathbf x = (1, x_1, x_2)\ \xrightarrow{\Phi}\ \mathbf z = (1, x_1, x_2, x_1 x_2, x_1^2, x_2^2) $$
 
@@ -1712,11 +1712,152 @@ When the backpropagation is complete, there will be $\delta$ values available at
     1. pick $n \in \{ 1, 2, \dots, N\}$
     2. **forward**: compute all $x^{(l)}_j$
     3. **backward**: compute all $\delta^{(l)}_j$
-    4. update the weights: $w^{(l)}_{ij} \gets w^{(l)}_{ij} - \eta x^{(l - 1)}_x \delta^{(l)}_j$
+    4. update the weights: $w^{(l)}_{ij} \gets w^{(l)}_{ij} - \eta x^{(l - 1)}_i \delta^{(l)}_j$
     5. repeat until it is time to stop
 3. return the final weights $w^{(l)}_{ij}$
 
-One final intuition is that the hidden layers are performing non-linear transformations which produce higher order features. However, these are features ***learned*** by the learning algorithm, with the VC dimension already taken into account. This allows us to avoid looking at the data to determine a proper non-linear transformation to perform explicitly and manually.
+One final intuition is that the hidden layers are performing non-linear transformations which produce higher order features. However, these are features _learned_ by the learning algorithm, with the VC dimension already taken into account. This allows us to avoid looking at the data to determine a proper non-linear transformation to perform explicitly and manually.
+
+# Overfitting
+
+Imagine that we are given five points along with the target function in blue. We can see that the target function doesn't exactly fit some of the points, which means that there is some noise involved. If we were then to use a 4th-order polynomial, such as the one in red, to fit the points perfectly, we would get a very large $\outsample$ despite $\insample = 0$.
+
+<img src="/images/machine-learning/overfitting/polynomial-overfit.png" class="center">
+
+**Overfitting** is the act of fitting the data more than is warranted. It is a comparative term used to express that a solution went past a desirable point in terms of fitting, more so than another solution, where the different solutions can be different instances within the same model or different models entirely. For example, if we had used a 3rd-order polynomial instead, we would not have achieved $\insample = 0$ but $\outsample$ would have been considerably less. In that case, the 4th-order solution could have been considered overfitting compared to the 3rd-order solution. In other words, there is a distinction between overfitting and just plain bad generalization.
+
+Overfitting within the same model occurs when $\insample$ is decreasing but $\outsample$ is beginning to increase, that is, when both error measures begin to diverge:
+
+$$ \text {overfitting:} \quad \insample \downarrow \quad \outsample \uparrow $$
+
+If we stop right before this occurs, we call it **early stopping**:
+
+<img src="/images/machine-learning/overfitting/early-stopping.png" class="center">
+
+The main culprit cause for overfitting is **fitting the noise**, which is a natural side-effect of fitting the data. Fitting the noise is harmful because the learning algorithm is forming its solution from it, trying to detect a pattern, and therefore "hallucinating" an out-of-sample solution extrapolated from the in-sample noise.
+
+Consider two different target functions with accompanying data points. The first target on the left is a simpler 10th-order polynomial but has noise involved (noisy low-order target), whereas the one on the right is a more complicated 50th-order polynomial but is noiseless (noiseless high-order target):
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/overfitting/case-study-1.png">
+  <img src="/images/machine-learning/overfitting/case-study-2.png">
+</div>
+
+If we try to model the first target function using two models, a 2nd and 10th-order polynomial, we get this result:
+
+<img src="/images/machine-learning/overfitting/case-study-1b.png" class="center">
+
+The error measures clearly show that the 10th-order fit is a case of overfitting, showing the effects of how the 10th-order fit bends itself just to fit noise:
+
+error         2nd-order   10th-order
+------       ----------- ------------
+$\insample$  $0.050$     $0.034$
+$\outsample$ $0.127$     $9.00$
+
+Now we can try using the same order fits to model the second target function. Remember that the target is a 50th-order polynomial:
+
+<img src="/images/machine-learning/overfitting/case-study-2b.png" class="center">
+
+In this case, the 10th-order polynomial can fit the sample data very well, but the out of sample error is even worse. This is clearly another case of overfitting, because this target function actually _does_ have noise, but it isn't the usual kind of noise:
+
+error         2nd-order   10th-order
+------       ----------- ------------
+$\insample$  $0.029$     $10^{-5}$
+$\outsample$ $0.120$     $7680$
+
+In the case of the 10th-order target, we can think of the 2nd-order fit as learner $R$ (for restricted) and the 10th-order fit as learner $O$ (for overfit). It can be said that $O$ chose $\mathcal H_{10}$ because it knew that the target is a 10th-order polynomial. On the other hand, $R$ chose $\mathcal H_2$ because it considered the number of points available in the training set, $15$. Choosing a 2nd-order polynomial provides three parameters, such that the ratio of points to degrees of freedom is 5:1, so we're pushing our luck since we know the rule of thumb is for it to be 10:1, but we do so because we figure we can't use a simple line when we _know_ that the target is a 10th-order polynomial.
+
+This reinforces the guideline that we are trying to match the data resources rather than the target complexity.
+
+In the case of the 50th-order polynomial, $O$ chooses $\mathcal H_{10}$ and $R$ chooses $\mathcal H_2$. We still got bad performance out of sample with $O$, so is there really no noise?
+
+## Role of Noise
+
+We will conduct an experiment to observe the effects of overfitting, specifically to observe the impact of **noise level** and **target complexity**. Consider the general target function with added noise:
+
+$$ y = f(x) + \underbrace {\epsilon(x)}_{\sigma^2} =
+\underbrace {\sum_{q = 0}^{Q_f} \alpha_q x^q}_{\text {normalized}} + \epsilon(x) $$
+
+The level (energy) of noise is denoted by $\sigma^2$. This is a higher order $Q_f$ (target complexity) polynomial. We normalize the polynomial quantity such that the energy is always $1$, since we want to observe the signal-to-noise ratio (SNR), so that we can definitively say that $\sigma^2$ is really the amount of noise.
+
+This function doesn't generate very interesting polynomials, so we will instead use the coefficients of Legendre polynomials, which are simply polynomials with specific coefficients such that from one order to the next they are orthogonal to each other, similar to harmonics in a sinusoidal expansion. Once the noise is added, the polynomial formed will be more interesting.
+
+Those factors that seem to affect overfitting are the noise level $\sigma^2$, the target complexity $Q_f$, and the data set size $N$.
+
+We fit the data set $(x_1, y_n), \dots, (x_N, y_N)$ using our two models $\mathcal H_2$ and $\mathcal H_{10}$, 2nd-order and 10th-order polynomials respectively. Each model yields a hypothesis function $g_2 \in \mathcal H_2$ and $g_{10} \in \mathcal H_{10}$. The overfit measure is then defined as the difference between $\outsample$ for the more complex model's hypothesis $g_{10}$ and $\outsample$ for the simpler model's hypothesis $g_2$. This works because if the more complex model is overfitting, its out of sample error will be bigger, yielding a larger positive number. If instead the measure yields a negative number, then it shows that the complex model is not overfitting because it's performing better than the simpler model:
+
+$$ \text {overfit measure: } \outsample(g_{10}) - \outsample(g_2) $$
+
+If we run an experiment for tens of millions of iterations (complete runs). The following plots show the impact of the noise $\sigma^2$ and the complexity $Q_f$ on the overfit measure based on the data set size $N$:
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/overfitting/noise-impact.png">
+  <img src="/images/machine-learning/overfitting/complexity-impact.png">
+</div>
+
+The main takeaway from these results is that there seems to be another factor aside from "conventional noise" that affects overfitting. The truth is that the noise $\sigma^2$ measured in the left picture is called **stochastic noise** (the more conventional noise). Meanwhile, the effect observed in the right picture which seems to be related to an increase in complexity that brings about a higher overfit measure is caused by **deterministic noise**.
+
+$$
+\begin{align}
+\text {number of data points} &\uparrow \quad \text {overfitting} \downarrow \\
+\text {stochastic noise} &\uparrow \quad \text {overfitting} \uparrow \\
+\text {deterministic noise} &\uparrow \quad \text {overfitting} \uparrow
+\end{align}
+$$
+
+## Deterministic Noise
+
+**Deterministic noise** is the part of $f$ that the best hypothesis function $h^*$ from $\mathcal H$ cannot capture:
+
+$$ \text {deterministic noise:}\ f(\feature) - h^*(\feature) $$
+
+<img src="/images/machine-learning/overfitting/deterministic-noise.png" class="center">
+
+An example of why we call this noise is the following. Imagine a younger sibling that has just learned fractions in school and comes to you to ask you to tell them more about numbers. You begin to teach them about negative numbers and real numbers, in a basic sense, but you probably would be better off not telling them about complex numbers. The reason is that this would be considered completely noise from their perspective, their "hypothesis set" would be so small that if you told them about complex numbers, they would create a pattern that doesn't actually exist (fitting the noise). You'd be better off not telling them about complex numbers in order to avoid misleading them (just as noise would in learning).
+
+This is why if we have a hypothesis set and part of the target function that we can't capture, there's no point in trying to capture it, because then we would be detecting a false pattern which we cannot extrapolate given the limitations of the hypothesis set.
+
+Deterministic noise differs from stochastic noise in that:
+
+1. it depends on hypothesis set $\mathcal H$; for the same target function, using a more sophisticated hypothesis set will decrease the deterministic noise
+2. it's fixed for a given $\feature$
+
+When we have a finite $N$ set, we gain the unfortunate ability to fit the noise --- be it stochastic or deterministic, which wouldn't be possible if we had an infinite sized set.
+
+## Noise and Bias-Variance
+
+Remember that the [bias-variance decomposition](#bias-variance-representation) concerned a noiseless target $f$. So how would the decomposition work if $f$ were a noisy target?
+
+$$ y = f(\feature) + \epsilon(\feature) \qquad \mathbb E [\epsilon(\feature)] = 0 $$
+
+We can decompose it into bias-variance by adding a noise term:
+
+$$
+\begin{align}
+\mathbb E_{\mathcal D} \Big[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \Big] &= \\
+\mathbb E_{\mathcal D, \epsilon} \Big[ (g^{(\mathcal D)}(\mathbf x) - y)^2 \Big] &=
+\mathbb E_{\mathcal D, \epsilon} \Big[ (g^{(\mathcal D)}(\mathbf x) - f(\feature) - \epsilon(\feature))^2 \Big] \\
+&= \mathbb E_{\mathcal D, \epsilon} \Big[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\feature) + \bar g(\feature) - f(\feature) - \epsilon(\feature))^2 \Big] \\
+&= \mathbb E_{\mathcal D, \epsilon} \Big[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\feature))^2 + (\bar g(\feature) - f(\feature))^2 - (\epsilon(\feature))^2 \\
+& \phantom {= \mathbb E_\mathcal {D, \epsilon} \Big[} + \text {cross terms}\ \Big]
+\end{align}
+$$
+
+Form this, we can derive the two noise terms. These can be described as moving from your hypothesis to the best possible hypothesis (variance), from the best possible hypothesis to the actual target (bias), and finally from the target to the actual output (with noise added):
+
+$$
+\underbrace {\mathbb E_{\mathcal D, \epsilon} \Big[ (g^{(\mathcal D)}(\mathbf x) - \bar g(\feature))^2 \Big]}_{\textbf {var}} +
+\underbrace {\mathbb E_{\mathrm x} \Big[ (\bar g(\feature) - f(\feature))^2 \Big]}_{\substack {\textbf {bias} \\[5 pt] \uparrow \\[5 pt] \text {deterministic noise}}} +
+\underbrace {\mathbb E_{\epsilon, \mathrm x} \Big[ (\epsilon(\feature))^2 \Big]}_{\substack {\sigma^2 \\[5 pt] \uparrow \\[5 pt] \text {stochastic noise}}}
+$$
+
+Notice that the bias consists of the deterministic noise. This is because the average hypothesis $\bar g(\feature)$ is supposed to be about the same as the best hypothesis, so the bias is a measure of how well the best hypothesis can approximate $f$, which is effectively a measure of the energy of deterministic noise.
+
+## Dealing with Overfitting
+
+There are two cures for overfitting. **Regularization** can be described as hitting the breaks to avoid going into the point of overfitting. **Validation** on the other hand involves checking the bottom line and making sure it doesn't overfit.
+
+# Regularization
 
 # Resources
 
@@ -1724,6 +1865,7 @@ One final intuition is that the hidden layers are performing non-linear transfor
 * [Mathematical Monk](http://www.youtube.com/user/mathematicalmonk/videos?flow=grid&view=1)
 
 *[PLA]: Perceptron Learning Algorithm
+*[SNR]: Signal-to-Noise Ratio
 *[VC]: Vapnik-Chervonenkis
 *[MSE]: Mean-Squared Error
 *[RHS]: Right-Hand Side
