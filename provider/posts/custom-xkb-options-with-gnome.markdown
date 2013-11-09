@@ -29,7 +29,6 @@ xkb_symbols "bottom_right" {
   key <RCTL> { [ XF86AudioRaiseVolume ] };
   key <MENU> { [ XF86AudioLowerVolume ] };
   key <RWIN> { [ XF86AudioMute ] };
-  key <RALT> { [ Multi_key ] };
 };
 ```
 

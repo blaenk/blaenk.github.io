@@ -1859,6 +1859,8 @@ There are two cures for overfitting. **Regularization** can be described as hitt
 
 # Regularization
 
+
+
 # Resources
 
 * [Cambridge Information Theory](http://videolectures.net/course_information_theory_pattern_recognition/)
