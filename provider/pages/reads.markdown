@@ -24,13 +24,7 @@ I ended up reading through the wikipedia page on red-black trees, which is one o
 
 <a href="http://amzn.com/1593272200" name="tlpi">The Linux Programming Interface</a> --- This book concerns the POSIX API as defined by various standards --- e.g., POSIX.1-2001/SUSv3, POSIX.1-2008/SUSv4 --- and platform-specific deviations. It has an emphasis on Linux, at times covering Linux-specific APIs such as epoll and inotify. The book comes in at a hefty 64 chapters and 1500+ pages, covering every possible topic including signals, processes, threads, interprocess-communication (IPC), sockets, terminals and pseudoterminals, evented I/O, and more.
 
-> _The Linux Programming Interface_ is the most comprehensive single-volume work on the Linux and UNIX programming interface, and a book that's destined to become a new classic.
->
-> <footer><strong>Back Cover</strong> <cite>TLPI</cite></footer>
-
 At the time of writing, the book's reviews consist of 52 five-star reviews and one four-star review (simply because the reviewer didn't like the binding, which I think is excellent). It took me many months to finish, in part from becoming distracted by other books, but it was worth it because every chapter connected many dots, triggering epiphanies left and right. It is liberating to have this much of a deeper understanding of Linux and POSIX systems in general.
-
-My goal now is to dive even deeper by exploring the kernel space.
 
 ----
 
