@@ -3,6 +3,7 @@
     a{
       color: #666;
       transition: color 0.3s;
+      line-height: 24px;
       @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
         &:hover { color: $color-main; }
       }

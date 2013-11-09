@@ -14,13 +14,11 @@
     border: none;
     margin-bottom: 0 !important;
 		.title{
-			@media screen and (max-width: 600px){
-        		font-size: 18px;
-      		}
 			margin-bottom: 0;
 	      a{
 	        color: #666;
 	        display: inline-block;
+          line-height: 24px;
 	        width: 100%;
           transition: color 0.3s;
 
