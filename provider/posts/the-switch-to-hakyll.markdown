@@ -45,7 +45,7 @@ As I mentioned earlier, Hakyll is a static site generator written in Haskell. Ha
 
 For example, in the following Hakyll program:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 main :: IO ()
 main = hakyll $ do
   match "images/*" $ do
@@ -61,7 +61,7 @@ Compiling a file in this context refers to the operations that should be perform
 
 `Compiler` is a [Monad](https://en.wikipedia.org/wiki/Monad_%28functional_programming%29), which allows for seamless chaining of operations that should be performed on any given file. For example, here is my `Rule` for regular posts:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 match "posts/*" $ do
   route $ nicePostRoute
   compile $ getResourceBody
@@ -89,7 +89,7 @@ In the above `Rule` for posts, I pass a pre-crafted post `Context`, `postCtx`, a
 
 The first customization I made was to allow support for [SCSS](http://sass-lang.com/). This is usually possible with a simple line:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 getResourceString >>= withItemBody (unixFilter "sass" ["-s", "--scss"])
 ~~~
 
@@ -99,7 +99,7 @@ The solution to this is to use the `shell` type with `createProcess` instead of 
 
 To accomplish this, I had to implement what was essentially a mirror copy of [Hakyll.Core.UnixFilter](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-UnixFilter.html) with `proc` switched out with `shell`. I'll be suggesting a pull request upstream soon which gives the user the option and removes the duplicate code. Now I can implement an SCSS compiler like the following, though I additionally pass it a few extra parameters in my actual implementation:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 getResourceString >>= withItemBody (shellFilter "sass -s --scss")
 ~~~
 
@@ -117,7 +117,7 @@ Keeping this in mind, I explicitly annotated the `[[String]]` type since I wante
 
 The `abbreviationReplace` function begins like this:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 abbreviationReplace :: String -> String
 abbreviationReplace body =
   let pat = "^\\*\\[(.+)\\]: (.+)$" :: String
@@ -137,7 +137,7 @@ The equivalent of a liquid tag in Jekyll would be a field, expressed as a `Conte
 
 Here's what `gitTag` looks like:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 gitTag :: String -> Context String
 gitTag key = field key $ \_ -> do
   unsafeCompiler $ do
@@ -185,7 +185,7 @@ args.map! {|arg| arg.upcase}
 
 One thing I had to do was invoke [`unsafePerformIO`](http://www.haskell.org/ghc/docs/latest/html/libraries/base/System-IO-Unsafe.html#v:unsafePerformIO) in the function I created which runs the code through `pygmentize`, an end-user binary for the Pygments library. I'm not sure if there's a better way to do this, but my justification for using it is that Pygments should return the same output for any given input. If it doesn't, then there are probably larger problems.
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 pygmentize :: String -> String -> String
 pygmentize lang contents = unsafePerformIO $ do
 ~~~
@@ -196,7 +196,7 @@ I don't feel particularly worried about it, given my justification. It's a simil
 
 This is what the AST transformer I wrote looks like:
 
-~~~ {lang="haskell" text="Pandoc AST transformer for Pygments syntax highlighting"}
+~~~ {.haskell text="Pandoc AST transformer for Pygments syntax highlighting"}
 pygments :: Block -> Block
 pygments (CodeBlock (_, _, namevals) contents) =
   let lang = fromMaybe "text" $ lookup "lang" namevals
@@ -230,7 +230,7 @@ Implementing this involved many steps. In general terms, I had to make a pass th
 
 Gathering all of the headers and their accompanying information --- i.e. HTML `id`, text, level --- proved to be a pretty straight-forward task using [`queryWith`](http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Generic.html#v:queryWith) from the [pandoc-types](http://hackage.haskell.org/package/pandoc-types) package:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 queryWith :: (Data a, Monoid b, Data c) => (a -> b) -> c -> b
 -- Runs a query on matching a elements in a c.
 -- The results of the queries are combined using mappend.
@@ -240,7 +240,7 @@ Once I collect all of the `Header` items' information, I normalize them by findi
 
 Next, a [`Data.Tree`](http://hackage.haskell.org/packages/archive/containers/latest/doc/html/Data-Tree.html) is constructed out of the headers which automatically encodes the nesting of the headers. This is done by exploiting [`groupBy`](http://hackage.haskell.org/packages/archive/base/latest/doc/html/Data-List.html#v:groupBy) by passing it `<` as an equivalence predicate:
 
-~~~ {lang="haskell"}
+~~~ {.haskell}
 tocTree :: [TocItem] -> Forest TocItem
 tocTree = map (\(x:xs) -> Node x (tocTree xs)) . groupBy (comp)
   where comp (TocItem a _ _) (TocItem b _ _) = a < b
@@ -262,7 +262,7 @@ I host my site using GitHub Pages. Such sites are deployed by pushing the site t
 
 When I deploy the site with `./site deploy`, the contents of **deploy/** are removed --- except for **.git/** --- and then all of the new generated files are copied into it. A commit is then generated for the deployment, tagged with the SHA identifier of the commit from which the site was generated, to make it easy for me to track things down sometimes. An eight character, truncated SHA is used as follows:
 
-~~~ {lang="bash"}
+~~~ {.bash}
 COMMIT=$(git log -1 HEAD --pretty=format:%H)
 SHA=${COMMIT:0:8}
 git commit -m "generated from $SHA" -q

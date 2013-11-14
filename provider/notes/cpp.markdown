@@ -28,7 +28,7 @@ When a signed value is assigned to an unsigned variable, the underlying bit repr
 
 If the signed value is negative, then it is likely represented at the bit-level in [Two's Complement](http://en.wikipedia.org/wiki/Two%27s_complement). For example, given:
 
-``` {lang="cpp"}
+``` cpp
 uint8_t var = -1;
 ```
 
@@ -142,12 +142,12 @@ Default constructors are synthesized only if all of the following criteria are m
 
 If other constructors are defined but otherwise all other criteria is met for synthesizing a default constructor, the default constructor can be constructed using the `= default` directive:
 
-``` {lang="cpp"}
+~~~ {.cpp}
 class A {
   A() = default;
   A(int a, int b);
 };
-```
+~~~
 
 Class members can be initialized inside the class definition. These initializers are known as **in-class initializers**. In-class initializers must be defined either using the `=` assignment operator or list initialization syntax `{}`.
 
@@ -165,7 +165,7 @@ Destructors do whatever work must be done to free resources used by an object, e
 
 A copy constructor is one consisting of a single parameter that is a reference to the same type of the constructor:
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   A(const A&);
 };
@@ -173,7 +173,7 @@ struct A {
 
 Copy constructors are **synthesized** if none are defined. Synthesized copy constructors perform member-wise copies of the argument. Members of class type are copied using their respective copy constructors and members of built-in type --- including arrays --- are copied directly.
 
-``` {lang="cpp"}
+``` cpp
 A::A(const A& toCopy) :
   firstMember(toCopy.firstMember),
   secondMember(toCopy.secondMember) {}
@@ -191,7 +191,7 @@ The compiler can perform [copy elision](http://en.wikipedia.org/wiki/Copy_elisio
 
 Assignment operators control how objects of its class are assigned. They generally should return a reference to the left-hand object.
 
-``` {lang="cpp"}
+``` cpp
 A& A::operator=(const A& rhs) {
   if (this != &rhs) {
     firstMember = rhs.firstMember;
@@ -210,7 +210,7 @@ Conversion constructors allow for the implicit conversion **from** other types t
 
 Such conversion constructors can be suppressed using the `explicit` keyword, which effectively only allows the direct form of initialization:
 
-``` {lang="cpp"}
+``` cpp
 explicit A(std::string &str) : internal(str) {};
 ```
 
@@ -218,7 +218,7 @@ However, the `explicit` keyword still allows one to use an explicit conversion u
 
 **VERIFY**: When defining a copy constructor in the above manner, it forces the compiler to always copy the string instead of being able to use move semantics. Instead, prefer to pass by value and then moving ([source](https://news.ycombinator.com/item?id=6398924)):
 
-``` {lang="cpp"}
+``` cpp
 explicit A::A(std::string str) : internal(std::move(str)) {}
 ```
 
@@ -226,7 +226,7 @@ explicit A::A(std::string str) : internal(std::move(str)) {}
 
 Where as [conversion constructors](#conversion-constructors) provide a way of converting another type **to** the class type, conversion operators provide a way of converting a class type to another type. They are defined using the `operator` keyword followed by the type it converts to.
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   operator bool () const { return B; }
 };
@@ -234,7 +234,7 @@ struct A {
 
 However, creating a `bool` conversion operator can cause unexpected results such as in the following:
 
-``` {lang="cpp"}
+``` cpp
 int i = 42;
 cin << i;
 ```
@@ -243,7 +243,7 @@ The above code is legal even though `<<` isn't defined for `cin` which is of typ
 
 For this reason, conversion operators can be defined as explicit. A conversion operator that is defined as explicit won't be performed implicitly and instead it must be performed explicitly through the use of `static_cast`. The only exception to this is when the expression would be used for boolean logic.
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   explicit operator bool () const { return B; }
 };
@@ -268,7 +268,7 @@ One way is to create a conversion constructor to a type that itself defines a co
 
 For example, given:
 
-``` {lang="cpp"}
+``` cpp
 struct B;
 
 struct A {
@@ -283,7 +283,7 @@ struct B {
 
 Both `A` and `B` define mutual conversions. `A` defines a conversion constructor that converts `B` to `A`, and `B` itself defines a conversion operator that converts from `B` to `A`. Therefore, the last line in the following code is ambiguous:
 
-``` {lang="cpp"}
+``` cpp
 A f(const A&);
 B b;
 A a = f(b);
@@ -291,7 +291,7 @@ A a = f(b);
 
 Because the conversion operation is ambiguous to the compiler, an error is emitted. Instead, it would have to be explicitly qualified:
 
-``` {lang="cpp"}
+``` cpp
 A a1 = f(b.operator A()); // use B's conversion operator
 A a2 = f(A(b));           // use A's conversion constructor
 ```
@@ -304,7 +304,7 @@ Another way is to define multiple conversions to or from types that themselves a
 
 For example, given:
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   A(int = 0);
   A(double);
@@ -315,7 +315,7 @@ struct A {
 
 Due to implicit integer promotion, the two conversions to and from `int` and `double` become ambiguous to the compiler:
 
-``` {lang="cpp"}
+``` cpp
 void f2(long double);
 A a;
 f2(a);    // operator int () or operator double ()
@@ -332,7 +332,7 @@ For this reason, one should not define more than one conversion to or from an ar
 
 Functions can be specified as **deleted** which prevents the compiler from generating code for them. This can be helpful for preventing copying of a specific type:
 
-``` {lang="cpp"}
+``` cpp
 struct NoCopy {
   NoCopy(const NoCopy&) = delete;
   NoCopy &operator=(const NoCopy&) = delete;
@@ -350,7 +350,7 @@ The compiler sometimes defines copy-control members --- that it would have other
 
 Classes that allocate resources might want to define a `swap` inline friend function that simply swaps pointers around. This is useful for classes that allocate resources, and can be re-used in copy and move operations.
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   friend void swap(A&, A&);
 private:
@@ -369,7 +369,7 @@ It's _very_ important to recognize that the `swap` function used isn't explicitl
 
 One use of the `swap` function is to implement the assignment operator:
 
-``` {lang="cpp"}
+``` cpp
 A& A::operator=(A rhs) {
   swap(*this, rhs);
   return *this;
@@ -395,13 +395,13 @@ Constructors, copy and move operations, and assignment operations all have to ha
 
 Inheritance can be prevented by a class using the `final` directive:
 
-``` {lang="cpp"}
+``` cpp
 class A final {};
 ```
 
 This directive can also be used on specific member functions:
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   void Perform() final;
 };
@@ -411,7 +411,7 @@ struct A {
 
 Constructors of derived classes can't directly initialize base-class members. Instead, initialization is delegated to the base-class constructor:
 
-``` {lang="cpp"}
+``` cpp
 B(const std::string& str, int num, char ltr) :
   A(str, num), ltr_(ltr) {}
 ```
@@ -422,7 +422,7 @@ If the base-class is not initialized in this manner, then the base-class is defa
 
 It's possible to "inherit" constructors from the base class:
 
-``` {lang="cpp"}
+``` cpp
 struct B : public A {
   using A::A;
 };
@@ -445,7 +445,7 @@ If a derived class defines a copy or move operation, then it is responsible for 
 
 As with the constructor and copy/move operations, the copy-assignment operator can delegate its work to the copy-assignment operator of the base class:
 
-``` {lang="cpp"}
+``` cpp
 B& B::operator=(const B& rhs) {
   A::operator=(rhs);
   // assign members of derived class
@@ -473,7 +473,7 @@ A simple explanation for the act of "moving" is that of a string class with an u
 
 Aside from binding rvalue-references to rvalues, it is possible to derive an rvalue-reference from an lvalue through the use of `static_cast`. Such a cast has been implemented as the function `std::move` in order to be more semantic:
 
-``` {lang="cpp"}
+``` cpp
 Object &&ref = std::move(instance);
 ```
 
@@ -531,7 +531,7 @@ An rvalue-reference can be converted to a `const` reference. This means that if 
 
 It's usually the case that member functions can be called on objects regardless of whether they're lvalues or rvalues. However, this can lead to unexpected usage of objects such as the following:
 
-``` {lang="cpp"}
+``` cpp
 s1 + s2 = "wow!";
 ```
 
@@ -544,7 +544,7 @@ Two possible reference qualifiers exist:
 
 **Note**: If a function has a reference qualifier, than _all_ of the same functions require a reference qualifier.
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   A& operator=(const A&) &;
 };
@@ -558,7 +558,7 @@ A& A::operator=(const A &rhs) & {
 
 Because rvalue-references serve as a sort of "tag" on an object that's about to be destroyed, functions can overload implementations specifically for such objects. An example of this would be a move constructor:
 
-``` {lang="cpp"}
+``` cpp
 A::A(A &&moveFrom) noexcept :
   firstMember(moveFrom.firstMember),
   secondMember(moveFrom.secondMember) {
@@ -572,7 +572,7 @@ It's important to leave the moved-from object in a destructible state.
 
 This is similar to the move constructor:
 
-``` {lang="cpp"}
+``` cpp
 A& A::operator=(A&& rhs) noexcept {
   if (this != &rhs) {
     delete firstMember;
@@ -586,7 +586,7 @@ A& A::operator=(A&& rhs) noexcept {
 
 An interesting thing to note is that the move-assignment operator can be defined in terms of the copy-assignment operator if a move constructor is defined:
 
-``` {lang="cpp"}
+``` cpp
 struct A {
   A(A &&other) noexcept : B(other.B) { other.B = nullptr; }
   A& operator=(A rhs) {
@@ -639,7 +639,7 @@ The `decltype` operator can deduce and "return" the type of the argument to be u
 
 The suffix-return syntax is useful when the return type is deduced from information --- such as the function arguments --- and has to appear after the function argument list so that the arguments are "in scope":
 
-``` {lang="cpp"}
+``` cpp
 template <class T, class U>
 auto add(T x, U y) -> decltype(x + y) {
   return x + y;
@@ -648,7 +648,7 @@ auto add(T x, U y) -> decltype(x + y) {
 
 Suffix-return syntax can also be useful in class methods in classes with nested types. Given the following class:
 
-``` {lang="cpp"}
+``` cpp
 struct LL {
   struct Link {};
   Link *erase(Link *p);
@@ -657,13 +657,13 @@ struct LL {
 
 Given the following declaration:
 
-``` {lang="cpp"}
+``` cpp
 LL::Link *LL::erase(Link *p) {};
 ```
 
 Using suffix-return syntax, after the compiler reads `LL::erase` it enters the class scope of `LL`, making it unnecessary to fully qualify the `Link` type that's nested within `LL`:
 
-``` {lang="cpp"}
+``` cpp
 auto LL::erase(Link *p) -> Link * {};
 ```
 
@@ -673,7 +673,7 @@ The `std::function` type is a generalized type that "matches" any kind of functi
 
 User-defined literals can easily be created:
 
-``` {lang="cpp"}
+``` cpp
 Out operator "" _intlit(int literal);
 Out operator "" _strlit(const char * literal);
 Out someVar = 1234_intlit;
@@ -684,7 +684,7 @@ Out otherVar = "testing"_strlit;
 
 **Scoped enumerations** can be created to avoid symbol clashing and enumerations' underlying type can be specified explicitly:
 
-``` {lang="cpp"}
+``` cpp
 enum class EventType : uint8_t { STATUS, LOG, ERROR };
 
 EventType type = EventType::STATUS;
@@ -694,7 +694,7 @@ EventType type = EventType::STATUS;
 
 The `std::tuple` type is similar to tuples in other languages. `get<index>(tuple)` retrieves the value at a given index. Tuples can easily be created with the `make_tuple` function. As in other languages, tuples can be "unpacked" into multiple values using the `tie` function:
 
-``` {lang="cpp"}
+``` cpp
 tie(num, ignore, letter) = make_tuple(10, 4.23, 'a');
 ```
 
