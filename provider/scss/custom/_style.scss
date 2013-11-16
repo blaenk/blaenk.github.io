@@ -332,6 +332,7 @@ figure.code {
   margin: 15px 0;
   cursor: default;
   background: #F2F9FF;
+  overflow: hidden;
 
   @media screen and (max-width: 600px) {
     padding: 5px;
