@@ -23,7 +23,7 @@ $$R_{ab} - {\textstyle 1 \over 2}R\,g_{ab} + \Lambda\ g_{ab} = \kappa\, T_{ab}$$
 
 Nulla facilisi. Cras lectus velit, rhoncus et mollis eget, ultricies quis ligula. Integer ornare nibh in est molestie tempus. Praesent bibendum placerat diam id gravida. Fusce et velit eget dui laoreet interdum eget id arcu. Ut et massa nibh, ut mollis augue. In hac habitasse platea dictumst. Sed massa orci, venenatis vitae dapibus sit amet, varius ut nibh. Ut vel enim leo, at posuere nisi. In elementum sem vel nibh malesuada sagittis.
 
-~~~ {lang="ruby" text="an example of base64 decoding in ruby"}
+~~~ {.ruby text="an example of base64 decoding in ruby"}
 require 'base64'
 
 File.open('favicon.png', 'wb') do |f|
