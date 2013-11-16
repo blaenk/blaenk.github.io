@@ -3,7 +3,16 @@ title: Scala
 published: October 12, 2013
 excerpt: Promising mixture of OO and FP
 comments: off
+toc: left
 ---
+
+I've been meaning to learn Scala for some time, mainly because of it's alleged real-world applicability compared to Haskell [^real_world_haskell]. Haskell has really left me wanting to program in a very functional style. Scala seems to provide a decent compromise in a language that mixes object-oriented programming with functional programming characteristics. Furthermore, the JVM is battle-tested and probably the most robust virtual machine of any language out there at the moment.
+
+*[JVM]: Java Virtual Machine
+
+[^real_world_haskell]: Although lately I've come to realize just how applicable Haskell can be to real-world problems.
+
+* toc
 
 The syntax for a function definition is:
 
@@ -128,6 +137,8 @@ object Singleton {
 
 When a singleton object is named after an existing class, it is referred to as the class' **companion object** [^companion_ruby]. They must both be defined in the same source file. They can access each other's private members.
 
+[^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
+
 A class is defined using the class keyword, and it can take parameters:
 
 ``` scala
@@ -175,6 +186,8 @@ val partial = some.method _
 ```
 
 This syntax creates an ephemeral class [^cpp_partialapplication] that defines an `apply` method that takes the appropriate amount of arguments. When the partially applied value is called, the arguments are forwarded to the underlying function and its result is returned.
+
+[^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
 
 This can also be done for specific arguments, but the type must be stated explicitly, presumably to disambiguate overloads:
 
@@ -328,6 +341,8 @@ There are two "bottom" types, which are subclasses of every kind of type. `Null`
 
 Traits encapsulate methods and fields which can be mixed into other classes [^ruby_mixins]. Traits are defined as:
 
+[^ruby_mixins]: Reminds me of Ruby's modules that can be included.
+
 ``` scala
 trait SomeTrait {
   def someMethod() {
@@ -356,7 +371,222 @@ trait Doubling extends IntQueue {
 
 Multiple mixins can be "stacked," in which case the same function is called in reverse order of the mixin list. That is, the right-most trait is treated as if a "superclass" of the one to its left, and `super` has that effect.
 
-[^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
-[^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
-[^ruby_mixins]: Reminds me of Ruby's modules that can be included
+# Packages
+
+The `import` statement can be used to import packages and symbols in different ways:
+
+``` scala
+def showFruit(fruit: Fruit) {
+  import fruit._
+  println(name + "s are " + color)
+}
+
+// only Apple and Orange
+import Fruits.{Apple, Orange}
+
+// everything, but rename Apple to McIntosh
+import Fruits.{Apple => McIntosh, _}
+
+// everything except Pear
+import Fruits.{Pear => _, _}
+```
+
+Every Scala file implicitly imports the following packages:
+
+``` scala
+import java.lang._
+import scala._
+import Predef._
+```
+
+# Testing
+
+Assertions can be made with `assert` and enabled in the JVM using the command options `-ea` (enable assertions) and `-da`. An alternative function is `ensuring`, which also takes a predicate. The predicate is a function that takes a so-called "result type" and returns a Boolean. If the predicate returns true, then `ensuring` returns the "result type," but if the predicate returns false, then `ensuring` throws an `AssertionError`.
+
+Unit testing is possible with tools such as [ScalaTest](http://www.scalatest.org) and ScalaCheck. ScalaTest tests are functions with names prefixed by `test` inside classes that extend `Suite`:
+
+``` scala
+import org.scalatest.Suite
+import Element.elem
+
+class ElementSuite extends Suite {
+  def testUniformElement() {
+    val ele = elem('x', 2, 3)
+    assert(ele.width == 2)
+  }
+}
+```
+
+ScalaTest has another style of testing with the FunSuite package:
+
+``` scala
+import org.scalatest.FunSuite
+import Element.elem
+
+class ElementSuite extends FunSuite {
+  test("elem result should have passed width") {
+    val ele = elem('x', 2, 3)
+    assert(ele.width == 2)
+  }
+}
+```
+
+The assertions used in the previous two ScalaTest suites would only show an error that the assertion failed, without showing what the two values were. ScalaTest also provides a `===` operator that is more descriptived:
+
+``` scala
+assert(ele.width === 2) // "3 did not equal 2"
+```
+
+There is also an `expect` method that differentiates between the two values:
+
+``` scala
+expect(2) {
+  ele.width
+} // "Expected 2, but got 3"
+```
+
+Method `intercept` can verify that an exception is thrown:
+
+``` scala
+intercept[IllegalArgumentException] {
+  elem('x', -2, 3)
+}
+```
+
+## Behavior-Driven Development
+
+The `FlatSpec` is one of many traits, such as [`FunSpec`](http://www.scalatest.org/getting_started_with_fun_spec), that allow for behavior-driven development (BDD). These traits can be mixed with other traits such as `ShouldMatchers` which allow the use of the `should` function to write tests very naturally as in RSpec:
+
+*[BDD]: Behavior-Driven Development
+
+``` scala
+import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
+import Element.elem
+
+class ElementSpec extends FlatSpec with ShouldMatchers {
+  "A UniformElement" should "have a width equal to the passed value" in {
+      val ele = elem('x', 2, 3)
+      ele.width should be (2)
+    }
+
+  it should "have a height equal to the passed value" in {
+    val ele = elem('x', 2, 3)
+    ele.height should be (3)
+  }
+
+  it should "throw an IAE if passed a negative width" in {
+    evaluating {
+      elem('x', 2, 3)
+    } should produce [IllegalArgumentException]
+  }
+}
+```
+
+## Property Testing
+
+[ScalaCheck](http://www.scalacheck.org/) is another testing tool that is similar to Haskell's [QuickCheck](http://hackage.haskell.org/package/QuickCheck), which essentially randomly generates test input data to test with. There is an implication operator `==>` that takes a function that places a constraint on the test data and a condition that must hold true for all data that fits that constraint:
+
+``` scala
+import org.scalatest.WordSpec
+import org.scalatest.prop.Checkers
+import org.scalacheck.Prop._
+import Element.elem
+
+class ElementSpec extends WordSpec with Checkers {
+  "elem result" must {
+    "have passed width" in {
+      check((w: Int) => w > 0 ==> (elem('x', w, 3).width == w))
+    }
+  }
+}
+```
+
+# Pattern Matching
+
+**Case Classes** are like stub classes which contain and are mainly about publicly accessible data. They're very similar to Haskell's algebraic data types (ADT). Consider the following domain specific language (DSL):
+
+*[ADT]: Algebraic Data Type
+*[DSL]: Domain Specific Language
+
+``` scala
+abstract class Expr
+case class Var(name: String) extends Expr
+case class Number(num: Double) extends Expr
+case class UnOp(operator: String, arg: Expr) extends Expr
+case class BinOp(operator: String, left: Expr, right: Expr) extends Expr
+```
+
+These case classes define factory methods to avoid having to explicitly write `new`, fields for the data, simple `toString` implementations, and a `copy` method that is very similar to Haskell's record syntax. For example, the following creates a copy of the `op` `BinOp` with the `operator` field changed to `"-"`:
+
+``` scala
+op.copy(operator = "-")
+```
+
+This is equivalent to Haskell's record syntax:
+
+``` haskell
+op { operator = "-" }
+```
+
+The main use of case classes is pattern matching. For example, a mathematical expression expressed using the `Expr` DSL constructed above can be simplified as follows:
+
+``` scala
+def simplifyTop(expr: Expr): Expr =
+  expr match {
+    case UnOp("-", UnOp("-", e))  => e
+    case BinOp("+", e, Number(0)) => e
+    case BinOp("*", e, Number(1)) => e
+    case _ => expr
+  }
+```
+
+This is very similar to other pattern matching features available in Haskell for example. In cases, we can use **constructor patterns**, **constant patterns**, and **variable patterns**. Variable patterns are simply those that begin with lower case characters, but we can force a lowercase identifier to be treated as a constant by surrounding it with backticks.
+
+It's also to use **sequence patterns**. In this case, the `_*` operator can be used to specify "the rest of the sequence," like so:
+
+``` scala
+expr match {
+  case List(0, _*) => println("found it")
+  case _ =>
+}
+```
+
+It's also possible to use **type patterns** to match the type of the expression:
+
+``` scala
+def generalSize(x: Any) = x match {
+  case s: String => s.length
+  case m: Map[_, _] => m.size
+  case _ => -1
+}
+```
+
+**Type Erasure** means that information about type arguments is not maintained at runtime. This is an artifact of the erasure model of generics that Java uses. As a result, it's not possible to pattern match on the type of `Map`, and the following code will return `true` for any `Map`:
+
+``` scala
+def isIntToIntMap(x: Any) = x match {
+  case m: Map[Int, Int] => true
+  case _ => false
+}
+```
+
+It's possible to use `@` for **variable binding** in pattern matching, just as in Haskell:
+
+``` scala
+expr match {
+  case UnOp("abs", e @ UnOp("abs", _)) => e
+  case _ =>
+}
+```
+
+**Pattern guards** are additional conditions placed on pattern matches. For example, to simplify an addition expression with identical operands to a multiplication by two, we can use:
+
+``` scala
+def simplifyAdd(e: Expr) = e match {
+  case BinOp("+", x, y) if x == y =>
+    BinOp("*", x, Number(2))
+  case _ => e
+}
+```
 
