@@ -1628,6 +1628,8 @@ The non-linearity $\theta$ in the neural network is the hyperbolic $\tan$, the $
 
 $$ \theta(s) = \tanh(s) = \frac {e^s - e^{-s}} {e^s + e^{-s}} $$
 
+<img id="tanh" src="/images/machine-learning/neural-networks/tanh.png" class="center">
+
 The parameters of the neural network are weights $w$ indexed by three indices consisting of the layers, inputs, and outputs, and each of these indices take on the following ranges:
 
 $$
@@ -1641,8 +1643,9 @@ $$
 The neural network can therefore be represented by a recursive definition:
 
 $$
+\def \neuronweight {w_{ij}^{(l)}}
 x^{(l)}_j = \theta \left(s^{(l)}_j\right) =
-\theta \left( \sum_{i = 0}^{d^{(l - 1)}} w_{ij}^{(l)} x_i^{(l - 1)} \right)
+\theta \left( \sum_{i = 0}^{d^{(l - 1)}} \neuronweight x_i^{(l - 1)} \right)
 $$
 
 The neural network is then constructed by applying the feature vector $\feature$ to the first layer in the neural network $x^{(0)}_1, \dots, x^{(0)}_{d^{(0)}}$ such that it eventually ends up in one scalar valued output from the last layer $\smash {x^{(L)}_1}$, which is the value that we will say that $h(\feature)$ produces.
@@ -1732,7 +1735,7 @@ $$ \text {overfitting:} \quad \insample \downarrow \quad \outsample \uparrow $$
 
 If we stop right before this occurs, we call it **early stopping**:
 
-<img src="/images/machine-learning/overfitting/early-stopping.png" class="center">
+<img id="early-stopping" src="/images/machine-learning/overfitting/early-stopping.png" class="center">
 
 The main culprit cause for overfitting is **fitting the noise**, which is a natural side-effect of fitting the data. Fitting the noise is harmful because the learning algorithm is forming its solution from it, trying to detect a pattern, and therefore "hallucinating" an out-of-sample solution extrapolated from the in-sample noise.
 
@@ -1858,6 +1861,221 @@ Notice that the bias consists of the deterministic noise. This is because the av
 There are two cures for overfitting. **Regularization** can be described as hitting the breaks to avoid going into the point of overfitting. **Validation** on the other hand involves checking the bottom line and making sure it doesn't overfit.
 
 # Regularization
+
+Regularization tends to reduce the bias at the expense of slightly increasing the variance. Regularization can be thought of as providing intermediate levels between the different fits such as constant, linear, quadratic.
+
+## Polynomial Model
+
+The model $\mathcal H_Q$ consists of the polynomials of order $Q$. A non-linear transformation produces $\mathbf z$ by taking a scalar $x$. In effect, the elements in $\mathbf z$ correspond to the coefficients of the Legendre polynomials. The parameterization of the hypothesis set is therefore represented as the linear combination of the weights and the Legendre polynomial coefficients:
+
+$$
+\mathbf z = \begin{bmatrix}
+              1 \\ L_1(x) \\ \vdots \\ L_Q(x)
+            \end{bmatrix}, \quad
+\mathcal H_Q = \left\{ \sum_{q = 0}^Q w_q L_q(x) \right\}
+$$
+
+The Legendre polynomials denoted by $L_q$ look like this:
+
+<img src="/images/machine-learning/regularization/legendre-polynomials.png" class="center">
+
+Because of the summation, we're going to apply linear regression in the $\mathcal Z$-space.
+
+We've already placed a _hard_ constraint on the weights in the previous section, in which case $\mathcal H_2$ was the constrained version of $\mathcal H_{10}$. This is represented in the polynomial model by having set $w_q = 0$ for $q > 2$.
+
+However, we'd like more of a _softer_ constraint. Given a budget $C$ for the total magnitude squared of the weights, $w_q^2$. Instead of the harder constraint above where we outright set some of the weights to $0$, we just want them to be generally small. This can be thought of as a "**soft-order**" constraint:
+
+$$ \sum_{q = 0}^Q w_q^2 \leq C $$
+
+Given this model, we now went to minimize $\insample$ while **being subject to** the constraint (shown in vector form):
+
+$$
+\begin{align}
+\text {minimize:} &\insample(\weight) = \frac 1 N (\mathbf {Zw - y})^\intercal (\mathbf {Zw - y}) \\[5 pt]
+&\text {subject to:} \quad \weightT \weight \leq C
+\end{align}
+$$
+
+The solution will be called $\def \weightreg {\weight_{\text {reg}}}$ signifying regularization, as opposed to $\def \weightlin {\weight_{\text {lin}}}$ signifying linear regression.
+
+The solution can be visualized by an ellipsoid. The in-sample error $\insample$ is represented by the blue ellipsoid. The boundary of the ellipsoid consists of the same value for $\insample$. Anything inside the boundary is a smaller value and outside is larger. The value of $\weightT \weight$ is represented by the red ellipsoid, so the constraint means that we have to be inside the red ellipsoid. The solution given by linear regression $\weightlin$ is at the centroid of the blue ellipsoid, since it minimizes $\insample$. Since we want to choose a point within the red ellipsoid such that it minimizes $\insample$, it stands to reason that we'll have to go as far out as we can within the red ellipsoid. Therefore, the constraint we'll actually be using is $\weightT \weight = C$, since the best value of $\insample$ will occur at the boundary of the red ellipsoid. Of course, if the red ellipsoid was large enough to contain $\weightlin$, then the solution would be $\weightlin$ since that is the minimum:
+
+<img src="/images/machine-learning/regularization/solution-visualization.png" class="center">
+
+Choose a $\weight$ that lies on both of the ellipsoid boundaries. From here, we can take visualize the gradient of $\insample$ with respect to the chosen point as well as the orthogonal vector to the red ellipsoid. The orthogonal vector to the red ellipsoid is equivalent to $\weight$ (from the center). From visualizing these vectors, we can tell that the chosen point below doesn't minimize $\insample$. If it did minimize $\insample$, then both vectors would be directly opposite each other:
+
+<img src="/images/machine-learning/regularization/solution-vectors.png" class="center">
+
+A condition can therefore be expressed that the gradient of the solution $\weightreg$ when found should be proportional to the negation of $\weightreg$:
+
+$$
+\begin{align}
+\nabla \insample(\weightreg) &\propto -\weightreg \\
+&= -2 \frac \lambda N \weightreg \\
+\nabla \insample(\weightreg) &+ -2 \frac \lambda N \weightreg = \mathbf 0
+\end{align}
+$$
+
+The solution of the last equation is simply the minimization of the following:
+
+$$ \insample(\weight) + \frac \lambda N \weightT \weight $$
+
+The values of $C$ and $\lambda$ are related, so that if $C$ is so big it already contains $\weightlin$, so $\lambda$ can be thought of as being $0$, and corresponding to the simple minimization of $\insample$. When $C$ is smaller, $\lambda$ has to go up:
+
+$$ C \uparrow \quad \lambda \downarrow $$
+
+## Augmented Error
+
+We're now going to consider an augmented error $\def \augerror {E_{\text {aug}}} \augerror$ that is essentially $\insample$ augmented with the regularization term:
+
+$$
+\begin{align}
+\augerror(\weight) &= \insample(\weight) + \frac \lambda N \weightT \weight \\
+&= \frac 1 N (\mathbf {Zw - y})^\intercal (\mathbf {Zw - y}) + \frac \lambda N
+\weightT \weight
+\end{align}
+$$
+
+The key observation is that solving the above equation is equivalent to minimizing $\insample$ _subject to_ the constraint $\weightT \weight \leq C$. This constraint lends itself to VC analysis.
+
+$$
+\begin{align}
+\augerror(\weight) &= \insample(\weight) + \frac \lambda N \weightT \weight \\
+&= \frac 1 N \left( (\mathbf {Zw - y})^\intercal (\mathbf {Zw - y}) + \lambda \weightT \weight \right)
+\end{align}
+$$
+To minimize this, we take the gradient of $\augerror$ and equate it to $\mathbf 0$:
+
+$$
+\begin{align}
+\nabla \augerror(\weight) &= \mathbf 0 \\
+\mathbf Z^\intercal (\mathbf {Zw - y}) + \lambda \weight &= \mathbf 0
+\end{align}
+$$
+
+So now this results in the weight vector with regularization, $\weightreg$:
+
+$$ \weightreg = (\mathbf Z^\intercal \mathbf Z + \lambda \mathbf I)^{-1} \mathbf Z^\intercal \mathbf y $$
+
+This is opposed to the weight vector _without_ regularization, $\weightlin$, which can be achieved by simply setting $\lambda = 0$:
+
+$$ \weightlin = (\mathbf Z^\intercal \mathbf Z)^{-1} \mathbf Z^\intercal \mathbf y $$
+
+We can now observe the effects of varying $\lambda$. In the first example, there is apparent overfitting. However, as $\lambda$ increased, there is apparent underfitting. Clearly, the choice of $\lambda$ is important:
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/regularization/lambda-variation-1.png">
+  <img src="/images/machine-learning/regularization/lambda-variation-2.png">
+</div>
+
+## Weight Decay
+
+The name of the regularizer that involves minimizing the following quantity is referred to as **weight 'decay'**:
+
+$$ \insample(\weight) + \frac \lambda N \weightT \weight $$
+
+For example, in batch gradient descent, we take a step from $\weight(t)$ to $\weight(t + 1)$:
+
+$$
+\begin{align}
+\weight(t + 1) &= \weight(t) - \eta \nabla \insample(\weight(t)) - 2 \eta \frac \lambda N \weight(t) \\
+&= \weight(t) \underbrace {(1 - 2 \eta \frac \lambda N)}_{\text {nudge factor}} - \eta \nabla \insample(\weight(t))
+\end{align}
+$$
+
+This can be interpreted geometrically. In the usual implementation of batch gradient descent we have the previous step $\weight(t)$ that is moved in the direction of the gradient $\nabla \insample$. However, this now includes a regularization term which can be interpreted as a nudge factor. That is, it takes the previous position, nudges it a bit based on $\lambda$, and _then_ performs the gradient descent. This is why the regularizer is called weight decay, because the weights decay from one iteration to the next.
+
+In neural networks, the term $\weightT \weight$ can be computed by considering all of the weights in all of the layers, input units, and output units and squaring them and summing them up:
+
+$$ \weightT \weight = \sum_{l = 1}^L \sum_{i = 0}^{d^{(l - 1)}} \sum_{j = 1}^{d^{(l)}} \left( \neuronweight \right)^2 $$
+
+### Variations {#variations-of-weight-decay}
+
+Instead of having a fixed budget $C$ and having the sum of the squared weights being less than or equal to $C$, we could emphasize certain weights by using this regularizer:
+
+$$ \sum_{q = 0}^Q \gamma_q w_q^2 $$
+
+Here, $\gamma$ is referred to as the **importance factor**. For example, if a particular $\gamma_q$ is small then the equivalent weight $w_q$ is less restricted; it can be made larger while knowing it won't take up too much of the budget $C$. On the other hand, if a particular $\gamma_q$ is big, then the corresponding weight doesn't have that luxury.
+
+For example, imagine that $\gamma_q$ is set to $2^q$. In this case, the regularizer is giving a larger emphasis on higher order terms. What this means is that the regularizer is trying to find a **low-order fit**. For example, a 10th-order polynomial would quickly kill the budget because $\gamma_{10} = 2^{10}$. If instead we had $\gamma_q$ set to $2^{-q}$, it would look for a **high-order fit**.
+
+In neural networks, the importance factor $\gamma$ is given different values for each each layer, in other words, giving different emphasis for the weights in different layers.
+
+The most general regularizer is called the **Tikhonov regularizer**, which has the form:
+
+$$ \weightT \mathbf \Gamma^\intercal \mathbf \Gamma \weight $$
+
+This is a general quadratic in matrix form. Weight decay, low-order fits, high-order fits, and many other regularizations can be achieved given the proper choice of matrix $\mathbf \Gamma$.
+
+## Weight Growth
+
+Just as big weights were constrained earlier, small weights can also be constrained. The following shows a plot of weight decay's $\outsample$ as a function of the regularization parameter $\lambda$. Notice that it dips before it goes back up again, in which case it begins to underfit. This means that weight decay performs well _given_ the correct choice of $\lambda$. Weight growth on the other hand --- constraining weights to be large --- is considerably worse.
+
+<img src="/images/machine-learning/regularization/regularizers.png" class="center">
+
+Stochastic noise is "high-frequency". Deterministic noise is also non-smooth. Because of these common observations, the guideline is to **constrain learning towards smoother hypotheses**. This is because the regularizer is a cure for fitting the noise. For this reason, we want to punish the noise more than we are punishing the signal. The usual way that hypothesis sets are mathematically written as a parameterized set is by having smaller weights correspond to smoother hypotheses.
+
+## Generalized Regularizer
+
+The regularizer will be referred to as $\Omega$:
+
+$$ \Omega = \Omega(h) $$
+
+We will minimize the augmented error of the hypothesis:
+
+$$ \augerror(h) = \insample(h) + \frac \lambda N \Omega(h) $$
+
+This looks similar to the VC dimension:
+
+$$ \outsample(h) \leq \insample(h) + \Omega(\mathcal H) $$
+
+From this, we make the claim that $\augerror$ is better than $\insample$ as a proxy of $\outsample$.
+
+The perfect regularizer is one that restricts in the "direction" of the target function. Regularization generically applies a methodology which harms the overfitting (fitting the noise) more than it harms the fitting (fitting the guideline), therefore it's a **heuristic**. For this reason, we move in the direction of **smoother** or "simpler" because the noise itself **is not** smooth. For example, in the case of movie ratings, this kind of regularization guideline tends to opt for the average rating in the absence of enough examples.
+
+If we choose a bad regularizer $\Omega$, we still have $\lambda$ that can save us by means of validation, which can set $\lambda$ such that it completely ignores the bad regularizer $\Omega$. In any case, having a regularizer is necessary to avoid overfitting.
+
+## Neural Network Regularizers
+
+Remember that the [$\tanh$](#tanh) function acts linear for small value ranges and binary for larger value ranges.
+
+### Weight Decay {#neural-network-weight-decay}
+
+If we use small weights, then the signal is constrained to the range that produces linear-like values, so every neuron would essentially be computing the linear function. With multiple hidden layers in a neural network, this essentially becomes a complex neural network that is computing a very simple linear function.
+
+If weights are increased to the maximum, $\tanh$ outputs binary values, which results in a logical dependency that can be used to implement any kind of functionality.
+
+Given these two extremes, it's apparent that as weights are increased, the model produces more complex models. This represents a clear correspondence between the simplicity of the function being implemented and the size of the weights, which is properly represented by **weight decay**.
+
+### Weight Elimination {#neural-network-weight-elimination}
+
+**Weight elimination** works by remembering that the VC dimension of neural networks is more or less the number of weights, so it simply eliminates some of the weights by forcing them to be $0$, so that the number of free parameters decreases, as does the VC dimension, leading to a better chance of generalizing and less chance of overfitting.
+
+Determining which weights to eliminate can is a combinatorial problem. **Soft weight elimination** is an optimization of weight elimination. For very small weights, regular weight decay is applied. For very large weights, the result is close to $1$. In other words, big weights are left alone and small weights are pushed towards $0$, or "soft eliminated":
+
+$$
+\Omega(\weight) = \sum_{i,j,l} \frac {\left( \neuronweight \right)^2} {\beta^2 + \left( \neuronweight \right)^2}
+$$
+
+### Early Stopping {#neural-network-early-stopping}
+
+Recall that [early stopping](#early-stopping) consists of stopping before $\outsample$ begins to increase. This is regularization through the optimizer. The point at which to stop is determined through [validation](#validation).
+
+## Optimal $\lambda$
+
+Observing the optimal value of $\lambda$ given the different levels of noise provides some insight as to how deterministic noise is treated by the regularizer compared to how it treats stochastic noise.
+
+As the level of **stochastic noise** $\sigma^2$ increases, the level of regularization $\lambda$ necessary to achieve the minimum $\outsample$ increases. For example, when there is no noise, the minimum $\outsample$ can be achieved with $\lambda = 0$. However, as the noise increases, regularization is **necessary** to achieve the best possible $\outsample$. The left side of the red and green curves represent the overfitting that occurs without regularization.
+
+<img src="/images/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
+
+The same behavior is observed as the level of **deterministic noise** $Q_f$ (complexity of the target function) increases.
+
+<img src="/images/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
+
+This cements the correspondence that regularization behaves with respect to deterministic noise behaves almost exactly as if it were unknown stochastic noise.
+
+# Validation
 
 
 
