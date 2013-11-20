@@ -32,3 +32,26 @@ The pseudo-inverse can be computed in octave using the `pinv` function, so that 
 pinv(X' * X) * X' * y
 ~~~
 
+The logistic regression cost function embeds the cost of getting the wrong probability. For example, the cost of predicting $1$ when the result was actually $0$ goes towards $+\infty$:
+
+$$
+\begin{align}
+\text {Cost}(h_\theta(x^{(i)}, y^{(i)})) &=
+\begin{cases}
+-\log(h_\theta(x)) & \text {if } y = 1 \\ \\
+-\log(1 - h_\theta(x)) & \text {if } y = 0
+\end{cases} \\ \\
+&= -y \log(h_\theta(x)) - (1 - y)\log(1 - h_\theta(x))
+\end{align}
+$$
+
+More advanced optimization algorithms aside from gradient descent include:
+
+* conjugate gradient
+* BFGS
+* L-BFGS
+
+These algorithms have advantages such as not needing to have to manually pick $\alpha$, as well as generally being faster than gradient descent. However, they are more complicated to implement.
+
+Multiclass classification can be performed by training a classifier for each class by treating all members of that class as the positive set and all other data points as the negative set. This is done for each class, and then to classify any new data point, it is classified as the one with the maximum probability.
+
