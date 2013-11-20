@@ -14,6 +14,8 @@ I've been meaning to learn Scala for some time, mainly because of it's alleged r
 
 * toc
 
+# Basics
+
 The syntax for a function definition is:
 
 ``` scala
@@ -588,5 +590,91 @@ def simplifyAdd(e: Expr) = e match {
     BinOp("*", x, Number(2))
   case _ => e
 }
+```
+
+A **sealed class** is one that restricts subclassing of that class to the file it's defined in. This way the compiler can guarantee and enforce exhaustive pattern matching, which it couldn't do otherwise because the class could be extended in another file:
+
+``` scala
+sealed abstract class Expr
+```
+
+If there's a function that is known to only handle a specific subset of subtypes, a catchall case can be added, or the `@unchecked` annotation can be used:
+
+``` scala
+def describe(e: Expr): String = (e: @unchecked) match {
+  case Number(_) => "a number"
+  case Var(_) =>    "a variable"
+}
+```
+
+The `Option` type is equivalent to Haskell's `Maybe` type. It can take on either a parameterized `Some` value or `None`.
+
+A **case sequence** is a function literal specific defined as a pattern match where each case is an entry point to the function:
+
+``` scala
+val withDefault: Option[Int] => Int = {
+  case Some(x) => x
+  case None => 0
+}
+```
+
+This is why it's possible to pass a pattern match directly to the `react` function in the actors library:
+
+``` scala
+react {
+  case (name: String, actor: Actor) => {
+    actor ! getip(name)
+    act()
+  }
+  case msg => {
+    println("Unhandled message: " + msg)
+    act()
+  }
+}
+```
+
+If a case sequence doesn't provide exhaustive patterns, it is considered a **partial function** since it doesn't provide an output for every input. If it's applied to a value that it can't match, it throws a run-time exception.
+
+The parameterized type `PartialFunction` can represent partial functions:
+
+``` scala
+val second: PartialFunction[List[Int],Int] = {
+  case x :: y :: _ => y
+}
+```
+
+The function `isDefinedAt` can then be used to determine if the function is defined for a particular value:
+
+```
+scala> second.isDefinedAt(List(5, 6, 7))
+res0: Boolean = true
+scala> second.isDefinedAt(List())
+res0: Boolean = false
+```
+
+The partial function above gets translated to:
+
+``` scala
+new PartialFunction[List[Int],Int] {
+  def apply(xs: List[Int]) = xs match {
+    case x :: y :: _ => y
+  }
+  def isDefinedAt(xs: List[Int]) = xs match {
+    case x :: y :: _ => true
+    case _ => false
+  }
+}
+```
+
+The actors library's `react` function for example uses partial a partial argument function, since it's defined only for the messages teh caller wants to handle.
+
+# Lists
+
+The left fold is possible with `/:` and `foldLeft` and the right fold with `:\` and `foldRight`. The `/:` and `:\` names represent the way the fold tree leans.
+
+``` scala
+def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
+def flattenRight[T](xss: List[List[T]]) =
+  (xss :\ List[T]()) (_ ::: _)
 ```
 
