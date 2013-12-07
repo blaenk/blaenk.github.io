@@ -126,7 +126,9 @@ tableOfContents headers alignment x@(BulletList (( (( Plain ((Str "toc"):_)):_))
 tableOfContents _ _ x = x
 
 quoteRulers :: Block -> Block
-quoteRulers (BlockQuote contents) = BlockQuote $ HorizontalRule : contents ++ [HorizontalRule]
+quoteRulers (BlockQuote contents) =
+  BlockQuote $ HorizontalRule : [padded] ++ [HorizontalRule]
+  where padded = Div ("", ["padded-quote"], []) $ contents
 quoteRulers x = x
 
 -- add handler for Plain?

@@ -568,31 +568,34 @@ article .entry-content blockquote {
   line-height: 1.5;
   margin: 30px auto;
 
-  & > *, & > figure.code {
-    margin: 0 35px;
+  .padded-quote {
+    padding: 0 35px;
 
     @media screen and (max-width: 600px) {
-      margin-left: 30px;
-      margin-right: 30px;
+      padding-left: 30px;
+      padding-right: 30px;
     }
-  }
+    
+    p {
+      text-align: justify;
+      // word-break: break-word;
+      -webkit-hyphens: auto;
+      -moz-hyphens: auto;
+      hyphens: auto;
+    }
 
-  > p{
-    margin-top: 10px;
-    text-align: justify;
-    // word-break: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    hyphens: auto;
-  }
+    code {
+      background-color: inherit;
+      padding: 0;
+    }
 
-  figure.code {
-    margin-bottom: 10px;
-  }
-
-  code {
-    background-color: inherit;
-    padding: 0;
+    footer {
+      border-top: none;
+      padding-top: 0;
+      padding-bottom: 0;
+      font-size: 16px;
+      margin-top: 5px;
+    }
   }
 
   hr {
@@ -649,15 +652,8 @@ article .entry-content blockquote {
       top: -0.75em;
     }
   }
-  .icon-quote-right { color: #eee; }
 
-  footer {
-    border-top: none;
-    padding-top: 0;
-    padding-bottom: 0;
-    font-size: 16px;
-    margin-top: 5px;
-  }
+  .icon-quote-right { color: #eee; }
 }
 
 kbd {
