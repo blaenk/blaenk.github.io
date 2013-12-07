@@ -186,4 +186,4 @@ I hope you learned something new today, or sharpened your skills in this area. I
 
 Okay, so you learned binary and hexadecimal now, what can you do? Well, nowadays you can't do much, but wait, don't lose your hope. These number systems are still crucial to many things in computers, and give you an edge when you know them. They help you better understand things like subnets. These number systems also help in encryption, low-level programming, and other hardcore practices like hex editing.
 
-Hope you had a great time learning. If anything seemed confusing, hard, or if any information is wrong, please email me or comment on this post.'
+Hope you had a great time learning. If anything seemed confusing, hard, or if any information is wrong, please email me or comment on this post.
