@@ -1,32 +1,29 @@
-name:                blaenk
-version:             1.0
-synopsis:            Personal Site
--- description:
-homepage:            http://blaenkdenum.com
-license:             BSD
-author:              Jorge Israel Peña
-maintainer:          jorge.israel.p@gmail.com
--- copyright:
-category:            Web
-build-type:          Simple
-cabal-version:       >=1.8
+name:             blaenk
+version:          1.0
+synopsis:         Personal Site
+homepage:         http://blaenkdenum.com
+license:          BSD
+author:           Jorge Israel Peña
+maintainer:       jorge.israel.p@gmail.com
+category:         Web
+build-type:       Simple
+cabal-version:    >=1.8
 
 executable site
-  main-is:           Site.hs
-  hs-source-dirs:    src/
-  ghc-options:       -O2 -Wall -o site -threaded
-  -- other-modules:
-  build-depends:       base,
-                       process      >= 1.1.0.2 && < 2,
-                       cryptohash   >= 0.8.4   && < 1,
-                       directory    >= 1.2.0.1 && < 2,
-                       old-locale   >= 1.0.0.4 && < 2,
-                       time         >= 1.4     && < 2,
-                       blaze-html   >= 0.6.1.1 && < 1,
-                       containers   >= 0.4.2.1 && < 1,
-                       regex-tdfa   >= 1.1.8   && < 2,
-                       pandoc       >= 1.12    && < 2,
-                       pandoc-types >= 1.12    && < 2,
-                       filepath     >= 1.3.0.0 && < 2,
-                       bytestring   >= 0.9.2.1 && < 10,
-                       hakyll       >= 4.2.2.0 && < 5
+  main-is:        Site.hs
+  hs-source-dirs: src/
+  ghc-options:    -O2 -Wall -o site -threaded
+  build-depends:  base,
+                  process      >= 1.1.0.2 && < 2,
+                  cryptohash   >= 0.8.4   && < 1,
+                  directory    >= 1.2.0.1 && < 2,
+                  old-locale   >= 1.0.0.4 && < 2,
+                  time         >= 1.4     && < 2,
+                  blaze-html   >= 0.6.1.1 && < 1,
+                  containers   >= 0.4.2.1 && < 1,
+                  regex-tdfa   >= 1.1.8   && < 2,
+                  pandoc       >= 1.12    && < 2,
+                  pandoc-types >= 1.12    && < 2,
+                  filepath     >= 1.3.0.0 && < 2,
+                  bytestring   >= 0.9.2.1 && < 10,
+                  hakyll       >= 4.2.2.0 && < 5
