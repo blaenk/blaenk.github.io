@@ -1,5 +1,5 @@
 ---
-title: Machine Learning
+title: Machine Learning Theory
 published: September 30, 2013
 excerpt: Machine Learning concepts
 comments: off
@@ -1397,8 +1397,8 @@ We have established that for each data point $(\mathbf x, y)$, $y$ is generated 
 
 $$
 P(y \mid \mathbf x) = \begin{cases}
-                        h(\mathbf x) & \text {for } y = +1; \\ \\
-                        1 - h(\mathbf x) & \text {for } y = -1.
+                        h(\mathbf x) & \text {for } y = +1 \\ \\
+                        1 - h(\mathbf x) & \text {for } y = -1
                       \end{cases}
 $$
 
@@ -1419,14 +1419,14 @@ So now we can simplify the probability to:
 
 $$ P(y \mid \feature) = \theta(y \weightT \feature) $$
 
-Now we can determine the likelihood of the entire data set $\mathcal D = (\feature_1, y1), \dots, (\feature_N, y_N)$ is:
+Now we can determine the likelihood of the entire data set $\mathcal D = (\feature_1, y_1), \dots, (\feature_N, y_N)$ is:
 
 $$
 \prod_{n = 1}^N P(y_n \mid \feature_n) =
 \prod_{n = 1}^N \theta(y_n \weightT \feature_n)
 $$
 
-It's noteworthy to observe that the same weight vector is being used for each of those products, so that if it's varied to better fit one data point, it might no longer fit another. Therefore, whatever maximizes this product would represent the likelihood that the weight vector is representing the underlying probability distribution.
+It's noteworthy to observe that the same weight vector is being used for each of those products, so that if it's varied to better fit one particular data point, it might no longer fit another. Therefore, whatever maximizes this product would represent the likelihood that the weight vector is representing the underlying probability distribution.
 
 So now we want to see how to maximize the likelihood with respect to $\weight$. This corresponds to minimizing the error:
 
@@ -1798,7 +1798,7 @@ If we run an experiment for tens of millions of iterations (complete runs). The 
   <img src="/images/machine-learning/overfitting/complexity-impact.png">
 </div>
 
-The main takeaway from these results is that there seems to be another factor aside from "conventional noise" that affects overfitting. The truth is that the noise $\sigma^2$ measured in the left picture is called **stochastic noise** (the more conventional noise). Meanwhile, the effect observed in the right picture which seems to be related to an increase in complexity that brings about a higher overfit measure is caused by **deterministic noise**.
+The main takeaway from these results is that there seems to be another factor aside from "conventional noise" that affects overfitting. The truth is that the noise $\sigma^2$ measured in the left image is called **stochastic noise** (the more conventional noise). Meanwhile, the effect observed in the right image which seems to be related to an increase in complexity that brings about a higher overfit measure is caused by **deterministic noise**.
 
 $$
 \begin{align}
@@ -1887,7 +1887,7 @@ However, we'd like more of a _softer_ constraint. Given a budget $C$ for the tot
 
 $$ \sum_{q = 0}^Q w_q^2 \leq C $$
 
-Given this model, we now went to minimize $\insample$ while **being subject to** the constraint (shown in vector form):
+Given this model, we now want to minimize $\insample$ while **being subject to** the constraint (shown in vector form):
 
 $$
 \begin{align}
@@ -1896,15 +1896,15 @@ $$
 \end{align}
 $$
 
-The solution will be called $\def \weightreg {\weight_{\text {reg}}}$ signifying regularization, as opposed to $\def \weightlin {\weight_{\text {lin}}}$ signifying linear regression.
+The solution will be called $\def \weightreg {\weight_{\text {reg}}} \weightreg$, which signifies regularization, as opposed to $\def \weightlin {\weight_{\text {lin}}} \weightlin$ which signifies linear regression.
 
 The solution can be visualized by an ellipsoid. The in-sample error $\insample$ is represented by the blue ellipsoid. The boundary of the ellipsoid consists of the same value for $\insample$. Anything inside the boundary is a smaller value and outside is larger. The value of $\weightT \weight$ is represented by the red ellipsoid, so the constraint means that we have to be inside the red ellipsoid. The solution given by linear regression $\weightlin$ is at the centroid of the blue ellipsoid, since it minimizes $\insample$. Since we want to choose a point within the red ellipsoid such that it minimizes $\insample$, it stands to reason that we'll have to go as far out as we can within the red ellipsoid. Therefore, the constraint we'll actually be using is $\weightT \weight = C$, since the best value of $\insample$ will occur at the boundary of the red ellipsoid. Of course, if the red ellipsoid was large enough to contain $\weightlin$, then the solution would be $\weightlin$ since that is the minimum:
 
-<img src="/images/machine-learning/regularization/solution-visualization.png" class="center">
+<img id="solution-visualization" src="/images/machine-learning/regularization/solution-visualization.png" class="center">
 
-Choose a $\weight$ that lies on both of the ellipsoid boundaries. From here, we can take visualize the gradient of $\insample$ with respect to the chosen point as well as the orthogonal vector to the red ellipsoid. The orthogonal vector to the red ellipsoid is equivalent to $\weight$ (from the center). From visualizing these vectors, we can tell that the chosen point below doesn't minimize $\insample$. If it did minimize $\insample$, then both vectors would be directly opposite each other:
+Choose a $\weight$ that lies on both of the ellipsoid boundaries. From here, we can visualize the gradient of $\insample$ with respect to the chosen point as well as the orthogonal vector to the red ellipsoid. The orthogonal vector to the red ellipsoid is equivalent to $\weight$ (from the center). From visualizing these vectors, we can tell that the chosen point below doesn't minimize $\insample$. If it did minimize $\insample$, then both vectors would be directly opposite each other:
 
-<img src="/images/machine-learning/regularization/solution-vectors.png" class="center">
+<img id="solution-vectors" src="/images/machine-learning/regularization/solution-vectors.png" class="center">
 
 A condition can therefore be expressed that the gradient of the solution $\weightreg$ when found should be proportional to the negation of $\weightreg$:
 
@@ -2246,7 +2246,7 @@ First we normalize $\weight$ with the following constraint, where $\feature_n$ a
 
 $$|\weightT \feature_n| = 1$$
 
-Second we have to take out $w_0$, the threshold/bias weight (aka $b$):
+Second we have to take out $w_0$, the threshold/bias weight, from now on referred to as $b$:
 
 $$\weight = (w_1, \dots, w_d)$$
 
@@ -2259,7 +2259,7 @@ We can now compute the distance between $\feature_n$ and the plane $\weightT \fe
 $$
 \begin{align}
 \weightT \feature' + b &= 0 \\
-- \weightT \feature'' + b &= 0 \\
+\weightT \feature'' + b &= 0 \\
 \Longrightarrow \weightT (\feature' - \feature'') &= 0
 \end{align}
 $$
@@ -2276,7 +2276,7 @@ So that now the distance can be computed as:
 
 $$
 \begin{align}
-\text {distance } &= |\hat \weight (\feature_n - \feature)| \\
+\text {distance } &= |\hat \weight \cdot (\feature_n - \feature)| \\
 \text {distance } &= \frac 1 {\lVert \weight \rVert}
 |\weightT \feature_n - \weightT \feature| \\
 \text {distance } &= \frac 1 {\lVert \weight \rVert}
@@ -2292,8 +2292,7 @@ The last component of the penultimate equation disappears because the equation f
 The resulting optimization problem is to maximize the margin, denoted as $\smash {\frac 1 {\lVert \weight \rVert}}$ subject to the following constraint:
 
 $$
-\DeclareMathOperator*{\argmin}{arg\,min}
-\argmin_{n = 1, 2, \dots, N} |\weightT \feature_n + b| = 1
+\min_{n = 1, 2, \dots, N} |\weightT \feature_n + b| = 1
 $$
 
 However, this is not a friendly optimization problem because it has a $\min$ in it. To get rid of the absolute value, notice that:
@@ -2309,12 +2308,931 @@ $$
 \end{align}
 $$
 
-The domain of this optimization problem is $\weight \in \mathbb R^d, b \in \mathbb R$.
+The domain of this optimization problem is $\weight \in \mathbb R^d, b \in \mathbb R$. This is therefore a constrained optimization problem, for which we can use Lagrange, but the problem is that these are inequality constraints not equality constraints.
+
+We saw this scenario before with regularization, where we minimized $\insample(\weight)$ under a constraint:
+
+$$
+\begin{align}
+\text {minimize:} &\insample(\weight) = \frac 1 N (\mathbf {Zw - y})^\intercal (\mathbf {Zw - y}) \\[5 pt]
+&\text {subject to:} \quad \weightT \weight \leq C
+\end{align}
+$$
+
+We [found](#solution-vectors) that $\nabla \insample$ was normal to the constraint. This presents a conceptual dichotomy between regularization and SVM. In regularization, we optimize the in-sample error $\insample$ under the constraint $\weightT \weight$. Conversely, with SVM we are optimizing $\weightT \weight$ under the constraint that $\insample = 0$.
+
+method          optimize           constraint
+-------------- ----------         ------------
+Regularization $\insample$        $\weightT \weight$
+SVM            $\weightT \weight$ $\insample$
+
+## Lagrange Formulation
+
+To recap, we are performing the following constrained optimization:
+
+$$
+\begin{align}
+\text {minimize }\colon& \frac 1 2 \weightT \weight \\
+\text {subject to }\colon& y_n(\weightT \feature_n + b) \geq 1
+\end{align}
+$$
+
+We first take the inequality constraint and put it in zero-form, so that:
+
+$$\alpha_n (\underbrace {y_n(\weightT \feature_n + b) - 1}_{\text {slack}})$$
+
+This is then combined with the optimization component to form the full optimization problem, which is a Lagrangian $\mathcal L$ dependent on $\weight$, $b$, and the Lagrange multipliers $\alpha$:
+
+$$
+\begin{align}
+\text {minimize}\colon &\mathcal L(\weight, b, \mathbf \alpha) = \frac 1 2 \weightT \weight - \sum_{n = 1}^N \alpha_n (y_n(\weightT \feature_n + b) - 1) \\
+&\text {w.r.t. } \weight \text { and } b, \text { and maximize w.r.t. each } \alpha_n \geq 0
+\end{align}
+$$
+
+Now we can find the gradient of the Lagrangian with respect to the weight, which we want to minimize by setting it to the zero-vector:
+
+$$\nabla_\weight \mathcal L = \weight - \sum_{n = 1}^N \alpha_n y_n \feature_n = \mathbf 0$$
+
+Now we find the derivative of the Lagrangian with respect to $b$ in order to minimize it by setting it to zero:
+
+$$\frac {\partial \mathcal L} {\partial b} = - \sum_{n = 1}^N \alpha_n y_n$$
+
+We now want to combine these optimization components in order to remove the $\weight$ and $b$ from the optimization problem, so that it's instead only a function of $\alpha$. This is referred to as the **dual formulation** of the problem:
+
+$$
+\begin{align}
+\mathcal L(\mathbf \alpha) = &\sum_{n = 1}^N \alpha_n - \frac 1 N \sum_{n = 1}^N \sum_{m = 1}^N y_n y_m \alpha_n \alpha_m \feature_n^\intercal \feature_m \\ \\
+&\text {maximize w.r.t. } \mathbf \alpha \\
+&\text {subject to } \alpha_n \geq 0 \text { for } n = 1, \dots, N
+\text { and } \smash {\sum_{n = 1}^N} \alpha_n y_n = 0
+\end{align}
+$$
+
+We still have to get rid of the constraints in order to have a pure optimization problem that we can pass on to some external [quadratic programming] library. First of all, most quadratic programming packages perform minimizations not maximizations, so we have to convert it to a minimization, which is accomplished by simply negating the equation:
+
+[quadratic programming]: http://en.wikipedia.org/wiki/Quadratic_programming
+
+$$
+\max_\alpha \sum_{n = 1}^N \alpha_n - \frac 1 N \sum_{n = 1}^N \sum_{m = 1}^N y_n y_m \alpha_n \alpha_m \feature_n^\intercal \feature_m \\
+\min_\alpha \frac 1 N \sum_{n = 1}^N \sum_{m = 1}^N y_n y_m \alpha_n \alpha_m \feature_n^\intercal \feature_m - \sum_{n = 1}^N \alpha_n
+$$
+
+Next we want to isolate the coefficients from the $\mathbf \alpha$ values, since the $\mathbf \alpha$ are parameters. What the quadratic programming library receives are the coefficients of our particular problem $y$ and $\feature$ and produces the $\mathbf \alpha$ values that minimize the above equation. This is accomplished <span id="quadratic-coefficients">as follows</span>:
+
+$$
+\begin{align}
+\min_{\mathbf \alpha}\ &\frac 1 2 {\mathbf \alpha}^\intercal
+\underbrace {\begin{bmatrix}
+y_1 y_1 \feature_1^\intercal \feature_1 & y_1 y_2 \feature_1^\intercal \feature_2 & \dots & y_1 y_N \feature_1^\intercal \feature_N \\
+y_2 y_1 \feature_2^\intercal \feature_1 & y_2 y_2 \feature_2^\intercal \feature_2 & \dots & y_2 y_N \feature_2^\intercal \feature_N \\
+\dots & \dots & \dots & \dots \\
+y_N y_1 \feature_N^\intercal \feature_1 & y_N y_2 \feature_N^\intercal \feature_2 & \dots & y_N y_N \feature_N^\intercal \feature_N \\
+\end{bmatrix}}_{\text {quadratic coefficients}}
+\mathbf \alpha + \underbrace {(-\mathbf 1^\intercal) \mathbf \alpha}_{\text {linear coefficients}} \\ \\
+&\text {subject to}\colon \underbrace {\mathbf y^\intercal \mathbf \alpha = 0}_{\text {linear constraint}}, \quad \underbrace {0 \leq \mathbf \alpha \leq \infty}_{\text {lower and upper bounds}}
+\end{align}
+$$
+
+The matrix in this equation as well as the linear coefficients are passed to the quadratic programming library. The above equation is equivalent to:
+
+$$
+\begin{align}
+\min_{\mathbf \alpha}\ &\frac 1 2 \mathbf \alpha^\intercal Q \mathbf \alpha - \mathbf 1^\intercal \mathbf \alpha \\ \\
+&\text {subject to } \mathbf y^\intercal \mathbf {\alpha} = 0, \quad \mathbf \alpha \geq \mathbf 0
+\end{align}
+$$
+
+It's important to note the implications of the number of examples, which clearly yields a larger matrix, in which case there are a variety of heuristics that mitigate this problem.
+
+After being fed the quadratic and linear coefficients, the quadratic programming library produces the vector $\mathbf {\alpha} = \alpha_1, \dots, \alpha_N$, from which we need to determine the value of $\weight$, $b$, the margin, and so on. The weights can be computed as based on the previous constraint that concerned it:
+
+$$\weight = \sum_{n = 1}^N \alpha_n y_n \feature_n$$
+
+It might be surprising to realize that the majority of the $\mathbf \alpha$ vector consists of zero elements (interior points). This is due to a [Karush-Kuhn-Tucker] (KKT) condition that's relevant here that says that _either_ the slack is zero or the Lagrange multiplier is zero, such that their product is definitely zero:
+
+[Karush-Kuhn-Tucker]: http://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions
+
+$$
+\text {For } n = 1, \dots, N \\
+\alpha_n(y_n(\weightT \feature_n + b) - 1) = 0
+$$
+
+We saw this before in [regularization](#solution-visualization), where we had a constraint which was to be within the red circle while optimizing a function represented by the blue circle. When the constraint didn't really constraint us and the absolute optimal was within the blue circle, there was no need for regularization and so $\lambda = 0$.
+
+The points which define the plane and margin are the ones for which the $\alpha$ values are positive, and all of these values form a **support vector**:
+
+$$\alpha_n > 0 \Longrightarrow \feature_n \text { is a } \textbf {support vector}$$
+
+That is, we had $N$ points which we classified and for which we found the maximum margin, and the margin touched some of the $+1$ and some of the $-1$ points, and it is said that these points "support the plane," and are called support vectors, while the rest of the points are interior points. In the image below, the support vectors are those points that touch the extents of the margin, those with a circle around them:
+
+<img src="/images/machine-learning/support-vector-machines/support-vectors.png" class="center">
+
+Since most $\alpha$ are zero, the weight calculation can be changed to only sum those in the support vector:
+
+$$\weight = \sum_{n = 1}^N \alpha_n y_n \feature_n = \sum_{\feature_n \text { is SV}} \alpha_n y_n \feature_n$$
+
+We can also solve for the bias $b$ corresponding to threshold term using ***any*** support vector, for which we already know that:
+
+$$y_n(\weightT \feature_n + b) = 1$$
+
+## Non-Linear Transformations {#svm-non-linear-transformations}
+
+Although all of this so far has only handled situations where the data is linearly separable, it's possible to attempt to solve it using non-linear transformations in the $\mathcal Z$-space as we did with perceptrons.
+
+$$
+\mathcal L(\mathbf \alpha) = \sum_{n = 1}^N \alpha_n - \frac 1 N \sum_{n = 1}^N \sum_{m = 1}^N y_n y_m \alpha_n \alpha_m \feature_n^\intercal \feature_m \\
+$$
+
+Observing the equation to maximize, we can see that there are only two components which may need to change in this transition between the $\mathcal X$-space and the $\mathcal Z$-space.
+
+$$
+\mathcal L(\mathbf \alpha) = \sum_{n = 1}^N \alpha_n - \frac 1 N \sum_{n = 1}^N \sum_{m = 1}^N y_n y_m \alpha_n \alpha_m \mathbf {z}_n^\intercal \mathbf {z}_m
+$$
+
+The increase in dimensionality resulting from the non-linear transformation has no effect on the complexity of the optimization. The quadratic optimization process results in the $\alpha$ vector, which is interpreted in the original $\mathcal X$-space.
+
+During a non-linear transformation, the support vectors resulting from the optimization "live" in $\mathcal Z$-space. In $\mathcal X$-space, these same points can be thought of as "pre-images" of support vectors, those with a circle around them:
+
+<img src="/images/machine-learning/support-vector-machines/x-space-non-linear-svm.png" class="center">
+
+It's important to remember that the distance between the points in $\mathcal X$-space and the resulting curve are _not_ the margin, since the margin is maintained only in $\mathcal Z$-space.
+
+What's interesting is that even if the non-linear transformation involved a million-dimensional transformation, we ended up with four support vectors, which effectively corresponds to having four parameters, so that generalization applies to the four parameters and not the entire million. This means we're able to use the flexibility of a higher dimensional representation without sacrificing generalization. In other words, we have a complex hypothesis $h$, but a simple hypothesis set $\mathcal H$. Therefore, the generalization result is:
+
+$$\mathbb E[\outsample] \leq \frac {\mathbb E[\text {# of SVs}]} {N - 1}$$
+
+# Kernel Methods
+
+We want to go to the $\mathcal Z$-space without paying the price for it. We saw previously that going to the $\mathcal Z$-space involved a very simple dot product:
+
+$$
+\mathcal L(\mathbf \alpha) = \sum_{n = 1}^N \alpha_n - \frac 1 N \sum_{n = 1}^N \sum_{m = 1}^N y_n y_m \alpha_n \alpha_m \mathbf {z}_n^\intercal \mathbf {z}_m
+$$
+
+We would like to see if we could do away with this relatively low cost altogether. The constraints for this equation are:
+
+$$
+\text {constraints: } \alpha_n \geq 0 \text { for } n = 1, \dots, N \text { and } \sum_{n = 1}^N \alpha_n y_n = 0
+$$
+
+Notice that $\mathbf z$ isn't present in the constraints. The hypothesis is essentially:
+
+$$
+\begin{align}
+g(\feature) &= \sign(\weightT \mathbf z + b) \\
+\text {where } \weight &= \sum_{\mathbf z_n \text { is SV}} \alpha_n y_n \mathbf z_n \\
+\text {and } b &\colon y_n(\weightT \mathbf z_m + b) = 1
+\end{align}
+$$
+
+We can then substitute the weight's definition into the hypothesis function, in which case we require the inner products consisting of $\mathbf z_n^\intercal \mathbf z$. We can do the same exact thing to determine the value of $b$, in which case we need $\mathbf z_n^\intercal \mathbf z_m$. In effect, this means that we only deal with $\mathbf z$ as far as the inner product in the hypothesis function is concerned.
+
+## Kernel Trick
+
+### Polynomial Kernel
+
+Given two points $\feature$ and $\feature' \in \mathcal X$, we need $\mathbf z^\intercal \mathbf z'$. Let $\mathbf z^\intercal \mathbf z' = K(\feature, \feature')$, where $K$ is referred to as the **kernel**, which corresponds to some $\mathcal Z$-space, it is considered the "inner product" of $\feature$ and $\feature'$ after some transormation. For example $\feature = (x_1, x_2)$ undergoes a 2nd-order non-linear transformation:
+
+$$\mathbf z = \Phi(\feature) = (1, x_1, x_2, x_1^2, x_2^2, x_1 x_2)$$
+
+So the kernel would be defined as:
+
+$$
+K(\feature, \feature') = \mathbf {z^\intercal z'} =
+1 + x_1 {x'}_1 + x_2 {x'}_2 + x_1^2 {x'}_1^2 + x_2^2 {x'}_2^2 + x_1 {x'}_1 x_2 {x'}_2
+$$
+
+Now the question is whether or not we can transform the kernel $K(\feature, \feature')$ **without** transforming $\feature$ and $\feature'$ into the $\mathcal Z$-space. Consider the following:
+
+$$
+\begin{align}
+K(\feature, \feature') &= (1 + \feature^\intercal \feature')^2 = (1 + x_1 {x'}_1 + x_2 {x'}_2)^2 \\
+&= 1 + x_1^2 {x'}_1^2 + x_2^2 {x'}_2^2 + 2 x_1 {x'}_1 + 2 x_2 {x'}_2 + 2 x_1 {x'}_1 x_2 {x'}_2
+\end{align}
+$$
+
+This looks very similar to an inner product if it weren't for the twos, in which case it'd be as if we transformed to the 2nd-order polynomial and took the inner product there. However, this _is_ an inner product if we say that the transformation that we are using is:
+
+$$
+\begin{align}
+\Phi(\feature) &= (1, x_1^2, x_2^2, \sqrt {2 x_1}, \sqrt {2 x_2}, \sqrt 2 x_1 x_2) \\
+\Phi(\feature') &= (1, {x'}_1^2, {x'}_2^2, \sqrt {2 {x'}_1}, \sqrt {2 {x'}_2}, \sqrt 2 {x'}_1 {x'}_2)
+\end{align}
+$$
+
+The advantage of the kernel is that we don't have to take each feature and expand it per the non-linear transformation in order to perform the inner product, instead we directly compute the inner product from the $\mathcal X$-space feature vector.
+
+More specifically, this is called the **polynomial kernel**. Generally, given a general d-dimensional space $\mathcal X = \mathbb R^d$ with a transformation of that space into a Qth-order polynomial $\Phi\colon \mathcal {X \to Z}$, the "equivalent" kernel would be:
+
+$$
+\begin{align}
+K(\feature, \feature') &= (1 + \feature^\intercal \feature')^Q \\
+&= (1 + x_1 {x'}_1 + x_2 {x'}_2 + \cdots + x_d {x'}_d)^Q \\
+&= (a \feature^\intercal \feature' + b)^Q
+\end{align}
+$$
+
+A kernel of the above form corresponds to an inner product in a higher space. So now all we have to do is use the $\mathcal X$-space feature vectors, compute the dot product, and raise that value to some exponent, instead of having to explicitly go into the $\mathcal Z$-space. This is all guaranteed if the kernel $K(\feature, \feature')$ is an inner product in _some_ space $\mathcal Z$-space. Consider the following kernel:
+
+$$K(\feature, \feature') = \exp\left(-\gamma\ \lVert \feature - \feature' \rVert^2\right)$$
+
+This kernel is clearly a function of $\feature$ and $\feature'$. It doesn't have a clear inner product. Does this correspond to an inner product in $\mathcal Z$-space? Indeed it is, if the $\mathcal Z$-space is treated as being **infinite-dimensional**. In this case we would get the full benefit of a non-linear transformation, without worrying about the generalization ramifications of going to an infinite-dimensional space. For example, take a simple case where the kernel is applied to a one-dimensional $\mathcal X$-space and $\gamma = 1$:
+
+$$
+\begin{align}
+K(x, x') &= \exp\left(-(x - x')^2\right) \\
+&= \exp(-x^2) \exp(-{x'}^2) \exp(2 x x') \\
+&= \exp(-x^2) \exp(-{x'}^2) \underbrace {\sum_{k = 0}^\infty \frac {2^k (x)^k (x')^k} {k!}}_{\text {Taylor Series}} \\
+\end{align}
+$$
+
+The $x$ terms can be grouped together and so can the $x'$ terms, and ultimately this equation can be transformed to look like an inner product in an infinite space, due to the infinite summation. This kernel is called the **radial basis function** (RBF) kernel.
+
+To see it in action, in the case of a slightly non-separable case in the $\mathcal X$-space with a slightly curvy target function. We transform this dataset into an $\infty$-dimensional $\mathcal Z$-space. The red and blue points are the support vectors (9 total; 4 blue, 5 red), the lime curve is the target function and the black curve is the $\mathcal Z$-space hyperplane:
+
+<img src="/images/machine-learning/kernel-methods/radial-basis-function-example.png" class="center">
+
+Here we were able to visit an infinite-dimensional space and yield only 9 support vectors, which thanks to the error bound we developed earlier means that the out-of-sample error must be less than about $10\%$. Previously, going to an infinite or even higher order $\mathcal Z$-space was considered overkill, but that determination is now made based on the number of resultant support vectors.
+
+An important thing to remember is that the distances between the support vectors and the $\mathcal X$-space hyperplane will possibly not be minimal, because that distance that was solved for was solved in $\mathcal Z$-space not $\mathcal X$-space. The support vectors are not support vectors per se, but rather they are "pre-images" of the actual support vectors in the $\mathcal Z$-space.
+
+### Kernel Formulation of SVM
+
+In solving support vector machines, we would [pass the inner products](#quadratic-coefficients) of the feature vectors to the quadratic programming library. All that changes now is that we instead pass the result of the kernel function $K$ --- **everything else remains the same**:
+
+$$
+\underbrace {\begin{bmatrix}
+y_1 y_1 K(\feature_1, \feature_1) & y_1 y_2 K(\feature_1, \feature_2) & \dots & y_1 y_N K(\feature_1, \feature_N) \\
+y_2 y_1 K(\feature_2, \feature_1) & y_2 y_2 K(\feature_2, \feature_2) & \dots & y_2 y_N K(\feature_2, \feature_N) \\
+\dots & \dots & \dots & \dots \\
+y_N y_1 K(\feature_N, \feature_1) & y_N y_2 K(\feature_N, \feature_2) & \dots & y_N y_N K(\feature_N, \feature_N) \\
+\end{bmatrix}}_{\text {quadratic coefficients}}
+$$
+
+When we receive the $\alpha$ and we need to construct the hypothesis in terms of the kernel. In other words, we want to express $g(\feature) = \sign(\weightT \mathbf z + b)$ in terms of $K(-, -)$. First remember the definition of the weight:
+
+$$
+\weight = \sum_{\mathbf z_n \text { is SV}} \alpha_n y_n \mathbf z_n
+$$
+
+So now we can construct the hypothesis, which is also the general SVM model, which differs based on the kernel function:
+
+$$
+\begin{align}
+g(\feature) &= \sign\left( \sum_{\alpha_n > 0} \alpha_n y_n K(\feature_n, \feature) + b \right) \\
+\text {where } b &= y_m - \sum_{\alpha_n > 0} \alpha_n y_n K(\feature_n, \feature_m)
+\end{align}
+$$
+
+### Kernel Function Validity
+
+How can we determine that a kernel is valid --- that is, that it corresponds to an inner product in _some_ space --- _without_ visiting that space? In other words, how do we know that $\mathcal Z$ exists for a given $K(\feature, \feature')$?
+
+There are three approaches to come up with a valid kernel. The first method is by construction. The second is by using mathematical properties of the kernel (i.e. Mercer's condition), which have already been applied to kernel functions other people have developed which can be applied to our own problems. The third approach is to simply not care whether or not $\mathcal Z$ exists, which is an approach taken by a number of people but for which Professor Yaser Abu-Mostafa has reservations, since the guarantees of the method depend on $\mathcal Z$ existing.
+
+To take the second approach for the purposes of designing our own kernel. A kernel $K(\feature, \feature')$ is a valid kernel iff:
+
+1. It is symmetric so that $K(\feature, \feature') = K(\feature', \feature)$
+2. The matrix of all possible pairs of feature vectors applied to the kernel function is **positive semi-definite**, that is, the matrix should be greater than or equal to 0, for any $\feature_1, \dots, \feature_N$. This is known as **Mercer's condition**:
+
+$$
+\underbrace {\begin{bmatrix}
+K(\feature_1, \feature_1) & K(\feature_1, \feature_2) & \dots & K(\feature_1, \feature_N) \\
+K(\feature_2, \feature_1) & K(\feature_2, \feature_2) & \dots & K(\feature_2, \feature_N) \\
+\dots & \dots & \dots & \dots \\
+K(\feature_N, \feature_1) & K(\feature_N, \feature_2) & \dots & K(\feature_N, \feature_N) \\
+\end{bmatrix}}_{\text {quadratic coefficients}}
+$$
+
+## Soft-Margin SVM
+
+There are two main kinds of non-separable situations. Slightly non-separable (left) is when it might be beneficial to simply accept that as error using something like the pocket algorithm, as opposed to sacrificing generalization in order to capture what are potentially simply outliers. Seriously non-separable (right) is when it's not a matter of outliers, but that the data is simply non-linearly separable.
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/kernel-methods/slightly-non-separable.png">
+  <img src="/images/machine-learning/kernel-methods/seriously-non-separable.png">
+</div>
+
+Slightly-separable data can be handled by soft-margin SVM, while seriously non-separable data can be handled by kernel functions. In real world data sets, however, it's likely that there will be elements of both: built-in non-linearity with outliers. For this reason, we would be combining kernels with soft-margin SVMs in almost all of the problems that we would encounter.
+
+### Error Measure {#soft-margin-svm-error-measure}
+
+The error measure will be defined by a so-called margin violation, which could be the point within the margin in the image below. Even though it is correctly classified by the hyperplane, it's considered a **margin violation** because it falls within the margin.
+
+<img src="/images/machine-learning/kernel-methods/margin-violation.png" class="center">
+
+It can be said that the margin is violated when $y_n(\weightT \feature_n + b) \geq 1$ fails. This failure can be quantified by introducing a "slack" $\xi_n \geq 0$ for every point so that:
+
+$$y_n(\weightT \feature_n + b) \geq 1 - \xi_n$$
+
+The total violation made by a derived SVM can be expressed as the sum of the slacks, since those that don't violate the margin will have $\xi = 0$:
+
+$$\text {Total violation } = \sum_{n = 1}^N \xi_n$$
+
+### Optimization {#soft-margin-svm-optimization}
+
+The previous optimization that we performed was to minimize the following quantity, which had the effect of maximizing the margin:
+
+$$\frac 1 2 \weightT \weight$$
+
+Now we are going to add an error term that corresponds to the violation of the margin:
+
+$$
+\begin{align}
+\text {minimize } &\frac 1 2 \weightT \weight + C \sum_{n = 1}^N \xi_n \\
+\text {subject to } &y_n(\weightT \feature_n + b) \geq 1 - \xi_n \quad \text { for } n = 1, \dots, N \\ \\
+&\text {and } \xi_n \geq 0 \quad \text { for } n = 1, \dots, N \\
+&\weight \in \mathbb R^d, b \in \mathbb R, \xi \in \mathbb R^N
+\end{align}
+$$
+
+In this new optimization problem, $C$ is a constant that represents the relative importance of the error versus the margin, similar to augmented error. For example, a very high value of $C$ represents that error cannot be afforded, whereas a very low value of $C$ means that we can have a large margin but it would have a higher rate of errors.
+
+The Lagrange formulation for this optimization problem can thus be derived as follows, where the first equation is the original Lagrange formulation:
+
+$$
+\begin{align}
+\mathcal L(\weight, b, \phantom {\xi}, \alpha, \phantom {\beta}) &= \frac 1 2 \weightT \weight \phantom {+ C \sum_{n = 1}^N \xi_n}
+- \sum_{n = 1}^N \alpha_n(y_n(\weightT \feature_n + b) - 1 \phantom {+ \xi_n})
+\phantom {- \sum_{n = 1}^N \beta_n \xi_n} \\ \\
+\mathcal L(\weight, b, \xi, \alpha, \beta) &= \frac 1 2 \weightT \weight + C \sum_{n = 1}^N \xi_n
+- \sum_{n = 1}^N \alpha_n(y_n(\weightT \feature_n + b) - 1 + \xi_n)
+- \sum_{n = 1}^N \beta_n \xi_n \\ \\
+&\text {minimize w.r.t. } \weight, b, \text { and } \xi \\
+&\text {maximize w.r.t. each } \alpha_n \geq 0 \text { and } \beta_n \geq 0
+\end{align}
+$$
+
+The minimization with respect to $\weight$ is the same as before:
+
+$$\nabla_\weight \mathcal L = \weight - \sum_{n = 1}^N \alpha_n y_n \feature_n = \mathbf 0$$
+
+The minimization with respect to $b$ is also the same as before:
+
+$$\frac {\partial \mathcal L} {\partial b} = - \sum_{n = 1}^N \alpha_n y_n = 0$$
+
+The minimization with respect to $\xi$ can be derived as follows:
+
+$$\frac {\partial \mathcal L} {\partial \xi_n} = C - \alpha_n - \beta_n = 0$$
+
+The ramifications of the final equation is that the Lagrange formulation above reduces back down to the original Lagrange formulation, with the only added constraint that $\alpha_n$ be **at most** $C$:
+
+$$
+\begin{align}
+\text {Maximize } &\mathcal L(\mathbf \alpha) = \sum_{n = 1}^N \alpha_n - \frac 1 N \sum_{n = 1}^N \sum_{m = 1}^N y_n y_m \alpha_n \alpha_m \feature_n^\intercal \feature_m \quad \text {w.r.t } \alpha \\
+\text {Subject to } &0 \leq \alpha_n \leq C\ \text { for } n = 1, \dots, N\ \text { and } \sum_{n = 1}^N \alpha_n y_n = 0
+\end{align}
+$$
+
+The result of this minimization is the weight:
+
+$$\weight = \sum_{n = 1}^N \alpha_n y_n \feature_n$$
+
+This particular weight guarantees that we are minimizing the quantity:
+
+$$\frac 1 2 \weightT \weight + C \sum_{n = 1}^N \xi_n$$
+
+In practical terms, well we have to do to use a soft-margin is to ensure that $0 \leq \alpha_n \leq C$.
+
+### Types of Support Vectors
+
+We call the support vectors that fall on the hyperplane boundary **margin support vectors** ($0 \lt \alpha_n \lt C$):
+
+$$y_n(\weightT \feature_n + b) = 1 \quad (\xi_n = 0)$$
+
+The other vectors that don't fall on the hyperplane boundary but are still correctly classified are referred to as **non-margin support vectors** ($\alpha_n = C$):
+
+$$y_n(\weightT \feature_n + b) \lt 1 \quad (\xi_n \gt 0)$$
+
+The $C$ parameter is determined in practice using [cross-validation](#cross-validation).
+
+<img src="/images/machine-learning/kernel-methods/types-of-support-vectors.png" class="center">
+
+There are two final observations.
+
+First, with the hard margin, what happens if the data is not linearly separable? The translation from the "primal" form (minimizing $\weightT \weight$) to the "dual" form (maximizing $\mathcal L(\alpha)$) begins to break down. This is mathematically valid only if there is a feasible solution. The point is that we don't have to worry about this, we don't have to go through the combinatorial process of determining whether a data set is linearly separable. Instead, we can validate the solution.
+
+Second, when we transform to the $\mathcal Z$-space, some of these transformations had a constant coordinate of $1$. This used to correspond to $w_0$, but we made a point to state that in support vectors there are no $w_0$ values, since we took them out as a separate variable $b$. If the $\mathcal Z$-space transformation has a $w_0 = 1$, then we effectively have two variables doing the same thing. We don't have to worry about this either though because when we get the solution, all of the corresponding weights will go to $0$, and the bulk of the bias will go to $b$.
+
+# Radial Basis Functions
+
+Radial basis functions serve as the glue between many different machine learning topics. The idea is that every point in the data set $(\feature_n, y_n) \in \mathcal D$ influences the value of the hypothesis $h(\feature)$ at every point $\feature$ based on the distance to nearby points $\lVert \feature - \feature_n \rVert$. For example, imagine in the bottom image that the top of the bump is $\feature_n$ and the surface represents the influence to other points, and the symmetry of the function shows that this influence is a function of the distance.
+
+<img src="/images/machine-learning/radial-basis-functions/rbf-example.png" class="center">
+
+The standard form of of a radial basis function embeds the notion that the closer a point is to the feature point, the more of an influence it has on it:
+
+$$h(\feature) = \sum_{n = 1}^N w_n \underbrace {\exp\left( -\gamma\ \lVert \feature - \feature_n \rVert^2 \right)}_{\text {basis function}}$$
+
+The equation shows the source of the **basis function** part of the name, while the **radial** part of the name comes from the $\lVert \feature - \feature_n \rVert$.
+
+Now that we have the model, we can move on to the learning algorithm, where we want to find the parameters $w_1, \dots, w_n$. First it's useful to note that we have $N$ parameters $w_n$, so it shouldn't be difficult to find parameters such that $\insample = 0$, so that $h(\feature_n) = y_n$ for $n = 1, \dots, N$. This constraint can be expressed as follows:
+
+$$\sum_{m = 1}^N w_m \exp\left( -\gamma\ \lVert \feature_n - \feature_m \rVert^2 \right) = y_n$$
+
+This shows that there are $N$ equations, one for each data point with $N$ unknown $w$ parameters.
+
+$$
+\newcommand{\basis}[2]{\exp \left(-\gamma\ \lVert #1 - #2 \rVert^2 \right)}
+\underbrace {\begin{bmatrix}
+\basis {\feature_1} {\feature_1} & \dots & \basis {\feature_1} {\feature_N} \\
+\basis {\feature_2} {\feature_1} & \dots & \basis {\feature_2} {\feature_N} \\
+\vdots & \vdots & \vdots \\
+\basis {\feature_N} {\feature_1} & \dots & \basis {\feature_N} {\feature_N} \\
+\end{bmatrix}}_{\mathbf \Phi}
+\underbrace {\begin{bmatrix}
+w_1 \vphantom {\Big(} \\
+w_2 \vphantom {\Big(} \\
+\vdots \\
+w_N \vphantom {\Big(}
+\end{bmatrix}}_{\weight} =
+\underbrace {\begin{bmatrix}
+y_1 \vphantom {\Big(} \\
+y_2 \vphantom {\Big(} \\
+\vdots \\
+y_N \vphantom {\Big(}
+\end{bmatrix}}_{\mathbf y}
+$$
+
+If $\mathbf \Phi$ is invertible, then the solution is simply:
+
+$$\weight = \mathbf \Phi^{-1} \mathbf y \quad \text {if } \mathbf \Phi \text { is invertible}$$
+
+This solution can be interpreted as being an **exact interpolation**, because on the points for which we know the value of the hypothesis, we're getting the exact output $y$ value.
+
+## Effect of $\gamma$
+
+The effect of $\gamma$ is such that if it is small, the Gaussian is a wider curve, whereas if it were larger it'd be a steeper curve. Depending on where the points are --- specifically how sparse they are --- the steepness of the curve makes a difference.
+
+The image on the left shows the effect of choosing a small $\gamma$. The three training points are on the curve, since that was what the constraint was. The smaller gray curves are the individual contributions from each of the points, that is, $w_1, w_2, w_3$, such that when they're plugged into the hypothesis function it yields the blue curve.
+
+The image on the right shows the effect of choosing a larger $\gamma$. The interpolation between any two points is poor because the individual contributions of each point "dies out" too quickly.
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/radial-basis-functions/small-gamma.png">
+  <img src="/images/machine-learning/radial-basis-functions/large-gamma.png">
+</div>
+
+It's apparent that $\gamma$ has an effect on the performance of interpolation, and that it seems to depend on the data set in question, specifically, how far apart the points are. We will cover the choice of $\gamma$ later on.
+
+## Classification {#rbf-classification}
+
+The model described above was a regression model, where we considered the output to be real-valued which was matched with the target output which was also real-valued. It's possible to use RBFs for classification, however, by modifying the hypothesis function to be:
+
+$$h(\feature) = \sign\left(\sum_{n = 1}^N w_n \exp\left( -\gamma\ \lVert \feature - \feature_n \rVert^2 \right)\right)$$
+
+The question now is how to determine the $w_n$ values with this $\sign$ function now involved. We've done this before when we applied [linear regression for classification](#linear-regression-for-classification). We will focus on the inner component of the $\sign$ function, the signal $s$:
+
+$$s = \sum_{n = 1}^N w_n \exp\left( -\gamma\ \lVert \feature - \feature_n \rVert^2 \right)$$
+
+Where we will try to make the signal itself match the $\pm 1$ target. So that we can minimize $(s - y)^2$ on $\mathcal D$ knowing that $y = \pm 1$, then we simply return $h(\feature) = \sign(s)$.
+
+RBFs share a relationship to the nearest-neighbor method, where we classify by looking at the closest point $\feature_n$ within the training set to the point $\feature$ being considered, so that $\feature$ inherits the label $y_n$ corresponding to that closest point $\feature_n$. For example in the image below, all points in a given red-shaded region inherit the label of the red point within that region because all points within that region are closest to that point rather than any of the other points that define other different regions:
+
+<img src="/images/machine-learning/radial-basis-functions/nearest-neighbors.png" class="center">
+
+This can be approximated with RBFs, where we only take influence of nearby points. The basis function would look like a cylinder as in the image below, where it's a given constant value or zero. With this basis function, the regions would look more like the cylinders.
+
+<img src="/images/machine-learning/radial-basis-functions/nearest-neighbors-basis-function.png" class="center">
+
+The nearest-neighbor approach is pretty brittle, as the boundaries between the regions are abrupt. It can be modified into the $k$-nearest neighbors, where instead of taking the value of the closest point, we look at the $k$ nearest points and adopt the label most represented by those points. This has an effect of smoothing the surface, where the number of fluctuations will decrease.
+
+The RBF can be smoothed similarly by using a Gaussian instead of a cylinder, which does a good job of representing a gradual decrease in influence.
+
+In both cases, the model can be considered as a **similarity-based method**, where we are classifying points according to how similar they are to points in the training set.
+
+### K-Centers RBF
+
+We are generally mindful of generalization as a ratio between the number of parameters and data points. However, the RBF model we described has $N$ parameters $w_1, \dots, w_N$ based on $N$ data points, so it may seem hopeless to generalize. We can mitigate this by preventing every point from having its own influence, and instead appoint a number $K$ of important centers for the data and have them influence the points around them.
+
+We do this by taking $K \ll N$ centers $\mathbf {\mu_1, \dots, \mu_K}$ as the centers of the RBFs instead of $\feature_1, \dots, \feature_N$. The $K$ centers live in the same space as $\feature$, but they are not necessarily data points --- they could be elected data points from the data set, or they may be specially constructed points that we may deem representative of the data set. We then define the hypothesis function as:
+
+$$h(\feature) = \sum_{k = 1}^K w_k \exp\left(-\gamma\ \lVert \feature - \mu_k \rVert^2\right)$$
+
+This hypothesis function now reflects the fact that every point $\feature_n$ is being compared against every center $\mathbf \mu_k$. We now have to determine how to choose the centers $\mathbf \mu_k$ and the weights $w_k$.
+
+### K-Means Clustering {#k-center-rbf-center-selection}
+
+To choose the $K$ centers, we are going to choose the centers as representative of the data inputs, that is, a representative center will exist for every cluster of data points. Such representative centers would be achieved by minimizing the distance between $\feature_n$ and the **closest** center $\mathbf \mu_k$. This is called **K-means clustering** because the center of a cluster will end up being the mean of the points in that cluster.
+
+We begin by splitting the data set $\feature_1, \dots, \feature_N$ into clusters $S_1, \dots, S_K$. Again, a good representative center $\mathbf \mu_k$ of a cluster $S_k$ would minimize the distance between the points in the cluster and itself, represented as the sum of the Euclidean MSE between the candidate center and each of the points in the cluster. The optimal cluster configuration is achieved by then minimizing the sum of each cluster's error measure.
+
+$$\text {Minimize } \quad \sum_{k = 1}^K \sum_{\feature_n \in S_k} \lVert \feature_n - \mathbf \mu_k \rVert^2$$
+
+This is **unsupervised learning**, since it was performed without any reference to the label $y_n$. The problem is that this is **NP-hard** in general; it is intractable to get the absolute minimum. The problem being NP-hard didn't discourage us before when we realized that finding the absolute minimum error in a neural network was NP-hard as well, in which case we developed a heuristic --- gradient descent --- which led to back-propagation and thus a decent local-minimum.
+
+### LLoyd's Algorithm
+
+We can develop an iterative algorithm to to solve K-means clustering, which works by fixing one of the parameters and attempting to minimize the other. First it fixes the particular membership of the clusters $\feature_n \in S_k$ and it tries to find the optimal centers. After finding these centers, it then fixes these centers and tries to find the optimal clustering for these centers. This is repeated until convergence:
+
+$$
+\begin{align}
+\text {Iteratively Minimize } \quad &\sum_{k = 1}^K \sum_{\feature_n \in S_k}
+\lVert \feature_n - \mathbf \mu_k \rVert^2 \quad \text {w.r.t. } \mathbf \mu_k, S_k \\ \\
+&\mathbf \mu_k \gets \frac 1 {|S_k|} \sum_{\feature_n \in S_k} \feature_n \\
+&S_k \gets \{\feature_n : \lVert \feature_n - \mathbf \mu_k \rVert \leq \text { all } \lVert \feature_n - \mathbf \mu_l \rVert\}
+\end{align}
+$$
+
+When updating $\mathbf \mu_k$, we essentially take the mean of the points in the cluster: add them up and divide by the amount of points in the cluster. This would be a good representative if $S_k$ were the real cluster.
+
+The $\mathbf \mu_k$ value is then frozen and we cluster the points based on it. For every point $\feature_n$ in the data set, we measure the distance to the new center and admit it to the cluster $S_k$ if this distance is smaller than the distance between this point $\feature_n$ and any of the other clusters $\mathbf \mu_l$.
+
+It is apparent that both steps are minimizing the original quantity, and since there are only a finite number of points and a finite number of possible values for $\mathbf \mu_k$, it is **guaranteed** that we will converge, albeit to a local minimum, which is sensitive to the initial centers or clusters, just like neural networks converged to a local minimum dependent on the initial weights. The general way of choosing decent initial centers or clusters is to perform a number of runs with different centers or clusters and choosing the best one.
+
+LLoyd's algorithm can be visualized in the image below. The algorithm is fed the only the inputs of the data set, with the centers initialized so some pre-defined values (black dots), then the algorithm iterates and outputs the representative $\mathbf \mu_k$ centers.
+
+<img src="/images/machine-learning/radial-basis-functions/lloyds-algorithm.png" class="center">
+
+Notice that since we cluster values without looking at the label $y_n$, we can have clusters that lie on the boundary so that half of the points are $+1$ and the other half are $-1$. This is the price paid by unsupervised learning, where we want to find similarity as far as the ***input*** is concerned, not as far as the behavior with the target function is concerned:
+
+<img src="/images/machine-learning/radial-basis-functions/rbf-centers.png" class="center">
+
+### Calculating Weights {#rbf-centers-calculating-weights}
+
+Now that we have determined the centers we can determine the weights. Again the hypothesis function was defined as:
+
+$$\sum_{k = 1}^K w_k \exp\left( -\gamma\ \lVert \feature_n - \mathbf \mu_n \rVert^2 \right) \approx y_n$$
+
+In this case there are now $N$ equations but only $K < N$ unknowns.
+
+$$
+\def \center {\mathbf \mu}
+\underbrace {\begin{bmatrix}
+\basis {\feature_1} {\center_1} & \dots & \basis {\feature_1} {\center_K} \\
+\basis {\feature_2} {\center_1} & \dots & \basis {\feature_2} {\center_K} \\
+\vdots & \vdots & \vdots \\
+\basis {\feature_N} {\center_1} & \dots & \basis {\feature_N} {\center_K} \\
+\end{bmatrix}}_{\mathbf \Phi}
+\underbrace {\begin{bmatrix}
+w_1 \vphantom {\Big(} \\
+w_2 \vphantom {\Big(} \\
+\vdots \\
+w_K \vphantom {\Big(}
+\end{bmatrix}}_{\weight} =
+\underbrace {\begin{bmatrix}
+y_1 \vphantom {\Big(} \\
+y_2 \vphantom {\Big(} \\
+\vdots \\
+y_N \vphantom {\Big(}
+\end{bmatrix}}_{\mathbf y}
+$$
+
+The weights can be solved for in the same manner as in linear regression by calculating the pseudo-inverse. If $\mathbf {\Phi^\intercal \Phi}$ is invertible, then:
+
+$$\weight = \left(\mathbf {\Phi^\intercal \Phi}\right)^{-1} \mathbf {\Phi^\intercal y} \quad \text {if } \mathbf {\Phi^\intercal \Phi} \text { is invertible }$$
+
+In this case we aren't guaranteed to get the correct value at every data point, but we do have a much higher chance at generalization since we only have $K \ll N$ parameters.
+
+## RBF Network
+
+We can take the RBF model and design a graphical network in order to relate it to neural networks. In this graphical network, we take the input and compute the radial component, the distance to every $\center_k$. These radial components are handed to a non-linearity $\phi$, usually the Gaussian non-linearity. The resultant features are combined with weights $w_k$ in order to compute the output $h(\feature)$.
+
+<img src="/images/machine-learning/radial-basis-functions/rbf-network.png" class="center">
+
+In this case the "features" are $\smash {\basis {\feature} {\center_k}}$. The non-linear transform features depend on $\mathcal D$, so it is no longer a linear model. However, since we only used the inputs in order to compute $\center$ it's _almost_ linear, since we didn't have to back-propagate because we didn't like the output, since the inputs were frozen. This is why the $w$ values look like multiplicative values, in which case it's linear on those values.
+
+A bias term ($b$ or $w_0$) is often added at the final layer.
+
+### Neural Network Comparison {#rbf-neural-network-comparison}
+
+A two-layer neural network can be compared to an RBF network.
+
+Both networks compute features, however in the case of RBF networks, the features depend on the distance to the center, and if that distance is very large then the influence disappears. That is, if a particular value input is huge, we can know that the corresponding feature will have zero contribution. In the case of a neural network, the input always goes through a sigmoid regardless of its size, meaning that it always has a contribution. What RBFs do can be interpreted as looking at local regions of the space without worrying about distant points, such that the basis function will not interfere with those distant points.
+
+The non-linearity is called $\phi$ in RBF networks and $\theta$ in neural networks. In neural networks, the input to the non-linearity consisted of the weights $\weight$ that depended on the labels of the data, so that the error was back-propagated through the network to adjust the weights. This is why in the neural networks the non-linearity outputs are learned features, which definitely makes it a non-linear model. In the case of RBF networks, the $\center$ values are already frozen, so that the $\phi$ is almost linear, which is why we were able to derive the features using the pseudo-inverse.
+
+Any two-layer network with a structure similar to an RBF network lends itself to being a support vector machine, where the first layer handles the kernel and the second one is the linear combination that is built into SVMs. For example, neural networks can be implemented using SVMs with a neural network kernel.
+
+<img src="/images/machine-learning/radial-basis-functions/neural-network.png" class="center">
+
+## Choosing $\gamma$
+
+The final parameter to choose was the width of the Gaussian curve $\gamma$. This is now treated as a genuine parameter to be learned using an iterative approach using an algorithm known as the **Expectation Maximization** (EM) algorithm, which is used for solving the mixture of Gaussians. The algorithm is as follows:
+
+1. Fix $\gamma$, solve for $w_1, \dots, w_K$ (using the pseudo-inverse)
+2. Fix $w_1, \dots, w_K$, minimize error w.r.t. $\gamma$ (using gradient descent)
+
+With this simple algorithm, we can have different $\gamma_k$ for each center $\center_k$, so that for example one center can "reach out further" than another if it has to.
+
+## RBF vs. SVM Kernel
+
+We previously saw the RBF kernel for SVM that implements the following classifier:
+
+$$\sign\left(\sum_{\alpha_n \gt 0} \alpha_n y_n \basis {\feature} {\feature_n} + b\right)$$
+
+We also just saw the straight RBF classifier implementation:
+
+$$\sign\left(\sum_{k = 1}^K w_k \basis {\feature} {\center_k} + b\right)$$
+
+The performance of both models can be observed in the image below. It's apparent from the straight RBF implementation that $\insample \ne 0$ since some points are misclassified. The SVM implementation clearly tracks the target better, with $\insample = 0$.
+
+<img src="/images/machine-learning/radial-basis-functions/rbf-vs-svm.png" class="center">
+
+## Regularization {#rbf-regularization}
+
+RBFs can be derived based purely on regularization. Take a 1D function with many data points and we want to inter/extra-polate between the points in order to get the whole function. With regularization there are usually two terms: one two minimize $\insample$ and the regularization term.
+
+The in-sample error minimization term can be defined the squared difference between the hypothesis value and the target value:
+
+$$\sum_{n = 1}^N (h(x_n) - y_n)^2$$
+
+A "smoothness" constraint can be added, which is a constraint on the derivatives, by taking the kth-derivative of the hypothesis and squaring it, since we are only interested in the magnitude of it, and integrate it from $-\infty$ to $\infty$. This would be an estimate of the size of the kth-derivative, where if it's big then it's bad for smoothness and vice versa. We can then combine the contributions of different derivatives:
+
+$$\sum_{k = 0}^\infty a_k \int_{-\infty}^\infty \left( \frac {d^k h} {dx^k} \right)^2 dx$$
+
+These terms can be combined by adding them, but first multiplying the second term by the regularization parameter $\lambda$. We can then minimize the augmented error $\augerror$ where the bigger $\lambda$ is, the more insistent we are on smoothness versus fitting, as we have seen before on the topic of regularization.
+
+$$\sum_{n = 1}^N (h(x_n) - y_n)^2 + \lambda \sum_{k = 0}^\infty a_k \int_{-\infty}^\infty \left( \frac {d^k h} {dx^k} \right)^2 dx$$
+
+If this is solved, we end up with RBFs, which means that with RBFs we are effectively looking for an interpolation, specifically as smooth an interpolation as possible in the sense of the sum of the squares of the derivatives with these coefficients. It isn't surprising, therefore, that the best interpolation would be Gaussian. This is what gives RBFs credibility as inherently self-regularized.
+
+# Three Learning Principles
+
+## Occam's Razor
+
+Occam's razor is a symbolic principle set by William of Occam, where we have a razor and we keep trimming the explanation to the bare minimum that is still consistent with the data, which happens to be the best possible explanation. More succinctly, it says that:
+
+> The simplest model that fits the data is also the most plausible.
+>
+> <footer><strong>Occam's Razor</strong> applied to ML</footer>
+
+It's therefore important to know when a model is considered "simple," and for this purpose there are two main types of complexity measures: one being the complexity of the hypothesis $h$ (object), the second being the complexity of the hypothesis set $\mathcal H$ (set of objects).
+
+The complexity of $h$ can be measured using minimum description length (MDL) or the order of the polynomial. MDL concerns specifying an object with as few bits as possible, the fewer the bits, the "simpler" the object. For example, for a million-digit number we want to determine the complexity of individual numbers of that length. If we choose the number $2^{1,000,000} - 1$, which is a million digits long, all the number $9$. Despite the fact that this is a very long number, it's simple because we can simply describe it as $2^{1,000,000} - 1$, which isn't a very long description. The order of the polynomial as a measure of complexity is straightforward.
+
+The complexity of $\mathcal H$ can be measured using entropy and the VC dimension. The VC dimension produces a number that describes the diversity of the set, which is considered the complexity.
+
+When we think of "simple", we think in terms of a single object, $h$ in this case. However, proofs use "simple" in terms of $\mathcal H$.
+
+The complexity of an object and a set of objects are related, if not almost identical. For example, using the MDL we take $l$ bits to specify the object $h$, in other words, the complexity of $h$ is $l$ bits. This implies that $h$ is one of $2^l$ elements of a set $\mathcal H$, in other words, one of $2^l$ is the complexity of set $\mathcal H$. Put into words, **the link is** that something is complex on its own if it's one of many, whereas something is simple on its own if it's one of few.
+
+The link holds with respect to real-valued parameters (as opposed to bits), such as a 17th-order polynomial, which is considered complex because it is one of very many, since there are 17 parameters to tune.
+
+There are exceptions. Support vector machines look complex but is one of few, i.e. when we go into an infinite-dimensional space yet only need a few support vectors to represent the separating hyperplane.
+
+### Puzzle 1: Football Oracle
+
+You get a letter Monday morning predicting the outcome of Monday night's game. After we watch the game, we realize the letter was right. The same thing happens next Monday, even with the odds stacked against the team it called. This went on for 5 weeks in a row. On the 6th week, the letter asks you if you want to continue getting predictions for a $50 fee. Should you pay?
+
+We shouldn't. The guy isn't sending only to us, but to 32 other people. In the first game, to half of those people he said the home team would lose, and the other half that they would win. The home team lost that first week. The second week, he did the same thing with the half of the recipients for which he sent the correct result. He repeated this process for 5 weeks until there was only one person left for him all "predictions" were correct.
+
+<!-- this is one nasty table -->
+
+Distribution of Predictions                                                                                         Result
+-------------                                                                                                      --------
+$\style{color:green}{0000000000000000}\style{color:red}{1111111111111111}$                                         $0$
+$\style{color:green}{00000000}\style{color:red}{11111111}\style{color:gray}{0000000011111111}$                     $1$
+$\style{color:gray}{00001111}\style{color:green}{0000}\style{color:red}{1111}\style{color:gray}{0000111100001111}$ $0$
+$\style{color:gray}{00110011}\style{color:green}{00}\style{color:red}{11}\style{color:gray}{00110011001100110011}$ $1$
+$\style{color:gray}{0101010101}\style{color:green}0\style{color:red}1\style{color:gray}{01010101010101010101}$     $1$
+
+We thought that the prediction ability was great since we only saw our letters (and we are the last remaining recipient for which all predictions were "correct"). We figured there was one hypothesis, and it predicted perfectly. The problem is that the hypothesis set is actually very complex, so the prediction value is meaningless, we simply didn't know since we didn't see the hypothesis set.
+
+### Why is Simpler Better?
+
+Occam's Razor isn't making the statement that simpler is more elegant. Instead, Occam's Razor is making the statement that simpler will have better out-of-sample performance.
+
+The basic argument to back up this claim, which is a formal proof under different idealized conditions, is as follows. There are fewer simpler hypotheses than complex ones, which was captured by the growth function $\growthfunc(N)$. To recap, the growth function took as parameter the size $N$ of the data set and returned the number of different patterns (dichotomies) that the hypothesis set $\mathcal H$ could generate on those $N$ points. Since there are fewer simpler hypotheses, it is less likely to fit a given data set, specifically, $\growthfunc(N)/2^N$. Since it is less likely for fitting to occur, then when it does occur it is more significant.
+
+The only difference between someone believing in the scam in Puzzle #1 and someone having the big picture was the fact that the growth function, from our point of view, was $\growthfunc(N) = 1$ --- we are only one person, he has one hypothesis, and it was correct, and we gave it a lot of value since that scenario is unlikely to occur. The reality was that the growth function was $\growthfunc(N) = 2^N$, which means it's certain to happen, so that when it _does_ happen, it's meaningless.
+
+### Meaningless Fit
+
+Suppose two scientists conduct an experiment to determine if conductivity is linear in the temperature. The first scientist is in a hurry so he simply takes two points from the data set and draws a line to connect them. The second scientist took three points and also drew a line. What evidence does the first or second experiment provide for the hypothesis that conductivity is linear in the temperature?
+
+<div style="text-align: center; margin-top: 10px">
+  <img src="/images/machine-learning/three-learning-principles/experiment-a.png">
+  <img src="/images/machine-learning/three-learning-principles/experiment-b.png">
+</div>
+
+Clearly the experiment that used three points to fit the line provided more evidence than the other. The experiment that used two points provided no evidence at all, because two points can always be connected by a line. This introduces the notion of **falsifiability**: if your data has no chance of falsifying your assertion, then it doesn't provide any evidence for the assertion. We have to have a chance to falsify the assertion in order to be able to draw the evidence (axiom of non-falsifiability).
+
+For example, the linear model is _too complex_ for the data set size of $N = 2$ to be able to generalize at all, so there is no evidence. On the other hand, with a data set size of $N = 3$ the assertion could've been falsified if one of the three points was not collinear with the other two.
+
+<img src="/images/machine-learning/three-learning-principles/falsifiability.png" class="center">
+
+## Sampling Bias
+
+### Puzzle 2: Presidential Election
+
+In 1948, in the first presidential election after WW2 ended up in a close race between Truman and Dewey. A newspaper ran a phone poll asking people how they voted and concluded that Dewey had won the poll decisively, that is, he won above the error bar. They then printed a newspaper declaring "_Dewey Defeats Truman_." However, Truman was the candidate that ended up winning.
+
+This wasn't $\delta$'s fault, where $\delta$ was the discrepancy between in-sample (poll) and out-of-sample (general population), where we asked ourselves for the probability that this discrepancy is larger than some quantity $\epsilon$ such that the result was flipped:
+
+$$\mathbb P \left[ |\insample - \outsample| \gt \epsilon \right] \leq \delta$$
+
+It was not bad luck, however, because if they had run the poll again with a larger and larger sample size, they would've gotten the same result. The problem was that there was a **sampling bias** in the poll they conducted, and that is that in 1948, phones were expensive, and in that era, rich people favored Dewey more than they favored Truman.
+
+> If the data is sampled in a biased way, then learning will produce a similarly biased outcome.
+>
+> <footer><strong>Sampling Bias Principle</strong></footer>
+
+This presents a problem of making sure that the data is representative of what we want. For example, in financial forecasting, we may want to predict the market by taking periods of the market where the market was normal. If this model is then tested in the real market which contains non-normal conditions, we will have no idea how the model will perform in those conditions.
+
+### Matching the Distributions
+
+The idea is that we have a distribution on the input space in our mind. Remember that VC, Hoeffding's, etc. made the assumption that we chose the points for training from the same distribution that we picked for testing. One method, in principle, that might resolve this is to make the training set we have be more representative of the target set. This can be done by resampling from the training set by picking data points that better represent the target set, or by scaling the weights of the training points. This could mean that the effective size of the training set decreases, losing some of the independence of the points.
+
+<img src="/images/machine-learning/three-learning-principles/matching-the-distributions.png" class="center">
+
+This method doesn't work if there is a region in the input space where the probability $P = 0$ for training (nothing will be sampled from this region) but $P > 0$ (it's being tested anyways). This is similar to the people without phones in Puzzle #2, who had $P = 0$ in the sample (they weren't in the sample) but not in the general population (there were people without phones who voted).
+
+### Puzzle 3: Credit Approval
+
+A bank wants to approve credit automatically by going through the historical records of previous applicants who were given credit cards with 3-4 years of credit behavior. The input is the information they provided on the credit application, since this is the data that would be available from a new customer:
+
+------------------ --------
+Age                23 years
+gender             male
+annual salary      $30,000
+years in residence 1 year
+years in job       1 year
+current debt       $15,000
+...                ...
+------------------ --------
+
+The target is whether or not the person was profitable for the bank. For example, someone flirting with disaster who maxed out but paid the debt was profitable as long as they didn't default.
+
+The sampling bias lies in the fact that we're only considering the historical data of customers we _approved_, since they're the only ones for whom we have credit behavior data on. When we're done training, we'll have a system that applies to a new applicant, and we don't know beforehand whether or not they'll be approved or not, because they were never part of our training sample. In this case, sampling bias isn't entirely terrible, because banks tend to be aggressive in providing credit, since borderline credit users are very profitable.
+
+## Data Snooping
+
+The data snooping principle doesn't forbid us from doing anything, it simply makes us realize that if we use a particular data set --- the whole, subset, whatever --- to navigate and decide which model, $\lambda$, etc., then when we have an outcome from the learning process and we use the same data set that affected the choice of the learning process, the ability to fairly assess the performance of the outcome has been compromised by the fact that it was chosen according to the data set.
+
+> If a data set has affected any step of the learning process, it's ability to assess the outcome has been compromised.
+>
+> <footer><strong>Data Snooping Principle</strong></footer>
+
+This is the most common trap for practitioners. A possible reason is that, when we data snoop, we end up with better performance --- or so we think. Data snooping isn't only looking at the data, in fact there are many ways to fall into the trap.
+
+### Looking at the Data
+
+The most common data snooping is "looking at the data." For example, with non-linear transforms, we use a second-order transform:
+
+$$\mathbf z = (1, x_1, x_2, x_1 x_2, x_1^2, x_2^2)$$
+
+<img src="/images/machine-learning/three-learning-principles/looking-at-the-data.png" class="center">
+
+We manage to get $\insample = 0$, so we decide that we fit the problem very well but we don't like the ratio of parameters-to-data points, with respect to generalization. So we decide that we could've done with a simpler transformation:
+
+$$\mathbf z = (1, x_1^2, x_2^2) \text { or even } \mathbf z = (1, x_1^2 + x_2^2)$$
+
+The problem is that this process of refining the non-linear transformation is essentially a learning algorithm, and we didn't take into account the fact that we did some of the learning, and thereby forgot to charge the original VC dimension instead of just the final VC dimension of the non-linear transformation we arrived at.
+
+It's important to realize that the snooping in this example involves the data set $\mathcal D$. The danger of looking at the data set is that we are vulnerable to designing the model or choices in learning according to the idiosyncrasies of the data set, so we are working well _on that_ data set, but we don't know how we'll be doing in another independently generated data set from the same distribution, which would be the out-of-sample.
+
+On the other hand, we're completely allowed --- encouraged, _ordered_ --- to look at all other information related to the target function and input space, _except for_ the realization of the data set that we're going to use for training, _unless_ we're going to charge accordingly. For example, we may ask: how many inputs do we have, what is the range of the inputs, how did we measure the inputs, are they physically correlated, do we know of any properties that we can apply. This is all valid and important for us to zoom-in correctly, since we're not using the data, and are therefore not subject to overfitting the data. Instead we're using properties of the target function and input space and therefore improving our chances of picking the correct model. **The problem starts** when we look at the data set and _not_ charge accordingly.
+
+### Puzzle 4: Financial Forecasting
+
+Suppose we want to predict the exchange rate between the US Dollar versus the British Pound. We have 8 years worth of daily trading --- about 2,000 data points. Our input-to-output model, where $r$ is the rate, can be expressed as getting the change in rate for the past 20 days, hoping that a particular pattern in the exchange rate will make it more likely that today's change is positive or negative and by how much:
+
+$$\Delta r_{-20}, \Delta r_{-19}, \dots, \Delta r_{-1} \to \Delta r_0$$
+
+We normalize the data to zero-mean and unit-variance, we split randomly into a $\trainingset$ of 1,500 points and $\def \testingset {\mathcal D_{\text {test}}}$ and 500 points. The training set is 1,500 days so that for every day (output) we take the previous 20 days as the input. We completely locked away the $\testingset$ until it was time to test, in an effort to avoid data snooping, resulting in:
+
+<img src="/images/machine-learning/three-learning-principles/financial-forecasting.png" class="center">
+
+The plot is of the profit that the testing measure represents, which can be seen to be increasing with more and more days that are trained. When we attempt to try this live on the real market, we end up losing a lot money. The fact is that there was actually data snooping in this learning process: **when we normalized the data**. The problem is that we did this _before_ we separated the data set into $\trainingset$ and $\testingset$, so we took into consideration the mean and variance _of the test set_.
+
+If we instead split the data first, then only normalized the $\trainingset$ and then took the $\mu$ and $\sigma^2$ that did the normalization for the training set and applied those to the $\testingset$ so that they live in the same range of values and then reran the test, we would've gotten the blue line.
+
+To recap, there's **nothing wrong with normalization**, as long as the normalization parameters are extracted exclusively from the training set.
+
+### Data Set Reuse
+
+If we try one model after another **on the same data set**, we will eventually "succeed." The problem is that in doing this, we're increasing the VC dimension without realizing it, since the final model that we end up using in order to learn is **the union of all of the attempted models**. Think of the VC dimension of the **total** learning model.
+
+> <p style="text-align:center">If you torture the data long enough, it will confess.</p>
+
+This problem could occur not only due to the different models that we have attempted, but _also_ due to what ***others*** have attempted. Imagine we decide to try our methods on some data set and we avoid looking at it. We decide to read papers about other people who have used the data set. In the end, we may not have looked at the data ourselves, but we used something that was affected by the data: the papers that others wrote. So that even if we only determined a couple of parameters and yielded great performance, we can't simply conclude that we have a VC dimension of 2 and 7,000 data points and that we'll do great out of sample. This is because we don't _only_ have 2 parameters, but all of the decisions that led up to that model.
+
+The key problem is that we're matching a ***particular*** data set too well; we're married to the data set, so that a completely new data set generated from the same distribution will look completely foreign to the model we created.
+
+For example, the observation that, in the original data set, whenever a particular two points are close, there is always another point on the same line far away --- this is clearly an idiosyncrasy of the data set, so that it would be pointless to try to find it in another data set from the same distribution since we may assume that if doesn't exhibit this same quality, it must be from another distribution. The truth is that the data set is generated from the same distribution, it's just that we got too used to the data set to the point where we were fitting the noise.
+
+### Remedies {#data-snooping-remedies}
+
+There are two remedies to data snooping: avoiding it or accounting for it. Avoiding it naturally requires very strict discipline. Accounting for data snooping concerns keeping track of how much data contamination has occurred on each data set. The most vulnerable part is looking at the data, because it's very difficult to model ourselves and say what is the hypothesis set that we explored in order to come up with a particular model by looking at the data.
+
+### Puzzle 5: Bias via Snooping
+
+We're testing the long-term performance of a famous strategy in trading called "buy and hold" in stocks. We use 50 years worth of data. We want the test to be as broad as possible so we take all currently traded companies in S&P500. We assume that we strictly followed a buy and hold for all of them. We determine that the model will yield very great profits.
+
+There is a sampling bias because we only looked at the _currently_ traded stocks, which obviously excludes those that were around within the 50-year data span but are no longer traded.
+
+People tend to treat this sampling bias not as sampling bias but as data snooping, because we looked at the future to see which stocks would be traded at that point. We consider it a sampling bias caused by "snooping."
+
+# Epilogue
+
+## Map of Machine Learning
+
+Singular value decomposition would treat the Netflix problem as decomposing the canonical ratings matrix into two matrices (user and movie factors). Graphical Models are models for where the target is a joint probability distribution, they try to find computational efficient ways using graph algorithms to determine the joint probability distribution by means of simplifying the graph. Aggregation is when different solutions are combined.
+
+<img src="/images/machine-learning/epilogue/ml-map.png" class="center">
+
+## Bayesian Learning
+
+Bayesian learning tries to take a full probabilistic approach to learning. For example, going back to the learning diagram, we can observe that there are many probabilistic components. An inherent probabilistic component is the fact that the target can be noisy, which is why we don't model the target as a function but rather as a probability distribution. This is apparent in the case of trying to predict heart attacks. Another probability distribution that we had to deal with was the unknown input probability distribution.
+
+<img src="/images/machine-learning/epilogue/learning-diagram.png" class="center">
+
+With the Bayesian approach, we want to extend the probabilistic role completely to all components, so that everything is a joint probability distribution. In the case of the heart attack prediction, we were trying to pick the hypothesis by determining the likelihood that that hypothesis would generate the data set in question:
+
+$$P(\mathcal D \mid h = f)$$
+
+Bayesian approaches instead try to determine the hypothesis by considering the probability that a given hypothesis is the best one given the data:
+
+$$P(h = f \mid \mathcal D)$$
+
+To compute this probability, we still need one more probability distribution:
+
+$$
+P(h = f \mid \mathcal D) = \frac {P(\mathcal D \mid h = f) P(h = f)} {P(\mathcal D)}
+\propto P(\mathcal D \mid h = f) P(h = f)
+$$
+
+The probability $P(\mathcal D \mid h = f)$ can be computed the same way as in logistic regression, and the probability $P(\mathcal D)$ can also be computed by simply integrating out what we don't want from the joint probability distribution in order to end up with the marginal $P(\mathcal D)$. In fact, since we're only picking the hypothesis according to the aforementioned criteria, we don't really care about $P(\mathcal D)$ since it only scales the value up or down, and instead we can only worry about picking the hypothesis that yields the largest numerator.
+
+The quantity that we don't know is the **prior**: $P(h = f)$, that is, the probability that the current hypothesis is the target function. It's called the prior because it's our belief of the hypothesis set before we got any data. We can modify this value after we get the data to get the **posterior**: $P(h = f \mid \mathcal D)$, which is more informed based on the data.
+
+Given the prior, we have the full distribution. For example, consider a perceptron $h$ determined by $\weight = w_0, w_1, \dots, w_d$. A possible prior on $\weight$ can take into account the fact that the magnitude of the weights doesn't matter, so that each weight $w_i$ is independent and uniform over $[-1, 1]$. This determines the prior over $h$, $P(h = f)$. Given $\mathcal D$, we can compute $P(\mathcal D \mid h = f)$. Putting them together we get $P(h = f \mid \mathcal D) \propto P(h = f)P(\mathcal D \mid h = f)$.
+
+This shows that the prior is an assumption. Even the most "neutral" prior for an unknown number $x$ for which we only know that it is between $-1$ and $+1$. It might seem reasonable to want to model this using a uniform probability distribution from $-1$ to $+1$. This seems reasonable because it's as likely to be any value in that range.
+
+<img src="/images/machine-learning/epilogue/prior-1.png" class="center">
+
+However, consider that using that model, if we were to take a bunch of $x$'s and average them, we'd get something close to $0$. However, in the unknown case, we have no idea what value we'd get from this operation. In fact, we can even say how close it'd be to zero in terms of variance.
+
+In fact, the true equivalent would be the image below, where the probability distribution is a delta function centered on a point $a$ that we don't know. Choosing to model the situation with the uniform probability distribution results in a huge building based on false premises.
+
+<img src="/images/machine-learning/epilogue/prior-2.png" class="center">
+
+If we actually knew the prior then we could compute the posterior $P(h = f \mid \mathcal D)$ for every hypothesis $h \in \mathcal H$. With this, we could find the most probable hypothesis given the data. In fact, we can derive the expected value of $h$, $\mathbb E(h(\feature))$ for every $\feature$. Further still, we can derive the **error bar** --- the chances that we're wrong. Simply, we can derive everything in a principled way.
+
+Bayesian learning can be justified in two main cases. The first is when the prior is **valid**, that is, it is indeed the probability that a particular hypothesis is the target function. The second is when the prior is **irrelevant**, for example, when we place a prior, when get more and more data sets and we look at the posterior we might realize that the posterior is affected largely by the data set and less and less by the prior --- the prior gets factored out as we get more and more data. In this case, we can think of the prior simply as a computational catalyst.
+
+For example, we might choose to use conjugate priors, where we don't have to recompute the posterior as an entire function, but instead parameterize it and change the parameters when we get new data points. This is valid when we're going to be doing it enough that by the time we arrive, it doesn't matter what we started with.
+
+## Aggregation Methods
+
+Aggregation is a method that applies to all models, which combines different solutions $h_1, h_2, \dots, h_T$ that were trained on $\mathcal D$. In the image below, every node corresponds to a resultant system $h_i$ that each person trained.
+
+<img src="/images/machine-learning/epilogue/aggregation-1.png" class="center">
+
+For example, when trying to detect a face with computer vision, we can instead detect components related to a face, such as an eye, nose, are the positions of these relative to each other, etc. If we were to try to determine whether or not a face was detected from just one of these features, the error would be large. However, if these are combined correctly, we might perform better. This is important in computer vision because we want to perform at or near real-time, so it helps to base the decision on simple computations.
+
+If the problem is a **regression**, then we can combine the results by simply taking an average. If the problem is a **classification**, then we can take a vote.
+
+Aggregation is also known as **ensemble learning** and **boosting**.
+
+This is **different** from performing 2-layer learning. For example, in a 2-layer model such as a neural network with one hidden layer, all units learn **jointly**. In the case of the neural network, each of the nodes are updated jointly via back-propagation. A single node isn't trying to replicate the function, it's just trying to contribute positively to the function:
+
+<img src="/images/machine-learning/epilogue/aggregation-2.png" class="center">
+
+In the case of aggregation, the units learn **independently** --- as if they were the only unit. In the image below, each node is trying to replicate the function individually. Their outputs are then combined to get the output:
+
+<img src="/images/machine-learning/epilogue/aggregation-3.png" class="center">
+
+### Before the Fact
+
+Aggregation before the fact creates the solutions with a view to the fact that they will be combined, such that they will "blend well" together. An example of this is **bagging**, where we're given the data set and we resample it so that every solution uses a different bootstrap sample, in order to introduce some independence.
+
+In fact, instead leaving the decorrelation to chance, we can enforce it. We can build each hypothesis by making sure that what it covers is different from what other hypotheses cover. This is done by creating each of the hypotheses $h_1, \dots, h_t, \dots$ sequentially, making each hypothesis $h_t$ decorrelated with previous hypotheses. That is, after the third hypothesis for example, we consider what the best fourth hypothesis would be to add to the mix such that it is sufficiently different from the previous other three. This is accomplished by analyzing how the previous three performed, and based on that performance, providing a data set to the fourth hypothesis so that it develops something fairly independent from the previous three.
+
+<img src="/images/machine-learning/epilogue/aggregation-4.png" class="center">
+
+For example, consider that the hypothesis functions that exist so far, combined, can correctly classify 60% of the data points in the set. In order to make the new hypothesis fairly independent from the existing ones, we can emphasize those points on which we performed poorly by giving them larger weights and conversely deemphasize those we got right, such that it looks like 50-50 so that the weighted error is 50%. If we take this distribution and learn on it with the new hypothesis and do better than 50%, then the new hypothesis is adding value to what we had before.
+
+In effect, we choose the weight of $h_t$ based on $\insample(h_t)$. The most famous algorithm that specifies this behavior is **adaptive boosting** AKA **AdaBoost**.
+
+### After the Fact
+
+Aggregation **after the fact** combines existing solutions. This is what happened when the Netflix teams merged, "blending." For regression problems we might have solutions $h_1, h_2, \dots, h_T$, and we might combine the solutions using some coefficients $\alpha$ such that:
+
+$$g(\feature) = \sum_{t = 1}^T \alpha_t h_t(\feature)$$
+
+To determine the optimal $\alpha$ coefficients, we can minimize the error on a separate "aggregation data set." The pseudo-inverse can be used for this purpose. It's important to emphasize that we should use a clean set for the aggregation data set. When this is done, some coefficients may come out negative, but this doesn't necessarily mean that the solution is bad and is being rid of. It could be that the solution is particularly correlated with another, and so the system is trying to combine them in order to get the signal without the noise.
+
+In that case, how can we determine the most valuable hypothesis in the blend? This can be determined by determining the performance with and without a particular hypothesis, where the difference between these two values corresponds to the contribution of that hypothesis to the blend.
 
 # Resources
 
 * [Cambridge Information Theory](http://videolectures.net/course_information_theory_pattern_recognition/)
-* [Mathematical Monk](http://www.youtube.com/user/mathematicalmonk/videos?flow=grid&view=1)
+* [Mathematical Monk](http://www.youtube.com/user/mathematicalmonk/videos)
+* [Hugo Larochelle](http://www.youtube.com/user/hugolarochelle/videos)
+* [Harvard CS 109 --- Data Science](http://cm.dce.harvard.edu/2014/01/14328/publicationListing.shtml)
+* [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/index.html)
+* [University of Washington Machine Learning](https://class.coursera.org/machlearning-001/lecture/index) by [Pedro Domingos](https://class.coursera.org/machlearning-001/lecture/preview)
+* [Neural Networks](https://www.coursera.org/course/neuralnets)
+* [Probabilistic Graphical Models](https://www.coursera.org/course/pgm)
+* [Computational Methods for Data Analysis](https://www.coursera.org/course/compmethods)
+* [Computational Neuroscience](https://www.coursera.org/course/compneuro)
+* [Mathematical Methods for Quantitative Finance](https://www.coursera.org/course/mathematicalmethods)
+* [UC Berkeley CS 188](http://www.youtube.com/user/CS188Spring2013/videos?live_view=500&flow=grid&sort=dd&view=0)
+* [Harvard CS 281 --- Advanced Machine Learning](http://www.seas.harvard.edu/courses/cs281/)
 
 *[PLA]: Perceptron Learning Algorithm
 *[SNR]: Signal-to-Noise Ratio
@@ -2323,5 +3241,10 @@ The domain of this optimization problem is $\weight \in \mathbb R^d, b \in \math
 *[RHS]: Right-Hand Side
 *[LHS]: Left-Hand Side
 *[SGD]: Stochastic Gradient Descent
+*[ANN]: Artificial Neural Network
+*[SVM]: Support Vector Machines
+*[RBF]: Radial Basis Function
+*[EM]: Expectation Maximization
+*[MDL]: Minimum Description Length
 
 [^gradient_question]: [How is the gradient derived here?](http://math.stackexchange.com/questions/546388/how-is-the-gradient-derived-here) --- Math.StackExchange
