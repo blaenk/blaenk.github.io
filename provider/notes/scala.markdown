@@ -678,3 +678,26 @@ def flattenRight[T](xss: List[List[T]]) =
   (xss :\ List[T]()) (_ ::: _)
 ```
 
+An efficient way to append lists in constant time is to use `ListBuffers` [^difference_lists]:
+
+[^difference_lists]: I imagine these are identical to Haskell's [difference lists](hackage.haskell.org/package/dlist/docs/Data-DList.html).
+
+``` scala
+import scala.collection.mutable.ListBuffer
+val buf = new ListBuffer[Int]
+buf += 1
+3 +=: buf
+buf.toList
+```
+
+An `ArrayBuffer` is similar to an `std::vector` in that it automatically resizes itself to fit its contents.
+
+# Tuples
+
+Tuples are the same as in Haskell, C++11, Python etc. They are indexed using `._n` where `n` it the nth tuple element. A difference from something like Python is that the following:
+
+``` scala
+val word, index = longest
+```
+
+Where `longest` is a tuple, ends up assigning the tuple to both `word` and `index`, contrary to what happens in Python. To assign the correct elements as in C++11's `std::tie`, use parentheses to pattern match as in Haskell.
