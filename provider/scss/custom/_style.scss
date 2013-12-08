@@ -116,13 +116,13 @@ abbr {
   }
 }
 
-sup.fn {
-  font-family: $font-mono;
-  vertical-align: baseline;
-  font-size: inherit;
+a[id^="fnref"] {
+  color: #990000;
 
-  a[id^="fnref"] {
-    color: #990000;
+  sup {
+    vertical-align: baseline;
+    font-family: $font-mono;
+    font-size: inherit;
     &:before { content: "[#"; }
     &:after { content: "]"; }
   }

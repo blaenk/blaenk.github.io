@@ -71,6 +71,5 @@ $(function() {
     $(this).next('.collapsible').slideToggle('fast');
   });
 
-  $('sup .footnoteRef').parent().addClass('fn');
   $('a[href^="#fnref"]').html('<i class="fa fa-level-up"></i>');
 });
