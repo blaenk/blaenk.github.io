@@ -4,6 +4,8 @@ The Hakyll site's source (the Haskell code in **src/**) is BSD licensed as state
 
 Feel free to use everything else in **provider/**, but if you can help it please don't use the site's style (in **provider/scss**) and instead use your own, or at the _very least_ differentiate the style ***as much as you can***. I created this style for this _personal_ site, so I'd prefer that it remains unique!
 
+If you use vim, I highly recommend the [vim-pandoc-syntax](https://github.com/vim-pandoc/vim-pandoc-syntax) plugin for better Pandoc-flavored markdown editing, complete with codeblock highlighting and concealments.
+
 Features:
 
 * fully integrated with MathJax using `$` inline and `$$` block delimiters
