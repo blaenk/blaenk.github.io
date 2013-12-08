@@ -9,8 +9,7 @@ toc: off
 When I made my site, specifically when I [switched to Hakyll](/posts/the-switch-to-hakyll), I didn't bother to include a [syndication feed](http://en.wikipedia.org/wiki/Web_feed) because I didn't expect that anyone would care to want to subscribe to my site. However, someone [filed an issue](https://github.com/blaenk/blaenk.github.io/issues/1) concerning this on github. I knew Hakyll exposed a module specifically for this: [Hakyll.Web.Feed](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Feed.html). It was more a matter of implementing it in a straightforward manner with the least duplication of work.
 
 > I'd like to subscribe to your blog, but I can't seem to find an RSS feed (nor the Hakyll code to generate one). Would you consider adding one?
->
-> <footer><strong>Nathan</strong> <cite><a href="https://github.com/blaenk/blaenk.github.io/issues/1">Issue #1</a></cite></footer>
+> <footer>**Nathan** <cite>[Issue #1](https://github.com/blaenk/blaenk.github.io/issues/1)</cite></footer>
 
 ## Considerations
 
