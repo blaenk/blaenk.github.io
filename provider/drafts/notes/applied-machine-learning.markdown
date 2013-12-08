@@ -1,7 +1,7 @@
 ---
-title: Machine Learning
+title: Applied Machine Learning
 published: September 28, 2013
-excerpt: Machine Learning concepts (Stanford)
+excerpt: Application of Machine Learning concepts
 comments: off
 toc: left
 ---
