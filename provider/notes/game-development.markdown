@@ -14,6 +14,18 @@ Over the years I've tried to learn about various different areas of software dev
 
 # Architecture
 
+## New Approach
+
+I'm taking a step back from the overly general architecture discussed in the following sections, consisting of "components everywhere" and a very loose, omnipresent event system that sacrificed the type system. I originally chose to create my engine from scratch because I wanted to use this as a learning experience, but also to have absolute control over what I want to create. However, I'm well aware of the countless games that roll their own engine only to still be working on the engine for years with no game --- oftentimes the primary motivation for creating the engine --- to show for it. I don't want that to happen here.
+
+My opinion is that this tends to happen because people want to make their engine be everything: fully cross-platform and fully general so that it can scale from a mobile F2P game to a next-gen racing game and further still to an FPS. I'm reminded of the days of the Quake 3 engine, which --- despite [my limited experience with it](/work/#the-instagib-project) --- didn't seem to strive to be everything for everyone, and yet many people adapted it to accommodate all manner of different game types.
+
+There is clearly a balance between creating a game and creating a general engine. The end goal is the game, but it's not necessary to completely sacrifice good software architecture practices, specifically those associated with game engine design (e.g. components, event systems, etc.).
+
+The approach I'm going to try now is to focus on creating a game, leaning towards a game-specific engine, while being sensitive to potential refactorings. These potential refactorings will be a lot clearer to me than to write them from the beginning, since I will have a concrete example of exactly where and why they might be useful.
+
+Anyone who has ever tried to learn anything about game engine design is familiar with the ever-present author disclaimer that goes something like "keep in mind this works in our particular engine, but circumstances in your engine may differ." Being new to game engine design, the task of designing a well architected, flexible engine from the start seems too open-ended. That's why I'm taking this approach, in order to help guide the process.
+
 ## Components
 
 Every `Actor` has a collection of `Component` objects which compose to define the whole of a particular `Actor`, including its attributes and behavior. Some `Components` are tied to a specific `Engine` subsystem, such as `RenderableComponent`. All these do is notify the particular subsystem of their existence so that they can be used. For example, the `Renderer` subsystem would receive the event from a `MeshComponent` and so would update its list of meshes to render on the next frame.
@@ -195,7 +207,7 @@ The most common optimization is to treat the world as a composition of **chunks*
 
 A chunk may be represented by a volumetric grid such as a 3D array, optimized into a flat slab of memory indexed with the formula:
 
-$$ chunk[x + (y * size_x) + (z * size_x * size_y)] $$
+$$ \text {chunk}[x + (y * \text {size}_x) + (z * \text {size}_x * \text {size}_y)] $$
 
 The problem with this is that a lot of space is wasted for empty cells. A 16x16x16 chunk size where every cell conveys its information within one byte of data --- for example, for its block type: lava, grass, etc. --- yields 4096 bytes, or 4 kilobytes. If every single cell in the chunk is empty except for one, then 4095 bytes are being wasted --- that's 99.9% of the space allocated for the chunk.
 
