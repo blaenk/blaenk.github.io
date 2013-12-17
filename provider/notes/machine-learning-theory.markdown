@@ -8,6 +8,8 @@ toc: left
 
 I've been wanting to learn about the subject of machine learning for a while now. I'm familiar with some basic concepts, as well as reinforcement learning. What follows are notes on my attempt to comprehend the subject. The primary learning resource I'm using is Cal Tech's CS 1156 on edX, with supplementary material from Stanford's CS 229 on Coursera.
 
+I pushed my code for the programming assignments for this class to [github](https://github.com/blaenk/learning-from-data).
+
 * toc
 
 # Learning Problem
@@ -148,8 +150,6 @@ Instead, to make it a learning process, then there needs to be no guarantee that
 
 ## Notation {#notation-for-learning}
 
-Marker: Lecture 2, 40:38
-
 Both $\mu$ and $\nu$ depend on which hypothesis $h$:
 
 $\nu$ is the error "**in sample**", which is denoted by $\def \insample {E_{\text {in}}} \insample(h)$
@@ -266,7 +266,7 @@ $$
 
 The dimension of $\mathrm {X}^\mathrm {T}$ is $(d + 1) \times N$, so the dimension of $\mathrm X$ is $N \times (d + 1)$. This means that even if $N$ is some large number, their product results in a small square matrix of dimensions $(d + 1) \times (d + 1)$. This means that the dimensions of $\mathrm {X}^\dagger$ will be $(d + 1) \times N$.
 
-### Algorithm
+### Algorithm {#linear-regression-algorithm}
 
 The algorithm for linear regression is therefore:
 
@@ -3233,6 +3233,9 @@ In that case, how can we determine the most valuable hypothesis in the blend? Th
 * [Mathematical Methods for Quantitative Finance](https://www.coursera.org/course/mathematicalmethods)
 * [UC Berkeley CS 188](http://www.youtube.com/user/CS188Spring2013/videos?live_view=500&flow=grid&sort=dd&view=0)
 * [Harvard CS 281 --- Advanced Machine Learning](http://www.seas.harvard.edu/courses/cs281/)
+* [Recommender Systems](https://www.coursera.org/course/recsys)
+* [Introduction to Data Science](https://www.coursera.org/course/datasci)
+* [Metacademy](http://www.metacademy.org/)
 
 *[PLA]: Perceptron Learning Algorithm
 *[SNR]: Signal-to-Noise Ratio
