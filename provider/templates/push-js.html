@@ -1,0 +1,9 @@
+<!-- preview push -->
+<script async="true" type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://localhost:9160/$path$');
+    ws.onmessage = function (e) {
+      jQuery('article .entry-content').html(e.data);
+    };
+  });
+</script>

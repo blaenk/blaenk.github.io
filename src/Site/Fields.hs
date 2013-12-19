@@ -31,9 +31,9 @@ import qualified Text.Blaze.Html5.Attributes     as A
 
 import Site.Routes
 
-sluggedTagsField :: String                             -- ^ Destination field
-                 -> Tags                               -- ^ Tags structure
-                 -> Context a                          -- ^ Resulting context
+sluggedTagsField :: String
+                 -> Tags
+                 -> Context a
 sluggedTagsField key tags = field key $ \item -> do
     tags' <- getTags $ itemIdentifier item
     links <- forM tags' $ \tag -> do
@@ -55,18 +55,20 @@ defaultCtx = mconcat
   , niceUrlField "url"
   , pathField "path"
   , constField "commentsJS" ""
+  , constField "pushJS" ""
   , constField "title" "Blaenk Denum"
   , missingField
   ]
 
-postCtx :: Context String
-postCtx = mconcat
+postCtx :: Bool -> Context String
+postCtx preview = mconcat
   [ dateField "datePost" "%B %e, %Y"
   , dateField "dateArchive" "%b %e"
   , commentsTag "comments"
   , commentsJS "commentsJS"
   , gitTag "git"
   , iconTag "icon"
+  , pushJS preview "pushJS"
   , defaultCtx
   ]
 
@@ -135,6 +137,17 @@ commentsJS key = field key $ \item -> do
           return $ itemBody gend
       else return ""
 
+pushJS :: Bool -> String -> Context String
+pushJS preview key = field key $ \item -> do
+  if preview
+    then do
+      path <- fmap toFilePath getUnderlying -- $ itemIdentifier item
+      tmpl <- loadBody "templates/push-js.html" :: Compiler Template
+      itm <- makeItem "" :: Compiler (Item String)
+      gend <- applyTemplate tmpl (constField "path" path) itm :: Compiler (Item String)
+      return $ itemBody gend
+    else return ""
+
 gitTag :: String -> Context String
 gitTag key = field key $ \item -> do
   let fp = "provider/" ++ (toFilePath $ itemIdentifier item)
@@ -155,7 +168,7 @@ yearArchives pat = do
     return $ concat list :: Compiler String
     where genArchives :: Template -> Template -> Integer -> (Integer, [Item String]) -> Compiler String
           genArchives itemTpl archiveTpl curYear (year, posts) = do
-            templatedPosts <- applyTemplateList itemTpl postCtx posts :: Compiler String
+            templatedPosts <- applyTemplateList itemTpl (postCtx False) posts :: Compiler String
             let yearCtx :: Context String
                 yearCtx = if curYear == year
                           then constField "year" ""
