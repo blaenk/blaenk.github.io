@@ -75,7 +75,7 @@ deploy() {
 
   cd $DEPLOY
 
-  git add .
+  git add --all .
   info "added files to git"
 
   git commit -m "generated from $SHA" -q
