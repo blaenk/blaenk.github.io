@@ -189,9 +189,6 @@ main = do
   
   channels <- atomically $ newTMVar Map.empty
 
-  -- live reload
-  void $ forkIO (wsServer channels)
-
   (action:args) <- getArgs
 
   -- establish configuration based on preview-mode
@@ -210,6 +207,9 @@ main = do
       postsPattern = previewPattern "posts"
       notesPattern = previewPattern "notes"
       pagesPattern = previewPattern "pages"
+
+  -- live reload
+  when previewMode $ void . forkIO $ wsServer channels
 
   when (action == "clean" &&
        (not . null $ args) &&
