@@ -3,7 +3,12 @@
   jQuery(function (){
     var ws = new WebSocket('ws://localhost:9160/$path$');
     ws.onmessage = function (e) {
-      jQuery('article .entry-content').html(e.data);
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
     };
   });
 </script>

@@ -131,20 +131,29 @@ commentsJS key = field key $ \item -> do
     if comments
       then do
           url <- niceItemUrl item
-          tmpl <- loadBody "templates/comments-js.html" :: Compiler Template
+          tmpl <- loadBody "templates/comments-js.html"
           itm <- makeItem "" :: Compiler (Item String)
-          gend <- applyTemplate tmpl (constField "url" url) itm :: Compiler (Item String)
+          gend <- applyTemplate tmpl (constField "url" url) itm
           return $ itemBody gend
       else return ""
 
+pushOn :: (MonadMetadata m) => Item a -> m Bool
+pushOn item = do
+  pushMeta <- getMetadataField (itemIdentifier item) "push"
+  return $ case pushMeta of
+    Just "false" -> False
+    Just "off" -> False
+    _ -> True
+
 pushJS :: Bool -> String -> Context String
 pushJS preview key = field key $ \item -> do
-  if preview
+  push <- pushOn item
+  if preview && push
     then do
-      path <- fmap toFilePath getUnderlying -- $ itemIdentifier item
-      tmpl <- loadBody "templates/push-js.html" :: Compiler Template
+      path <- fmap toFilePath getUnderlying
+      tmpl <- loadBody "templates/push-js.html"
       itm <- makeItem "" :: Compiler (Item String)
-      gend <- applyTemplate tmpl (constField "path" path) itm :: Compiler (Item String)
+      gend <- applyTemplate tmpl (constField "path" path) itm
       return $ itemBody gend
     else return ""
 

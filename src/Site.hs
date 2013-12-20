@@ -59,32 +59,28 @@ feedConf = FeedConfiguration
   }
 
 indexCompiler :: String -> Routes -> Pattern -> Rules ()
-indexCompiler name route' itemsPattern =
-  create [name'] $ do
-    route route'
+indexCompiler name path itemsPattern =
+  create [fromFilePath $ name ++ ".html"] $ do
+    route path
     compile $ do
       makeItem ""
         >>= loadAndApplyTemplate "templates/index.html" (archiveCtx itemsPattern)
         >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
-  where name' = fromFilePath $ name ++ ".html"
-
-{-
-  have a map of route to channel
-  when a ws connection is created, check map (TMVar) for route's channel (TChan)
-    if one exists, duplicate it
-    if none exists, create one and put it in the map
-  in the pushToWebSocket compiler
-    check if channel exists in map for underlying route
-      if one exists, write the contents to it
-      if none exists, do nothing
--}
 
 type Channels = TMVar (Map.Map String (TChan String, Integer))
 
-wsApp :: Channels -> WS.ServerApp
-wsApp channels pending = do
+wsServer :: Channels -> IO ()
+wsServer channels = do
+  putStrLn "WebSocket Server Listening on http://0.0.0.0:9160/"
+  WS.runServer "0.0.0.0" 9160 $ wsHandler channels
+
+-- check map (tmvar) for route's channel
+-- if none exists, create one and put it in the map
+-- otherwise, duplicate the channel and inc refcount
+wsHandler :: Channels -> WS.ServerApp
+wsHandler channels pending = do
   let request = WS.pendingRequest pending
-      path = tail $ BC.unpack $ WS.requestPath request
+      path    = tail . BC.unpack $ WS.requestPath request
 
   conn <- WS.acceptRequest pending
 
@@ -94,18 +90,17 @@ wsApp channels pending = do
     chans <- readTMVar channels
 
     case Map.lookup path chans of
-      Just existing -> do
-        void $ swapTMVar channels $ Map.insert path (fst existing, (snd existing) + 1) chans
-        dupTChan (fst existing)
+      Just (ch, refcount) -> do
+        void $ swapTMVar channels $ Map.insert path (ch, refcount + 1) chans
+        dupTChan ch
       Nothing -> do
         ch <- newTChan
         void $ swapTMVar channels $ Map.insert path (ch, 1) chans
         return ch
 
   -- pipes the data from the channel to the websocket
-  handle catchDisconnect $ forever $ liftIO $ do
-    contents <- atomically $ readTChan chan
-    WS.sendTextData conn (T.pack contents)
+  handle catchDisconnect . forever . liftIO $ do
+    atomically (readTChan chan) >>= WS.sendTextData conn . T.pack
 
   -- decrement the ref count of the channel
   -- remove it if no listeners
@@ -113,36 +108,32 @@ wsApp channels pending = do
   void $ atomically $ do
     chans <- readTMVar channels
     case Map.lookup path chans of
-      Just existing -> do
-        let refcount = (snd existing) - 1
+      Just (ch, refcount) -> do
         if refcount == 0
           then void $ swapTMVar channels $ Map.delete path chans
-          else void $ swapTMVar channels $ Map.insert path ((fst existing), refcount) chans
+          else void $ swapTMVar channels $ Map.insert path (ch, refcount) chans
       Nothing -> return ()
 
-  return ()
-  where catchDisconnect e =
-          case fromException e of
-            Just WS.ConnectionClosed -> return ()
-            _ -> return ()
+  where
+    catchDisconnect e =
+      case fromException e of
+        Just WS.ConnectionClosed -> return ()
+        _ -> return ()
 
-wsServer :: Channels -> IO ()
-wsServer channels = do
-  WS.runServer "0.0.0.0" 9160 $ wsApp channels
-
-pushToWebSocket :: Channels -> Item String -> Compiler (Item String)
-pushToWebSocket channels item =
+-- check if a channel exists for the underlying route
+-- if so, pipe the item body through the channel
+webSocketPipe :: Channels -> Item String -> Compiler (Item String)
+webSocketPipe channels item =
   unsafeCompiler $ do
     let path = toFilePath . itemIdentifier $ item
         body = itemBody item
 
-    chans <- atomically $ readTMVar channels
+    void . forkIO $ atomically $ do
+      chans <- readTMVar channels
 
-    case Map.lookup path chans of
-      Just existing -> do
-        atomically $ writeTChan (fst existing) body
-      Nothing -> do
-        return ()
+      case Map.lookup path chans of
+        Just (ch, _) -> writeTChan ch body
+        Nothing -> return ()
 
     return item
 
@@ -160,7 +151,7 @@ contentCompiler content channels =
     route $ niceRoute routeRewrite
     compile $ getResourceBody
       >>= pandocCompiler (storeDirectory conf)
-      >>= pushToWebSocket channels
+      >>= webSocketPipe channels
       >>= loadAndApplyTemplate itemTemplate context
       >>= loadAndApplyTemplate "templates/layout.html" layoutContext
   where conf          = contentConfiguration content
@@ -193,6 +184,7 @@ main = do
 
   -- establish configuration based on preview-mode
   let previewMode = action == "watch" || action == "preview"
+      clean = action == "clean" && (not . null $ args) && ((head args) == "preview")
       hakyllConf =
         if previewMode
           then myHakyllConf
@@ -211,9 +203,8 @@ main = do
   -- live reload
   when previewMode $ void . forkIO $ wsServer channels
 
-  when (action == "clean" &&
-       (not . null $ args) &&
-       ((head args) == "preview")) deletePreviewDirs
+  -- clean preview dirs as well
+  when clean deletePreviewDirs
 
   hakyllWith hakyllConf $ do
     tags <- buildTags postsPattern (fromCapture "tags/*.html")
@@ -274,9 +265,9 @@ main = do
     create ["atom.xml"] $ do
       route idRoute
       compile $ do
-        let feedCtx = postCtx previewMode <> bodyField "description"
-        feedItems <- fmap (take 10) . recentFirst =<< loadAll (postsPattern .&&. hasVersion "feed")
-        renderAtom feedConf feedCtx feedItems
+        loadAll (postsPattern .&&. hasVersion "feed")
+          >>= fmap (take 10) . recentFirst
+          >>= renderAtom feedConf (postCtx previewMode <> bodyField "description")
 
     match "templates/*" $ compile templateCompiler
 

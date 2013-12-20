@@ -102,13 +102,8 @@
       messageStyle: "none"
     });
 
-    MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready', function() {
-      var HTMLCSS = MathJax.OutputJax['HTML-CSS'];
-      HTMLCSS.Font.testSize = ['10px', '12px', '15px', '9px', '8px']
-      document.getElementById('MathJax_Font_Test').style.fontSize = '10px'
-    });
-
-    MathJax.Hub.Register.StartupHook('End', function() {
+    MathJax.Hub.Register.MessageHook('End Process', function() {
+      jQuery('#MathJax_Font_Test').empty();
       jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
     });
   </script>

@@ -53,23 +53,27 @@ $(function() {
     }
   })
 
-  // header links
-  $('.entry-content').find('h1, h2, h3, h4, h5').each(function() {
-    var $id = $(this).attr('id');
-    var $text = $(this).text();
+  window.refresh = function () {
+    // header links
+    $('.entry-content').find('h1, h2, h3, h4, h5').each(function() {
+      var $id = $(this).attr('id');
+      var $text = $(this).text();
 
-    $(this).html('').prepend('<a href="#' + $id + '" class="hash">#</a>')
-           .append('<a href="#' + $id + '" class="header-link">' + $text + '</a>');
-  });
+      $(this).html('').prepend('<a href="#' + $id + '" class="hash">#</a>')
+             .append('<a href="#' + $id + '" class="header-link">' + $text + '</a>');
+    });
 
-  $('.collapse').not(function() {
-    return "#" + $(this).attr('id') == window.location.hash;
-  }).next('.collapsible').hide();
+    $('.collapse').not(function() {
+      return "#" + $(this).attr('id') == window.location.hash;
+    }).next('.collapsible').hide();
 
-  $('.collapse').click(function(e) {
-    e.preventDefault();
-    $(this).next('.collapsible').slideToggle('fast');
-  });
+    $('.collapse').click(function(e) {
+      e.preventDefault();
+      $(this).next('.collapsible').slideToggle('fast');
+    });
 
-  $('a[href^="#fnref"]').html('<i class="fa fa-level-up"></i>');
+    $('a[href^="#fnref"]').html('<i class="fa fa-level-up"></i>');
+  };
+
+  window.refresh();
 });
