@@ -4,6 +4,7 @@ published: September 30, 2013
 excerpt: Machine Learning concepts
 comments: off
 toc: left
+push: off
 ---
 
 I've been wanting to learn about the subject of machine learning for a while now. I'm familiar with some basic concepts, as well as reinforcement learning. What follows are notes on my attempt to comprehend the subject. The primary learning resource I'm using is Cal Tech's CS 1156 on edX, with supplementary material from Stanford's CS 229 on Coursera.
