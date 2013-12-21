@@ -91,11 +91,11 @@ wsHandler channels pending = do
 
     case Map.lookup path chans of
       Just (ch, refcount) -> do
-        void $ swapTVar channels $ Map.insert path (ch, refcount + 1) chans
+        void $ modifyTVar' channels $ Map.insert path (ch, refcount + 1)
         dupTChan ch
       Nothing -> do
         ch <- newBroadcastTChan
-        void $ swapTVar channels $ Map.insert path (ch, 1) chans
+        void $ modifyTVar' channels $ Map.insert path (ch, 1)
         dupTChan ch
 
   -- pipes the data from the channel to the websocket
@@ -109,9 +109,9 @@ wsHandler channels pending = do
     chans <- readTVar channels
     case Map.lookup path chans of
       Just (ch, refcount) -> do
-        if refcount == 0
-          then void $ swapTVar channels $ Map.delete path chans
-          else void $ swapTVar channels $ Map.insert path (ch, refcount) chans
+        if (refcount - 1) == 0
+          then modifyTVar' channels $ Map.delete path
+          else modifyTVar' channels $ Map.insert path (ch, refcount - 1)
       Nothing -> return ()
 
   where
