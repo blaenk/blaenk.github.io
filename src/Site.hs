@@ -25,7 +25,7 @@ import Control.Monad.IO.Class
 import Control.Monad.STM
 import Control.Concurrent
 import Control.Concurrent.STM.TChan
-import Control.Concurrent.STM.TMVar
+import Control.Concurrent.STM.TVar
 
 import qualified Data.ByteString.Char8 as BC
 
@@ -67,7 +67,7 @@ indexCompiler name path itemsPattern =
         >>= loadAndApplyTemplate "templates/index.html" (archiveCtx itemsPattern)
         >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
 
-type Channels = TMVar (Map.Map String (TChan String, Integer))
+type Channels = TVar (Map.Map String (TChan String, Integer))
 
 wsServer :: Channels -> IO ()
 wsServer channels = do
@@ -87,16 +87,16 @@ wsHandler channels pending = do
   -- needs to be atomic to avoid race conditions
   -- between the read and the update
   chan <- liftIO $ atomically $ do
-    chans <- readTMVar channels
+    chans <- readTVar channels
 
     case Map.lookup path chans of
       Just (ch, refcount) -> do
-        void $ swapTMVar channels $ Map.insert path (ch, refcount + 1) chans
+        void $ swapTVar channels $ Map.insert path (ch, refcount + 1) chans
         dupTChan ch
       Nothing -> do
-        ch <- newTChan
-        void $ swapTMVar channels $ Map.insert path (ch, 1) chans
-        return ch
+        ch <- newBroadcastTChan
+        void $ swapTVar channels $ Map.insert path (ch, 1) chans
+        dupTChan ch
 
   -- pipes the data from the channel to the websocket
   handle catchDisconnect . forever . liftIO $ do
@@ -106,12 +106,12 @@ wsHandler channels pending = do
   -- remove it if no listeners
   -- this is probably important, to avoid build-up within the channel
   void $ atomically $ do
-    chans <- readTMVar channels
+    chans <- readTVar channels
     case Map.lookup path chans of
       Just (ch, refcount) -> do
         if refcount == 0
-          then void $ swapTMVar channels $ Map.delete path chans
-          else void $ swapTMVar channels $ Map.insert path (ch, refcount) chans
+          then void $ swapTVar channels $ Map.delete path chans
+          else void $ swapTVar channels $ Map.insert path (ch, refcount) chans
       Nothing -> return ()
 
   where
@@ -129,7 +129,7 @@ webSocketPipe channels item =
         body = itemBody item
 
     void . forkIO $ atomically $ do
-      chans <- readTMVar channels
+      chans <- readTVar channels
 
       case Map.lookup path chans of
         Just (ch, _) -> writeTChan ch body
@@ -178,7 +178,7 @@ main = do
   setFileSystemEncoding utf8
   setForeignEncoding utf8
   
-  channels <- atomically $ newTMVar Map.empty
+  channels <- atomically $ newTVar Map.empty
 
   (action:args) <- getArgs
 
