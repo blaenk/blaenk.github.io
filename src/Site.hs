@@ -91,11 +91,11 @@ wsHandler channels pending = do
 
     case Map.lookup path chans of
       Just (ch, refcount) -> do
-        void $ modifyTVar' channels $ Map.insert path (ch, refcount + 1)
+        modifyTVar' channels $ Map.insert path (ch, refcount + 1)
         dupTChan ch
       Nothing -> do
         ch <- newBroadcastTChan
-        void $ modifyTVar' channels $ Map.insert path (ch, 1)
+        modifyTVar' channels $ Map.insert path (ch, 1)
         dupTChan ch
 
   -- pipes the data from the channel to the websocket
@@ -105,7 +105,7 @@ wsHandler channels pending = do
   -- decrement the ref count of the channel
   -- remove it if no listeners
   -- this is probably important, to avoid build-up within the channel
-  void $ atomically $ do
+  atomically $ do
     chans <- readTVar channels
     case Map.lookup path chans of
       Just (ch, refcount) -> do
