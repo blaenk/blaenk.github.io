@@ -1,6 +1,7 @@
 ---
 title: Reads
 published: July 5, 2013
+comments: off
 ---
 
 This is a list of books I've finished reading recently, in reverse chronological order. You can also see a list of books 
