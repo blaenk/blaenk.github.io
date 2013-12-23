@@ -8,6 +8,7 @@ If you use vim, I highly recommend the [vim-pandoc-syntax](https://github.com/vi
 
 Features:
 
+* ["live" editing](http://blaenkdenum.com/posts/live-editing-with-hakyll/); see changes as you save them, in-place (Haskell STM Channels -> HTML5 WebSockets)
 * fully integrated with MathJax using `$` inline and `$$` block delimiters
 * nice urls, e.g. .com/posts/some-post and .com/some-page, no trailing 'index.html'
 * easy page and post creation (place in **posts/** or **pages/**)
