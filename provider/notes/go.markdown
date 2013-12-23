@@ -5,10 +5,10 @@ excerpt: Simple C-like language
 comments: off
 ---
 
-I've been meaning to learn Go for a while now. I've recently come to renew an interest in simple, no non-sense languages like Python, and what I imagine Go to be. The resources I'll be using are the [golang specification], [golang tour], and [effective go]. A lot of this is straight from these sources, with my commentary of how I come to understand it.
+I've been meaning to learn Go for a while now. I've recently come to renew an interest in simple, no non-sense languages like Python, and what I imagine Go to be. The resources I'll be using are the [go specification], [go tour], and [effective go]. A lot of this is straight from these sources, with my commentary of how I come to understand it.
 
-[golang specification]: http://golang.org/ref/spec
-[golang tour]: http://tour.golang.org
+[go specification]: http://golang.org/ref/spec
+[go tour]: http://tour.golang.org
 [effective go]: http://golang.org/doc/effective_go.html
 
 ## Packages
@@ -242,3 +242,156 @@ func main() {
 }
 ```
 
+## Methods
+
+While Go doesn't have classes, it has a syntax for definining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with `type`, but **not** on types from other packages or basic types. A pointer receiver can be modified and doesn't have to copy the entire structure on the method call, just like in C/C++:
+
+``` go
+func (v *Vertex) Abs() float64 {
+  return math.Sqrt(v.X * v.X + v.Y * v.Y)
+}
+
+v := &Vertex{3, 4}
+v.Abs()
+
+type MyFloat float64
+
+func (f MyFloat) Abs() float64 {
+  if < 0 {
+    return float64(-f)
+  }
+  return float64(f)
+}
+
+f := MyFloat(-math.Sqrt2)
+f.Abs()
+```
+
+## Interfaces
+
+Interfaces types are defined by a set of methods. A value of interface type can hold any value that implements those methods. It's important to note that types implement interfaces implicitly, there's no explicit declaration of intent as with Haskell typeclasses (`class T where`) or traditional Java interfaces (`class A implements B`):
+
+``` go
+type Abser interface {
+  Abs() float64
+}
+
+var a Abser
+a = MyFloat(-math.Sqrt2)
+a = &v
+a = v // error: Vertex doesn't implement Abser, *Vertex does
+```
+
+Interfaces can also be composed of other interfaces:
+
+``` go
+type Reader interface {
+  Read(b []byte) (n int, err error)
+}
+
+type Writer interface {
+  Write(b []byte) (n int, err error)
+}
+
+type ReadWriter interface {
+  Reader
+  Writer
+}
+```
+
+## Errors
+
+In Go, an error is anything that can be described as a string. Interface type `error` defines a single method `Error` that returns a string:
+
+``` go
+type error interface {
+  Error() string
+}
+
+type MyError struct {
+  When time.Time
+  What string
+}
+
+func (e *MyError) Error() string {
+  return fmt.Sprintf("at %v, %s", e.When, e.What)
+}
+
+func run() error {
+  return &MyError{
+    time.Now(),
+    "it didn't work"
+  }
+}
+
+func main() {
+  if err := run(); err != nil {
+    fmt.Println(err)
+  }
+}
+```
+
+## Concurrency
+
+A goroutine is a lightweight thread managed by the Go runtime. The evaluation of the function and its arguments occurs in the current goroutine but execution of the function occurs in a new goroutine:
+
+``` go
+func say(s string) {
+  for i := 0; i < 5; i++ {
+    time.Sleep(100 * time.Millisecond)
+    fmt.Println(s)
+  }
+}
+
+func main() {
+  go say("world")
+  say("hello")
+
+  // javascript-like idiom of defining
+  // and calling a function
+  go func() {
+    // something
+  }()
+}
+
+```
+
+Channels are typed conduits through which data of that type can be sent, a lot like Haskell channels. The `<-` operator is used to send and receive values, where the data travensl in the direction of the arrow. Sending and receiving blocks until the other side is ready, allowing simple synchronization of the different goroutines:
+
+``` go
+ch := make(chan T) // create channel of type T
+ch <- v            // send v to channel ch
+v := <-ch          // receive from channel ch into v
+```
+
+There are also bounded, buffered channels, in which case the buffer doesn't block on send as long as the buffer isn't full, nor on receive as long as the buffer isn't empty:
+
+``` go
+buffered := make(chan T, 100)
+```
+
+Channels can be closed with the `close` function. Receivers can test if the channel is closed by accepting the second return value. Alternatively, looping with a `range` on the channel will read values until the channel is closed:
+
+``` go
+v, ok := <-ch
+
+for i := range ch {
+  fmt.Println(i)
+}
+```
+
+The `select` statement lets a goroutine wait on multiple communication operations, a lot like the POSIX `select()` system call. It'll block until one of its cases can run, randomly choosing if multiple are ready. A `default` case can be specified for when no other case is ready, particularly useful when the `select` is used within a forever loop, as is usually the case. The `default` case is usually used to try a send or receive without blocking:
+
+``` go
+for {
+  select {
+  case c <- x:
+    x, y = y, x + y
+  case <-quit:
+    fmt.Println("quit")
+    return
+  default:
+    // ...
+  }
+}
+```
