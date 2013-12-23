@@ -181,7 +181,7 @@ yearArchives pat = do
             let yearCtx :: Context String
                 yearCtx = if curYear == year
                           then constField "year" ""
-                          else constField "year" ("<h2>" ++ show year ++ "</h2>")
+                          else constField "year" ("<h2 style='margin-bottom: 15px'>" ++ show year ++ "</h2>")
                 ctx' :: Context String
                 ctx' = mconcat [ yearCtx
                                , constField "posts" templatedPosts

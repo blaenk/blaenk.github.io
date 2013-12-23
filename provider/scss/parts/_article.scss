@@ -7,8 +7,8 @@ article{
 	@media screen and (max-width: 600px){
 		padding: 15px 0;
 	}
-	h2.title{
-		font-weight: 300;
+	h2.title, h3.title{
+		font-weight: 400;
 		line-height: 35px;
 		margin-bottom: 5px;
 		a{
@@ -69,7 +69,7 @@ article{
 		> p{
 			margin-top: 10px;	
 		}
-		h2{
+		h2,h3{
 			font-weight: 300;
 			border-bottom: 1px solid $color-gray04;
 			position: relative;
