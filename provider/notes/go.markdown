@@ -244,7 +244,7 @@ func main() {
 
 ## Methods
 
-While Go doesn't have classes, it has a syntax for definining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with `type`, but **not** on types from other packages or basic types. A pointer receiver can be modified and doesn't have to copy the entire structure on the method call, just like in C/C++:
+While Go doesn't have classes, it has a syntax for defining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with `type`, but **not** on types from other packages or basic types. A pointer receiver can be modified and doesn't have to copy the entire structure on the method call, just like in C/C++:
 
 ``` go
 func (v *Vertex) Abs() float64 {
@@ -356,7 +356,7 @@ func main() {
 
 ```
 
-Channels are typed conduits through which data of that type can be sent, a lot like Haskell channels. The `<-` operator is used to send and receive values, where the data travensl in the direction of the arrow. Sending and receiving blocks until the other side is ready, allowing simple synchronization of the different goroutines:
+Channels are typed conduits through which data of that type can be sent, a lot like Haskell channels. The `<-` operator is used to send and receive values, where the data travels in the direction of the arrow. Sending and receiving blocks until the other side is ready, allowing simple synchronization of the different goroutines:
 
 ``` go
 ch := make(chan T) // create channel of type T
