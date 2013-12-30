@@ -3,6 +3,7 @@ title: Go
 published: December 20, 2013
 excerpt: Simple C-like language
 comments: off
+toc: left
 ---
 
 I've been meaning to learn Go for a while now. I've recently come to renew an interest in simple, no non-sense languages like Python, and what I imagine Go to be. The resources I'll be using are the [go specification], [go tour], and [effective go]. A lot of this is straight from these sources, with my commentary of how I come to understand it.
@@ -11,9 +12,11 @@ I've been meaning to learn Go for a while now. I've recently come to renew an in
 [go tour]: http://tour.golang.org
 [effective go]: http://golang.org/doc/effective_go.html
 
-## Packages
+* toc
 
-Packages can be imported with the `import` statement. They can also be grouped inside parentheses. The containing package can be specified with the `package` statement:
+# Packages
+
+Packages can be imported with the `import` statement. They can also be grouped inside parentheses. The containing package can be specified with the `package` statement. Names that begin with capitalized letters are exported by the package:
 
 ``` go
 package somepkg
@@ -24,7 +27,7 @@ import (
 )
 ```
 
-## Functions
+# Functions
 
 When there are consecutive named function parameters of the same type, we can omit the type of all but the last:
 
@@ -60,7 +63,7 @@ hypot := func(x, y float64) float64 {
 }
 ```
 
-## Variables
+# Variables
 
 Variables are declared with `var`. Multiple variables can be initialized in a tuple-assignment fashion, in which case the type can be omitted as it will be inferred from the initializers. Inside functions, `:=` can be used in place of a var declaration with inferred type. Variables can be declared constant with `const` but not using the `:=` syntax:
 
@@ -91,7 +94,7 @@ float32 float64
 complex64 complex128
 ```
 
-## Control Structures
+# Control Structures
 
 There's only one looping construct and that's the `for` loop. The `for` loop in Go doesn't use parentheses around the parameters, but the braces around the code to loop are mandatory.
 
@@ -136,7 +139,7 @@ default:
 
 The condition on the switch statement can be omitted, in which case it acts like a long if-then-else chain.
 
-## Structures
+# Structures
 
 Structures can be defined with the `struct` keyword and given a name with `type`. Fields are accessed using a dot as in other languages. When creating a struct, any non-initialized field takes on that type's default value:
 
@@ -160,7 +163,7 @@ func main() {
 }
 ```
 
-## Pointers
+# Pointers
 
 There are pointers but no pointer arithmetic. Indirection through pointers is transparent:
 
@@ -177,7 +180,7 @@ var t *T = new(T)
 t := new(T)
 ```
 
-## Arrays and Slices
+# Arrays and Slices
 
 An array of `n` type `T` elements is created with the `[n]T` syntax. A slice points to an array and includes a length and capacity. Slices can be re-sliced with the syntax `s[lo:hi]` as in Python slices, which essentially points to a region of the same array. Slices can be created with `make` which takes the type of array, the length and optional capacity. The `range` function can be used to iterate over a slice or map, yielding an `index, value` per iteration, or if the `value` isn't needed simply omit it:
 
@@ -208,7 +211,7 @@ for _, v := range p {
 }
 ```
 
-## Maps
+# Maps
 
 Maps take the form `map[key]value`. A `nil` map is empty and can't be assigned to. Map literals accept a trailing comma. When reading a map element, if the key doesn't exist in the map, the value returned is the default value for the map value type:
 
@@ -242,7 +245,7 @@ func main() {
 }
 ```
 
-## Methods
+# Methods
 
 While Go doesn't have classes, it has a syntax for defining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with `type`, but **not** on types from other packages or basic types. A pointer receiver can be modified and doesn't have to copy the entire structure on the method call, just like in C/C++:
 
@@ -267,7 +270,7 @@ f := MyFloat(-math.Sqrt2)
 f.Abs()
 ```
 
-## Interfaces
+# Interfaces
 
 Interfaces types are defined by a set of methods. A value of interface type can hold any value that implements those methods. It's important to note that types implement interfaces implicitly, there's no explicit declaration of intent as with Haskell typeclasses (`class T where`) or traditional Java interfaces (`class A implements B`):
 
@@ -299,7 +302,7 @@ type ReadWriter interface {
 }
 ```
 
-## Errors
+# Errors
 
 In Go, an error is anything that can be described as a string. Interface type `error` defines a single method `Error` that returns a string:
 
@@ -331,7 +334,7 @@ func main() {
 }
 ```
 
-## Concurrency
+# Concurrency
 
 A goroutine is a lightweight thread managed by the Go runtime. The evaluation of the function and its arguments occurs in the current goroutine but execution of the function occurs in a new goroutine:
 
@@ -395,3 +398,4 @@ for {
   }
 }
 ```
+
