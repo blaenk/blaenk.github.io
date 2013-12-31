@@ -2,6 +2,8 @@
 
 module Site.Pandoc (pandocCompiler, pandocFeedCompiler) where
 
+import Site.Util (procArgs)
+
 import Hakyll.Web.Pandoc hiding (pandocCompiler)
 import Hakyll.Core.Metadata (getMetadataField)
 
@@ -14,8 +16,6 @@ import Hakyll.Core.Item
 import Hakyll.Core.Util.String
 import System.IO.Unsafe
 import System.Process
-import System.IO (hClose, hGetContents, hPutStr, hSetEncoding, localeEncoding)
-import Control.Concurrent (forkIO)
 import Control.Exception
 import Data.List hiding (span)
 import Data.Function (on)
@@ -192,22 +192,8 @@ pygments _ x = x
 
 pygmentize :: String -> String -> IO String
 pygmentize lang contents = do
-  let process = (shell ("pygmentize -f html -l " ++ lang ++ " -P encoding=utf-8")) {
-                  std_in = CreatePipe, std_out = CreatePipe, close_fds = True}
-      writer h input = do
-        hSetEncoding h localeEncoding
-        hPutStr h input
-      reader h = do
-        hSetEncoding h localeEncoding
-        hGetContents h
-
-  (Just stdin, Just stdout, _, _) <- createProcess process
-
-  _ <- forkIO $ do
-    writer stdin contents
-    hClose stdin
-
-  reader stdout
+  let (cmd, args) = procArgs "pygmentize" ["-f", "html", "-l", lang, "-P encoding=utf-8"]
+  readProcess cmd args contents
 
 readerOptions :: ReaderOptions
 readerOptions =

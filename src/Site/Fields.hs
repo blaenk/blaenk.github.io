@@ -161,8 +161,8 @@ gitTag :: String -> Context String
 gitTag key = field key $ \item -> do
   let fp = "provider/" ++ (toFilePath $ itemIdentifier item)
   unsafeCompiler $ do
-    sha <- readProcess "git" (words $ "log -1 HEAD --pretty=format:%h " ++ fp) []
-    message <- readProcess "git" (words $ "log -1 HEAD --pretty=format:%s " ++ fp) []
+    sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%h", fp] ""
+    message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s", fp] ""
     return $ "<a href='https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "'>History</a>" ++
              "<span class='hash'>, <a href='https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
              "' title='" ++ message ++ "'>" ++ sha ++ "</a></span>"
