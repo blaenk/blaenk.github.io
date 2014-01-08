@@ -153,7 +153,9 @@ The `list` represents an owned tree of values.
 
 # Move Semantics
 
-Rust performs a shallow copy for parameter passing, assignment, and returning from functions. Performing such a shallow copy is treated by Rust as "moving ownership" of the value, so that the original source location can no longer be used unless it is reinitialized:
+Move semantics in Rust is different from [C++11 move semantics]. In Rust, the "move" refers to moving ownership. Rust performs a shallow copy for parameter passing, assignment, and returning from functions. Performing such a shallow copy is treated by Rust as "moving ownership" of the value, so that the original source location can no longer be used unless it is reinitialized. A move can be avoided by cloning:
+
+[C++11 move semantics]: /notes/cpp#move-semantics
 
 ``` rust
 let mut xs = Nil;
@@ -162,4 +164,51 @@ let ys = xs;
 // error if attempt to use `xs`
 
 xs = Nil; // xs can be used again
+
+let x = ~5;
+let y = x.clone(); // y is a newly allocated box
+let z = x; // no new memory alloc'd, x can no longer be used
 ```
+
+Mutability can be changed by moving it to a new owner:
+
+``` rust
+let r = ~13;
+let mut s = r; // box becomes mutable
+*s += 1;
+let t = s; // box becomes immutable
+```
+
+# References
+
+References are non-owning views of a value which are obtained using the address-of operator `&` and dereferenced using the `*` operator. In patterns, the `ref` keyword can be used to bind a variable name by reference rather than by value.
+
+``` rust
+fn eq(xs: &List, ys: &List) -> bool {
+  match (xs, ys) {
+    (&Nil, &Nil) => true,
+    (&Cons(x, ~ref next_xs), &Cons(y, ~ref next_ys)) if x == y => eq(next_xs, next_ys),
+    _ => false
+  }
+}
+
+let xs = Cons(5, ~Cons(10, ~Nil));
+let ys = Cons(5, ~Cons(10, ~Nil));
+assert!(eq(&xs, &ys));
+```
+
+# Parameterized Types
+
+Types can be parameterized similar to C++ class templates:
+
+``` rust
+enum List<T> {
+  Const(T, ~List<T>),
+  Nil
+}
+
+fn prepend<T>(xs: List<T>, value: T) -> List<T> {
+  Cons(value, ~xs)
+}
+```
+
