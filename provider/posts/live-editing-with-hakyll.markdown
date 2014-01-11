@@ -259,9 +259,9 @@ pushOn :: (MonadMetadata m) => Item a -> m Bool
 pushOn item = do
   pushMeta <- getMetadataField (itemIdentifier item) "push"
   return $ case pushMeta of
-    Just "false" -> False
-    Just "off" -> False
-    _ -> True
+             Just "false" -> False
+             Just "off" -> False
+             _ -> True
 ```
 
 Now we can get to the `pushJS` function. We only generate the JavaScript code if the site is in preview mode and the option isn't disabled for this particular `Item`. The way this will work is that it'll load the contents of the file `templates/push-js.html` into the `key` tag, which is `"pushJS"` in my case as defined above. So in my layout template I'll have `$pushJS$`, which will be replaced by the contents of `push-js.html` or it'll be an empty string if the requirements for the feature aren't met. One last thing is that we pass the path of the file responsible for the `Item` into the `push-js.html` template as the `$path$` tag so that the WebSocket knows what path to connect to:
