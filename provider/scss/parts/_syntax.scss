@@ -17,6 +17,10 @@ $solar-green:   #859900 !default; //
 
 .highlight { color: #2381c4; }
 
+.rust .highlight {
+  .cp { color: $base1; }
+}
+
 .html .highlight {
   .nt { color: $solar-cyan; }
   .na { color: $solar-violet; }
