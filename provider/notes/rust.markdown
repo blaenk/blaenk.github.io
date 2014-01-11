@@ -212,3 +212,57 @@ fn prepend<T>(xs: List<T>, value: T) -> List<T> {
 }
 ```
 
+The compiler can infer the type of a list like this:
+
+``` rust
+let mut xs = Nil;
+xs = prepend(xs, 10);
+xs = prepend(xs, 20);
+xs = prepend(xs, 30);
+```
+
+However, it's also possible to explicitly annotate the types:
+
+``` rust
+let mut xs: List<int> = Nil::<int>;
+xs = prepend::<int>(xs, 10);
+xs = prepend::<int>(xs, 20);
+xs = prepend::<int>(xs, 30);
+```
+
+The list equality function can be updated for this generic list by adding a trait bound of `Eq` on the element type and adding `ref` annotations to avoid moving out the element types. In fact, we might as well implement the `Eq` trait for this generic list already:
+
+``` rust
+impl<T: Eq> Eq for List<T> {
+  fn eq(&self, ys: &List<T>) -> bool {
+    match (self, ys) {
+      (&Nil, &Nil) => true,
+      (&Cons(ref x, ~ref next_xs), &Cons(ref y, ~ref next_ys)) if x == y => next_xs == next_ys,
+      _ => false
+    }
+  }
+}
+```
+
+# Large Parameters and Return Values
+
+It's not necessary to worry about manually boxing large return values or arguments, they are essentially passed by reference if they are larger than the size of the machine's register. To quote the tutorial:
+
+> A large value is returned via a hidden output parameter, and the decision on where to place the return value should be left to the caller
+
+What this essentially means is that if for example function `foo()` returns `BigStruct`, the compiler will pass `foo()` a pointer to an uninitialized `BigStruct` in the local scope, something like:
+
+``` rust
+let x: BigStruct; // uninitialized
+foo(&x); // as if type: foo(_ret: &mut BigStruct)
+```
+
+This allows the caller to decide where to place the return value, for example:
+
+``` rust
+fn foo() -> (u64, u64, u64, u64, u64, u64) {
+  (5, 5, 5, 5, 5, 5)
+}
+
+let x = ~foo(); // allocates ~ box and writes u64's directly to it
+```
