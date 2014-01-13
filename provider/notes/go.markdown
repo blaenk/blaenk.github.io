@@ -1,7 +1,7 @@
 ---
 title: Go
 published: December 20, 2013
-excerpt: A no-nonsense, simple C-like language
+excerpt: A simple C-like language from Google
 comments: off
 toc: left
 ---
