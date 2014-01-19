@@ -6,9 +6,7 @@ comments: off
 toc: left
 ---
 
-I took a shot at [learning Go] recently. I really appreciate how simple, no-nonsense Go is. I quickly picked up and used a variety of packages and have begun working on a web project with it. All in all I have to say that it's been a nice language to develop in so far.
-
-However, after having tasted the simplicity of concurrency in Haskell and being familiar with good software design practice, something rubs me the wrong way about how prevalent the use of globals is and the direct use of classic concurrency primitives like mutexes on shared memory. Go does have channels builtin with syntax specifically for reading and writing them. However, I do feel there was a missed opportunity in innovating in this area.
+I took a shot at [learning Go] recently and I found its simplicity to be refreshing. However, after having tasted the simplicity of concurrency in Haskell and being familiar with good software design practice, something rubs me the wrong way about how prevalent the use of globals is and the direct use of classic concurrency primitives like mutexes on shared memory. Go does have channels builtin with syntax specifically for reading and writing them. However, I do feel there was a missed opportunity in innovating in this area.
 
 My main resources are the [tutorial] and [manual]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it.
 
@@ -181,7 +179,9 @@ let t = s; // box becomes immutable
 
 # References
 
-References are non-owning views of a value which are obtained using the address-of operator `&` and dereferenced using the `*` operator. In patterns, the `ref` keyword can be used to bind a variable name by reference rather than by value.
+References are non-owning views of a value which are obtained using the address-of operator `&` and dereferenced using the `*` operator. In patterns, the `ref` keyword can be used to bind a variable name by reference rather than by value. [^cpp11_ref]
+
+[^cpp11_ref]: This really reminds me of C++11's [`std::ref`](http://en.cppreference.com/w/cpp/utility/functional/ref).
 
 ``` rust
 fn eq(xs: &List, ys: &List) -> bool {
@@ -266,3 +266,45 @@ fn foo() -> (u64, u64, u64, u64, u64, u64) {
 
 let x = ~foo(); // allocates ~ box and writes u64's directly to it
 ```
+
+# More on References
+
+Referneces don't imply ownership, they're "borrowed". Reference parameters are often used to allow functions to work with all manner of different allocated types.
+
+``` rust
+fn distance(p1: &Point, p2: &Point) -> f64 {
+  let x = p1.x - p2.x;
+  let y = p1.y - p2.y;
+  sqrt(x * x + y * y)
+}
+```
+
+This can be used on stack-allocated variables by using the address-of operator `&` to borrow the local variable, to create an alias for it, i.e. another route to the same data. Managed and owned boxes, on the other hand, are automatically converted to references, in which case the "borrowed" metaphor is more like "lent out".
+
+If the contents of a variable are lent out then the variable can't be sent to another task. Also, no actions can be taken that may cause the borrowed value to be freed or to change its type. It's necessary to wait for the borrowed value to be returned, i.e. reference to go out of scope, before making full use of it again.
+
+Furthermore, the act of lending immutable pointers to variables freezes the objects they point to and prevents their mutation until the reference is destroyed (i.e. out of scope):
+
+``` rust
+let mut x = 5;
+{
+  let y = &x; // x is frozen
+}
+// x is unfrozen
+```
+
+Pointers and boxes are uniformly dereferenced with `*`. The pointer `borrowed` can be read as taking the reference of the mutable `value`, that is, the `mut` is part of the name. Note that the precedence levels of `*` and `.` are similar to those in C/C++, making for the awkward parenthesized dereferencing syntax. Unlike C/C++, there is no `->` shortcut. Instead, there is automatic pointer dereferencing through `*` and `[]`, which applies to any number of levels of indirection:
+
+``` rust
+let mut owned = ~20;
+let mut value = 30;
+let borrowed = &mut value;
+
+*owned = *borrowed + 100;
+*borrowed = 1000;
+
+let point &@~Point { x: 10.0, y: 20.0 };
+println!("{:f}", point.x); // dereferences all three levels
+```
+
+
