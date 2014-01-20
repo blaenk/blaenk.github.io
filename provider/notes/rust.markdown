@@ -6,7 +6,7 @@ comments: off
 toc: left
 ---
 
-I took a shot at [learning Go] recently and I found its simplicity to be refreshing. However, after having tasted the simplicity of concurrency in Haskell and being familiar with good software design practice, something rubs me the wrong way about how prevalent the use of globals is and the direct use of classic concurrency primitives like mutexes on shared memory. Go does have channels builtin with syntax specifically for reading and writing them. However, I do feel there was a missed opportunity in innovating in this area.
+I took a shot at [learning Go] recently and I found its simplicity to be refreshing. I do like the language, but I found myself reinventing too many wheels that Go didn't have built-in for sake of simplicity. I found that the simplicity the language strives for sometimes comes at the expense of the developer, for no particularly worthwhile benefit. Contrast this to Haskell, for example, where it might take time to ensure that everything is correct to even compile, but the process is worthwhile because it provides certain correctness guarantees about the program.
 
 My main resources are the [tutorial] and [manual]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it.
 
@@ -102,6 +102,8 @@ fn do_nothing_another_way(a: int) -> () { a; }
 
 fn first((value, _): (int, f64)) -> int { value }
 ```
+
+In short, blocks such as `{ expr1; expr2 }` are considered a single expression and evaluate to the result of the last expression if it's not followed by a semicolon, otherwise the block evaluates to `()`.
 
 # Destructors
 
@@ -305,6 +307,113 @@ let borrowed = &mut value;
 
 let point &@~Point { x: 10.0, y: 20.0 };
 println!("{:f}", point.x); // dereferences all three levels
+```
+
+# Vectors and Strings
+
+Fixed-size vectors are unboxed blocks of memory that owns the elements it contains.
+
+``` rust
+let fixed_size: [1, 2, 3];
+let five_zeroes: [int, ..5] = [0, ..5];
+```
+
+Unique vectors are dynamically-sized and have a destructor that cleans up the allocated memory on the heap. Unique vectors also own the elements they contain.
+
+``` rust
+let mut numbers = ~[1, 2, 3];
+numbers.push(4);
+
+let more_numbers: ~[int] = numbers;
+```
+
+Strings are represented as vectors of `u8` with a guarantee of containing a valid UTF-8 sequence.
+
+``` rust
+let mut string = ~"fo";
+string.push_char('o');
+```
+
+Slices point into blocks of memory and don't have ownership over the elements. Other vector types coerce to slices. An unadorned string literal is an immutable string slice:
+
+``` rust
+let xs = &[1, 2, 3];
+let ys: &[int] = xs;
+
+let three = [1, 2, 3];
+let zs: &[int] = three;
+
+let string = "foobar";
+let view: &str = string.slice(0, 3);
+```
+
+Mutable slices exist, but none for strings, since strings are a multi-byte encoding of Unicode code points, meaning they can't be freely mutated without the ability to alter the length, something that can't be done via slices, which simply provide a window.
+
+``` rust
+let mut xs = [1, 2, 3];
+let view = xs.mut_slice(0, 2);
+view[0] = 5;
+
+let ys: &mut [int] = &mut [1, 2, 3];
+```
+
+Vectors can be destructured using pattern matching:
+
+``` rust
+let numbers: &[int] = &[1, 2, 3];
+let score = match numbers {
+  [] => 0,
+  [a] => a * 10,
+  [a, b] => a * 6 + b * 4,
+  [a, b, c, ..rest] => a * 5 + b * 3 + c * 2 + rest.len() as int
+};
+```
+
+# Ownership Escape Hatches
+
+There are other ownership strategies that can be employed, such as task-local garbage collected and reference counted. Reference counted ownership [^cpp11_shared_ptr] is possible through `std::rc::Rc`:
+
+[^cpp11_shared_ptr]: This of course reminds me of C++11's [`std::shared_ptr`](http://en.cppreference.com/w/cpp/memory/shared_ptr).
+
+``` rust
+use std::rc::Rc;
+
+let x = Rc::new([1, 2, 3]);
+let y = x.clone(); // a new owner
+let z = x; // moves x into z
+
+assert_eq!(*z.borrow(), [1, 2, 3]);
+
+let mut a = Rc::new([1, 2]);
+a = z; // variable is mutable, not its contents
+```
+
+There are also garbage collected pointers via `std::gc::Gc` under ownership of a task-local garbage collector. These pointers allow the creation of cycles. Individual `Gc` pointers don't have destructors.
+
+``` rust
+use std::gc::Gc;
+
+// fixed-sized array allocated in garbage-collected box
+let x = Gc::new([1, 2, 3]);
+let y = x; // doesn't perform a move, unlike Rc
+let z = x;
+
+assert_eq!(*z.borrow(), [1, 2, 3]);
+```
+
+With shared ownership, mutability can't be inherited so the boxes are always immutable. Dynamic mutability is possible via types like `std::cell::Cell`. `Rc` and `Gc` types are not sendable, so they can't be used to share memory between tasks. This is instead possible via the `extra::arc` module.
+
+# Closures
+
+Regular, named functions don't close over their environment, but closures do.
+
+``` rust
+fn call_closure_with_ten(b: |int|) { b(10); }
+
+let captured_var = 20;
+let closure = |arg| println!("captured_var={}, arg={}", captured_var, arg);
+
+call_closure_with_ten(closure);
 ```
 
 
