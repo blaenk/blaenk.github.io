@@ -44,14 +44,6 @@ api.some_function();
 local count = api.get_count();
 ~~~
 
-One problem is that on POSIX systems, libraries are usually exported as `libsomething.so` and are searched for in the `LD_LIBRARY_PATH`. However, it probably makes no sense to install a library used only by a single program to the system's library path. This can be circumvented by loading the file by path, including the SO's full name. This introduces system-dependent behavior instead of simply loading the name of the shared library and having LuaJIT automatically modifying the name as would be appropriate for the target machine.
-
-An alternative is to modify the executable's rpath using the `-Wl,-rpath` [option](http://man7.org/linux/man-pages/man8/ld.so.8.html) in `ld.so`, which allows the executable to search in _its_ directory (`$ORIGIN`) for shared libraries by name:
-
-``` cmake
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,$ORIGIN")
-```
-
 Official FFI Resources
 
   * [Tutorial](http://luajit.org/ext_ffi_tutorial.html)
