@@ -2629,7 +2629,7 @@ Following from this, the maxflow can be found by starting with zero flow everywh
 
 A **residual network** has the same vertices as the original. For every edge in the original network: if its flow is positive, an edge should be created in the residual with an opposite direction and capacity equal to the flow. Also, if its flow is less than its capacity, an edge should be added in the same direction as the original edge with capacity equal to the difference between its capacity and flow.
 
-This means that if --- in the original -- an edge's flow is zero then there'll only be one edge (in the same direction) and if instead the flow is full there'll only be one edge (in the opposite direction).
+This means that if --- in the original --- an edge's flow is zero then there'll only be one edge (in the same direction) and if instead the flow is full there'll only be one edge (in the opposite direction).
 
 The residual network is useful because any path in it from source to sink corresponds directly to an augmenting path in the original network. As an augmenting path's flow is incremented, when an edge in the path becomes full or empty, it corresponds to changing direction or disappearing in the residual network.
 

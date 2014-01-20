@@ -97,7 +97,7 @@ Once again in text:
 [someserver] λ ~/.dots (master) ➜ 
 ~~~
 
-**Update -- October 28, 2013**: I've actually done away with this component of the prompt. I didn't like how the lambda no longer aligned with the arrow symbol --- it created a sort of inconsistency. I've instead decided to add a pretty simple green `R` at the end of the current working path, to signify that I am on a "remote" machine, so it reads something like "currently on x path remotely."
+**Update --- October 28, 2013**: I've actually done away with this component of the prompt. I didn't like how the lambda no longer aligned with the arrow symbol --- it created a sort of inconsistency. I've instead decided to add a pretty simple green `R` at the end of the current working path, to signify that I am on a "remote" machine, so it reads something like "currently on x path remotely."
 
 ```
 λ ~/.dots R (master)
