@@ -137,7 +137,9 @@ In my case, the reason I wanted to set the rpath was specifically for this use c
 [not transitive]: https://sourceware.org/bugzilla/show_bug.cgi?id=13945
 [gnome]: https://bugzilla.gnome.org/show_bug.cgi?id=670477#c20
 
-A quick fix for this is to revert to using the `DT_RPATH` attribute, which can be done by explicitly setting the `--disable-new-dtags` linker flag. Alternative solutions would include hard coding the library name --- introducing system dependent naming conventions --- or wrapping the binary in a script that sets `LD_LIBRARY_PATH`. I may end up going with the former if I decide against setting the rpath.
+A quick fix for this is to revert to using the `DT_RPATH` attribute, which can be done by explicitly setting the `--disable-new-dtags` linker flag. Alternative solutions would include hard coding the library name --- introducing system dependent naming conventions --- or wrapping the binary in a script that sets `LD_LIBRARY_PATH`.
+
+The solution gnome went with was to link with the shared object that's loaded after the fact, so that its `dlopen()` is considered to be done by the binary itself, in which case the `DT_RUNPATH` is honored.
 
 It's simple to verify that the produced binary contains the attributes by running:
 
