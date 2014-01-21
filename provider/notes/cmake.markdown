@@ -111,7 +111,7 @@ One problem is that on POSIX systems, libraries are usually exported as `libsome
 
 [specified locations]: http://man7.org/linux/man-pages/man8/ld.so.8.html#DESCRIPTION
 
-An alternative is to modify the executable's rpath using the `$ORIGIN` linker variable, which allows the executable to search relative to _its_ directory (`$ORIGIN`) for shared libraries by name. There are a variety of different ways to accomplish this.
+An alternative is to modify the executable's rpath using the `$ORIGIN` linker variable, which allows the executable to search relative to _its_ directory  --- the `$ORIGIN` --- for shared libraries by name. There are a variety of different ways to accomplish this.
 
 The simplest way to accomplish this is to use the `CMAKE_EXE_LINKER_FLAGS` variable to specify the linker flag. Clang will complain if these are defined in `CMAKE_CXX_FLAGS` because those flags are passed to it even when it's merely compiling `-c` source files, to which linker flags obviously don't apply.
 
@@ -120,7 +120,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN'")
 ```
 
-There's also a "built-in" way to accomplish this using CMake. By default, this method only applies to installed files, which means it won't work until the CMake install procedure is run, this is easily changed with another option:
+There's also a "built-in" way to accomplish this using CMake. By default, this method only applies to installed files, which means it won't apply until the project's installation procedure is run. This is easily changed so that it applies during regular builds:
 
 ``` cmake
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags")
@@ -128,16 +128,16 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH "$ORIGIN")
 ```
 
-It's important to note that the rpath corresponds to an ELF dynamic section attribute. Historically, the attribute has been `DT_RPATH`, but recently it has fallen out of favor for a more flexible `DT_RUNPATH` which honors `LD_LIBRARY_PATH`, allowing for greater user flexibility.
+It's important to note that the rpath corresponds to an ELF dynamic section attribute. Historically the attribute has been `DT_RPATH`, but recently it has fallen out of favor for a more flexible `DT_RUNPATH` which honors `LD_LIBRARY_PATH`, allowing for greater user flexibility.
 
-The thing with `DT_RUNPATH` is that it's [not transitive], meaning, if your binary with a specified `DT_RUNPATH` links with a library that itself performs a `dlopen()`, that library load won't honor the `DT_RUNPATH` --- it is that way by design.
+The thing with `DT_RUNPATH` is that it's [not transitive], meaning, if your binary with a specified `DT_RUNPATH` links with a library that itself loads another library via `dlopen()`, that library load won't honor the `DT_RUNPATH` --- it is that way by design.
 
-In my case, the reason I wanted to set the rpath was specifically for this use case. The shared object I have exposes a game engine through a C API which is then loaded by LuaJIT's FFI system. This of course performs a `dlopen()` to load the bindings shared object, so the rpath won't apply. This apparently bit a couple others too, including [gnome].
+In my case, the reason I wanted to set the rpath was specifically for this use case. The shared object I have exposes a game engine through a C API which is then loaded by LuaJIT's FFI system. This of course performs a `dlopen()` to load the shared object, so the rpath won't apply. This apparently bit other people as well, including [gnome].
 
 [not transitive]: https://sourceware.org/bugzilla/show_bug.cgi?id=13945
 [gnome]: https://bugzilla.gnome.org/show_bug.cgi?id=670477#c20
 
-A quick fix for this is to revert to using the `DT_RPATH` attribute, which can be done by explicitly setting the `--disable-new-dtags` linker flag. Alternative solutions would be to hard code the library name --- introducing system dependent naming conventions --- or wrapping the binary in a script that sets `LD_LIBRARY_PATH`.
+A quick fix for this is to revert to using the `DT_RPATH` attribute, which can be done by explicitly setting the `--disable-new-dtags` linker flag. Alternative solutions would include hard coding the library name --- introducing system dependent naming conventions --- or wrapping the binary in a script that sets `LD_LIBRARY_PATH`. I may end up going with the former if I decide against setting the rpath.
 
 It's simple to verify that the produced binary contains the attributes by running:
 
