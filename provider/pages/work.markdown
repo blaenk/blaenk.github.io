@@ -9,7 +9,44 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
-##### archlinux: syncplay packages {#vim-pandoc-syntax .collapse}
+##### haxr: i8-type support {#haxr-i8-types .collapse}
+
+<div class="collapsible">
+
+[HaXR] is the main (only?) available package for performing XML-RPC in Haskell. It supports type conversions via typeclasses as with other serialization packages such as [Aeson], which can also be automated via [Template Haskell]. I [contributed] `i8`-type support to the package.
+
+[HaXR]: http://hackage.haskell.org/package/haxr
+[Aeson]: http://hackage.haskell.org/package/aeson
+[Template Haskell]: http://www.haskell.org/haskellwiki/Template_Haskell
+[contributed]: https://github.com/byorgey/haxr/pull/1
+
+</div>
+
+##### Go scgiclient: allow unix domain sockets {#go-scgiclient-uds .collapse}
+
+<div class="collapsible">
+
+I [contributed] support for [unix domain sockets] to a Go package for creating [SCGI] clients.
+
+[contributed]: https://github.com/mpl/scgiclient/pull/1
+[unix domain sockets]: http://en.wikipedia.org/wiki/Unix_domain_socket
+[SCGI]: http://en.wikipedia.org/wiki/Simple_Common_Gateway_Interface
+
+</div>
+
+##### Go xmlrpc: i8-type and base64 support {#go-xmlrpc-i8-base64 .collapse}
+
+<div class="collapsible">
+
+I contributed [i8-type] and [base64] support to an [XML-RPC package] for Go.
+
+[i8-type]: https://github.com/kolo/xmlrpc/pull/12
+[base64]: https://github.com/kolo/xmlrpc/pull/14
+[XML-RPC package]: https://github.com/kolo/xmlrpc
+
+</div>
+
+##### archlinux: syncplay packages {#syncplay-packages .collapse}
 
 <div class="collapsible">
 
@@ -197,6 +234,27 @@ Finally, I added support for basic HTTP authentication.
 
 ## Projects
 
+##### Carson: Lightweight, "Real-Time" web interface for rtorrent {#carson .collapse}
+
+<div class="collapsible">
+
+[Carson] is a web interface for [rtorrent]. The back-end is a Python [Flask] application serving a simple JSON API to an [Angular.js] front-end. The back-end communicates with rtorrent via [SCGI]-transported [XML-RPC]. The front-end uses HTML5 Canvas to render download progress elegantly and WebSockets to continuously provide the user with updates on the state of the downloads (e.g. progress, status, etc.). The front-end is designed to be highly interactive and responsive, allowing drag-and-drop file uploads for example.
+
+[Carson]: https://github.com/blaenk/carson
+[rtorrent]: http://libtorrent.rakshasa.no/
+[Flask]: http://flask.pocoo.org/
+[Angular.js]: http://angularjs.org/
+[SCGI]: http://en.wikipedia.org/wiki/Simple_Common_Gateway_Interface
+[XML-RPC]: http://en.wikipedia.org/wiki/XML-RPC
+
+It's also made with multiple users in mind, complete with a simple role-based authorization system, invitation system, and lock system. A user can express interest in a particular download by "locking" it, which prevents it from automatically being removed after a certain amount of time as part of the back-end management systems.
+
+Creating an interface for rtorrent --- or any separate and independent program --- presents a problem of where to store additional interface-related metadata per item in the program. For example, with the aforementioned locking system, it's necessary to know which download is locked by which users. This can easily be stored in a secondary location, such as a traditional RDBMS, but this creates a problem of synchronization. Background jobs should be run to ensure that the data in the RDBMS reflects the latest state of the delegate program, to ensure that data doesn't linger in the RDBMS for items which are no longer even present in the delegate program.
+
+I decided to circumvent the issue entirely by storing the data inside the items in the delegate program itself. This is done by using an rtorrent XML-RPC API function to store arbitrary data in a particular download. I serialize my interface's metadata in JSON, encode it with Base64, then use this function to store this data inside the item. When the interface then goes to collected the data from rtorrent, it pulls this data along as well and decodes it into data usable by the interface. If a download is removed from rtorrent, the accompanying metadata is simply removed along with it.
+
+</div>
+
 ##### Pulse Visualizer: Visualizer for PulseAudio in Haskell {#pulse-visualizer .collapse}
 
 <div class="collapsible">
@@ -205,25 +263,11 @@ This was my first Haskell application, aside from exercise solutions to Haskell 
 
 I had already gotten a barebones iTunes visualizer up and running with C, so I figured I would write some hooks with the [foreign function interface](http://en.wikipedia.org/wiki/Foreign_function_interface) to delegate most of the work to Haskell. The way of going about this was pretty messy however, as it involved (at the time, and most likely even now) compiling the Haskell code into dynamic link libraries because the Haskell code had to be compiled with gcc, who's symbols differed from the ones Visual Studio produced, which I wanted to use to take advantage of DirectX 11 and DirectCompute.
 
-I managed to get something working, but it felt very messy and quite the abomination: Haskell to DLL with GCC on Windows linked with an iTunes Visualization Plugin DLL produced by MSVC which used DirectX 11. So I decided to instead look around for options to pursue on Linux, where Haskell development felt a lot more natural to me. After looking around for xmms, Banshee, or other bindings --- and finding them lacking, I figured I might as well create a visualizer for a more fundamental thing: [PulseAudio](http://en.wikipedia.org/wiki/PulseAudio) itself.
+I managed to get something working, but it felt very messy and was quite the abomination: Haskell to DLL with GCC on Windows linked with an iTunes Visualization Plugin DLL produced by MSVC which used DirectX 11. So I decided to instead look around for options to pursue on Linux, where Haskell development felt a lot more natural to me. After looking around for xmms, Banshee, or other bindings --- and finding them lacking, I figured I might as well create a visualizer for a more fundamental thing: [PulseAudio](http://en.wikipedia.org/wiki/PulseAudio) itself.
 
 PulseAudio has a concept of sources (e.g. processes) and sinks (e.g. sound cards). Every sink also has a corresponding source known as a monitor, meaning that the audio going to the associated sink can be intercepted and read. I found a [binding for Haskell](http://hackage.haskell.org/package/pulse-simple) that seemed sufficient enough which allowed me to monitor all of the audio on the system. I then paired this up with OpenGL to draw a pretty basic "frequency bar" visualization. The major benefit of having written it for PulseAudio itself instead of a particular music player or even as a standalone application is that I could then play the audio anywhere, such as YouTube or Pandora, and watch it visualized in my application.
 
 Source is available [on github](https://github.com/blaenk/pulse-visualizer).
-
-</div>
-
-##### Phoenix: Web Interface for rtorrent {#phoenix .collapse}
-
-<div class="collapsible">
-
-In 2008 I started to used [wTorrent](http://www.wtorrent-project.org/) as an interface to [rtorrent](http://libtorrent.rakshasa.no/). I began to modify it more and more to fit my needs (multi-user environment) and I eventually found myself fighting the existing code base. As a result, and to solidify my understanding of Ruby on Rails, I decided to develop an interface from scratch in Ruby on Rails. That interface was pretty heavy and a bit hackish, so I recently rewrote it, again in Ruby on Rails, to be a little bit lighter.
-
-Even so, it still feels to me that Rails is a bit too heavy for something like this. I was originally developing the latest iteration of this interface with [node.js](http://nodejs.org/), [express.js](http://expressjs.com/), and [backbone.js](http://documentcloud.github.io/backbone/) on the front-end. I was taking too long using these frameworks so I ended up going back to Ruby on Rails. I believe this is in part due to the seeming neutrality of these frameworks, which don't impose upon you a file structure or specific software architecture (such as [MVC](http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)), leaving you to devise these things on your own. As a result I kept getting distracted refining various aspects of the application.
-
-So I went back to Ruby on Rails for this iteration of the interface. One way in which I compensated for this was avoiding the use of a heavy relational database management system such as [PostgreSQL](http://www.postgresql.org/), instead only using [SQLite](http://www.sqlite.org/) for user accounts and other minor things. Torrent metadata is stored as [Base64](http://en.wikipedia.org/wiki/Base64)-encoded [JSON](http://en.wikipedia.org/wiki/JSON) within torrents using the rtorrent [XML-RPC](http://en.wikipedia.org/wiki/XML-RPC) API. This way when torrents are removed, their pertinent data is also removed. It uses Coffeescript and bootstrap on the front-end.
-
-This interface tends to be a sort of rite of passage for me when learning a language or framework. Perhaps in the future I may rewrite it yet again in something even lighter such as Ruby and [Sinatra](http://www.sinatrarb.com/), Python and [Flask](http://flask.pocoo.org/), or Haskell and [Scotty](http://www.ittc.ku.edu/csdl/fpg/software/scotty.html).
 
 </div>
 
@@ -263,7 +307,7 @@ Recently, however --- as a result of Disney [shutting down](http://en.wikipedia.
 
 <div class="collapsible">
 
-This was an application I wrote back in 2006-2007 which was a combination of client-side C# and server-side PHP. The application was basically similar to [last.fm](http://last.fm), in which a client-side application scans popular media players for the currently playing song and then transmitted to a server-side endpoint for aggregation. The client-side C# application was written with modularity in mind, so that one would simply implement an interface, generate a DLL, and place it in the same directory as the executable to add support for more players. I added such plugins for iTunes, Windows Media Player, and Winamp. Information about the currently playing song was then sent to an endpoint of the user's choosing. At the time I also wrote a WordPress plugin which displayed this information in a blog's description text (usually under the blog title/name).
+This was an application I wrote back in 2006-2007 which was a combination of client-side C# and server-side PHP. The application was basically similar to [last.fm](http://last.fm), in which a client-side application scans popular media players for the currently playing song and then transmits the information to a server-side endpoint for aggregation. The client-side C# application was written with modularity in mind, so that one would simply implement an interface, generate a DLL, and place it in the same directory as the executable to add support for more players. I added such plugins for iTunes, Windows Media Player, and Winamp. Information about the currently playing song was then sent to an endpoint of the user's choosing. At the time I also wrote a WordPress plugin which displayed this information in a blog's description text (usually under the blog title/name).
 
 After I had done all this, one of the friends I showed it to said, "Oh, so it's like last.fm?" I had never heard of last.fm before this and the whole time I had thought I had created something quite innovative.
 
@@ -273,7 +317,7 @@ After I had done all this, one of the friends I showed it to said, "Oh, so it's 
 
 <div class="collapsible">
 
-This was my first C# application which I wrote back in 2006-2007. I created it in response to an instance in which I wanted to back-up some of the music I had transferred to my iPod. The application understood the file structure of the iPod as it was back then, which consisted of several nested directories each storing about four audio files with seemingly randomly generated names. MyPod simply walked this file structure and used [TagLib](http://taglib.github.io/) to expose the actual file information to the user in a data list. The user then specified which files they wanted to back up and were then transferred to a location and naming template (i.e. artist - title) of their choosing.
+This was my first C# application which I wrote back in 2006-2007. I created it in response to an instance in which I wanted to back-up some of the music I had transferred to my iPod. The application understood the file structure of the iPod as it was back then, which consisted of several nested directories each storing about four audio files with seemingly randomly generated names. MyPod simply walked this file structure and used [TagLib](http://taglib.github.io/) to expose the actual file information to the user in a data list. The user then specified which files they wanted to back up and they were then transferred to a location and naming template (i.e. artist - title) of their choosing.
 
 </div>
 
