@@ -255,6 +255,61 @@ I decided to circumvent the issue entirely by storing the data inside the items 
 
 </div>
 
+##### Hakyll website: Source code for my Hakyll-powered website {#hakyll-website .collapse}
+
+<div class="collapsible">
+
+I wouldn't include my website as a project if it weren't for the fact that I have heavily modified it. I've [written] about many of these modifications and customizations. Some of the features I've implemented as Pandoc abstract syntax tree transformers and others as Hakyll custom compilers.
+
+Pandoc AST transformers I've written include blockquote beautification, automatic abbreviation substitution, [Pygments] codeblock highlighting, and table of contents generation (with pure CSS nested section numbering).
+
+Custom Hakyll compilers I've written include a [preview-draft system] to separate drafts from other published posts and another to [automatically push changes] as they're written to the client through WebScokets, which is useful when previewing a post that's in the middle of being written.
+
+A full list of customizations is available in the readme for the [repository].
+
+[written]: http://localhost:4000/tags/hakyll/
+[Pygments]: http://pygments.org/
+[preview-draft system]: /posts/drafts-in-hakyll/
+[automatically push changes]: /posts/live-editing-with-hakyll/
+[repository]: https://github.com/blaenk/blaenk.github.io
+
+</div>
+
+##### Learning From Data: Assignments for Cal Tech CS 1156x {#learning-from-data .collapse}
+
+<div class="collapsible">
+
+The code for the [homework assignments] for the Cal Tech CS 1156x class offered on edX.org. The class was about Machine Learning, focusing on the theory. My class notes are [also available]. I decided to do the assignments in Python to gain some experience with [NumPy], which is quickly becoming the industry choice for scientific computing. I had experience with R, but I preferred to use a "real" language.
+
+[homework assignments]: http://work.caltech.edu/homeworks.html
+[also available]: /notes/machine-learning-theory/
+[NumPy]: http://numpy.scipy.org/
+
+I created a simple testing mechanism to automate testing of the experiments that were developed, allowing me to do something like:
+
+``` python
+# constructor is Question(question_str, choices, answer)
+question8 = Question("8. in sample error",
+                     [0, 0.1, 0.3, 0.5, 0.8], 'd')
+
+in_sample_error = experiment()
+question8.check(in_sample_error)
+```
+
+Which would output something like:
+
+```
+8. in sample error
+  result:  0.506176
+  nearest: d. 0.5
+  answer:  d. 0.5
+  + CORRECT
+```
+
+The homework assignments covered many topics such as the simple perceptron learning algorithm, support vector machines, logistic regression via stochastic gradient descent, regularization, and validation.
+
+</div>
+
 ##### Pulse Visualizer: Visualizer for PulseAudio in Haskell {#pulse-visualizer .collapse}
 
 <div class="collapsible">
