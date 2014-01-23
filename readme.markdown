@@ -45,6 +45,8 @@ Features:
 * atom feed generation
 * disqus comments on by default, can turn off with metadata `comments: off`
     * only loads the JS when comments are on
+* github history integration
+    * show the commit that most recently altered a given post in its footer, as well as a link to its overall history on github
 
 Todo:
 
