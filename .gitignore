@@ -4,3 +4,5 @@
 dist/
 generated/
 deploy/
+.cabal-sandbox/
+cabal.sandbox.config
