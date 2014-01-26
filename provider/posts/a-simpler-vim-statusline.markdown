@@ -65,37 +65,54 @@ This statusline was fine, but I couldn't shake the thought that it felt out of p
 
 <img src="/images/vim/regular.png" class="center">
 
-I completely got rid of any mode designation in the statusline since I realized that I had the `showmode` option set, which already shows the current mode in the message line under the statusline. Further still, I created [mode-aware cursors] that change color based on the mode using the `gcr` option.
+I completely got rid of any mode designation in the statusline since I realized that I had the `showmode` option set, which already shows the current mode in the message line under the statusline. Further still, I created [mode-aware cursors] that change color based on the mode using the `gcr` option. Top-to-bottom: normal, insert, visual, replace, command:
+
+<img src="/images/vim/gcr-normal.png" class="center">
+<img src="/images/vim/gcr-insert.png" class="center">
+<img src="/images/vim/gcr-visual.png" class="center">
+<img src="/images/vim/gcr-replace.png" class="center">
+<img src="/images/vim/gcr-command.png" class="center">
 
 [mode-aware cursors]: https://github.com/blaenk/dots/blob/9843177fa6155e843eb9e84225f458cd0205c969/vim/vimrc.ln#L49-L64
+
+### Inactive Statuslines
 
 One piece of functionality that I wanted to preserve from airline was support for different active and inactive statuslines. In my case, I wanted this to be a subtle difference as you can see in the image below, where some things lose their color and the angle quotes become inverted:
 
 <img src="/images/vim/regular-inactive.png" class="center">
 
-This feature isn't built into Vim, so to emulate it requires a bit of added complexity by way of having to define Vim auto commands on window focus events with a function that appropriately refreshes each window's statusline so that the statuslines of now-unfocused windows change their appearance to that of an inactive statusline:
+This feature isn't built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refresh the statusline based on whether it's the window being entered to or the window being left from:
 
 ``` vim
-function! SetStatus()
-  for nr in range(1, winnr('$'))
-    call setwinvar(nr, '&statusline', '%!Status(' . nr . ')')
-  endfor
-endfunction
+augroup status
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * setl statusline=%!Status(1)
+  autocmd WinLeave * setl statusline=%!Status(0)
+augroup END
 ```
 
-There is yet another function that actually constructs the statusline, being careful to get the buffer-local version of variables used to construct the statusline, such as `&modified`:
+The function that actually constructs the statusline is called `Status`. It takes an argument that lets it know whether or not it's for an active statusline or not. I set the statusline using the `%!SomeFunc()` syntax so that the result of the function is the value that's interpreted to construct the statusline.
+
+One problem is that when done this way, the function is evaluated in the context of the current window and buffer, so if you use the value of `&modified` in your statusline somehow, and you have various windows but only the currently focused one is modified, all of the other windows will show the same modified marker, because the query as to whether or not they're modified was done within the context of the current window.
+
+The documentation presented the solution to this problem:
+
+> Note that the "`%!`" expression is evaluated in the context of the current window and buffer, while `%{}` items are evaluated in the context of the window that the statusline belongs to.
+> <footer><strong>Vim 7.4</strong> <cite><a href="http://vimhelp.appspot.com/options.txt.html#%27statusline%27">docs</a></cite></footer>
+
+This means that if we want to perform behavior specific to the window or buffer for which the statusline is being created, we should wrap that in a `%{}` expression block:
 
 ``` vim
-let l:modified = getbufvar(winbufnr(a:winnr), '&modified')
+let stat .= "%{&modified ? ' +' : ''}"
 ```
 
-This isn't as complicated as it may seem. Once the boilerplate is defined, it's a very simple way of constructing a statusline, and in my opinion more [organized and manageable] than typical, [densely packed] statusline declarations. For example, here's the code for showing the file-modified marker, where `Color` is a helper function that conditionally colors the passed content based on whether or not the window is active:
+Defining a function to construct the statusline isn't as complicated as it may seem. Once the boilerplate is defined, it's a very simple way of constructing a statusline, and in my opinion more [organized and manageable] than typical, [densely packed] statusline declarations. For example, here's the code for showing the file-modified marker, where `Color` is a helper function that conditionally colors the passed content based on whether or not the window is active:
 
 [organized and manageable]: https://github.com/blaenk/dots/blob/9843177fa6155e843eb9e84225f458cd0205c969/vim/vimrc.ln#L170
 [densely packed]: http://stackoverflow.com/a/5380230/101090
 
 ``` vim
-let stat .= Color(active, 2, l:modified ? ' +' : '')
+let stat .= Color(a:focused, 2, "%{&modified ? ' +' : ''}")
 ```
 
 Here's what the modified, paste mode, and read-only markers look like:
