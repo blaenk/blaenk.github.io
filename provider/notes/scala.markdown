@@ -159,7 +159,7 @@ class Rational(num: Int, den: Int) {
 }
 ```
 
-**Auxiliary constructors** are additional constructors that simply directly or indirectly delegating object construction to the primary constructor. They are named after `this`, and their first action must be invoking another constructor:
+**Auxiliary constructors** are additional constructors that simply directly or indirectly delegate object construction to the primary constructor. They are named after `this`, and their first action must be invoking another constructor:
 
 ``` scala
 class Rational(num: Int, den: Int) {
@@ -189,7 +189,11 @@ val partial = some.method _
 
 This syntax creates an ephemeral class [^cpp_partialapplication] that defines an `apply` method that takes the appropriate amount of arguments. When the partially applied value is called, the arguments are forwarded to the underlying function and its result is returned.
 
-[^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a [functor](http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B), or function object --- not to be confused with the category theory [Functor](http://en.wikipedia.org/wiki/Functor) more common in [Haskell](http://www.haskell.org/haskellwiki/Functor).
+[^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a functor, or [function object] --- not to be confused with the category theory [Functor] more common in [Haskell].
+
+[function object]: http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B
+[Functor]: http://en.wikipedia.org/wiki/Functor
+[Haskell]: http://www.haskell.org/haskellwiki/Functor
 
 This can also be done for specific arguments, but the type must be stated explicitly, presumably to disambiguate overloads:
 
@@ -680,7 +684,9 @@ def flattenRight[T](xss: List[List[T]]) =
 
 An efficient way to append lists in constant time is to use `ListBuffers` [^difference_lists]:
 
-[^difference_lists]: I imagine these are identical to Haskell's [difference lists](hackage.haskell.org/package/dlist/docs/Data-DList.html).
+[^difference_lists]: I imagine these are similar to Haskell's [difference lists].
+
+[difference lists]: http://hackage.haskell.org/package/dlist/docs/Data-DList.html
 
 ``` scala
 import scala.collection.mutable.ListBuffer
@@ -701,3 +707,73 @@ val word, index = longest
 ```
 
 Where `longest` is a tuple, ends up assigning the tuple to both `word` and `index`, contrary to what happens in Python. To assign the correct elements as in C++11's `std::tie`, use parentheses to pattern match as in Haskell.
+
+# Stateful Objects
+
+Scala has support for something similar to C# properties. When a non-private `var` is defined in a class, a pair of getter and setters is automatically generated for that variable. For example, given the following declaration:
+
+``` scala
+class Time {
+  var hour   = 12
+  var minute = 0
+}
+```
+
+Changes the variable to be `private[this]` so that it's only accessible from the object itself, and the getters and setters take on the visibility of the original variable, this in effect restricts all external access to its generated getters and setters. The setter takes the form `x_=(arg)` [^ruby_setter].
+
+[^ruby_setter]: This is of course very similar to setters in Ruby, which take the form `attr=(arg)`.
+
+``` scala
+class Time {
+  private[this] var h = 12
+  private[this] var m = 0
+
+  def hour: Int = h
+  def hour_=(x: Int) { h = x }
+
+  def minute: Int = m
+  def minute_=(x: Int) { m = x }
+}
+```
+
+These getters and setters can be defined explicitly in order to encode things such as input validation:
+
+``` scala
+class Time {
+  private[this] var h = 12
+  private[this] var m = 0
+
+  def hour: Int = h
+  def hour_=(x: Int) {
+    require(0 <= x && x < 24)
+    h = x
+  }
+
+  def minute: Int = m
+  def minute_=(x: Int) {
+    require(0 <= x && x < 60)
+    m = x
+  }
+}
+```
+
+It's also possible to define getters and setters that aren't backed by a variable, which is particularly useful for converter functions, for example. Note that in the following example, `_` is used to give the `celsius` variable a default value (0 for numeric types) [^monoid_default_value].
+
+[^monoid_default_value]: This reminds me of a [Monoid]'s identity, `mempty` in the Haskell typeclass, but I doubt that `_` is backed by a Monoid typeclass because a Monoid would also require an associative binary operation. Perhaps it's simply more like the [default] package's default typeclass.
+
+[Monoid]: http://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Monoid.html
+[default]: http://hackage.haskell.org/package/data-default
+
+``` scala
+class Thermometer {
+  var celsius: Float = _
+
+  def fahrenheit = celsius * 9 / 5 + 32
+  def fahrenheit_=(f: Float) {
+    celsius = (f - 32) * 5 / 9
+  }
+
+  override def toString = fahrenheight + "F/" + celsius + "C"
+}
+```
+
