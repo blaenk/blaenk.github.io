@@ -72,7 +72,7 @@ $(function() {
       $(this).next('.collapsible').slideToggle('fast');
     });
 
-    $('a[href^="#fnref"]').html('<i class="fa fa-level-up"></i>');
+    $('a[href^="#fnref"]').attr({title: 'continue reading'}).html('<i class="fa fa-level-up"></i>');
   };
 
   window.refresh();
