@@ -81,19 +81,28 @@ One piece of functionality that I wanted to preserve from airline was support fo
 
 <img src="/images/vim/regular-inactive.png" class="center">
 
-This feature isn't built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refresh the statusline based on whether it's the window being entered into or the window being left from:
+This feature isn't built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refreshes every window's statusline:
 
 ``` vim
+function! s:RefreshStatus()
+  for nr in range(1, winnr('$'))
+    call setwinvar(nr, '&statusline', '%!Status(' . nr . ')')
+  endfor
+endfunction
+
 augroup status
   autocmd!
-  autocmd VimEnter,WinEnter,BufWinEnter * setl statusline=%!Status(1)
-  autocmd WinLeave * setl statusline=%!Status(0)
+  autocmd VimEnter,WinEnter,BufWinEnter * call <SID>RefreshStatus()
 augroup END
 ```
 
-The function that actually constructs the statusline is called `Status`. It takes an argument that lets it know whether or not it's for an active statusline or not. I set the statusline using the `%!SomeFunc()` syntax so that the result of the function is the value that's interpreted to construct the statusline.
+The function that actually constructs the statusline is called `Status`. It takes an argument that corresponds to the window for which the statusline is to be constructed. I then detect whether the statusline being constructed is going to be active by checking it against the current/focused window:
 
-One problem is that when done this way, the function is evaluated in the context of the currently focused window and buffer, so if you use the value of `&modified` in your statusline somehow, and you have various windows but only the currently focused one is modified, all of the other windows will show the same modified marker, because the query as to whether or not they're modified was done within the context of the focused window.
+``` vim
+let active = a:winnum == winnr()
+```
+
+I set the statusline using the `%!SomeFunc()` syntax so that the result of the function is the value that's interpreted to construct the statusline. One problem is that when done this way, the function is evaluated in the context of the currently focused window and buffer, so if you use the value of `&modified` in your statusline somehow, and you have various windows but only the currently focused one is modified, all of the other windows will show the same modified marker, because the query as to whether or not they're modified was done within the context of the focused window.
 
 The documentation presented the solution to this problem:
 
@@ -112,7 +121,7 @@ Defining a function to construct the statusline isn't as complicated as it may s
 [densely packed]: http://stackoverflow.com/a/5380230/101090
 
 ``` vim
-let stat .= Color(a:focused, 2, "%{&modified ? ' +' : ''}")
+let stat .= Color(isactive, 2, "%{&modified ? ' +' : ''}")
 ```
 
 Here's what the modified, paste mode, and read-only markers look like:
