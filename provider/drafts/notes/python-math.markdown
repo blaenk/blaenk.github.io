@@ -17,6 +17,8 @@ What is:
     * [IPython](http://ipython.org/)
     * [SciPy](http://www.scipy.org/)
 * [PyMC](https://github.com/pymc-devs/pymc)
+* gensim
+* theano
 
 [Probabilistic Programming & Bayesian Methods for Hackers](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/)
 
