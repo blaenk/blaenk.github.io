@@ -9,7 +9,7 @@ A recent trend in developer-oriented blogging is to use static site generators, 
 
 * toc
 
-A while back, a friend was telling me about his Jekyll setup and in passing mentioned how indispensable some "LiveReload" tool was. I previously did use Jekyll myself, but I hadn't heard of this LiveReload tool. For me, step 3 didn't feel like such a hassle, so having a tool that "only" automatically reloaded the page for me didn't feel entirely beneficial. For this reason, I assumed that this was **not** what the LiveReload tool did, and instead I assumed it somehow replaced the content (i.e. post body) in-place. It turns out I was incorrect in my assumption and ended up implementing what I thought LiveReload did in Hakyll, the static site generator I use written in Haskell.
+A while back, a friend was telling me about his Jekyll setup and in passing mentioned how indispensable some "LiveReload" tool was. I previously did use Jekyll myself, but I hadn't heard of this LiveReload tool. For me, reloading didn't feel like such a hassle, so having a tool that "only" automatically reloaded the page for me didn't feel entirely beneficial. For this reason, I assumed that this was **not** what the LiveReload tool did, and instead I assumed it somehow replaced the content (i.e. post body) in-place. It turns out I was incorrect in my assumption and ended up implementing what I thought LiveReload did in Hakyll, the static site generator I use written in Haskell.
 
 # Conception
 
