@@ -59,7 +59,7 @@ $(function() {
       var $id = $(this).attr('id');
       var $text = $(this).text();
 
-      $(this).html('').prepend('<a href="#' + $id + '" class="hash">#</a>')
+      $(this).html('').prepend('<span class="hash">#</span>')
              .append('<a href="#' + $id + '" class="header-link">' + $text + '</a>');
     });
 
