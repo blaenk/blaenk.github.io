@@ -80,13 +80,13 @@ The modulus operation `%` simply calculates the remainder of the left expression
 
 The equation generally used to calculate the modulus is:
 
-$$ mod(a, n) = a - \lfloor a / n \rfloor * n $$
+$$ \text{mod}(a, n) = a - \lfloor a / n \rfloor * n $$
 
 The operation `-1 % 256` yields the result `255` with this implementation. This is the result yielded in languages such as Python and Ruby.
 
 C and C++ uses the same equation as the above, **but** the division operation has an additional restriction when used with negative operands:
 
-$$ div(-a, n) = div(a, -n) = -(a/n) $$
+$$ \text{div}(-a, n) = \text{div}(a, -n) = -(a/n) $$
 
 With these definitions, the division of `-1 / 256` in the above equation becomes `-(1 / 256)`. The result of `1 / 256` is zero due to truncation. The negation of this result is still zero, so the result of the modulus operation is simply `-1`, which is **very different** from the result of `256` yielded above without these restrictions.
 
@@ -94,8 +94,8 @@ Given the above restriction on the division operation with negative operands, th
 
 $$
 \begin{align}
-  mod(\phantom {-} a, -n) &= \phantom {-} mod(a, n) \\
-  mod(-a, \phantom {-} n) &= -mod(a, n)
+  \text{mod}(\phantom {-} a, -n) &= \phantom {-} \text{mod}(a, n) \\
+  \text{mod}(-a, \phantom {-} n) &= -\text{mod}(a, n)
 \end{align}
 $$
 
