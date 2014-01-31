@@ -17,6 +17,22 @@ This page lists some of the things I've been up to lately.
 
 This is what I'm currently reading, but I also keep a list of [books I've read](/reads).
 
+<img src="/images/books/wayofkings.jpg" class="right" width="128">
+
+* [The Way of Kings](http://amzn.com/B003P2WO5E) --- My brother had a physical copy of this book lying around for months because he read on reddit that it was a very good book, but I paid no attention to it.
+
+    However, after recently finishing the _A Song of Ice and Fire_ [prequels], I was left with a craving for that kind of world, so I looked online and saw that the general consensus was that it was indeed very good. It's written by Brandon Sanderson, who I wasn't familiar with, but he already had other popular series, and also masterfully finished the late Robert Jordan's _The Wheel of Time_ by writing books 12 through 14.
+
+    The series is called _The Stormlight Archive_. The setting is the typical medieval fantasy world, somewhat like the one from _A Song of Ice and Fire_. It's a little heavier on the magic, but only slightly, and it's treated similar to how it's treated in ASOIAF: there are magical items in the world, but they are scarce, and people don't really understand how they work because they were created thousands of years ago. It has many _very_ interesting [concepts] which I've come to love.
+
+    It's around the same length as the typical ASOIAF book, and has POV chapters as well, though not in as strict a fashion as ASOIAF. I am _really_ liking it, and supposedly the author intends for there to be 36-volumes written with this world as a setting :)
+
+[prequels]: http://en.wikipedia.org/wiki/Tales_of_Dunk_and_Egg
+[concepts]: http://en.wikipedia.org/wiki/The_Stormlight_Archive#Concepts
+
+*[ASOIAF]: A Song of Ice and Fire
+*[POV]: Point of View
+
 <img src="/images/books/scala.jpg" class="right" width="128">
 
 * [Programming in Scala](http://amzn.com/0981531644) --- I've been interested in Scala as a promising compromise between a purely functional statically typed language like Haskell and an imperative dynamic language like Ruby or Python. I'm particularly interested in the possible benefits of leveraging a VM as time-tested and robust as the JVM compared to other languages' perhaps more ad-hoc solutions. I'm also interested in it from a multicore utilization perspective with its actor concurrency model which resembles Erlang's, but with access to Scala/Java's perhaps more numerous packages.
@@ -39,4 +55,5 @@ This is what I'm currently reading, but I also keep a list of [books I've read](
 
 * [Parallel Programming with GPUs](https://www.udacity.com/course/cs344): A class that teaches GPGPU programming using [CUDA](http://en.wikipedia.org/wiki/CUDA).
 
+*[GRRM]: George RR Martin
 *[GPGPU]: General Purpose GPU
