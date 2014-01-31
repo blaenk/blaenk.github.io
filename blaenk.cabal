@@ -2,7 +2,7 @@ name:             blaenk
 version:          1.0
 synopsis:         Personal Site
 homepage:         http://blaenkdenum.com
-license:          BSD
+license:          BSD3
 author:           Jorge Israel Peña
 maintainer:       jorge.israel.p@gmail.com
 category:         Web

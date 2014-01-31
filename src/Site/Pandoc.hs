@@ -127,26 +127,27 @@ tableOfContents _ _ x = x
 
 quoteRulers :: Block -> Block
 quoteRulers (BlockQuote contents) =
-  BlockQuote $ HorizontalRule : [padded] ++ [HorizontalRule]
+  BlockQuote $ [HorizontalRule, padded, HorizontalRule]
   where padded = Div ("", ["padded-quote"], []) $ contents
 quoteRulers x = x
 
--- add handler for Plain?
 abbreviations :: Map.Map String String -> Block -> Block
-abbreviations abbrs (Para inlines) = Para $ map substitute inlines
-  where substitute (Str string) = case findMatch (Map.keys abbrs) string of
-                                    Just abbr -> replaceWithAbbr string abbr
-                                    Nothing -> Str string
-        substitute x = x
-        findMatch (key:keys) text = if (text =~ key :: Bool)
-                                      then Just key
-                                      else findMatch keys text
+abbreviations abbrs (Para inlines)  = Para  $ walk (substituteAbbreviation abbrs) inlines
+abbreviations abbrs (Plain inlines) = Plain $ walk (substituteAbbreviation abbrs) inlines
+abbreviations _ x = x
+
+substituteAbbreviation :: Map.Map String String -> Inline -> Inline
+substituteAbbreviation abbrs (Str content) =
+  case findMatch (Map.keys abbrs) content of
+    Just abbr -> replaceWithAbbr content abbr
+    Nothing -> Str content
+  where findMatch (key:keys) text = if (text =~ key :: Bool) then Just key else findMatch keys text
         findMatch [] _ = Nothing
         replaceWithAbbr string abbr =
           let definition = (fromMaybe "ERROR" $ Map.lookup abbr abbrs)
               replacement = const $ renderHtml $ H.abbr ! A.title (H.toValue definition) $ preEscapedToHtml abbr
           in RawInline "html" $ replaceAll abbr replacement string
-abbreviations _ x = x
+substituteAbbreviation _ x = x
 
 tocRemover :: Block -> Block
 tocRemover (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) = Null
