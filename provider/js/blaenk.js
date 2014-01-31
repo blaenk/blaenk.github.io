@@ -72,7 +72,8 @@ $(function() {
       $(this).next('.collapsible').slideToggle('fast');
     });
 
-    $('a[href^="#fnref"]').attr({title: 'continue reading'}).html('<i class="fa fa-level-up"></i>');
+    $('.footnoteRef').attr('title', 'read footnote');
+    $('a[href^="#fnref"]').attr('title', 'continue reading').html('<i class="fa fa-level-up"></i>');
   };
 
   window.refresh();
