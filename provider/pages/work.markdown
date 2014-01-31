@@ -13,22 +13,22 @@ This is an aggregation of the different work I've done in terms of open source c
 
 <div class="collapsible">
 
-[HaXR] is the main (only?) available package for performing XML-RPC in Haskell. It supports type conversions via typeclasses as with other serialization packages such as [Aeson], which can also be automated via [Template Haskell]. I [contributed] `i8`-type support to the package.
+[HaXR] is the main (only?) available package for performing XML-RPC in Haskell. It supports type conversions via typeclasses as with other serialization packages such as [Aeson], which can also be automated via [Template Haskell]. I [contributed][haxr pr] `i8`-type support to the package.
 
 [HaXR]: http://hackage.haskell.org/package/haxr
 [Aeson]: http://hackage.haskell.org/package/aeson
 [Template Haskell]: http://www.haskell.org/haskellwiki/Template_Haskell
-[contributed]: https://github.com/byorgey/haxr/pull/1
+[haxr pr]: https://github.com/byorgey/haxr/pull/1
 
 </div>
 
-##### Go scgiclient: allow unix domain sockets {#go-scgiclient-uds .collapse}
+##### Go scgiclient: unix domain socket support {#go-scgiclient-uds .collapse}
 
 <div class="collapsible">
 
-I [contributed] support for [unix domain sockets] to a Go package for creating [SCGI] clients.
+I [contributed][goscgi pr] support for [unix domain sockets] to a Go package for creating [SCGI] clients.
 
-[contributed]: https://github.com/mpl/scgiclient/pull/1
+[goscgi pr]: https://github.com/mpl/scgiclient/pull/1
 [unix domain sockets]: http://en.wikipedia.org/wiki/Unix_domain_socket
 [SCGI]: http://en.wikipedia.org/wiki/Simple_Common_Gateway_Interface
 
