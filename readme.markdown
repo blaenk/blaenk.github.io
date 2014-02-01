@@ -32,7 +32,13 @@ Features:
     * section ignoring (don't include in toc and don't number): `# Some Header {.notoc}`
     * table of contents section numbering with pure CSS
     * header section numbering with pure CSS
-* pygments highlighting of codeblocks with caching
+* pygments highlighting of codeblocks
+    * fully supports UTF-8
+    * very fast, server-backed implementation
+    * produces simple and [semantically correct](http://www.w3.org/TR/html5/grouping-content.html#the-pre-element) markup
+
+            <pre><code class="highlight language-haskell">the code</code></pre>
+
     * uses first class for language specification, `{.haskell}`, or optional `{lang=haskell}` keyvar, or alternative backtick codeblock syntax:
 
             ``` haskell
@@ -47,7 +53,3 @@ Features:
     * only loads the JS when comments are on
 * github history integration
     * show the commit that most recently altered a given post in its footer, as well as a link to its overall history on github
-
-Todo:
-
-* possible optimization for pygments: combine all similar language code blocks into one "file"
