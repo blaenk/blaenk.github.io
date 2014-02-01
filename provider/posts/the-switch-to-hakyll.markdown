@@ -163,6 +163,13 @@ There is actually work towards implementing abbreviation substitution. The [read
 
 ### Pygments {#pygments}
 
+Update
+  ~ This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I've created a pygments server that the site opens alongside it at launch, and this Pandoc AST transformer communicates with it with it through its stdout/stdin handles. It works perfectly and the site compiles very fast now. It also fully supports UTF-8:
+
+    ```
+    ¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹
+    ```
+
 One of the first things I wanted to implement right away was syntax highlighting with [Pygments](http://pygments.org/). There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for [kate](http://johnmacfarlane.net/highlighting-kate/): a Haskell package for syntax highlighting written by the author of Pandoc. However, I don't find it to be on par with Pygments. In the past, I simply posted code to [gist](https://gist.github.com/) and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.
 
 Eventually I realized that github just uses Pygments underneath, so I implemented a Pandoc AST transformer that finds every [`CodeBlock`](http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Definition.html#t:Block), extracts the code within it, passes it to Pygments, and replaces that `CodeBlock` with a `RawBlock` containing the raw HTML output by Pygments. I also implemented a way to specify an optional caption which is shown under the code block. I use [blaze-html](http://jaspervdj.be/blaze/) for the parts where I need to hand-craft HTML.
