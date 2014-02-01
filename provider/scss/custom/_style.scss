@@ -22,11 +22,6 @@ h3.title {
   text-align: center;
 }
 
-.entry-content code {
-  background-color: #EEE;
-  padding: 1px 5px;
-}
-
 .MathJax_Display {
   cursor: default;
 }
@@ -330,15 +325,11 @@ hr {
   }
 }
 
-figure.code {
+figure.codeblock {
   margin: 15px 0;
   cursor: default;
   background: #F2F9FF;
   overflow: hidden;
-
-  @media screen and (max-width: 600px) {
-    padding: 5px;
-  }
 
   figcaption {
     @media screen and (max-width: 600px) {
@@ -380,23 +371,20 @@ figure.code {
     }
   }
 
-  .code-container {
+  pre {
     overflow-x: auto;
     background: #F2F9FF;
     font-size: 0.875em;
-  }
-
-  .highlight {
-    background: none;
     line-height: 18px;
-    margin: 0;
-    border: 0;
+    padding: 10px;
 
-    @media not screen and (max-width: 600px) {
-      padding: 10px;
+    @media screen and (max-width: 600px) {
+      padding: 5px;
     }
 
-    .code, .gutter { line-height: 18px; }
+    .highlight {
+      padding: 0;
+    }
   }
 }
 

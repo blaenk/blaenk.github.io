@@ -2,8 +2,6 @@
 
 module Site.Pandoc (pandocCompiler, pandocFeedCompiler) where
 
-import Site.Util (procArgs)
-
 import Hakyll.Web.Pandoc hiding (pandocCompiler)
 import Hakyll.Core.Metadata (getMetadataField)
 
@@ -14,9 +12,7 @@ import qualified Data.Set as S
 import Hakyll.Core.Compiler
 import Hakyll.Core.Item
 import Hakyll.Core.Util.String
-import System.IO.Unsafe
-import System.Process
-import Control.Exception
+import System.IO.Unsafe -- for Pygments
 import Data.List hiding (span)
 import Data.Function (on)
 
@@ -27,17 +23,16 @@ import qualified Text.Blaze.Html5.Attributes as A
 
 import Control.Applicative ((<$>))
 
-import qualified Data.ByteString.Char8 as C (ByteString, pack)
-import Crypto.Hash
+import qualified Data.ByteString.Char8 as C
+import qualified Data.ByteString.UTF8 as U8
+
 import Data.Tree
 import Data.Maybe (fromMaybe)
 import Data.Monoid ((<>), mconcat)
 import Text.Regex.TDFA ((=~))
 import qualified Data.Map as Map
 
-import System.Directory
-import System.FilePath (takeDirectory)
-import System.IO.Error (isDoesNotExistError)
+import System.IO (Handle, hFlush)
 
 abbreviationCollector :: Item String -> Map.Map String String
 abbreviationCollector item =
@@ -50,8 +45,8 @@ pandocFeedCompiler :: Item String -> Compiler (Item String)
 pandocFeedCompiler = pandocTransformer readerOptions writerOptions' (walk tocRemover)
   where writerOptions' = writerOptions { writerHTMLMathMethod = PlainMath }
 
-pandocCompiler :: FilePath -> Item String -> Compiler (Item String)
-pandocCompiler storePath item = do
+pandocCompiler :: (Handle, Handle) -> Item String -> Compiler (Item String)
+pandocCompiler handles item = do
   alignmentM <- getMetadataField (itemIdentifier item) "toc"
 
   let abbrs = abbreviationCollector item
@@ -64,7 +59,7 @@ pandocCompiler storePath item = do
       transformer =
         (walk quoteRulers) .
         (walk $ abbreviations abbrs) .
-        (walk $ pygments storePath) .
+        (walk $ pygments handles) .
         tableOfContents'
 
   pandocTransformer readerOptions writerOptions transformer item
@@ -153,48 +148,26 @@ tocRemover :: Block -> Block
 tocRemover (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) = Null
 tocRemover x = x
 
-cache :: String -> String -> FilePath -> String
-cache code lang storePath = unsafePerformIO $ do
-  let pathStem = (takeDirectory . takeDirectory $ storePath) ++ "/pygments/"
-
-  _ <- createDirectoryIfMissing True pathStem
-
-  let path = pathStem ++ "/" ++ newhash
-      newhash = sha1 code
-
-  readFile path `catch` handleExists path
-  where cacheit path = do
-          colored <- pygmentize lang code
-          writeFile path colored
-          return colored
-        sha1 :: String -> String
-        sha1 = show . sha1hash . C.pack
-          where sha1hash = hash :: C.ByteString -> Digest SHA1
-        handleExists :: FilePath -> IOError -> IO String
-        handleExists path e
-          | isDoesNotExistError e = cacheit path
-          | otherwise = throwIO e
-
-pygments :: FilePath -> Block -> Block
-pygments storePath (CodeBlock (_, classes, keyvals) contents) =
-  let lang = case lookup "lang" keyvals of
-               Just language -> language
-               Nothing -> if not . null $ classes
-                            then head classes
-                            else "text"
-      text = lookup "text" keyvals
-      colored = renderHtml $ H.div ! A.class_ (H.toValue $ "code-container " ++ lang) $ do
-                  preEscapedToHtml $ cache contents lang storePath
-      caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) text
-      composed = renderHtml $ H.figure ! A.class_ "code" $ do
+pygments :: (Handle, Handle) -> Block -> Block
+pygments handles (CodeBlock (_, classes, keyvals) contents) =
+  let lang = fromMaybe (if not . null $ classes then head classes else "text") $ lookup "lang" keyvals
+      colored = renderHtml $ H.pre $ H.code ! A.class_ (H.toValue $ "highlight language-" ++ lang) $ do
+                  preEscapedToHtml $ U8.toString $ pygmentize (U8.fromString lang) (U8.fromString contents) handles
+      caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) (lookup "text" keyvals)
+      composed = renderHtml $ H.figure ! A.class_ "codeblock" $ do
                    preEscapedToHtml $ colored ++ caption
   in RawBlock "html" composed
 pygments _ x = x
 
-pygmentize :: String -> String -> IO String
-pygmentize lang contents = do
-  let (cmd, args) = procArgs "pygmentize" ["-f", "html", "-l", lang, "-P encoding=utf-8"]
-  readProcess cmd args contents
+-- REQUEST:  LANG\nLENGTH\nCODE
+-- RESPONSE: LENGTH\nRESPONSE
+pygmentize :: C.ByteString -> C.ByteString -> (Handle, Handle) -> C.ByteString
+pygmentize lang contents (pin, pout) = unsafePerformIO $ do
+  let len = C.pack . show . C.length $ contents
+      request = C.intercalate "\n" [lang, len, contents]
+
+  C.hPutStr pin request >> hFlush pin
+  read . C.unpack <$> C.hGetLine pout >>= C.hGet pout
 
 readerOptions :: ReaderOptions
 readerOptions =

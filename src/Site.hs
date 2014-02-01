@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE CPP #-}
 
 import Hakyll hiding (pandocCompiler)
 
@@ -13,6 +14,10 @@ import System.Environment
 import Control.Monad (when, void)
 import System.Exit (exitSuccess)
 import System.FilePath (takeFileName)
+
+-- pygments server
+import System.IO (Handle)
+import System.Process (runInteractiveProcess)
 
 -- websockets stuff
 
@@ -138,24 +143,22 @@ webSocketPipe channels item =
     return item
 
 data Content = Content
-  { contentConfiguration :: Configuration
-  , contentPattern       :: Pattern
+  { contentPattern       :: Pattern
   , contentRoute         :: String
   , contentTemplate      :: String
   , contentContext       :: Context String
   , contentLayoutContext :: Context String }
 
-contentCompiler :: Content -> Channels -> Rules ()
-contentCompiler content channels =
+contentCompiler :: Content -> Channels -> (Handle, Handle) -> Rules ()
+contentCompiler content channels pigHandles =
   match pattern $ do
     route $ niceRoute routeRewrite
     compile $ getResourceBody
-      >>= pandocCompiler (storeDirectory conf)
+      >>= pandocCompiler pigHandles
       >>= webSocketPipe channels
       >>= loadAndApplyTemplate itemTemplate context
       >>= loadAndApplyTemplate "templates/layout.html" layoutContext
-  where conf          = contentConfiguration content
-        pattern       = contentPattern content
+  where pattern       = contentPattern content
         routeRewrite  = contentRoute content
         template      = contentTemplate content
         context       = contentContext content
@@ -168,8 +171,6 @@ deletePreviewDirs = do
   removeDirectory "generated/preview"
   putStrLn "Removing generated/scss..."
   removeDirectory "generated/scss"
-  putStrLn "Removing generated/pygments..."
-  removeDirectory "generated/pygments"
   exitSuccess
 
 main :: IO ()
@@ -177,7 +178,7 @@ main = do
   setLocaleEncoding utf8
   setFileSystemEncoding utf8
   setForeignEncoding utf8
-  
+
   channels <- atomically $ newTVar Map.empty
 
   (action:args) <- getArgs
@@ -199,6 +200,15 @@ main = do
       postsPattern = previewPattern "posts"
       notesPattern = previewPattern "notes"
       pagesPattern = previewPattern "pages"
+
+  -- pygments server
+#ifdef mingw32_HOST_OS
+  let python = "python"
+#else
+  let python = "python2"
+#endif
+
+  (pin, pout, _, _) <- runInteractiveProcess python ["src/pig.py"] Nothing Nothing
 
   -- live reload
   when previewMode $ void . forkIO $ wsServer channels
@@ -222,8 +232,7 @@ main = do
         route $ idRoute
         compile $ sassCompiler
 
-    let posts = Content { contentConfiguration = hakyllConf
-                        , contentPattern  = postsPattern
+    let posts = Content { contentPattern  = postsPattern
                         , contentRoute    = "posts/"
                         , contentTemplate = "post"
                         , contentContext  = (sluggedTagsField "tags" tags <> postCtx previewMode)
@@ -236,9 +245,9 @@ main = do
                         , contentRoute    = ""
                         , contentTemplate = "page" }
 
-    contentCompiler posts channels
-    contentCompiler notes channels
-    contentCompiler pages channels
+    contentCompiler posts channels (pin, pout)
+    contentCompiler notes channels (pin, pout)
+    contentCompiler pages channels (pin, pout)
 
     indexCompiler "index" idRoute        postsPattern
     indexCompiler "notes" (niceRoute "") notesPattern

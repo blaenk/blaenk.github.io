@@ -15,51 +15,60 @@ $solar-blue:    #268bd2 !default; // haskell: function
 $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
 $solar-green:   #859900 !default; //
 
-.highlight { color: #2381c4; }
-
-.rust .highlight {
+.language-rust {
   .cp { color: $base1; }
 }
 
-.html .highlight {
+.language-html {
   .nt { color: $solar-cyan; }
   .na { color: $solar-violet; }
 }
 
-.bash .highlight {
+.language-bash {
   .nv { color: $solar-cyan; }
 }
 
-.python .highlight {
+.language-python {
   .kn { color: $solar-violet; }
   .nn { color: $solar-cyan; }
 }
 
-.ruby .highlight {
+.language-ruby {
   .k {color: $solar-cyan; }
   .no { color: $solar-cyan; }
 }
 
-.cpp .highlight {
+.language-cpp {
   .nl { color: $solar-violet; }
 }
 
-.java .highlight {
+.language-java {
   .o { color: $solar-red; }
   .nc { color: $solar-cyan; }
 }
 
-.lua .highlight {
+.language-lua {
   .kd { color: $solar-green; } // local etc.
 }
 
-.cmake .highlight {
+.language-cmake {
   .nb { color: $solar-green; }
   .nv { color: $solar-yellow; }
   .s { color: $solar-blue; }
 }
 
+// `code`
+code {
+  background-color: #EEE;
+  padding: 1px 5px;
+}
+
 .highlight {
+   color: #2381c4;
+   background-color: inherit;
+}
+
+code {
   .bp { color: $solar-blue }   // Name.Builtin.Pseudo
   .c { color: $base01 }        // Comment
   .c1 { color: $base01 }        // Comment.Single
@@ -134,3 +143,5 @@ $solar-green:   #859900 !default; //
   .w { color: $base1 }         // Text.Whitespace
   .x { color: $solar-orange }  // Other
 }
+
+
