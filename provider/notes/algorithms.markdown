@@ -62,8 +62,8 @@ public void union(int a, int b) {
 
 Operation    Growth
 ----------  --------
-Find        $tree\ height$
-Union       $tree\ height$
+Find        $\text{tree height}$
+Union       $\text{tree height}$
 
 </div>
 
