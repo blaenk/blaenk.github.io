@@ -30,4 +30,3 @@ while True:
     sys.stdout.write(rv)
     sys.stdout.flush()
 
-open('exited', 'a').close()
