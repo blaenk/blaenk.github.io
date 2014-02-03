@@ -24,6 +24,7 @@ import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 
 import Control.Applicative ((<$>))
+import Control.Monad ((>=>))
 
 import qualified System.IO.Streams as S
 import qualified Data.ByteString.Char8 as C
@@ -167,14 +168,15 @@ pygmentize (os, is) lang contents = unsafePerformIO $ do
       len       = C.pack . show . C.length $ contents'
 
       -- REQUEST:  LANG\nLENGTH\nCODE
-      -- RESPONSE: LENGTH\nRESPONSE
       request = Just $ C.intercalate "\n" [lang', len, contents']
       flush   = Just ""
 
-  S.write request os >> S.write flush os
-  S.lines is
-    >>= fmap (read . C.unpack . fromJust) . S.read
-    >>= fmap U8.toString . flip S.readExactly is
+  S.write request os
+  S.write flush os
+
+  -- RESPONSE: LENGTH\nRESPONSE
+  responseLength <- read . C.unpack . fromJust <$> (S.lines >=> S.read) is
+  U8.toString <$> S.readExactly responseLength is
 
 readerOptions :: ReaderOptions
 readerOptions =
