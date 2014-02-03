@@ -3,6 +3,7 @@
 
 import Hakyll hiding (pandocCompiler)
 
+import Site.Types
 import Site.Filters
 import Site.Fields
 import Site.Routes
@@ -16,11 +17,9 @@ import System.Exit (exitSuccess)
 import System.FilePath (takeFileName)
 
 -- pygments server
-import System.IO (Handle)
-import System.Process (runInteractiveProcess)
+import System.IO.Streams.Process (runInteractiveProcess)
 
 -- websockets stuff
-
 import qualified Data.Map as Map
 
 import qualified Data.Text as T
@@ -71,8 +70,6 @@ indexCompiler name path itemsPattern =
       makeItem ""
         >>= loadAndApplyTemplate "templates/index.html" (archiveCtx itemsPattern)
         >>= loadAndApplyTemplate "templates/layout.html" defaultCtx
-
-type Channels = TVar (Map.Map String (TChan String, Integer))
 
 wsServer :: Channels -> IO ()
 wsServer channels = do
@@ -149,12 +146,12 @@ data Content = Content
   , contentContext       :: Context String
   , contentLayoutContext :: Context String }
 
-contentCompiler :: Content -> Channels -> (Handle, Handle) -> Rules ()
-contentCompiler content channels pigHandles =
+contentCompiler :: Content -> Channels -> Streams -> Rules ()
+contentCompiler content channels streams =
   match pattern $ do
     route $ niceRoute routeRewrite
     compile $ getResourceBody
-      >>= pandocCompiler pigHandles
+      >>= pandocCompiler streams
       >>= webSocketPipe channels
       >>= loadAndApplyTemplate itemTemplate context
       >>= loadAndApplyTemplate "templates/layout.html" layoutContext
@@ -208,7 +205,8 @@ main = do
   let python = "python2"
 #endif
 
-  (pin, pout, _, _) <- runInteractiveProcess python ["src/pig.py"] Nothing Nothing
+  (inp, out, _, _) <- runInteractiveProcess python ["src/pig.py"] Nothing Nothing
+  let streams = (inp, out)
 
   -- live reload
   when previewMode $ void . forkIO $ wsServer channels
@@ -245,9 +243,9 @@ main = do
                         , contentRoute    = ""
                         , contentTemplate = "page" }
 
-    contentCompiler posts channels (pin, pout)
-    contentCompiler notes channels (pin, pout)
-    contentCompiler pages channels (pin, pout)
+    contentCompiler posts channels streams
+    contentCompiler notes channels streams
+    contentCompiler pages channels streams
 
     indexCompiler "index" idRoute        postsPattern
     indexCompiler "notes" (niceRoute "") notesPattern

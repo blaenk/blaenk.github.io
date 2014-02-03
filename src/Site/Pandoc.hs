@@ -2,13 +2,15 @@
 
 module Site.Pandoc (pandocCompiler, pandocFeedCompiler) where
 
+import Site.Types
+
 import Hakyll.Web.Pandoc hiding (pandocCompiler)
 import Hakyll.Core.Metadata (getMetadataField)
 
 import Text.Pandoc
 import Text.Pandoc.Walk (walk, query)
 
-import qualified Data.Set as S
+import qualified Data.Set as Set
 import Hakyll.Core.Compiler
 import Hakyll.Core.Item
 import Hakyll.Core.Util.String
@@ -23,16 +25,15 @@ import qualified Text.Blaze.Html5.Attributes as A
 
 import Control.Applicative ((<$>))
 
+import qualified System.IO.Streams as S
 import qualified Data.ByteString.Char8 as C
 import qualified Data.ByteString.UTF8 as U8
 
 import Data.Tree
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, fromJust)
 import Data.Monoid ((<>), mconcat)
 import Text.Regex.TDFA ((=~))
 import qualified Data.Map as Map
-
-import System.IO (Handle, hFlush)
 
 abbreviationCollector :: Item String -> Map.Map String String
 abbreviationCollector item =
@@ -45,8 +46,8 @@ pandocFeedCompiler :: Item String -> Compiler (Item String)
 pandocFeedCompiler = pandocTransformer readerOptions writerOptions' (walk tocRemover)
   where writerOptions' = writerOptions { writerHTMLMathMethod = PlainMath }
 
-pandocCompiler :: (Handle, Handle) -> Item String -> Compiler (Item String)
-pandocCompiler handles item = do
+pandocCompiler :: Streams -> Item String -> Compiler (Item String)
+pandocCompiler streams item = do
   alignmentM <- getMetadataField (itemIdentifier item) "toc"
 
   let abbrs = abbreviationCollector item
@@ -59,7 +60,7 @@ pandocCompiler handles item = do
       transformer =
         (walk quoteRulers) .
         (walk $ abbreviations abbrs) .
-        (walk $ pygments handles) .
+        (walk $ pygments streams) .
         tableOfContents'
 
   pandocTransformer readerOptions writerOptions transformer item
@@ -135,7 +136,7 @@ substituteAbbreviation :: Map.Map String String -> Inline -> Inline
 substituteAbbreviation abbrs (Str content) =
   case findMatch (Map.keys abbrs) content of
     Just abbr -> replaceWithAbbr content abbr
-    Nothing -> Str content
+    Nothing   -> Str content
   where findMatch (key:keys) text = if (text =~ key :: Bool) then Just key else findMatch keys text
         findMatch [] _ = Nothing
         replaceWithAbbr string abbr =
@@ -148,36 +149,42 @@ tocRemover :: Block -> Block
 tocRemover (BulletList (( (( Plain ((Str "toc"):_)):_)):_)) = Null
 tocRemover x = x
 
-pygments :: (Handle, Handle) -> Block -> Block
-pygments handles (CodeBlock (_, classes, keyvals) contents) =
+pygments :: Streams -> Block -> Block
+pygments streams (CodeBlock (_, classes, keyvals) contents) =
   let lang = fromMaybe (if not . null $ classes then head classes else "text") $ lookup "lang" keyvals
       colored = renderHtml $ H.pre $ H.code ! A.class_ (H.toValue $ "highlight language-" ++ lang) $ do
-                  preEscapedToHtml $ U8.toString $ pygmentize (U8.fromString lang) (U8.fromString contents) handles
+                  preEscapedToHtml $ pygmentize streams lang contents
       caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) (lookup "text" keyvals)
       composed = renderHtml $ H.figure ! A.class_ "codeblock" $ do
                    preEscapedToHtml $ colored ++ caption
   in RawBlock "html" composed
 pygments _ x = x
 
--- REQUEST:  LANG\nLENGTH\nCODE
--- RESPONSE: LENGTH\nRESPONSE
-pygmentize :: C.ByteString -> C.ByteString -> (Handle, Handle) -> C.ByteString
-pygmentize lang contents (pin, pout) = unsafePerformIO $ do
-  let len = C.pack . show . C.length $ contents
-      request = C.intercalate "\n" [lang, len, contents]
+pygmentize :: Streams -> String -> String -> String
+pygmentize (os, is) lang contents = unsafePerformIO $ do
+  let lang'     = U8.fromString lang
+      contents' = U8.fromString contents
+      len       = C.pack . show . C.length $ contents'
 
-  C.hPutStr pin request >> hFlush pin
-  read . C.unpack <$> C.hGetLine pout >>= C.hGet pout
+      -- REQUEST:  LANG\nLENGTH\nCODE
+      -- RESPONSE: LENGTH\nRESPONSE
+      request = Just $ C.intercalate "\n" [lang', len, contents']
+      flush   = Just ""
+
+  S.write request os >> S.write flush os
+  S.lines is
+    >>= fmap (read . C.unpack . fromJust) . S.read
+    >>= fmap U8.toString . flip S.readExactly is
 
 readerOptions :: ReaderOptions
 readerOptions =
-  let extensions = S.fromList [
+  let extensions = Set.fromList [
         Ext_tex_math_dollars,
         Ext_abbreviations
         ]
   in def {
     readerSmart = True,
-    readerExtensions = S.union extensions (writerExtensions def)
+    readerExtensions = Set.union extensions (writerExtensions def)
     }
 
 writerOptions :: WriterOptions
