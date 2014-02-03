@@ -171,8 +171,7 @@ pygmentize (os, is) lang contents = unsafePerformIO $ do
       request = Just $ C.intercalate "\n" [lang', len, contents']
       flush   = Just ""
 
-  S.write request os
-  S.write flush os
+  mapM_ (flip S.write os) [request, flush]
 
   -- RESPONSE: LENGTH\nRESPONSE
   responseLength <- read . C.unpack . fromJust <$> (S.lines >=> S.read) is
