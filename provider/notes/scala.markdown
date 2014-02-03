@@ -777,3 +777,63 @@ class Thermometer {
 }
 ```
 
+# Type Parameterization
+
+It's possible to hide the primary constructor by making it private. This makes its type usable but not its constructor, which can only be used from the class itself, such as through an auxiliary constructor, or its companion object.
+
+``` scala
+class Queue[T] private (
+  private val leading:  List[T],
+  private val trailing: List[T]
+)
+```
+
+For example, a factory method can be created in the companion object:
+
+``` scala
+object Queue {
+  def apply[T](xs: T*) = new Queue[T](xs.toList, Nil)
+}
+```
+
+Another way is to define a **generic trait**, i.e. one that is parameterized, and hide the implementation inside the companion object, along with a factory method in the companion object:
+
+``` scala
+trait Queue[T] {
+  def head: T
+  def tail: Queue[T]
+  def enqueue(x: T): Queue[T]
+}
+
+object Queue {
+  def apply[T](xs: T*): Queue[T] = new QueueImpl[T](xs.toList, Nil)
+
+  private class QueueImpl[T](
+    private val leading:  List[T],
+    private val trailing: List[T]
+  ) extends Queue[T] {
+    def mirror = ...
+    def tail = ...
+    def enqueue = ...
+  }
+}
+```
+
+## Variance
+
+**Variance** refers to inheritance relationships of parameterized types, such as whether `Set[String]` is a subtype of `Set[AnyRef]`.
+
+For example, if `S` is a subtype of `T` and `Queue[S]` is considered a subtype of `Queue[T]`, then `Queue` is **covariant** in its type parameter `T`. This would mean for example that we could pass `Queue[String]` to a method that accepted types `Queue[AnyRef]`.
+
+However, generic types are **nonvariant** by default, meaning that there would be no such subtype relationship. It's possible to annotate the type parameter as being **covariant** by prepending the type parameter with `+`:
+
+``` scala
+trait Queue[+T] { ... }
+```
+
+**Contravariance** would mean that if `T` is a subtype of `S`, then `Queue[S]` is a subtype of `Queue[T]`. It's also possible to annotate the type parameter to be **contravariant** by using the `-` annotation:
+
+``` scala
+trait Queue[-T] { ... }
+```
+
