@@ -164,7 +164,7 @@ There is actually work towards implementing abbreviation substitution. The [read
 ### Pygments {#pygments}
 
 Update
-  ~ This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I've created a pygments server that the site opens alongside it at launch, and this Pandoc AST transformer communicates with it with it through its stdout/stdin handles. It works perfectly and the site compiles very fast now. It also fully supports UTF-8:
+  ~ This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I've created a pygments server that the site opens alongside it at launch, and this Pandoc AST transformer communicates with it through its stdout/stdin handles. It works perfectly and the site compiles a lot quicker. It also fully supports UTF-8:
 
     ```
     ¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹
