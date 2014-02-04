@@ -253,7 +253,7 @@ Another optimization yet is a higher-level one that would occur before most othe
 
 Infinite worlds have eventual limits mainly due to round-off errors with floating point numbers. Minecraft tries to [mitigate this](http://notch.tumblr.com/post/3746989361/terrain-generation-part-1) by using local coordinates:
 
-> Many of these problems can be solved by changing the math into a local model centered around the player so the numbers all have vaguely the same magnitude. For rendering, Minecraft already uses local coordinates within the block and offset the block position relative to the player to give the impression of the player moving. This is mostly due to OpengGL using 32 bit floats for positions, but also because the rounding errors are extremely visible when displayed on a screen.
+> Many of these problems can be solved by changing the math into a local model centered around the player so the numbers all have vaguely the same magnitude. For rendering, Minecraft already uses local coordinates within the block and offset the block position relative to the player to give the impression of the player moving. This is mostly due to OpenGL using 32 bit floats for positions, but also because the rounding errors are extremely visible when displayed on a screen.
 
 
 Terrain generation is usually accomplished with noise:
