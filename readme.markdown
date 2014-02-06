@@ -1,4 +1,4 @@
-This is the source for my [personal site](http://blaenkdenum.com).
+This is the source for my [personal site](http://www.blaenkdenum.com).
 
 The Hakyll site's source (the Haskell code in **src/**) is BSD licensed as stated in the cabal file.
 
@@ -33,9 +33,9 @@ Features:
     * table of contents section numbering with pure CSS
     * header section numbering with pure CSS
 * pygments highlighting of codeblocks
-    * fully supports UTF-8
+    * UTF-8
     * very fast, server-backed implementation
-    * produces simple and [semantically correct](http://www.w3.org/TR/html5/grouping-content.html#the-pre-element) markup
+    * produces simple, clean, and [semantically correct](http://www.w3.org/TR/html5/grouping-content.html#the-pre-element) markup
 
             <pre><code class="highlight language-haskell">the code</code></pre>
 
