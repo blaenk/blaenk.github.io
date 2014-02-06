@@ -837,3 +837,45 @@ trait Queue[+T] { ... }
 trait Queue[-T] { ... }
 ```
 
+In order to make `Queue` covariant, it's necessary to specify a lower bound on the `enqueue` method and make it polymorphic as well. The lower bound enforces the requirement that `U` be a supertype of `T`.
+
+``` scala
+class Queue[+T] (
+  private val leading:  List[T],
+  private val trailing: List[T]
+) {
+  def enqueue[U :> T](x: U) = new Queue[U](leading, x :: trailing)
+}
+```
+
+This means that given supertype `Fruit` and subtypes `Apple` and `Orange`, an `Orange` can be appended to a `Queue[Apple]`, yielding a `Queue[Fruit]` result.
+
+There are also upper bounds which enforce the requirement that a type be a subtype of another, in the example below, it means that `T` must be a subtype of `Ordered[T]`:
+
+``` scala
+def orderedMergeSort[T <: Ordered[T]](xs: List[T]): List[T] = ...
+```
+
+# Abstract Members
+
+A member of a class or trait is **abstract** if it doesn't have a complete definition within the class. The implementations are meant to be defined in subclasses. Unlike other object-oriented languages, it's also possible to declare abstract fields and even abstract types. It's possible to declare abstract types, methods, `val`s and `var`s:
+
+``` scala
+trait Abstract {
+  type T
+  def transform(x: T): T
+  val initial: T
+  var current: T
+}
+```
+
+This can then be implemented in a subclass:
+
+``` scala
+class Concrete extends Abstract {
+  type T = String
+  def transform(x: String) = x + x
+  val initial = "hi"
+  var current = initial
+}
+```
