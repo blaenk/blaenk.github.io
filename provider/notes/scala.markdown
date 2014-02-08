@@ -879,3 +879,136 @@ class Concrete extends Abstract {
   var current = initial
 }
 ```
+
+It's possible to override abstract methods with a concrete `val`, since the `val` will yield the same value every time, whereas the reverse can't be guaranteed.
+
+Abstract `var`s provide implicit getters and setters for certain values.
+
+Class parameter arguments are evaluated _before_ being passed to the class constructor, but concrete `val` definitions are evaluated _after_ the superclass is initialized. The following yields an error for failing to satisfy the requirement, since at the time the requirement is checked, the value of `denomArg` is still 0, since it's defined in the subclass.
+
+``` scala
+trait RationalTrait {
+  val numerArg: Int
+  val denomArg: Int
+  require(denomArg != 0)
+}
+
+val x = 2
+
+// defines an anonymous class that mixes in RationalTrait
+// with its definition enclosed
+new RationalTrait {
+  val numerArg = 1 * x
+  val denomArg = 2 * x
+}
+
+// yields java.lang.IllegalArgumentException: requirement failed
+```
+
+Pre-initialized fields are one way to solve this problem by defining certain subclass fields before the superclass is called:
+
+``` scala
+// anonymous class
+new {
+  val numerArg = 1 * x
+  val denomArg = 2 * x
+} with RationalTrait
+
+// object definition
+object twoThirds extends {
+  val numerArg = 2
+  val denomArg = 3
+} with RationalTrait
+```
+
+The other way to solve this problem is using lazy `val`s, which defers the evaluation of the `val`'s expression until the first time it the `val` is used, much like in Haskell.
+
+``` scala
+trait LazyRationalTrait {
+  val numerArg: Int
+  val denomArg: Int
+  lazy val numer = numerArg / g
+  lazy val denom = denomArg / g
+  private lazy val g = {
+    require(denomArg != 0)
+    gcd(numerArg, denomArg)
+  }
+}
+```
+
+Abstract types are useful when there are abstract methods which take on parameters of types specific to the subclass. For example, it wouldn't make sense to have the following because it would mean that we could pass any type of `Food` to any `Animal` subclass.
+
+``` scala
+class Food
+abstract class Animal {
+  def eat(food: Food)
+}
+```
+
+Instead of defining the `eat` method as taking a `Food` parameter, we could define it to take some abstract type with an upper bound enforcing that it is a subclass of `Food`. This way, a subclass of `Animal` could explicitly specify the type of `Food` it eats.
+
+``` scala
+class Food
+abstract class Animal {
+  type SuitableFood <: Food
+  def eat(food: SuitableFood)
+}
+```
+
+A **path-dependent type** is one that depends on its path, i.e. `some.object.Type`. Such a type can be instantiated using that syntax, since it implies a reference to `Type`'s outer object, particularly `object`. The syntax `Outer#Inner` can't be used to instantiate `Inner` since it doesn't refer to any instance of `Outer`.
+
+## Structural Subtyping
+
+**Structural subtyping** is when two types get a subtyping relationship because they have the same members [^go_interfaces]. This is contrasted to the more traditional **nominal subtyping**, where each type has a name they have an explicitly declared subtyping relationship. Structural subtyping is achieved in Scala using **refinement types**.
+
+[^go_interfaces]: This reminds me of [Go's interfaces].
+
+[Go's interfaces]: /notes/go/#interfaces
+
+For example, to create a `Pasture` class full of `Animal`s that eat `Grass`, we can define:
+
+``` scala
+Animal { type SuitableFood = Grass }
+class Pasture {
+  var animals: List[Animal { type SuitableFood = Grass }] = Nil
+}
+```
+
+It can also be used to generalize a `using` method, such as Python's `with` from, so that it works on any object that has a `close` method. The first attempt at generalization wouldn't work because `T` could be any type, even one that _doesn't_ have a `close` method. This can be fixed by specifying an upper bound consisting of a refinement type. Note that if no base type is specified, like `Animal` preceding the braces above, then Scala uses `AnyRef`
+
+``` scala
+def using[T, S](obj: T)(operation: T => S) = {
+  val result = operation(obj)
+  obj.close() // type error
+  result
+}
+
+def using[T, <: { def close(): Unit }, S](obj: T)(operation: T => S) = {
+  val result = operation(obj)
+  obj.close()
+  result
+}
+```
+
+## Enumerations
+
+Enumerations in Scala aren't defined at the language-level. Instead there is a class `scala.Enumeration` that can be used to define enumerations, which works due to path-dependent types. This means that `Color.Value` would be different from `Direction.Value` becuase their parts differ:
+
+``` scala
+object Color extends Enumeration {
+  val Red, Green, Blue = Value
+}
+
+object Direction extends Enumeration {
+  val North = Value("North")
+  val East  = Value("East")
+  val South = Value("South")
+  val West  = Value("West")
+}
+
+for (d <- Direction.values) print (d + " ")
+
+Direction.East.id == 1
+Direction(1)      == Direction.East
+```
+
