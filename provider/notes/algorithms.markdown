@@ -1652,7 +1652,7 @@ Space   $O(V)$
 
 </div>
 
-The problem of finding the shortest paths can be generalized to graphs containing negative cycles. The Bellman-Ford algorithm accomplishes this by adding the source vertex to a queue and entering a loop where a vertex is dequeued and relaxed, and any vertex affected by that relaxation gets enqueue.
+The problem of finding the shortest paths can be generalized to graphs containing negative cycles. The Bellman-Ford algorithm accomplishes this by adding the source vertex to a queue and entering a loop where a vertex is dequeued and relaxed, and any vertex affected by that relaxation gets enqueued.
 
 A **negative cycle** is a directed cycle with net negative weight. No shortest path between $s$ and $v$ can consist of a vertex that lies within a negative cycle, or the weight of the path can be made arbitrarily low and a _shortest_ path would "never" be achieved.
 
