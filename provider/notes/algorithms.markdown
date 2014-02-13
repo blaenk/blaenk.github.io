@@ -1048,11 +1048,46 @@ A popular and simple hashing function is modular hashing of the form:
 
 $$h(k) = k \bmod M$$
 
-where $k$ is the key and $M$ is the array size, usually chosen to be prime. Multiple pieces of data can be combined into one hash by doing:
+where $k$ is the key and $M$ is the array size, used to avoid integer overflow, usually chosen to be prime. Multiple pieces of data can be combined into one hash by doing:
 
-$$R * H + D \bmod M$$
+$$(H * R + D) \bmod M$$
 
 where $R$ is a prime number such as a 31, $H$ is the hash as constructed so far (initially set to some prime number) and $D$ is the new piece of data.
+
+For example, given a three properties --- day, month, and year --- the following hash computation could be used:
+
+``` java
+int hash = 0;
+int hash = (hash * R + day  ) % M;
+int hash = (hash * R + month) % M;
+int hash = (hash * R + year ) % M;
+
+// or
+int hash = (((((0 * R + day) % M) * R + month) % M) * R + year) % M;
+```
+
+Or to hash a given string:
+
+``` java
+int hash = 0;
+
+for (int i = 0; i < s.length(); i++)
+  hash = (R * hash + s.charAt(i)) % M;
+```
+
+A simpler hashing scheme that doesn't account for integer overflow is:
+
+$$R * H$$
+
+So for example, given a day, month, and year:
+
+``` java
+int hash = R + day;
+int hash = hash * R + month;
+int hash = hash * R + year;
+
+int hash = ((R + day) * R + month) * R + year;
+```
 
 ### Separate Chaining
 
