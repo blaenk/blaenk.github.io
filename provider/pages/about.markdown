@@ -36,7 +36,7 @@ While I do take pride in my work, I don't waste time with being prideful. Instea
 
 [cargo culting]: http://en.wikipedia.org/wiki/Cargo_cult_programming
 
-For these reasons I'm not really strongly opinionated about any one technology. Instead, I try to understand and appreciate the different benefits that each may provide. However, I do have [some preferences].
+For these reasons, I'm not really strongly opinionated about any one technology. Instead, I try to understand and appreciate the different benefits that each may provide. However, I do have [some preferences].
 
 [some preferences]: /uses-this
 
