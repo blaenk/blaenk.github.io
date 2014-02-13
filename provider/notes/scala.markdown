@@ -6,11 +6,9 @@ comments: off
 toc: left
 ---
 
-I've been meaning to learn Scala for some time, mainly because of it's alleged real-world applicability compared to Haskell [^real_world_haskell]. Haskell has really left me wanting to program in a very functional style. Scala seems to provide a decent compromise in a language that mixes object-oriented programming with functional programming characteristics. Furthermore, the JVM is battle-tested and probably the most robust virtual machine of any language out there at the moment.
+I've been meaning to learn Scala for some time. Haskell has really left me wanting to program in a very functional style, and it seems like Scala is used more in the industry than Haskell. Scala seems to provide a decent compromise in a language that mixes object-oriented programming with functional programming characteristics. Furthermore, the JVM is battle-tested and probably the most robust virtual machine of any language out there at the moment.
 
 *[JVM]: Java Virtual Machine
-
-[^real_world_haskell]: Although lately I've come to realize just how applicable Haskell can be to real-world problems.
 
 * toc
 
@@ -110,6 +108,12 @@ The `yield` keyword can be used in conjunction with `for` loops to generate new 
 
 ``` scala
 val shouts = for (arg <- args) yield arg + "!"
+```
+
+Raw strings are possible by using three successive double quote delimiters:
+
+``` scala
+val rawstr = """\d+"""
 ```
 
 # Classes and Objects
@@ -672,32 +676,6 @@ new PartialFunction[List[Int],Int] {
 
 The actors library's `react` function for example uses partial a partial argument function, since it's defined only for the messages teh caller wants to handle.
 
-# Lists
-
-The left fold is possible with `/:` and `foldLeft` and the right fold with `:\` and `foldRight`. The `/:` and `:\` names represent the way the fold tree leans.
-
-``` scala
-def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
-def flattenRight[T](xss: List[List[T]]) =
-  (xss :\ List[T]()) (_ ::: _)
-```
-
-An efficient way to append lists in constant time is to use `ListBuffers` [^difference_lists]:
-
-[^difference_lists]: I imagine these are similar to Haskell's [difference lists].
-
-[difference lists]: http://hackage.haskell.org/package/dlist/docs/Data-DList.html
-
-``` scala
-import scala.collection.mutable.ListBuffer
-val buf = new ListBuffer[Int]
-buf += 1
-3 +=: buf
-buf.toList
-```
-
-An `ArrayBuffer` is similar to an `std::vector` in that it automatically resizes itself to fit its contents.
-
 # Tuples
 
 Tuples are the same as in Haskell, C++11, Python etc. They are indexed using `._n` where `n` it the nth tuple element. A difference from something like Python is that the following:
@@ -1012,3 +990,905 @@ Direction.East.id == 1
 Direction(1)      == Direction.East
 ```
 
+# Implicit Conversions and Parameters
+
+Implicit conversions [^implicit_conversions_opinion] can be used to make two independent libraries interoperate in an easier manner. For example, using Swing in Scala would look something like this:
+
+[^implicit_conversions_opinion]: Now that I've learned what implicit conversions are in Scala, I have formed an opinion about them. Implicit conversions are one of the parts that make C++ [very complex]. Scala's implicit conversions don't seem as complex as C++'s, here they're implicit at the site of use, but explicit at the site of definition. In C++ it feels that they're implicit on both ends, since you can have overloaded conversion operators and conversion constructors on either type, which is further made ambiguous with arithmetic type conversions.
+
+[very complex]: /notes/cpp/#conversion-ambiguity
+
+``` scala
+val button = new JButton
+button.addActionListener(
+  new ActionListener {
+    def actionPerformed(event: ActionEvent) {
+      println("pressed!")
+    }
+  }
+)
+```
+
+However, code written this way reflects Java's limitations and is therefore not idiomatic Scala. Using implicit conversions it can be possible to write it something like this:
+
+``` scala
+button.addActionListener(
+  (_: ActionEvent) => println("pressed!")
+)
+```
+
+This is done using an implicit conversion function like this one. What happens is that Scala compiles it normally and encounters a type error in the above code, so it checks if there's an implicit conversion function of the correct type, `ActionEvent => Unit`, and if it works then it continues compilation:
+
+``` scala
+implicit def function2ActionListener(f: ActionEvent => Unit) =
+  new ActionListener {
+    def actionPerformed(event: ActionEvent) = f(event)
+  }
+```
+
+There are a variety of rules concerning implicit definitions.
+
+* Only functions marked as `implicit` are tried.
+* The implicit conversion must be in the scope as a single identifier, i.e. not `some.convert`. This is why some libraries include a `Preamble` object which often contains useful implicit conversions which can be imported with `import.Preamble._`
+    * The **exception** to this rule is that the compiler also looks inside the companion object of the source or target types of the conversion.
+* The compiler only attempts one implicit conversion, i.e. it won't attempt converting `x + y` into `convert1(convert2(x)) + y`.
+
+Implicit conversions are also used on the receiver of a selection. For example, `"abc".exists` is converted to `stringWrapper("abc").exists`.
+
+Implicit conversions are often used for simulating new syntax, such as the `->` in a `Map`, which is defined as:
+
+``` scala
+package scala
+object Predef {
+  class ArrowAssoc[A](x: A) {
+    def -> [B](y: B): Tuple2[A, B] = Tuple2(x, y)
+  }
+
+  implicit def any2ArrowAssoc[A](x: A): ArrowAssoc[A] =
+    new ArrowAssoc(x)
+}
+```
+
+## Implicit Parameters
+
+Implicit parameters are those that can optionally be provided by the compiler. Note that the `implicit` applies to the entire last parameter list. Also, we didn't use a direct `String` since the compiler selects implicit parameters based on their types, so this should lower the chances that another type is used to fulfill the implicit parameter. Finally, implicit parameters must be available as single identifiers, which is why they are usually declared in an object which is imported.
+
+``` scala
+class PreferredPrompt(val preference: String)
+class PreferredDrink(val preference: String)
+
+object Greeter {
+  def greet(name: String)(implicit prompt: PreferredPrompt, drink: PreferredDrink) {
+    println("Welcome " + name + ", have some " + drink.preference)
+    println(prompt.preference)
+  }
+}
+
+object Preferences {
+  implicit val prompt = new PreferredPrompt("$ ")
+  implicit val drink  = new PreferredDrink("tea")
+}
+
+import Preferences._
+Greeter.greet("Bob")(prompt, drink)
+Greeter.greet("Bob") // or implicitly
+```
+
+Implicit parameters are often used to provide information about a type in a preceding, explicit parameter list. For example, it can be used to pass a compare function to a function that yields the largest element in a list. Scala actually provides many `orderer` functions in the standard library, which makes this function usable with many standard types without explicitly providing an `orderer`. Note that again, types are made as specific as possible to reduce ambiguity to the developer and to restrict the options available to the compiler:
+
+``` scala
+def maxList[T](elements: List[T])(implicit orderer: T => Ordered[T]): T =
+  elements match {
+    case List()    => throw new IllegalArgumentException("empty")
+    case List(x)   => x
+    case x :: rest =>
+      val maxRest = maxList(rest) // (ordered)  is implicit
+      if (x > maxRest) x          // ordered(x) is implicit
+      else maxRest
+  }
+```
+
+Also note that the implicit parameter can be used as an implicit parameter and conversion in the body, as a result, `ordered` doesn't appear anywhere in the function body. This is a very common thing to do, and since the name of the implicit parameter isn't used anywhere, it's possible to use a **view bound**.
+
+For example, the following code essentially enforces the requirement that `T` can be _treated_ as an `Ordered[T]`, where _treated_ would mean that there is an implicit conversion available. If `T` is already an `Ordered[T]`, then an identity function is used as the implicit conversion:
+
+``` scala
+def maxList[T <% Ordered[T]](elements: List[T]): T = ...
+```
+
+If multiple conversions apply for an implicit conversion, Scala generally refuses to insert a conversion. However, since Scala 2.8, it now does something similar to C++ where it'll choose the most specific conversion available, where being _more specific_ entails:
+
+* the argument type is a subtype of another conversion's argument type
+* both conversions are methods and the enclosing class extends the other conversion's enclosing class
+
+# Lists
+
+The left fold is possible with `/:` and `foldLeft` and the right fold with `:\` and `foldRight`. The `/:` and `:\` names represent the way the fold tree leans.
+
+``` scala
+def sum(xs: List[Int]): Int = (0 /: xs) (_ + _)
+def flattenRight[T](xss: List[List[T]]) =
+  (xss :\ List[T]()) (_ ::: _)
+```
+
+An efficient way to append lists in constant time is to use `ListBuffers` [^difference_lists]:
+
+[^difference_lists]: I wonder if these are similar to Haskell's [difference lists].
+
+[difference lists]: http://hackage.haskell.org/package/dlist/docs/Data-DList.html
+
+``` scala
+import scala.collection.mutable.ListBuffer
+val buf = new ListBuffer[Int]
+buf += 1
+3 +=: buf
+buf.toList
+```
+
+An `ArrayBuffer` is similar to an `std::vector` in that it automatically resizes itself to fit its contents.
+
+## Implementation {#list-implementation}
+
+Lists are implemented as a covariant, abstract class `List` for which there are subclasses `::` and `Nil`. The covariant property allows a `List[Int]` to be assigned to a `List[Any]`:
+
+``` scala
+package scala
+abstract class List[+T]
+
+val xs: List[Any] = List(1, 2, 3)
+```
+
+The `Nil` object inherits from `List[Nothing]` so that `Nil` can be assigned to any `List`. The methods `isEmpty`, `head`, and `tail` are implemented for `Nil`, where the first returns `true` and the latter two throw an exception, as in Haskell.
+
+``` scala
+case object Nil extends List[Nothing]  {
+  override def isEmpty = true
+  def head: Nothing = throw ...
+  def tail: List[Nothing] = throw ...
+}
+```
+
+The `::`, "cons" class is defined so that `x :: xs` is treated as `::(x, xs)` where `::` is a case class defined as:
+
+``` scala
+final case class ::[T](head: T, tail: List[T]) extends List[T] {
+  override def isEmpty: Boolean = false
+}
+```
+
+List operations are defined so that the result type is "widened" to accommodate the types of all list elements. This is done by placing a lower bound
+
+``` scala
+def ::[U >: T](x: U): List[U] = new scala.::(x, this)
+
+abstract class Fruit
+class Apple extends Fruit
+class Orange extends Fruit
+
+val apples = new Apple  :: Nil
+val fruits = new Orange :: apples
+```
+
+It turns out that the cons class is actually defined such that the tail is a mutable var, but only accessible within the `scala` package:
+
+``` scala
+final case class ::[U](hd: U, private[scala] var tl: List[U]) extends List[U] {
+  def head = hd
+  def tail = tl
+  override def isEmpty: Boolean = false
+}
+```
+
+A `ListBuffer` then works by directly modifying the tail of the last cons cell in the list. This means that the tails in the following two variables are shared to avoid copying [^mutability]:
+
+[^mutability]: It seems like Scala uses mutability to leave optimization up to the developer. Contrast this with Haskell, where everything is immutable at the language level and the optimizations are done underneath at compile time or at the runtime level. The cons `:` in Haskell for example would also reuse the tail, creating a [persistent linked list], but the developer doesn't have to worry about how to best implement something like this for efficiency. Scala of course affords one more flexibility in how they implement something, but it expects that every developer be mindful of how best to implement things in the unusual functional and imperative environment.
+
+[persistent linked list]: http://en.wikipedia.org/wiki/Persistent_data_structure#Linked_lists
+``` scala
+val ys = 1 :: xs
+val zs = 2 :: xs
+```
+
+# For Expressions
+
+All `for` expressions that `yield` are translated by the compiler into combinations of `map`, `flatMap`, and `withFilter`, and those that don't `yield` into combinations of `withFilter` and `foreach`. This means that the following are equivalent:
+
+``` scala
+persons withFilter (p => !p.isMale) flatMap (p =>
+  (p.children map (c => (p.name, c.name))))
+
+for (p <- persons; if !p.isMale; c <- p.children)
+yield (p.name, c.name)
+```
+
+`for` expressions are of the following form, where _seq_ is a sequence of _generators_, _definitions_, and _filters_ delimited by semicolons:
+
+``` scala
+for (seq) yield expr
+
+// for example: seq = generator; definition; filter
+for (p <- persons; n = p.name; if (n startsWith "To"))
+yield n
+```
+
+Generators are of the form `pat <- expr` where the pattern `pat` is matched for each element in the list. If the match succeeds, the variables are bound to the pattern components. If the match fails, the element is discarded from iteration.
+
+# Translation {#for-expression-translation}
+
+The following are examples of how `for` expressions are translated into combinations of `map`, `flatMap`, and `withFilter`.
+
+``` scala
+// case 1: one generator
+for (x <- expr1) yield expr2
+expr1.map(x => expr2)
+
+// case 2: generator and filter
+for (x <- expr1 if expr2) yield expr3
+// transform into case 1
+for (x <- expr1.withFilter(x => expr2)) yield expr3
+expr1.withFilter(x => expr2).map(x => expr3)
+
+// case 3: two generators
+for (x <- expr1; y <- expr2; seq) yield expr3
+expr1.flatMap(x => for (y <- expr2; seq) yield expr3)
+
+// case 4: tuple pattern
+for ((x1, ..., xn) <- expr1) yield expr2
+expr1.map { case (x1, ..., xn) => expr2 }
+
+// case 5: arbitrary pattern
+//         first filter by successful match, then map.
+//         guarantees no MatchError exception
+for (pat <- expr1) yield expr2
+expr1.withFilter {
+  case pat => true
+  case _   => false
+}.map {
+  case pat => expr2
+}
+
+// case 6: contains definitions
+//         expr2 is evaluated each time x is generated
+for (x <- expr1; y = expr2; seq) yield expr3
+for ((x, y) <- for (x <- expr1) yield (x, expr2); seq)
+yield expr3
+
+// case 7: side-effect loop
+for (x <- expr1) body
+expr1.foreach(x => body)
+
+for (x <- expr1; if expr2; y <- expr3) body
+expr1.withFilter(x => expr2).foreach(x =>
+  expr3.foreach(y => body))
+```
+
+## Generalized For Expressions
+
+It's possible to add support for `for` expressions to any data type by defining `map`, `flatMap`, and `withFilter`, and `foreach` --- but it's not necessary to define complete support. Depending on the level of support implemented for a data type, the following features of `for` expressions become available:
+
+* `map`: expressions with a single generator
+* `flatMap` and `map`: expressions with multiple generators
+* `foreach`: loops with single/multiple generators
+* `withFilter`: filter expressions
+
+Type checking is performed after translation occurs. Given a parameterized type `C` denoting a collection, the following type signatures are generally used for the required methods. A standard technique to optimize `withFilter` is to not return an entire new object but to return a wrapper object that remembers that elements need to be filtered when they're processed later:
+
+``` scala
+abstract class C[A] {
+  // monad methods
+  def map[B](f: A => B): C[B]
+  def flatMap[B](f: A => C[B]): C[B]
+  def withFilter(p: A => Boolean): C[A]
+
+  def foreach(b: A => Unit): Unit
+}
+```
+
+# Collections API
+
+The `Traversable` trait is at the top of the collections hierarchy and defines the following abstract operation, which is meant to traverse all elements of a collection and apply the operation `f` to each element:
+
+``` scala
+def foreach[U](f: Elem => U)
+```
+
+The `Iterable` trait defines an abstract `iterator` method, which `Iterable` uses to define `foreach` of `Traversable` it extends from:
+
+``` scala
+def foreach[U](f: Elem => U): Unit = {
+  val it = iterator
+  while (it.hasNext) f(it.next())
+}
+```
+
+## Sequences
+
+The sequence traits `Seq`, `IndexedSeq`, and `LinearSeq` represent iterables that have a length and whose elements have fixed indexed positions starting from 0.
+
+Buffers are a sub-category of sequences that allow element insertions, removals, and appending operations. Common buffers are `ListBuffer` and `ArrayBuffer`.
+
+## Sets
+
+Sets are iterables with no duplicate elements. There are two subtraits `SortedSet` and `BitSet`. Ordering is preserved in `SortedSet`, and is backed by an ordered binary tree, with `immutable.TreeSet` being a [red-black tree] that keeps the tree balanced. `BitSet` uses an array of `Long` values to efficiently represent a set of packed bits, much like C++'s [bitset].
+
+[red-black tree]: /notes/algorithms/#red-black-trees
+[bitset]: http://en.cppreference.com/w/cpp/utility/bitset
+
+## Maps
+
+Maps' `get` method returns an `Option[Value]`, like `lookup` would return a `Maybe a` in Haskell. The `getOrElseUpdate` function facilitates the use of Maps as caches.
+
+## Streams
+
+Streams have elements that are computed lazily. The `#::` function is used to construct streams. Notice that only the head has been computed so far:
+
+``` scala
+val str = 1 #:: 2 #:: 3 #:: Stream.empty
+// Stream(1, ?)
+
+def fibonacciFrom(a: Int, b: Int): Stream[Int] =
+  a #:: fibonacciFrom(b, a + b)
+
+val fibs = fibonacciFrom(1, 1).take(7).toList
+// List(1, 1, 2, 3, 5, 8, 13)
+```
+
+## Vectors
+
+Vectors are effectively constant time, random access sequences represented as broad, shallow trees where every tree node contains up to 32 elements of the vector or 32 other tree nodes. The `updated` method can be used to update particular elements and is also effectively constant time, since only the node that contains the element and every node that points to it must be copied. These are currently the default implementation of immutable indexed sequences, `collection.immutable.IndexedSeq`.
+
+## Ranges
+
+Ranges can be defined as follows:
+
+``` scala
+1 to 3       // => Range(1, 2, 3)
+5 to 14 by 3 // => Range(5, 8, 11, 14)
+1 until 3    // => Range(1, 2,)
+```
+
+## Arrays
+
+Scala arrays correspond to Java arrays such that `Array[T]` in Scala is a `T[]` in Java. Scala arrays are compatible with sequences, and provide all operations that sequences provide. This is facilitated through implicit conversions to `scala.collection.mutable.WrappedArray`. There's also an implicit conversion to `ArrayOps` which supports various methods available to sequences, without actually turning the array into a sequence.
+
+Java doesn't allow generic arrays `T[]`, but this is made possible in Scala by creating an array of `Objects`. Creating generic arrays in Scala through `Array[T]` requires a run-time hint, since the information about the type `T` gets erased at runtime. This is done with a **class manifest** of type `scala.reflect.ClassManifest`, which is a type descriptor object that describes the top-level class of a type. The compiler can be instructed to generate code to construct and pass a class manifest, this is done via an implicit parameter. This way, the compiler looks for an implicit value of type `ClassManifest[T]` so that the correct type of array can be constructed at run-time:
+
+``` scala
+def someMethod[T](xs: Vector[T])(implicit m: ClassManifest[T]): Array[T] = ...
+
+// or with a context bound
+def someMethod[T: ClassManifest](xs: Vector[T]): Array[T] = ...
+```
+
+## Views
+
+Transformer methods are ones such as `map` and `filter` and come in strict and non-strict varieties. A strict transformer constructs a new collection on the spot. A non-strict transformer construct a proxy for the result collection such that its elements are constructed on demand.
+
+``` scala
+def lazyMap[T, U](coll: Iterable[T], f: T => U) =
+  new Iterable[U] {
+    def iterator = coll.iterator map f
+  }
+```
+
+Most collections are strict by default in their transformers except for `Stream`. It's possible to turn a collection into a lazy one and vice versa through **collection views**, which represent a base collection with the difference that the transformers are lazy. The `view` method is used to make the transformers lazy, and `force` is used to go back to strict transformers.
+
+``` scala
+(v.view.map(_ + 1).map(_ * 2)).force
+```
+
+Views can provide a simple way to optimize otherwise costly operations [^lazy_haskell]:
+
+[^lazy_haskell]: Something like this would be implicit in Haskell due to its non-strict nature.
+
+``` scala
+def isPalindrome(x: String) = x == x.reverse
+def findPalindrome(s: Seq[String]) = s find isPalindrome
+
+// creates 1000000 element sequence
+findPalindrome(words take 1000000)
+
+// creates no copy
+findPalindrome(words.view take 1000000)
+```
+
+Views can also be used as subwindows into mutable sequences [^slices].
+
+[^slices]: This is of course very much like [Go's slices] and [Rust's slices].
+
+[Go's slices]: http://golang.org/doc/effective_go.html#slices
+[Rust's slices]: http://static.rust-lang.org/doc/master/tutorial.html#vectors-and-strings
+
+``` scala
+val subarr = arr.view.slice(3, 6)
+
+// can now perform operations on that slice only
+// i.e. negate all elements in the slice
+for (i <- 0 until subarr.length) subarr(i) = -subarr(i)
+```
+
+## Iterators
+
+Iterators are affected by operations on them, such that for example a `map` called on an iterator leaves the iterator's position at the end of the sequence, so that an extra call to `next` will throw a `NoSuchElementException`. This is mitigated by duplicating the iterator with `duplicate` [^duplicate_fd].
+
+[^duplicate_fd]: This reminds me of [open file descriptions] which record the file offset and status flags. Duplicate file descriptors [share this information]. To avoid this, it's necessary to perform a separate `open` call.
+
+[open file descriptions]: http://man7.org/linux/man-pages/man2/open.2.html
+[share this information]: http://man7.org/linux/man-pages/man2/dup.2.html
+
+A `BufferedIterator` provides an extra method `head` that returns its first element without advancing the iterator.
+
+## Java Interop {#java-interop-collections}
+
+Scala provides implicit conversions for the major collection types in Java through the `JavaConversions` object.
+
+## Architecture {#collections-architecture}
+
+Most of the collection operations are implemented in terms of traversals and builders.
+
+### Builders {#builders}
+
+Builders are in charge of building new collections. The `result` method yields the collection that has been constructed thus far, and the builder can be reset to a clean slate to construct another collection with the `clear` method. The `mapResult` method can be used to return a result of a different type.
+
+``` scala
+package scala.collection.generic
+
+class Builder[-Elem, +To] {
+  def +=(elem: Elem): this.type
+  def result(): To
+  def clear()
+  def mapResult(f: To => NewTo): Builder[Elem, NewTo] = ...
+}
+```
+
+### Implementation Traits
+
+The code is kept DRY by using **implementation traits** which are named with a `Like` suffix, such as `TraversableLike`. These traits implement concrete methods and are parameterized using the collection's element type and its representation type, i.e. `Seq[I]` or `List[I]`. For example, `filter` is implemented here such that it creates a new builder for the representation type and appends elements to it if they satisfy the predicate, then the builder's result is returned.
+
+*[DRY]: Don't Repeat Yourself
+
+``` scala
+package scala.collection
+
+class TraversableLike[+Elem, +Repr] {
+  def newBuilder: Builder[Elem, Repr]
+  def foreach[U](f: Elem => U)
+  ...
+  def filder(p: Elem => Boolean): Repr = {
+    val b = newBuilder
+    foreach { elem => if (p(elem)) b += elem }
+    b.result
+  }
+}
+```
+
+A problem presents itself when we want to return a different type of sequence from the one that is being operator one, for example:
+
+``` scala
+Map("a" -> 1, "b" -> 2) map { case (x, y) => (y, x) }
+// Map(1 -> "a", 2 -> "b")
+
+Map("a" -> 1, "b" -> 2) map { case (x, y) => y }
+// List(1, 2)
+
+BitSet(1, 2, 3) map (_.toFloat)
+// Set(1.0, 2.0, 3.0)
+```
+
+This is mitigated with an implicit parameter on the function so that a builder factory may produce the correct type of builder by passing it the implicit parameter.
+
+``` scala
+def map[B, That](p: Elem => B)
+  (implicit bf: CanBuildFrom[B, That, This]): That = {
+  val b = bf(this)
+  for (x <- this) b += f(x)
+  b.result
+}
+
+package scala.collection.generic
+trait CanBuildFrom[-From, -Elem, +To] {
+  def apply(from: From): Builder[Elem, To]
+}
+```
+
+For example, in the case of a `BitSet`, the companion object for `BitSet` would define a builder factory of type `CanBuildFrom[BitSet, Int, BitSet]`, with a more general fallback that converts to a regular `Set` with `CanBuildFrom[Set[_], A, Set[A]]`. Scala will then choose the more specific one when choosing the implicit instance.
+
+Finally, collections are kept the same dynamic type. This is achieved through virtual dispatch by passing the source collection to the builder factory, which forwards the call to a `genericBuilder` method available on all generic, non-leaf classes, which itself calls the builder that belongs to the collection on which it is defined.
+
+### Creating Collections
+
+Creating a new collection type `T` can be done by using traits `IndexedSeq[Elem]` and `IndexedSeqLike[Elem, T]`. The latter requires the implementation of `newBuilder`. It's also necessary to implement appropriate `CanBuildFrom` implicits.
+
+# Extractors
+
+Extractors provide a way to define patterns that are decoupled from an object's representation. This is done using an `unapply` method that matches a value and deconstructs it:
+
+``` scala
+object EMail {
+  def unapply(str: String): Option[(String, String)] = {
+    val parts = str split "@"
+    if (parts.length == 2) Some(parts(0), parts(1)) else None
+  }
+}
+```
+
+This is analogous to an `apply` method that constructs an object:
+
+``` scala
+object EMail {
+  def apply(user: String, domain: String) = user + "@" + domain
+}
+```
+
+This can be made more explicit by inheriting from the function type:
+
+``` scala
+// equivalent to extends Function2[String, String, String]
+object EMail extends ((String, String) => String) { ... }
+```
+
+Pattern matching in Scala checks for an `unapply` method to deconstruct the object. If `unapply` returns `None`, then the pattern doesn't match and it moves on to the next pattern, throwing a `MatchError` if there are no other patterns that match. Remember that a single-tuple parameter can omit the set of parentheses, i.e. `func((a, b)) -> func(a, b)`.
+
+``` scala
+selectorString match { case EMail(user, domain) => ... }
+```
+
+It's generally a good idea to ensure that the following property holds:
+
+``` scala
+Obj.unapply(Obj.apply(a, b)) == Some(a, b)
+```
+
+In the case of a single pattern variable, that single variable is wrapped in an `Option` value.
+
+It's also possible for the pattern to not bind any variables, in which case a `Boolean` is returned to indicate whether the pattern matched:
+
+``` scala
+object UpperCase {
+  def unapply(s: String): Boolean = s.toUpperCase == s
+}
+```
+
+It's also possible to define variable argument extractors, to be able to match on an arbitrary number of variables. This is done using the `unapplySeq` function:
+
+``` scala
+object Domain {
+  def unapplySeq(whole: String): Option[Seq[String]] =
+    Some(whole.split("\\.").reverse)
+}
+```
+
+This allows matching like this:
+
+``` scala
+domain match {
+  case Domain("org", "acm") => println("acm.org")
+  case Domain("net", _*) => println("some .net domain")
+}
+```
+
+## Compared to Case Classes
+
+Modifying the case classes has an effect on client code, whereas extractors provide a layer of indirection between the data representation and the way it's viewed by clients. However, case classes to have advantages over extractors. They're easier and simpler to define. Case classes can also end up generating more efficient pattern matches because the compiler can optimize them since they're defined at the language level. Finally, case classes derived from a `sealed` base class can allow the compiler to check for pattern match exhaustiveness.
+
+## Regular Expressions
+
+Regular expressions can be constructed using the `Regex` constructor or with a `r` method on a string. It's possible to pattern match on a regular expression match using a predefined extractor. The matching is done by binding every matched group. If a group didn't match, it'll bind the variable to `null`:
+
+``` scala
+val Decimal = """(-)?(\d+)(\.\d*)?""".r
+val Decimal(sign, integerpart, decimalpart) = "-1.23"
+// sign = "-", integerpart = "1", decimalpart = ".23"
+```
+
+# Annotations
+
+Annotations are like meaningful comments for the compiler. They can support generation of documentation (Scaladoc), for example. Annotations can be placed on any kind of declaration or definition, as well as expressions:
+
+``` scala
+@deprecated def oldMethod() = ...
+
+(expr: @unchecked) match {
+  // non-exhaustive cases
+}
+```
+
+The general form of annotations is as follows. The `@` prefixed to an annotation can read as `new` since underneath the compiler is simply instantiating a class named after the annotation. Passing an annotation as argument to another has the consequence that it must use `new` instead of `@`.
+
+``` scala
+@annotation(exp1, exp2, ...)
+```
+
+The `@deprecated` annotation can mark something as deprecated, which elicits a compiler warning if some code uses it. It accepts an optional message:
+
+``` scala
+@deprecated("use newOne() instead")
+def oldOne() = ...
+```
+
+The `@volatile` annotation informs the compiler that the variable in question will be used by multiple threads. This makes reads/writes slower, but accesses from multiple threads behave more predictably.
+
+The `@serializable` annotation marks a class as serializable. The `@SerialVersionUID(id)` annotation marks the current version of a class. The `@transient` annotation marks fields that should not be serialized.
+
+The `@scala.reflect.BeanProperty` annotation generates automatic get and set methods, i.e. `age` generates `getAge` and `setAge`. This is useful for Java-centric frameworks. The generated methods are available only after compilation, i.e. not within one's own code.
+
+The `@tailrec` annotation designates that a method should be tail-recursion optimized. If the optimization cannot be performed, a warning is emitted.
+
+The `@unchecked` annotation tells the compiler not to check for exhaustive match cases.
+
+The `@native` annotation means that the method's implementation is supplied by the runtime, via the Java Native Interface (JNI), rather than in Scala.
+
+``` scala
+@native
+def nativeMethod() { /* empty body required */ }
+```
+
+# XML
+
+Scala allows XML literals anywhere that an expression is valid. The type of an XML literal is `Elem`. Class `Node` is the abstract superclass of all XML node classes. Class `Text` is a node holding just text. Class `NodeSeq` corresponds to a sequence of nodes, in fact, `Node` extends from `NodeSeq`, so a `Node` can be thought of as a one-element `NodeSeq`.
+
+It's possible to interpolate Scala code within XML literals using braces `{}`. The interpolated code can itself contain XML literals, effectively allowing arbitrary nesting of XML code. Two braces in a row are used to print literal braces.
+
+``` scala
+var res = <a> {3 + 4} </a>
+// scala.xml.Elem = <a> 7 </a>
+
+var yearMade = 1955
+var res2 = <a> { if (yearMade < 2000) <old>{yearMade}</old>
+                 else xml.NodeSeq.Empty} </a>
+// <a> <old>1955</old> </a>
+```
+
+Scala's XML support can be leveraged to provide object serialization:
+
+``` scala
+abstract class SomeClass {
+  val description: String
+  val year: Int
+
+  def toXML =
+    <someclass>
+      <description>{description}</description>
+      <year>{year}</year>
+    </someclass>
+}
+```
+
+There are various ways to deconstruct XML in Scala. The `text` method retrieves all of the text from the entire element tree, `flatMap` style. Scala also supports [XPath] through the methods `\` (for sub-elements) and `\\` (for recursive/deep search). Attributes can be extracted using the `@` sign before the attribute.
+
+[XPath]: http://en.wikipedia.org/wiki/XPath
+
+``` scala
+var res  = <a><b><c>hello</c></b></a> \ "b"
+// <b><c>hello</c></b>
+
+var res2 = <a><b><c>hello</c></b></a> \\ "c"
+// <c>hello</c>
+
+val employee = <employee name="Joe" rank="officer" serial="IG-88"/>
+val res3 = employee \ "@name"
+// "Joe"
+```
+
+It's also possible to define a `fromXML` method to deserialize an object.
+
+``` scala
+object SomeClass {
+  def fromXML(node: scala.xml.Node): SomeClass =
+    new SomeClass {
+      val description = (node \ "description").text
+      val year        = (node \ "year").text.toInt
+    }
+}
+```
+
+It's possible to save a file from an XML node using, and conversely, load it:
+
+``` scala
+xml.XML.save("serialized.xml", node)
+val loadednode = xml.XML.loadFile("serialized.xml")
+```
+
+It's possible to pattern match on XML. This is done by using XML literals where instead of interpolating expressions, variables are interpolated in order to bind to the matched data. In the context of XML, the `_*` is interpreted as matching any sequence of nodes down the XML tree.
+
+``` scala
+def proc(node: scala.xml.Node): String =
+  node match {
+    case <a>{contents @ _*}</a> => "It's an a: " + contents
+    case <b>{contents @ _*}</b> => "It's a b: "  + contents
+    case _ => "Something else."
+  }
+
+// proc(<a>a <em>b</em> c</a>) => "It's an a: ArrayBuffer(a, <em>b</em>, c)"
+```
+
+# Modular Programming
+
+When a module grows too large for a single file, it may be useful to split the module up into separate traits defined in separate files, which can then be mixed into the original module.
+
+A problem can arise when one such compartmentalized trait wants to refer to another trait that ultimately gets mixed into the same class. This can be circumvented by specifying the **self type** which essentially defines the value of type of `this` for whenever it's referred to in the class. For example, assuming trait `Second` needs to refer to trait `First`'s method `count`, we can do:
+
+``` scala
+trait First {
+  def count = 5
+}
+
+trait Second {
+  this: First =>
+
+  def printCount { println(count()) }
+}
+```
+
+It's also possible to select types at runtime:
+
+``` scala
+val db: Database =
+  if(args(0) == "student")
+    StudentDatabase
+  else
+    SimpleDatabase
+```
+
+Sometimes the compiler won't be able to determine that two types are the same, as in the following case:
+
+``` scala
+object Obj {
+  val db: Database = SomeDatabase
+
+  object browser extends Browser {
+    // compiler doesn't know `database` is
+    // same type as `db`
+    val database = db
+  }
+
+  // error: type mismatch
+  // found: db.SomeCategory
+  // required: browser.database.SomeCategory
+  for (category <- db.allCategories)
+    browser.displayCategory(category)
+}
+```
+
+This can be resolved by using a singleton type through the `type` property, which is an extremely specific type that refers to the type of the specific object [^ruby_eigenclass]:
+
+[^ruby_eigenclass]: This _definitely_ reminds me of Ruby's EigenClasses.
+
+``` scala
+object browser extends Browser {
+  val database: db.type = db
+}
+```
+
+# Object Equality
+
+To recap, Scala's equality operators are equivalent to Java's `equals` methods, that is, unlike Java's equality operators which refer to object identity for reference types. Object identity is available through the `eq` method though it's rarely used.
+
+There are four main pitfalls when defining equals methods:
+
+1. wrong signature
+2. changing it without also changing `hashCode`
+3. defining it in terms of mutable fields
+4. failing to define it as an equivalent relation
+
+## Wrong Signature
+
+Given a simple type like the following, the accompanying `equals` method is too naive. What happens is that when it's added to a collection, it's static type becomes `Any`, which would trigger the `equals` method for `Any` since overloading in Scala and Java is based on the static type. It turns out that the `equals` method in `Any` is simply object identity.
+
+``` scala
+class Point(val x: Int, val y: Int) {
+  def equals(other: Point): Boolean =
+    this.x == other.x && this.y == other.y
+}
+```
+
+A more robust `equals` operator would assume that the parameter is of static type `Any`, and then perform a pattern match for its dynamic type:
+
+``` scala
+override def equals(other: Any) = other match {
+  case that: Point => this.x == that.x && this.y == that.y
+  case _ => false
+}
+```
+
+It's also a common mistake to want to define the `==` operator directly, which is impossible since it's defined as `final`:
+
+``` scala
+final def == (that: Any): Boolean =
+  if (null eq this) {null eq that} else {this equals that}
+```
+
+However, if this method is defined with a different parameter type, the compiler would regard it as an overloaded variant, and would allow the definition to occur, but the same problem would occur as above, where the parameter type isn't `Any`.
+
+## Hash Code
+
+When the `equals` method is redefined, it's also logically necessary to redefine the `hashCode` method, which by default is defined in `AnyRef` to be some transformation of the object's address. In fact, if two objects are determined to be equal as per the `equals` method, then they must return the same `hashCode`.
+
+The `hashCode` method can be defined for `Point` so that it only references fields that were used in `equals` for equality determination.
+
+``` scala
+override def hashCode = 41 * (41 + x) + y
+```
+
+## Mutable Fields
+
+Making the `hashCode` and as a result the `equals` method depend on mutable fields can have bad consequences. Adding an item to a collection and then changing that item's mutable field, which itself aids in equivalence determination, will mean that the collection will no longer find the object, since the collection (a `HashSet`) will keep looking in the wrong bucket, where it would expect to find the item based on its new data representation. Instead it may have been better to avoid redefining `hashCode` and create a separate comparison function such as `equalContents`.
+
+## Equivalence Relation
+
+The `equals` method should implement an equivalence relation on non-null objects, that is:
+
+* it's _reflexive_: for any non-null value x
+
+    `x.equals(x) == true`
+
+* it's _symmetric_: for non-null values x and y
+
+    `x.equals(y) == true == y.equals(x)`
+
+* it's _transitive_: for non-null values x, y, and z
+
+    `x.equals(y) && y.equals(z) == true == x.equals(z)`
+
+* it's _consistent_: for non-null values x and y, multiple invocations of `x.equals(y)` should consistently return the same value provided no information used in equality determination is modified
+
+* `x.equals(null)` should return false
+
+## Subtypes {#subtype-equality}
+
+There's a mistake that can be made given a subtype that redefines its `equals` method. If a supertype is compared to a subtype and appears on the left hand side, it would invoke the supertype's `equals` method which would _only_ compare those properties common to both types, meaning that the equality would not be symmetric.
+
+``` scala
+class ColoredPoint(x: Int, y: Int, val color: Color.Value)
+  extends Point(x, y) {
+  override def equals(other: Any) = other match {
+    case that: ColoredPoint =>
+      this.color == that.color && super.equals(that)
+    case _ => false
+  }
+}
+
+val p  = new Point(1, 2)
+val cp = new ColoredPoint(1, 2, Color.Red)
+
+p  equals cp == true
+cp equals p  == false
+```
+
+A way to solve this is to define a `canEqual` method in classes that override `equals` and `hashCode`, which determines whether or not an object can be compared for equality with the given class. This allows subclasses of the class that redefined `canEqual` to continue to compare for equality with objects of the superclass. This is especially important for the anonymous class instantiation syntax:
+
+``` scala
+class Point(val x: Int, val y: Int) {
+  override def hashCode = 41 * (41 + x) + y
+  override def equals(other: Any) = other match {
+    case that: Point =>
+      (that canEqual this) &&
+      (this.x == that.x) && (this.y == that.y)
+    case _ =>
+      false
+  }
+  def canEqual(other: Any) = other.isInstanceOf[Point]
+}
+
+class ColoredPoint(x: Int, y: Int, val color: Color.value)
+  extends Point(x, y) {
+  override def hashCode = 41 * super.hashCode + color.hashCode
+  override def equals(other: Any) = other match {
+    case that: ColoredPoint =>
+      (that canEqual this) &&
+      super.equals(that) && this.color == that.color
+    case _ =>
+      false
+  }
+  override def canEqual(other: Any) =
+    other.isInstanceOf[ColoredPoint]
+}
+```
+
+# Java Interop
+
+The Scala compiler will attempt to use direct mappings to Java value types, such as an `Int`. However, sometimes this assumption can't be made, as in a collection, in which case it'll use wrapper classes like `java.lang.Integer`.
+
+Singleton `objects` the compiler creates a Java class with suffix `$` which contains all of the methods and fields of the Scala singleton object as well as a `MODULE$` static field that holds the singleton instance created at runtime. If the singleton object has no companion class then a class without the `$` suffix is created which has a static forwarder method for each method in the singleton object.
+
+Traits get compiled down to Java interfaces if they only contain abstract methods.
