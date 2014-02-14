@@ -617,6 +617,7 @@ def describe(e: Expr): String = (e: @unchecked) match {
 
 The `Option` type is equivalent to Haskell's `Maybe` type. It can take on either a parameterized `Some` value or `None`.
 
+<a name="case-sequence"></a>
 A **case sequence** is a function literal specific defined as a pattern match where each case is an entry point to the function:
 
 ``` scala
@@ -1892,3 +1893,243 @@ The Scala compiler will attempt to use direct mappings to Java value types, such
 Singleton `objects` the compiler creates a Java class with suffix `$` which contains all of the methods and fields of the Scala singleton object as well as a `MODULE$` static field that holds the singleton instance created at runtime. If the singleton object has no companion class then a class without the `$` suffix is created which has a static forwarder method for each method in the singleton object.
 
 Traits get compiled down to Java interfaces if they only contain abstract methods.
+
+## Existential Types
+
+Existential types in Scala are mainly used to facilitate Java's wildcard types and raw types. They take the form:
+
+``` scala
+type forSome { declarations }
+```
+
+For example, the following is equivalent to Java's `Iterator <?>` and reads as it being an `Iterator` of `T`'s for some type `T`. It's also possible to use **placeholder syntax** which is similar to the one used in patterns. For each underscore present in the type a type parameter is added to the `forSome` clause:
+
+``` scala
+Iterator[T] forSome { type T }
+
+// equivalently: placeholder syntax
+Iterator[_]
+```
+
+Similarly, Java's `Iterator<? extends Component>` can be represented as follows in Scala, where it reads as being an `Iterator` of `T` for some type `T` that is a subtype of `Component`:
+
+``` scala
+Iterator[T] forSome { type T <: Component }
+
+// equivalently: placeholder syntax
+Iterator[_ <: Component]
+```
+
+Given a Java class with wildcards like this:
+
+``` java
+public class Wild {
+  Collection<?> contents() {
+    Collection<String> stuff = new Vector<String>();
+    stuff.add("a");
+    stuff.add("b");
+    stuff.add("see");
+    return stuff;
+  }
+}
+```
+
+If we want to create a new `Set` from the contents of this collection, we'll have trouble naming the type:
+
+``` scala
+import scala.collection.mutable.Set
+val iter = (new Wild).contents.iterator
+val set = Set.empty[???] // what type?
+while (iter.hasMore)
+  set += iter.next()
+```
+
+The solution to this is to create an abstract class with methods for each of the types in the `forSome` clause:
+
+``` scala
+abstract class SetAndType {
+  type Elem // required for defining `set`
+  val set: set[Elem]
+}
+
+def java2scala[T](jset: Collection[T]): SetAndType = {
+  val sset = Set.empty[T] // T can be used, inferred from parameter
+  val iter = jset.iterator
+  while (iter.hasNext)
+    sset += iter.next()
+
+  return new SetAndType {
+    type Elem = T
+    val set = sset
+  }
+}
+```
+
+## Compiling Heterogenous Projects
+
+Usually one would compile the Java code and add the output to the classpath when building the Scala code. However, this wouldn't work if the Java code references the Scala code, or vice versa. For this reason, Scala allows processing of Java source files as if they were Scala files. They won't be compiled, but they'll be scanned to determine what they contain. This is done with this sequence of commands:
+
+``` bash
+$ scalac -d bin FileAnalysis.scala FileItem.java File.java
+$ javac -cp bin -d bin File.java FileItem.java FileManagement.java
+$ scala -cp bin FileManagement
+# program output
+```
+
+# Actors and Concurrency
+
+Scala uses actors similar to Erlang's as its primary concurrency primitive. **Note** that this actors library is [deprecated]; [Akka] actors will be covered later are the default actors library since Scala 2.10.
+
+[deprecated]: http://docs.scala-lang.org/overviews/core/actors-migration-guide.html
+[Akka]: http://akka.io/
+
+``` scala
+import scala.actors._
+
+object PrintActor extends Actor {
+  def act() {
+    for (i <- 1 to 5) {
+      println("acting")
+      Thread.sleep(1000)
+    }
+  }
+}
+
+SillyActor.start() // prints "acting" five times
+
+// equivalent: .start()s as soon as it's defined
+val PrintActor2 = actor {
+  for (i <- 1 to 5) {
+    println("acting")
+    Thread.sleep(1000)
+  }
+}
+```
+
+Actors can be sent messages using the `!` method. The following actor prints out the messages it receives:
+
+``` scala
+val echoActor = actor {
+  while (true) {
+    receive {
+      case msg => println("received: " + msg)
+    }
+  }
+}
+
+echoActor ! "testing"
+// received: testing
+```
+
+The way this works is that the `receive` method accepts a partial function, which in this case is specified as a partial function literal [case sequence]. The actor will block until a message is received that matches a pattern in the partial function, and non-matching messages are silently ignored.
+
+[case sequence]: #case-sequence
+
+It's also possible to treat "native" threads as actors through `Actor.self`, which yields an actor representing the current thread. This is useful for debugging, by specifically setting a `receive` function:
+
+``` scala
+import scala.actors.Actor._
+self ! "hello"
+self.receive { case x => x}
+// res1: Any = hello
+
+// 1 second timeout to avoid blocking repl
+self.receiveWithin(1000) { case x => x }
+```
+
+Every actor is given its own thread so that they can each perform the `act` method. This is resource heavy, so a `react` method can be used that is similar to `receive`. The `react` method doesn't return after it finds and processes a message, instead it only evaluates the message handler. This means that the implementation doesn't need to preserve the call stack of the current thread, allowing it to reuse the thread for the next actor that wakes up.
+
+Since `react` doesn't return, it's usually common to return the information (if any) by sending the message to another actor, then recursing the message handler `act` to continue to process messages. This recursion pattern is common enough that there's a method `loop` that can wrap around the `react` method so that it loops infinitely.
+
+``` scala
+object Resolver extends Actor {
+  import java.net.{InetAddress, UnknownHostException}
+
+  def act() {
+    react {
+      case (name: String, receiver: Actor) =>
+        receiver ! getIp(name)
+        act()
+      case "EXIT" =>
+        println("exiting") // doesn't recurse again
+      case msg =>
+        println("unhandled msg: " + msg)
+        act()
+    }
+  }
+
+  def getIp(name: String): Option[InetAddress] = {
+    try {
+      Some(InetAddress.getByName(name))
+    } catch {
+      case _:UnknownException => None
+    }
+  }
+}
+
+Resolver.start()
+
+Resolver ! ("www.scala-lang.org", self)
+self.receiveWithin(0) { case x => x }
+// Some(ww.scala-lang.org/<some-ip>)
+```
+
+Actor's shouldn't block, such as while processing a message, since this can even cause deadlocks while actors wait on each other. If an actor needs to perform an operation that blocks in order to process a message, a separate actor should be created that performs the blocking operation and then notifies the original actor when its work is complete. In the following example, the actor will continue to accept requests even while it continues to perform blocking operations, which it delegates to a sub-actor.
+
+``` scala
+val someActor = actor {
+  def emoteLater() {
+    val mainActor = self
+    actor {
+      Thread.sleep(1000)
+      mainActor ! "Emote"
+    }
+  }
+
+  var emoted = 0
+  emoteLater()
+
+  loop {
+    react {
+      case "Emote" =>
+        println("acting")
+        emoted += 1
+        if (emoted < 5)
+          emoteLater()
+      case msg =>
+        println("received: " + msg)
+    }
+  }
+}
+
+/*
+acting
+acting
+someActor ! "hello"
+Received: hello
+acting
+acting
+*/
+```
+
+It's very important to communicate with actors only via messages. However, unlike Erlang's actors, Scala allows mixing the traditional shared data & locks model with actors. For example, if multiple actors were to share a common mutable map, there are two approaches that can be taken to achieve this. The first would entail creating an actor that owns the map, defining messages for every kind of map operation that would be required such as getting and setting values. An alternative approach, however, would be to pass a thread-safe map such as `ConcurrentHashMap`.
+
+It's also a good idea to keep actors self-contained. A good idea is to send contextual information about the request (if not the request itself) along with the response, to the original actor, since some time may have passed since the actor performed the request. It's also more readable to create case classes when possible:
+
+``` scala
+case class LookupIP(name: String, respondTo: Actor)
+case class LookupResult(name: String, address: Option[InetAddress])
+
+object Resolver extends Actor {
+  def act() {
+    loop {
+      react {
+        case LookupIP(name, actor) =>
+          actor ! LookupResult(name, getIp(name))
+      }
+    }
+  }
+
+  def getIp = ...
+}
+```
