@@ -160,12 +160,24 @@ pushJS preview key = field key $ \item -> do
 gitTag :: String -> Context String
 gitTag key = field key $ \item -> do
   let fp = "provider/" ++ (toFilePath $ itemIdentifier item)
+      gitLog :: String -> IO String
+      gitLog format = readProcess "git"
+                        [ "log"
+                        , "-1"
+                        , "HEAD"
+                        , "--pretty=format:" ++ format
+                        , fp] ""
+
   unsafeCompiler $ do
-    sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%h", fp] ""
-    message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s", fp] ""
-    return $ "<a href='https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "'>History</a>" ++
-             "<span class='hash'>, <a href='https://github.com/blaenk/blaenk.github.io/commit/" ++ sha ++
-             "' title='" ++ message ++ "'>" ++ sha ++ "</a></span>"
+    sha <- gitLog "%h"
+    message <- gitLog "%s"
+
+    let url = "https://github.com/blaenk/blaenk.github.io/commit/" ++ sha
+
+    return $ if sha == ""
+               then "Not Committed"
+               else "<a href='https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "'>History</a>" ++
+                    "<span class='hash'>, <a href='" ++ url ++ "' title='" ++ message ++ "'>" ++ sha ++ "</a></span>"
 
 yearArchives :: Pattern -> Compiler String
 yearArchives pat = do
