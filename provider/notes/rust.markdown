@@ -914,3 +914,187 @@ fn select<'r, T>(shape: Shape, threshold: f64, a: &'r T, b: &'r T) -> &'r T {
 Tasks are _green threads_ similar to those in Haskell and perhaps Erlang. Tasks have dynamically sized stacks, starting out with small ones and dynamically growing as required. This means that unlike C/C++, it's not possible to write beyond the end of the stack. Tasks provide failure isolation and recovery. When a problem occurs, the runtime destroys the entire task, and other tasks can monitor each other for failure.
 
 Tasks can't share mutable state with each other. Instead they communicate with each other by transferring owned data through the global _exchange heap_.
+
+## Spawning
+
+Tasks are spawned with the `spawn` function which accepts a closure which is executed in a separate task. Creating tasks isn't defined at the language-level, but rather, inside the standard library.
+
+``` rust
+fn print_msg() {
+  println!("running in diff task");
+}
+
+spawn(print_msg);
+
+// or with lambda expression
+spawn(proc() println!("also in diff task"));
+```
+
+Since the signature of the `spawn` function is `spawn(f: proc())`, it accepts only owned closures, which by extension can only contain owned data. For this reason, `spawn` can safely move the entire closure and its associated state to an entirely different task for execution. As with any closure, it can capture an environment that it carries across tasks:
+
+``` rust
+let child_task_nr = generate_task_nr();
+
+spawn(proc() {
+  println!("I am child number {}", child_task_nr);
+});
+```
+
+## Channels
+
+Pipes are used for communication between tasks [^channels]. Each pipe is defined by a pair of endpoints: one for sending and another for receiving. In Rust, a channel is the **sending** endpoint of a pipe and the **port** is the receiving endpoint.
+
+[^channels]: Pipes remind me of Go's channels, or Haskell's.
+
+The following code creates a channel for sending and receiving `int` types. Note that `Chan` and `Port` are both sendable types that may be captured into task closures or transferred between them.
+
+``` rust
+let (port, chan): (Port<int>, Chan<int>) = Chan::new();
+
+spawn(proc() {
+  let result = expensive_computation();
+  chan.send(result);
+});
+
+other_expensive_computation();
+let result = port.recv();
+```
+
+A regular `Chan` and `Port` created by `Chan::new` can't be used by more than one task. Attempting to do so leads to an error, since the first task to use it becomes its owner. Instead it's possible to use a `SharedChan` by calling `clone` on the endpoint.
+
+``` rust
+let (port, chan) = Chan::new();
+
+for init_val in range(0u, 3) {
+  // create a SharedChan
+  let child_chan = chan.clone();
+
+  spawn(proc() {
+    child_chan.send(expensive_computation(init_val));
+  });
+}
+
+let result = port.recv() + port.recv() + port.recv();
+```
+
+The above example is contrived and could've been done with three separate channels:
+
+``` rust
+let ports = vec::from_fn(3, |init_val| {
+  let (port, chan) = Chan::new();
+  spawn(proc() {
+    chan.send(some_expensive_computation(init_val));
+  });
+  port
+});
+
+let result = ports.iter().fold(0, |accum, port| accum + port.recv() );
+```
+
+## Futures
+
+Futures can be used for requesting a computation and getting the result later. In the code below, `sync::Future::spawn` immediately returns a `future` object whether or not the computation is complete. The result can be explicitly retrieve with the `get()` function, which blocks until the value becomes available. **Note** that the future is mutable so that it can save the result inside the object once the computation is complete.
+
+``` rust
+fn fib(n: u64) -> u64 { 12586269025 }
+
+let mut delayed_fib = sync::Future::spawn(proc() fib(50));
+something_else();
+println!("fib(50) = {:?}", delayed_fib.get());
+```
+
+## Arc
+
+When wanting to share immutable data between tasks, it may be expensive to use a typical pipe as that would create a copy of the data on each transfer. For this it would be more efficient to use an Atomically Reference Counted wrapper, `Arc`, which is implemented in the `sync` library. `Arc` acts as a reference to shared data so that only the reference itself is shared and cloned.
+
+``` rust
+use sync::Arc;
+
+fn main() {
+  let big_data = ~[1, 2, 3, 4, 5];
+  let data_arc = Arc::new(big_data);
+
+  for num in range(1u, 10) {
+    let (port, chan)  = Chan::new();
+
+    // send arc
+    chan.send(data_arc.clone());
+
+    spawn(proc() {
+      // receive arc
+      let local_arc : Arc<~[f64]> = port.recv();
+
+      // data pointed to by arc
+      let task_data = local_arc.get();
+
+      expensive_computation(task_data);
+    });
+  }
+}
+```
+
+## Failure
+
+Exceptions can be raised in Rust using the `fail!()` macro. Exceptions are unrecoverable within a single task. When an exception is raised, the task unwinds its stack --- running destructors and freeing memory along the way --- then exits.
+
+However, tasks may notify each other of failure. The `try` function is similar to `spawn` but blocks until the child is finish, yielding a return value of `Result<T, ()>` [^either] which has two variants: `Ok(T)` and `Err`. This `Result` can then be pattern-matched to determine the outcome of the task, with `Err` representing termination with an error. **Note** currently, it's not possible to retrieve a useful error value from the `Err` variant, since `try` always returns `()`:
+
+[^either]: This `Result` type is a lot like Haskell's `Either`.
+
+``` rust
+let result: Result<int, ()> = task::try(proc() {
+  if some_condition() {
+    calculate_result()
+  } else {
+    fail!("oops!");
+  }
+});
+
+assert!(result.is_err());
+```
+
+## Duplex Streams
+
+A `DuplexStream` can be used to both send and receive from one task to another. The following code creates a task that continually receives a `uint` and sends it back converted to a string.
+
+``` rust
+fn stringifier(channel: &DuplexStream<~str, uint>) {
+  let mut value: uint;
+  loop {
+    value = channel.recv();
+    channel.send(value.to_str());
+    if value == 0 { break; }
+  }
+}
+
+let (from_child, to_child) = DuplexStream::new();
+
+spawn(proc() {
+  stringifier(&to_child);
+});
+
+from_child.send(22);
+assert!(from_child.recv() == ~"22");
+```
+
+# Iterators
+
+Iterators can be transformed by adaptors that themselves return another iterator:
+
+``` rust
+let xs = [1, 2, 3, 4, 5];
+let ys = ["one", "two", "three", "four", "five"];
+
+let mut it = xs.iter().zip(ys.iter());
+
+for (x, y) in it {
+  println!("{} {}", *x, *h);
+}
+```
+
+Iterators offer a generic conversion to containers with the `collect` adaptor. This method is provided by the `FromIterator` trait:
+
+``` rust
+let xs = [1, 2, 3, 4];
+let ys = xs.rev_iter().skip(1).map(|&x| x * 2).collect::<~[int]>();
+```
