@@ -9,6 +9,37 @@ I'm [currently reading](/lately/#reading).
 
 ----
 
+<img src="/images/books/wayofkings.jpg" class="right" width="128">
+
+<a href="http://amzn.com/B003P2WO5E" name="wok">The Way of Kings</a> --- My brother had a physical copy of this book lying around for months because he read on reddit that it was a very good book, but I paid no attention to it.
+
+However, after recently finishing the _A Song of Ice and Fire_ [prequels], I was left with a craving for that kind of world, so I checked online and saw that the general consensus was that it was indeed a very good book. It's written by Brandon Sanderson, whom I wasn't familiar with, but he already had other popular series, and also masterfully finished the late Robert Jordan's _The Wheel of Time_ by writing books 12 through 14, judging by their critical reception.
+
+This has become my favorite book. I think it's the best book I've ever read.
+
+The series is called _The Stormlight Archive_. The setting is the typical medieval fantasy world, somewhat like the one from _A Song of Ice and Fire_. It's a little heavier on the magic, but only slightly, and it's treated similar to how it's treated in ASOIAF: there are magical items in the world, but they are scarce, and people don't really understand how they work because they were created thousands of years ago. It has many _very_ interesting [concepts] that I've come to love.
+
+It's around the same length as the typical ASOIAF book, and has POV chapters as well, though not in as strict a fashion as ASOIAF. _The Stormlight Archive_ will eventually consist of 10 books, and this series itself belongs to a larger universe referred to as _The Cosmere_ which will eventually consist of 36 books.
+
+I actually chose an opportune time to read this book, since it was published in 2010 and the second book in the series --- _Words of Radiance_ --- will be available on Marth 4, 2014. In the meantime, I'm beginning another series that belongs to _The Cosmere_, called [_Mistborn_][mistborn].
+
+[mistborn]: http://amzn.com/0765350386
+[prequels]: http://en.wikipedia.org/wiki/Tales_of_Dunk_and_Egg
+[concepts]: http://en.wikipedia.org/wiki/The_Stormlight_Archive#Concepts
+
+*[ASOIAF]: A Song of Ice and Fire
+*[POV]: Point of View
+
+----
+
+<img src="/images/books/scala.jpg" class="right" width="128">
+
+<a href="http://amzn.com/0981531644" name="scala">Programming in Scala</a> --- This is a book about Scala by the person that designed the language. The book is pretty inconsistent in the topics it approaches and how it approaches them. Some topics, like software testing, received very shallow coverage, to the point where I wondered why it was included at all. Other topics were covered perhaps a bit too in-depth, such as the collections API which has multiple chapters devoted to it, one of them being very long and plastered with API references that could have easily been left to the Internet, or a chapter on the rationale behind the collections API's design and implementation.
+
+However, the coverage of the language was pretty good, perhaps as good as it can get considering that it came from the language's designer himself. I've yet to form an opinion on the language since I haven't really created anything with it, but at face value, I think I prefer Haskell.
+
+----
+
 <img src="/images/books/algorithms.jpg" class="right" width="128">
 
 <a href="http://amzn.com/032157351X" name="algorithms">Algorithms</a> --- I've been refreshing my knowledge of algorithms using this book by Sedgewick. I chose this one for this purpose because it seems to strike a balance between the catalog-formatted coverage of Skiena's book and the in-depth analysis of the classic CLRS. So far it has worked perfectly fine, at times looking to CLRS for more information.

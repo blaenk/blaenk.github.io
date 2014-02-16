@@ -17,25 +17,19 @@ This page lists some of the things I've been up to lately.
 
 This is what I'm currently reading, but I also keep a list of [books I've read](/reads).
 
-<img src="/images/books/wayofkings.jpg" class="right" width="128">
+<img src="/images/books/mistborn.jpg" class="right" width="128">
 
-* [The Way of Kings](http://amzn.com/B003P2WO5E) --- My brother had a physical copy of this book lying around for months because he read on reddit that it was a very good book, but I paid no attention to it.
+* [Mistborn: The Final Empire](http://amzn.com/0765350386) --- After finishing [_The Way of Kings_][wok] and absolutely _loving_ it, I decided to try another series within the same universe (the universe is called _The Cosmere_), called _Mistborn_. I decided to do this while I wait for the second book of the _Stormlight Archive_ series, _Words of Radiance_, which comes out on March 4, 2014.
 
-    However, after recently finishing the _A Song of Ice and Fire_ [prequels], I was left with a craving for that kind of world, so I looked online and saw that the general consensus was that it was indeed very good. It's written by Brandon Sanderson, who I wasn't familiar with, but he already had other popular series, and also masterfully finished the late Robert Jordan's _The Wheel of Time_ by writing books 12 through 14.
+    This book starts out a lot darker than tWoK, although there are actually a lot of parallels once you learn about a plot twist reveal towards the end of tWoK. The world in general is more somber though. The world seems split between the aristocracy and a slave class known as the _skaa_. The slave class has for the most part lost all hope after centuries of subjugation.
 
-    The series is called _The Stormlight Archive_. The setting is the typical medieval fantasy world, somewhat like the one from _A Song of Ice and Fire_. It's a little heavier on the magic, but only slightly, and it's treated similar to how it's treated in ASOIAF: there are magical items in the world, but they are scarce, and people don't really understand how they work because they were created thousands of years ago. It has many _very_ interesting [concepts] which I've come to love.
+    It appears that membership into these classes is determined by a great war that occurred centuries ago. The leader of the winning side, the Lord Ruler, is apparently immortal and rewarded all of those that fought for him, and their descendants, by making them members of the aristocracy. What's more, the nobles were rewarded powers which allow them to do a variety of different things by consuming different kinds of metal, such as tin and iron, and "burning" them. These powers are only supposed to be available to nobles, and "half-bloods" are illegal and hunted down. Some half-bloods survive though, and some of these end up developing these powers.
 
-    It's around the same length as the typical ASOIAF book, and has POV chapters as well, though not in as strict a fashion as ASOIAF. I am _really_ liking it, and supposedly the author intends for there to be 36-volumes written with this world as a setting :)
+    There are a variety of different powers available, each one triggered by a different kind of metal. People usually only have one of these powers, and they are referred to as Mistings. It is much, much rarer to be able to wield every one of the powers available, and people who can are known as Mistborns.
 
-[prequels]: http://en.wikipedia.org/wiki/Tales_of_Dunk_and_Egg
-[concepts]: http://en.wikipedia.org/wiki/The_Stormlight_Archive#Concepts
+[wok]: /reads#wok
 
-*[ASOIAF]: A Song of Ice and Fire
-*[POV]: Point of View
-
-<img src="/images/books/scala.jpg" class="right" width="128">
-
-* [Programming in Scala](http://amzn.com/0981531644) --- I've been interested in Scala as a promising compromise between a purely functional statically typed language like Haskell and an imperative dynamic language like Ruby or Python. I'm particularly interested in the possible benefits of leveraging a VM as time-tested and robust as the JVM compared to other languages' perhaps more ad-hoc solutions. I'm also interested in it from a multicore utilization perspective with its actor concurrency model which resembles Erlang's, but with access to Scala/Java's perhaps more numerous packages.
+*[tWoK]: The Way of Kings
 
 <img src="/images/books/got-pt.jpg" class="right" width="128">
 
