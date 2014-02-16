@@ -1978,7 +1978,7 @@ $ scala -cp bin FileManagement
 
 # Actors and Concurrency
 
-Scala uses actors similar to Erlang's as its primary concurrency primitive. **Note** that this actors library is [deprecated]; [Akka] actors will be covered later are the default actors library since Scala 2.10.
+Scala uses actors similar to Erlang's as its primary concurrency primitive. **Note** that this actors library is [deprecated]; [Akka] actors will be covered later and are the default actors library since Scala 2.10.
 
 [deprecated]: http://docs.scala-lang.org/overviews/core/actors-migration-guide.html
 [Akka]: http://akka.io/
