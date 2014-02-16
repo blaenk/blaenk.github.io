@@ -416,4 +416,501 @@ let closure = |arg| println!("captured_var={}, arg={}", captured_var, arg);
 call_closure_with_ten(closure);
 ```
 
+Stack closures are a specific kind of closure that directly accesses local variables in the enclosing scope, making them very efficient. To ensure that they don't outlive the current scope, they aren't first class, so they can't be assigned to values or returned from functions.
 
+``` rust
+let mut max = 0;
+[1, 2, 3].map(|x| if *x > max { max = *x })
+```
+
+Owned closures are written with `proc`, e.g. `proct(arg: int)`, and they own values that can be sent safely between processes. The values they close over are copied, and they become owned by the closure. These are particularly used in concurrent scenarios, particularly for spawning tasks.
+
+Despite there being different types of closures, functions that expect a `||` closure can accept any kind of closure provided they have the same arguments and return types. For this reason, higher-order functions should usually define their closure types as `||` so that callers can pass any kind of closure.
+
+# Methods
+
+Methods are functions that take `self` as the first argument, which is of the same type as the method's receiver. Implementations are used to define methods on specific types, such as structs and enums.
+
+``` rust
+struct Point {
+  x: f64,
+  y: f64
+}
+
+enum Shape {
+  Circle(Point, f64),
+  Rectangle(Point, Point)
+}
+
+impl Shape {
+  fn draw(&self) {
+    match *self {
+      Circle(p, f)      => draw_circle(p, f),
+      Rectangle(p1, p2) => draw_rectangle(p1, p2)
+    }
+  }
+}
+
+let s = Circle(Point {x: 1.0, y: 2.0}, 3.0);
+s.draw();
+```
+
+It's also possible to define static methods by omitting the `self` parameter. This is usually how constructors are defined:
+
+``` rust
+use std::f64::consts::PI;
+
+struct Circle { radius: f64 }
+
+impl Circle {
+  fn new(area: f64) -> Circle {
+    Circle { radius: (area / PI).sqrt() }
+  }
+}
+
+let c = Circle::new(42.5);
+```
+
+# Generics
+
+Generics are available in Rust which allows for generic functions to be defined, such as a `map` function. Generic functions in Rust have similar performance characteristics as templates in C++ because it performs _monomorphization_ which generates a separate copy of each generic function at each call site, which is specialized to the argument types, optimized specifically for them. This is similar to C++ template instantiation.
+
+``` rust
+fn map<T, U>(vector: &[T], function: |v: &T| -> U) -> ~[U] {
+  let mut accumulator = ~[];
+  for element in vector.iter() {
+    accumulator.push(function(element));
+  }
+  return accumulator;
+}
+```
+
+Type parameters can also be used to define generic types, structs, and enums.
+
+``` rust
+use std::hashmap::HashMap;
+type Set<T> = HashMap<T, ()>;
+// Set<int>
+
+struct Stack<T> {
+  elements: ~[T]
+}
+// Stack<int>
+
+enum Option<T> {
+  Some(T),
+  None
+}
+// Option<int>
+```
+
+# Traits
+
+Traits are similar to type classes in Haskell. They allow the expression of _bounded polymorphism_ which limits the possible types a type parameter could refer to. For example, the `clone` method which allows the copying of a type, isn't defined on all types because it can't be safely performed on all types, due to user-defined destructors for example. Traits allow to bound the polymorphism of a generic function by specifying that a type parameter must implement the `Clone` trait in this case to limit the types on which the function can work:
+
+``` rust
+fn head<T: Clone>(v: &[T]) -> T {
+  v[0].clone()
+}
+```
+
+There are three traits that are automatically derived and implemented for applicable types:
+
+* `Send` is for sendable types, which don't contain managed boxes, managed closures, or references.
+* `Freeze` is for constant/immutable types, types that don't contain anything intrinsically mutable.
+* `'static` is for non-borrowed types, which don't contain any references or any data whose lifetime is bound to a particular stack frame, or they are types where the only contained references have `'static` lifetime.
+
+The `Drop` trait can be used to define destructors via its method `drop`.
+
+``` rust
+struct TimeBomb {
+  explosivity: uint
+}
+
+impl Drop for TimeBomb {
+  fn drop(&mut self) {
+    for _ in range(0, self.explosivity) {
+      println("boom");
+    }
+  }
+}
+```
+
+Traits contain zero or more method signatures. In the following trait, it is said that `Printable` provides a `print` method with the given signature:
+
+``` rust
+trait Printable {
+  fn print(&self);
+}
+
+impl Printable for int {
+  fn print(&self) { println!("{:?}", *self) }
+}
+
+impl Printable for ~str {
+  fn print(&self) { println(*self) }
+}
+```
+
+It's also possible to define default method implementations which can later be overridden on a case-by-case basis:
+
+``` rust
+trait Printable {
+  fn print(&self) { println!("{:?}", *self) }
+}
+
+// these use default implementation
+impl Printable for int {}
+impl Printable for bool {}
+impl Printable for f32 {}
+
+// overrides default implementation
+impl Printable for ~str {
+  fn print(&self) { println(*self) }
+}
+```
+
+Traits may be parameterized by type variables.
+
+``` rust
+trait Seq<T> {
+  fn length(&self) -> uint;
+}
+
+impl<T> Seq<T> for ~[T] {
+  fn length(&self) -> uint {
+    self.len()
+  }
+}
+```
+
+The `Self` type parameter is available within the trait definition and is replaced with the eventual type `T` in the implementation:
+
+``` rust
+trait Eq {
+  fn equals(&self, other: &Self) -> bool;
+}
+
+impl Eq for in {
+  fn equals(&self, other: &int) -> bool {
+    *other == *self;
+  }
+}
+```
+
+Traits can also define static methods which are ultimately called with a `::` prefix as well:
+
+``` rust
+use std::f64::consts::PI;
+
+trait Shape {
+  fn new(area: f64) -> Self;
+}
+
+struct Circle { radius: f64 }
+
+impl Shape for Circle {
+  fn new(area: f64) -> Circle {
+    Circle { radius: (area / PI).sqrt() }
+  }
+}
+
+let c: Circle = Shape::new(area);
+```
+
+Type parameters can have multiple bounds by combining them with `+`. Method calls to bounded type parameters are statically dispatched:
+
+``` rust
+fn print_all<T: Printable + Clone>(printable_things: ~[T]) {
+  // can clone() then print()
+}
+```
+
+It's possible to have method calls to trait types that are dynamically dispatched. With this, it's possible to define a function that performs the `draw` method on type that implements `Drawable`, which itself provides the `draw` method. This particular method takes a borrowed pointer to an array of owned values that implement the `Drawable` trait. Such an array must be constructed by casting each element to `~Drawable`:
+
+``` rust
+fn draw_all(shapes: &[~Drawable]) {
+  for shape in shapes.iter() {
+    shape.draw()
+  }
+}
+
+draw_all([circle as ~Drawable, rectangle as ~Drawable])
+```
+
+The three storage classes enforce a set of traits that their contents must fulfill in order to be packaged up in a trait object for that storage class:
+
+* contents of `~owned` traits must fulfill the `Send` bound
+* contents of `@managed` traits must fulfill the `'static` bound
+* contents of `&reference` traits are not constrained by any bound
+
+Trait objects automatically fulfill their respective trait bounds. This can be overridden by specifying a list of bounds on the trait type, such as `~Trait:Send+Freeze` which indicates that contents must fulfill `Send` and `~Freeze`.
+
+Traits can inherit from other traits, so that the traits they inherit from are referred to as _supertraits_. This means that for any type to implement the derived trait, it must also implement the supertrait:
+
+``` rust
+trait Shape {
+  fn area(&self) -> f64;
+}
+
+trait Circle : Shape {
+  fn radius(&self) -> f64;
+}
+
+struct CircleStruct { center: Point, radius: f64 }
+
+impl Circle for CircleStruct {
+  fn radius(&self) -> f64 {
+    (self.area() / PI).sqrt()
+  }
+}
+
+impl Shape for CircleStruct {
+  fn area(&self) -> f64 {
+    PI * square(self.radius)
+  }
+}
+```
+
+It's also possible to call supertrait methods on subtrait-bound type parameter values. This is also possible from trait objects:
+
+``` rust
+fn radius_times_area<T: Circle>(c: T) -> f64 {
+  c.radius() * c.area()
+}
+
+let concrete = @CircleStruct { center: Point {x: 3f, y: 4f}, radius: 5f }
+let mycircle: @Circle = concrete as @Circle;
+let nonsense = mycircle.radius() * mycircle.area();
+```
+
+Some traits can be automatically derived, similar to Haskell. The full list is `Eq`, `TotalEq`, `Ord`, `TotalOrd`, `Encodable`, `Decodable`, `Clone`, `DeepClone`, `IterBytes`, `Rand`, `Default`, `Zero`, `FromPrimitive`, and `Show`:
+
+``` rust
+#[deriving(Eq)]
+struct Circle { radius: f64 }
+
+#[deriving(Rand, ToStr)]
+enum ABC { A, B, C }
+```
+
+# Modules
+
+The content of all source code that the compiler directly had to compile in order to end up with a particular binary is collectively called a **crate**. A crate is a unit of independent compilation in Rust. Using an already compiled library in code doesn't make it part of a crate.
+
+There exists a hierarchy of modules where the root is referred to as **crate root**. Global paths begin with the root path `::`, all other paths are local paths, similar to the distinction between absolute `/`-prefixed paths and relative paths.
+
+Module contents are private by default. They can be made explicitly public with the `pub` qualifier. In fact, visibility restrictions are only applicable at module boundaries. On the other hand, `struct` fields are public by default and are made explicitly private with `priv`. Since visibility restrictions only apply at module boundaries, a private field of a `struct` defined within a module is itself accessible within that module:
+
+``` rust
+mod farm {
+  pub fn chicken() { ... }
+
+  pub struct Farm {
+    priv chickens: ~[Chicken],
+    farmer: Human
+  }
+
+  impl Farm {
+    fn feed_chickens(&self) { ... }
+    pub fn add_chickens(&self, c: Chicken) { ... }
+  }
+
+  pub fn feed_animals(farm: &Farm) {
+    farm.feed_chickens();
+  }
+}
+
+fn main() {
+  ::farm::chicken();
+
+  let f = make_farm();
+  f.add_chicken(make_chicken());
+  farm::feed_animals(&f);
+  f.farmer.rest();
+}
+```
+
+Source files and modules are not the same thing. The only file that's relevant when compiling is the one that contains the body of the crate root. Declaring a module without a body prompts the compiler to look for a file named after that module or for a file named `mod.rs` in a folder named after that module.
+
+The `use` statement can be used to bring in a module's contents into the current block by providing a global path without the `::` prefix. It's possible to prefix with `super::` to start the path in the parent module, and `self::` to start the path in the current module.
+
+``` rust
+use super::some_parent_item;
+use self::some_child_module::some_item;
+```
+
+Imported items are shadowed by local definitions. To make this fact more explicit, `use` statements must go before any declaration, including `mod` declarations. This looks awkward when importing items from a module that follows:
+
+``` rust
+use farm::cow;
+
+mod farm {
+  pub fn cow() {
+    println!("moo")
+  }
+}
+
+fn main() {
+  cow()
+}
+```
+
+This is even more awkward when using a `mod` statement that looks in a separate file for the contents:
+
+``` rust
+use b::foo;
+mod b;
+
+fn main() { foo(); }
+```
+
+It's possible to import by wildcard or selectively, similar to Scala. It's also possible to rename an imported item:
+
+``` rust
+use farm::{chicken, cow};
+
+#[feature(globs)]
+use farm::*;
+
+use egg_layer = farm::chicken;
+```
+
+Likewise, it's possible to re-export items from another module:
+
+``` rust
+mod farm {
+  pub use self::barn::hay;
+}
+```
+
+It's common to use existing libraries, which in rust are simply referred to as other crates. The `extern mod` declaration is used to be able to reference other crates, similar to `extern` in C. `extern mod`-imported items can be shadowed by local declarations and `use`-imported items, so they must go before both. Crates declared in an `extern mod` declaration are looked for in the library search path, which can be expanded with the `-L` switch.
+
+``` rust
+extern mod num;
+
+use farm::dog;
+use num::rational::Ratio;
+
+mod farm {
+  pub fn dog() { println!("woof") }
+}
+
+fn main() {
+  farm::dog();
+  let one_half = ::num::rational::Ratio::new(1, 2);
+}
+```
+
+Crates can contain metadata used for the resultant libraries, such as the package ID:
+
+``` rust
+#[crate_id = "farm#2.5"];
+
+// specify that it's a library
+#[crate_type = "lib"];
+```
+
+This information can be used to select the crate from the `extern mod` declaration:
+
+``` rust
+extern mod farm = "farm#2.5";
+// or
+extern mod my_farm = "farm";
+```
+
+For example, here's an example library, its compilation, and usage:
+
+~~~ {.rust text="world.rs"}
+#[crate_id = "world#0.42"];
+#[crate_type = "lib"];
+
+pub fn explor() -> &'static str { "world" }
+~~~
+
+~~~ {.rust text="main.rs"}
+extern mod world;
+fn main() {
+  println!("hello {}", world::explore());
+}
+~~~
+
+~~~ {.bash text="compilation"}
+$ rustc world.rs     # compiles libworld-<HASH>-0.42.so
+$ rustc main.rs -L . # include local dir in library search path
+$ ./main
+"hello world"
+~~~
+
+Many predefined items such as `range` and `Option<T>` come from the standard library's prelude, similar to Haskell's. The rust compiler automatically inserts the following into the crate root:
+
+``` rust
+extern mod std;
+
+// to prevent: in crate root
+#[no_std];
+```
+
+As well as the following into every module body:
+
+``` rust
+use std::prelude::*;
+
+// to prevent: in any module
+#[no_implicit_prelude];
+```
+
+# Named Lifetimes
+
+It's possible to give a lifetime a name in order to explicitly specify the lifetime of a returned reference. In the following case, the named lifetime `'r` is associated with the parameter `p: &Point`, this named lifetime is then also mentioned in the return type. What this means is that the returned reference will have the same lifetime as the passed in pointer parameter `p`. In effect, this means that the returned reference will remain valid as long as `p` itself remains valid.
+
+This is necessary because, generally it's only possible to return references derived from a parameter to the function, and named parameters explicitly specify which parameter that is.
+
+``` rust
+struct Point {x: f64, y: f64}
+
+fn get_x<'r>(p: &'r Point) -> &'r f64 {
+  &p.x
+}
+```
+
+Named lifetimes allow grouping of parameters by lifetime. The following means that all of the parameters are assigned the same named lifetime `r`, so that in the caller the lifetime `r` will be the intersection of the lifetime of the three region parameters.
+
+``` rust
+fn select<'r, T>(shape: &'r Shape, threshold: f64, a: &'r T, b: &'r T) -> &'r T {
+  if compute_area(shape) > threshold {
+    a
+  } else {
+    b
+  }
+}
+```
+
+For example, if `select()` were called by the following function it would produce an error. The reason is that the lifetime of the first parameter to `select()` is the function body of `select_unit()`. The second two parameters to `select()` share a lifetime in `select_unit()`, so there are actually two lifetimes. The intersection between these two lifetimes would be the `Shape`'s lifetime which is the function body, so the return value of the `select()` call will be the function body of `select_unit()`.
+
+This would lead to a **compilation error**, because `select_unit()` is supposed to return a value with a lifetime of `r`, which is the lifetime of `a` and `b`, _not_ the lifetime of the local `Circle`.
+
+``` rust
+fn select_unit<'r, T>(threshold: f64, a: &'r T, b: &'r T) -> &'r T {
+  let shape = Circle(Point {x: 0., y: 0.}, 1.);
+  select(&shape, threshold, a, b);
+}
+```
+
+This can be resolved by creating another lifetime, `'tmp` in `select()` and assign it to the `shape` parameter, in order to distinguish it from the lifetime of the last two parameters. However, since we wouldn't be using the `'tmp` lifetime and the compiler is guaranteed to generate a unique lifetime for ever parameter, it's simpler to simply omit it altogether:
+
+``` rust
+fn select<'r, T>(shape: Shape, threshold: f64, a: &'r T, b: &'r T) -> &'r T {
+  if compute_area(shape) > threshold {
+    a
+  } else {
+    b
+  }
+}
+```
+
+# Tasks
+
+Tasks are _green threads_ similar to those in Haskell and perhaps Erlang. Tasks have dynamically sized stacks, starting out with small ones and dynamically growing as required. This means that unlike C/C++, it's not possible to write beyond the end of the stack. Tasks provide failure isolation and recovery. When a problem occurs, the runtime destroys the entire task, and other tasks can monitor each other for failure.
+
+Tasks can't share mutable state with each other. Instead they communicate with each other by transferring owned data through the global _exchange heap_.
