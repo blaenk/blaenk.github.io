@@ -39,7 +39,7 @@ Every `Actor` has a collection of `Component` objects which compose to define th
 
 The `Engine` has Components/Susbystems such as `Renderer`, `Game`, `Audio`, etc. `Game` has collection of `Actors`, and `Actors` have collection of `Components`. This hierarchy forms a chain of responsibility up to the `Engine`.
 
-<img class="center" src="/images/engine-architecture.png">
+<img class="center" src="/images/game-development/engine-architecture.png">
 
 The chain of responsibility forms an event-handler hierarchy. Each `Event` is derived from a base event that has `scope` and `subject` properties.
 
