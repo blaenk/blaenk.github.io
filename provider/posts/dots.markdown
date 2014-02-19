@@ -208,9 +208,11 @@ clojure may be found in the following packages:
   community/clojure 1.5.1-2     /usr/bin/clojure
 ```
 
-I also configured [subtle highlighting] for the `less` pager.
+I also configured [highlighting] for the `less` pager.
 
-[subtle highlighting]: https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh
+[highlighting]: https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh
+
+<img class="center" src="/images/dots/less.png">
 
 My prompt is pretty involved and it's discussed more in-depth in my [customization] post, though it's slightly outdated. See my dotfiles for the latest configuration.
 
