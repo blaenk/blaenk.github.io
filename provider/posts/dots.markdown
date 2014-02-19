@@ -190,6 +190,44 @@ Example output:
 copied 123.45.678.90 to clipboard
 ```
 
+### Cursors
+
+I setup mode-aware cursors in zsh, to better emphasize when I'm in vi mode and not. This is pretty straightforward, simply sending the correct terminal control sequence:
+
+``` bash
+function zle-keymap-select {
+  zle reset-prompt
+
+  if [[ $KEYMAP = "vicmd" ]]; then
+    echo -ne "\033]12;10\007"
+  else
+    echo -ne "\033]12;6\007"
+  fi
+}
+
+function zle-line-finish {
+  echo -ne "\033]12;6\007"
+}
+
+zle -N zle-keymap-select
+zle -N zle-line-finish
+```
+
+This works perfectly fine in urxvt, but tmux must be configured to allow this because otherwise the setting of the cursor color above by zsh bypasses tmux, applying to tmux as a whole. This means that if one tmux window is in vi mode, the cursor will change, but if one then switches to another tmux window that is in insert mode, the cursor color for that window will remain the same as in the one in vi-mode. That is, the changed cursor color applies to every screen in tmux.
+
+tmux did implement functionality for it to remember the cursor color on a per-window basis back in 2011, but this is only configured out of the box for xterm, since every terminal's control sequences may vary.
+
+The cursor color is inherently global, so what happens is that tmux remembers the cursor color for every window. When switching to another tmux window, tmux checks if that window's cursor color had been previously changed. If so, tmux sets the global cursor color to that window's saved cursor color. Otherwise, it means that that window's cursor color hasn't been changed, in which case it needs to reset the cursor color to the "default" cursor color, in case the previous window did change the color.
+
+For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the "default" color.
+
+The sequence for setting the color is the same in xterm and urxvt: `\033]12;color\007`. However, there is no sequence I know of --- after looking at `man 7 urxvt` --- for resetting the cursor color to the default cursor color. For xterm, it is `\033]112\007`. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).
+
+```
+# when 1.9 comes out, change to Cs, Cr
+set -g terminal-overrides ',rxvt*:Cc=\E]12;%p1%s\007:Cr=\E]12;6\007'
+```
+
 ### Misc
 
 When one runs a command that doesn't exist, it generally gives an error pointing out that fact. However, the `pkgfile` package provides a zsh script that, when sourced, provides information about which package such a command may be found in.
