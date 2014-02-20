@@ -9,6 +9,15 @@ I'm [currently reading](/lately/#reading).
 
 ----
 
+<img src="/images/books/debugging.jpg" class="right" width="128">
+
+<a href="http://amzn.com/1593271743" name="gdb">The Art of Debugging with GDB, DDD, and Eclipse</a> --- Another great book by No Starch Press, publishers of TLPI. I unfortunately never really spent the time to really understand how to use debuggers past basic functionality, in this case [GDB]. I knew enough to get by, but it always seemed a little archaic or very complicated, instead opting for so-called "printf debugging," in which one simply adds a bunch of print statements to find the source of various problems. This, I've come to realize, is an exercise in masochism. Really learning the various tools available to one through a debugger is enlightening. I did write up [some notes].
+
+[GDB]: http://www.gnu.org/software/gdb/
+[some notes]: /notes/gdb/
+
+----
+
 <img src="/images/books/wayofkings.jpg" class="right" width="128">
 
 <a href="http://amzn.com/B003P2WO5E" name="wok">The Way of Kings</a> --- My brother had a physical copy of this book lying around for months because he read on reddit that it was a very good book, but I paid no attention to it.
