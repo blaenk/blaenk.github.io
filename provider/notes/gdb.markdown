@@ -400,7 +400,7 @@ $3 = 88
 
 # Core Files
 
-A core file contains a detailed description of the program's state when it crashed, such as the contenst of the stack(s), CPU's registers, and values of statically allocated variables.
+A core file contains a detailed description of the program's state when it crashed, such as the contents of the stack(s), CPU's registers, and values of statically allocated variables.
 
 Usually when a core dump file is generated, it's placed in the current directory named `core` or some variation of it. It may be necessary to increase the shell's core dump resource limit with the command:
 
@@ -408,7 +408,7 @@ Usually when a core dump file is generated, it's placed in the current directory
 $ ulimit -c unlimited
 ```
 
-On systems that use [systemd], such as mine, these files are instead be managed by systemd's journal. The helper program `systemd-coredumpctl` can be used to extract the core dumps from the journal to separate files:
+On systems that use [systemd], such as mine, these files are instead managed by systemd's journal --- they don't show up in the current directory regardless of the resource limit. The helper program `systemd-coredumpctl` can be used to extract the core dumps from the journal into individual files:
 
 [systemd]: http://en.wikipedia.org/wiki/Systemd
 
