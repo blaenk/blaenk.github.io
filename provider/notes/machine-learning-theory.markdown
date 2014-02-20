@@ -3045,7 +3045,7 @@ This method doesn't work if there is a region in the input space where the proba
 A bank wants to approve credit automatically by going through the historical records of previous applicants who were given credit cards with 3-4 years of credit behavior. The input is the information they provided on the credit application, since this is the data that would be available from a new customer:
 
 ------------------ --------
-Age                23 years
+age                23 years
 gender             male
 annual salary      $30,000
 years in residence 1 year
