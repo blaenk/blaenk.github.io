@@ -11,10 +11,9 @@ I'm [currently reading](/lately/#reading).
 
 <img src="/images/books/debugging.jpg" class="right" width="128">
 
-<a href="http://amzn.com/1593271743" name="gdb">The Art of Debugging with GDB, DDD, and Eclipse</a> --- Another great book by No Starch Press, publishers of TLPI. I unfortunately never really spent the time to really understand how to use debuggers past basic functionality, in this case [GDB]. I knew enough to get by, but it always seemed a little archaic or very complicated, instead opting for so-called "printf debugging," in which one simply adds a bunch of print statements to find the source of various problems. This, I've come to realize, is an exercise in masochism. Really learning the various tools available to one through a debugger is enlightening. I did write up [some notes].
+<a href="http://amzn.com/1593271743" name="gdb">The Art of Debugging with GDB, DDD, and Eclipse</a> [[notes](/notes/gdb/)] --- Another great book by No Starch Press, publishers of TLPI. I unfortunately never really spent the time to really understand how to use debuggers past basic functionality, in this case [GDB]. I knew enough to get by, but it always seemed a little archaic or very complicated, instead opting for so-called "printf debugging," in which one simply adds a bunch of print statements to find the source of various problems. This, I've come to realize, is an exercise in masochism. Really learning the various tools available to one through a debugger is enlightening.
 
 [GDB]: http://www.gnu.org/software/gdb/
-[some notes]: /notes/gdb/
 
 ----
 
@@ -43,7 +42,7 @@ I actually chose an opportune time to read this book, since it was published in 
 
 <img src="/images/books/scala.jpg" class="right" width="128">
 
-<a href="http://amzn.com/0981531644" name="scala">Programming in Scala</a> --- This is a book about Scala by the person that designed the language. The book is pretty inconsistent in the topics it approaches and how it approaches them. Some topics, like software testing, received very shallow coverage, to the point where I wondered why it was included at all. Other topics were covered perhaps a bit too in-depth, such as the collections API which has multiple chapters devoted to it, one of them being very long and plastered with API references that could have easily been left to the Internet, or a chapter on the rationale behind the collections API's design and implementation.
+<a href="http://amzn.com/0981531644" name="scala">Programming in Scala</a> [[notes](/notes/scala/)] --- This is a book about Scala by the person that designed the language. The book is pretty inconsistent in the topics it approaches and how it approaches them. Some topics, like software testing, received very shallow coverage, to the point where I wondered why it was included at all. Other topics were covered perhaps a bit too in-depth, such as the collections API which has multiple chapters devoted to it, one of them being very long and plastered with API references that could have easily been left to the Internet, or a chapter on the rationale behind the collections API's design and implementation.
 
 However, the coverage of the language was pretty good, perhaps as good as it can get considering that it came from the language's designer himself. I've yet to form an opinion on the language since I haven't really created anything with it, but at face value, I think I prefer Haskell.
 
@@ -51,7 +50,7 @@ However, the coverage of the language was pretty good, perhaps as good as it can
 
 <img src="/images/books/algorithms.jpg" class="right" width="128">
 
-<a href="http://amzn.com/032157351X" name="algorithms">Algorithms</a> --- I've been refreshing my knowledge of algorithms using this book by Sedgewick. I chose this one for this purpose because it seems to strike a balance between the catalog-formatted coverage of Skiena's book and the in-depth analysis of the classic CLRS. So far it has worked perfectly fine, at times looking to CLRS for more information.
+<a href="http://amzn.com/032157351X" name="algorithms">Algorithms</a> [[notes](/notes/algorithms/)] --- I've been refreshing my knowledge of algorithms using this book by Sedgewick. I chose this one for this purpose because it seems to strike a balance between the catalog-formatted coverage of Skiena's book and the in-depth analysis of the classic CLRS. So far it has worked perfectly fine, at times looking to CLRS for more information.
 
 Only one thing really bothered me about the book and that is that it teaches left-leaning red-black trees --- a creation of the author himself --- instead of classical red-black trees, _without_ warning the reader. The main claim to LLRBs that I'm aware of is that they're simpler to teach because they're more consistent, only allowing left-leaning red links, thereby reducing every imbalance to a matter of rotating into left-leaning red links.
 
@@ -71,7 +70,7 @@ At the time of writing, the book's reviews consist of 52 five-star reviews and o
 
 <img src="/images/books/cppprimer.jpg" class="right" width="128">
 
-<a href="http://amzn.com/0321714113" name="cpp-primer">C++ Primer</a> ---  The 5th edition of the book was specifically updated for the new C++11 standard release. At one point I came to the realization that I didn't have enough experience with C++, and that my understanding of it was hazy at best. Recognizing this, I dedicated myself to bettering my understanding of C++ by rereading a book I already had on C++. However, I felt I was missing out on the new C++11 features that were recently introduced.
+<a href="http://amzn.com/0321714113" name="cpp-primer">C++ Primer</a> [[notes](/notes/cpp/)] ---  The 5th edition of the book was specifically updated for the new C++11 standard release. At one point I came to the realization that I didn't have enough experience with C++, and that my understanding of it was hazy at best. Recognizing this, I dedicated myself to bettering my understanding of C++ by rereading a book I already had on C++. However, I felt I was missing out on the new C++11 features that were recently introduced.
 
 C++ Primer is what I look for in every programming book. It is direct --- to the point, thanks in part to the assumption that the reader is already familiar with programming, or even C++ itself. It diligently scours every nook and cranny of the C++11 standard, almost reading as a commentary of it, and in so doing, masterfully conveys the various intricacies of shared and unique pointers, move semantics, lambdas, variadic templates, and more.
 
