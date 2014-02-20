@@ -153,8 +153,9 @@ tocRemover x = x
 pygments :: Streams -> Block -> Block
 pygments streams (CodeBlock (_, classes, keyvals) contents) =
   let lang = fromMaybe (if not . null $ classes then head classes else "text") $ lookup "lang" keyvals
+      code = if lang == "text" then contents else pygmentize streams lang contents
       colored = renderHtml $ H.pre $ H.code ! A.class_ (H.toValue $ "highlight language-" ++ lang) $ do
-                  preEscapedToHtml $ pygmentize streams lang contents
+                  preEscapedToHtml code
       caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) (lookup "text" keyvals)
       composed = renderHtml $ H.figure ! A.class_ "codeblock" $ do
                    preEscapedToHtml $ colored ++ caption
