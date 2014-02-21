@@ -24,10 +24,11 @@ Aside from GDB there's also [LLDB] to keep an eye on, which is the LLVM project'
 
 Remember that, when debugging, it's best if a program is built with a symbol table --- the list of memory addresses corresponding to the program's variables and lines of code --- by passing the `-g` parameter to gcc or clang.
 
-For an additional resource, RMS' own [tutorial][rms_tut] on GDB is available.
+For an additional resource, RMS' own [tutorial][rms_tut] on GDB is available, as well as this [very good guide].
 
 *[RMS]: Richard M. Stallman
 [rms_tut]: http://www.unknownroad.com/rtfm/gdbtut/
+[very good guide]: http://rsquared.sdf.org/gdb/
 
 * toc
 
@@ -74,6 +75,8 @@ Breakpoint 1, function_containing_breakpoint(ac=4, av=0xbffff094) at src.c:16
 
 If the program was previously run, the arguments passed to the previous `run` can be reused by simply entering `run` on its own. If the program is already running, GDB will ask if it should restart the program.
 
+GDB is focused on one file at any given moment, which is the file that will be looked for when given parameters without specifying the file name, such as breaking by line number or function name. The first focused file is the one with the `main` entry point, but the file focus is changed whenever the `list` command is run, when one steps into code residing on a different file, or when hitting a breakpoint from a separate source file.
+
 ## Session
 
 It's normal to keep a GDB session to open during the debugging session. As bugs are fixed and the program is recompiled, GDB will detect the changes and load them in. Breakpoints and other information specified in ways not dependent on line numbers should continue to work.
@@ -97,8 +100,6 @@ History can be saved by putting this in `~/.gdbinit`:
 set history filename ~/.gdb_history
 set history save
 ```
-
-GDB is focused on one file at any given moment, which is the file that will be looked for when given parameters without specifying the file name, such as breaking by line number or function name. The first focused file is the one with the `main` entry point, but the file focus is changed whenever the `list` command is run, when one steps into code residing on a different file, or when hitting a breakpoint from a separate source file.
 
 # Breakpoints
 
@@ -273,6 +274,28 @@ The `until` command resumes execution until GDB reaches a machine instruction th
 
 Inspecting the program's state at any point in its execution is usually the primary motivation for debugging and setting breakpoints, so I consider it one of the most important parts to learn.
 
+## Source
+
+Source code can be shown by using the `list` command, which itself changes the file currently in focus by GDB, used for setting breakpoints and other things. When it's first run, `list` shows the 10 source lines centered around `main`. Subsequence `list` commands show the next 10 lines, stopping when the end is reached. The reverse, showing the previous 10 lines, can be done with `list -`. If `list` is given a number, it shows 10 source lines centered on that line number. This command can also accept a range of lines to print, where one of the endpoints can optionally be omitted.
+
+```
+(gdb) list
+(gdb) list -
+(gdb) list 5
+(gdb) list ,28
+(gdb) list 28,
+(gdb) list 21,25
+(gdb) list funcname
+(gdb) list file.c:12
+(gdb) list file.c:funcname
+```
+
+The number of lines output by GDB when using `list` is by default 10, but this can be changed:
+
+```
+(gdb) set listsize 5
+```
+
 ## Printing
 
 Basic variables such as integers can be printed with the `print` command. More complicated types will be covered later on. It's also possible to print out individual array elements with regular index syntax.
@@ -282,7 +305,21 @@ Basic variables such as integers can be printed with the `print` command. More c
 $1 = 12
 ```
 
-The `print` command has support for printing in a variety of different formats, such as `p/x` which would print the variable in hexadecimal. Similarly, `c` would print as a character, `s` a string, and `f` floating-point.
+The `print` command has support for printing in a variety of different format, which is done with `p/fmt var` where `fmt` is any one of:
+
+Format                  Code
+-------                ------
+address                a
+binary                 t
+char                   c
+decimal                d
+float                  f
+hex                    x
+hex (left zero padded) z
+instruction            i
+octal                  o
+unsigned decimal       u
+string                 s
 
 There is also a `printf` function which behaves the same way as the function of the same name in C, but like `print` in GDB, the parentheses are optional.
 
@@ -293,6 +330,25 @@ Structures can be printed outright and their constituent data members will be di
 ```
 (gdb) p *structptr
 $1 = {val = 12, left = 0x8049698, right = 0x0}
+```
+
+All of this information on one line can become difficult to read, in which case an alternative "pretty printing" scheme may be used which uses one struct member per-line:
+
+```
+(gdb) set print pretty
+(gdb) p *structptr
+$1 = {
+  val = 12,
+  left = 0x8049698,
+  right = 0x0
+}
+```
+
+Specific members can be printed individually by accessing the same way as one would in C/C++, both `->` and `.` can be used on pointers:
+
+```
+(gdb) p structptr->val
+(gdb) p structptr.val
 ```
 
 The `display` command registers a variable for printing every time execution pauses. If no argument is passed, it lists all auto-displayed variables. Display directives can be disabled or enabled with the corresponding commands. To remove a display directive altogether, use the `undisplay` command:
@@ -316,7 +372,12 @@ The `x` command, for "examine," can be used to examing memory at a given address
 
 A summary of information about the current frame can be obtained with the `info frame` command. More specifically, the `info args` command can show the values of the arguments passed to the current function, and the `info locals` command can show all of the variables local to the current stack frame.
 
-The `ptype` command can provide a quick look at the layout of a class or structure.
+The `ptype` command can be used to determine the type of a variable. When the type is a structure or a class, it can show the layout/definition.
+
+```
+(gdb) ptype argc
+type = int
+```
 
 A static array can be printed regularly with the `print` command:
 
@@ -328,7 +389,13 @@ int x[25];
 (gdb) p x
 ```
 
-However, dynamically allocated arrays can't be printed out in such a straightforward manner. Instead we would create an _artificial array_ that provides GDB with the necessary information about the array, specifically how large it is. It takes the form `*ptr@size`.
+It's also possible to print sub-ranges of an array, for example 5 elements starting at element 3:
+
+```
+(gdb) p x[3]@5
+```
+
+Dynamically allocated arrays have to be dereferenced and GDB has to be instructed on how large they are. This takes the form `*ptr@size`.
 
 ``` cpp
 int x = (int *)malloc(6 * sizeof(int));
@@ -359,12 +426,15 @@ GDB also provides simpler commands `up` and `down` for traversing relative to th
 
 The `backtrace` command shows the entire stack.
 
+The command `where` can be used to determine where one is at any given moment.
+
 ## Setting
 
-It's possible to set the value of variables mid-execution using the `set` command.
+It's possible to set the value of variables mid-execution using the `set` command, which provides no output from GDB. Variables can also be set using the print command, which follows the setting of the variable with printing out its new value:
 
 ```
 (gdb) set x = 12
+(gdb) print x = 12
 ```
 
 There are also variables specific to GDB that can be created and used. For example, GDB has a _value history_ which simply assigns the result of an entered command to an increasing variable name. This is similar to Scala's interpreter which assigns the expression result values to `res#`. These variables can be referenced in future commands. The `$` variable always refers to the previous result.
@@ -459,6 +529,7 @@ finish    fin
 info      i
 next      n
 print     p
+ptype     pt
 quit      q
 run       r
 step      s
