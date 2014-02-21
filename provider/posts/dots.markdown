@@ -224,8 +224,7 @@ For this, two terminal escape sequences have to be defined, or overridden: the f
 The sequence for setting the color is the same in xterm and urxvt: `\033]12;color\007`. However, there is no sequence I know of --- after looking at `man 7 urxvt` --- for resetting the cursor color to the default cursor color. For xterm, it is `\033]112\007`. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).
 
 ```
-# when 1.9 comes out, change to Cs, Cr
-set -g terminal-overrides ',rxvt*:Cc=\E]12;%p1%s\007:Cr=\E]12;6\007'
+set -g terminal-overrides ',rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007'
 ```
 
 ### Misc
