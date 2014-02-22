@@ -242,6 +242,22 @@ On the other hand, increasing the impulse response length to 1,000 and the input
 | Reduced           | 0        |
 | Parallel          | 48       |
 
+## Fusion
+
+As Christian pointed out in the comments, this naive implementation can really benefit from [Stream Fusion]. It's embarrassingly straightforward to enable stream fusion on this naive algorithm, considering that all we're doing is qualifying the list functions so that the ones from the [`stream-fusion`] package are used instead. Doing this yielded a 36% performance increase over the parallel algorithm showcased above, which was already fast. This is quite a bountiful optimization reward indeed.
+
+[Stream Fusion]: http://research.microsoft.com/en-us/um/people/simonpj/papers/ndp/haskell-beats-C.pdf
+[`stream-fusion`]: http://hackage.haskell.org/package/stream-fusion
+
+~~~ {.haskell text="stream fusion implementation"}
+import qualified Data.List.Stream as S
+
+parConvolveSF hs xs =
+  let pad = S.replicate ((S.length hs) - 1) 0
+      ts  = pad S.++ xs
+  in parMap rdeepseq (S.sum . S.zipWith (*) (S.reverse hs)) (S.init $ S.tails ts)
+~~~
+
 ## Conclusion
 
 I'm new to Digital Signal Processing, so if you notice any glaring errors please feel free to correct me; I would appreciate it. If you are interested in this subject and would like to read a book to learn more, I wholeheartedly recommend [The Scientist and Engineer's Guide to Digital Signal Processing](http://www.dspguide.com). If you would like to learn more about Convolution, you can check the relevant chapters in that freely available book.
