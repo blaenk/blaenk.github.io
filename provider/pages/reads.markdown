@@ -25,7 +25,7 @@ However, after recently finishing the _A Song of Ice and Fire_ [prequels], I was
 
 This has become my favorite book. I think it's the best book I've ever read.
 
-The series is called _The Stormlight Archive_. The setting is the typical medieval fantasy world, somewhat like the one from _A Song of Ice and Fire_. It's a little heavier on the magic, but only slightly, and it's treated similar to how it's treated in ASOIAF: there are magical items in the world, but they are scarce, and people don't really understand how they work because they were created thousands of years ago. It has many _very_ interesting [concepts] that I've come to love.
+The series is called _The Stormlight Archive_. The setting is the typical medieval fantasy world, somewhat like the one from _A Song of Ice and Fire_. It's a little heavier on the magic, but only slightly, and it's treated similar to how it's treated in ASOIAF: there are magical items in the world, but they are scarce, and people don't really understand how they work because they were created thousands of years ago. It has many _very_ interesting concepts that I've come to love.
 
 It's around the same length as the typical ASOIAF book, and has POV chapters as well, though not in as strict a fashion as ASOIAF. _The Stormlight Archive_ will eventually consist of 10 books, and this series itself belongs to a larger universe referred to as _The Cosmere_ which will eventually consist of 36 books.
 
@@ -33,7 +33,6 @@ I actually chose an opportune time to read this book, since it was published in 
 
 [mistborn]: http://amzn.com/0765350386
 [prequels]: http://en.wikipedia.org/wiki/Tales_of_Dunk_and_Egg
-[concepts]: http://en.wikipedia.org/wiki/The_Stormlight_Archive#Concepts
 
 *[ASOIAF]: A Song of Ice and Fire
 *[POV]: Point of View
