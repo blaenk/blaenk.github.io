@@ -120,7 +120,7 @@ Have an `Input` subsystem. In the SDL event loop, feed key events to the `Input`
 
 # Build System
 
-The best build system in my opinion is [CMake](/notes/cmake/), which can generate build files on various platforms. Perhaps the only thing --- as minor as it may be --- that bothered me about developing on Windows was the fact that all settings were mainly configured through a GUI, hidden in various sections and so on. This felt very haphazard to me, mainly difficult to grok which settings were manually specified --- they are emboldened in the GUI, but scattered throughout various property sheets, sections, and dialogs.
+The best build system for a game in my opinion is [CMake](/notes/cmake/), which can generate build files on various platforms. Perhaps the only thing --- as minor as it may be --- that bothered me about developing on Windows was the fact that all settings were mainly configured through a GUI, hidden in various sections and so on. This felt very haphazard to me, mainly difficult to grok which settings were manually specified --- they are emboldened in the GUI, but scattered throughout various property sheets, sections, and dialogs.
 
 With CMake, I can define all of the settings I want in a CMake file and have a neat Visual Studio project be generated from it. Likewise on POSIX systems, Makefiles are automatically created.
 
