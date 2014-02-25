@@ -135,12 +135,10 @@ abbreviations _ x = x
 
 substituteAbbreviation :: Map.Map String String -> Inline -> Inline
 substituteAbbreviation abbrs (Str content) =
-  case findMatch (Map.keys abbrs) content of
+  case find (content =~) (Map.keys abbrs) of
     Just abbr -> replaceWithAbbr content abbr
     Nothing   -> Str content
-  where findMatch (key:keys) text = if (text =~ key :: Bool) then Just key else findMatch keys text
-        findMatch [] _ = Nothing
-        replaceWithAbbr string abbr =
+  where replaceWithAbbr string abbr =
           let definition = (fromMaybe "ERROR" $ Map.lookup abbr abbrs)
               replacement = const $ renderHtml $ H.abbr ! A.title (H.toValue definition) $ preEscapedToHtml abbr
           in RawInline "html" $ replaceAll abbr replacement string
