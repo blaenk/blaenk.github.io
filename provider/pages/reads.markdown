@@ -9,6 +9,26 @@ I'm [currently reading](/lately/#reading).
 
 ----
 
+<img src="/images/books/mistborn.jpg" class="right" width="128">
+
+<a href="http://amzn.com/0765350386" name="mistborn">Mistborn: The Final Empire</a> --- After finishing [_The Way of Kings_][wok] and absolutely _loving_ it, I decided to try another series from the same author, Brandon Sanderson, taking place within the same _Cosmere_ universe, called _Mistborn_. I decided to do this while I wait for the second book of the _Stormlight Archive_ series, _Words of Radiance_, which comes out on March 4, 2014.
+
+The first book in _Mistborn_ is called _The Final Empire_ and it starts out a lot darker than tWoK, although there are actually a lot of parallels once you learn about a plot twist reveal towards the end of tWoK. The world in general is more somber though. The world seems split between the aristocracy and a subjugated class known as the _skaa_. The skaa has for the most part lost all hope after centuries of subjugation.
+
+Membership into these classes is hereditary, determined by a great war that occurred centuries ago. The leader of the winning side, the Lord Ruler --- who has reigned for centuries, rewarded all of those that fought for him, and their descendants, by making them members of the aristocracy.
+
+The aristocracy was also rewarded with genes that give them the ability to wield special powers, but very few nobles are actually born with these powers. "Half-bloods" between the aristocracy and the skaa are forbidden and hunted down. There are different kinds of powers, and they're all triggered by consuming certain metals, depending on the power, and "burning" them. Those born with the powers actually only manifest the ability to wield one of these powers, those people are referred to as _Mistings_. Even rarer are those who can wield all of the powers, known as _Mistborns_. That is, it's no powers, one power, or all powers.
+
+The story is written from multiple POVs, but the story originates from a character whom intends to overthrow the ruling government which has been in power for centuries. He is faced with the difficult task of rousing up a group of people that have been subjugated for centuries, whom regard their oppressive ruler as their god, and their subjugation as deserved.
+
+This is the second book I read by Sanderson and it proves to me that he's a very skilled writer. Everything he writes is very intricately planned, making for very detailed and skillfully-weaved plot threads that are always neatly resolved by the end of his books.
+
+[wok]: /reads#wok
+
+*[tWoK]: The Way of Kings
+
+----
+
 <img src="/images/books/debugging.jpg" class="right" width="128">
 
 <a href="http://amzn.com/1593271743" name="gdb">The Art of Debugging with GDB, DDD, and Eclipse</a> [[notes](/notes/gdb/)] --- Another great book by No Starch Press, publishers of TLPI. I unfortunately never really spent the time to really understand how to use debuggers past basic functionality, in this case [GDB]. I knew enough to get by, but it always seemed a little archaic or very complicated, instead opting for so-called "printf debugging," in which one simply adds a bunch of print statements to find the source of various problems. This, I've come to realize, is an exercise in masochism. Really learning the various tools available to one through a debugger is enlightening.
