@@ -59,10 +59,10 @@ pandocCompiler streams item = do
           else let headers = query collectHeaders ast
                in walk (tableOfContents headers alignment) ast
       transformer =
-        (walk quoteRulers) .
-        (walk $ abbreviations abbrs) .
+        tableOfContents' .
         (walk $ pygments streams) .
-        tableOfContents'
+        (walk quoteRulers) .
+        (walk $ abbreviations abbrs)
 
   pandocTransformer readerOptions writerOptions transformer item
 
