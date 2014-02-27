@@ -117,7 +117,7 @@ let stat .= "%{&modified ? ' +' : ''}"
 
 Defining a function to construct the statusline isn't as complicated as it may seem. Once the boilerplate is defined, it's a very simple way of constructing a statusline, and in my opinion more [organized and manageable] than typical, [densely packed] statusline declarations. For example, here's the code for showing the file-modified marker, where `Color` is a helper function that conditionally colors the passed content based on whether or not the window is active:
 
-[organized and manageable]: https://github.com/blaenk/dots/blob/ad421186f38fedb46e1a630f08ac3eb994941c6d/vim/vimrc.ln#L166
+[organized and manageable]: https://github.com/blaenk/dots/blob/dfb34f1ad78f5aa25bc486d3c14c9a0ef24094bd/vim/.vimrc#L168
 [densely packed]: http://stackoverflow.com/a/5380230/101090
 
 ``` vim
