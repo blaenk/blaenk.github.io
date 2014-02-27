@@ -153,7 +153,7 @@ The `list` represents an owned tree of values.
 
 # Move Semantics
 
-Move semantics in Rust is different from [C++11 move semantics]. In Rust, the "move" refers to moving ownership. Rust performs a shallow copy for parameter passing, assignment, and returning from functions. Performing such a shallow copy is treated by Rust as "moving ownership" of the value, so that the original source location can no longer be used unless it is reinitialized. A move can be avoided by cloning:
+Move semantics in Rust is similar to [C++11 move semantics], where the "move" refers to moving ownership. Rust performs a shallow copy for parameter passing, assignment, and returning from functions. Performing such a shallow copy is treated by Rust as "moving ownership" of the value, so that the original source location can no longer be used unless it is reinitialized. A move can be avoided by cloning:
 
 [C++11 move semantics]: /notes/cpp#move-semantics
 
