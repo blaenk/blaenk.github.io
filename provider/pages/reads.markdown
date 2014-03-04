@@ -25,7 +25,7 @@ One thing I really like about Sanderson is that everything he writes seems to ha
 
 The first book in _Mistborn_ is called _The Final Empire_ and it starts out a lot darker than tWoK, although there are actually a lot of parallels once you learn about a plot twist reveal towards the end of tWoK. The world in general is more somber though. The world seems split between the aristocracy and a subjugated class known as the _skaa_. The skaa has for the most part lost all hope after centuries of subjugation.
 
-Membership into these classes is hereditary, determined by a great war that occurred centuries ago. The leader of the winning side, the Lord Ruler --- who has reigned for centuries, rewarded all of those that fought for him, and their descendants, by making them members of the aristocracy.
+Membership into these classes is hereditary, determined by a great war that occurred centuries ago. The leader of the winning side, the Lord Ruler --- who has reigned for centuries --- rewarded all of those that fought for him, and their descendants, by making them members of the aristocracy.
 
 The aristocracy was also rewarded with genes that give them the ability to wield special powers, but very few nobles are actually born with these powers. "Half-bloods" between the aristocracy and the skaa are forbidden and hunted down. There are different kinds of powers, and they're all triggered by consuming certain metals, depending on the power, and "burning" them. Those born with the powers actually only manifest the ability to wield one of these powers, those people are referred to as _Mistings_. Even rarer are those who can wield all of the powers, known as _Mistborns_. That is, it's no powers, one power, or all powers.
 
