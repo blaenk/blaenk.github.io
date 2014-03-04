@@ -9,9 +9,19 @@ I'm [currently reading](/lately/#reading).
 
 ----
 
+<img src="/images/books/mistborn2.jpg" class="right" width="128">
+
+<a href="http://amzn.com/0765316889" name="mistborn2">Mistborn: The Well of Ascension</a> --- This is the sequel to _Mistborn: The Final Empire_. It's difficult to talk about this one without spoiling the first book. Suffice it to say that crazy things happen at the end of the first book and this book deals with the repercussions of those events. It seems like it's the least liked of the original trilogy, only because it seems to have gone a little slow --- for a Brandon Sanderson book --- at the beginning. I didn't really mind since I'm used to an even slower, seemingly undirected pace from GRRM's books, and it allowed me to really learn about some of the characters in-depth. Of course, the Sanderson Avalanche starts up towards the end so that even those who did find it to be their least favorite seem to agree that it redeems itself with it.
+
+*[GRRM]: George RR Martin
+
+One thing I really like about Sanderson is that everything he writes seems to have been very meticulously premeditated. An event comes to fruition at the end of this second book that was slowly, subtly, patiently unraveling before our very eyes throughout the first two books, and completely changes the stakes for the third and final book in the original trilogy.
+
+----
+
 <img src="/images/books/mistborn.jpg" class="right" width="128">
 
-<a href="http://amzn.com/0765350386" name="mistborn">Mistborn: The Final Empire</a> --- After finishing [_The Way of Kings_][wok] and absolutely _loving_ it, I decided to try another series from the same author, Brandon Sanderson, taking place within the same _Cosmere_ universe, called _Mistborn_. I decided to do this while I wait for the second book of the _Stormlight Archive_ series, _Words of Radiance_, which comes out on March 4, 2014.
+<a href="http://amzn.com/0765350386" name="mistborn">Mistborn: The Final Empire</a> --- After finishing [_The Way of Kings_][wok] and absolutely _loving_ it, I decided to try another series from the same author, Brandon Sanderson, taking place within the same _Cosmere_ universe, called _Mistborn_. I decided to do this while I wait for the second book of the _Stormlight Archive_ series, _Words of Radiance_.
 
 The first book in _Mistborn_ is called _The Final Empire_ and it starts out a lot darker than tWoK, although there are actually a lot of parallels once you learn about a plot twist reveal towards the end of tWoK. The world in general is more somber though. The world seems split between the aristocracy and a subjugated class known as the _skaa_. The skaa has for the most part lost all hope after centuries of subjugation.
 
@@ -49,9 +59,6 @@ The series is called _The Stormlight Archive_. The setting is the typical mediev
 
 It's around the same length as the typical ASOIAF book, and has POV chapters as well, though not in as strict a fashion as ASOIAF. _The Stormlight Archive_ will eventually consist of 10 books, and this series itself belongs to a larger universe referred to as _The Cosmere_ which will eventually consist of 36 books.
 
-I actually chose an opportune time to read this book, since it was published in 2010 and the second book in the series --- _Words of Radiance_ --- will be available on Marth 4, 2014. In the meantime, I'm beginning another series that belongs to _The Cosmere_, called [_Mistborn_][mistborn].
-
-[mistborn]: http://amzn.com/0765350386
 [prequels]: http://en.wikipedia.org/wiki/Tales_of_Dunk_and_Egg
 
 *[ASOIAF]: A Song of Ice and Fire
