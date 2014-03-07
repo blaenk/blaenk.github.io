@@ -30,13 +30,13 @@ I also liked that the deploy script had a naming convention such that files and 
 
 Now, instead of the `.symlink`-suffix naming convention, those files and folders that should be deployed are themselves hidden. This allows vim, Github, and others to detect the file type and provide highlighting. Running the deploy script for the first time yields something like this:
 
-<img class="center" src="/images/dots/deploy.png">
+<img class="center" src="/images/posts/dots/deploy.png">
 
 My zsh files have an alias for the sprinkle script so that it can be run from anywhere, though in this case I was already in my dots directory. Files that haven't been deployed are immediately deployed (symlinked) unless there's an existing file in the destination. In that case, there are options to backup, overwrite, or remove (without deploying) the existing file, as well as skip that file altogether.
 
 These commands are entered when prompted by simply entering the first letter of the action, i.e. `o` for overwrite. A capitalized letter performs that action for all remaining files as well. This is what the prompt looks like:
 
-<img class="center" src="/images/dots/prompt.png">
+<img class="center" src="/images/posts/dots/prompt.png">
 
 ## tmux
 
@@ -44,7 +44,7 @@ My tmux configuration is pretty simple I think. I keep the bind at `C-b` though 
 
 My window list is pretty subtle I think. Active windows are underlined and the current window name is emboldened.
 
-<img class="center" src="/images/dots/tmux.png">
+<img class="center" src="/images/posts/dots/tmux.png">
 
 I have binds for creating new windows with `M-n` and renaming a window with `M-r`:
 
@@ -249,7 +249,7 @@ I also configured [highlighting] for the `less` pager.
 
 [highlighting]: https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh
 
-<img class="center" src="/images/dots/less.png">
+<img class="center" src="/images/posts/dots/less.png">
 
 My prompt is pretty involved and it's discussed more in-depth in my [customization] post, though it's slightly outdated. See my dotfiles for the latest configuration.
 

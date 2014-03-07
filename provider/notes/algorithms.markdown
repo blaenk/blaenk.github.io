@@ -390,7 +390,7 @@ private void sort(Comparable[] seq, int lo, int hi) {
 
 The partition algorithm is similar to merge in merge sort in that it is what actually does the sorting.
 
-<img class="center" src="/images/algorithms/quicksort/partition.png">
+<img class="center" src="/images/notes/algorithms/quicksort/partition.png">
 
 1. choose a partition element separator $v$
 2. scan through the array from $i$ to $j$ in both directions
@@ -457,7 +457,7 @@ One problem with quick sort as it is implemented above is that items with keys e
 
 **Performance Factors**: distribution of the keys
 
-<img class="center" src="/images/algorithms/quicksort/3waypartition.png">
+<img class="center" src="/images/notes/algorithms/quicksort/3waypartition.png">
 
 1. perform a 3-way comparison between element $i$ and $v$
     1. $seq[i] < v$: swap $lt$ and $i$ and `lt++` and `i++`
@@ -787,7 +787,7 @@ C.  new node and parent lean in the same direction
 
 **First**, if the parent and its uncle are **red**, flip their colors and make the grandparent **red** instead. This allows the newly added **red** node to satisfy all properties, since its parent is **black**. However, making the grandparent **red** may possibly violate properties **2** (root is **black**) and **4** (both children of **red** nodes are **black**), so recurse the enforcement algorithm on the grandparent starting from case 1:
 
-<img src="/images/algorithms/red-black-trees/insert_1.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/insert_1.png" class="center">
 
 ~~~ {lang="c"}
 void insert_case3a(node *n) {
@@ -812,7 +812,7 @@ This is ultimately resolved by two rotations, but the first rotation is made to 
 
 There are still consecutive **red** nodes after this rotation, albeit leaning in the same direction. This makes it simple for case 3c to handle, provided it is applied to the ex-parent, i.e. the now-bottom node, since case 3c operates in a more general sense from the perspective of the grandchild.
 
-<img src="/images/algorithms/red-black-trees/insert_2.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/insert_2.png" class="center">
 
 ~~~ {lang="c"}
 void insert_case3b(node *n) {
@@ -836,7 +836,7 @@ This is resolved by rotating the grandparent in the direction **opposite** to th
 
 The grandparent was known to be **black**, since the **red** parent could not have been a child of it otherwise. Knowing this, the parent --- now the root --- switches colors with the grandparent, such that the subtree now consists of the **black** root and two **red** children.
 
-<img src="/images/algorithms/red-black-trees/insert_3.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/insert_3.png" class="center">
 
 ~~~ {lang="c"}
 void insert_case3c(node *n) {
@@ -935,7 +935,7 @@ When both $M$ and $C$ are **black** nodes, four situations [^rbtree_case_merge] 
 
 **First**: $N$'s sibling $S$ is **red**. In this case, reverse the colors of $P$ and $S$ and rotate $P$ left. Although all paths still have the same black-height, $N$'s sibling $S$ is now **black** and its parent $P$ is **red**, allowing fall-through to case 4, 5, or 6:
 
-<img src="/images/algorithms/red-black-trees/delete_1.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/delete_1.png" class="center">
 
 ~~~ {lang="c"}
 void delete_case1(node *n) {
@@ -959,11 +959,11 @@ void delete_case1(node *n) {
 
 **Second**: $P$, $S$, and $S$'s children are all **black**. Repaint $S$ **red** so that all paths passing through $S$ have the same black-height as those that go through $N$.
 
-<img src="/images/algorithms/red-black-trees/delete_2a.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/delete_2a.png" class="center">
 
 If $P$ is **red**, then the tree is violating property **4** (both children of **red** nodes are **black**), fix it by simply painting $P$ **black**.
 
-<img src="/images/algorithms/red-black-trees/delete_2b.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/delete_2b.png" class="center">
 
 Otherwise, if $P$ was already **black**, however, then after the painting of $S$ to **red**, $P$ now has effectively lost one level from its black-height, so case 1 should be applied to $P$:
 
@@ -987,7 +987,7 @@ void delete_case2(node *n) {
 
 **Third**: $S$ is **black**, $S_{L}$ is **red**, $S_{R}$ is **black**, $N$ is left child of its $P$. Rotate $S$ right, then exchange colors of $S$ and its new parent. This case just prepares the tree for falling into case 6, since $N$ now has a **black** sibling --- $S_{L}$ --- whose right child is **red**.
 
-<img src="/images/algorithms/red-black-trees/delete_3.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/delete_3.png" class="center">
 
 ~~~ {lang="c"}
 void delete_case3(node *n) {
@@ -1011,7 +1011,7 @@ void delete_case3(node *n) {
 
 This unbalances the tree by increasing black-height of paths through $N$ by one because either $P$ became **black** or it was **black** and $S$ became a **black** grandparent.
 
-<img src="/images/algorithms/red-black-trees/delete_4.png" class="center">
+<img src="/images/notes/algorithms/red-black-trees/delete_4.png" class="center">
 
 ~~~ {lang="c"}
 void delete_case4(node *n) {
@@ -1430,7 +1430,7 @@ The first vertex in a reverse postorder of $G$ is in a _source_ component of the
 
 All-Pairs reachability asks: given a digraph, is there a directed path from a given vertex $v$ to another given vertex $w$? This can be answered by creating a separate graph representation known as a transitive closure, which allows for straightforward checking of which vertex is reachable by others.
 
-<img src="/images/algorithms/graphs/transitive-closure.png" class="right">
+<img src="/images/notes/algorithms/graphs/transitive-closure.png" class="right">
 
 The **transitive closure** of digraph $G$ is another digraph with the same set of vertices but with an edge from $v$ to $w$ in the transitive closure if and only if $w$ is reachable from $v$ in $G$. Transitive closures are generally represented as a matrix of booleans where row $v$ at column $w$ is true if $w$ is reachable from $v$ in the digraph.
 
@@ -1944,7 +1944,7 @@ void stringQuickSort(String[] a, int lo, int hi, int d) {
 
 Trie structures exploit string properties to provide much faster string search, with hits taking time proportional to the length of the key and where misses require examining only a few characters.
 
-<img src="/images/algorithms/tries/trie.png" class="right">
+<img src="/images/notes/algorithms/tries/trie.png" class="right">
 
 The structure of tries is comprised of a tree where every node has $R$ **links** where $R$ is the size of the alphabet. Every node also has an associated **label** corresponding to the character value consumed to reach the node. The root node has no such label as there is no link pointing to it. Every node also also has an associated **value** corresponding to the value associated with the key denoted by the path ending at the particular node.
 

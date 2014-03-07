@@ -55,7 +55,7 @@ Finally, a select few markers are very useful, such as whether or not the file h
 
 After removing what I didn't need, I ended up with this very customized airline installation, where the number on the right side is the column number:
 
-<img src="/images/vim/airline.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/airline.png" class="center">
 
 ## Redesign
 
@@ -63,15 +63,15 @@ This statusline was fine, but I couldn't shake the thought that it felt out of p
 
 [airline-config]: https://github.com/blaenk/dots/blob/275b3b40fa0c57f1b48b5ba59b9ecbc00cddf866/vim/vimrc.ln#L80-L202
 
-<img src="/images/vim/regular.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/regular.png" class="center">
 
 I completely got rid of any mode designation in the statusline since I realized that I had the `showmode` option set, which already shows the current mode in the message line under the statusline. Further still, I created [mode-aware cursors] that change color based on the mode using the `gcr` option. Top-to-bottom: normal, insert, visual, replace, command:
 
-<img src="/images/vim/gcr-normal.png" class="center">
-<img src="/images/vim/gcr-insert.png" class="center">
-<img src="/images/vim/gcr-visual.png" class="center">
-<img src="/images/vim/gcr-replace.png" class="center">
-<img src="/images/vim/gcr-command.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/gcr-normal.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/gcr-insert.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/gcr-visual.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/gcr-replace.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/gcr-command.png" class="center">
 
 [mode-aware cursors]: https://github.com/blaenk/dots/blob/9843177fa6155e843eb9e84225f458cd0205c969/vim/vimrc.ln#L49-L64
 
@@ -79,7 +79,7 @@ I completely got rid of any mode designation in the statusline since I realized 
 
 One piece of functionality that I wanted to preserve from airline was support for different active and inactive statuslines. In my case, I wanted this to be a subtle difference as you can see in the image below, where some things lose their color and the angle quotes become inverted:
 
-<img src="/images/vim/regular-inactive.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/regular-inactive.png" class="center">
 
 This feature isn't built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refreshes every window's statusline:
 
@@ -126,9 +126,9 @@ let stat .= Color(isactive, 2, "%{&modified ? ' +' : ''}")
 
 Here's what the modified, paste mode, and read-only markers look like:
 
-<img src="/images/vim/regular-modified.png" class="center">
-<img src="/images/vim/regular-paste.png" class="center">
-<img src="/images/vim/regular-readonly.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/regular-modified.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/regular-paste.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/regular-readonly.png" class="center">
 
 I didn't want the read-only marker to be `RO`, so instead I got the inspiration from when one does `sudo !!` to re-do the previous command with `sudo`. In fact, I have a mapping for this that I found online, `w!!`:
 
@@ -138,11 +138,11 @@ cmap w!! %!sudo tee > /dev/null %
 
 I finally had to redo the CtrlP theme from scratch as well, because I had previously customized it through airline's API. This turned out to be pretty straightforward, since CtrlP itself exposes a function for this. With airline, I had this, which I specifically made to look like how it looked in powerline by default:
 
-<img src="/images/vim/airline-ctrlp.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/airline-ctrlp.png" class="center">
 
 This actually looked pretty nice, in my opinion, but this look doesn't mesh well with what I've created so far. I completely got rid of everything but the current mode and search scope path. Whether regex is turned on and/or if searching by file name is reflected in the CtrlP prompt already:
 
-<img src="/images/vim/regular-ctrlp.png" class="center">
+<img src="/images/posts/a-simpler-vim-statusline/regular-ctrlp.png" class="center">
 
 ## Conclusion
 

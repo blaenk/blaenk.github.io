@@ -13,7 +13,7 @@ Before I go any further I'd like to point out that all of the things that I'll t
 
 Here is the end result:
 
-<img src="/images/terminal/urxvt.png" class="center">
+<img src="/images/posts/terminal-customization/urxvt.png" class="center">
 
 ## dotfiles
 
@@ -59,7 +59,7 @@ My prompt is inspired by the Haskell [lambda syntax](http://www.haskell.org/hask
 
 Here's what the actual prompt looks like:
 
-<img src="/images/terminal/basic-prompt.png" class="center">
+<img src="/images/posts/terminal-customization/basic-prompt.png" class="center">
 
 Here it is in text:
 
@@ -75,7 +75,7 @@ Like any self-respecting modern prompt, mine [incorporates git information](http
 
 All of these features were done using zsh's [vcsinfo](http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information) with the help of [Arjan van der Gaag](http://arjanvandergaag.nl/blog/customize-zsh-prompt-with-vcs-info.html) and --- once again --- [sunaku](https://github.com/sunaku/home/blob/master/.zsh/config/prompt.zsh). Here's what it looks like [^echo]:
 
-<img src="/images/terminal/git-prompt.png" class="center">
+<img src="/images/posts/terminal-customization/git-prompt.png" class="center">
 
 Again in text:
 
@@ -89,7 +89,7 @@ The branch is `master` and apparently there's unstaged files, modifed files, and
 
 The prompt also detects if it's being viewed through SSH. I don't like viewing hostname in my prompt on machines I'm on locally as I feel it's pointless. However, when I'm connected to a remote server via SSH, it's often handy to have the hostname around to differentiate between your computer and the remote host. For this reason my prompt only shows the hostname when it detects that it's being viewed through an SSH connection. Here's what it looks like:
 
-<img src="/images/terminal/ssh-prompt.png" class="center">
+<img src="/images/posts/terminal-customization/ssh-prompt.png" class="center">
 
 Once again in text:
 

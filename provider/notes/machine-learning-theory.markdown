@@ -555,13 +555,13 @@ This is a poor bound because in reality the bad events could have significant am
 Given the following perceptron:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/training-versus-testing/e-in.png">
-  <img src="/images/machine-learning/training-versus-testing/e-out.png">
+  <img src="/images/notes/machine-learning/training-versus-testing/e-in.png">
+  <img src="/images/notes/machine-learning/training-versus-testing/e-out.png">
 </div>
 
 When the perceptron (the hypothesis) is changed, there is a huge amount of overlap:
 
-<img src="/images/machine-learning/training-versus-testing/perceptron-overlap.png" class="center">
+<img src="/images/notes/machine-learning/training-versus-testing/perceptron-overlap.png" class="center">
 
 Only the area in yellow is what has changed between the two perceptrons; everything else overlaps.
 
@@ -611,7 +611,7 @@ $$ \growthfunc(N) \leq 2^N $$
 
 This can be applied to the perceptron. For example, when $N = 4$, we can lay out the points so that they are easily separated. However, given a layout, we must then consider all possible configurations of labels on the points, one of which is the following:
 
-<img src="/images/machine-learning/training-versus-testing/breaking-point.png" class="center">
+<img src="/images/notes/machine-learning/training-versus-testing/breaking-point.png" class="center">
 
 This is where the perceptron breaks down because it _cannot_ separate that configuration, and so $\growthfunc(4) = 14$ because two configurations --- this one and the one in which the left/right points are blue and top/bottom are red --- cannot be represented.
 
@@ -630,7 +630,7 @@ h(x) = \begin{cases}
        \end{cases}
 $$
 
-<img src="/images/machine-learning/training-versus-testing/positive-rays.png" class="center">
+<img src="/images/notes/machine-learning/training-versus-testing/positive-rays.png" class="center">
 
 $\mathcal H$ is the set from the reals to a label $-1$ or $+1$, so $h\colon \mathbb R \to \{-1, +1\}$. Put more simply:
 
@@ -651,7 +651,7 @@ h(x) = \begin{cases}
        \end{cases}
 $$
 
-<img src="/images/machine-learning/training-versus-testing/positive-intervals.png" class="center">
+<img src="/images/notes/machine-learning/training-versus-testing/positive-intervals.png" class="center">
 
 The way to vary the different dichotomies is by choosing two line segments --- of which there are again $N + 1$ --- at which to place the interval ends. For this reason, the growth function is:
 
@@ -680,13 +680,13 @@ $$
 A convex region is a region where for any two points picked within a region, the entirety of the line segment connecting them lies within the region. For example, the left image is a convex region, but the one on the right isn't because the line segment connecting the chosen two points doesn't fall entirely within the region:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/training-versus-testing/convex-region.png">
-  <img src="/images/machine-learning/training-versus-testing/non-convex-region.png">
+  <img src="/images/notes/machine-learning/training-versus-testing/convex-region.png">
+  <img src="/images/notes/machine-learning/training-versus-testing/non-convex-region.png">
 </div>
 
 Convex regions can therefore be used to model dichotomies. The best layout for the points in the input set is to place them on the perimeter of a circle, in which case any configuration of the labels can be satisfied with a convex region as shown below:
 
-<img src="/images/machine-learning/training-versus-testing/convex-region-dichotomy.png" class="center">
+<img src="/images/notes/machine-learning/training-versus-testing/convex-region-dichotomy.png" class="center">
 
 When a hypothesis set is able to reach every possible dichotomy, it is said that the hypothesis set shattered the points. This means that the hypothesis set is very good at fitting the data, but this is a trade off with generalization.
 
@@ -700,11 +700,11 @@ We [already saw](#growth-function) that for perceptrons, $k = 4$.
 
 For positive rays where $\growthfunc(N) = N + 1$, the break point is $k = 2$ because $2 + 1 = 3$ and this is not the same as $2^2 = 4$. This is evidenced by the fact that the below configuration cannot be represented by a positive ray:
 
-<img src="/images/machine-learning/training-versus-testing/positive-ray-break-point.png" class="center">
+<img src="/images/notes/machine-learning/training-versus-testing/positive-ray-break-point.png" class="center">
 
 Similarly, for positive intervals where $\growthfunc(N) = \frac 1 2 N^2 + \frac 1 2 N + 1$, the break point is $k = 3$ because $\growthfunc(3) = 7 \not= 2^3 = 8$. The following configuration is an example configuration that cannot be represented by a positive interval:
 
-<img src="/images/machine-learning/training-versus-testing/positive-interval-break-point.png" class="center">
+<img src="/images/notes/machine-learning/training-versus-testing/positive-interval-break-point.png" class="center">
 
 Convex sets don't have a break point, so $k = \infty$. Having no break point means that $\growthfunc(N) = 2^N$.
 
@@ -808,7 +808,7 @@ When $N = 1$ and $k \geq 2$, given that we only have one point, the maximum numb
 
 With these bounds, we can then define every other point in the table:
 
-<img src="/images/machine-learning/theory-of-generalization/dichotomy-table.png" class="center">
+<img src="/images/notes/machine-learning/theory-of-generalization/dichotomy-table.png" class="center">
 
 Remembering that:
 
@@ -1217,15 +1217,15 @@ $$
 We will now see which one fares better by approximating what we think would be the best hypothesis from each set. In the case of the constant model, we would choose the line at $y = 0$ to minimize the MSE. The linear model would use a line that also tries to minimize the MSE. The following is the $\outsample$ for both:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/bias-variance-tradeoff/constant-model.png">
-  <img src="/images/machine-learning/bias-variance-tradeoff/linear-model.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/constant-model.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/linear-model.png">
 </div>
 
 It's clear that from approximation, $\mathcal H_1$ seems to be better. We will now see which one fares better through machine learning. For example, for these particular two points we get the following result:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/bias-variance-tradeoff/learning-constant-model.png">
-  <img src="/images/machine-learning/bias-variance-tradeoff/learning-linear-model.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/learning-constant-model.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/learning-linear-model.png">
 </div>
 
 The problem is that these results depend on the two points that we were given, so it complicates the task of comparing the two hypothesis sets. This is why we need bias-variance analysis, it gives us the expected error _with respect to_ the choice of the data set.
@@ -1233,15 +1233,15 @@ The problem is that these results depend on the two points that we were given, s
 If we were derive a hypothesis from any two points, for a large number of different two points, we would come up with something like the left image, where every line represents a derived hypothesis. It therefore stands to reason that the average hypothesis would fall somewhere near $y = 0$ --- the midpoint of the range of possible hypotheses. The error measure of the average hypothesis against the target function is the **bias**, and the **variance** is represented by the gray region which corresponds to the standard deviation of the possible hypotheses. It's apparent that this model has a **high bias** ($0.5$) and a **low variance** ($0.25$):
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/bias-variance-tradeoff/multiple-hypotheses.png">
-  <img src="/images/machine-learning/bias-variance-tradeoff/average-hypothesis.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/multiple-hypotheses.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/average-hypothesis.png">
 </div>
 
 The same is slightly more complicated with the second hypothesis $\mathcal H_1$ because of its linear model, which yields very different hypotheses --- that is, **high variance** ($1.69$). There is **low bias** ($0.21$) however, because it has many different hypotheses to average from:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/bias-variance-tradeoff/linear-multiple-hypotheses.png">
-  <img src="/images/machine-learning/bias-variance-tradeoff/linear-average-hypothesis.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/linear-multiple-hypotheses.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/linear-average-hypothesis.png">
 </div>
 
 It's clear that when the two components are summed for both models, the expected error of the first hypothesis set $\mathcal H_0$ is much lower than $\mathcal H_1$'s.
@@ -1255,15 +1255,15 @@ A learning curve plots the expected value of $\outsample$ and $\insample$ as a f
 The following images are learning curves for a simple and complex model. The simple model shows that $\outsample$ decreases with the $N$, but so does $\insample$ --- which can be attributed to exceeding the degrees of freedom available in the hypothesis set. The second model has so many degrees of freedom that it can fit the training set perfectly until the part where the blue curve appears on the left side, however, $\outsample$ is very high before that point --- this corresponds to not learning anything; just memorizing the examples. Therefore if there are very few examples, then it's clear that the simple model would fare better. This is why we want to match the model's complexity to the data resources that we have.
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/bias-variance-tradeoff/simple-learning-curve.png">
-  <img src="/images/machine-learning/bias-variance-tradeoff/complex-learning-curve.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/simple-learning-curve.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/complex-learning-curve.png">
 </div>
 
 The following is a comparison of the learning curves for a given model using VC analysis and bias-variance analysis. In the VC analysis curve on the left, the blue region is $\insample$ and the red region is $\Omega$ --- what happens within the generalization bound. In the Bias-Variance curve, the black bar is the approximation. Everything below the approximation is the bias, so everything else under the $\outsample$ curve must be the variance. Both curves are talking about approximations. The Bias-Variance curve is concerning over-all approximation, whereas the VC analysis curve is concerning in-sample approximation.
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/bias-variance-tradeoff/vc-learning-curve.png">
-  <img src="/images/machine-learning/bias-variance-tradeoff/bias-variance-learning-curve.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/vc-learning-curve.png">
+  <img src="/images/notes/machine-learning/bias-variance-tradeoff/bias-variance-learning-curve.png">
 </div>
 
 ## Analysis of Linear Regression
@@ -1286,7 +1286,7 @@ $$ \mathrm X \mathbf w - \mathbf y' $$
 
 This yields the following analysis learning curve. Up until $d + 1$ data points, the data was being fit perfectly. The best approximation error, the variance of the noise, is denoted by $\sigma^2$.
 
-<img src="/images/machine-learning/bias-variance-tradeoff/linear-regression-learning-curve.png" class="center">
+<img src="/images/notes/machine-learning/bias-variance-tradeoff/linear-regression-learning-curve.png" class="center">
 
 We can observe the following characteristics:
 
@@ -1323,13 +1323,13 @@ What is the price paid in using a non-linear transformation? Well it has been es
 For example considering the following **case 1** where there are two outliers in the data set. If we want to really fit the data, we could use a 4th-order surface in order to completely classify the data in the set. However, this increase in complexity would mean that it'd be very difficult to generalize. Sometimes it's best to accept that there will be an $\insample > 0$.
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/linear-model-ii/non-linear-case-1.png">
-  <img src="/images/machine-learning/linear-model-ii/non-linear-case-1-transformed.png">
+  <img src="/images/notes/machine-learning/linear-model-ii/non-linear-case-1.png">
+  <img src="/images/notes/machine-learning/linear-model-ii/non-linear-case-1-transformed.png">
 </div>
 
 Now consider **case 2**, where we don't stand a chance using a linear model to fit the data, which clearly falls inside a circular region:
 
-<img src="/images/machine-learning/linear-model-ii/non-linear-case-2.png" class="center">
+<img src="/images/notes/machine-learning/linear-model-ii/non-linear-case-2.png" class="center">
 
 In this case, we can use a non-linear transformation to map the data to a general 2nd-order surface as follows:
 
@@ -1363,7 +1363,7 @@ $$ h(\mathbf x) = \theta(s) $$
 
 Where $s$ is simply the dot product of the weight and feature vectors as is done in the other two linear models, and $\theta$ is a non-linear function that is often called a **sigmoid**, and looks something like this:
 
-<img src="/images/machine-learning/linear-model-ii/sigmoid.png" class="center">
+<img src="/images/notes/machine-learning/linear-model-ii/sigmoid.png" class="center">
 
 In our particular case, the formula we're going to use is:
 
@@ -1586,36 +1586,36 @@ $$ \mathbf e_{ij} = \left( r_{ij} - \sum_{k = 1}^K u_{ik} v_{jk} \right)^2 $$
 
 The perceptron model has a break point of 4 because it couldn't properly model situations such as the following:
 
-<img src="/images/machine-learning/neural-networks/impossible-perceptron.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/impossible-perceptron.png" class="center">
 
 Although the above can't be modeled with one perceptron, perhaps the combination of more than one perceptron can. For example, we could divide the space twice, independently, with two different perceptrons and then somehow combine their results to effectively model the above scenario:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/neural-networks/impossible-perceptron-left.png">
-  <img src="/images/machine-learning/neural-networks/impossible-perceptron-right.png">
+  <img src="/images/notes/machine-learning/neural-networks/impossible-perceptron-left.png">
+  <img src="/images/notes/machine-learning/neural-networks/impossible-perceptron-right.png">
 </div>
 
 The results of these two independent perceptrons can be combined to model the impossible scenario. Specifically, one way this can be accomplished is by modeling logical AND and OR operations to combine results of separate perceptrons.
 
 Logical OR can be modeled as a perceptron where the threshold weight $x_0$ is set to $1.5$. This way it'll only return $-1$ if both of the other features are $-1$, as is expected of logical OR:
 
-<img src="/images/machine-learning/neural-networks/or-gate.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/or-gate.png" class="center">
 
 Logical AND can be modeled as a perceptron where the threshold weight $x_0$ is set to $-1.5$. This way, both of the other features have to be $+1$ in order to overcome the threshold weight and thus return $+1$, just as with logical AND:
 
-<img src="/images/machine-learning/neural-networks/and-gate.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/and-gate.png" class="center">
 
 With these models, we can model the original complicated scenario. We can take the AND result of one of the perceptrons such as $h_1$ and the negation of the other perceptron, $h_2$. This essentially means that the bottom quadrant in the target model would be $h_1$'s `+` AND the negation of $h_2$'s `-` which results in `+` as in the target model. The left quadrant can similarly be modeled by taking $h_1$'s `-` AND the negation of $h_2$'s `-` which results in `-` as in the target model. We take this and OR it with the alternate scenario, where $h_1$'s values are negated, to fully complete the model.
 
-<img src="/images/machine-learning/neural-networks/simple-layers.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/simple-layers.png" class="center">
 
 The full, multi-layer perceptron can now be constructed, with the additional layer at the beginning which yields the separate, independent perceptrons $h_1$ and $h_2$. Note that there are three layers, and it is strictly "feedforward," that is, we don't feed outputs to previous layers nor do we skip layers:
 
-<img src="/images/machine-learning/neural-networks/multilayer-perceptron.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/multilayer-perceptron.png" class="center">
 
 This new model seems very powerful, with a seemingly infinite degree of freedom able to model a variety of situations. For example, we can model a circle only using perceptrons instead of using a non-linear transformation as we did before. The more perceptrons we use, the better the approximation:
 
-<img src="/images/machine-learning/neural-networks/circular-perceptron-model.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/circular-perceptron-model.png" class="center">
 
 There are two costs that this seemingly powerful model can incur. The first is **generalization** because we have so many perceptrons, yielding a higher VC dimension and with it higher degrees of freedom. This is a problem, but at least being aware of it means that we can overcome it by simply using an adequate number of examples. The other, perhaps more important cost, is that of **optimization**. When the data is not separable, it becomes a combinatorial optimization problem that is very difficult to solve.
 
@@ -1623,13 +1623,13 @@ The problem of optimization can be solved by using soft thresholds instead of th
 
 A neural network has various inputs and layers. Each layer has a non-linearity $\theta$, which is a generic non-linearity --- not specifically the logistic function in logistic regression. To be precise, the non-linearity $\theta$ is similar to the logistic function except that it ranges from $-1$ to $+1$, to better approximate the hard threshold that goes from $-1$ to $+1$. Each of the non-linearities $\theta$ can be different. A famous approach to take is to make all of the $\theta$'s be non-linear and then make the final $\theta$ actually be linear. The intermediate layers are referred to as **hidden layers**. The final layer is referred to as the **output layer**:
 
-<img src="/images/machine-learning/neural-networks/neural-network.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/neural-network.png" class="center">
 
 The non-linearity $\theta$ in the neural network is the hyperbolic $\tan$, the $\tanh$ function which takes on values ranging from $(-1, +1)$. If the signal (sum of the weights) is small then the $\tanh$ function acts linear, and otherwise if it is very large then it asks as a hard threshold:
 
 $$ \theta(s) = \tanh(s) = \frac {e^s - e^{-s}} {e^s + e^{-s}} $$
 
-<img id="tanh" src="/images/machine-learning/neural-networks/tanh.png" class="center">
+<img id="tanh" src="/images/notes/machine-learning/neural-networks/tanh.png" class="center">
 
 The parameters of the neural network are weights $w$ indexed by three indices consisting of the layers, inputs, and outputs, and each of these indices take on the following ranges:
 
@@ -1665,7 +1665,7 @@ $$ \frac {\partial \crossentropy(\weight)} {\partial w^{(l)}_{ij}} = \frac {\par
 
 This is easily observable when we look at a diagram of a neural network layer:
 
-<img src="/images/machine-learning/neural-networks/final-delta.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/final-delta.png" class="center">
 
 We already know the second component's result:
 
@@ -1707,7 +1707,7 @@ $$
 
 This decomposition into three components is again observable from a diagram of a neural network layer:
 
-<img src="/images/machine-learning/neural-networks/backpropagated-delta.png" class="center">
+<img src="/images/notes/machine-learning/neural-networks/backpropagated-delta.png" class="center">
 
 When the backpropagation is complete, there will be $\delta$ values available at every position in the network where there is an $s$ value. The algorithm can now be formulated:
 
@@ -1726,7 +1726,7 @@ One final intuition is that the hidden layers are performing non-linear transfor
 
 Imagine that we are given five points along with the target function in blue. We can see that the target function doesn't exactly fit some of the points, which means that there is some noise involved. If we were then to use a 4th-order polynomial, such as the one in red, to fit the points perfectly, we would get a very large $\outsample$ despite $\insample = 0$.
 
-<img src="/images/machine-learning/overfitting/polynomial-overfit.png" class="center">
+<img src="/images/notes/machine-learning/overfitting/polynomial-overfit.png" class="center">
 
 **Overfitting** is the act of fitting the data more than is warranted. It is a comparative term used to express that a solution went past a desirable point in terms of fitting, more so than another solution, where the different solutions can be different instances within the same model or different models entirely. For example, if we had used a 3rd-order polynomial instead, we would not have achieved $\insample = 0$ but $\outsample$ would have been considerably less. In that case, the 4th-order solution could have been considered overfitting compared to the 3rd-order solution. In other words, there is a distinction between overfitting and just plain bad generalization.
 
@@ -1736,20 +1736,20 @@ $$ \text {overfitting:} \quad \insample \downarrow \quad \outsample \uparrow $$
 
 If we stop right before this occurs, we call it **early stopping**:
 
-<img id="early-stopping" src="/images/machine-learning/overfitting/early-stopping.png" class="center">
+<img id="early-stopping" src="/images/notes/machine-learning/overfitting/early-stopping.png" class="center">
 
 The main culprit cause for overfitting is **fitting the noise**, which is a natural side-effect of fitting the data. Fitting the noise is harmful because the learning algorithm is forming its solution from it, trying to detect a pattern, and therefore "hallucinating" an out-of-sample solution extrapolated from the in-sample noise.
 
 Consider two different target functions with accompanying data points. The first target on the left is a simpler 10th-order polynomial but has noise involved (noisy low-order target), whereas the one on the right is a more complicated 50th-order polynomial but is noiseless (noiseless high-order target):
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/overfitting/case-study-1.png">
-  <img src="/images/machine-learning/overfitting/case-study-2.png">
+  <img src="/images/notes/machine-learning/overfitting/case-study-1.png">
+  <img src="/images/notes/machine-learning/overfitting/case-study-2.png">
 </div>
 
 If we try to model the first target function using two models, a 2nd and 10th-order polynomial, we get this result:
 
-<img src="/images/machine-learning/overfitting/case-study-1b.png" class="center">
+<img src="/images/notes/machine-learning/overfitting/case-study-1b.png" class="center">
 
 The error measures clearly show that the 10th-order fit is a case of overfitting, showing the effects of how the 10th-order fit bends itself just to fit noise:
 
@@ -1760,7 +1760,7 @@ $\outsample$ $0.127$     $9.00$
 
 Now we can try using the same order fits to model the second target function. Remember that the target is a 50th-order polynomial:
 
-<img src="/images/machine-learning/overfitting/case-study-2b.png" class="center">
+<img src="/images/notes/machine-learning/overfitting/case-study-2b.png" class="center">
 
 In this case, the 10th-order polynomial can fit the sample data very well, but the out of sample error is even worse. This is clearly another case of overfitting, because this target function actually _does_ have noise, but it isn't the usual kind of noise:
 
@@ -1795,8 +1795,8 @@ $$ \text {overfit measure: } \outsample(g_{10}) - \outsample(g_2) $$
 If we run an experiment for tens of millions of iterations (complete runs). The following plots show the impact of the noise $\sigma^2$ and the complexity $Q_f$ on the overfit measure based on the data set size $N$:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/overfitting/noise-impact.png">
-  <img src="/images/machine-learning/overfitting/complexity-impact.png">
+  <img src="/images/notes/machine-learning/overfitting/noise-impact.png">
+  <img src="/images/notes/machine-learning/overfitting/complexity-impact.png">
 </div>
 
 The main takeaway from these results is that there seems to be another factor aside from "conventional noise" that affects overfitting. The truth is that the noise $\sigma^2$ measured in the left image is called **stochastic noise** (the more conventional noise). Meanwhile, the effect observed in the right image which seems to be related to an increase in complexity that brings about a higher overfit measure is caused by **deterministic noise**.
@@ -1815,7 +1815,7 @@ $$
 
 $$ \text {deterministic noise:}\ f(\feature) - h^*(\feature) $$
 
-<img src="/images/machine-learning/overfitting/deterministic-noise.png" class="center">
+<img src="/images/notes/machine-learning/overfitting/deterministic-noise.png" class="center">
 
 An example of why we call this noise is the following. Imagine a younger sibling that has just learned fractions in school and comes to you to ask you to tell them more about numbers. You begin to teach them about negative numbers and real numbers, in a basic sense, but you probably would be better off not telling them about complex numbers. The reason is that this would be considered completely noise from their perspective, their "hypothesis set" would be so small that if you told them about complex numbers, they would create a pattern that doesn't actually exist (fitting the noise). You'd be better off not telling them about complex numbers in order to avoid misleading them (just as noise would in learning).
 
@@ -1878,7 +1878,7 @@ $$
 
 The Legendre polynomials denoted by $L_q$ look like this:
 
-<img src="/images/machine-learning/regularization/legendre-polynomials.png" class="center">
+<img src="/images/notes/machine-learning/regularization/legendre-polynomials.png" class="center">
 
 Because of the summation, we're going to apply linear regression in the $\mathcal Z$-space.
 
@@ -1901,11 +1901,11 @@ The solution will be called $\def \weightreg {\weight_{\text {reg}}} \weightreg$
 
 The solution can be visualized by an ellipsoid. The in-sample error $\insample$ is represented by the blue ellipsoid. The boundary of the ellipsoid consists of the same value for $\insample$. Anything inside the boundary is a smaller value and outside is larger. The value of $\weightT \weight$ is represented by the red ellipsoid, so the constraint means that we have to be inside the red ellipsoid. The solution given by linear regression $\weightlin$ is at the centroid of the blue ellipsoid, since it minimizes $\insample$. Since we want to choose a point within the red ellipsoid such that it minimizes $\insample$, it stands to reason that we'll have to go as far out as we can within the red ellipsoid. Therefore, the constraint we'll actually be using is $\weightT \weight = C$, since the best value of $\insample$ will occur at the boundary of the red ellipsoid. Of course, if the red ellipsoid was large enough to contain $\weightlin$, then the solution would be $\weightlin$ since that is the minimum:
 
-<img id="solution-visualization" src="/images/machine-learning/regularization/solution-visualization.png" class="center">
+<img id="solution-visualization" src="/images/notes/machine-learning/regularization/solution-visualization.png" class="center">
 
 Choose a $\weight$ that lies on both of the ellipsoid boundaries. From here, we can visualize the gradient of $\insample$ with respect to the chosen point as well as the orthogonal vector to the red ellipsoid. The orthogonal vector to the red ellipsoid is equivalent to $\weight$ (from the center). From visualizing these vectors, we can tell that the chosen point below doesn't minimize $\insample$. If it did minimize $\insample$, then both vectors would be directly opposite each other:
 
-<img id="solution-vectors" src="/images/machine-learning/regularization/solution-vectors.png" class="center">
+<img id="solution-vectors" src="/images/notes/machine-learning/regularization/solution-vectors.png" class="center">
 
 A condition can therefore be expressed that the gradient of the solution $\weightreg$ when found should be proportional to the negation of $\weightreg$:
 
@@ -1965,8 +1965,8 @@ $$ \weightlin = (\mathbf Z^\intercal \mathbf Z)^{-1} \mathbf Z^\intercal \mathbf
 We can now observe the effects of varying $\lambda$. In the first example, there is apparent overfitting. However, as $\lambda$ increased, there is apparent underfitting. Clearly, the choice of $\lambda$ is important:
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/regularization/lambda-variation-1.png">
-  <img src="/images/machine-learning/regularization/lambda-variation-2.png">
+  <img src="/images/notes/machine-learning/regularization/lambda-variation-1.png">
+  <img src="/images/notes/machine-learning/regularization/lambda-variation-2.png">
 </div>
 
 ## Weight Decay
@@ -2012,7 +2012,7 @@ This is a general quadratic in matrix form. Weight decay, low-order fits, high-o
 
 Just as big weights were constrained earlier, small weights can also be constrained. The following shows a plot of weight decay's $\outsample$ as a function of the regularization parameter $\lambda$. Notice that it dips before it goes back up again, in which case it begins to underfit. This means that weight decay performs well _given_ the correct choice of $\lambda$. Weight growth on the other hand --- constraining weights to be large --- is considerably worse.
 
-<img src="/images/machine-learning/regularization/regularizers.png" class="center">
+<img src="/images/notes/machine-learning/regularization/regularizers.png" class="center">
 
 Stochastic noise is "high-frequency". Deterministic noise is also non-smooth. Because of these common observations, the guideline is to **constrain learning towards smoother hypotheses**. This is because the regularizer is a cure for fitting the noise. For this reason, we want to punish the noise more than we are punishing the signal. The usual way that hypothesis sets are mathematically written as a parameterized set is by having smaller weights correspond to smoother hypotheses.
 
@@ -2068,11 +2068,11 @@ Observing the optimal value of $\lambda$ given the different levels of noise pro
 
 As the level of **stochastic noise** $\sigma^2$ increases, the level of regularization $\lambda$ necessary to achieve the minimum $\outsample$ increases. For example, when there is no noise, the minimum $\outsample$ can be achieved with $\lambda = 0$. However, as the noise increases, regularization is **necessary** to achieve the best possible $\outsample$. The left side of the red and green curves represent the overfitting that occurs without regularization.
 
-<img src="/images/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
+<img src="/images/notes/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
 
 The same behavior is observed as the level of **deterministic noise** $Q_f$ (complexity of the target function) increases.
 
-<img src="/images/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
+<img src="/images/notes/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
 
 This cements the correspondence that regularization behaves with respect to deterministic noise behaves almost exactly as if it were unknown stochastic noise.
 
@@ -2112,7 +2112,7 @@ We would instead like to estimate the error using the validation set, then once 
 
 $\trainingset$ yields $g^-$ which is then evaluated on $\validationset$ in order to get the estimate $\valerror(g^-)$. Then the final hypothesis $g$ is derived using the full set $\mathcal D$. This means that there will be a discrepancy between the estimate $\valerror(g^-)$ and $\valerror(g)$, because they are based on different hypotheses, as derived from different training sets. This presents a trade off between the size of $\trainingset$ and $\validationset$: a larger $\trainingset$ means that the hypothesis more closely resembles the final hypothesis, but a subsequently smaller $\validationset$ makes the estimate a poor one, even if the hypothesis $g^-$ is representative of the final hypothesis $g$.
 
-<img src="/images/machine-learning/validation/validation.png" class="center">
+<img src="/images/notes/machine-learning/validation/validation.png" class="center">
 
 The **rule of thumb** for the choice of the size $K$ of $\validationset$ is to make it $1/4^{\text {th}}$ the size of of the full set $\mathcal D$:
 
@@ -2130,13 +2130,13 @@ The main use of validation sets is model selection, which is accomplished by usi
 
 Then we will use $\trainingset$ to learn $g_m^-$ for each model. The hypothesis $g_m^-$ is then evaluated using $\validationset$ to derive $E_{\text m}$, which is simply $\valerror(g_m^-)$. The model with the smallest $E_{\text m}$ is chosen as the optimal model $m^*$, which is then used to train on the entire dataset $\mathcal D$ to derive the hypothesis $g_{m^*}$.
 
-<img src="/images/machine-learning/validation/model-selection.png" class="center">
+<img src="/images/notes/machine-learning/validation/model-selection.png" class="center">
 
 ## Bias {#validation-bias}
 
 The bias is introduced because we chose the model $\mathcal H_{m^*}$ using $\validationset$, so $\valerror(g_{m^*}^-)$ is a biased estimate of $\outsample(g_{m^*}^-)$. The following graph depicts two models to choose between, one being 2nd-order and the other 5th-order polynomials. It's not shown which model was chosen.
 
-<img src="/images/machine-learning/validation/validation-bias.png" class="center">
+<img src="/images/notes/machine-learning/validation/validation-bias.png" class="center">
 
 The curve for $\valerror$ goes up because the higher the $K$, the less points that are left for $\trainingset$. The curve for $\outsample$ goes up because it is based on the number of points left in $\trainingset$, so the error increases as there are less and less points.
 
@@ -2192,7 +2192,7 @@ The effective size of the validation set represented by the cross validation err
 
 For example, given three points, we train three different sets:
 
-<img src="/images/machine-learning/validation/cross-validation.png" class="center">
+<img src="/images/notes/machine-learning/validation/cross-validation.png" class="center">
 
 The cross validation error can then be defined as:
 
@@ -2202,7 +2202,7 @@ This cross validation error can then be interpreted as how well the linear model
 
 Cross-validation can then be used for model selection. Compare the above linear model example with the constant model:
 
-<img src="/images/machine-learning/validation/cross-validation-model-selection.png" class="center">
+<img src="/images/notes/machine-learning/validation/cross-validation-model-selection.png" class="center">
 
 In this case, the constant model is clearly better.
 
@@ -2210,24 +2210,24 @@ Going back to the case of hand-written digits classification, where we extracted
 
 $$ (1, x_1, x_2) \to (1, x_1, x_2, x^2_1, x_1 x_2, x_2^2, x_1^3, x_1^2 x_2, \dots, x_1^5, x_1^4 x_2, x_1^3 x_2^2, x_1^2 x_2^3, x_1 x_2^4, x_2^5) $$
 
-<img src="/images/machine-learning/validation/digits-classification.png" class="center">
+<img src="/images/notes/machine-learning/validation/digits-classification.png" class="center">
 
 In this case, we would like to use cross-validation to determine at which point to cut off the non-linear transformation, that is how many terms to use, where each term in the non-linear transformation is considered a separate model, for a total of $20$ different models. Here are the different errors derived based on the number of features used:
 
-<img src="/images/machine-learning/validation/digits-classification-2.png" class="center">
+<img src="/images/notes/machine-learning/validation/digits-classification-2.png" class="center">
 
 From this graph it seems that the best number of features to use is 6. Without validation (left) we can observe overfitting with no in-sample error and $2.5\%$ out-of sample error, whereas with validation (right) provides a smooth surface with non-zero in-sample error but lower out-of-sample error at $1.5\%$.
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/validation/without-validation.png">
-  <img src="/images/machine-learning/validation/with-validation.png">
+  <img src="/images/notes/machine-learning/validation/without-validation.png">
+  <img src="/images/notes/machine-learning/validation/with-validation.png">
 </div>
 
 ## Optimization {#cross-validation-optimization}
 
 When we use leave one out, we have $N$ training sessions on $N - 1$ points each. We would like to use more points for validation. We take the data and break it into different folds, such as 10 folds, making it 10-fold cross-validation. We use one fold for validation and the other 9 for training. In other words, it's similar to leave one out except instead of leaving one point out we leave out a chunk/fold.
 
-<img src="/images/machine-learning/validation/leave-more-than-one-out.png" class="center">
+<img src="/images/notes/machine-learning/validation/leave-more-than-one-out.png" class="center">
 
 This results in $\frac N K$ training sessions on $N - K$ points each. Specifically, **10-fold cross validation** is very useful in practice.
 
@@ -2237,7 +2237,7 @@ Going back to the concept of [dichotomies](#dichotomies), when we wanted to dete
 
 However, if we did care about the position and angle of the line, it could be said that a distinguishing factor of every such line position and angle would be its margin of error, that is, its distance between the data it separates. A higher margin of error makes it more tolerant to out-of-sample data, due to noise for example. We can enforce a lower bound requirement on the margin of error, which naturally would result in less dichotomies, as it places a restriction on the growth function, yielding a smaller VC dimension:
 
-<img src="/images/machine-learning/support-vector-machines/margin-dichotomies.png" class="center">
+<img src="/images/notes/machine-learning/support-vector-machines/margin-dichotomies.png" class="center">
 
 In the scenario in which we would like to enforce a lower bound on the margin of error, the problem of learning then becomes that of finding the $\weight$ that maximizes the margin.
 
@@ -2267,7 +2267,7 @@ $$
 
 The conclusion from the above is that $\weight$ is orthogonal to any vector on the plane.
 
-<img src="/images/machine-learning/support-vector-machines/plane.png" class="center">
+<img src="/images/notes/machine-learning/support-vector-machines/plane.png" class="center">
 
 The distance between the nearest point $\feature_n$ and the plane can be computed by taking any point $\feature$ on the plane and computing the projection of the vector formed by $\feature_n - \feature$ on $\weight$. In order to get this projection, we need the unit vector of $\weight$:
 
@@ -2288,7 +2288,7 @@ $$
 
 The last component of the penultimate equation disappears because the equation for a point on the plane is defined to be $0$, and we already restricted the equation for $\feature_n$ to be equal to $1$.
 
-<img src="/images/machine-learning/support-vector-machines/distance.png" class="center">
+<img src="/images/notes/machine-learning/support-vector-machines/distance.png" class="center">
 
 The resulting optimization problem is to maximize the margin, denoted as $\smash {\frac 1 {\lVert \weight \rVert}}$ subject to the following constraint:
 
@@ -2427,7 +2427,7 @@ $$\alpha_n > 0 \Longrightarrow \feature_n \text { is a } \textbf {support vector
 
 That is, we had $N$ points which we classified and for which we found the maximum margin, and the margin touched some of the $+1$ and some of the $-1$ points, and it is said that these points "support the plane," and are called support vectors, while the rest of the points are interior points. In the image below, the support vectors are those points that touch the extents of the margin, those with a circle around them:
 
-<img src="/images/machine-learning/support-vector-machines/support-vectors.png" class="center">
+<img src="/images/notes/machine-learning/support-vector-machines/support-vectors.png" class="center">
 
 Since most $\alpha$ are zero, the weight calculation can be changed to only sum those in the support vector:
 
@@ -2455,7 +2455,7 @@ The increase in dimensionality resulting from the non-linear transformation has 
 
 During a non-linear transformation, the support vectors resulting from the optimization "live" in $\mathcal Z$-space. In $\mathcal X$-space, these same points can be thought of as "pre-images" of support vectors, those with a circle around them:
 
-<img src="/images/machine-learning/support-vector-machines/x-space-non-linear-svm.png" class="center">
+<img src="/images/notes/machine-learning/support-vector-machines/x-space-non-linear-svm.png" class="center">
 
 It's important to remember that the distance between the points in $\mathcal X$-space and the resulting curve are _not_ the margin, since the margin is maintained only in $\mathcal Z$-space.
 
@@ -2552,7 +2552,7 @@ The $x$ terms can be grouped together and so can the $x'$ terms, and ultimately 
 
 To see it in action, in the case of a slightly non-separable case in the $\mathcal X$-space with a slightly curvy target function. We transform this dataset into an $\infty$-dimensional $\mathcal Z$-space. The red and blue points are the support vectors (9 total; 4 blue, 5 red), the lime curve is the target function and the black curve is the $\mathcal Z$-space hyperplane:
 
-<img src="/images/machine-learning/kernel-methods/radial-basis-function-example.png" class="center">
+<img src="/images/notes/machine-learning/kernel-methods/radial-basis-function-example.png" class="center">
 
 Here we were able to visit an infinite-dimensional space and yield only 9 support vectors, which thanks to the error bound we developed earlier means that the out-of-sample error must be less than about $10\%$. Previously, going to an infinite or even higher order $\mathcal Z$-space was considered overkill, but that determination is now made based on the number of resultant support vectors.
 
@@ -2611,8 +2611,8 @@ $$
 There are two main kinds of non-separable situations. Slightly non-separable (left) is when it might be beneficial to simply accept that as error using something like the pocket algorithm, as opposed to sacrificing generalization in order to capture what are potentially simply outliers. Seriously non-separable (right) is when it's not a matter of outliers, but that the data is simply non-linearly separable.
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/kernel-methods/slightly-non-separable.png">
-  <img src="/images/machine-learning/kernel-methods/seriously-non-separable.png">
+  <img src="/images/notes/machine-learning/kernel-methods/slightly-non-separable.png">
+  <img src="/images/notes/machine-learning/kernel-methods/seriously-non-separable.png">
 </div>
 
 Slightly-separable data can be handled by soft-margin SVM, while seriously non-separable data can be handled by kernel functions. In real world data sets, however, it's likely that there will be elements of both: built-in non-linearity with outliers. For this reason, we would be combining kernels with soft-margin SVMs in almost all of the problems that we would encounter.
@@ -2621,7 +2621,7 @@ Slightly-separable data can be handled by soft-margin SVM, while seriously non-s
 
 The error measure will be defined by a so-called margin violation, which could be the point within the margin in the image below. Even though it is correctly classified by the hyperplane, it's considered a **margin violation** because it falls within the margin.
 
-<img src="/images/machine-learning/kernel-methods/margin-violation.png" class="center">
+<img src="/images/notes/machine-learning/kernel-methods/margin-violation.png" class="center">
 
 It can be said that the margin is violated when $y_n(\weightT \feature_n + b) \geq 1$ fails. This failure can be quantified by introducing a "slack" $\xi_n \geq 0$ for every point so that:
 
@@ -2708,7 +2708,7 @@ $$y_n(\weightT \feature_n + b) \lt 1 \quad (\xi_n \gt 0)$$
 
 The $C$ parameter is determined in practice using [cross-validation](#cross-validation).
 
-<img src="/images/machine-learning/kernel-methods/types-of-support-vectors.png" class="center">
+<img src="/images/notes/machine-learning/kernel-methods/types-of-support-vectors.png" class="center">
 
 There are two final observations.
 
@@ -2720,7 +2720,7 @@ Second, when we transform to the $\mathcal Z$-space, some of these transformatio
 
 Radial basis functions serve as the glue between many different machine learning topics. The idea is that every point in the data set $(\feature_n, y_n) \in \mathcal D$ influences the value of the hypothesis $h(\feature)$ at every point $\feature$ based on the distance to nearby points $\lVert \feature - \feature_n \rVert$. For example, imagine in the bottom image that the top of the bump is $\feature_n$ and the surface represents the influence to other points, and the symmetry of the function shows that this influence is a function of the distance.
 
-<img src="/images/machine-learning/radial-basis-functions/rbf-example.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/rbf-example.png" class="center">
 
 The standard form of of a radial basis function embeds the notion that the closer a point is to the feature point, the more of an influence it has on it:
 
@@ -2771,8 +2771,8 @@ The image on the left shows the effect of choosing a small $\gamma$. The three t
 The image on the right shows the effect of choosing a larger $\gamma$. The interpolation between any two points is poor because the individual contributions of each point "dies out" too quickly.
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/radial-basis-functions/small-gamma.png">
-  <img src="/images/machine-learning/radial-basis-functions/large-gamma.png">
+  <img src="/images/notes/machine-learning/radial-basis-functions/small-gamma.png">
+  <img src="/images/notes/machine-learning/radial-basis-functions/large-gamma.png">
 </div>
 
 It's apparent that $\gamma$ has an effect on the performance of interpolation, and that it seems to depend on the data set in question, specifically, how far apart the points are. We will cover the choice of $\gamma$ later on.
@@ -2791,11 +2791,11 @@ Where we will try to make the signal itself match the $\pm 1$ target. So that we
 
 RBFs share a relationship to the nearest-neighbor method, where we classify by looking at the closest point $\feature_n$ within the training set to the point $\feature$ being considered, so that $\feature$ inherits the label $y_n$ corresponding to that closest point $\feature_n$. For example in the image below, all points in a given red-shaded region inherit the label of the red point within that region because all points within that region are closest to that point rather than any of the other points that define other different regions:
 
-<img src="/images/machine-learning/radial-basis-functions/nearest-neighbors.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/nearest-neighbors.png" class="center">
 
 This can be approximated with RBFs, where we only take influence of nearby points. The basis function would look like a cylinder as in the image below, where it's a given constant value or zero. With this basis function, the regions would look more like the cylinders.
 
-<img src="/images/machine-learning/radial-basis-functions/nearest-neighbors-basis-function.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/nearest-neighbors-basis-function.png" class="center">
 
 The nearest-neighbor approach is pretty brittle, as the boundaries between the regions are abrupt. It can be modified into the $k$-nearest neighbors, where instead of taking the value of the closest point, we look at the $k$ nearest points and adopt the label most represented by those points. This has an effect of smoothing the surface, where the number of fluctuations will decrease.
 
@@ -2844,11 +2844,11 @@ It is apparent that both steps are minimizing the original quantity, and since t
 
 LLoyd's algorithm can be visualized in the image below. The algorithm is fed the only the inputs of the data set, with the centers initialized so some pre-defined values (black dots), then the algorithm iterates and outputs the representative $\mathbf \mu_k$ centers.
 
-<img src="/images/machine-learning/radial-basis-functions/lloyds-algorithm.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/lloyds-algorithm.png" class="center">
 
 Notice that since we cluster values without looking at the label $y_n$, we can have clusters that lie on the boundary so that half of the points are $+1$ and the other half are $-1$. This is the price paid by unsupervised learning, where we want to find similarity as far as the ***input*** is concerned, not as far as the behavior with the target function is concerned:
 
-<img src="/images/machine-learning/radial-basis-functions/rbf-centers.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/rbf-centers.png" class="center">
 
 ### Calculating Weights {#rbf-centers-calculating-weights}
 
@@ -2890,7 +2890,7 @@ In this case we aren't guaranteed to get the correct value at every data point, 
 
 We can take the RBF model and design a graphical network in order to relate it to neural networks. In this graphical network, we take the input and compute the radial component, the distance to every $\center_k$. These radial components are handed to a non-linearity $\phi$, usually the Gaussian non-linearity. The resultant features are combined with weights $w_k$ in order to compute the output $h(\feature)$.
 
-<img src="/images/machine-learning/radial-basis-functions/rbf-network.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/rbf-network.png" class="center">
 
 In this case the "features" are $\smash {\basis {\feature} {\center_k}}$. The non-linear transform features depend on $\mathcal D$, so it is no longer a linear model. However, since we only used the inputs in order to compute $\center$ it's _almost_ linear, since we didn't have to back-propagate because we didn't like the output, since the inputs were frozen. This is why the $w$ values look like multiplicative values, in which case it's linear on those values.
 
@@ -2906,7 +2906,7 @@ The non-linearity is called $\phi$ in RBF networks and $\theta$ in neural networ
 
 Any two-layer network with a structure similar to an RBF network lends itself to being a support vector machine, where the first layer handles the kernel and the second one is the linear combination that is built into SVMs. For example, neural networks can be implemented using SVMs with a neural network kernel.
 
-<img src="/images/machine-learning/radial-basis-functions/neural-network.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/neural-network.png" class="center">
 
 ## Choosing $\gamma$
 
@@ -2929,7 +2929,7 @@ $$\sign\left(\sum_{k = 1}^K w_k \basis {\feature} {\center_k} + b\right)$$
 
 The performance of both models can be observed in the image below. It's apparent from the straight RBF implementation that $\insample \ne 0$ since some points are misclassified. The SVM implementation clearly tracks the target better, with $\insample = 0$.
 
-<img src="/images/machine-learning/radial-basis-functions/rbf-vs-svm.png" class="center">
+<img src="/images/notes/machine-learning/radial-basis-functions/rbf-vs-svm.png" class="center">
 
 ## Regularization {#rbf-regularization}
 
@@ -3004,15 +3004,15 @@ The only difference between someone believing in the scam in Puzzle #1 and someo
 Suppose two scientists conduct an experiment to determine if conductivity is linear in the temperature. The first scientist is in a hurry so he simply takes two points from the data set and draws a line to connect them. The second scientist took three points and also drew a line. What evidence does the first or second experiment provide for the hypothesis that conductivity is linear in the temperature?
 
 <div style="text-align: center; margin-top: 10px">
-  <img src="/images/machine-learning/three-learning-principles/experiment-a.png">
-  <img src="/images/machine-learning/three-learning-principles/experiment-b.png">
+  <img src="/images/notes/machine-learning/three-learning-principles/experiment-a.png">
+  <img src="/images/notes/machine-learning/three-learning-principles/experiment-b.png">
 </div>
 
 Clearly the experiment that used three points to fit the line provided more evidence than the other. The experiment that used two points provided no evidence at all, because two points can always be connected by a line. This introduces the notion of **falsifiability**: if your data has no chance of falsifying your assertion, then it doesn't provide any evidence for the assertion. We have to have a chance to falsify the assertion in order to be able to draw the evidence (axiom of non-falsifiability).
 
 For example, the linear model is _too complex_ for the data set size of $N = 2$ to be able to generalize at all, so there is no evidence. On the other hand, with a data set size of $N = 3$ the assertion could've been falsified if one of the three points was not collinear with the other two.
 
-<img src="/images/machine-learning/three-learning-principles/falsifiability.png" class="center">
+<img src="/images/notes/machine-learning/three-learning-principles/falsifiability.png" class="center">
 
 ## Sampling Bias
 
@@ -3036,7 +3036,7 @@ This presents a problem of making sure that the data is representative of what w
 
 The idea is that we have a distribution on the input space in our mind. Remember that VC, Hoeffding's, etc. made the assumption that we chose the points for training from the same distribution that we picked for testing. One method, in principle, that might resolve this is to make the training set we have be more representative of the target set. This can be done by resampling from the training set by picking data points that better represent the target set, or by scaling the weights of the training points. This could mean that the effective size of the training set decreases, losing some of the independence of the points.
 
-<img src="/images/machine-learning/three-learning-principles/matching-the-distributions.png" class="center">
+<img src="/images/notes/machine-learning/three-learning-principles/matching-the-distributions.png" class="center">
 
 This method doesn't work if there is a region in the input space where the probability $P = 0$ for training (nothing will be sampled from this region) but $P > 0$ (it's being tested anyways). This is similar to the people without phones in Puzzle #2, who had $P = 0$ in the sample (they weren't in the sample) but not in the general population (there were people without phones who voted).
 
@@ -3074,7 +3074,7 @@ The most common data snooping is "looking at the data." For example, with non-li
 
 $$\mathbf z = (1, x_1, x_2, x_1 x_2, x_1^2, x_2^2)$$
 
-<img src="/images/machine-learning/three-learning-principles/looking-at-the-data.png" class="center">
+<img src="/images/notes/machine-learning/three-learning-principles/looking-at-the-data.png" class="center">
 
 We manage to get $\insample = 0$, so we decide that we fit the problem very well but we don't like the ratio of parameters-to-data points, with respect to generalization. So we decide that we could've done with a simpler transformation:
 
@@ -3094,7 +3094,7 @@ $$\Delta r_{-20}, \Delta r_{-19}, \dots, \Delta r_{-1} \to \Delta r_0$$
 
 We normalize the data to zero-mean and unit-variance, we split randomly into a $\trainingset$ of 1,500 points and $\def \testingset {\mathcal D_{\text {test}}}$ and 500 points. The training set is 1,500 days so that for every day (output) we take the previous 20 days as the input. We completely locked away the $\testingset$ until it was time to test, in an effort to avoid data snooping, resulting in:
 
-<img src="/images/machine-learning/three-learning-principles/financial-forecasting.png" class="center">
+<img src="/images/notes/machine-learning/three-learning-principles/financial-forecasting.png" class="center">
 
 The plot is of the profit that the testing measure represents, which can be seen to be increasing with more and more days that are trained. When we attempt to try this live on the real market, we end up losing a lot money. The fact is that there was actually data snooping in this learning process: **when we normalized the data**. The problem is that we did this _before_ we separated the data set into $\trainingset$ and $\testingset$, so we took into consideration the mean and variance _of the test set_.
 
@@ -3132,13 +3132,13 @@ People tend to treat this sampling bias not as sampling bias but as data snoopin
 
 Singular value decomposition would treat the Netflix problem as decomposing the canonical ratings matrix into two matrices (user and movie factors). Graphical Models are models for where the target is a joint probability distribution, they try to find computational efficient ways using graph algorithms to determine the joint probability distribution by means of simplifying the graph. Aggregation is when different solutions are combined.
 
-<img src="/images/machine-learning/epilogue/ml-map.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/ml-map.png" class="center">
 
 ## Bayesian Learning
 
 Bayesian learning tries to take a full probabilistic approach to learning. For example, going back to the learning diagram, we can observe that there are many probabilistic components. An inherent probabilistic component is the fact that the target can be noisy, which is why we don't model the target as a function but rather as a probability distribution. This is apparent in the case of trying to predict heart attacks. Another probability distribution that we had to deal with was the unknown input probability distribution.
 
-<img src="/images/machine-learning/epilogue/learning-diagram.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/learning-diagram.png" class="center">
 
 With the Bayesian approach, we want to extend the probabilistic role completely to all components, so that everything is a joint probability distribution. In the case of the heart attack prediction, we were trying to pick the hypothesis by determining the likelihood that that hypothesis would generate the data set in question:
 
@@ -3163,13 +3163,13 @@ Given the prior, we have the full distribution. For example, consider a perceptr
 
 This shows that the prior is an assumption. Even the most "neutral" prior for an unknown number $x$ for which we only know that it is between $-1$ and $+1$. It might seem reasonable to want to model this using a uniform probability distribution from $-1$ to $+1$. This seems reasonable because it's as likely to be any value in that range.
 
-<img src="/images/machine-learning/epilogue/prior-1.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/prior-1.png" class="center">
 
 However, consider that using that model, if we were to take a bunch of $x$'s and average them, we'd get something close to $0$. However, in the unknown case, we have no idea what value we'd get from this operation. In fact, we can even say how close it'd be to zero in terms of variance.
 
 In fact, the true equivalent would be the image below, where the probability distribution is a delta function centered on a point $a$ that we don't know. Choosing to model the situation with the uniform probability distribution results in a huge building based on false premises.
 
-<img src="/images/machine-learning/epilogue/prior-2.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/prior-2.png" class="center">
 
 If we actually knew the prior then we could compute the posterior $P(h = f \mid \mathcal D)$ for every hypothesis $h \in \mathcal H$. With this, we could find the most probable hypothesis given the data. In fact, we can derive the expected value of $h$, $\mathbb E(h(\feature))$ for every $\feature$. Further still, we can derive the **error bar** --- the chances that we're wrong. Simply, we can derive everything in a principled way.
 
@@ -3181,7 +3181,7 @@ For example, we might choose to use conjugate priors, where we don't have to rec
 
 Aggregation is a method that applies to all models, which combines different solutions $h_1, h_2, \dots, h_T$ that were trained on $\mathcal D$. In the image below, every node corresponds to a resultant system $h_i$ that each person trained.
 
-<img src="/images/machine-learning/epilogue/aggregation-1.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/aggregation-1.png" class="center">
 
 For example, when trying to detect a face with computer vision, we can instead detect components related to a face, such as an eye, nose, are the positions of these relative to each other, etc. If we were to try to determine whether or not a face was detected from just one of these features, the error would be large. However, if these are combined correctly, we might perform better. This is important in computer vision because we want to perform at or near real-time, so it helps to base the decision on simple computations.
 
@@ -3191,11 +3191,11 @@ Aggregation is also known as **ensemble learning** and **boosting**.
 
 This is **different** from performing 2-layer learning. For example, in a 2-layer model such as a neural network with one hidden layer, all units learn **jointly**. In the case of the neural network, each of the nodes are updated jointly via back-propagation. A single node isn't trying to replicate the function, it's just trying to contribute positively to the function:
 
-<img src="/images/machine-learning/epilogue/aggregation-2.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/aggregation-2.png" class="center">
 
 In the case of aggregation, the units learn **independently** --- as if they were the only unit. In the image below, each node is trying to replicate the function individually. Their outputs are then combined to get the output:
 
-<img src="/images/machine-learning/epilogue/aggregation-3.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/aggregation-3.png" class="center">
 
 ### Before the Fact
 
@@ -3203,7 +3203,7 @@ Aggregation before the fact creates the solutions with a view to the fact that t
 
 In fact, instead leaving the decorrelation to chance, we can enforce it. We can build each hypothesis by making sure that what it covers is different from what other hypotheses cover. This is done by creating each of the hypotheses $h_1, \dots, h_t, \dots$ sequentially, making each hypothesis $h_t$ decorrelated with previous hypotheses. That is, after the third hypothesis for example, we consider what the best fourth hypothesis would be to add to the mix such that it is sufficiently different from the previous other three. This is accomplished by analyzing how the previous three performed, and based on that performance, providing a data set to the fourth hypothesis so that it develops something fairly independent from the previous three.
 
-<img src="/images/machine-learning/epilogue/aggregation-4.png" class="center">
+<img src="/images/notes/machine-learning/epilogue/aggregation-4.png" class="center">
 
 For example, consider that the hypothesis functions that exist so far, combined, can correctly classify 60% of the data points in the set. In order to make the new hypothesis fairly independent from the existing ones, we can emphasize those points on which we performed poorly by giving them larger weights and conversely deemphasize those we got right, such that it looks like 50-50 so that the weighted error is 50%. If we take this distribution and learn on it with the new hypothesis and do better than 50%, then the new hypothesis is adding value to what we had before.
 
