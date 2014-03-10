@@ -120,6 +120,7 @@ Evaluation strategies decouple algorithms from parallelism, allowing for paralle
 ``` haskell
 type Strategy a = a -> Eval a
 ```
+
 A strategy would take a data structure as input which is then traversed and evaluated with parallelism and returns the original value. For example a strategy for evaluating a pair tuple could look like:
 
 ``` haskell
