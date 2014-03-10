@@ -1222,7 +1222,7 @@ void dfs(const Graph &G, int v) {
 }
 ~~~
 
-To trace the paths in the graph, an array can be kept of sice $V$ indexed by a given vertex whose value is the vertex that connects to it. This array of edges represents a tree rooted at the source vertex.
+To trace the paths in the graph, an array can be kept of size $V$ indexed by a given vertex whose value is the vertex that connects to it. This array of edges represents a tree rooted at the source vertex.
 
 ### Breadth-First Search
 
