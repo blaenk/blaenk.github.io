@@ -9,6 +9,18 @@ I'm [currently reading](/lately/#reading).
 
 ----
 
+<img src="/images/books/wor.jpg" class="right" width="128">
+
+<a href="http://amzn.com/0765326361" name="wor">Words of Radiance</a> --- This is the much anticipated sequel to [The Way of Kings] and the second book in the 10-book epic fantasy _Stormlight Archive_. It starts out with an alternate perspective on the event that catalyzed the events of tWoK. All of the characters --- which were previously scattered throughout the world --- are finally converging upon the same location, ramping up anticipation of their first interactions.
+
+The magic that was misunderstood and scarce during the first book is slowly becoming more common, and some of the more scholarly characters are attempting to study it.
+
+Sanderson is known to be a very prolific writer, writing thousands of words every day, teaching a university class on creative writing, and has had enough practice with world-building and meticulous story planning with _Mistborn_, the last few books of _Wheel of Time_, and various other independent books he has written. This is what he wants to be his legacy, what he has prepared for, and it really shows.
+
+[The Way of Kings]: #wok
+
+----
+
 <img src="/images/books/mistborn2.jpg" class="right" width="128">
 
 <a href="http://amzn.com/0765316889" name="mistborn2">Mistborn: The Well of Ascension</a> --- This is the sequel to _Mistborn: The Final Empire_. It's difficult to talk about this one without spoiling the first book. Suffice it to say that crazy things happen at the end of the first book and this book deals with the repercussions of those events. It seems like it's the least liked of the original trilogy, only because it seems to have gone a little slow --- for a Brandon Sanderson book --- at the beginning. I didn't really mind since I'm used to an even slower, seemingly undirected pace from GRRM's books, and it allowed me to really learn about some of the characters in-depth. Of course, the Sanderson Avalanche starts up towards the end so that even those who did find it to be their least favorite seem to agree that it redeems itself with it.
@@ -33,7 +45,7 @@ The story is written from multiple POVs, but the story originates from a charact
 
 This is the second book I read by Sanderson and it proves to me that he's a very skilled writer. Everything he writes is very intricately planned, making for very detailed and skillfully-weaved plot threads that are always neatly resolved by the end of his books.
 
-[wok]: /reads#wok
+[wok]: #wok
 
 *[tWoK]: The Way of Kings
 
