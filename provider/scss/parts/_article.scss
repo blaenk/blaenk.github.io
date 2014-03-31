@@ -29,6 +29,11 @@ article{
 	}
 	.entry-content{
 		line-height: 1.5;
+
+    @media screen and (max-width: 600px) {
+      line-height: 1.6;
+    }
+
     h1, h2, h3, h4, h5 { line-height: 2; }
 		a{
       @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
@@ -45,7 +50,7 @@ article{
 			&:before{
 				content: "\f061";
 				font: 1.3em $font-icon;
-				line-height: 1.6em;
+				line-height: 1.23;
 				position: absolute;
 				left: 0;
 			}
@@ -111,7 +116,7 @@ article{
 				content: "\f040";
 				color: $color-gray03;
 				font: 1.3em $font-icon;
-				line-height: 1.6em;
+				line-height: 1.23;
 				position: absolute;
 				left: 0;
 			}

@@ -200,7 +200,7 @@ article .entry-content ol {
     display: block;
 
     @media screen and (max-width: 600px) {
-      line-height: 22px;
+      line-height: 1.69;
     }
 
     &:before {
@@ -229,10 +229,10 @@ article .entry-content ol {
   }
 
   p {
-    line-height: 20px;
+    line-height: 1.67;
 
     @media screen and (max-width: 600px) {
-      line-height: 18px;
+      line-height: 1.5;
     }
   }
 
@@ -371,7 +371,7 @@ figure.codeblock {
     overflow-x: auto;
     background: #F2F9FF;
     font-size: 0.875em;
-    line-height: 1.3em;
+    line-height: 1.3;
     padding: 10px;
 
     @media screen and (max-width: 600px) {
@@ -646,6 +646,5 @@ kbd {
   border-bottom-color: #ccc;
   border-right-color: #ccc;
   padding: 1px 4px;
-  line-height: 10px;
   cursor: default;
 }

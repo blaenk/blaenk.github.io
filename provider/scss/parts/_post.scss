@@ -3,7 +3,6 @@
     a{
       color: #666;
       transition: color 0.3s;
-      line-height: 24px;
       @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
         &:hover { color: $color-main; }
       }
@@ -42,7 +41,7 @@
         color: $color-gray03;
         margin-right: 2px;
         font-size: 1.3em;
-        line-height: 1.6em;
+        line-height: 1.5;
         cursor: default;
 
         @media not screen and (max-width: 600px){

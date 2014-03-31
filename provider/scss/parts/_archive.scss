@@ -18,7 +18,6 @@
 	      a{
 	        color: #666;
 	        display: inline-block;
-          line-height: 24px;
 	        width: 100%;
           transition: color 0.3s;
 
@@ -32,7 +31,6 @@
     }
     & > .meta {
       float: left;
-      line-height: 35px;
     }
 		.meta{
 			font-size: 1em;
@@ -48,7 +46,6 @@
 				&:before{
 					color: $color-gray03;
 					font: 1.3em $font-icon;
-					line-height: 34px;
 					position: absolute;
 					left: 0;
 				}
