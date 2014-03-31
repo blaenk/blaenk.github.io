@@ -6,7 +6,7 @@ comments: off
 toc: left
 ---
 
-I took a shot at [learning Go] recently and I found its simplicity to be refreshing. I do like the language, but I found myself reinventing too many wheels that Go didn't have built-in for sake of simplicity. I found that the simplicity the language strives for sometimes comes at the expense of the developer, for no particularly worthwhile benefit. Contrast this to Haskell, for example, where it might take time to ensure that everything is correct to even compile, but the process is worthwhile because it provides certain correctness guarantees about the program.
+I took a shot at [learning Go] recently and I found its simplicity to be refreshing. Rust is a similar language from Mozilla which I've been interested in for a while now.
 
 My main resources are the [tutorial] and [manual]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it.
 
