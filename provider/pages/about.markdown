@@ -44,7 +44,7 @@ For these reasons, I'm not really strongly opinionated about any one technology.
 
 I was pretty much computer illiterate before the age of 12. All of my life I had largely avoided computers, aside from specific instances in school when we were given time to work with them. This was a result of being warned and scolded lest I break them.
 
-However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I usually had to go to the library to type up school assignments, and this wasn't always possible on short-notice assignments. In these situations, I would have to write my assignments _perfectly_ in ink, forced to appease draconian requirements which demanded no mistakes at all --- no white-out allowed.
+However, by the age of 11 I was at a point in school where computers were a necessity. Without a computer, I had to go to the library to type up school assignments, which wasn't always possible on the more frequent short-notice assignments. I had to write my assignments in _perfect_, inked cursive, being forced to appease draconian requirements which demanded no mistakes at all --- no white-out allowed.
 
 As the only student in the class without a computer capable of producing neatly printed assignments, I was inconveniencing _the teacher_. So while other students could lazily type up assignments in a matter of minutes, I had to meticulously obsess over my writing.
 
@@ -56,7 +56,7 @@ Armed with this information, I made a deal with my dad which consisted of me kee
 
 Eventually I did get my computer, but I began to lose interest, thinking there wasn't much else to learn about them as I knew them at the time.
 
-I was rarely allowed to use our free AOL dial-up Internet connection, since it prevented phone calls from going through. On one of those rare opportunities though, I noticed an article on how to get started with "modding" --- whatever that was --- the game that I loved to play offline: Star Wars: Jedi Outcast. The example was to write a mod to slow down the speed at which rockets from a rocket launcher traveled at. They used words I had never heard before such as Visual Studio, compiler, C++, source code, and so on.
+I was rarely allowed to use our free AOL dial-up Internet connection, since it prevented phone calls from going through. On one of those rare opportunities I noticed an article on how to get started with "modding" --- whatever that was --- the game that I loved to play offline: Star Wars: Jedi Outcast. The example was to write a mod to slow down the speed at which rockets from a rocket launcher traveled at. They used words I had never heard before such as Visual Studio, compiler, C++, source code, and so on.
 
 I distinctly remember a part of the article that talked about editing some line in some "source code" that apparently had the literal effect of slowing down the rocket! Kids often wondered how games were made, and this article was nonchalantly talking about _modifying_ a game I loved. This blew my mind. This was around the time that the Matrix sequels were in theatres, and so out of ignorance I naturally imagined that this article was explaining how to get into something similar to the Matrix of the game. I felt a deep urge to understand all of this.
 
