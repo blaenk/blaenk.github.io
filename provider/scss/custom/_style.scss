@@ -33,12 +33,6 @@
   margin-bottom: 15px;
 }
 
-#strip {
-  height: 3px;
-  margin: 0 -20px;
-  background-color: #2A9AF9;
-}
-
 h1.notfound {
   margin-top: 25px;
   font-size: 4em; }
@@ -155,7 +149,7 @@ article .entry-content ol {
     content: '\00BB';
     cursor: default;
     position: absolute;
-    margin-left: -15px;
+    margin-left: -0.9375em;
     line-height: 1.25;
     color: #ccc; // #ddd
     font-family: $font-sans;
