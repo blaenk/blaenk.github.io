@@ -4,7 +4,6 @@ $header-height: 30px;
 	height: $header-height;
 	padding: 25px 0 30px 0;
 	border-bottom: 5px solid #8ccaff;
-	line-height: 26px;
   @media screen and (max-width: 766px){
     text-align: center;
   }
@@ -33,14 +32,15 @@ $header-height: 30px;
       margin: 0 auto;
     }
     h1{
-      font-weight: 300;
-      font-family: 'Noto Sans', "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,sans-serif;
-      font-size: 30px;
+      font-weight: 400;
+      font-size: 2em;
+      line-height: 1;
     }
     h4{
       color: #666;
       text-align: right;
       cursor: default;
+      font-family: $font-sans;
     }
   }
 }
@@ -78,7 +78,6 @@ $header-height: 30px;
 			>a{
 				padding: 38px 0;
 				margin-top: -38px;
-				font-weight: bold;
 				&:after{
 					content: "\f078";
 					color: $color-gray03;

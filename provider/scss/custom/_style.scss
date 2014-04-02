@@ -8,15 +8,18 @@
   }
 }
 
-.post-info .excerpt { cursor: default; }
-
-h3.title {
-  font-family: $font-serif;
-}
+.post-info .excerpt {
+  font-weight: 300;
+  cursor: default; }
 
 .archives {
   h3 {
     margin-bottom: 10px; } }
+
+.archive-year {
+  margin-bottom: 15px;
+  font-family: $font-sans;
+}
 
 .notfound {
   text-align: center;
@@ -31,7 +34,7 @@ h3.title {
 }
 
 #strip {
-  height: 5px;
+  height: 3px;
   margin: 0 -20px;
   background-color: #2A9AF9;
 }
@@ -154,6 +157,7 @@ article .entry-content ol {
     position: absolute;
     margin-left: -15px;
     color: #ccc; // #ddd
+    font-family: $font-sans;
   }
 }
 
@@ -173,7 +177,6 @@ article .entry-content ol {
 }
 
 #toc {
-  font-family: $font-serif;
   margin-top: 10px;
 
   p {
@@ -215,7 +218,6 @@ article .entry-content ol {
 }
 
 .footnotes {
-  font-family: $font-serif;
   font-size: 12px;
   padding: 0 25px;
 
@@ -272,7 +274,7 @@ hr {
 
 #main-nav > ul > li > a {
   padding: 31px 0 35px 0;
-  text-transform: uppercase;
+  text-transform: lowercase;
   font-size: 14px;
 
   &::after { padding-left: 0; }
@@ -304,7 +306,6 @@ hr {
     clear: both;
     position: static;
     width: auto;
-    font-family: $font-serif;
 
     // TODO: move this to post.scss
     .date, .tags, .commit, .notes {
@@ -401,7 +402,6 @@ figure.codeblock {
 .page h1.title {
   margin-bottom: 15px;
   margin-top: 5px;
-  font-family: $font-serif;
   font-weight: 400;
 }
 .entry-content {
@@ -411,7 +411,6 @@ figure.codeblock {
     overflow: hidden;
     position: static !important;
     font-weight: 400;
-    font-family: $font-serif;
 
     @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
       &:hover .hash {
@@ -548,7 +547,6 @@ figure.codeblock {
 }
 
 article .entry-content blockquote {
-  font-family: $font-serif;
   font-weight: 400;
   font-size: 1.1em;
   line-height: 1.4;

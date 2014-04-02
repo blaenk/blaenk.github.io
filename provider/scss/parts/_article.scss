@@ -17,7 +17,6 @@ article{
 
             span {
                 padding-bottom: 2px;
-                font-family: $font-serif;
             }
 
           @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
@@ -65,7 +64,7 @@ article{
 			}
 		}
 		strong{
-			font-weight: bold;
+			font-weight: 900; /* merriweather ultra-bold */
 		}
 		em{
 			font-style: italic;
