@@ -46,7 +46,7 @@ The WebSocket server that comes with the websockets package forks separate threa
 
 ## State
 
-First, however, I had to think about how the WebSocket server would communicate with the clients. I decided that the most straightforward thing to do would be to communicate on a per-route basis. A route in this case refers to a post, such as **posts/live-editing-with-hakyll.markdown**. The clients use that path to establish the connection, which tells the WebSocket server that they're interested in data about that particular post. This way, the client doesn't get updates posts it doesn't care about.
+First, however, I had to think about how the WebSocket server would communicate with the clients. I decided that the most straightforward thing to do would be to communicate on a per-route basis. A route in this case refers to a post, such as **posts/live-editing-with-hakyll.markdown**. The clients use that path to establish the connection, which tells the WebSocket server that they're interested in data about that particular post. This way, the client doesn't get updates about posts it doesn't care about.
 
 An alternative to this would've perhaps been to use a single communication channel, where the server would send data about every post that was changed, and clients decided which applied to them. While this seems simpler, it has the consequence that _every_ post's data is sent to the client, even posts no one is actually paying attention to. This is inefficient, and to avoid this inefficiency would again require some form of "interest-registration" which is implicit in the aforementioned method.
 
