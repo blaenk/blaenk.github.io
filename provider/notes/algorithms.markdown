@@ -643,7 +643,7 @@ This is the classical data structure consisting of a binary tree where each node
 
 The performance of BSTs greatly depends on the shape of the tree, which is a result of the distribution and order of the elements that are input.
 
-#### Traversal {#binary-search-tree-traversal}
+### Traversal {#binary-search-tree-traversal}
 
 There are three main forms of traversing a BST. The _order_ refers to the order in which the current node $C$ is visited, that is, the time at which $C$ is visited is the only thing that varies, so $L$ is always visited before $R$.
 
@@ -653,7 +653,7 @@ pre-order  $C \to L \to R$
 in-order   $L \to C \to R$
 post-order $L \to R \to C$
 
-#### Deletion {#binary-search-tree-deletion}
+### Deletion {#binary-search-tree-deletion}
 
 Most operations such as insertion and lookup are very straightforward. Deletion is somewhat more involved.
 
