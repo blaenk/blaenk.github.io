@@ -187,7 +187,6 @@ article .entry-content ol {
 
 #toc {
   margin-top: 10px;
-  font-weight: 400;
 
   p {
     font-weight: bold;
@@ -229,7 +228,6 @@ article .entry-content ol {
 
 .footnotes {
   font-size: 12px;
-  font-weight: 400;
   padding: 0 25px;
 
   @media screen and (max-width: 600px) {
@@ -315,7 +313,6 @@ hr {
 .post {
   .meta {
     clear: both;
-    font-weight: 400;
     position: static;
     width: auto;
 
@@ -559,7 +556,6 @@ figure.codeblock {
 }
 
 article .entry-content blockquote {
-  font-weight: 400;
   font-size: 1.1em;
   line-height: 1.4;
   margin: 30px auto;
