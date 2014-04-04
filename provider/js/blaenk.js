@@ -30,24 +30,23 @@ $(function() {
   var $search = $('.desk_search');
 
   var hideSearch = function() {
-    $nav.removeClass('searching');
-    $search.hide();
+    $search.fadeOut('fast');
   };
 
   var showSearch = function() {
-    $nav.addClass('searching');
-    $search.show().find('input[type="text"]').focus();
+    $search.fadeIn('fast');
+    $search.find('#search').focus();
   };
 
   $('#search_btn').click(function() {
-    if ($nav.hasClass('searching')) {
+    if ($search.is(':visible')) {
       hideSearch();
     } else {
       showSearch();
     }
   });
 
-  $('.desk_search input[type="text"]').keyup(function(e) {
+  $search.keyup(function(e) {
     if (e.keyCode == 27) {
       hideSearch();
     }

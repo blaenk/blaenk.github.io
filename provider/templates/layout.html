@@ -37,10 +37,6 @@
           <li><a href="/notes/">Notes</a></li>
           <li><a id="search_btn">Search</a></li>
         </ul>
-        <form class="desk_search" action="http://google.com/search" method="get">
-          <input type="text" name="q" results="0" placeholder="Search... (Click 'Search' to hide)" autocomplete="off" spellcheck="false">
-          <input type="hidden" name="q" value="site:blaenkdenum.com">
-        </form>
       </nav>
       <nav id="mobile-nav">
         <div class="alignleft menu">
@@ -67,6 +63,10 @@
       </nav>
     </header>
     <div id="content" class="inner">
+      <form class="desk_search" action="http://google.com/search" method="get">
+        <input id="search" type="text" name="q" results="0" placeholder="Search" autocomplete="off" spellcheck="false">
+        <input type="hidden" name="q" value="site:blaenkdenum.com">
+      </form>
       $body$
     </div>
     <footer id="footer" class="inner">

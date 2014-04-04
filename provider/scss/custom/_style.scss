@@ -284,7 +284,6 @@ hr {
 #main-nav > ul > li > a {
   padding: 31px 0 35px 0;
   text-transform: lowercase;
-  font-size: 14px;
 
   &::after { padding-left: 0; }
 
@@ -527,20 +526,18 @@ figure.codeblock {
 
 .desk_search {
   display: none;
-  float: right;
-  input[type="text"] {
-    width: 335px;
-    padding: 2px;
+  padding-bottom: 15px;
+  #search {
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+    padding: 5px;
+
+    font-family: $font-default;
 
     &:focus { outline: none; }
-  }
-
-  @media screen and (max-width: 766px) {
-    float: none;
-  }
-
-  @media screen and (max-width: 600px) {
-    display: none !important;
   }
 }
 
@@ -549,10 +546,6 @@ figure.codeblock {
   @media screen and (max-width: 600px) {
     display: none !important;
   }
-}
-
-#main-nav > ul.searching > li > a {
-  padding: 31px 0 0 0;
 }
 
 article .entry-content blockquote {

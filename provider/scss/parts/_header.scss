@@ -58,9 +58,9 @@ $header-height: 30px;
 			display: none;
 		}
 		>li{
-			margin-left: 20px;
+			margin-left: 30px;
 			display: inline-block;
-      vertical-align: middle;
+      line-height: 2;
 			@media screen and (max-width: 766px){
 				margin-left: 0;
 				margin-right: 50px;
