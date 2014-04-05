@@ -516,24 +516,71 @@ It's also possible to provide thread disambiguators to the `break` command, to p
 
 Many commands have abbreviations which are simpler to enter:
 
-Command    Abbreviation
---------  --------------
-backtrace bt
-break     b
-condition cond
-continue  c
-disable   dis
-display   disp
-enable    ena
-finish    fin
-info      i
-next      n
-print     p
-ptype     pt
-quit      q
-run       r
-step      s
-tbreak    tb
-undisplay undisp
-until     u
+<table>
+  <thead>
+    <tr class="header">
+      <th>Command</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="odd">
+      <td>**b**ack**t**race</td>
+    </tr>
+    <tr class="even">
+      <td>**b**reak</td>
+    </tr>
+    <tr class="odd">
+      <td>**cond**ition</td>
+    </tr>
+    <tr class="even">
+      <td>**c**ontinue</td>
+    <tr class="odd">
+      <td>**dis**able</td>
+    <tr class="even">
+      <td>**disp**lay</td>
+    <tr class="odd">
+      <td>**ena**ble</td>
+    <tr class="even">
+      <td>**fin**ish</td>
+    <tr class="odd">
+      <td>**i**nfo</td>
+    <tr class="even">
+      <td>**n**ext</td>
+    <tr class="odd">
+      <td>**p**rint</td>
+    <tr class="even">
+      <td>**pt**ype</td>
+    <tr class="odd">
+      <td>**q**uit</td>
+    <tr class="even">
+      <td>**r**un</td>
+    <tr class="odd">
+      <td>**s**tep</td>
+    <tr class="even">
+      <td>**tb**reak</td>
+    <tr class="odd">
+      <td>**undisp**lay</td>
+    <tr class="even">
+      <td>**u**ntil</td>
+  </tbody>
+</table>
 
+# Valgrind
+
+It's [possible] to load a GDB session inside of a valgrind session.
+
+[possible]: http://billiob.net/blog/20140330_vgdb.html
+
+``` bash
+$ valgrind --vgdb=yes --vgdb-error=0 ./prog
+$ gdb ./prog
+(gdb) target remote | vgdb
+```
+
+It's possible to then send commands to valgrind from within GDB using the `monitor` command. The `leak_check` valgrind command for example can be used when paused at a GDB breakpoint to manually perform a memory leak check. Other useful valgrind commands are `block_list` and `who_points_at`.
+
+```
+(gdb) monitor help
+(gdb) breakpoint 6
+(gdb) monitor leak_check
+```
