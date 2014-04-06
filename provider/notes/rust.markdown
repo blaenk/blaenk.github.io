@@ -29,6 +29,15 @@ match number {
 }
 ```
 
+Patterns can also be bound to variables as in Haskell and Scala:
+
+``` rust
+match age {
+  a @ 0..20 => println!("{} years old", a),
+  _         => println!("older than 21")
+}
+```
+
 # Structures
 
 Structures are laid out in memory the same as as they are in C. Structures are constructed similar to Go structures. Structures have inherited mutability. Structures can be pattern matched on to destructure their fields.
@@ -120,7 +129,7 @@ The `~` sigil represents a unique handle for a memory allocation on the heap:
 
 # Ownership
 
-An object's lifetime is determined by its owner, either a variable or a task-local garbage collector. Ownership is recursive so that mutability is inherited recursively and a destructor destroys the contained tree of owned objects. Variables are to-level owners and destroy teh contained object when they go out of scope:
+An object's lifetime is determined by its owner, either a variable or a task-local garbage collector. Ownership is recursive so that mutability is inherited recursively and a destructor destroys the contained tree of owned objects. Variables are to-level owners and destroy the contained object when they go out of scope:
 
 ``` rust
 struct Foo { x: int, y: ~int }
@@ -271,7 +280,7 @@ let x = ~foo(); // allocates ~ box and writes u64's directly to it
 
 # More on References
 
-Referneces don't imply ownership, they're "borrowed". Reference parameters are often used to allow functions to work with all manner of different allocated types.
+References don't imply ownership, they're "borrowed." Reference parameters are often used to allow functions to work with all manner of different allocated types.
 
 ``` rust
 fn distance(p1: &Point, p2: &Point) -> f64 {
@@ -305,7 +314,7 @@ let borrowed = &mut value;
 *owned = *borrowed + 100;
 *borrowed = 1000;
 
-let point &@~Point { x: 10.0, y: 20.0 };
+let point = &@~Point { x: 10.0, y: 20.0 };
 println!("{:f}", point.x); // dereferences all three levels
 ```
 
@@ -591,7 +600,7 @@ trait Eq {
   fn equals(&self, other: &Self) -> bool;
 }
 
-impl Eq for in {
+impl Eq for int {
   fn equals(&self, other: &int) -> bool {
     *other == *self;
   }
@@ -825,7 +834,7 @@ For example, here's an example library, its compilation, and usage:
 #[crate_id = "world#0.42"];
 #[crate_type = "lib"];
 
-pub fn explor() -> &'static str { "world" }
+pub fn explore() -> &'static str { "world" }
 ~~~
 
 ~~~ {.rust text="main.rs"}
@@ -1015,7 +1024,7 @@ fn main() {
   let data_arc = Arc::new(big_data);
 
   for num in range(1u, 10) {
-    let (port, chan)  = Chan::new();
+    let (port, chan) = Chan::new();
 
     // send arc
     chan.send(data_arc.clone());

@@ -20,7 +20,8 @@ $solar-green:   #859900 !default; //
 }
 
 .language-rust {
-  .cp { color: $base1; }
+  .cp { color: $solar-orange; }
+  .k { color: $solar-violet; }
 }
 
 .language-html {
