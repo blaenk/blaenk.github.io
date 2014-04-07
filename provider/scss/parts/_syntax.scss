@@ -19,6 +19,12 @@ $solar-green:   #859900 !default; //
   .nn { color: $solar-blue; }
 }
 
+.language-gdb {
+  .kt { color: $solar-cyan; }
+  .nb { color: $solar-red; }
+  .nv { color: $solar-green; }
+}
+
 .language-rust {
   .cp { color: $solar-orange; }
   .k { color: $solar-violet; }

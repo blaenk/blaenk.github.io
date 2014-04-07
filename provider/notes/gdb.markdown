@@ -30,6 +30,10 @@ For an additional resource, RMS' own [tutorial][rms_tut] on GDB is available, as
 [rms_tut]: http://www.unknownroad.com/rtfm/gdbtut/
 [very good guide]: http://rsquared.sdf.org/gdb/
 
+The GDB session samples provided in this page are highlighted with a basic GDB [Pygments lexer] I found on github from user snarez, which I then customized a bit.
+
+[Pygments lexer]: https://github.com/snarez/gdb_lexer
+
 * toc
 
 # Workflow
@@ -50,7 +54,7 @@ $ gdb programname PID
 
 Another thing that can be done is to run GDB and tell it that the program should be run on a different terminal. This is accomplished with the `tty` command. For example, assuming the program should be on `/dev/pts/8` --- perhaps because we have another window paired with that pseudoterminal --- we would run the following:
 
-```
+``` gdb
 (gdb) tty /dev/pts/8
 ```
 
@@ -66,7 +70,7 @@ It's common to then place a temporary breakpoint on `main` as an entrypoint into
 
 The program is then run with the `run` command, passing it the appropriate program arguments. The program's execution will be paused at each breakpoint:
 
-```
+``` gdb
 (gdb) run arg1 arg2
 Starting program: /path/to/program_to_debug arg1 arg2
 
@@ -89,7 +93,7 @@ $ gdb -command=.gdbinit program
 
 Breakpoints can be saved to a file with:
 
-```
+``` gdb
 (gdb) save breakpoints filename
 (gdb) source filename
 ```
@@ -105,7 +109,7 @@ set history save
 
 Breakpoints, set with the `break` command, pause execution of the program just before that line of code executes.
 
-```
+``` gdb
 (gdb) break function
 (gdb) break line
 (gdb) break file:line
@@ -114,14 +118,14 @@ Breakpoints, set with the `break` command, pause execution of the program just b
 
 It's also possible to set a breakpoint relative to the currently executing line of course code in the currently selected stack frame:
 
-```
+``` gdb
 (gdb) break +offset
 (gdb) break -offset
 ```
 
 It's also possible to set a breakpoint at a specific virtual memory address, which is useful when there are no debugging symbols:
 
-```
+``` gdb
 (gdb) break *address
 ```
 
@@ -135,14 +139,14 @@ Catchpoints are similar to breakpoints and are triggered by things such as throw
 
 Breakpoints can be either deleted in two ways, using the `delete` or `clear` commands. The `delete` command accepts breakpoint identifiers or if none are given, deletes all breakpoints:
 
-```
+``` gdb
 (gdb) delete breakpoint_list
 (gdb) delete # deletes all breakpoints
 ```
 
 The `clear` command accepts arguments similar to the `break` command. If no argument is given, it deletes the breakpoint at the next instruction that GDB will execute, which is useful for deleting the breakpoint that GDB just reached:
 
-```
+``` gdb
 (gdb) clear # delete breakpoint that was just reached
 ```
 
@@ -156,25 +160,25 @@ The `enable` command is the opposite of the `disable` command. The `enable` comm
 
 A condition can be associated with a breakpoint, using the `contidion` command, so that execution only pauses at it if it satisfies the condition. The condition can refer to variables local to the scope of the breakpoint. For example, the following places a condition on breakpoint #1 so that it only breaks if `num_y` is `1`:
 
-```
+``` gdb
 (gdb) condition 3 i == 10
 ```
 
 This condition also could have been provided to the `break` command itself as follows:
 
-```
+``` gdb
 (gdb) break 3 if i == 10
 ```
 
 A condition can be removed from an existing breakpoint as well:
 
-```
+``` gdb
 (gdb) cond 3
 ```
 
 Pretty much any valid C conditional statement can be used, where true is non-zero and false is zero. This includes equality, logical, and inequality operators, bitwise and shift operators, arithmetic operators, and functions --- either from the program itself or from libraries, provided they're linked into the program.
 
-```
+``` gdb
 (gdb) break 180 if string == NULL && i < 0
 (gdb) break test.c:34 if (x & y) == 1
 (gdb) break myfunc if i % (j + 3) != 0
@@ -184,14 +188,14 @@ Pretty much any valid C conditional statement can be used, where true is non-zer
 
 **Note** that when using a library function or other externally-linked function that provides no debugging symbols, the result of the function will be interpreted as an integer. This can lead to misinterpretations, such as:
 
-```
+``` gdb
 (gdb) print cos(0.0)
 $1 = 14368
 ```
 
 This can be alleviated if necessary by defining a GDB convenience variable with the necessary type information for the function in question:
 
-```
+``` gdb
 (gdb) set $p = (double (*) (double))cos
 (gdb) ptype $p
 type = double (*)()
@@ -205,9 +209,9 @@ $4 = -1
 
 It's possible to define a list of commands to be run as soon as a particular breakpoint is triggered using the `commands` command which takes the following form. If the first command in the list is the `silent` command, it'll suppress information about the breakpoint whenever it's triggered.
 
-```
+``` gdb
 (gdb) commands breakpoint-identifier
-> ...commands...
+> command
 > end
 ```
 
@@ -215,7 +219,7 @@ Commands can be removed from a breakpoint by redefining an empty command list.
 
 It's possible to define macros --- sets of commands --- with the `define` command. Its form is similar to `commands`' but its first argument is the name of the macro. The arguments are accessible as `$argn` where `n` is anywhere from `0` to `9`. Macro arguments aren't comma separated. Useful macros can be placed in the startup file and referenced within GDB. The command `show user` can be used to list all macros.
 
-```
+``` gdb
 (gdb) define print_and_go
 > printf $arg0, $arg1
 > continue
@@ -228,13 +232,13 @@ Commands can also include if conditions.
 
 A _watchpoint_, set with `watch`, can be thought of as being attached to an expression, such that it gets triggered when the result of that expression changes. Setting a watchpoint on a variable causes the debugger to pause execution at the point when the memory location of that variable changes. For example, to watch the `z` variable:
 
-```
+``` gdb
 (gdb) watch z
 ```
 
 More powerful watchpoints can be established that are based on conditions related to the variable in question. For example, to watch for when `z` becomes greater than `28`:
 
-```
+``` gdb
 (gdb) watch (z > 28)
 ```
 
@@ -244,8 +248,8 @@ Watchpoints are deleted as soon as any variable in the expression goes out of sc
 
 It's possible to avoid the pausing of execution or printing a warning when signals are received by having GDB handle them with the `handle` command. For example, to avoid stopping and printing a warning when `SIGUSR` is received:
 
-```
-handle SIGUSR1 nostop noprint
+``` gdb
+(gdb) handle SIGUSR1 nostop noprint
 ```
 
 ## Information
@@ -278,7 +282,7 @@ Inspecting the program's state at any point in its execution is usually the prim
 
 Source code can be shown by using the `list` command, which itself changes the file currently in focus by GDB, used for setting breakpoints and other things. When it's first run, `list` shows the 10 source lines centered around `main`. Subsequence `list` commands show the next 10 lines, stopping when the end is reached. The reverse, showing the previous 10 lines, can be done with `list -`. If `list` is given a number, it shows 10 source lines centered on that line number. This command can also accept a range of lines to print, where one of the endpoints can optionally be omitted.
 
-```
+``` gdb
 (gdb) list
 (gdb) list -
 (gdb) list 5
@@ -292,7 +296,7 @@ Source code can be shown by using the `list` command, which itself changes the f
 
 The number of lines output by GDB when using `list` is by default 10, but this can be changed:
 
-```
+``` gdb
 (gdb) set listsize 5
 ```
 
@@ -300,7 +304,7 @@ The number of lines output by GDB when using `list` is by default 10, but this c
 
 Basic variables such as integers can be printed with the `print` command. More complicated types will be covered later on. It's also possible to print out individual array elements with regular index syntax.
 
-```
+``` gdb
 (gdb) print y[0]
 $1 = 12
 ```
@@ -327,14 +331,14 @@ This makes GDB much more preferable to actual `printf`-debugging which modifies 
 
 Structures can be printed outright and their constituent data members will be displayed.
 
-```
+``` gdb
 (gdb) p *structptr
 $1 = {val = 12, left = 0x8049698, right = 0x0}
 ```
 
 All of this information on one line can become difficult to read, in which case an alternative "pretty printing" scheme may be used which uses one struct member per-line:
 
-```
+``` gdb
 (gdb) set print pretty
 (gdb) p *structptr
 $1 = {
@@ -346,14 +350,14 @@ $1 = {
 
 Specific members can be printed individually by accessing the same way as one would in C/C++, both `->` and `.` can be used on pointers:
 
-```
+``` gdb
 (gdb) p structptr->val
 (gdb) p structptr.val
 ```
 
 The `display` command registers a variable for printing every time execution pauses. If no argument is passed, it lists all auto-displayed variables. Display directives can be disabled or enabled with the corresponding commands. To remove a display directive altogether, use the `undisplay` command:
 
-```
+``` gdb
 (gdb) disable display 1
 (gdb) enable display 1
 (gdb) undisplay 1
@@ -361,7 +365,7 @@ The `display` command registers a variable for printing every time execution pau
 
 The `call` command can also be used to call a particular function when a breakpoint is triggered, which can be used for printing some state out using a function defined in the program, specialized for that task.
 
-```
+``` gdb
 (gdb) commands 2
 > printf "current tree is"
 > call printtree(root)
@@ -374,7 +378,7 @@ A summary of information about the current frame can be obtained with the `info 
 
 The `ptype` command can be used to determine the type of a variable. When the type is a structure or a class, it can show the layout/definition.
 
-```
+``` gdb
 (gdb) ptype argc
 type = int
 ```
@@ -385,13 +389,13 @@ A static array can be printed regularly with the `print` command:
 int x[25];
 ```
 
-```
+``` gdb
 (gdb) p x
 ```
 
 It's also possible to print sub-ranges of an array, for example 5 elements starting at element 3:
 
-```
+``` gdb
 (gdb) p x[3]@5
 ```
 
@@ -402,12 +406,12 @@ int x = (int *)malloc(6 * sizeof(int));
 x[3] = 12;
 ```
 
-```
+``` gdb
 (gdb) p *x@6
 $1 = {0, 0, 0, 12, 0, 0}
 ```
 
-```
+``` gdb
 (gdb) p (int [6]) *x
 $1 = {0, 0, 0, 12, 0, 0}
 ```
@@ -418,7 +422,7 @@ The runtime information immediately available to GDB is whatever is located on t
 
 However, it's also possible to traverse the call stack as it is at any given moment, in order to bring a different frame into GDB's focus and therefore inspect that frame's state. The `frame` command allows traversal relative to the current function call's frame, which is referred to as frame `0`. For example, to go to the grand-parent's frame:
 
-```
+``` gdb
 (gdb) frame 2
 ```
 
@@ -432,14 +436,14 @@ The command `where` can be used to determine where one is at any given moment.
 
 It's possible to set the value of variables mid-execution using the `set` command, which provides no output from GDB. Variables can also be set using the print command, which follows the setting of the variable with printing out its new value:
 
-```
+``` gdb
 (gdb) set x = 12
 (gdb) print x = 12
 ```
 
 There are also variables specific to GDB that can be created and used. For example, GDB has a _value history_ which simply assigns the result of an entered command to an increasing variable name. This is similar to Scala's interpreter which assigns the expression result values to `res#`. These variables can be referenced in future commands. The `$` variable always refers to the previous result.
 
-```
+``` gdb
 (gdb) p tmp->left
 $1 = (struct node *) 0x80496a8
 (gdb) p *$
@@ -448,7 +452,7 @@ $2 = {val = 5, left = 0x0, right = 0x0}
 
 It's also possible to set environment variables within GDB:
 
-```
+``` gdb
 (gdb) set environment ENVVAR = 3
 ```
 
@@ -458,7 +462,7 @@ Convenience variables can change values according to C rules. For example, given
 int w[3] = {12, 5, 88};
 ```
 
-```
+``` gdb
 (gdb) set $i = 0
 (gdb) p w[$i++]
 $1 = 12
@@ -508,7 +512,7 @@ It's possible to switch GDB's focus to a different thread with the `thread` comm
 
 It's also possible to provide thread disambiguators to the `break` command, to pause execution when a specific thread reaches a breakpoint:
 
-```
+``` gdb
 (gdb) break linenr thread threadid if condition
 ```
 
@@ -579,7 +583,7 @@ $ gdb ./prog
 
 It's possible to then send commands to valgrind from within GDB using the `monitor` command. The `leak_check` valgrind command for example can be used when paused at a GDB breakpoint to manually perform a memory leak check. Other useful valgrind commands are `block_list` and `who_points_at`.
 
-```
+``` gdb
 (gdb) monitor help
 (gdb) breakpoint 6
 (gdb) monitor leak_check
