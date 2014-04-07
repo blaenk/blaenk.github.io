@@ -60,7 +60,7 @@ Characters are denoted by a blackslash, as in `\c`, and they natively support Un
 
 ### Keywords
 
-Keywords I believe are similar to Ruby/Scala symbols and Erlang atoms and are prefixed by a colon `:` and consist of any non-whitespace character, where a slash `/` denotes a _namespaced keyword_, and a double colon `::` is expanded by the reader to a namespaced keyword in the current namespace, or another namespace if the keyword started by a namespace alias as in `::alias/keyword`.
+Keywords I believe are similar to Ruby/Scala symbols and Erlang atoms. The are prefixed by a colon `:` and consist of any non-whitespace character, where a slash `/` denotes a _namespaced keyword_, and a double colon `::` is expanded by the reader to a namespaced keyword in the current namespace, or another namespace if the keyword started by a namespace alias as in `::alias/keyword`.
 
 ``` clojure
 (def pizza {:name "Ramunto's"
@@ -151,7 +151,7 @@ Commas are considered whitespace by the reader. Whether to use them or not is a 
 (= [1 2 3] [1, 2, 3])
 ;= true
 
-(create-user {:name user1, :email email1})
+(create-user {:name user, :email email})
 ```
 
 ### Collections
@@ -219,7 +219,9 @@ The special form `quote` suppresses evaluation of a Clojure expression. For exam
 
 'x
 ;= x
+
 (symbol? 'x)
+;= true
 
 (= '(+ x x) (list '+ 'x 'x))
 ;= true
@@ -258,3 +260,84 @@ The special form `let` allows lexically scoped named references to be defined.
     (Math/sqrt (+ x2 y2))))
 ```
 
+The `let` form also allows _destructuring_ similar to pattern-matching in languages like Haskell, Rust, Scala, and Erlang. For example, to destructure a sequence, specifically a vector, we simply pass it a list of symbols that will take on the appropriate values. Destructuring can also be nested, as in other languages. The ampersand `&` can be used to specify that the following symbol should take on the remaining _sequence_ of values. The `:as` keyword can be used to bind the collection to a value, similar to what `@` does in Haskell, Scala, and Rust.
+
+``` clojure
+(def v [42 "foo" 99.2 [5 12]])
+;= #'user/v
+
+(let [[x y z] v]
+  (+ x z))
+;= 141.2
+
+(let [[x _ _ [y z]] v]
+  (+ x y z))
+;= 59
+
+(let [[x & rest] v]
+  rest)
+;= ("foo" 99.2 [5 12])
+
+(let [[x _ z :as original-vector] v]
+  (conj original-vector (+ x z)))
+;= [42 "foo" 99.2 [5 12] 141.2]
+```
+
+Maps can also be destructured in a similar manner. This works with Clojure's `hash-map`, `array-map`, records, collections implementing `java.util.Map`, and values supported by the `get` function such as Clojure vectors, strings, and array can be keyed by their indices.
+
+``` clojure
+(def m {:a 5 :b 6
+        :c [7 8 9]
+        :d {:e 10 :f 11}
+        "foo" 88
+        42 false})
+;= #'user/m
+
+(let [{a :a b :b} m]
+  (+ a b))
+;= 11
+
+(let [{x 3 y 8} [12 0 0 -18 44 6 0 0 1]]
+  (+ x y))
+;= -17
+```
+
+The `:as` keyword can be used to bind the collection. The `:or` keyword can be used to provide a defaults map which will be consulted if the destructured keys aren't present.
+
+``` clojure
+(let [{k :unknown x :a
+       :or {k 50}} m]
+  (+ k x))
+;= 55
+```
+
+Often times it may be desirable to destructure a map such that the symbols are named after the keys of the map, but doing this explicitly can get repetitive, which is why the options `:keys`, `:strs`, and `:syms` can be used.
+
+``` clojure
+(def chas {:name "Chas" :age 31 :location "Massachusetts"})
+;= #'user/chas
+
+(let [{name :name age :age location :location} chas]
+  (format "%s is %s years old and lives in %s." name age location))
+
+(let [{:keys [name age location]} chas]
+  (format "%s is %s years old and lives in %s." name age location))
+```
+
+It's also possible to destructure vectors which themselves contain key-value pairs. This can be done explicitly by binding the key-value pairs with `&`, converting that to a `hash-map`, and then destructuring that --- but it's also possible with regular destructure syntax. This is specifically made possible by `let` by allowing the destructuring of rest sequences if they have an even number of values, i.e. key-value pairs.
+
+``` clojure
+(def user-info ["robert8990" 2011 :name "Bob" :city "Boston"])
+;= #'user/user-info
+
+(let [[username account-year & extra-info] user-info
+      {:keys [name city]} (apply hash-map extra-info)]
+  (format "%s is in %s" name city))
+;= "Bob is in Boston"
+
+(let [[username account-year & {:keys [name city]}] user-info]
+  (format "%s is in %s" name city))
+;= "Bob is in Boston"
+```
+
+### Creating Functions
