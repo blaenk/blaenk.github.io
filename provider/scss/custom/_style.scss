@@ -309,27 +309,6 @@ hr {
   background-color: #ffc;
 }
 
-.post {
-  .meta {
-    clear: both;
-    position: static;
-    width: auto;
-
-    // TODO: move this to post.scss
-    .date, .tags, .commit, .notes {
-      display: inline-block;
-      margin-right: 30px;
-    }
-
-    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
-      .entry-content a:hover {
-        color: #258FB8;
-        text-decoration: underline;
-      }
-    }
-  }
-}
-
 figure.codeblock {
   margin: 15px 0;
   cursor: default;

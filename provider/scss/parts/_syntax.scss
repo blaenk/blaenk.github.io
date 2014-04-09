@@ -19,6 +19,10 @@ $solar-green:   #859900 !default; //
   .nn { color: $solar-blue; }
 }
 
+.language-scala {
+  .nc { color: $solar-yellow; }
+}
+
 .language-gdb {
   .kt { color: $solar-cyan; }
   .nb { color: $solar-red; }

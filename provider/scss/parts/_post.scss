@@ -22,6 +22,16 @@
 		color: $color-gray02;
 		width: 230px;
 		margin-top: 15px;
+    clear: both;
+    position: static;
+    width: auto;
+
+    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      .entry-content a:hover {
+        color: #258FB8;
+        text-decoration: underline;
+      }
+    }
 		@media screen and (max-width: 766px){
 			position: static;
 			width: auto;
@@ -36,7 +46,9 @@
         }
       }
 		}
-		.date, .tags, .commit, .notes {
+		.meta-component {
+      display: inline-block;
+      margin-right: 30px;
       i {
         color: $color-gray03;
         margin-right: 2px;
@@ -45,7 +57,7 @@
         cursor: default;
 
         @media not screen and (max-width: 600px){
-          vertical-align: bottom;
+          vertical-align: top;
         }
       }
 			position: relative;
@@ -54,6 +66,5 @@
 				margin-right: 30px;
 			}
 		}
-		.commit .hash { font-family: $font-mono; }
 	}
 }
