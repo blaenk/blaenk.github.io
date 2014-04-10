@@ -16,10 +16,11 @@ import System.Process
 import System.FilePath
 
 -- for groupByYear
-import Data.List (sortBy, groupBy, intersperse)
+import Data.List (sortBy, groupBy, intersperse, intercalate)
 import Data.Maybe (catMaybes)
 import Data.Ord (comparing)
 import Control.Monad (liftM, forM)
+import Control.Applicative ((<$>))
 import System.Locale (defaultTimeLocale)
 import Data.Time.Clock
 import Data.Time.Calendar
@@ -67,7 +68,7 @@ postCtx preview = mconcat
   , commentsTag "comments"
   , commentsJS "commentsJS"
   , gitTag "git"
-  , iconTag "icon"
+  , socialTag "social"
   , pushJS preview "pushJS"
   , defaultCtx
   ]
@@ -104,10 +105,6 @@ niceItemUrl =
   where removeIndexStr url = case splitFileName url of
           (dir, "index.html") -> dir
           _ -> url
-
-iconTag :: String -> Context String
-iconTag key = field key $ \item -> do
-  fmap (maybe "icon-chevron-right" ("icon-" ++)) $ getMetadataField (itemIdentifier item) "icon"
 
 commentsOn :: (MonadMetadata m) => Item a -> m Bool
 commentsOn item = do
@@ -156,6 +153,19 @@ pushJS preview key = field key $ \item -> do
       gend <- applyTemplate tmpl (constField "path" path) itm
       return $ itemBody gend
     else return ""
+
+socialTag :: String -> Context String
+socialTag key = field key $ \item -> do
+  let link = \name ln -> "<a href=\"" ++ ln ++ "\">" ++ name ++ "</a>"
+
+  redditM <- fmap (link "Reddit") <$> getMetadataField (itemIdentifier item) "reddit"
+  hnM     <- fmap (link "HN")     <$> getMetadataField (itemIdentifier item) "hn"
+
+  let links = intercalate ", " . catMaybes $ [hnM, redditM]
+
+  if null links
+    then return ""
+    else return $ "<div class=\"meta-component\"><i class=\"fa fa-comments-o fa-fw\"></i>" ++ links ++ "</div>"
 
 gitTag :: String -> Context String
 gitTag key = field key $ \item -> do

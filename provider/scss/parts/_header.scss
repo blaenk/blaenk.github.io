@@ -3,7 +3,7 @@ $header-height: 30px;
 #header{
 	height: $header-height;
 	padding: 25px 0 30px 0;
-	border-bottom: 5px solid #8ccaff;
+	border-bottom: 3px solid #8ccaff;
   @media screen and (max-width: 766px){
     text-align: center;
   }

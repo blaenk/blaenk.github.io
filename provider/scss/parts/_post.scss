@@ -21,12 +21,14 @@
 		font-size: 0.9em;
 		color: $color-gray02;
 		width: 230px;
-		margin-top: 15px;
+    padding: 10px 0;
+    border-top: 2px solid #eeeeee;
     clear: both;
     position: static;
     width: auto;
 
     @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      text-align: center;
       .entry-content a:hover {
         color: #258FB8;
         text-decoration: underline;
@@ -49,6 +51,9 @@
 		.meta-component {
       display: inline-block;
       margin-right: 30px;
+      @media screen and (max-width: 600px){
+        display: block;
+      }
       i {
         color: $color-gray03;
         margin-right: 2px;
@@ -62,7 +67,6 @@
       }
 			position: relative;
 			@media screen and (max-width: 766px){
-        display: inline-block;
 				margin-right: 30px;
 			}
 		}
