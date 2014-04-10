@@ -238,7 +238,7 @@ speed(time = 10, distance = 100)
 It's possible to define default parameter values:
 
 ``` scala
-def printTime(out: java.io.PrintStream  Console.out) =
+def printTime(out: java.io.PrintStream) =
   out.println("time = " + System.currentTimeMillis())
 ```
 
