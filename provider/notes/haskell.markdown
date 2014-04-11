@@ -87,7 +87,7 @@ SPARKS: 100 (100 converted, 0 overflowed, 0 dud, 0 GC'd, 0 fizzled)
 
 Term       Definition
 -----      -----------
-converted  successfully evaluated in parallel
+converted  evaluated in parallel
 overflowed didn't fit in the spark pool
 dud        already evaluated, ignored
 GC'd       unused, garbage collected
