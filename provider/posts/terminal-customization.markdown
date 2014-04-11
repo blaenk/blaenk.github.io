@@ -67,7 +67,9 @@ Here it is in text:
 λ ~/code/haskell ➜
 ~~~
 
+<div class="callout">
 **Update**: I have changed my prompt to be multiline. All that has changed is that the ➜ is on its own line.
+</div>
 
 #### git
 
@@ -97,7 +99,9 @@ Once again in text:
 [someserver] λ ~/.dots (master) ➜ 
 ~~~
 
+<div class="callout">
 **Update --- October 28, 2013**: I've actually done away with this component of the prompt. I didn't like how the lambda no longer aligned with the arrow symbol --- it created a sort of inconsistency. I've instead decided to add a pretty simple green `R` at the end of the current working path, to signify that I am on a "remote" machine, so it reads something like "currently on x path remotely."
+</div>
 
 ```
 λ ~/.dots R (master)
