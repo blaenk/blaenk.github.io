@@ -194,22 +194,73 @@ let t = s; // box becomes immutable
 
 # References
 
-References are non-owning views of a value which are obtained using the address-of operator `&` and dereferenced using the `*` operator. In patterns, the `ref` keyword can be used to bind a variable name by reference rather than by value. [^cpp11_ref]
+The `&` symbol has multiple context-dependent meanings in Rust, as in C++ [^cpp_references]. Remembering that expressions are for constructing and patterns for destructuring, a `&` in a pattern _dereferences_ the expression being destructured. This can be useful to avoid having to manually dereference the variable within the body using `*`.
 
-[^cpp11_ref]: This really reminds me of C++11's [`std::ref`](http://en.cppreference.com/w/cpp/utility/functional/ref).
+For example, the `fold` function takes a folding operation in the form of a closure that is passed the accumulator and a reference `&T` to the current element, which means that within the body it would have to be manually dereferenced with `*`, and we can avoid that by specifying the `&` in the pattern.
+
+[^cpp_references]: In C++, an `&` on the lhs can be the ref-qualifier, i.e. _bind by reference_, and on the rhs it can be the address-of operator.
 
 ``` rust
-fn eq(xs: &List, ys: &List) -> bool {
-  match (xs, ys) {
-    (&Nil, &Nil) => true,
-    (&Cons(x, ~ref next_xs), &Cons(y, ~ref next_ys)) if x == y => eq(next_xs, next_ys),
-    _ => false
-  }
-}
+let manual  = v.iter().fold(0, |a, b| a + *b);
+let pattern = v.iter().fold(0, |a, &b| a + b);
+```
 
-let xs = Cons(5, ~Cons(10, ~Nil));
-let ys = Cons(5, ~Cons(10, ~Nil));
+It's also necessary when attempting to match on borrowed values. In this case, it reads as _dereference the variable then see if it matches the pattern_.
+
+``` rust
+let x = Some(5);
+let y = (&x, 2);
+
+match y {
+  (&Some(a), b) => a + b,
+  (_, a) => a
+}
+```
+
+In a type signature, the `&` means the parameter is a reference. A reference can be passed to such a function by using `&` in an expression, which is essentially the address-of operator in that context.
+
+``` rust
+fn eq(xs: &int, ys: &int) -> bool { ... }
+
+let xs = ~34;
+let ys = ~34;
 assert!(eq(&xs, &ys));
+```
+
+There is also the `ref` keyword that can be used in a pattern. In this context, it is similar to C++'s ref-qualifier, which means bind by reference. This is required when matching on something that can't or we don't want to be taken by value.
+
+For example, we want to get a reference to the `Foo` in `&Option<Foo>`. Taking it by value would require moving ownership, but since the `Option` is borrowed we don't have ownership to begin with. Instead we bind the `foo` by reference which does away with the need to take ownership.
+
+``` rust
+let some = Some(foo);
+let borrowed = &some;
+
+match borrowed {
+  &Some(ref foo) => *foo
+}
+```
+
+There's also a language inconsistency where `"str"` is of type `&str`, but to get a type of `&&str` it doesn't suffice to simply do `&"str"`, because that _too_ is treated as `&str`, so _two_ are needed: `&&str`.
+
+In the following example, `contains_key` takes a value of type `&K` where `K` is the key type. The key type is `&str`, so `&K` is `&&str`. Because of the language inconsistency noted above, two `&`'s must prefix the string literal in order to yield a `&&str` to pass to `contains_key`.
+
+Issue [#10105] is a proposal to fix this. I've also read that [DST] will fix this as a consequence of its implementation.
+
+[#10105]: https://github.com/mozilla/rust/issues/10105
+[DST]: https://github.com/mozilla/rust/issues/6308
+
+``` rust
+use collections::Hashmap;
+
+// type inferred as HashMap<&str, &str>
+let mut items = HashMap::new();
+
+items.insert("key1", "value1");
+items.insert("key2", "value2");
+
+if !items.contains_key(& &"key1") {
+  println!("not present");
+}
 ```
 
 # Parameterized Types
