@@ -1,5 +1,5 @@
 ---
-title: Machine Learning Theory
+title: Machine Learning
 published: September 30, 2013
 excerpt: Machine Learning concepts
 comments: off
