@@ -16,6 +16,10 @@ My main resources are the [tutorial] and [manual]. As usual, oftentimes some thi
 
 * toc
 
+# Printing
+
+Use the `print!`, `println!`, and `write!` macros to print strings in a `printf`-like manner. If just printing an actual string, then just use the direct functions `print` and `println`. The `format!` macro also exists for creating a `~str` with a specific format. See the docs for [`std::fmt`](http://static.rust-lang.org/doc/master/std/fmt/index.html) for more information.
+
 # Pattern Matching
 
 Pattern matching takes the place of regular switch statements. Pattern matches don't fall through. The pipe operator `|` can be used to combine multiple patterns into one arm. The underscore `_` is a wildcard pattern as in Haskell. As in Haskell, matches must be exhaustive. Every case is separated by commas, unless block expressions are used. As in Haskell, pattern matching can be used to bind values. Pattern guards are added using `if` expressions:
