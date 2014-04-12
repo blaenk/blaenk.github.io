@@ -217,15 +217,27 @@ match y {
 }
 ```
 
-In a type signature, the `&` means the parameter is a reference. A reference can be passed to such a function by using `&` in an expression, which is essentially the address-of operator in that context.
+A `&` in a function signature means that the parameter accepts a reference. Owned pointers `~` and types that implement the `Deref` trait are automatically converted to references when passed to such functions. Variables on the stack, on the other hand, can yield a reference manually using `&`, which is the address-of operator in that context.
 
 ``` rust
 fn eq(xs: &int, ys: &int) -> bool { ... }
 
 let xs = ~34;
-let ys = ~34;
-assert!(eq(&xs, &ys));
+let ys = 34;
+assert!(eq(xs, &ys));
 ```
+
+A `&` that's applied to an rvalue is a shorthand for creating a temporary and taking its address.
+
+``` rust
+let explicit = Point {x: 3.0, y: 4.0};
+reference_taking_func(&explicit);
+
+let shorthand = &Point {x: 3.0, y: 4.0};
+reference_taking_func(shorthand);
+```
+
+A mutable reference `&mut` is one through which the pointed-to variable can be modified, provided the pointed-to variable is also mutable. When a mutable reference exists, no other kind of reference can exist, regardless of whether it's mutable or not. Compare this with a regular, immutable reference of which many can exist to the same variable, since the variable cannot be modified through it.
 
 There is also the `ref` keyword that can be used in a pattern. In this context, it is similar to C++'s ref-qualifier, which means bind by reference. This is required when matching on something that can't or we don't want to be taken by value.
 
