@@ -940,7 +940,7 @@ use std::prelude::*;
 
 It's possible to give a lifetime a name in order to explicitly specify the lifetime of a returned reference. In the following case, the named lifetime `'r` is associated with the parameter `p: &Point`, this named lifetime is then also mentioned in the return type. What this means is that the returned reference will have the same lifetime as the passed in pointer parameter `p`. In effect, this means that the returned reference will remain valid as long as `p` itself remains valid.
 
-This is necessary because, generally it's only possible to return references derived from a parameter to the function, and named parameters explicitly specify which parameter that is.
+This is necessary because, generally it's only possible to return references derived from a parameter to the function, and named lifetimes explicitly specify which parameter that is. The lifetime is something that's implicitly passed in from the caller's context, just like the parameter.
 
 ``` rust
 struct Point {x: f64, y: f64}
@@ -981,6 +981,18 @@ fn select<'r, T>(shape: Shape, threshold: f64, a: &'r T, b: &'r T) -> &'r T {
     a
   } else {
     b
+  }
+}
+```
+
+It's also possible to use named lifetime notation to label control structures, allowing for breaking and continuing to specific locations.
+
+``` rust
+'h: for i in range(0,10) {
+  'g: loop {
+    if i % 2 == 0 { continue 'h; }
+    if i == 9 { break 'h; }
+    break 'g;
   }
 }
 ```
