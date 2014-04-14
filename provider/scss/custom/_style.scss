@@ -5,6 +5,8 @@
   background-color: #fefdd9;
   padding: 10px;
   margin: 15px 0;
+
+  p:first-child { margin-top: 0; }
 }
 
 .post-info {
@@ -74,6 +76,10 @@ p.notfound {
 .center {
   margin-left: auto;
   margin-right: auto;
+}
+
+.clear {
+  clear: both;
 }
 
 .left {
@@ -539,7 +545,7 @@ figure.codeblock {
 article .entry-content blockquote {
   font-size: 1.1em;
   line-height: 1.4;
-  margin: 30px auto;
+  margin: 30px auto 15px;
 
   .padded-quote {
     padding: 0 35px;
@@ -548,7 +554,7 @@ article .entry-content blockquote {
       padding-left: 30px;
       padding-right: 30px;
     }
-    
+
     p {
       text-align: justify;
       // word-break: break-word;
@@ -556,14 +562,13 @@ article .entry-content blockquote {
       -moz-hyphens: auto;
       hyphens: auto;
     }
+  }
 
-    footer {
-      border-top: none;
-      padding-top: 0;
-      padding-bottom: 0;
-      font-size: 16px;
-      margin-top: 5px;
-    }
+  footer {
+    padding: 0 35px;
+    border-top: none;
+    font-size: 16px;
+    margin-top: 10px;
   }
 
   hr {
@@ -604,10 +609,11 @@ article .entry-content blockquote {
     }
   }
 
-  hr:last-child {
+  hr:last-of-type {
     text-align: right;
     margin-top: 10px;
     margin-left: 30px;
+    margin-bottom: 0;
 
     @media screen and (max-width: 600px) {
       margin-left: 30px;

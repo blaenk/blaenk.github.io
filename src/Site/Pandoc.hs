@@ -124,8 +124,13 @@ tableOfContents _ _ x = x
 
 quoteRulers :: Block -> Block
 quoteRulers (BlockQuote contents) =
-  BlockQuote $ [HorizontalRule, padded, HorizontalRule]
-  where padded = Div ("", ["padded-quote"], []) $ contents
+  BlockQuote $ [HorizontalRule, quote, HorizontalRule] ++ citation
+  where
+    (q, citation) = break isFooter contents
+    quote = Div ("", ["padded-quote"], []) q
+    isFooter x = case x of
+                   RawBlock (Format "html") "<footer>" -> True
+                   _ -> False
 quoteRulers x = x
 
 abbreviations :: Map.Map String String -> Block -> Block
@@ -150,13 +155,13 @@ tocRemover x = x
 
 pygments :: Streams -> Block -> Block
 pygments streams (CodeBlock (_, classes, keyvals) contents) =
-  let lang = fromMaybe (if not . null $ classes then head classes else "text") $ lookup "lang" keyvals
+  let lang = fromMaybe (if null classes then "text" else head classes) $ lookup "lang" keyvals
       code = if lang == "text"
                then renderHtml $ H.toHtml contents
                else pygmentize streams lang contents
       colored = renderHtml $ H.pre $ H.code ! A.class_ (H.toValue $ "highlight language-" ++ lang) $ do
                   preEscapedToHtml code
-      caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) (lookup "text" keyvals)
+      caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) $ lookup "text" keyvals
       composed = renderHtml $ H.figure ! A.class_ "codeblock" $ do
                    preEscapedToHtml $ colored ++ caption
   in RawBlock "html" composed
