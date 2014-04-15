@@ -13,9 +13,10 @@ Recently I've been thinking about my opinions on the various languages I know, p
 *[JVM]: Java Virtual Machine
 *[VM]: Virtual Machine
 
-I didn't have an overwhelming reaction to Scala, so I decided to give Clojure a shot as well to better compare them. My main resource is the book [Clojure Programming].
+I didn't have an overwhelming reaction to Scala, so I decided to give Clojure a shot as well to better compare them. My main resource is the book [Clojure Programming]. There's also [Clojure for the Brave and True].
 
 [Clojure Programming]: http://amzn.com/1449394701
+[Clojure for the Brave and True]: http://www.braveclojure.com/
 
 * toc
 
@@ -32,8 +33,6 @@ Because Clojure code is itself an AST in a Clojure data structure, metaprogrammi
 
 Clojure AST structures can be deserialized into Clojure structures using the `read`-like functions. In the following examples, the structures are printed back out by the REPL using the `pr-str` function. The fact that serialization of Clojure structures is this straightforward is what drives most Clojure developers to use it as the primary serialization mechanism.
 
-**Note** the Clojure REPL always starts in the default `user` namespace.
-
 *[REPL]: Read-Eval-Print-Loop
 
 ``` clojure
@@ -44,6 +43,12 @@ Clojure AST structures can be deserialized into Clojure structures using the `re
 (pr-str (read-string "[1 2 3]"))
 ;= [1 2 3]
 ```
+
+<div class="callout">
+
+**Note**: the Clojure REPL always starts in the default `user` namespace.
+
+</div>
 
 The reader allows for different syntax to make code more concise. For example, evaluation of a form can be suppressed by prefixing it with a quote `'`. Anonymous function literals can be defined with `#()`.
 
@@ -244,9 +249,22 @@ The special form `do` evaluates all of the expressions provided to it in order a
   (+ a b))
 ```
 
-### Defining Vars
+### Vars
 
 The special form `def` defines or redefines a var with an optional value within the current namespace. Other forms implicitly create or redefine vars and are usually prefixed with `def` such as `defn` and `defn-`.
+
+It's possible to refer to vars instead of the values that they hold by using the special form `var`. There's also a shorthand for this with `#'`.
+
+``` clojure
+(def x 5)
+;= #'user/x
+
+(var x)
+;= #'user/x
+
+#'x
+;= #'user/x
+```
 
 ### Local Bindings
 
@@ -341,3 +359,179 @@ It's also possible to destructure vectors which themselves contain key-value pai
 ```
 
 ### Creating Functions
+
+The special form `fn` is used to create functions. A function defined this way has no name, and so cannot be referred to later on. It can be place inside a var using the `def` form. The `fn` form also takes an optional name by which the function can reference itself. Furthermore, a function can have _multiple arities_, that is, define different bodies depending on the number of arguments passed.
+
+``` clojure
+((fn [x] (+ 10 x)) 8)
+
+(def add-ten (fn [x] (+ 10 x)))
+
+(add-ten 20)
+;= 30
+
+(def strange-adder (fn adder-self-reference
+                    ([x] (adder-self-reference x 1))
+                    ([x y] (+ x y))))
+
+(strange-adder 10)
+;= 11
+
+(strange-adder 10 50)
+;= 60
+```
+
+The `defn` form encapsulates the functionality of `def` and `fn`.
+
+``` clojure
+(defn strange-adder
+  ([x] (strange-adder x 1))
+  ([x y] (+ x y)))
+```
+
+The special form `letfn` can be used to define multiple functions at once that are aware of each other. This is useful for definining mutually recursive functions.
+
+``` clojure
+(letfn [(odd? [n]
+          (even? (dec n)))
+        (even? [n]
+          (or (zero? n)
+            (odd? (dec n))))])
+
+(odd? 11)
+;= true
+```
+
+Variadic functions are possible using the rest arguments syntax from destructuring.
+
+``` clojure
+(defn concat-rest
+  [x & rest]
+  (apply str (butlast rest)))
+
+(defn make-user
+  [& [user-id]]
+  {:user-id (or user-id (str (java.util.UUID/randomUUID)))})
+```
+
+It's also possible to use keyword arguments in functions, which is facilitated through map destructuring of rest sequences.
+
+``` clojure
+(defn make-user
+  [username & {:keys [email join-date]
+               :or {join-date (java.util.Date.)}}]
+  {:username username
+   :join-date join-date
+   :email email
+   :exp-date (java.util.Date. (long (+2.592e9 (.getTime join-date))))})
+
+(make-user "Bobby")
+(make-user "Bobby"
+            :join-date (java.util.Date. 111 0 1)
+            :email "bobby@example.com")
+```
+
+Function literals have specific, concise syntax by being prepended with `#`. Placeholder arguments are prepended with `%`, though the first argument can be referred to by a single `%`. Function literals don't contain an implicit `do` form, so multiple statements require an explicit `do` form. It's also possible to specify variadic functions by assigning the rest of the arguments to `%&`.
+
+``` clojure
+(fn [x y] (Math/pow x y))
+#(Math/pow %1 %2)
+
+(fn [x & rest] (- x (apply + rest)))
+#(- % (apply + %&))
+```
+
+<div class="callout">
+
+**Note**: Function literals cannot be nested.
+
+</div>
+
+### Conditionals
+
+The special form `if` is the single primitive conditional operator in Clojure. If no else-expression is provided it is assumed to be `nil`. There other conditionals based on this form that are more convenient in specific situations.
+
+``` clojure
+(if condition? true false)
+
+(if-let [nums (seq (filter even? [1 2 3 4]))]
+  (reduce + nums)
+  "No even numbers found.") ; else
+
+(when (= x y) true) ; else nil
+
+(cond
+  (< n 0) "negative"
+  (> n 0) "positive"
+  :else   "zero")
+```
+
+### Looping
+
+The special form `recur` transfers control to the local-most `loop` or function, allowing recursion without consuming stack space and thereby overflowing the stack. The `loop` special form takes a vector of binding names and initial values. The final expression is taken as the value of the form itself. The `recur` special form is considered very low-level that is usually unnecessary, instead opting for `doseq`, `dotimes`, `map`, `reduce`, `for`, and so on.
+
+``` clojure
+(loop [x 5]
+  (if (neg? x)
+    x
+    (recur (dec x))))
+
+(defn countdown
+  [x]
+  (if (zero? x)
+    :blastoff!
+    (do (println x)
+        (recur (dec x)))))
+```
+
+### Java Interop
+
+The special forms `.` and `new` exist for Java interoperability. Their use is somewhat unnatural in Clojure, however, and so there are sugared forms which are idiomatic.
+
+There are also special forms for exception handling and throwing. There are also lock primitives to synchronize on the monitor associated with every Java object, but this is usually unnecessary as there's macro `locking` that is better suited.
+
+``` clojure
+; instantiation
+(new java.util.ArrayList 100)
+(java.util.ArrayList. 100)
+
+; static method
+(. Math pow 2 10)
+(Math/pow 2 10)
+
+; instance method
+(. "hello" substring 1 3)
+(.substring "hello" 1 3)
+
+; static fields
+(. Integer MAX_VALUE)
+Integer/MAX_VALUE
+
+; instance field
+(. some-object some-field)
+(.someField some-object)
+```
+
+### Specialized Mutation
+
+The `set!` special form can be used to perform in-place mutation of state, which is useful for setting thread-local values, Java fields, or mutable fields.
+
+### Eval
+
+The `eval` form evaluates its single argument form, which is useful when used with `quote` or `'` to suppress evaluation of the argument until it's evaluated by `eval`. With this final form, it's possible to reimplement a simple REPL.
+
+``` clojure
+(defn simple-repl
+  "Simple REPL. :quit to exit."
+  []
+  (print (str (ns-name *ns*) ">>> "))
+  (flush)
+  (let [expr (read)
+        value (eval expr)]
+    (when (not= :quit value)
+      (println value)
+      (recur))))
+
+(simple-repl)
+```
+
