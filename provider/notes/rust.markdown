@@ -8,11 +8,12 @@ toc: left
 
 I took a shot at [learning Go] recently and I found its simplicity to be refreshing. Rust is a similar language from Mozilla which I've been interested in for a while now.
 
-My main resources are the [tutorial] and [manual]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it.
+My main resources are the [tutorial] and [manual], but there are [many more]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it.
 
 [learning Go]: /notes/go/
 [tutorial]: http://static.rust-lang.org/doc/master/tutorial.html
 [manual]: http://static.rust-lang.org/doc/master/rust.html
+[many more]: http://static.rust-lang.org/doc/master/index.html
 
 * toc
 
