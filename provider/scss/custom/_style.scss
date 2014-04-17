@@ -118,11 +118,12 @@ article .entry-content table {
   font-size: 0.875em;
   margin: 25px auto;
   background: #F2F9FF;
-  border: 2px solid #8ccaff;
+  border: 2px solid #428bca;
 
   th {
-    background: #8ccaff;
-    color: #00427b;
+    background: #428bca;
+    color: white;
+    font-weight: normal;
   }
 
   td { color: #00427B; }
@@ -333,11 +334,12 @@ figure.codeblock {
       display: none;
     }
 
-    background-color: #8ccaff;
+    background-color: #D0E9FF;
     padding: 5px 10px;
     position: relative;
     font-size: 87.5%;
-    color: #00427b;
+    color: #00427B;
+    text-align: center;
 
     abbr {
       border-bottom: 1px dotted #00427B;
@@ -351,7 +353,6 @@ figure.codeblock {
       background: none;
       padding: 0;
       margin: 0;
-      font-weight: bold;
       display: block;
 
       &:empty{
