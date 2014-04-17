@@ -79,6 +79,11 @@ code {
   padding: 1px 5px;
 }
 
+code.path {
+  background-color: inherit;
+  padding: 0;
+}
+
 .highlight {
    color: #2381c4;
    background-color: inherit;

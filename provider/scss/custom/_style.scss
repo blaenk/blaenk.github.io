@@ -118,12 +118,11 @@ article .entry-content table {
   font-size: 0.875em;
   margin: 25px auto;
   background: #F2F9FF;
-  border: 2px solid #428bca;
+  border: 2px solid #8ccaff;
 
   th {
-    background: #428bca;
-    color: white;
-    font-weight: normal;
+    background: #8ccaff;
+    color: #00427b;
   }
 
   td { color: #00427B; }
@@ -308,8 +307,8 @@ hr {
 }
 
 #comment {
-  padding-top: 10px;
-  border-top: 2px solid #8ccaff;
+  padding: 10px 0;
+  border-top: 2px solid #eeeeee;
   clear: both;
 }
 

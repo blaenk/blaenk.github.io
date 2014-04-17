@@ -61,7 +61,8 @@ pandocCompiler streams item = do
       transformer =
         tableOfContents' .
         (walk $ pygments streams) .
-        (walk quoteRulers) .
+        (walk quotes) .
+        (walk paths) .
         (walk $ abbreviations abbrs)
 
   pandocTransformer readerOptions writerOptions transformer item
@@ -122,8 +123,8 @@ tableOfContents headers alignment x@(BulletList (( (( Plain ((Str "toc"):_)):_))
         table  = createTable . groupByHierarchy
 tableOfContents _ _ x = x
 
-quoteRulers :: Block -> Block
-quoteRulers (BlockQuote contents) =
+quotes :: Block -> Block
+quotes (BlockQuote contents) =
   BlockQuote $ [HorizontalRule, quote, HorizontalRule] ++ citation
   where
     (q, citation) = break isFooter contents
@@ -131,7 +132,11 @@ quoteRulers (BlockQuote contents) =
     isFooter x = case x of
                    RawBlock (Format "html") "<footer>" -> True
                    _ -> False
-quoteRulers x = x
+quotes x = x
+
+paths :: Inline -> Inline
+paths (Code (_, ["path"], _) code) = Code ("", ["path"], []) $ replaceAll "/" (const "\x200b\&/") code
+paths x = x
 
 abbreviations :: Map.Map String String -> Block -> Block
 abbreviations abbrs (Para inlines)  = Para  $ walk (substituteAbbreviation abbrs) inlines
@@ -163,7 +168,7 @@ pygments streams (CodeBlock (_, classes, keyvals) contents) =
                   preEscapedToHtml code
       caption = maybe "" (renderHtml . H.figcaption . H.span . preEscapedToHtml) $ lookup "text" keyvals
       composed = renderHtml $ H.figure ! A.class_ "codeblock" $ do
-                   preEscapedToHtml $ colored ++ caption
+                   preEscapedToHtml $ caption ++ colored
   in RawBlock "html" composed
 pygments _ x = x
 
