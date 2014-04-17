@@ -39,7 +39,7 @@ $ threadscope program.eventlog
 
 ## Eval Monad
 
-The `Eval` monad from `Control.Parallel.Strategies` expresses parallelism naturally. The `rpar` combinator expresses that the argument can be evaluated in parallel, and `rseq` forces sequential evaluation. Evaluation is to weak head normal form (WHNF), i.e. the outermost type constructor is evaluated. Notice that the monad is completely pure, with no need for the `IO` monad.
+The `Eval` monad from Control.Parallel.Strategies expresses parallelism naturally. The `rpar` combinator expresses that the argument can be evaluated in parallel, and `rseq` forces sequential evaluation. Evaluation is to weak head normal form (WHNF), i.e. the outermost type constructor is evaluated. Notice that the monad is completely pure, with no need for the `IO` monad.
 
 *[WHNF]: Weak Head Normal Form
 
@@ -95,7 +95,7 @@ fizzled    evaluated some place else
 
 ## Deepseq
 
-The `Control.Deepseq` module contains various utilities for forcing the evaluation of a thunk. It defines the `NFData`, i.e. _normal-form data_, type class. This type class has only one method, `rnf`, i.e. _reduce to normal-form_, which defines how the particular type may be evaluated to normal form, returning `()` afterward:
+The Control.Deepseq module contains various utilities for forcing the evaluation of a thunk. It defines the `NFData`, i.e. _normal-form data_, type class. This type class has only one method, `rnf`, i.e. _reduce to normal-form_, which defines how the particular type may be evaluated to normal form, returning `()` afterward:
 
 ``` haskell
 class NFData a where
@@ -180,7 +180,7 @@ r0 x = return x
 evalPair (evalPair rpar r0) (evalPair rpar r0) :: Strategy ((a, b), (c, d))
 ```
 
-The `parMap` function can be defined in terms of evaluation strategies. The `parList` function is a strategy that evaluates list elements in parallel. Defining `parList` can take the same approach as before: define a parameterized strategy on lists called `evalList` and then define a parameterized function `parList` that performs `evalList` in parallel. Both of these functions are already defined in `Control.Parallel.Strategies`:
+The `parMap` function can be defined in terms of evaluation strategies. The `parList` function is a strategy that evaluates list elements in parallel. Defining `parList` can take the same approach as before: define a parameterized strategy on lists called `evalList` and then define a parameterized function `parList` that performs `evalList` in parallel. Both of these functions are already defined in Control.Parallel.Strategies:
 
 ``` haskell
 evalList :: Strategy a -> Strategy [a]
