@@ -107,6 +107,7 @@ I set the statusline using the `%!SomeFunc()` syntax so that the result of the f
 The documentation presented the solution to this problem:
 
 > Note that the "`%!`" expression is evaluated in the context of the current window and buffer, while `%{}` items are evaluated in the context of the window that the statusline belongs to.
+>
 > <footer><strong>Vim 7.4</strong> <cite><a href="http://vimhelp.appspot.com/options.txt.html#%27statusline%27">docs</a></cite></footer>
 
 This means that if we want to perform behavior specific to the window or buffer for which the statusline is being created, we should wrap that in a `%{}` expression block:
