@@ -16,7 +16,7 @@ import System.Process
 import System.FilePath
 
 -- for groupByYear
-import Data.List (sortBy, groupBy, intersperse, intercalate)
+import Data.List (sortBy, groupBy, intersperse, intersperse)
 import Data.Maybe (catMaybes)
 import Data.Ord (comparing)
 import Control.Monad (liftM, forM)
@@ -156,16 +156,18 @@ pushJS preview key = field key $ \item -> do
 
 socialTag :: String -> Context String
 socialTag key = field key $ \item -> do
-  let link = \name ln -> "<a href=\"" ++ ln ++ "\">" ++ name ++ "</a>"
+  let link = \name ln -> H.a ! A.href (toValue ln) $ toHtml (name :: String)
 
   redditM <- fmap (link "Reddit") <$> getMetadataField (itemIdentifier item) "reddit"
   hnM     <- fmap (link "HN")     <$> getMetadataField (itemIdentifier item) "hn"
 
-  let links = intercalate ", " . catMaybes $ [hnM, redditM]
+  let links = intersperse ", " . catMaybes $ [hnM, redditM]
 
   if null links
     then return ""
-    else return $ "<div class=\"meta-component\"><i class=\"fa fa-comments-o fa-fw\"></i>" ++ links ++ "</div>"
+    else return . renderHtml $ H.div ! A.class_ "meta-component" $ do
+                                 H.i ! A.class_ "fa fa-comments-o fa-fw" $ ""
+                                 mconcat links
 
 gitTag :: String -> Context String
 gitTag key = field key $ \item -> do
@@ -182,12 +184,16 @@ gitTag key = field key $ \item -> do
     sha <- gitLog "%h"
     message <- gitLog "%s"
 
-    let url = "https://github.com/blaenk/blaenk.github.io/commit/" ++ sha
+    let history = "https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp
+        commit  = "https://github.com/blaenk/blaenk.github.io/commit/" ++ sha
 
-    return $ if sha == ""
+    return $ if null sha
                then "Not Committed"
-               else "<a href='https://github.com/blaenk/blaenk.github.io/commits/source/" ++ fp ++ "'>History</a>" ++
-                    "<span class='hash'>, <a href='" ++ url ++ "' title='" ++ message ++ "'>" ++ sha ++ "</a></span>"
+               else renderHtml $ do
+                      H.a ! A.href (toValue history) $ "History"
+                      H.span ! A.class_ "hash" $ do
+                        toHtml (", " :: String)
+                        H.a ! A.href (toValue commit) ! A.title (toValue message) $ toHtml sha
 
 yearArchives :: Pattern -> Compiler String
 yearArchives pat = do
