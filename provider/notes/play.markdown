@@ -52,19 +52,22 @@ object Product {
 
 # Views
 
-Templates consist of a first line containing template parameters. Embedded Scala statements are prefixed with `@`.
+Templates can accept parameters. Embedded Scala statements are prefixed with `@`.
 
 ``` scala
-@(products: List[Product])(implicit lang: Lang)
+@(title: String)
+<!DOCTYPE html>
+<html>
+<head>
+  <title>@title</title>
+</head>
+</html>
+```
 
-@main(Messages("application.name")) {
-  <dl class="products">
-    @for(product <- products) {
-      <dt>@product.name</dt>
-      <dd>@product.description</dd>
-    }
-  </dl>
-}
+If the above template is saved at `app/views/title.scala.html`{.path} then it can be rendered with:
+
+``` scala
+val html = views.html.title("New Arrivals")
 ```
 
 Tags are similar to partials in other templating systems and they essentially get compiled into functions. Their starting line, for this reason, is a parameter list.
@@ -149,3 +152,4 @@ current.configuration.getConfig("db.default").map {
   dbConfig.getString("url").map(Logger.info(_))
 }
 ```
+
