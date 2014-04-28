@@ -953,7 +953,7 @@ class Pasture {
 }
 ```
 
-It can also be used to generalize a `using` method, such as Python's `with` from, so that it works on any object that has a `close` method. The first attempt at generalization wouldn't work because `T` could be any type, even one that _doesn't_ have a `close` method. This can be fixed by specifying an upper bound consisting of a refinement type. Note that if no base type is specified, like `Animal` preceding the braces above, then Scala uses `AnyRef`
+It can also be used to generalize a `using` method, such as Python's `with` syntax, so that it works on any object that has a `close` method. The first attempt at generalization wouldn't work because `T` could be any type, even one that _doesn't_ have a `close` method. This can be fixed by specifying an upper bound consisting of a refinement type. Note that if no base type is specified, like `Animal` preceding the braces above, then Scala uses `AnyRef`
 
 ``` scala
 def using[T, S](obj: T)(operation: T => S) = {
@@ -993,7 +993,7 @@ Direction(1)      == Direction.East
 
 # Implicit Conversions and Parameters
 
-Implicit conversions [^implicit_conversions_opinion] can be used to make two independent libraries interoperate in an easier manner. For example, using Swing in Scala would look something like this:
+Implicit conversions [^implicit_conversions_opinion] can be used to make two independent libraries interoperate in a simple manner. For example, using Swing in Scala would look something like this:
 
 [^implicit_conversions_opinion]: Now that I've learned what implicit conversions are in Scala, I have formed an opinion about them. Implicit conversions are one of the parts that make C++ [very complex]. Scala's implicit conversions don't seem as complex as C++'s, here they're implicit at the site of use, but explicit at the site of definition. In C++ it feels that they're implicit on both ends, since you can have overloaded conversion operators and conversion constructors on either type, which is further made ambiguous with arithmetic type conversions.
 
