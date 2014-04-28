@@ -241,7 +241,7 @@ Tuple sections are a straightforward extension that allows tuples to be used in 
 ``` haskell
 {-# LANGUAGE TupleSections #-}
 
-(1, "hello",, Just (),) == \x y -> (1, "hello",, Just (),)
+(1, "hello",, Just (),) == \x y -> (1, "hello", x, Just (), y)
 ```
 
 ## Package Imports
@@ -322,8 +322,8 @@ Pattern guards are a generalization of guards which allow _pattern guardlets_ as
 func :: [Int] -> Ordering
 func xs | 7 <- sum xs    -- if the sum is 7
         , n <- length xs -- bind the length to n for further checks
-        , n >= 5         -- and the length is <= 5
-        , n <= 20        -- and <= 5
+        , n >= 5         -- and the length is >= 5
+        , n <= 20        -- and <= 20
           = EQ           -- then evaluate to EQ
         | otherwise
           = LT
