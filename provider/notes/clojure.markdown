@@ -449,7 +449,7 @@ Function literals have specific, concise syntax by being prepended with `#`. Pla
 
 ### Conditionals
 
-The special form `if` is the single primitive conditional operator in Clojure. If no else-expression is provided it is assumed to be `nil`. There other conditionals based on this form that are more convenient in specific situations.
+The special form `if` is the single primitive conditional operator in Clojure. If no else-expression is provided it is assumed to be `nil`. There are other conditionals based on this form that are more convenient in specific situations.
 
 ``` clojure
 (if condition? true false)
