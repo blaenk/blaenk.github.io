@@ -8,12 +8,13 @@ toc: left
 
 I took a shot at [learning Go] recently and I found its simplicity to be refreshing. Rust is a similar language from Mozilla which I've been interested in for a while now.
 
-My main resources are the [tutorial] and [manual], but there are [many more]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it.
+My main resources are the [tutorial] and [manual], but there are [many more]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it. There is also a more basic [Rust by Example] which is similar to the go tour.
 
 [learning Go]: /notes/go/
 [tutorial]: http://static.rust-lang.org/doc/master/tutorial.html
 [manual]: http://static.rust-lang.org/doc/master/rust.html
 [many more]: http://static.rust-lang.org/doc/master/index.html
+[Rust by Example]: http://rustbyexample.github.io/
 
 * toc
 
@@ -1000,7 +1001,7 @@ It's also possible to use named lifetime notation to label control structures, a
 
 # Tasks
 
-Tasks are _green threads_ similar to those in Haskell and perhaps Erlang. Tasks have dynamically sized stacks, starting out with small ones and dynamically growing as required. This means that unlike C/C++, it's not possible to write beyond the end of the stack. Tasks provide failure isolation and recovery. When a problem occurs, the runtime destroys the entire task, and other tasks can monitor each other for failure.
+Tasks have dynamically sized stacks, starting out with small ones and dynamically growing as required. This means that unlike C/C++, it's not possible to write beyond the end of the stack. Tasks provide failure isolation and recovery. When a problem occurs, the runtime destroys the entire task, and other tasks can monitor each other for failure.
 
 Tasks can't share mutable state with each other. Instead they communicate with each other by transferring owned data through the global _exchange heap_.
 
