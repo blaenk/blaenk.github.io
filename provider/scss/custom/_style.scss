@@ -175,13 +175,18 @@ article .entry-content ol {
   list-style-type: none;
 
   &:before {
-    content: '\00BB';
+    content: '»';
     cursor: default;
     position: absolute;
     margin-left: -0.9375em;
-    line-height: 1.25;
-    color: #ccc; // #ddd
     font-family: $font-sans;
+    font-size: 1.2em;
+
+    line-height: 1.1;
+
+    @media screen and (max-width: 600px) {
+      line-height: 0.9;
+    }
   }
 }
 
@@ -578,7 +583,7 @@ article .entry-content blockquote {
     width: auto;
     margin: 20px auto;
     background-color: transparent;
-    border-top: 2px dotted #eee;
+    border-top: 2px solid #eee;
     color: #eee;
   }
 
