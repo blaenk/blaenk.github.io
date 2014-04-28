@@ -874,7 +874,7 @@ void delete(node *m, void *key) {
       delete(c, c->key);
 ~~~
 
-**Second**, if the node to be deleted has a child, simply replace the successor with its child.
+**Second**, if the node to be deleted has one child, simply replace the successor with its child.
 
 ~~~ {lang="c"}
     } else if (m->left != NULL || m->right != NULL) {
