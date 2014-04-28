@@ -13,7 +13,6 @@ import Text.Pandoc.Walk (walk, query)
 import qualified Data.Set as Set
 import Hakyll.Core.Compiler
 import Hakyll.Core.Item
-import Hakyll.Core.Util.String
 import System.IO.Unsafe -- for Pygments
 import Data.List hiding (span)
 import Data.Function (on)
@@ -34,14 +33,8 @@ import Data.Tree
 import Data.Maybe (fromMaybe, fromJust)
 import Data.Monoid ((<>), mconcat)
 import Text.Regex.TDFA ((=~))
+import Text.Regex (mkRegex, subRegex)
 import qualified Data.Map as Map
-
-abbreviationCollector :: Item String -> Map.Map String String
-abbreviationCollector item =
-  let pat = "^\\*\\[(.+)\\]: (.+)$" :: String
-      found = (itemBody item) =~ pat :: [[String]]
-      definitions = map (\(_:abbr:definition:_) -> (abbr, definition)) found
-  in Map.fromList definitions
 
 pandocFeedCompiler :: Item String -> Compiler (Item String)
 pandocFeedCompiler = pandocTransformer readerOptions writerOptions' (walk tocRemover)
@@ -135,23 +128,31 @@ quotes (BlockQuote contents) =
 quotes x = x
 
 paths :: Inline -> Inline
-paths (Code (_, ["path"], _) code) = Code ("", ["path"], []) $ replaceAll "/" (const "\x200b\&/") code
+paths (Code (_, ["path"], _) code) = Code ("", ["path"], []) $ subRegex pat code "\x200b\&\\0"
+  where pat = mkRegex "/|\\.|::"
 paths x = x
 
-abbreviations :: Map.Map String String -> Block -> Block
+abbreviationCollector :: Item String -> Abbreviations
+abbreviationCollector item =
+  let pat = "^\\*\\[(.+)\\]: (.+)$" :: String
+      found = (itemBody item) =~ pat :: [[String]]
+      definitions = map (\(_:abbr:definition:_) -> (abbr, (mkRegex abbr, definition))) found
+  in Map.fromList definitions
+
+abbreviations :: Abbreviations -> Block -> Block
 abbreviations abbrs (Para inlines)  = Para  $ walk (substituteAbbreviation abbrs) inlines
 abbreviations abbrs (Plain inlines) = Plain $ walk (substituteAbbreviation abbrs) inlines
 abbreviations _ x = x
 
-substituteAbbreviation :: Map.Map String String -> Inline -> Inline
+substituteAbbreviation :: Abbreviations -> Inline -> Inline
 substituteAbbreviation abbrs (Str content) =
   case find (content =~) (Map.keys abbrs) of
     Just abbr -> replaceWithAbbr content abbr
     Nothing   -> Str content
   where replaceWithAbbr string abbr =
-          let definition = (fromMaybe "ERROR" $ Map.lookup abbr abbrs)
-              replacement = const $ renderHtml $ H.abbr ! A.title (H.toValue definition) $ preEscapedToHtml abbr
-          in RawInline "html" $ replaceAll abbr replacement string
+          let Just (pat, definition) = Map.lookup abbr abbrs
+              replacement = renderHtml $ H.abbr ! A.title (H.toValue definition) $ preEscapedToHtml abbr
+          in RawInline "html" $ subRegex pat string replacement
 substituteAbbreviation _ x = x
 
 tocRemover :: Block -> Block
