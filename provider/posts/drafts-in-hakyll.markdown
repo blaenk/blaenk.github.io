@@ -24,7 +24,7 @@ The following two draft system implementations exemplify the two approaches I ca
 
 [Octopress](http://octopress.org/) had support for drafts hacked onto Jekyll by way of a plugin that allowed a metadata field `published` to be set that, if set to **false**, would establish an environment variable that would be detected on site generation in order to regenerate the site without the draft posts. This consequently meant that draft posts were stored in the same directory as regular posts.
 
-[Jekyll](http://jekyllrb.com) implemented support for this in its 1.0 version by allowing a new directory, **\_drafts/**, to store draft posts which could be previewed by specifying the `--drafts` flag to most operations. However, it was right after Jekyll 1.0 was released that I decided to switch to Hakyll.
+[Jekyll](http://jekyllrb.com) implemented support for this in its 1.0 version by allowing a new directory, `_drafts/`{.path}, to store draft posts which could be previewed by specifying the `--drafts` flag to most operations. However, it was right after Jekyll 1.0 was released that I decided to switch to Hakyll.
 
 Octopress' draft system was pretty straightforward in my opinion, despite being a pretty hack-ish implementation. I would create drafts in the same directory as all of the other posts, and would simply set metadata `published: false`. This would allow the draft to show up when I previewed the site, but not when it was ultimately deployed. This was accomplished by regenerating the site on deploy, this time without the preview posts.
 
