@@ -57,18 +57,39 @@ p.notfound {
 
   #social {
     cursor: default;
-    font-family: $font-mono;
     font-size: 18px;
     color: #999;
-    
+
     a {
       color: $color-gray02;
       transition: color 0.3s;
+      padding: 20px;
+
+      @media screen and (max-width: 600px) {
+        padding: 10px;
+      }
+
       @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
         &:hover {
           color: $color-gray01;
         }
       }
+    }
+
+    a[title="twitter"]:hover {
+      color: #2eb8e7;
+    }
+
+    a[title="github"]:hover {
+      color: #286da3;
+    }
+
+    a[title="stackoverflow"]:hover, a[title="feed"]:hover {
+      color: #d85620;
+    }
+
+    a[title="email"]:hover {
+      color: #f66;
     }
   }
 }
@@ -274,8 +295,9 @@ article .entry-content ol {
     padding: 0;
     text-align: center;
     width: 100%;
-    background-color: #eee;
+    background-color: #efefef;
     margin: 30px auto 20px;
+    height: 1px;
 
     &:after {
       content: "\00A7";
@@ -313,7 +335,7 @@ hr {
 
 #comment {
   padding: 10px 0;
-  border-top: 2px solid #eeeeee;
+  border-top: 1px solid #efefef;
   clear: both;
 }
 
@@ -520,7 +542,7 @@ figure.codeblock {
 }
 
 #footer {
-  border-top: 2px solid #ddd;
+  border-top: 1px solid #efefef;
 }
 
 .desk_search {
@@ -583,7 +605,7 @@ article .entry-content blockquote {
     width: auto;
     margin: 20px auto;
     background-color: transparent;
-    border-top: 2px solid #eee;
+    border-top: 1px solid #efefef;
     color: #eee;
   }
 
