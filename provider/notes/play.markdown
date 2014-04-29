@@ -88,141 +88,7 @@ current.configuration.getConfig("db.default").map {
 }
 ```
 
-# Models
-
-A model tends to consist of a model class (definition and attributes), data access object (to access model data), and some test data. The model is typically defined as a case class and its data access object is represented by a companion object.
-
-``` scala
-package models
-
-case class Product(
-  ean: Long, name: String, description: String)
-
-object Product {
-  var products = Set(
-    Product(1L, "House", "A huge house"),
-    Product(2L, "Boat", "A tug boat"),
-    Product(3L, "Car", "A luxurious car")
-  )
-
-  def findAll = products.toList.sortBy(_.ean)
-}
-```
-
-# Views
-
-Templates can accept parameters. Embedded Scala statements are prefixed with `@`.
-
-``` scala
-@(title: String)
-<!DOCTYPE html>
-<html>
-<head>
-  <title>@title</title>
-</head>
-</html>
-```
-
-If the above template is saved at `app/views/title.scala.html`{.path} then it can be rendered with:
-
-``` scala
-val html = views.html.title("New Arrivals")
-```
-
-Tags are similar to partials in other templating systems and they essentially get compiled into functions. Their starting line, for this reason, is a parameter list.
-
-``` scala
-@(ean: Long)
-<img class="barcode" alt="@ean" src="@routes.Barcodes.barcode(ean)">
-```
-
-# Controllers
-
-Controllers derive from `Controller` and are basically generators of actions by defining methods that return an instance of `Action`, which constructs a function that handles a request and returns a result. More specifically, this function is of type `Request[A] => Result` where `A` is the type of the request body.
-
-They generally mark the `request` object as `implicit` so that it may be passed to functions implicitly.
-
-``` scala
-package controllers
-
-import play.api.mvc.{Action, Controller}
-import models.Product
-
-object Products extends Controller {
-  def list = Action { implicit request =>
-    val products = Product.findAll
-    Ok(views.html.products.list(products))
-  }
-
-  def details(ean: Long) = Action {
-    NotImplemented // HTTP 501
-  }
-}
-```
-
-The `as` method allows setting the mime-type in a convenient manner, and the `withHeaders` method allows setting headers.
-
-``` scala
-Ok("some result")
-  .as(JSON)
-  .withHeaders(LOCATION -> url)
-```
-
-Actions can be composed, facilitating the re-use of common handlers such as authentication checking and caching:
-
-``` scala
-def list =
-  Authenticate {
-    Cached {
-      Action {
-        // process request
-      }
-    }
-  }
-```
-
-## Session
-
-The session is represented as a map `Map[String, String]` in `request.session` and can easily be modified with the `withSession` method.
-
-``` scala
-Ok(result).withSession(
-  request.session + ("some.data" -> value)
-)
-
-// later on
-
-val data = request.session.get("some.data")
-```
-
-A flash scope is available as in most other web frameworks which is essentially stored in the session and the values only live on until the next request. The `flashing` method makes this straightforward:
-
-``` scala
-Redirect(routes.Products.list()).flashing("info" -> "Product deleted!")
-
-// later on
-
-val message = request.flash("info")
-```
-
-## Assets
-
-The assets controller allows for reverse routing to asset files.
-
-``` scala
-<link href="@routes.Assets.at("images/favicon.png")" type="image/png">
-```
-
-The assets controller handles this automatically by adding an `Etag` header. HTTP Entity Tags (ETags) allows a client to make a conditional HTTP request for a resource so that the server can tell it whether or not to use the cached copy instead.
-
-Compression is also automatically enabled if:
-
-* in production mode
-* request is routed to assets controller
-* HTTP request has `Accept-Encoding: gzip`
-* file with same name and `.gz` suffix is found
-
-# Routing
+## Routing
 
 The `conf/routes`{.path} file contains the mapping of routes to controller actions.
 
@@ -250,8 +116,6 @@ GET /assets/*filepath controllers.Assets.at(path="/public", file)
 GET /product/$ean<\d{13}> controllers.Products.details(ean: Long)
 ```
 
-## Reverse Routing
-
 Reverse routing is a means of programmatically generating routes for a given action method invocation.
 
 ``` scala
@@ -262,7 +126,28 @@ def delete(ean: Long) = Action {
 }
 ```
 
-# Persistence
+# Models
+
+A model tends to consist of a model class (definition and attributes), data access object (to access model data), and some test data. The model is typically defined as a case class and its data access object is represented by a companion object.
+
+``` scala
+package models
+
+case class Product(
+  ean: Long, name: String, description: String)
+
+object Product {
+  var products = Set(
+    Product(1L, "House", "A huge house"),
+    Product(2L, "Boat", "A tug boat"),
+    Product(3L, "Car", "A luxurious car")
+  )
+
+  def findAll = products.toList.sortBy(_.ean)
+}
+```
+
+## Persistence
 
 Play allows for _evolutions_ which are similar to Rails database migrations, which are stored in `conf/evolutions/default/`{.path} and are named `#.sql` where `#` is the revision number. Play automatically asks to apply the evolution the next time the application is accessed. Evolutions take the following form:
 
@@ -285,8 +170,6 @@ Play comes with Squeryl, a DSL for generating SQL in a type-safe manner, and Ano
 [Slick]: http://slick.typesafe.com/
 
 </div>
-
-## Anorm
 
 Anorm has three ways of processing results: Stream API, pattern matching, and parser combinators. SQL queries are constructed using the `SQL` class. The `apply` method of `SQL` accepts an implicit parameter of type `java.sql.Connection`, which `Play` provides from `DB.withConnection`. This `apply` method returns a `Stream[SqlRow]` which can be `map`ped over.
 
@@ -454,7 +337,7 @@ def delete(product: Product): Boolean =
   }
 ```
 
-# Templates
+# Views
 
 Templates in Play are type-safe and consist of interspersed Scala, avoiding the need to learn a template DSL. Templates can specify a parameter list as the first line, which can be used to provide data from the controller's end.
 
@@ -542,4 +425,116 @@ A layout can be created in a straightforward manner from the template concepts c
   <strong>Some Products</strong>
 }
 ~~~
+
+It's possible to define implicit parameters on template parameter lists to avoid having to explicitly pass parameters to the templates. A common pattern is to define a reusable trait with the appropriate implicit values. The `WrappedRequest` class wraps a `Request` and can be extended by a class that defines other values that should be accessible by a template.
+
+## Localization
+
+Localization is pretty straightforward in Play. The `application.conf`{.path} file can take an `application.langs`{.path} option that defines a comma-separated list of languages in ISO 639-2 format optionally followed by an ISO 3166-1 alpha-2 country code.
+
+```
+application.langs="en,en-US,nl"
+```
+
+For each of these languages there should be a corresponding `conf/messages.lang`{.path} file which defines localized messages. These messages can then be referenced using the `Messages` object which takes the message's key as well as an implicit `Lang` value which can be implicitly converted from a `Request` in the scope.
+
+Messages in the file are patterns formatted using [`java.text.MessageFormat`{.path}][messageformat], so that arguments can be inserted with `{#}` where the `#` is the position of the argument. It's also possible to define different messages for zero, one, more items:
+
+[messageformat]: http://docs.oracle.com/javase/8/docs/api/java/text/MessageFormat.html
+
+``` scala
+// cart=Cart {0,choice,0#is empty|1#has one item|1< has {0} items}.
+
+<p>@Messages("cart", 0)</p> // is empty
+<p>@Messages("cart", 1)</p> // has one item
+<p>@Messages("cart", 2)</p> // has 2 items
+```
+
+# Controllers
+
+Controllers derive from `Controller` and are basically generators of actions by defining methods that return an instance of `Action`, which constructs a function that handles a request and returns a result. More specifically, this function is of type `Request[A] => Result` where `A` is the type of the request body.
+
+They generally mark the `request` object as `implicit` so that it may be passed to functions implicitly.
+
+``` scala
+package controllers
+
+import play.api.mvc.{Action, Controller}
+import models.Product
+
+object Products extends Controller {
+  def list = Action { implicit request =>
+    val products = Product.findAll
+    Ok(views.html.products.list(products))
+  }
+
+  def details(ean: Long) = Action {
+    NotImplemented // HTTP 501
+  }
+}
+```
+
+The `as` method allows setting the mime-type in a convenient manner, and the `withHeaders` method allows setting headers.
+
+``` scala
+Ok("some result")
+  .as(JSON)
+  .withHeaders(LOCATION -> url)
+```
+
+Actions can be composed, facilitating the re-use of common handlers such as authentication checking and caching:
+
+``` scala
+def list =
+  Authenticate {
+    Cached {
+      Action {
+        // process request
+      }
+    }
+  }
+```
+
+## Session
+
+The session is represented as a map `Map[String, String]` in `request.session` and can easily be modified with the `withSession` method.
+
+``` scala
+Ok(result).withSession(
+  request.session + ("some.data" -> value)
+)
+
+// later on
+
+val data = request.session.get("some.data")
+```
+
+A flash scope is available as in most other web frameworks which is essentially stored in the session and the values only live on until the next request. The `flashing` method makes this straightforward:
+
+``` scala
+Redirect(routes.Products.list()).flashing("info" -> "Product deleted!")
+
+// later on
+
+val message = request.flash("info")
+```
+
+## Assets
+
+The assets controller allows for reverse routing to asset files.
+
+``` scala
+<link href="@routes.Assets.at("images/favicon.png")" type="image/png">
+```
+
+The assets controller handles this automatically by adding an `Etag` header. HTTP Entity Tags (ETags) allows a client to make a conditional HTTP request for a resource so that the server can tell it whether or not to use the cached copy instead.
+
+Compression is also automatically enabled if:
+
+* in production mode
+* request is routed to assets controller
+* HTTP request has `Accept-Encoding: gzip`
+* file with same name and `.gz` suffix is found
+
+Play has built-in support for Less and CoffeeScript. Such files can easily be referenced using the assets reverse router by its target extension. The extension can be prefixed by `min` to use a minified version. A file can opt-out of compilation by prefixing its name with an underscore.
 
