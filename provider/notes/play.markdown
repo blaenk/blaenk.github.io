@@ -538,3 +538,51 @@ Compression is also automatically enabled if:
 
 Play has built-in support for Less and CoffeeScript. Such files can easily be referenced using the assets reverse router by its target extension. The extension can be prefixed by `min` to use a minified version. A file can opt-out of compilation by prefixing its name with an underscore.
 
+# Validation
+
+Play provides a forms API which is used for general validation, not just HTML forms. A `Mapping` is an object that constructs an object from an HTTP request, a process called _binding_, where the type of the object constructed is a type parameter of `Mapping`.
+
+The data from an HTTP request is transformed into a `Map[String, String]`, and a mapping performs its construction off of this map. A mapping can also perform the reverse process, _unbinding_.
+
+A mapping can also define constraints and errors to provide when data doesn't satisfy the constraints.
+
+## Forms
+
+[Predefined mappings] exist in the `Forms` namespace, such as `Forms.text`. Mappings can be composed together, for example using `Forms.tuple` which can bind values to a tuple type.
+
+[Predefined mappings]: http://www.playframework.com/documentation/2.0/api/scala/play/api/data/Forms$.html
+
+``` scala
+val data = Map(
+  "name"   -> "Box of paper clips",
+  "ean"    -> "1234567890123",
+  "pieces" -> "300"
+)
+
+val mapping: Mapping[(String, String, Int)] =
+  Forms.tuple(
+    "name"   -> Forms.text,
+    "ean"    -> Forms.text,
+    "pieces" -> Forms.number
+)
+```
+
+To be able to bind data, it's necessary to wrap a mapping in a `Form`, which can also contain the data that will eventually be bound. The `Form`'s type parameter is the same as the `Mapping`'s, representing the data that would be available if it validates. Once the form is created, the data can be bound using the `bind` method. Since `Form` is immutable, the `bind` method returns a new `Form` populated with the bound data.
+
+``` scala
+val productForm = Form(mapping)
+val processedForm = productForm.bind(data)
+```
+
+The form can be checked for errors with `hasErrors` and if there are any the errors can be fetched with `getErrors`, otherwise the data can be retrieved with `get`.
+
+An alternative method of processing the result of binding the data is to use the `fold` method in the same manner that it'd be used on the `Either` type, where the first function is the error handler which is passed the form, and the second function is the success handler which is passed the bound data:
+
+``` scala
+processedForm.fold(
+  formWithErrors => BadRequest,
+  productTuple => {
+    Ok(views.html.product.show(product))
+  }
+)
+```
