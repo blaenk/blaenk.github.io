@@ -42,6 +42,7 @@ myHakyllConf = defaultConfiguration
   , destinationDirectory = "generated/deploy/out"
   , storeDirectory = "generated/deploy/cache"
   , tmpDirectory = "generated/deploy/cache/tmp"
+  , previewHost = "0.0.0.0"
   , previewPort = 4000
   , ignoreFile = isIgnored
   }

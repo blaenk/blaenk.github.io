@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Site.Pandoc (pandocCompiler, pandocFeedCompiler) where
+module Site.Pandoc (
+  pandocCompiler,
+  pandocFeedCompiler
+) where
 
 import Site.Types
 
@@ -54,8 +57,7 @@ pandocCompiler streams item = do
       transformer =
         tableOfContents' .
         (walk $ pygments streams) .
-        (walk quotes) .
-        (walk paths) .
+        (walk codeBreak) .
         (walk $ abbreviations abbrs)
 
   pandocTransformer readerOptions writerOptions transformer item
@@ -66,7 +68,7 @@ pandocTransformer :: ReaderOptions
                   -> Item String
                   -> Compiler (Item String)
 pandocTransformer ropt wopt f item =
-  writePandocWith wopt . fmap f . readPandocWith ropt <$> (return $ item)
+  writePandocWith wopt . fmap f . readPandocWith ropt <$> (return item)
 
 headerLevel :: Block -> Int
 headerLevel (Header level _ _) = level
@@ -116,21 +118,10 @@ tableOfContents headers alignment x@(BulletList (( (( Plain ((Str "toc"):_)):_))
         table  = createTable . groupByHierarchy
 tableOfContents _ _ x = x
 
-quotes :: Block -> Block
-quotes (BlockQuote contents) =
-  BlockQuote $ [HorizontalRule, quote, HorizontalRule] ++ citation
-  where
-    (q, citation) = break isFooter contents
-    quote = Div ("", ["padded-quote"], []) q
-    isFooter x = case x of
-                   RawBlock (Format "html") "<footer>" -> True
-                   _ -> False
-quotes x = x
-
-paths :: Inline -> Inline
-paths (Code (_, ["path"], _) code) = Code ("", ["path"], []) $ subRegex pat code "\x200b\&\\0"
-  where pat = mkRegex "/|\\.|::"
-paths x = x
+codeBreak :: Inline -> Inline
+codeBreak (Code attrs code) = Code attrs $ subRegex pat code "\x200b\&\\0"
+  where pat = mkRegex "/|\\.|::|:|#|,|\\[|\\("
+codeBreak x = x
 
 abbreviationCollector :: Item String -> Abbreviations
 abbreviationCollector item =
