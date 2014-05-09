@@ -37,9 +37,13 @@ Donec vitae turpis non augue pulvinar imperdiet eu non erat. Integer mollis diam
 
 # Immortal Words #
 
+As you can see, there’s lots of work to do! Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi. Cras lectus velit, rhoncus et mollis eget, ultricies quis ligula. Integer ornare nibh in est molestie tempus. Praesent bibendum placerat diam id gravida. Fusce et velit eget dui laoreet interdum eget id arcu.
+
 > Too many people have opinions on things they know nothing about. And the more ignorant they are, the more opinions they have.
 >
-> <footer><strong>Thomas Hildern</strong> <cite><a href="http://fallout.wikia.com/wiki/Thomas_Hildern">Fallout Wiki</a></cite></footer>
+> <footer><strong>Thomas Hildern</strong> on <cite><a href="http://fallout.wikia.com/wiki/Thomas_Hildern">Fallout Wiki</a></cite></footer>
+
+Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi.
 
 ## The Meaning of Life ##
 
