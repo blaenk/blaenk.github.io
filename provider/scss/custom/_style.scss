@@ -573,6 +573,7 @@ article .entry-content blockquote {
   font-size: 1.1em;
   line-height: 1.4;
   padding: 20px;
+  margin-top: 0;
 
   @media screen and (max-width: 600px) {
     padding: 10px;
@@ -591,6 +592,11 @@ article .entry-content blockquote {
     text-align: left;
     font-size: 0.9em;
     font-style: italic;
+
+    code {
+      background-color: inherit;
+      padding: 0;
+    }
 
     &:before {
       content: '\2014';
