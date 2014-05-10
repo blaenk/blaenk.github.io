@@ -573,6 +573,7 @@ article .entry-content blockquote {
   font-size: 1.1em;
   line-height: 1.4;
   padding: 20px;
+  margin-top: 0;
 
   @media screen and (max-width: 600px) {
     padding: 10px;
@@ -582,10 +583,6 @@ article .entry-content blockquote {
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
-
-  & > p:first-of-type {
-    margin-top: 0;
-  }
 
   cite {
     text-align: left;
