@@ -700,3 +700,7 @@ tie(num, ignore, letter) = make_tuple(10, 4.23, 'a');
 
 Uniform initialization allows for constructing any type using the `{}` syntax that was previously used for arrays for example. If a class defines a constructor that takes an `std::initializer_list` then that constructor takes precedence when using initializer list construction. Initializer lists cause an error if a construction would narrow a type.
 
+# Resources
+
+* [Three Optimization Tips for C++](https://www.facebook.com/notes/facebook-engineering/three-optimization-tips-for-c/10151361643253920)
+
