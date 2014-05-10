@@ -19,7 +19,7 @@ There's of course nothing wrong with using these plugins, but I've come to reali
 
 ## Patched Fonts
 
-First there was the annoyance of having to use patched fonts to achieve the "powerline look". This isn't a huge problem since it's pretty straightforward to track down, download, and install pre-patched fonts. This has only become somewhat more annoying due to the fact that the new powerline rewrite patches fonts differently, so you have to find the patched font for the version of powerline you use, and different plugins adopt different versions. Now do this for every OS you use, in my case, Windows, Linux, and OS X.
+First there was the annoyance of having to use patched fonts to achieve the "powerline look". This isn't a huge problem since it's pretty straightforward to track down, download, and install pre-patched fonts. This has only become somewhat more annoying due to the fact that the new powerline rewrite patches fonts differently, so you have to find the patched font for the version of powerline you use, and different plugins adopt different versions. Now do this for every OS you use, in my case, Windows, Linux, and OS&nbsp;X.
 
 The point is that in the grand scheme of things, when you take a step back, you realize you're doing all of this for a mere statusline in a particular application (or two).
 
@@ -81,7 +81,7 @@ One piece of functionality that I wanted to preserve from airline was support fo
 
 <img src="/images/posts/a-simpler-vim-statusline/regular-inactive.png" class="center">
 
-This feature isn't built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refreshes every window's statusline:
+This feature isn't built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refresh every window's statusline:
 
 ``` vim
 function! s:RefreshStatus()
@@ -108,7 +108,7 @@ The documentation presented the solution to this problem:
 
 > Note that the "`%!`" expression is evaluated in the context of the current window and buffer, while `%{}` items are evaluated in the context of the window that the statusline belongs to.
 >
-> <footer><strong>Vim 7.4</strong> <cite><a href="http://vimhelp.appspot.com/options.txt.html#%27statusline%27">docs</a></cite></footer>
+> <cite><strong>Vim 7.4's</strong> <a href="http://vimhelp.appspot.com/options.txt.html#%27statusline%27">documentation</a></cite>
 
 This means that if we want to perform behavior specific to the window or buffer for which the statusline is being created, we should wrap that in a `%{}` expression block:
 

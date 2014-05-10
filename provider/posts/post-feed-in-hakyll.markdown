@@ -10,7 +10,7 @@ When I made my site, specifically when I [switched to Hakyll](/posts/the-switch-
 
 > I'd like to subscribe to your blog, but I can't seem to find an RSS feed (nor the Hakyll code to generate one). Would you consider adding one?
 >
-> <footer>**Nathan** <cite>[Issue #1](https://github.com/blaenk/blaenk.github.io/issues/1)</cite></footer>
+> <cite>**Nathan** on [Issue #1](https://github.com/blaenk/blaenk.github.io/issues/1)</cite>
 
 ## Considerations
 

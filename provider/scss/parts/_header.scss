@@ -13,7 +13,7 @@ $header-height: 30px;
 		padding-bottom: 10px;
 	}
 	a{
-		color: #666;
+		color: $color-gray01;
 		transition: color 0.3s;
     @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
       &:hover{
@@ -37,7 +37,7 @@ $header-height: 30px;
       line-height: 1;
     }
     h4{
-      color: #666;
+      color: $color-gray01;
       text-align: right;
       cursor: default;
       font-family: $font-sans;
@@ -207,7 +207,7 @@ $header-height: 30px;
         }
       }
 			&.on{
-				color: #666;
+				color: $color-gray01;
         border-radius: 5px 5px 5px 0;
 				&:before{
 					content: "\f077";

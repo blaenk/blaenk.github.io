@@ -38,7 +38,7 @@ With the help of Hakyll's creator, Jasper, I learned that the solution involves 
 >
 > A useful utility for this purpose is `makePatternDependency`.
 >
-> <footer><strong>Jasper</strong> <cite><a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies">Hackage</a></cite></footer>
+> <cite><strong>Jasper</strong> on <a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies">Hackage</a></cite>
 
 Now when I'm previewing my site --- or when I build the site in general --- and I modify any scss file, it correctly regenerates the monolithic **css/screen.css** file. Here's my new scss compiler rule:
 

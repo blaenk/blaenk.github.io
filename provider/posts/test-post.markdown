@@ -41,7 +41,7 @@ As you can see, there’s lots of work to do! Aenean mauris augue, faucibus vel 
 
 > Too many people have opinions on things they know nothing about. And the more ignorant they are, the more opinions they have.
 >
-> <footer><strong>Thomas Hildern</strong> on <cite><a href="http://fallout.wikia.com/wiki/Thomas_Hildern">Fallout Wiki</a></cite></footer>
+> <cite><strong>Thomas Hildern</strong> on <a href="http://fallout.wikia.com/wiki/Thomas_Hildern">Fallout Wiki</a></cite>
 
 Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi.
 

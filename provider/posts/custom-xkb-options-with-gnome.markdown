@@ -9,7 +9,7 @@ As I've [explained before](/posts/xmonad-ignores-bindings/#media-keys), I use a 
 
 > This article describes low-level configuration using XKB which is effective in most cases, but some desktop environments like GNOME override it with its own settings.
 >
-> <footer><strong>Arch Wiki</strong></footer>
+> <cite><strong>Arch Wiki</strong></cite>
 
 As a result, I decided to look for a way to have my solution work alongside Gnome's initialization of XKB. There was _very_ little information on Gnome's interaction with XKB short of reading Gnome's source, but after searching around for a long time, I found that there is indeed a dconf option hidden away at `/org/gnome/desktop/input-sources/xkb-options`{.path}. Before I could use this though, I had to make my XKB option available system-wide.
 

@@ -2957,7 +2957,7 @@ Occam's razor is a symbolic principle set by William of Occam, where we have a r
 
 > The simplest model that fits the data is also the most plausible.
 >
-> <footer><strong>Occam's Razor</strong> applied to ML</footer>
+> <cite><strong>Occam's Razor</strong> applied to ML</cite>
 
 It's therefore important to know when a model is considered "simple," and for this purpose there are two main types of complexity measures: one being the complexity of the hypothesis $h$ (object), the second being the complexity of the hypothesis set $\mathcal H$ (set of objects).
 
@@ -3028,7 +3028,7 @@ It was not bad luck, however, because if they had run the poll again with a larg
 
 > If the data is sampled in a biased way, then learning will produce a similarly biased outcome.
 >
-> <footer><strong>Sampling Bias Principle</strong></footer>
+> <cite><strong>Sampling Bias Principle</strong></cite>
 
 This presents a problem of making sure that the data is representative of what we want. For example, in financial forecasting, we may want to predict the market by taking periods of the market where the market was normal. If this model is then tested in the real market which contains non-normal conditions, we will have no idea how the model will perform in those conditions.
 
@@ -3064,7 +3064,7 @@ The data snooping principle doesn't forbid us from doing anything, it simply mak
 
 > If a data set has affected any step of the learning process, it's ability to assess the outcome has been compromised.
 >
-> <footer><strong>Data Snooping Principle</strong></footer>
+> <cite><strong>Data Snooping Principle</strong></cite>
 
 This is the most common trap for practitioners. A possible reason is that, when we data snoop, we end up with better performance --- or so we think. Data snooping isn't only looking at the data, in fact there are many ways to fall into the trap.
 

@@ -122,7 +122,7 @@ Syntax               Type
 
 ### Regular Expressions
 
-Strings prefixed with a hash `#` are regex literals which yield `java.util.regex.Pattern` instances.
+Strings prefixed with a hash `#` are regex literals which yield `java.util.regex.Pattern`{.path} instances.
 
 ``` clojure
 (re-seq #"(\d+)-(\d+)" "1-3")
@@ -210,7 +210,7 @@ x
 
 ## Special Forms
 
-Special forms are Clojure's primitive building blocks of computation upon which the rest of Clojure is built.
+Special forms are Clojure's primitives of computation upon which the rest of Clojure is built.
 
 ### Suppressing Evaluation
 
@@ -301,7 +301,7 @@ The `let` form also allows _destructuring_ similar to pattern-matching in langua
 ;= [42 "foo" 99.2 [5 12] 141.2]
 ```
 
-Maps can also be destructured in a similar manner. This works with Clojure's `hash-map`, `array-map`, records, collections implementing `java.util.Map`, and values supported by the `get` function such as Clojure vectors, strings, and array can be keyed by their indices.
+Maps can also be destructured in a similar manner. This works with Clojure's `hash-map`, `array-map`, records, collections implementing `java.util.Map`{.path}, and values supported by the `get` function such as Clojure vectors, strings, and array can be keyed by their indices.
 
 ``` clojure
 (def m {:a 5 :b 6
