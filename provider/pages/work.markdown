@@ -39,7 +39,7 @@ To illustrate the problem:
 2. Read modification time as 3:45.325, compare against cached modification time, 3:45.000, to see if the file has changed.
 3. 3:45.325 is more recent than 3:45.000, so the file is considered to have been modified.
 
-The [patch][sub-second patch] simply _kept_ the sub-second precision when caching, allowing for graceful handling of systems and do and don't support sub-second precision.
+The [patch][sub-second patch] simply _kept_ the sub-second precision when caching, allowing for graceful handling of systems that do and don't support sub-second precision.
 
 This fix made it into [Hakyll 4.5.2.0].
 
