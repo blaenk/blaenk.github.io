@@ -1185,6 +1185,7 @@ A `ListBuffer` then works by directly modifying the tail of the last cons cell i
 [^mutability]: It seems like Scala uses mutability to leave optimization up to the developer. Contrast this with Haskell, where everything is immutable at the language level and the optimizations are done underneath at compile time or at the runtime level. The cons `:` in Haskell for example would also reuse the tail, creating a [persistent linked list], but the developer doesn't have to worry about how to best implement something like this for efficiency. Scala of course affords one more flexibility in how they implement something, but it expects that every developer be mindful of how best to implement things in the unusual functional and imperative environment.
 
 [persistent linked list]: http://en.wikipedia.org/wiki/Persistent_data_structure#Linked_lists
+
 ``` scala
 val ys = 1 :: xs
 val zs = 2 :: xs
