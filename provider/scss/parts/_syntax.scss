@@ -165,4 +165,80 @@ code {
   .x { color: $solar-orange }  // Other
 }
 
+figure.codeblock {
+  margin: 15px 0;
+  cursor: default;
+  background: #F2F9FF;
+  overflow: hidden;
+
+  figcaption {
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
+
+    background-color: #D0E9FF;
+    padding: 5px 10px;
+    position: relative;
+    font-size: 87.5%;
+    color: #00427B;
+    text-align: center;
+
+    abbr {
+      border-bottom: 1px dotted #00427B;
+
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover { border-bottom: 1px solid #00427B; }
+      }
+    }
+
+    span {
+      background: none;
+      padding: 0;
+      margin: 0;
+      display: block;
+
+      &:empty{
+        display: none;
+      }
+
+      a, a:visited {
+        position: absolute;
+        top: 5px;
+        right: 28px;
+        color: #00427B;
+        font-weight: bold;
+      }
+    }
+  }
+
+  pre {
+    overflow-x: auto;
+    background: #F2F9FF;
+    font-size: 0.875em;
+    line-height: 1.3;
+    padding: 10px;
+
+    @media screen and (max-width: 600px) {
+      padding: 5px;
+    }
+
+    .highlight {
+      padding: 0;
+    }
+  }
+}
+
+.entry-content code,
+.entry-content pre {
+  font-family: $font-mono;
+}
+
+.entry-content > pre {
+  background-color: #f2f9ff;
+  color: #00427b;
+  padding-left: 10px;
+  margin-top: 10px;
+  margin-left: -10px;
+  margin-right: -10px;
+}
 
