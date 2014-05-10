@@ -9,7 +9,46 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
-##### haxr: i8-type support {#haxr-i8-types .collapse}
+##### Hakyll: Sub-Second Granularity {#hakyll-subsecond .collapse}
+
+<div class="collapsible">
+
+[Hakyll] has a watch mode where it watches files and re-compiles them when they're modified. It does this by checking the file's modified time and storing it for comparison on the next iteration. When the new major-release version 7.8 of [GHC] was released, a [bug was observed] in Hakyll where whenever any file was modified, the whole site was recompiled instead of just the file that was modified.
+
+[Hakyll]: http://jaspervdj.be/hakyll/
+[GHC]: http://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler
+[bug was observed]: https://github.com/jaspervdj/hakyll/issues/250
+
+The perplexing thing was that the Hakyll source hadn't changed at all, so clearly the bug was being caused by a direct or indirect package dependency or, _gulp_, the compiler itself. All in all, it seemed pretty uncharacteristic of my impression of Haskell.
+
+Of course, it wasn't a compiler bug. Instead, it seemed to have been caused by the culmination of different factors. First, the [directory] package, which houses the `getModificationTime` function used to retrieve a file's modification time, began supporting sub-second precision in version 1.2 and above _if_ it's linked against the [unix] package version 2.6 and above.
+
+> Note: When linked against unix-2.6.0.0 or later the reported time supports sub-second precision if provided by the underlying system call.
+>
+> <cite>[documentation][getModificationTime] for `getModificationTime`</cite>
+
+[directory]: http://hackage.haskell.org/package/directory
+[unix]: http://hackage.haskell.org/package/unix
+[getModificationTime]: http://hackage.haskell.org/package/directory-1.2.1.0/docs/System-Directory.html#v:getModificationTime
+
+The problem was essentially that Hakyll cached the modification time by first shaving off the sub-second precision with the `floor` function. However, when it then compared against this cached modification time, the other comparison operand's sub-second precision _wasn't_ shaved. What this meant was that the file was _almost always_ deemed modified, unless of course the modification time had a sub-second count of zero to begin with.
+
+To illustrate the problem:
+
+1. Read modification time as 3:45.325, shave sub-seconds and save as 3:45.000.
+2. Read modification time as 3:45.325, compare against cached modification time, 3:45.000, to see if the file has changed.
+3. 3:45.325 is more recent than 3:45.000, so the file is considered to have been modified.
+
+The [patch][sub-second patch] simply _kept_ the sub-second precision when caching, allowing for graceful handling of systems and do and don't support sub-second precision.
+
+This fix made it into [Hakyll 4.5.2.0].
+
+[sub-second patch]: https://github.com/jaspervdj/hakyll/pull/252
+[Hakyll 4.5.2.0]: https://github.com/jaspervdj/hakyll/commit/d89fadcdb97c2acd9aeaa58c830d30ad755f31d7
+
+</div>
+
+##### haxr: i8-Type Support {#haxr-i8-types .collapse}
 
 <div class="collapsible">
 
@@ -22,7 +61,7 @@ This is an aggregation of the different work I've done in terms of open source c
 
 </div>
 
-##### Go scgiclient: unix domain socket support {#go-scgiclient-uds .collapse}
+##### Go scgiclient: Unix Domain Socket Support {#go-scgiclient-uds .collapse}
 
 <div class="collapsible">
 
@@ -34,7 +73,7 @@ I [contributed][goscgi pr] support for [unix domain sockets] to a Go package for
 
 </div>
 
-##### Go xmlrpc: i8-type and base64 support {#go-xmlrpc-i8-base64 .collapse}
+##### Go xmlrpc: i8-Type and Base64 Support {#go-xmlrpc-i8-base64 .collapse}
 
 <div class="collapsible">
 
@@ -46,7 +85,7 @@ I contributed [i8-type] and [base64] support to an [XML-RPC package] for Go.
 
 </div>
 
-##### archlinux: syncplay packages {#syncplay-packages .collapse}
+##### archlinux: Syncplay Packages {#syncplay-packages .collapse}
 
 <div class="collapsible">
 
@@ -63,7 +102,7 @@ There exist user friendly installers for Windows, but Linux' side of things cons
 
 </div>
 
-##### vim-pandoc-syntax: Embedded codeblock highlighting, various features & fixes {#vim-pandoc-syntax .collapse}
+##### vim-pandoc-syntax: Embedded Codeblock Highlighting, Various Features & Fixes {#vim-pandoc-syntax .collapse}
 
 <div class="collapsible">
 
@@ -82,7 +121,7 @@ The most substantial contribution was [embedded-language highlighting] for codeb
 [Pandoc-flavored markdown]: http://johnmacfarlane.net/pandoc/README.html#pandocs-markdown
 [embedded-language highlighting]: https://github.com/vim-pandoc/vim-pandoc-syntax/issues/14
 
-##### Hakyll: Update to work with Pandoc 1.12 {#hakyll-pandoc-update .collapse}
+##### Hakyll: Update to Work With Pandoc 1.12 {#hakyll-pandoc-update .collapse}
 
 <div class="collapsible">
 
@@ -92,7 +131,7 @@ This change made it into [Hakyll 4.4.0.0](http://jaspervdj.be/hakyll/releases.ht
 
 </div>
 
-##### Hakyll: Add default port option {#hakyll-port .collapse}
+##### Hakyll: Add Default Port Option {#hakyll-port .collapse}
 
 <div class="collapsible">
 
@@ -106,7 +145,7 @@ This change made it into [Hakyll 4.4.0.0](http://jaspervdj.be/hakyll/releases.ht
 
 </div>
 
-##### libtorrent: Fix I/O multiplexing error on Solaris {#libtorrent .collapse}
+##### libtorrent: Fix I/O Multiplexing Error on Solaris {#libtorrent .collapse}
 
 <div class="collapsible">
 
@@ -144,7 +183,7 @@ The [fix I came up with](https://github.com/rakshasa/libtorrent/pull/40) involve
 
 </div>
 
-##### Hakyll: Fix preview functionality on Windows {#hakyll-preview .collapse}
+##### Hakyll: Fix Preview Functionality on Windows {#hakyll-preview .collapse}
 
 <div class="collapsible">
 
@@ -166,7 +205,7 @@ This change made it into [Hakyll 4.3.0.0](http://jaspervdj.be/hakyll/releases.ht
 
 </div>
 
-##### rtorrent: Fix unportable signal disposition establishment on Solaris {#rtorrent .collapse}
+##### rtorrent: Fix Unportable Signal Disposition Establishment on Solaris {#rtorrent .collapse}
 
 <div class="collapsible">
 
@@ -196,9 +235,9 @@ The situation on Linux is such that the kernel's `signal()` system call provides
 
 Solaris doesn't have such a wrapper for `signal()`, instead exposing its bare, System V semantics system call with [`signal()`](http://docs.oracle.com/cd/E26502_01/html/E29034/signal-3c.html):
 
-> ~~~ {lang="c"}
+> ``` c
 > void (*signal(int sig, void (*disp)(int)))(int);
-> ~~~
+> ```
 > 
 > If `signal()` is used, `disp` is the address of a signal handler, and `sig` is not `SIGILL`, `SIGTRAP`, or `SIGPWR`, the system first sets the signal's disposition to `SIG_DFL` before executing the signal handler.
 
@@ -208,7 +247,7 @@ My [patch](https://github.com/rakshasa/rtorrent/pull/127) simply consisted of sw
 
 </div>
 
-##### MPC-HC: Fix web UI seeking {#mpc-hc .collapse}
+##### MPC-HC: Fix Web UI Seeking {#mpc-hc .collapse}
 
 <div class="collapsible">
 
@@ -218,7 +257,7 @@ As for the original intent of implementing the functionality for synced playback
 
 </div>
 
-##### node-xmlrpc: Add support for buffer & i8 datatypes, chunked responses, HTTP basic authentication {#node-xmlrpc .collapse}
+##### node-xmlrpc: Buffer & i8 Datatypes, Chunked Responses, HTTP Basic Authentication {#node-xmlrpc .collapse}
 
 <div class="collapsible">
 
@@ -234,7 +273,7 @@ Finally, I added support for basic HTTP authentication.
 
 ## Projects
 
-##### Carson: Lightweight, "Real-Time" web interface for rtorrent {#carson .collapse}
+##### Carson: Lightweight, "Real-Time" Web Interface for rtorrent {#carson .collapse}
 
 <div class="collapsible">
 
@@ -255,7 +294,7 @@ I decided to circumvent the issue entirely by storing the data inside the items 
 
 </div>
 
-##### Hakyll website: Source code for my Hakyll-powered website {#hakyll-website .collapse}
+##### Hakyll website: Source Code for my Hakyll-Powered website {#hakyll-website .collapse}
 
 <div class="collapsible">
 
@@ -326,7 +365,7 @@ Source is available [on github](https://github.com/blaenk/pulse-visualizer).
 
 </div>
 
-##### WP-reCAPTCHA: Official reCAPTCHA plug-in for WordPress {#wp-recaptcha .collapse}
+##### WP-reCAPTCHA: Official reCAPTCHA Plug-In for WordPress {#wp-recaptcha .collapse}
 
 <div class="collapsible">
 
@@ -342,7 +381,7 @@ reCAPTCHA was acquired by Google in 2009, and the original team seems to have la
 
 </div>
 
-##### The Instagib Project: Standalone Instagib game based on Quake 3 engine (id Tech 3) {#the-instagib-project .collapse}
+##### The Instagib Project: Standalone Instagib Game Based on Quake 3 Engine (id Tech 3) {#the-instagib-project .collapse}
 
 <div class="collapsible">
 
@@ -368,7 +407,7 @@ After I had done all this, one of the friends I showed it to said, "Oh, so it's 
 
 </div>
 
-##### MyPod: iPod music navigator and retriever {#mypod .collapse}
+##### MyPod: iPod Music Navigator and Retriever {#mypod .collapse}
 
 <div class="collapsible">
 
