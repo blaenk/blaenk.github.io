@@ -15,7 +15,7 @@ main = do
 
 copyBinary :: Args -> BuildFlags -> PackageDescription -> LocalBuildInfo -> IO ()
 copyBinary args buildFlags pkgDesc buildInfo = do
-  let exe = find ("site" `isPrefixOf`) $ map exeName . executables $ pkgDesc
+  let exe = find ("site" `isPrefixOf`) $ map exeName (executables pkgDesc)
 
   when (isJust exe) $ do
     let binary = fromJust exe
