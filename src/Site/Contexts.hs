@@ -18,8 +18,7 @@ import System.FilePath
 -- for groupByYear
 import Data.List (sortBy, groupBy, intersperse, intersperse)
 import Data.Maybe (catMaybes)
-import Data.Ord (comparing)
-import Control.Monad (liftM, forM)
+import Control.Monad (forM)
 import Control.Applicative ((<$>))
 import System.Locale (defaultTimeLocale)
 import Data.Time.Clock
@@ -32,9 +31,9 @@ import qualified Text.Blaze.Html5.Attributes     as A
 
 import Site.Routes
 
-sluggedTagsField :: String
-                 -> Tags
-                 -> Context a
+import Data.Function (on)
+
+sluggedTagsField :: String -> Tags -> Context a
 sluggedTagsField key tags = field key $ \item -> do
     tags' <- getTags $ itemIdentifier item
     links <- forM tags' $ \tag -> do
@@ -75,7 +74,8 @@ postCtx preview = mconcat
 
 archiveCtx :: Pattern -> Context String
 archiveCtx pat = mconcat
-  [ field "archives" (\_ -> yearArchives pat) :: Context String
+  -- [ archives pat
+  [ field "archives" (\_ -> yearlyArchives pat) :: Context String
   , constField "commentsJS" ""
   , defaultCtx
   ]
@@ -172,13 +172,14 @@ socialTag key = field key $ \item -> do
 gitTag :: String -> Context String
 gitTag key = field key $ \item -> do
   let fp = "provider/" ++ (toFilePath $ itemIdentifier item)
-      gitLog :: String -> IO String
-      gitLog format = readProcess "git"
-                        [ "log"
-                        , "-1"
-                        , "HEAD"
-                        , "--pretty=format:" ++ format
-                        , fp] ""
+      gitLog format =
+        readProcess "git" [
+          "log"
+        , "-1"
+        , "HEAD"
+        , "--pretty=format:" ++ format
+        , fp
+        ] ""
 
   unsafeCompiler $ do
     sha     <- gitLog "%h"
@@ -195,46 +196,34 @@ gitTag key = field key $ \item -> do
                         toHtml (", " :: String)
                         H.a ! A.href (toValue commit) ! A.title (toValue message) $ toHtml sha
 
-yearArchives :: Pattern -> Compiler String
-yearArchives pat = do
-    thisYear <- unsafeCompiler . fmap yearFromUTC $ getCurrentTime
-    posts    <- groupByYear =<< loadAll (pat .&&. hasNoVersion) :: Compiler [(Integer, [Item String])]
-    itemTpl  <- loadBody "templates/index-post.html" :: Compiler Template
-    archiveTpl <- loadBody "templates/archive.html" :: Compiler Template
-    list     <- mapM (genArchives itemTpl archiveTpl thisYear) posts :: Compiler [String]
-    return $ concat list :: Compiler String
-    where genArchives :: Template -> Template -> Integer -> (Integer, [Item String]) -> Compiler String
-          genArchives itemTpl archiveTpl curYear (year, posts) = do
-            templatedPosts <- applyTemplateList itemTpl (postCtx False) posts :: Compiler String
-            let yearCtx :: Context String
-                yearCtx = if curYear == year
-                          then constField "year" ""
-                          else constField "year" ("<h2 class='archive-year'>" ++ show year ++ "</h2>")
-                ctx' :: Context String
-                ctx' = mconcat [ yearCtx
-                               , constField "posts" templatedPosts
-                               , missingField
-                               ]
-            itm <- makeItem "" :: Compiler (Item String)
-            gend <- applyTemplate archiveTpl ctx' itm :: Compiler (Item String)
-            return $ itemBody gend
-
-groupByYear :: (MonadMetadata m, Functor m) => [Item a] -> m [(Integer, [Item a])]
-groupByYear items =
-    groupByYearM . fmap reverse . sortByM (getItemUTC defaultTimeLocale . itemIdentifier) $ items
+groupedArchives :: Pattern -> Compiler [(Integer, [Item String])]
+groupedArchives pat =
+  map collect . groupBy ((==) `on` fst) . reverse . sortBy (compare `on` fst)
+    <$> (mapM addYear =<< recentFirst =<< loadAll (pat .&&. hasNoVersion))
   where
-    sortByM :: (Monad m) => (a -> m UTCTime) -> [a] -> m [(Integer, a)]
-    sortByM f xs = -- sort the list comparing the UTCTime
-                   liftM (map (\(utc, post) -> (yearFromUTC utc, post)) . sortBy (comparing fst)) $
-                   -- get them in a tuple of Item [(UTCTime, Item a)]
-                   mapM (\x -> liftM (,x) (f x)) xs
+    collect :: [(Integer, Item String)] -> (Integer, [Item String])
+    collect [] = error "what"
+    collect items@((year, _):_) = (year, (map snd items))
 
-    groupByYearM :: (Monad m) => m [(Integer, a)] -> m [(Integer, [a])]
-    groupByYearM xs = liftM (map mapper . groupBy f) xs
-      where f a b = (fst a) == (fst b)
-            mapper [] = error "what"
-            mapper posts@((year, _):_) = (year, (map snd posts))
+    addYear :: Item String -> Compiler (Integer, Item String)
+    addYear item = do
+      year <- yearFromUTC <$> (getItemUTC defaultTimeLocale . itemIdentifier $ item)
+      return (year, item)
 
-yearFromUTC :: UTCTime -> Integer
-yearFromUTC utcTime = let (year, _, _) = toGregorian $ utctDay utcTime in year
+    yearFromUTC :: UTCTime -> Integer
+    yearFromUTC utcTime = let (year, _, _) = toGregorian $ utctDay utcTime
+                          in year
+
+yearlyArchives :: Pattern -> Compiler String
+yearlyArchives pat = do
+  concat <$> (mapM generateArchive =<< groupedArchives pat)
+  where generateArchive :: (Integer, [Item String]) -> Compiler String
+        generateArchive (year, items) = do
+          let ctx = mconcat [constField "year" (show year),
+                             listField "items" (postCtx False) (return items),
+                             missingField]
+
+          archiveTmpl <- loadBody "templates/archive.html"
+          archive <- makeItem ("" :: String)
+          itemBody <$> applyTemplate archiveTmpl ctx archive
 
