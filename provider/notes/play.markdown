@@ -586,3 +586,42 @@ processedForm.fold(
   }
 )
 ```
+
+Aside from tuple mappings, it's also possible to construct objects from mappings. This is possible by using the `mapping` method which takes a map of mappings, a function used to construct the object, and one to deconstruct it. These last two functions are provided for free by case classes in the form of `apply` and `unapply`. The first takes a parameter for every field in the case class, whereas the second takes an object of that type and deconstructs it into an `Option` tuple containing each of the fields.
+
+``` scala
+import play.api.data.Forms._
+
+case class Product(
+  name: String,
+  ean: String,
+  pieces: Int)
+
+val productMapping = mapping(
+  "name"   -> text,
+  "ean"    -> text,
+  "pieces" -> number)(Product.apply)(Product.unapply)
+)
+```
+
+Creating a mapping for a class allows the construction of a `Form` parameterized by that class, making it much more natural to handle forms.
+
+``` scala
+val productForm = Form(productMapping)
+
+productForm.bind(data).fold(
+  formWithErrors => ...,
+  product => ...
+)
+```
+
+So far forms have been found from maps, but yielding a map from an HTTP request isn't very straightforward. For this reason, the `bindFromRequest` form method exists which works the same way as `bind`.
+
+``` scala
+def processForm() = Action { implicit request =>
+  productForm.bindFromRequest.fold(
+    ...
+  )
+}
+```
+
