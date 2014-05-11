@@ -4,10 +4,9 @@
 import Hakyll hiding (pandocCompiler)
 
 import Site.Types
-import Site.Filters
-import Site.Fields
+import Site.Compilers
+import Site.Contexts
 import Site.Routes
-import Site.Pandoc
 
 import Data.Monoid ((<>))
 import GHC.IO.Encoding

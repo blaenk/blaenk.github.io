@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Site.Pandoc (
+module Site.Compilers (
+  sassCompiler,
   pandocCompiler,
   pandocFeedCompiler
 ) where
@@ -9,6 +10,8 @@ import Site.Types
 
 import Hakyll.Web.Pandoc hiding (pandocCompiler)
 import Hakyll.Core.Metadata (getMetadataField)
+import Hakyll.Core.Identifier (fromFilePath)
+import Hakyll.Core.UnixFilter (unixFilter)
 
 import Text.Pandoc
 import Text.Pandoc.Walk (walk, query)
@@ -38,6 +41,13 @@ import Data.Monoid ((<>), mconcat)
 import Text.Regex.TDFA ((=~))
 import Text.Regex (mkRegex, subRegex)
 import qualified Data.Map as Map
+
+sassCompiler :: Compiler (Item String)
+sassCompiler = loadBody (fromFilePath "scss/screen.scss")
+                 >>= makeItem
+                 >>= withItemBody (unixFilter "sass" args)
+  where args = ["-s", "--scss", "-I", "provider/scss/",
+                "--cache-location", "generated/scss"]
 
 pandocFeedCompiler :: Item String -> Compiler (Item String)
 pandocFeedCompiler = pandocTransformer readerOptions writerOptions' (walk tocRemover)

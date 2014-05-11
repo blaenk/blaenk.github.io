@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 
-module Site.Fields (
+module Site.Contexts (
   defaultCtx,
   postCtx,
   archiveCtx,
