@@ -33,6 +33,12 @@
   font-family: $font-sans;
 }
 
+section.archives:first-of-type {
+  h2.archive-year:first-of-type {
+    display: none;
+  }
+}
+
 .notfound {
   text-align: center;
 }

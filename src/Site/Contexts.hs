@@ -198,12 +198,11 @@ gitTag key = field key $ \item -> do
 
 groupedArchives :: Pattern -> Compiler [(Integer, [Item String])]
 groupedArchives pat =
-  map collect . groupBy ((==) `on` fst) . reverse . sortBy (compare `on` fst)
+  map combineItems . groupBy ((==) `on` fst) . reverse . sortBy (compare `on` fst)
     <$> (mapM addYear =<< recentFirst =<< loadAll (pat .&&. hasNoVersion))
   where
-    collect :: [(Integer, Item String)] -> (Integer, [Item String])
-    collect [] = error "what"
-    collect items@((year, _):_) = (year, (map snd items))
+    combineItems :: [(Integer, Item String)] -> (Integer, [Item String])
+    combineItems = foldr (\(year, item) (_, items) -> (year, item : items)) (0, [])
 
     addYear :: Item String -> Compiler (Integer, Item String)
     addYear item = do
