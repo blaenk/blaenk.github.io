@@ -14,13 +14,8 @@ article{
           color: $color-gray01;
       		display: inline-block;
       		width: 100%;
-
-            span {
-                padding-bottom: 2px;
-            }
-
           @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
-            &:hover > span {
+            &:hover {
               text-decoration: underline;
             }
           }
