@@ -211,8 +211,9 @@ groupedArchives pat =
       return (year, item)
 
     yearFromUTC :: UTCTime -> Integer
-    yearFromUTC utcTime = let (year, _, _) = toGregorian $ utctDay utcTime
-                          in year
+    yearFromUTC utcTime =
+      let (year, _, _) = toGregorian $ utctDay utcTime
+      in year
 
 yearlyArchives :: Pattern -> Compiler String
 yearlyArchives pat = do
