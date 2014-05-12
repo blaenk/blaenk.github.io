@@ -217,13 +217,14 @@ groupedArchives pat =
 yearlyArchives :: Pattern -> Compiler String
 yearlyArchives pat = do
   concat <$> (mapM generateArchive =<< groupedArchives pat)
-  where generateArchive :: (Integer, [Item String]) -> Compiler String
-        generateArchive (year, items) = do
-          let ctx = mconcat [constField "year" (show year),
-                             listField "items" (postCtx False) (return items),
-                             missingField]
+  where
+    generateArchive :: (Integer, [Item String]) -> Compiler String
+    generateArchive (year, items) = do
+      let ctx = mconcat [constField "year" (show year),
+                         listField "items" (postCtx False) (return items),
+                         missingField]
 
-          archiveTmpl <- loadBody "templates/archive.html"
-          archive <- makeItem ("" :: String)
-          itemBody <$> applyTemplate archiveTmpl ctx archive
+      archiveTmpl <- loadBody "templates/archive.html"
+      archive <- makeItem ("" :: String)
+      itemBody <$> applyTemplate archiveTmpl ctx archive
 
