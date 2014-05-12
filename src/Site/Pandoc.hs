@@ -57,7 +57,7 @@ codeBreak = walk breakChars
 
 breakChars :: Inline -> Inline
 breakChars (Code attrs code) = Code attrs $ subRegex pat code "\x200b\&\\0"
-  where pat = mkRegex "/|\\.|::|:|#|,|\\[|\\("
+  where pat = mkRegex "/|\\.|::|:|#|,|\\["
 breakChars x = x
 
 abbreviationCollector :: Item String -> Abbreviations
