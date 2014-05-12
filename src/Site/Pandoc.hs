@@ -34,8 +34,6 @@ import Control.Monad ((>=>))
 
 import Control.Applicative ((<$>))
 
-import Text.Hyphenation (hyphenate, english_US)
-
 pandocFeedCompiler :: Compiler (Item String)
 pandocFeedCompiler =
   pandocCompilerWithTransform readerOptions writerOptions' (walk ignoreTOC . walk removeTOCMarker)
@@ -48,27 +46,11 @@ pandocCompiler streams = do
 
   let transformer =
         return . abbreviations abbrs
-        >=> return . hyphens
         >=> return . codeBreak
         >=> pygments streams
         >=> return . tableOfContents alignment
 
   pandocCompilerWithTransformM readerOptions writerOptions transformer
-
-hyphens :: Pandoc -> Pandoc
-hyphens = walk hyphenation
-
-hyphenation :: Inline -> Inline
-hyphenation (Str str) =
-  Str . shy . hyphenate english_US $ str
-  where shy [] = []
-        shy [x] = x
-        shy (x:xs) = merge x (shy xs)
-
-        merge "-" a = '-' : a
-        merge [] a = '\x00ad' : a
-        merge (x:xs) a = x : merge xs a
-hyphenation x = x
 
 codeBreak :: Pandoc -> Pandoc
 codeBreak = walk breakChars
