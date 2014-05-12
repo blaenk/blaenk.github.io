@@ -11,15 +11,14 @@ module Site.Contexts (
 ) where
 
 import Hakyll hiding (titleField)
-import Data.Monoid (mconcat)
+import Data.Monoid (mconcat, (<>))
 import System.Process
 import System.FilePath
 
--- for groupByYear
-import Data.List (sortBy, groupBy, intersperse, intersperse)
+import Data.List (groupBy, intersperse, intersperse)
 import Data.Maybe (catMaybes)
 import Control.Monad (forM)
-import Control.Applicative ((<$>))
+import Control.Applicative ((<$>), empty)
 import System.Locale (defaultTimeLocale)
 import Data.Time.Clock
 import Data.Time.Calendar
@@ -74,8 +73,7 @@ postCtx preview = mconcat
 
 archiveCtx :: Pattern -> Context String
 archiveCtx pat = mconcat
-  -- [ archives pat
-  [ field "archives" (\_ -> yearlyArchives pat) :: Context String
+  [ yearlyArchives pat
   , constField "commentsJS" ""
   , defaultCtx
   ]
@@ -196,10 +194,11 @@ gitTag key = field key $ \item -> do
                         toHtml (", " :: String)
                         H.a ! A.href (toValue commit) ! A.title (toValue message) $ toHtml sha
 
-groupedArchives :: Pattern -> Compiler [(Integer, [Item String])]
+groupedArchives :: Pattern -> Compiler [Item (Integer, [Item String])]
 groupedArchives pat =
-  map combineItems . groupBy ((==) `on` fst) . reverse . sortBy (compare `on` fst)
-    <$> (mapM addYear =<< recentFirst =<< loadAll (pat .&&. hasNoVersion))
+  mapM makeItem =<<
+    map combineItems . groupBy ((==) `on` fst)
+      <$> (mapM addYear =<< recentFirst =<< loadAll (pat .&&. hasNoVersion))
   where
     combineItems :: [(Integer, Item String)] -> (Integer, [Item String])
     combineItems = foldr (\(year, item) (_, items) -> (year, item : items)) (0, [])
@@ -214,17 +213,12 @@ groupedArchives pat =
       let (year, _, _) = toGregorian $ utctDay utcTime
       in year
 
-yearlyArchives :: Pattern -> Compiler String
-yearlyArchives pat = do
-  concat <$> (mapM generateArchive =<< groupedArchives pat)
+yearlyArchives :: Pattern -> Context a
+yearlyArchives pat =
+  listField "archives" (year <> items) (groupedArchives pat)
   where
-    generateArchive :: (Integer, [Item String]) -> Compiler String
-    generateArchive (year, items) = do
-      let ctx = mconcat [constField "year" (show year),
-                         listField "items" (postCtx False) (return items),
-                         missingField]
-
-      archiveTmpl <- loadBody "templates/archive.html"
-      archive <- makeItem ("" :: String)
-      itemBody <$> applyTemplate archiveTmpl ctx archive
-
+    year = field "year" (return . show . fst . itemBody)
+    items = Context $ \k i ->
+              if k == "items"
+                then return $ ListField (postCtx False) (snd . itemBody $ i)
+                else empty
