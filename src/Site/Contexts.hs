@@ -154,18 +154,22 @@ pushJS preview key = field key $ \item -> do
 
 socialTag :: String -> Context String
 socialTag key = field key $ \item -> do
-  let sites = [("hn", "HN"), ("reddit", "Reddit")]
-      link name ln = H.a ! A.href (toValue ln) $ toHtml (name :: String)
+  let sites = [ ("hn", "hacker-news", "HN")
+              , ("reddit", "reddit", "Reddit")
+              ] :: [(String, String, String)]
 
-  links <- fmap (intersperse ", " . catMaybes) . forM sites $ \(site, name) -> do
-             fmap (link name) <$> getMetadataField (itemIdentifier item) site
+      link name icon ln =
+        H.div ! A.class_ "meta-component" $ do
+          H.i ! A.class_ (toValue $ "fa fa-" ++ icon ++ " fa-fw") $ ""
+          " "
+          H.a ! A.href (toValue ln) $ toHtml (name :: String)
+
+  links <- fmap catMaybes . forM sites $ \(site, icon, name) -> do
+             fmap (link name icon) <$> getMetadataField (itemIdentifier item) site
 
   if null links
     then return ""
-    else return .
-         renderHtml $ H.div ! A.class_ "meta-component" $ do
-                        H.i ! A.class_ "fa fa-comments-o fa-fw" $ ""
-                        mconcat $ " " : links
+    else return . renderHtml . mconcat $ links
 
 gitTag :: String -> Context String
 gitTag key = field key $ \item -> do
