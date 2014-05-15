@@ -439,3 +439,11 @@ data EmptyWithPhantom x
 type EmptyWithEmpty = EmptyWithPhantom Empty
 ```
 
+# Resources
+
+* [Categories from Scratch](http://staff.science.uva.nl/~poss/categories-from-scratch.html)
+* [Category Theory on Youtube](https://www.youtube.com/user/TheCatsters#p/u/68/xqLgGB7Hv7g)
+* [What I Wish I Knew](http://dev.stephendiehl.com/hask/)
+* [Learning Haskell](https://gist.github.com/bitemyapp/8739525)
+* [CS 194](http://www.seas.upenn.edu/~cis194/lectures.html)
+* [Performance profiling with ghc-events-analyze](http://www.well-typed.com/blog/86/)
