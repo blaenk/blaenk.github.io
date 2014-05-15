@@ -313,14 +313,19 @@ augroup cursorline
 augroup END
 ```
 
-I use `ag` to generate the file list for CtrlP, which is much faster than CtrlP at doing this:
+Instead of letting CtrlP generate the list of files, which can be slow, I delegate this work to `find` and `dir` on unix and windows respectively. If we're within a git repository, then I take advantage of `git ls-files` to do this instead.
 
 ``` vim
-if executable('ag')
-  set grepprg=ag\ -nogroup\ --nocolor
-  let g:ctrlp_user_command = 'ag %s -l --hidden --nocolor --ignore-dir .git -g ""'
-  let g:ctrlp_use_caching = 0
-endif
+let s:ctrlp_fallback =
+  \ has('win32') ?
+    \ 'dir %s /-n /b /s /a-d' :
+    \ 'find %s -type f'
+
+let g:ctrlp_user_command = [
+  \ '.git',
+  \ 'git --git-dir=%s/.git ls-files -co --exclude-standard',
+  \ s:ctrlp_fallback
+  \ ]
 ```
 
 ## Conclusion
