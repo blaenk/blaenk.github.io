@@ -10,4 +10,5 @@ toc: left
 
 * [React](http://facebook.github.io/react/)
 * [Jest](http://facebook.github.io/jest/)
+* [The case for react](http://murilopereira.com/the-case-for-reactjs-and-clojurescript/#/)
 
