@@ -50,7 +50,7 @@ fmap g :: f a -> f b
 
 # Parallelism
 
-Amdahl's law places an upper bound on potential speedup through more processors. The expected speedup $S$ can be described as a function of the number of processors $N$ and the percentage of runtime that can be parallelized $P$. The implications are that the potential speedup increasingly becomes negligible with the increase in processors, but more importantly that most programs have a theoretical maximum amount of parallelism.
+Amdahl's law places an upper bound on potential speedup that may be available by adding more processors. The expected speedup $S$ can be described as a function of the number of processors $N$ and the percentage of runtime that can be parallelized $P$. The implications are that the potential speedup increasingly becomes negligible with the increase in processors, but more importantly that most programs have a theoretical maximum amount of parallelism.
 
 $$S(N) = \frac {1} {(1 - P) + \frac P N}$$
 
