@@ -36,7 +36,7 @@ fmap id = id
 fmap (g . h) = (fmap g) . (fmap h)
 ```
 
-A way of thinking of `fmap` is that it _lifts_ a function into one that operates over contexts. This is evident from the type signature that explicitly emphasizes the fact that it is curried.
+A way of thinking of `fmap` is that it _lifts_ a function into one that operates over contexts. This is evident from the type signature that explicitly emphasizes the fact that it is partially applied.
 
 ``` haskell
 fmap :: (a -> b) ->  f a -> f b
@@ -47,6 +47,36 @@ fmap g :: f a -> f b
 ```
 
 ## Applicative Functors
+
+Applicative functors lie somewhere between functors and monads in expressivity. While functors allow the lifting of a normal function to a function on a computational context, applicative functors allow for the application of a function within a computational context. The type class includes a function `pure` for embedding values in a default, effect free context. Applicatives are functors by definition.
+
+``` haskell
+class Functor f => Applicative f where
+  pure  :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
+```
+
+The `<*>` function is essentially function application within a computational context.
+
+``` haskell
+($)   ::   (a -> b) ->   a ->   b
+(<*>) :: f (a -> b) -> f a -> f b
+```
+
+It's straightforward enough to create a convenient infix function that can be used like the regular function application `$` by embedding a regular function in a computational context before applying it to the parameter:
+
+``` haskell
+(<$>) :: (a -> b) -> f a -> f b
+(<$>) g x = pure g <*> x
+```
+
+However, this is what `fmap` already does based on its type. For this reason, the `<$>` convenience function is simply an infix alias for `fmap`.
+
+``` haskell
+fmap  :: (a -> b) -> f a -> f b
+(<$>) :: (a -> b) -> f a -> f b
+(<$>) = fmap
+```
 
 # Parallelism
 
@@ -447,3 +477,4 @@ type EmptyWithEmpty = EmptyWithPhantom Empty
 * [Learning Haskell](https://gist.github.com/bitemyapp/8739525)
 * [CS 194](http://www.seas.upenn.edu/~cis194/lectures.html)
 * [Performance profiling with ghc-events-analyze](http://www.well-typed.com/blog/86/)
+* [Haskell Wikibooks - Category Theory](http://en.wikibooks.org/wiki/Haskell/Category_theory)
