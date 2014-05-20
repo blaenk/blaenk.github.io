@@ -687,5 +687,159 @@ package object bootstrap {
 
 ## Validation
 
+Although mappings are immutable, the `verifying` method takes `Constraint[T]*` which copies the mapping and adds the provided constraints. There are some predefined constraints:
 
+``` scala
+// maximum value for an Int mapping
+max(maxValue: Int): Constraint[Int]
+
+// maximum length for a String mapping
+maxLength(length: Int): Constraint[String]
+
+// e.g.
+"name" -> text.verifying(Constraints.nonEmpty)
+```
+
+Custom validators can be created by using the `verifying` method on mappings, which accepts a function that gets passed the bound object and returns a boolean indicating whether the constraint is met. It's possible to pass a string as the first parameter, which serves as the custom validation message.
+
+``` scala
+def eanExists(ean: Long) = Product.findByEan(ean).isempty
+
+"ean" -> longNumber.verifying(eanExists(_))
+```
+
+Since mappings can be composed of other mappings, we can put constraints on more than one constituent mapping by applying the `verifying` method at the outer level. However, the error message for the top-level mapping has no key. Instead, if the top-level mapping produces an error, it's called the _global error_ which can be retrieved with the `globalError` method on `Form`, which returns an `Option[Error]`.
+
+## Optional Values
+
+Optional form values can be represented with the `Option` type by using the `Forms.optional` method which transforms `Mapping[A]` into `Mapping[Option[A]]`.
+
+``` scala
+case class Person(name: String, age: Option[Int])
+
+val personMapping = mapping(
+  "name" -> nonEmptyText,
+  "age" -> optional(number)
+)(Person.apply)(Person.unapply)
+```
+
+## Repeated Values
+
+It's also possible to repeat mappings to accept a list of values using the `list` mapping transformer, which transforms a mapping from `Mapping[A]` to `Mapping[List[A]]`. The `seq` transformer is similar, but using a `Seq` instead of a `List`.
+
+``` scala
+/*
+<input type="text" name="tags[0]">
+<input type="text" name="tags[1]">
+<input type="text" name="tags[2]">
+*/
+
+"tags" -> list(text)
+```
+
+Repeated mappings like these can be displayed easily with form helpers by using the `repeat` helper.
+
+``` scala
+@helper.repeat(form("tags"), min = 3) { tagField =>
+  @helper.inputText(tagField, '_label -> "Tag")
+}
+```
+
+## Nested Mappings
+
+Nested mappings can be referred to using dot-notation similar to object dot notation. One reason for nesting mappings, aside from organizational purposes, is to avoid reaching the hard limit of 18 tuple fields which are used to back mappings.
+
+``` scala
+val contactMapping = tuple(
+  "name" -> text,
+  "email" -> email
+)
+
+val contactsForm = Form(tuple(
+  "main_contact" -> contactMapping,
+  "technical_contact" -> contactMapping,
+  "administrative_contact" -> contactMapping,
+))
+
+@helper.inputText(form("main_contact.name"))
+@helper.inputText(form("main_contact.email"))
+```
+
+## Custom Mappings
+
+There are two ways to construct a custom mapping. The first involves transforming from an existing one, and the second involves building one from scratch. Transforming an existing mapping can be done using the `transform` method, which accepts a function from the existing type to the target type, and another for the reverse --- since mappings are bidirectional. However, `transform`'s limitation is that it has no way of expressing failure.
+
+``` scala
+val localDateMapping = text.transform(
+  (dateString: String) => LocalDate.parse(dateString),
+  (localDate: LocalDate) => localDate.toString
+)
+```
+
+The process of creating a custom mapping from scratch involves implementing the `Formatter` trait. The mapping can then be constructed using the `Forms.of` method.
+
+``` scala
+trait Formatter[T] {
+  def bind(key: String, data: Map[String, String]):
+    Either[Seq[FormError], T]
+
+  def unbind(key: String, value: T): Map[String, String]
+
+  val format: Option[(String, Seq[Any])] = None
+}
+
+implicit val localDateFormatter = new Formatter[LocalDate] {
+  def bind(key: String, data: Map[String, String]) =
+    data.get(key) map { value =>
+      Try {
+        Right(LocalDate.parse(value))
+      } getOrElse Left(Seq(FormError(key, "error.date", Nil)))
+    } getOrElse Left(Seq(FormError(key, "error.required", Nil)))
+
+  def unbind(key: String, ld: LocalDate) = Map(key -> ld.toString)
+
+  override val format = Some(("date.format", Nil))
+}
+
+val localDateMapping = Forms.of(localDateFormatter)
+val localDateForm = Form(single(
+  "introductionDate" -> localDateMapping
+))
+```
+
+## File Uploads
+
+File uploads require the `multipart/form-data` encoding on forms.
+
+It can be handled using the `parse.multipartFormData` body parser.
+
+``` scala
+def upload() = Action(parse.multipartFormData) { implicit request =>
+  val form = Form(tuple(
+    "description" -> text,
+    "image" -> ignored(request.body.file("image")).
+                 verifying("File missing", _.isDefined)
+  ))
+
+  form.bindFromRequest.fold(
+    formWithErrors => {
+      Ok(views.html.fileupload.uploadform(formWithErrors))
+    },
+    value => {
+      file.ref.moveTo(new File("/tmp/image"))
+      Ok("Retrieved file %s" format file.filename)
+    }
+  )
+}
+```
+
+The above handler would correspond to the following.
+
+``` scala
+@helper.form(action = routes.FileUpload.upload,
+             'enctype -> "multipart/form-data") {
+  @helper.inputText(form("description"))
+  @helper.inputFile(form("image"))
+}
+```
 
