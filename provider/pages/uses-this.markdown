@@ -113,7 +113,7 @@ My favorite source control system so far is [git]. I regularly spend time learni
 
 [Kindle] for reading books. At first I only used it to read novels and other casual material, but eventually I began using it for more and more technical books, starting with C++ Primer 5th Ed. (and the GDB book and TLPI). I actually used to explicitly prefer physical books, now I consistently find that I can read a lot quicker and have more fun doing it on a kindle. I use [Calibre] to manage my vast ebook library.
 
-[Kindle]: http://amzn.com/B007HCCNJU
+[Kindle]: http://amzn.com/B00AWH595M
 [Calibre]: http://calibre-ebook.com/
 
 [Chrome] is my primary browser (Chromium on Linux).
