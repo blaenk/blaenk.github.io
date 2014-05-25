@@ -126,6 +126,16 @@ def delete(ean: Long) = Action {
 }
 ```
 
+## Environments
+
+It's straightforward to setup different configuration environments by using the `include` directive in configuration files. Production configuration files would need to use the `classpath` function to refer to files within the deployed archive. This can be used to define a configuration file at a system path such as `/etc/paperclips/production.conf`{.path}, which can then be imported with the `-Dconfig.file` parameter.
+
+```
+include classpath("application.conf")
+
+email.override.enabled=false
+```
+
 # Models
 
 A model tends to consist of a model class (definition and attributes), data access object (to access model data), and some test data. The model is typically defined as a case class and its data access object is represented by a companion object.
@@ -842,4 +852,341 @@ The above handler would correspond to the following.
   @helper.inputFile(form("image"))
 }
 ```
+
+# JSON
+
+Play's `play.api.libs.json.Json`{.path} module contains support for JSON. Default types can be converted to JSON with the `toJson` method resulting in a `JsValue`, which can be converted to a string with the `stringify` method. The response methods such as `Ok` know about `JsValue` and automatically set the `Content-Type` header to `application/json`. The JSON types include:
+
+* `JsString`
+* `JsNumber`
+* `JsBoolean`
+* `JsObject`
+* `JsArray`
+* `JsNull`
+
+Arbitrary objects can be converted to JSON using a JSON formatter. The way this works is that `toJson` takes a second, implicit parameter of type `Writes[T]` where `T` is the type being serialized. `Writes[T]` is a trait with a single method that takes an object of type `T` and returns a `JsValue`.
+
+``` scala
+import play.api.libs.json._
+
+case class Product(ean: Long, name: String, description: String)
+
+implicit object ProductWrites extends Writes[Product] {
+  def writes(p: Product) = Json.obj(
+    "ean" -> Json.toJson(p.ean),
+    "name" -> Json.toJson(p.name),
+    "description" -> Json.toJson(p.description)
+  )
+}
+
+// alternatively
+val adminProductWrites: Writes[Product] = (
+  (JsPath \ "ean").write[Long] and
+  (JsPath \ "name").write[String] and
+  (JsPath \ "description").write[String] and
+  (JsPath \ "price").write[BigDecimal] and
+)(unlift(Product.unapply))
+```
+
+To go in the other direction, parsing an object from a JSON value, we use the `Reads` trait.
+
+``` scala
+implicit val productReads: Reads[Product] = (
+  (JsPath \ "ean").read[Long] and
+  (JsPath \ "name").read[String] and
+  (JsPath \ "description").read[String] and
+)(Product.apply _)
+
+val parsedProduct = JsValue.as[Product]
+```
+
+There are a couple of query methods that can be used on JSON values. The `\` method selects an element. The `\\` method selects a property anywhere in the JSON tree. The `apply` method returns an element from a `JsArray`.
+
+``` scala
+val companyName = (json \ "company" \ "name").asOpt[String]
+```
+
+Since it's common to want to implement `Reads` and `Writes` to serialize and deserialize objects, the `Format[T]` exists that represents both.
+
+``` scala
+case class PricedProduct(
+  name: String,
+  description: Option[String],
+  purchasePrice: BigDecimal,
+  sellingPrice: BigDecimal
+)
+
+implicit val productFormat = (
+  (JsPath \ "name").format[String] and
+    (JsPath \ "description").formatNullable[String] and
+    (JsPath \ "purchase_price").formatNullable[BigDecimal] and
+    (JsPath \ "selling_price").formatNullable[BigDecimal]
+)(PricedProduct.apply, unlift(PricedProduct.unapply))
+```
+
+Formatters can also be created at compile time.
+
+``` scala
+implicit val productReads = Json.reads[PricedProduct]
+implicit val productWrites = Json.writes[PricedProduct]
+
+// or
+implicit val productFormat = Json.format[PricedProduct]
+```
+
+Constraints can be added to fields to perform validation. This is done by supplying a custom `Reads` implementation to use for the validation as an implicit parameter to `read` or `readNullable`. The JSON can then be validated using the `validate` method.
+
+``` scala
+def save = Actions(parse.json) { implicit request =>
+  val json = request.body
+  json.validate[Product].fold(
+    valid = { product =>
+      Product.save(product)
+      Ok("Saved")
+    },
+    invalid = {
+      errors => BadRequest(JsError.toFlatJson(errors))
+    }
+  )
+}
+```
+
+# Authentication
+
+One way to handle authentication is to create a wrapper around `Action` that serves an HTTP Unauthorized error code if authentication fails.
+
+``` scala
+def AuthenticatedAction(f: Request[AnyContent] => Result):
+  Action[AnyContent] = {
+  Action { request =>
+    if (authenticate(request)) {
+      f(request)
+    } else {
+      Unauthorized
+    }
+  }
+}
+```
+
+# Modules
+
+Modules can be added via sbt, which the `play` command is actually a wrapper of. Some modules may be found in repositories other than the default ones, in which case a _resolver_ must be added. The following shows how to add the [SecureSocial] module.
+
+[SecureSocial]: http://securesocial.ws/
+
+``` scala
+import sbt._
+import Keys._
+import PlayProject._
+
+object ApplicationBuild extends Build {
+  val appName = "product-details"
+  val appVersion = "1.0-SNAPSHOT"
+
+  val appDependencies = Seq(
+    "securesocial" %% "securesocial" % "2.1.0"
+  )
+
+  val main = PlayProject(appName, appVersion,
+    appDependencies, mainLang = SCALA
+  ).settings(
+    resolvers += Resolver.url("SecureSocial Repository",
+      url("http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/")
+    )(Resolver.ivyStylePatterns)
+  )
+}
+```
+
+Creating modules is also straightforward and begins by creating a new Play application and only keeping the necessary files. This means that if we can remove `app/public`{.path} and `app/views`{.path} if we don't need them. It's important to keep in mind naming collisions however, which is why it's useful to create packages out of source files with the `package` keyword in Scala.
+
+# Deployment
+
+Play has two commands that make it very easy to deploy. The `stage` command compiles the application to a JAR file together with all dependency JARs and places the file in `target/staged`{.path} along with script `target/start`{.path} which can be used to start the application. The `dist` command packages up start script and dependencies into a zip archive which can easily be transferred.
+
+Packaging up the application in this manner allows it to be deployed on any target that contains a Java runtime installation.
+
+# Web Services
+
+The `WS` object makes it simple to consume web services. The `WS.url` method creates a `WSRequestHolder` object can be constructed in method-chaining style, ultimately followed by a call to the request type, i.e. `get`.
+
+``` scala
+def itemList() = Action {
+  Async {
+    val response: Future[Response] =
+      WS.url("http://someservice.com/api.json")
+        .withQueryString("q" -> query)
+        .get
+
+    response.map { response =>
+      val items = Json.parse(response.body).\("results").as[Seq[Item]]
+      Ok(views.html.items.itemList(items))
+    }
+  }
+}
+```
+
+# Caching
+
+There's a caching API represented by the `Cache` object that can be accessed by having an implicit `play.api.Application`{.path} in the scope, which can be fulfilled by importing `play.api.Play.current`{.path}.  The `getOrElse` method can get a value for a given key and if not found, compute it and store it with an optional expiration time.
+
+``` scala
+Cache.set("user-key", User("John Doe"))
+val userOption: Option[User] = Cache.getAs[User]("user-key")
+```
+
+It's also possible to use the `Cached` object to wrap an `Action` that can take a key and optional expiration time.
+
+``` scala
+def handler() = Cached("handler", 120) {
+  Action { ... }
+}
+```
+
+It's also possible to cache dynamic content by supplying a function to `Cached` that determines the string key to use based on the `RequestHeader`.
+
+# Iteratees
+
+Iteratees are objects that received individual chunks of data and does something with them. They have two type parameters: the first indicating the type of chunks it accepts and the second indicates the type of the final result the iteratee produces. Consider an iteratee that logs every chunk using the `foreach` function which takes a chunk of type `A` and returns an `Iteratee[A, Unit]`. It can be used with a `WSRequestHolder` by passing a function of type `ResponseHeaders => Iteratee` to the request type.
+
+``` scala
+val loggingIteratee = Iteratee.foreach[Array[Byte]] { chunk =>
+  val chunkString = new String(chunk "UTF-8")
+  println(chunkString)
+}
+
+WS.url("https://stream.twitter.com/1/statuses/sample.json")
+  .sign(OAuthCalculator(consumerKey, accessToken))
+  .get(_ => loggingIteratee)
+```
+
+Alternatively we can create an iteratee that produces an end-result, such as summing up integer chunks. Enumerators are the counterpart to iteratees in that they are producers of chunks and can be applied to iteratees, yielding futures of the new iteratee. Iteratees are immutable, so the result is simply a new iteratee with a new state.
+
+``` scala
+val summingIteratee = Iteratee.fold(0) { (sum: Int, chunk: Int) =>
+  sum + chunk
+}
+
+val intEnumerator = Enumerator(1, 2, 3, 4, 5)
+
+val newIterateeFuture: Future[Iteratee[Int, Int]] =
+  intEnumerator(summingIteratee)
+
+val resultFuture: Future[Int] = newIterateeFuture.flatMap(_.run)
+resultFuture.onComplete(sum => println("Sum is %d" format sum))
+```
+
+## WebSockets
+
+WebSockets are created using a pair of an iteratee used to process the incoming data stream and an enumator used to send data to the client.
+
+In a simple chat application, an Akka actor can be used to process users, specifically to keep track of all of the users in the room. A `Concurrent.broadcast` yields a pair of an enumerator and a channel tied to that enumerator which allows one to push additional data to it after it has been created. The actor's private state will therefore include a set of users and a broadcast channel and its associated enumerator.
+
+``` scala
+class ChatRoom extends Actor {
+  val users = Set[String]()
+  val (enumerator, channel) = Concurrent.broadcast[String]
+```
+
+The `receive` method will handle events where a user joins, leaves, or broadcasts a message. Joining is handled by first checking if that user exists, and if so, ignoring anything that user might say. Otherwise, a message is broadcast to the room announcing that the user joined and adding them to the set of user names taken. The `mapDone` method is used to specify the behavior to perform when the iteratee has finished sending data.
+
+``` scala
+  def receive = {
+    case Join(nick) => {
+      if (!users.contains(nick)) {
+        val iteratee = Iteratee.foreach[String]{ message =>
+          self ! Broadcast("%s: %s" format (nick, message))
+        }.mapDone { _ =>
+          self ! Leave(nick)
+        }
+
+        users += nick
+        channel.push("User %s has joined the room, now %s users"
+          format(nick, users.size))
+        sender ! (iteratee, enumerator)
+      } else {
+        val enumerator = Enumerator(
+          "Nickname %s is already in use." format nick)
+        val iteratee = Iteratee.ignore
+        sender ! (iteratee, enumerator)
+      }
+    }
+```
+
+The Akka actor can also handle the case where a user leaves by simply removing the username from the set of usernames and broadcasting the event to the room.
+
+``` scala
+    case Leave(nick) => {
+      users -= nick
+      channel.push("User %s has left the room, %s users left"
+        format(nick, users.size))
+    }
+```
+
+Finally, the broadcast event simply adds a message to the channel that was created with `Concurrent.broadcast`.
+
+``` scala
+    case Broadcast(msg: String) => channel.push(msg)
+  }
+}
+```
+
+This actor can then be used in a controller by creating an instance of the actor. The `showRoom` method will render the template showing the chat room. The `chatSocket` is an action of type `WebSocket.async` which accepts parameters of type `Future[(Iteratee, Enumerator)]`.
+
+The `chatSocket` action sends the `Join` message to the actor using the `?` method which essentially expects a response, which in this case is a pair of iteratee and enumerator, with the iteratee being the stream used to communicate with the server and the enumerator being the broadcast stream that is sent to the user. Finally, the `mapTo` method is used to cast the `Future[Any]` to the appropriate type of `Future[(Iteratee, Enumerator)]`.
+
+``` scala
+object Chat extends Controller {
+  implicit val timeout = Timeout(1 seconds)
+  val room = Akka.system.actorOf(Props[ChatRoom])
+
+  def showRoom(nick: String) = Action { implicit request =>
+    Ok(views.html.chat.showRoom(nick))
+  }
+
+  def chatSocket(nick: String) = WebSocket.async { request =>
+    val channelsFuture = room ? Join(nick)
+    channelsFuture.mapTo[(Iteratee[String, _], Enumerator[String])]
+  }
+}
+```
+
+## Body Parsers
+
+Normally actions are only invoked when the request is complete, once the body parser is done parsing the body of the request. Suppose a user is uploading a large file only to be rejected once the upload is complete because the file is of the wrong type. A body parser can respond before the request is complete.
+
+A body parser is an object that can process an HTTP request body, such as the `json`  or `multipartFormData` body parsers. More specifically, a body parser is a function that takes a `RequestHeader` parameter and returns an iteratee `Iteratee[Array[Byte], Either[Result, A]]`, that is, it processes the body of type `Array[Byte]` and returns an `Either[Result, A]`, where an error `Result` is return in the event of failure to construct `A`.
+
+Essentially, Play creates a `RequestHeader` which is used to route to the appropriate `Action` and the body parser is used to create an `Iteratee` that's fed the body of the request. When the body is finished constructing, it's used to construct a complete `Request` which is then fed to the `Action`. If the construction fails, a `Request` won't be constructed and instead the `Result` will be returned to the client.
+
+Built-in body parsers allow a maximum body size to be specified, which defaults to 512 kilobytes, and if exceeded, yields a `EntityTooLarge` HTTP error response.
+
+The `temporaryFile` body parser parses the body and put its in a temporary file, which can then be moved to a permanent location with the `moveTo` method if the file satisfies any constraints. The `Play.getFile` method can yield a path relative to the application root.
+
+``` scala
+def upload = Action(parse.temporaryFile) { request =>
+  val destinationFile = Play.getFile("uploads/myfile")
+  request.body.moveTo(destinationFile)
+  Ok("File successfully uploaded!")
+}
+```
+
+It's possible to compose body parsers. For example, the `when` method allows one to specify a predicate and a parser to use if it's satisfied, as well as a failure result if not.
+
+``` scala
+def fileWithContentType(filename: String, contentType: String) =
+  parse.when(
+    requestHeader => requestHeader.contentType == contentType,
+    parse.file(Play.getFile(filename)),
+    requestHeader => BadRequest(
+      "Expected a '%s' content type, but fuond %s".
+        format(contentType, requestHeader.contentType)))
+
+def savePdf(filename: String) = Action(
+  fileWithContentType(filename, "application/pdf")) { request =>
+    Ok("Your file is saved!")
+  }
+)
+```
+
+Body parsers also support the `map` function to transform the body parser's constructed type. This has the advantage of constructing the desired type and making it available within the action.
 
