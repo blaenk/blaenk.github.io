@@ -260,7 +260,7 @@ parMap f xs = map f xs `using` parList rseq
 
 # Documentation
 
-[Haddock] is the documentation system is the most prevalent in the Haskell community. Documentation can be generated using the `haddock` command or more commonly `cabal haddock`.
+[Haddock] is the documentation system that is most prevalent in the Haskell community. Documentation can be generated using the `haddock` command or more commonly `cabal haddock`.
 
 Functions can be annotated by beginning comments with `-- |`, which applies the documentation to the following declaration in the source file. It's also possible to place annotations after a given declaration, in which case the caret `^` is used instead of the `|` to denote an annotation.
 
