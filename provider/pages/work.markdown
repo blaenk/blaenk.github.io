@@ -9,7 +9,7 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
-##### Aura: Allow number parameter for truncation {#aura-truncate-number .collapse}
+##### Aura: Allow Number Parameter for Truncation {#aura-truncate-number .collapse}
 
 <div class="collapsible">
 
