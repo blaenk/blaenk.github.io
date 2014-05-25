@@ -258,6 +258,113 @@ parMap :: (a -> b) -> [a] -> [b]
 parMap f xs = map f xs `using` parList rseq
 ```
 
+# Documentation
+
+[Haddock] is the documentation system is the most prevalent in the Haskell community. Documentation can be generated using the `haddock` command or more commonly `cabal haddock`.
+
+Functions can be annotated by beginning comments with `-- |`, which applies the documentation to the following declaration in the source file. It's also possible to place annotations after a given declaration, in which case the caret `^` is used instead of the `|` to denote an annotation.
+
+[Haddock]: http://www.haskell.org/haddock/doc/html/
+
+``` haskell
+data T a b
+  -- | the C1 constructor is used for foo
+  = C1 a b
+  -- | the C2 constructor is used for bar
+  | C2 a b
+
+data T a b
+  = C1 a b -- ^ the C1 constructor is used for foo
+  | C2 a b -- ^ the C2 constructor is used for bar
+```
+
+Annotations can span multiple lines until the first non-comment line is encountered. It's also possible to use multi-line comments by opening them with `{-|`.
+
+``` haskell
+
+-- | this is a comment
+-- that spans multiple lines
+f :: Int   -- ^ the int
+  -> Float -- ^ the float
+  -> IO () -- ^ the return value
+```
+
+Chunks of documentation can be given a name with `$name` and then included elsewhere.
+
+``` haskell
+module Foo (
+  -- $doc
+)
+
+-- $doc
+-- this is a large chunk of documentation
+-- that spans many lines
+```
+
+## Markup {#haddock-markup}
+
+One or more blank lines separates two paragraphs. Emphasis is denoted by surrounding text with a forward-slash `/`, whereas bold text is denoted by surrounding the text with two underscores `__` Monospace text is denoted by surrounding it with `@`. Other markup is valid inside each of these, for example, `@'f'` will hyperlink the identifier `f` within the monospace text.
+
+Links can be inserted using `<url label>` syntax, although Haddock automatically links free-standing URLs. It's also possible to link to other parts of the same page with `#anchor#` syntax.
+
+Images can be embedded with `<<path.png title>>` syntax.
+
+It's possible to link to Haskell identifiers that are types, classes, constructors, or functions by surrounding them with single quotes. If the target is not in the scope, they may be referenced by fully qualifying them.
+
+``` haskell
+
+-- | This module defines the type 'T'
+-- It has nothing to do with 'M.T'
+```
+
+Alternatively, it's possible to link to a module entirely by surrounding the name with double quotes.
+
+``` haskell
+
+-- | This is a reference to the "Foo" module
+```
+
+Code blocks may be inserted by surrounding the paragraph with `@` signs, where its content is interpreted as normal markup. Alternatively, it's possible to do so by preceding each line with a `>`, in which case the text is interpreted literally.
+
+``` haskell
+
+-- | this is some documentation that includes code
+--
+-- @
+--     f x = x + x
+-- @
+--
+-- > g x = x * 42
+```
+
+It's possible to denote REPL examples with `>>>`, followed by the result.
+
+``` haskell
+
+-- | demonstrating the REPL example syntax
+--
+-- >>> fib 10
+-- 55
+```
+
+Unordered lists are possible by simply preceding the paragraph with a `*` or `-`. Ordered lists are possible by preceding each item with `(n)` or `n.`.
+
+## Options {#haddock-options}
+
+Haddock accepts some comma-separated list of options that affect how it generates documentation for that module, much like `LANGUAGE` pragmas in Haskell.
+
+``` haskell
+{-# OPTIONS_HADDOCK hide, prune #-}
+```
+
+Option          Effect
+-------         -------
+hide            omits module; doesn't affect re-exported definitions
+prune           omits definitions with no annotations
+ignore-exports  ignore export list; all top-level declarations are exported
+not-home        module shouldn't be considered to be home module
+show-extensions include all language extensions used in the module
+
 # GHC Extensions
 
 Haskell is a PLT playground, and as a result GHC has available a multitude of language extensions. I found a [series of articles] that cover some of the more popular extensions.
