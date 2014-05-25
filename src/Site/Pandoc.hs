@@ -55,9 +55,15 @@ pandocCompiler streams = do
 codeBreak :: Pandoc -> Pandoc
 codeBreak = walk breakChars
 
+-- | This AST inserts a <http://en.wikipedia.org/wiki/Zero-width_space zero-width space>
+-- before every matched delimiter.
+--
+-- I pattern match on the first two elements to avoid inserting it before the first two
+-- characters. This is because regex-tdfa doesn't support negative lookaheads :(
 breakChars :: Inline -> Inline
-breakChars (Code attrs code) = Code attrs $ subRegex pat code "\x200b\&\\0"
+breakChars (Code attrs (x:y:xs)) = Code attrs $ x : y : subRegex pat xs "\x200b\&\\0"
   where pat = mkRegex "/|\\.|::|:|#|,|\\["
+breakChars (Code attrs code) = Code attrs code
 breakChars x = x
 
 abbreviationCollector :: Item String -> Abbreviations

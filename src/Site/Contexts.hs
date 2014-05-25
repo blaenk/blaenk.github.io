@@ -161,7 +161,7 @@ socialTag key = field key $ \item -> do
       link name icon ln =
         H.div ! A.class_ "meta-component" $ do
           H.i ! A.class_ (toValue $ "fa fa-" ++ icon ++ " fa-fw") $ ""
-          " "
+          toHtml (" " :: String)
           H.a ! A.href (toValue ln) $ toHtml (name :: String)
 
   links <- fmap catMaybes . forM sites $ \(site, icon, name) -> do
