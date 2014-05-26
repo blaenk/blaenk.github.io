@@ -281,7 +281,6 @@ data T a b
 Annotations can span multiple lines until the first non-comment line is encountered. It's also possible to use multi-line comments by opening them with `{-|`.
 
 ``` haskell
-
 -- | this is a comment
 -- that spans multiple lines
 f :: Int   -- ^ the int
@@ -312,7 +311,6 @@ Images can be embedded with `<<path.png title>>` syntax.
 It's possible to link to Haskell identifiers that are types, classes, constructors, or functions by surrounding them with single quotes. If the target is not in the scope, they may be referenced by fully qualifying them.
 
 ``` haskell
-
 -- | This module defines the type 'T'
 -- It has nothing to do with 'M.T'
 ```
@@ -320,14 +318,12 @@ It's possible to link to Haskell identifiers that are types, classes, constructo
 Alternatively, it's possible to link to a module entirely by surrounding the name with double quotes.
 
 ``` haskell
-
 -- | This is a reference to the "Foo" module
 ```
 
 Code blocks may be inserted by surrounding the paragraph with `@` signs, where its content is interpreted as normal markup. Alternatively, it's possible to do so by preceding each line with a `>`, in which case the text is interpreted literally.
 
 ``` haskell
-
 -- | this is some documentation that includes code
 --
 -- @
@@ -340,7 +336,6 @@ Code blocks may be inserted by surrounding the paragraph with `@` signs, where i
 It's possible to denote REPL examples with `>>>`, followed by the result.
 
 ``` haskell
-
 -- | demonstrating the REPL example syntax
 --
 -- >>> fib 10
