@@ -1,13 +1,13 @@
 $for(archives)$
-  <section class="archives">
-      <h2 class="archive-year">$year$</h2>
-      $for(items)$
-        <article>
-          <div class="post-info">
-            <h3 class="title"><a href="$url$">$title$</a></h3>
-            <div class="excerpt">$excerpt$</div>
-          </div>
-        </article>
-      $endfor$
-  </section>
+  <h2 class="archive-year">$year$</h2>
+  <ul class="archive">
+  $for(items)$
+    <li class="archive-item">
+      <a class="item-link" href="$url$">
+        <h3 class="item-title">$title$</h3>
+        <div class="item-excerpt">$excerpt$</div>
+      </a>
+    </li>
+  $endfor$
+  </ul>
 $endfor$

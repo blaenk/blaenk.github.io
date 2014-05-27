@@ -1,84 +1,44 @@
 #category-title { margin-bottom: 15px; }
 
-.archives{
-	position: relative;
-	&:last-of-type{
-		&:before{
-			content: "";
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-		}
-	}
-	article{
-    border: none;
-    margin-bottom: 0 !important;
-		.title{
-			margin-bottom: 0;
-	      a{
-	        color: $color-gray01;
-	        display: inline-block;
-	        width: 100%;
-          transition: color 0.3s;
-
-          @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
-            &:hover { color: $color-main; }
-          }
-	      }
-		}
-    .excerpt {
-      color: #999;
-    }
-    & > .meta {
-      float: left;
-    }
-		.meta{
-			font-size: 1em;
-			line-height: 34px;
-			position: absolute;
-			left: -30px;
-			@media screen and (max-width: 766px){
-				display: none;
-			}
-			span{
-        display: inline-block;
-				text-transform: uppercase;
-				&:before{
-					color: $color-gray03;
-					font: 1.3em $font-icon;
-					position: absolute;
-					left: 0;
-				}
-        		vertical-align: baseline;
-			}
-			a{
-				color: $color-gray02;
-        transition: color 0.3s;
-        @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
-          &:hover{
-            color: #258FB8;
-          }
-        }
-			}
-			.date {
-				cursor: default;
-				padding-left: 22px;
-
-				i {
-					font-size: 1.3em;
-					color: #cccccc
-				}
-			}
-		}
-    .post-info {
-      @media screen and (max-width: 600px){
-        margin-left: 0;
-      }
-
-      & > .meta {
-        margin-top: 5px;
-        .tags > .category { vertical-align: top; }
-      }
-    }
-	}
+.archive-year {
+  margin-bottom: 15px;
+  font-family: $font-sans;
 }
+
+h2.archive-year:first-of-type {
+  display: none;
+}
+
+.archive {
+  margin-bottom: 15px;
+}
+
+.archive-item {
+  border: none;
+
+  .item-link {
+    display: block;
+    color: $color-gray01;
+
+    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      &:hover {
+        .item-title {
+          color: $color-main;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .item-title {
+      transition: color 0.3s;
+      font-weight: normal;
+    }
+
+    .item-excerpt {
+      color: #999;
+      font-weight: 300;
+      display: inline-block;
+    }
+  }
+}
+
