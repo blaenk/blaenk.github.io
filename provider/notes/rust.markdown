@@ -317,7 +317,8 @@ impl<T: Eq> Eq for List<T> {
   fn eq(&self, ys: &List<T>) -> bool {
     match (self, ys) {
       (&Nil, &Nil) => true,
-      (&Cons(ref x, ~ref next_xs), &Cons(ref y, ~ref next_ys)) if x == y => next_xs == next_ys,
+      (&Cons(ref x, ~ref next_xs), &Cons(ref y, ~ref next_ys)) if x == y =>
+        next_xs == next_ys,
       _ => false
     }
   }
