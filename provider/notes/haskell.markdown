@@ -366,6 +366,27 @@ Haskell is a PLT playground, and as a result GHC has available a multitude of la
 
 [series of articles]: https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions
 
+## Named-Field Puns
+
+Record puns allows for the easy creation of bindings of the same name as their field.
+
+``` haskell
+{-# LANGUAGE NamedFieldPuns #-}
+
+greet IndividualR { person = PersonR { firstName = fn } } = "Hi, " ++ fn
+greet IndividualR { person = Person { firstName } } = "Hi, " ++ firstName
+```
+
+## Record WildCards
+
+This extension allows the use of two dots `..` to automatically create bindings for all fields at that location, named the same as the fields they bind.
+
+``` haskell
+{-# LANGUAGE RecordWildCards #-}
+
+greet IndividualR { person = PersonR { .. } } = "Hi, " ++ firstName
+```
+
 ## Tuple Sections
 
 Tuple sections are a straightforward extension that allows tuples to be used in sections.
