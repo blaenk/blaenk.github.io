@@ -58,8 +58,10 @@ $(function() {
       var $id = $(this).attr('id');
       var $text = $(this).text();
 
-      $(this).html('').prepend('<span class="hash">#</span>')
-             .append('<a href="#' + $id + '" class="header-link">' + $text + '</a>');
+      $(this)
+        .html('')
+        .prepend('<span class="hash">#</span>')
+        .append('<a href="#' + $id + '" class="header-link">' + $text + '</a>');
     });
 
     $('.collapse').not(function() {
@@ -68,11 +70,31 @@ $(function() {
 
     $('.collapse').click(function(e) {
       e.preventDefault();
-      $(this).next('.collapsible').slideToggle('fast');
+      $(this)
+        .next('.collapsible')
+        .slideToggle('fast');
     });
 
-    $('.footnoteRef').attr('title', 'read footnote');
-    $('a[href^="#fnref"]').attr('title', 'continue reading').html('<i class="fa fa-level-up"></i>');
+    var $footnotes = $('.footnotes > ol > li');
+
+    $('.footnoteRef')
+      .attr('title', 'read footnote')
+      .click(function() {
+        $footnotes.stop(true, true)
+
+        var note = $(this).attr('href');
+        $footnotes.not(note)
+          .css({opacity: 0.1})
+          .animate({opacity: 1.0}, 15000, 'linear');
+      });
+
+    $('a[href^="#fnref"]')
+      .attr('title', 'continue reading')
+      .html('<i class="fa fa-level-up"></i>')
+      .click(function() {
+        $footnotes.stop(true, true);
+      });
+
   };
 
   window.refresh();
