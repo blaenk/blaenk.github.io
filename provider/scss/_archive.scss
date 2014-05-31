@@ -1,0 +1,56 @@
+#tag {
+  margin-bottom: 15px;
+}
+
+.archive-year {
+  margin-bottom: 15px;
+  font-family: $font-sans;
+
+  &:first-of-type {
+    display: none;
+  }
+}
+
+.archive {
+  margin-bottom: 15px;
+
+  > li {
+    margin-bottom: 15px;
+    list-style-type: none;
+  }
+}
+
+.archive-item {
+  border: none;
+
+  .item-link {
+    display: block;
+    color: $color-gray01;
+
+    .item-title {
+      transition: color 0.3s;
+      font-weight: normal;
+    }
+
+    .item-excerpt {
+      color: #999;
+      transition: color 0.3s;
+      font-weight: 300;
+      display: inline-block;
+    }
+
+    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+      &:hover {
+        .item-title {
+          color: $color-main;
+          text-decoration: underline;
+        }
+
+        .item-excerpt {
+          color: #555;
+        }
+      }
+    }
+  }
+}
+

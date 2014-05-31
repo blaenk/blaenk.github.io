@@ -197,7 +197,7 @@ figure.codeblock {
       margin: 0;
       display: block;
 
-      &:empty{
+      &:empty {
         display: none;
       }
 
@@ -231,14 +231,5 @@ figure.codeblock {
 .entry-content code,
 .entry-content pre {
   font-family: $font-mono;
-}
-
-.entry-content > pre {
-  background-color: #f2f9ff;
-  color: #00427b;
-  padding-left: 10px;
-  margin-top: 10px;
-  margin-left: -10px;
-  margin-right: -10px;
 }
 
