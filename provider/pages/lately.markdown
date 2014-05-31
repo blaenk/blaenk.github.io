@@ -5,11 +5,11 @@ comments: off
 toc: off
 ---
 
-This page lists some of the things I've been up to lately.
+This page lists some of the things that I've been up to lately.
 
 ## Reading
 
-This is what I'm currently reading, but I also keep a list of [books I've read](/reads).
+At any moment I have a handful of books that I'm currently reading. I find that I don't have trouble keeping track of each --- oftentimes due to keeping [notes](/notes/), and having a set of books allows me to switch to something else temporarily if a particular book falls into a lull. I also keep a page of reviews of [books that I've finished](/reads/).
 
 <img src="/images/books/onchina.jpg" class="right" width="128">
 
