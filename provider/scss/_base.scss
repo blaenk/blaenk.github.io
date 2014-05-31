@@ -80,6 +80,7 @@ p.notfound {
 .left {
   float: left;
   margin-right: 1.5em;
+  margin-bottom: 15px;
   & > * { margin-top: 10px !important; }
 
   @media screen and (max-width: 600px) {
@@ -93,6 +94,7 @@ p.notfound {
 .right {
   float: right;
   margin-left: 1.5em;
+  margin-bottom: 15px;
   & > * { margin-top: 10px !important; }
 
   @media screen and (max-width: 600px) {

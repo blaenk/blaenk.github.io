@@ -9,6 +9,21 @@ I'm [currently reading](/lately/#reading).
 
 <hr class="book">
 
+<img src="/images/books/play.jpg" class="right" width="128">
+
+<a href="http://amzn.com/1617290793" name="play">Play for Scala</a> [[notes](/notes/play/)] --- So now that I [learned][Scala] about the _language_ I figured I'd read up on some of the main Scala libraries and frameworks. The nice thing about it is that it completely rethinks JVM web frameworks, outside of the constraints of the J2EE (over) architecture, whose problem was abstracting away HTTP instead of embracing it.
+
+Play seems like a more performant alternative to Ruby on Rails. It runs on Java's NIO via Netty and is built with the Akka concurrency framework. The architecture of Play, from what I learned from the book, is very clean and straightforward; at no point did I get the feeling that there was clearly some magic going on under the hood like one does with Rails.
+
+Scala tends to adopt advanced functional programming concepts from Haskell, and Play continues this tradition. For example, Play uses iteratees for streamed responses and WebSockets. I also really like the templating language that Play uses, which makes it about as powerful as Scala itself, without having to learn some other templating DSL and having to reconcile the two languages. All in all I have to say that Play seems like a pretty nice framework.
+
+*[MVC]: Model-View-Controller
+*[DSL]: Domain Specific Language
+
+[Scala]: /notes/scala/
+
+<hr class="book">
+
 <img src="/images/books/wor.jpg" class="right" width="128">
 
 <a href="http://amzn.com/0765326361" name="wor">Words of Radiance</a> --- This is the much anticipated sequel to [The Way of Kings] and the second book in the 10-book epic fantasy _Stormlight Archive_. It starts out with an alternate perspective on the event that catalyzed the events of tWoK. All of the characters --- which were previously scattered throughout the world --- are finally converging upon the same location, ramping up anticipation of their first interactions.

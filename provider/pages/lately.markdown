@@ -22,14 +22,6 @@ This is what I'm currently reading, but I also keep a list of [books I've read](
 [Scheme]: http://en.wikipedia.org/wiki/Scheme_(programming_language)
 [sufficient to describe any possible computation]: http://www.paulgraham.com/rootsoflisp.html
 
-<img src="/images/books/play.jpg" class="right" width="128">
-
-* [Play for Scala](http://amzn.com/1617290793) [[notes](/notes/play/)] --- So now that I [learned][Scala] about the _language_ I figured I'd read up on some of the main Scala libraries and frameworks. The nice thing about it is that it completely rethinks JVM web frameworks, outside of the constraints of the J2EE (over) architecture, whose problem was abstracting away HTTP instead of embracing it.
-
-    Play seems like a more performant alternative to Ruby on Rails. It runs on Java's NIO via Netty and is built with the Akka concurrency framework. I just started the book, but so far Play seems pretty clean and straightforward.
-
-*[MVC]: Model-View-Controller
-
 <img src="/images/books/haskellconpar.jpg" class="right" width="128">
 
 * [Parallel and Concurrent Programming in Haskell](http://amzn.com/1449335942) [[notes](/notes/haskell/)] --- It's well known that Haskell makes it very easy to reason about concurrent and parallel programs, and this has proven true in my experience so far. The [software transactional memory] package provides transactional concurrency primitives that make writing safe, concurrent programs very simple.
