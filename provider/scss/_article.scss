@@ -278,6 +278,26 @@ article {
       }
     }
 
+    hr.book {
+      padding: 0;
+      text-align: center;
+      width: 50%;
+      background-color: #efefef;
+      margin: 30px auto;
+      height: 1px;
+
+      &:after {
+        font-family: $font-icon;
+        content: "\f097";
+        cursor: default;
+        display: inline-block;
+        position: relative;
+        font-size: 1.3em;
+        background: white;
+        top: -0.7em;
+      }
+    }
+
     sup { line-height: 1; }
 
     #toc.right-toc {

@@ -7,7 +7,7 @@ comments: off
 This is a list of books I've finished reading recently, in reverse chronological order. You can also see a list of books 
 I'm [currently reading](/lately/#reading).
 
-----
+<hr class="book">
 
 <img src="/images/books/wor.jpg" class="right" width="128">
 
@@ -19,7 +19,7 @@ Sanderson is known to be a very prolific writer, writing thousands of words ever
 
 [The Way of Kings]: #wok
 
-----
+<hr class="book">
 
 <img src="/images/books/mistborn2.jpg" class="right" width="128">
 
@@ -29,7 +29,7 @@ Sanderson is known to be a very prolific writer, writing thousands of words ever
 
 One thing I really like about Sanderson is that everything he writes seems to have been very meticulously premeditated. An event comes to fruition at the end of this second book that was slowly, subtly, patiently unraveling before our very eyes throughout the first two books, and completely changes the stakes for the third and final book in the original trilogy.
 
-----
+<hr class="book">
 
 <img src="/images/books/mistborn.jpg" class="right" width="128">
 
@@ -49,7 +49,7 @@ This is the second book I read by Sanderson and it proves to me that he's a very
 
 *[tWoK]: The Way of Kings
 
-----
+<hr class="book">
 
 <img src="/images/books/debugging.jpg" class="right" width="128">
 
@@ -57,7 +57,7 @@ This is the second book I read by Sanderson and it proves to me that he's a very
 
 [GDB]: http://www.gnu.org/software/gdb/
 
-----
+<hr class="book">
 
 <img src="/images/books/wayofkings.jpg" class="right" width="128">
 
@@ -76,7 +76,7 @@ It's around the same length as the typical ASOIAF book, and has POV chapters as 
 *[ASOIAF]: A Song of Ice and Fire
 *[POV]: Point of View
 
-----
+<hr class="book">
 
 <img src="/images/books/scala.jpg" class="right" width="128">
 
@@ -84,7 +84,7 @@ It's around the same length as the typical ASOIAF book, and has POV chapters as 
 
 However, the coverage of the language was pretty good, perhaps as good as it can get considering that it came from the language's designer himself. I've yet to form an opinion on the language since I haven't really created anything with it, but at face value, I think I prefer Haskell.
 
-----
+<hr class="book">
 
 <img src="/images/books/algorithms.jpg" class="right" width="128">
 
@@ -96,7 +96,7 @@ I discovered that the book was teaching LLRBs and not classical RB trees when it
 
 I ended up reading through the wikipedia page on red-black trees, which is one of the most dense articles I've read, even just the deletion section was pretty dense. However, the actual implementation was pretty straightforward, so much so apparently that even the Linux kernel uses it.
 
-----
+<hr class="book">
 
 <img src="/images/books/tlpi.jpg" class="right" width="128">
 
@@ -104,7 +104,7 @@ I ended up reading through the wikipedia page on red-black trees, which is one o
 
 At the time of writing, the book's reviews consist of 52 five-star reviews and one four-star review (simply because the reviewer didn't like the binding, which I think is excellent). It took me many months to finish, in part from becoming distracted by other books, but it was worth it because every chapter connected many dots, triggering epiphanies left and right. It is liberating to have this much of a deeper understanding of Linux and POSIX systems in general.
 
-----
+<hr class="book">
 
 <img src="/images/books/cppprimer.jpg" class="right" width="128">
 
@@ -112,7 +112,7 @@ At the time of writing, the book's reviews consist of 52 five-star reviews and o
 
 C++ Primer is what I look for in every programming book. It is direct --- to the point, thanks in part to the assumption that the reader is already familiar with programming, or even C++ itself. It diligently scours every nook and cranny of the C++11 standard, almost reading as a commentary of it, and in so doing, masterfully conveys the various intricacies of shared and unique pointers, move semantics, lambdas, variadic templates, and more.
 
-----
+<hr class="book">
 
 <img src="/images/books/lyah.jpg" class="right" width="128">
 
@@ -120,7 +120,7 @@ C++ Primer is what I look for in every programming book. It is direct --- to the
 
 After reading RWH, however, I had an insatiable interest in Haskell, and so I wanted to see if I had missed anything of note in this book, so I continued where I had left off. Indeed, after having seen practical uses of Haskell in RWH, I developed an appreciation for the theory that LYAH preoccupied itself with and came to appreciate it's more in-depth analysis of functors, applicative functors, monoids, and monads.
 
-----
+<hr class="book">
 
 <img src="/images/books/rwh.jpg" class="right" width="128">
 
@@ -128,7 +128,7 @@ After reading RWH, however, I had an insatiable interest in Haskell, and so I wa
 
 For the longest time I had wanted to learn Haskell, but I wanted to learn it in a practical context so that I may develop a realistic idea of what I can do with it. Specifically, I learned Haskell for the purpose of doing some digital signal processing in order to create a music visualizer. This book was very direct with regard to its teaching practical usage of Haskell. As a result, I was able to see how functors, applicative functors, monoids, monads, monad transformers --- and other seemingly-abstract concepts --- actually helped in developing real-world applications.
 
-----
+<hr class="book">
 
 <img src="/images/books/dspguide.jpg" class="right" width="128">
 
@@ -140,7 +140,7 @@ This book, on the other hand, was exactly what I needed, and best of all it was 
 
 Best of all, however, was that it provided example algorithm implementations of every concept it discussed. I feel this is a testament to the author's foresight, as the book was written during a transitional period in which DSP was beginning to shift from dedicated hardware to general purpose CPUs.
 
-----
+<hr class="book">
 
 <img src="/images/books/direct3d11.jpg" class="right" width="128">
 
@@ -149,7 +149,7 @@ Best of all, however, was that it provided example algorithm implementations of 
 
 I decided to choose Direct3D 11 as the API to learn because I felt it would be a bit more organized and consistent than OpenGL (cf. extensions), OpenGL's advantages notwithstanding. Indeed, I found the Direct3D 11 API to be pretty clean and straightforward. With it I covered traditional lighting, texturing, blending, stenciling, as well as the newer functionality like geometry, compute, and tessellation shaders. The book also covered some more advanced topics such as cube, normal, and displacement mapping, particle systems with stream-out, shadow mapping, and ambient occlusion.
 
-----
+<hr class="book">
 
 <img src="/images/books/3dmath.jpg" class="right" width="128">
 
@@ -159,7 +159,7 @@ This book helped me to not only understand it, but fall in love with it. This is
 
 This book helped me understand how matrices encode coordinate space transformations which can easily be concatenated, the utility of homogeneous coordinates in perspective projection, the pros & cons of various orientation representations (Polar Coordinates, Euler Angles, Axis-Angle, and Quaternions), Quaternion spherical linear interpolation ([slerp](http://en.wikipedia.org/wiki/Slerp#Quaternion_Slerp)), and many more concepts of the modern GPU pipeline within a mathematical context.
 
-----
+<hr class="book">
 
 <img src="/images/books/iosnerdranch.jpg" class="right" width="128">
 
@@ -167,7 +167,7 @@ This book helped me understand how matrices encode coordinate space transformati
 
 Most of this information is easily available in the Apple documentation. Instead, I used this book more like a tour of various SDK features to get an idea of what kinds of things could be achieved.
 
-----
+<hr class="book">
 
 <img src="/images/books/hfdesignpatterns.jpg" class="right" width="128">
 
@@ -175,7 +175,7 @@ Most of this information is easily available in the Apple documentation. Instead
 
 Admittedly, in my opinion, while it was fun to read and achieved its purpose, ultimately the over-use of pictures and figures, and the very contrived example use cases made it feel very indirect. I feel I could've saved more time by simply getting the classic Gang of Four [Design Patterns](http://amzn.com/0201633612) book, which serves as more of a catalog of different design patterns with direct explanations and examples.
 
-----
+<hr class="book">
 
 <img src="/images/books/metaruby.jpg" class="right" width="128">
 
