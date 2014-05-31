@@ -11,6 +11,23 @@ This page lists some of the things I've been up to lately.
 
 This is what I'm currently reading, but I also keep a list of [books I've read](/reads).
 
+<img src="/images/books/onchina.jpg" class="right" width="128">
+
+* [On China](http://amzn.com/0143121316) --- China has always interested me as seeming like a world within a world. I had previously seen some [edX courses] about China that seemed to be _very_ good, but I tend to prefer reading rather than watching when it comes to learning.
+
+    This book by [Henry Kissinger] goes over the historical perspective that informs China's current state of affairs. Henry Kissinger is the one that orchestrated the opening of relations with China when he served as Secretary of State during the Nixon Administration, so he's no stranger to the country. The book seems to go over parts of Chinese history in chronologically leading up to modern day, and it is simply _engrossing_.
+
+[Henry Kissinger]: http://en.wikipedia.org/wiki/Henry_Kissinger
+[edX courses]: https://www.edx.org/course/harvardx/harvardx-sw12x-china-920
+
+<img src="/images/books/haskellconpar.jpg" class="right" width="128">
+
+* [Parallel and Concurrent Programming in Haskell](http://amzn.com/1449335942) [[notes](/notes/haskell/)] --- It's well known that Haskell makes it very easy to reason about concurrent and parallel programs, and this has proven true in my experience so far. The [software transactional memory] package provides transactional concurrency primitives that make writing safe, concurrent programs very simple.
+
+    One of the more common difficulties in reasoning about Haskell programs is the property of being non-strict, which in GHC is handled via lazy evaluation. What this means is that one has to be careful about how expressions are evaluated, particularly with _when_ they will be evaluated. This is especially important in parallel evaluation contexts, where the parallel evaluation can end up only evaluating the expression to weak-head normal form, i.e. the outer-most constructor. For this reason, this book starts out with thorough coverage of so-called evaluation strategies, which decouple a given algorithm from the way in which it's to be evaluated (e.g. in parallel or not).
+
+[software transactional memory]: http://en.wikipedia.org/wiki/Software_transactional_memory
+
 <img src="/images/books/clojure.jpg" class="right" width="128">
 
 * [Clojure Programming](http://amzn.com/1449394701) [[notes](/notes/clojure/)] --- I've had a recent interest in JVM languages. I already looked into [Scala] and am unsure what I think of it so far. I like a lot of it but I feel like it's overly complex and context-dependent; it reminds me of C++. I decided to look into the other emerging JVM language, the lisp-like Clojure, and its level of simplicity and consistency feels refreshing in comparison.
@@ -21,14 +38,6 @@ This is what I'm currently reading, but I also keep a list of [books I've read](
 [Scala]: /notes/scala/
 [Scheme]: http://en.wikipedia.org/wiki/Scheme_(programming_language)
 [sufficient to describe any possible computation]: http://www.paulgraham.com/rootsoflisp.html
-
-<img src="/images/books/haskellconpar.jpg" class="right" width="128">
-
-* [Parallel and Concurrent Programming in Haskell](http://amzn.com/1449335942) [[notes](/notes/haskell/)] --- It's well known that Haskell makes it very easy to reason about concurrent and parallel programs, and this has proven true in my experience so far. The [software transactional memory] package provides transactional concurrency primitives that make writing safe, concurrent programs very simple.
-
-    One of the more common difficulties in reasoning about Haskell programs is the property of being non-strict, which in GHC is handled via lazy evaluation. What this means is that one has to be careful about how expressions are evaluated, particularly with _when_ they will be evaluated. This is especially important in parallel evaluation contexts, where the parallel evaluation can end up only evaluating the expression to weak-head normal form, i.e. the outer-most constructor. For this reason, this book starts out with thorough coverage of so-called evaluation strategies, which decouple a given algorithm from the way in which it's to be evaluated (e.g. in parallel or not).
-
-[software transactional memory]: http://en.wikipedia.org/wiki/Software_transactional_memory
 
 <img src="/images/books/erlang.jpg" class="right" width="128">
 
