@@ -2,42 +2,62 @@
   border-top: 1px solid #efefef;
   padding: 15px 0;
   text-align: center;
-
   cursor: default;
-  font-size: 18px;
-  color: #999;
 
-  a {
-    color: $color-gray02;
-    transition: color 0.3s;
-    padding: 20px;
+  #credit {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-style: italic;
+    font-size: 12px;
+    color: #999;
 
-    @media screen and (max-width: 600px) {
-      padding: 10px;
-    }
+    a {
+      color: #555;
+      transition: color 0.3s;
 
-    @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
       &:hover {
-        color: $color-gray01;
+        color: #222;
+        text-decoration: underline;
       }
     }
   }
 
-  a[title="twitter"]:hover {
-    color: #2eb8e7;
-  }
+  #social {
+    font-size: 18px;
+    color: #999;
 
-  a[title="github"]:hover {
-    color: #286da3;
-  }
+    a {
+      color: $color-gray02;
+      transition: color 0.3s;
+      padding: 20px;
 
-  a[title="stackoverflow"]:hover,
-  a[title="feed"]:hover {
-    color: #d85620;
-  }
+      @media screen and (max-width: 600px) {
+        padding: 10px;
+      }
 
-  a[title="email"]:hover {
-    color: #f66;
+      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
+        &:hover {
+          color: $color-gray01;
+        }
+      }
+    }
+
+    a[title="twitter"]:hover {
+      color: #2eb8e7;
+    }
+
+    a[title="github"]:hover {
+      color: #286da3;
+    }
+
+    a[title="stackoverflow"]:hover,
+    a[title="feed"]:hover {
+      color: #d85620;
+    }
+
+    a[title="email"]:hover {
+      color: #f66;
+    }
   }
 }
 
