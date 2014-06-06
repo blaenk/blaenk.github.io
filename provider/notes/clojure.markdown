@@ -29,7 +29,7 @@ Clojure and other lisp languages are _homoiconic_, often referred to as "code as
 
 Because Clojure code is itself an AST in a Clojure data structure, metaprogramming is also more powerful because it simply involves manipulating that data structure; this is the basis of macros.
 
-## Reader
+# Reader
 
 Clojure AST structures can be deserialized into Clojure structures using the `read`-like functions. In the following examples, the structures are printed back out by the REPL using the `pr-str` function. The fact that serialization of Clojure structures is this straightforward is what drives most Clojure developers to use it as the primary serialization mechanism.
 
@@ -38,8 +38,10 @@ Clojure AST structures can be deserialized into Clojure structures using the `re
 ``` clojure
 (read-string "42")
 ;= 42
+
 (read-string "(+ 1 2)")
 ;= (+ 1 2)
+
 (pr-str (read-string "[1 2 3]"))
 ;= [1 2 3]
 ```
@@ -52,7 +54,7 @@ Clojure AST structures can be deserialized into Clojure structures using the `re
 
 The reader allows for different syntax to make code more concise. For example, evaluation of a form can be suppressed by prefixing it with a quote `'`. Anonymous function literals can be defined with `#()`.
 
-## Scalar Literals
+# Scalar Literals
 
 Characters are denoted by a blackslash, as in `\c`, and they natively support Unicode. It's also possible to use special characters such as `\n` would be used in strings, but individually:
 
@@ -63,7 +65,7 @@ Characters are denoted by a blackslash, as in `\c`, and they natively support Un
 * `\backspace`
 * `\tab`
 
-### Keywords
+## Keywords
 
 Keywords I believe are similar to Ruby/Scala symbols and Erlang atoms. The are prefixed by a colon `:` and consist of any non-whitespace character, where a slash `/` denotes a _namespaced keyword_, and a double colon `::` is expanded by the reader to a namespaced keyword in the current namespace, or another namespace if the keyword started by a namespace alias as in `::alias/keyword`.
 
@@ -73,6 +75,7 @@ Keywords I believe are similar to Ruby/Scala symbols and Erlang atoms. The are p
             ::location "123,-456"})
 ;= #'user/pizza
 pizza
+
 ;= {:name "Ramunto's", :location "Claremont, NH", :user/location "123,-456"}
 (:user/location pizza)
 ;= "123,-456
@@ -83,6 +86,7 @@ Keywords are "named" values which are values that have intrinsic names that can 
 ``` clojure
 (name :user/location)
 ;= "location"
+
 (namespace :user/location)
 ;= "user"
 ```
@@ -93,11 +97,12 @@ As in Ruby, keywords are often used for indexing hashes. The following defines a
 (def person {:name "Sandra Cruz"
              :city "Portland, ME"})
 ;= #'user/person
+
 (:city person)
 ;= "Portland, ME"
 ```
 
-### Symbols
+## Symbols
 
 Symbols are identifiers that evaluate to the values they name. For example, in the following code, `average` is a symbol referring to the function held in the var named `average`. Symbols containing a slash `/` denote a _namespaced symbol_ which evaluates to the named value in the specified namespace.
 
@@ -108,7 +113,7 @@ Symbols are identifiers that evaluate to the values they name. For example, in t
 
 The variables can be referred to directly by prefixing a symbol with `#'`.
 
-### Numbers
+## Numbers
 
 Numeric literals exist for a variety of number types. Custom numerical bases can be used with the `#r` prefix where `#` would be the desired number base.
 
@@ -120,7 +125,7 @@ Syntax               Type
 0.01M                java.math.BigDecimal
 22/7                 clojure.lang.Ratio
 
-### Regular Expressions
+## Regular Expressions
 
 Strings prefixed with a hash `#` are regex literals which yield `java.util.regex.Pattern`{.path} instances.
 
@@ -129,7 +134,7 @@ Strings prefixed with a hash `#` are regex literals which yield `java.util.regex
 ;= (["1-3" "1" "3"])
 ```
 
-### Comments
+## Comments
 
 Single-line comments are started with a semicolon `;`. There are also _form-level_ comments prefixed by the `#_` reader macro which cue the reader to ignore the next Clojure _form_ following the macro. This is particularly useful when wanting to comment out blocks of code. The `comment` macro can also be used to comment out code but they always evaluate to `nil`, which may be unexpected.
 
@@ -148,7 +153,7 @@ Single-line comments are started with a semicolon `;`. There are also _form-leve
 ;= NullPointerException
 ```
 
-### Whitespace
+## Whitespace
 
 Commas are considered whitespace by the reader. Whether to use them or not is a question of style, but they're generally used when multiple pairs of values appear on the same line.
 
@@ -159,7 +164,7 @@ Commas are considered whitespace by the reader. Whether to use them or not is a 
 (create-user {:name user, :email email})
 ```
 
-### Collections
+## Collections
 
 There are literals for lists, vectors, maps, and sets. Note that since lists denote calls in Clojure, it's necessary to quote them to prevent their evaluation as a call.
 
@@ -170,17 +175,20 @@ There are literals for lists, vectors, maps, and sets. Note that since lists den
 #{1 2 3}              ;; set
 ```
 
-## Namespaces
+# Namespaces
 
 Vars are defined using the `def` special form which takes the symbol used to refer to the var and the value to store in that var. When the symbol is used on its own to access the var's value, the symbol is said to be _unqualified_ and so it is resolved within the current namespace. Vars can also be redefined by supplying the same symbol with a different value to the `def` function.
 
 ``` clojure
 (def x 1)
 ;= #'user/x
+
 x
 ;= 1
+
 (def x "hello")
 ;= #'user/x
+
 x
 ;= "hello"
 ```
@@ -208,17 +216,18 @@ x
 ;= CompilerException: Unable to resolve symbol: x
 ```
 
-## Special Forms
+# Special Forms
 
 Special forms are Clojure's primitives of computation upon which the rest of Clojure is built.
 
-### Suppressing Evaluation
+## Suppressing Evaluation
 
 The special form `quote` suppresses evaluation of a Clojure expression. For example symbols evaluate to the value of the var they represent, but with `quote` that evaluation is suppressed, so they evaluate to themselves like strings and numbers do. The quote character `'` is reader syntax for `quote`. In fact, `quote` can be used on reader sugars to determine how they're actually represented.
 
 ``` clojure
 (quote x)
 ;= x
+
 (symbol? (quote x))
 ;= true
 
@@ -232,7 +241,7 @@ The special form `quote` suppresses evaluation of a Clojure expression. For exam
 ;= true
 ```
 
-### Code Blocks
+## Code Blocks
 
 The special form `do` evaluates all of the expressions provided to it in order and yields the last expression's value as its value. Many other forms such as `fn`, `let`, `loop`, `try` and `defn` wrap their body in an implicit `do` expression so that multiple inner expressions are evaluated.
 
@@ -249,7 +258,7 @@ The special form `do` evaluates all of the expressions provided to it in order a
   (+ a b))
 ```
 
-### Vars
+## Vars
 
 The special form `def` defines or redefines a var with an optional value within the current namespace. Other forms implicitly create or redefine vars and are usually prefixed with `def` such as `defn` and `defn-`.
 
@@ -266,7 +275,7 @@ It's possible to refer to vars instead of the values that they hold by using the
 ;= #'user/x
 ```
 
-### Local Bindings
+## Local Bindings
 
 The special form `let` allows lexically scoped named references to be defined.
 
@@ -358,7 +367,7 @@ It's also possible to destructure vectors which themselves contain key-value pai
 ;= "Bob is in Boston"
 ```
 
-### Creating Functions
+## Functions
 
 The special form `fn` is used to create functions. A function defined this way has no name, and so cannot be referred to later on. It can be place inside a var using the `def` form. The `fn` form also takes an optional name by which the function can reference itself. Furthermore, a function can have _multiple arities_, that is, define different bodies depending on the number of arguments passed.
 
@@ -447,7 +456,7 @@ Function literals have specific, concise syntax by being prepended with `#`. Pla
 
 </div>
 
-### Conditionals
+## Conditionals
 
 The special form `if` is the single primitive conditional operator in Clojure. If no else-expression is provided it is assumed to be `nil`. There are other conditionals based on this form that are more convenient in specific situations.
 
@@ -466,7 +475,7 @@ The special form `if` is the single primitive conditional operator in Clojure. I
   :else   "zero")
 ```
 
-### Looping
+## Looping
 
 The special form `recur` transfers control to the local-most `loop` or function, allowing recursion without consuming stack space and thereby overflowing the stack. The `loop` special form takes a vector of binding names and initial values. The final expression is taken as the value of the form itself. The `recur` special form is considered very low-level that is usually unnecessary, instead opting for `doseq`, `dotimes`, `map`, `reduce`, `for`, and so on.
 
@@ -484,7 +493,7 @@ The special form `recur` transfers control to the local-most `loop` or function,
         (recur (dec x)))))
 ```
 
-### Java Interop
+## Java Interop
 
 The special forms `.` and `new` exist for Java interoperability. Their use is somewhat unnatural in Clojure, however, and so there are sugared forms which are idiomatic.
 
@@ -512,11 +521,11 @@ Integer/MAX_VALUE
 (.someField some-object)
 ```
 
-### Specialized Mutation
+## Specialized Mutation
 
 The `set!` special form can be used to perform in-place mutation of state, which is useful for setting thread-local values, Java fields, or mutable fields.
 
-### Eval
+## Eval
 
 The `eval` form evaluates its single argument form, which is useful when used with `quote` or `'` to suppress evaluation of the argument until it's evaluated by `eval`. With this final form, it's possible to reimplement a simple REPL.
 
@@ -534,4 +543,43 @@ The `eval` form evaluates its single argument form, which is useful when used wi
 
 (simple-repl)
 ```
+
+# Function Application
+
+The `apply` function can be used to apply a function to arguments, where the last argument can be a collection of arguments to apply, but the complete set of arguments must be passed. The `partial` function allows _partial application_ by providing only a subset of the arguments, yielding a function that can be used further. The `comp` function can be used to compose other functions [^haskell_compose].
+
+[^haskell_compose]: Similar to Haskell's `.`
+
+``` clojure
+(def args [2 -2 10])
+(apply * 0.5 3 args)
+;= -60.0
+
+(def only-strings (partial filter string?))
+(only-strings ["a" 5 "b" 6])
+;= ("a" "b")
+
+(def negated-sum-str (comp str - +))
+(negated-sum-str 10 12 3.4)
+;= "-25.4"
+```
+
+The `->` and `->>` macros are can be used in place of explicitly using `comp`. This makes it unnecessary to create partial functions, instead simply requiring function calls without the last argument applied:
+
+``` clojure
+(defn composed
+  (comp keyword
+        str/join
+        (partial interpose \-)
+        (partial map str/lower-case))
+
+(defn composed
+  [s]
+  (->> (map str/lower-case)
+       (interpose \-)
+       str/join
+       keyword))
+```
+
+Functions can be memoized using the `memoize` function.
 
