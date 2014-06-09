@@ -78,6 +78,39 @@ fmap  :: (a -> b) -> f a -> f b
 (<$>) = fmap
 ```
 
+Note that in a monadic context, the effects are applied sequentially, from left to right. This is makes sense because function application is left-associative, and each application of `<*>`, which for monads is `ap` which itself is `liftM2 id`, has to extract the pure function and value from their respective monad 'container' [^mobit], thereby performing the monad's effects.
+
+[^mobit]: Or [mobit] as some have taken to calling values that monads manage.
+
+[mobit]: http://www.haskell.org/haskellwiki/What_a_Monad_is_not#Monads_are_not_values
+
+There also exists functions `*>` and `<*` that sequence actions while discarding the value of one of the arguments --- left and right respectively. These are immensely useful for monadic parser combinators such as those found in the [Parsec] library. For example, `*>` is useful in Parsec to consume the first parser but return the second, similar to `>>` in a monadic context.
+
+[Parsec]: http://hackage.haskell.org/package/parsec
+
+``` haskell
+(*>) :: f a -> f b -> f b
+u *> v = pure (const id) <*> u <*> v
+
+(<*) :: f a -> f b -> f a
+u <* v = pure const <*> u <*> v
+```
+
+Finally, there's a function that replaces all of the locations in the input context with the provided value. This is useful in Parsec when we want to parse some input, and if the input is successfully consumed, return something else, such as parsing a URL-encoded space with `' ' <$ char '+'`.
+
+``` haskell
+(<$) :: a -> f b -> f a
+(<$) = fmap . const
+
+-- (fmap . const) x y
+-- ((fmap . const) x) y
+-- (fmap (const x)) y     <- (f . g) x = f (g x)
+-- fmap (const x) y
+
+-- can also be thought of as
+x <$ y = pure x <* y
+```
+
 # Parallelism
 
 Amdahl's law places an upper bound on potential speedup that may be available by adding more processors. The expected speedup $S$ can be described as a function of the number of processors $N$ and the percentage of runtime that can be parallelized $P$. The implications are that the potential speedup increasingly becomes negligible with the increase in processors, but more importantly that most programs have a theoretical maximum amount of parallelism.
