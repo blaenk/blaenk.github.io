@@ -67,7 +67,8 @@ postCtx preview = mconcat
   , commentsJS "commentsJS"
   , gitTag "git"
   , socialTag "social"
-  , pushJS preview "pushJS"
+  , pushJS "pushJS"
+  , previewMode preview
   , defaultCtx
   ]
 
@@ -140,10 +141,16 @@ pushOn item = do
     Just "off" -> False
     _ -> True
 
-pushJS :: Bool -> String -> Context String
-pushJS preview key = field key $ \item -> do
+previewMode :: Bool -> Context String
+previewMode preview =
+  if preview
+    then constField "preview" ""
+    else constField "production" ""
+
+pushJS :: String -> Context String
+pushJS key = field key $ \item -> do
   push <- pushOn item
-  if preview && push
+  if push
     then do
       path <- fmap toFilePath getUnderlying
       tmpl <- loadBody "templates/push-js.html"

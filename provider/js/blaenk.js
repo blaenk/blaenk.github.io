@@ -27,30 +27,28 @@ $(function() {
   });
 
   var $nav = $('#main-nav .main');
-  var $search = $('.desk_search');
 
-  var hideSearch = function() {
-    $search.fadeOut('fast');
+  var toggleForm = function(button, form) {
+    button.click(function() {
+      if (form.is(':visible')) {
+        form.fadeOut('fast');
+      } else {
+        form.fadeIn('fast');
+        form.find('input').focus();
+      }
+    });
+
+    form.find('input').keyup(function(e) {
+      if (e.keyCode == 27) {
+        form.fadeOut('fast');
+      }
+    });
   };
 
-  var showSearch = function() {
-    $search.fadeIn('fast');
-    $search.find('#search').focus();
-  };
+  toggleForm($('#search_btn'), $('.desk_search'));
+  toggleForm($('#push_btn'), $('.push_config'));
 
-  $('#search_btn').click(function() {
-    if ($search.is(':visible')) {
-      hideSearch();
-    } else {
-      showSearch();
-    }
-  });
-
-  $search.keyup(function(e) {
-    if (e.keyCode == 27) {
-      hideSearch();
-    }
-  })
+  $('#push').val(localStorage['push']);
 
   window.refresh = function () {
     // header links
