@@ -23,7 +23,9 @@ body {
   background: white;
   color: $color-gray01;
   -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+
   @media screen and (max-width: 600px) {
     font-size: 13px;
   }

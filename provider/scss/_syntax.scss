@@ -15,6 +15,10 @@ $solar-blue:    #268bd2 !default; // haskell: function
 $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
 $solar-green:   #859900 !default; //
 
+.language-clojure {
+  // .ss { color: $solar-green; }
+}
+
 .language-haskell {
   .nn { color: $solar-blue; }
 }
@@ -91,9 +95,9 @@ code.path {
 
 code {
   .bp { color: $solar-blue }   // Name.Builtin.Pseudo
-  .c { color: $base02 }        // Comment
-  .c1 { color: $base02 }        // Comment.Single
-  .cm { color: $base02 }       // Comment.Multiline
+  .c { color: $base1 }        // Comment
+  .c1 { color: $base1 }        // Comment.Single
+  .cm { color: $base1 }       // Comment.Multiline
   .cp { color: $solar-green }  // Comment.Preproc
   .cs { color: $solar-green }  // Comment.Special
   .err { color: $base1 }       // Error
