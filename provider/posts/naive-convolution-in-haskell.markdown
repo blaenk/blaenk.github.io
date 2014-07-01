@@ -11,7 +11,7 @@ tags: Haskell, Digital Signal Processing
 
 ## Principle
 
-The properties of [homogeneity](http://www.cns.nyu.edu/~david/handouts/linear-systems/linear-systems.html) and [shift-invariance](http://en.wikipedia.org/wiki/Shift-invariant_system) in [Linear Time-Invariant System Theory](http://en.wikipedia.org/wiki/LTI_system_theory) hold that scaling and shifting an input signal in a linear system results in the same scaling and shifting in the output signal. Because of these properties, we can represent any impulse as a shifted and scaled delta function and consequently know what the impulse response --- i.e. output signal in response to an impulse input signal --- will be for that scaled and shifted impulse.
+The properties of [homogeneity](http://www.cns.nyu.edu/~david/handouts/linear-systems/linear-systems.html) and [shift-invariance](http://en.wikipedia.org/wiki/Shift-invariant_system) in [Linear Time-Invariant System Theory](http://en.wikipedia.org/wiki/LTI_system_theory) hold that scaling and shifting an input signal in a linear system results in the same scaling and shifting in the output signal. Because of these properties, we can represent any impulse as a shifted and scaled delta function and consequently know what the impulse response, i.e. output signal in response to an impulse input signal, will be for that scaled and shifted impulse.
 
 An impulse of $-3$ at the $8^{th}$ sample would be represented as a unit impulse $h$ by scaling the delta function $\delta$ by $-3$ and shifting it to the right by $8$ samples: $-3\delta[n-8]$, where $n-8$ means the $8^{th}$ sample is now the $0^{th}$. Due to homogeneity and shift invariance, we can determine the impulse response of this impulse by simply scaling and shifting the unit impulse response in the same manner. In other words:
 
@@ -105,7 +105,7 @@ The `roll` function is recursive and will simulate the actual rolling of the con
 
 The `roll` function is run for every sample in the output signal. This is where the bulk of the implementation comes in. At any given sample in the input signal, we simulate the roll by zipping the input signal from that sample forward along with the impulse response. This generates a list of pairs each consisting of the input signal sample with its corresponding impulse response sample (which is being rolled over it).
 
-If you have trouble conceptualizing this, imagine that the impulse response on the roller is tape, so that when you roll it over the input signal, the impulse response --- which, remember, makes contact with the input signal in reverse --- sticks to the input signal and is lined up such that each sample in the impulse response is directly over a sample of the input signal.
+If you have trouble conceptualizing this, imagine that the impulse response on the roller is tape, so that when you roll it over the input signal, the impulse response---which, remember, makes contact with the input signal in reverse---sticks to the input signal and is lined up such that each sample in the impulse response is directly over a sample of the input signal.
 
 We then need to multiply the components of each pair with each other, i.e. the input sample multiplied by its corresponding impulse response sample. The act of zipping and multiplying the zipped up pairs can be done in one go with `zipWith (*)`. We then gather all of these products and `sum` them up. This sum is the latest computed sample in the output signal.
 
@@ -141,7 +141,7 @@ Now that we understand the concept behind convolution, we can reduce the above i
 
 The observation we should make is that the `roll` function acts like `map`, specifically over `ts`. The only detail is that on every element mapped over, the result of that element's mapping concerns the list `ts` from that element forward. If we are on the third element of `ts`, we only act on the third element forward. In other words, we are mapping over every `tail` of `ts`. Knowing this, we can change the `roll` function to a straight up `map` over `tails ts`.
 
-However, `tails` considers `[]` to be a tail of any list --- which is technically correct --- so we'll always have a trailing `0` element if we do it this way. That's why we simply take the `init` of the result of `tails`, which returns every element in a list except the last one. We also still need to prepad the signal, so those lines remain:
+However, `tails` considers `[]` to be a tail of any list---which is technically correct---so we'll always have a trailing `0` element if we do it this way. That's why we simply take the `init` of the result of `tails`, which returns every element in a list except the last one. We also still need to prepad the signal, so those lines remain:
 
 ~~~ {lang="haskell" text="a reduced form of the convolution machine implementation"}
 convolve :: (Num a) => [a] -> [a] -> [a]
@@ -153,7 +153,7 @@ convolve hs xs =
 
 ## Parallelization
 
-There's something to be said about how the various properties of the Haskell language come together to make certain algorithms trivially parallelizable. Green threads, single assignment, function purity and its consequent idempotence/referential transparency --- I can go on and on, but I'd rather not digress from the topic of this post. You won't get any Monad koolaid from me. Still, I think it's interesting to note how easy it can be to parallelize this naive convolution algorithm. So let's do it.
+There's something to be said about how the various properties of the Haskell language come together to make certain algorithms trivially parallelizable. Green threads, single assignment, function purity and its consequent idempotence/referential transparency, among other things. I think it's interesting to note how easy it can be to parallelize this naive convolution algorithm.
 
 ### parMap
 
@@ -270,7 +270,7 @@ You can also check out [this page](http://www.songho.ca/dsp/convolution/convolut
 
 Haskell is known for having many ways of doing any one thing, so if you come up with a better solution feel free to [gist it](https://gist.github.com) and post it in the comments.
 
-Of course, this post concerns a _naive_ implementation of convolution. There are other more optimized implementations of convolution, such as FFT convolution which exploits the Fast Fourier Transform and the principle of duality --- convolution in the time domain is equivalent to multiplication in the frequency domain --- to perform convolution a lot faster in some cases.
+Of course, this post concerns a _naive_ implementation of convolution. There are other more optimized implementations of convolution, such as FFT convolution which exploits the Fast Fourier Transform and the principle of duality---convolution in the time domain is equivalent to multiplication in the frequency domain---to perform convolution a lot faster in some cases.
 
 *[GHC]: Glasgow Haskell Compiler
 *[CSV]: Comma Separated Value
@@ -282,4 +282,4 @@ Of course, this post concerns a _naive_ implementation of convolution. There are
 [^compute_shader]: As described in [3D Game Programming with DirectX 11](http://www.d3dcoder.net/d3d11.htm) by Frank D. Luna in Chapter 12, page 450, § 12.7
 [^motion_blur]: Despite this optimization of Gaussian Blurring, many implementations optimize further. Blurring typically involves rendering the scene to a separate buffer (e.g. Render-to-Texture) at a scaled-down resolution. This speeds up the blurring operation as there are less pixels to operate on. Then the result is rendered to the actual screen. Since the point is to blur, the upscaling is usually hardly noticeable.
 
-    Recently I purchased an old game on Steam which I had played circa 2003. This game was developed back when 1280x1024 was a popular resolution, that is 4:3 aspect ratio. I got to a part where the game displayed some sort of blur effect and noticed that the entire screen was completely blurred to the point where I couldn't make anything out. I presume this was not the intended effect. If I had to guess, I imagine they hard-coded a scaled down resolution --- and thus aspect ratio as well --- at which to render the scene for blurring, such that upscaling it to my current 1920x1080 resolution 16:9 AR looked horrible. I imagine newer games take into account aspect ratio and some other factor to scale down the current resolution from.
+    Recently I purchased an old game on Steam which I had played circa 2003. This game was developed back when 1280x1024 was a popular resolution, that is 4:3 aspect ratio. I got to a part where the game displayed some sort of blur effect and noticed that the entire screen was completely blurred to the point where I couldn't make anything out. I presume this was not the intended effect. If I had to guess, I imagine they hard-coded a scaled down resolution---and thus aspect ratio as well---at which to render the scene for blurring, such that upscaling it to my current 1920x1080 resolution 16:9 AR looked horrible. I imagine newer games take into account aspect ratio and some other factor to scale down the current resolution from.

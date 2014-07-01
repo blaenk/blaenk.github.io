@@ -14,7 +14,7 @@ When I made my site, specifically when I [switched to Hakyll](/posts/the-switch-
 
 ## Considerations
 
-If I used my custom post compiler, it would include the table of contents and Pygments highlighted code. This was a problem because the table of contents didn't work correctly in [the feed reader](https://yoleoreader.com/) I tested with and so just served to waste space. Worse, Pygments highlighted code was completely absent from the feed reader --- that is, not that it wasn't highlighted, but the code itself was completely missing. Finally, posts containing math type --- which is rendered with [MathJax](http://www.mathjax.org/) on this site --- obviously did not render at all in the feed reader.
+If I used my custom post compiler, it would include the table of contents and Pygments highlighted code. This was a problem because the table of contents didn't work correctly in [the feed reader](https://yoleoreader.com/) I tested with and so just served to waste space. Worse, code blocks were completely absent from the feed reader. Finally, posts containing math type---which is rendered with [MathJax](http://www.mathjax.org/) on this site---did not render at all in the feed reader.
 
 So it was obvious to me that I had to compile the posts meant for the syndication feed with a more vanilla Pandoc compiler. However, I did want to keep the abbreviation substitution filter as that seemed to work perfectly fine.
 
@@ -48,7 +48,7 @@ match postsPattern $ do
 
 This meant that I could now refer to the "abbreviated" snapshot of any post. All I had to do now was to define a `Rule` to compile posts specifically for the syndication feed. Hakyll also has support for this in the form of **versions**, in which one can compile different versions of the same thing and refer to them later on.
 
-So what I do in the "feed" version of the post compiler was to get the underlying `Identifier` for the given post and load the "abbreviated" snapshot of the version of that post that has no name --- i.e. the version of the post compiled by the regular post compiler.
+So what I do in the "feed" version of the post compiler was to get the underlying `Identifier` for the given post and load the "abbreviated" snapshot of the version of that post that has no name, i.e. the version of the post compiled by the regular post compiler.
 
 I then pass that snapshot to `pandocFeedCompiler` which is simply a more vanilla Pandoc compiler that removes the table of contents sentinel value I use, doesn't generate the table of contents, doesn't highlight code with Pygments, and uses regular superscripts etc. instead of MathJax:
 
@@ -91,7 +91,7 @@ First it gets the `Item`'s `Identifier`, and then it gets that `Identifier`'s `R
 
 I actually use a slightly different `urlField`-type function, which I called [`niceUrlField`](https://github.com/blaenk/blaenk.github.io/blob/1379be96c66de626b2623d0b09ce32e065da4f49/src/Site/Fields.hs#L80), it simply returns the URL without the `index.html` at the end. However, the solution to this problem is the same in both functions.
 
-The solution is to get the no-name version of the `Identifier` that is retrieved, that is, the version of the post without an explicit version --- the version that was compiled normally. This is done using the [`setVersion`](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Identifier.html#v:setVersion) function. The function can be changed to this:
+The solution is to get the no-name version of the `Identifier` that is retrieved, that is, the version of the post without an explicit version---the version that was compiled normally. This is done using the [`setVersion`](http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Identifier.html#v:setVersion) function. The function can be changed to this:
 
 ~~~ {lang="haskell"}
 urlField' :: String -> Context a

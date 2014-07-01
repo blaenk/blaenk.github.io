@@ -8,13 +8,13 @@ toc: left
 
 A lot of people really dislike C++ because it's a very complex language that often catches one by surprise. Despite this, C++ is undisputed when it comes to striking a balance between abstraction and speed. Those that need to use it for these reasons generally take one of two approaches, while the rest completely dismiss it as an option to begin with.
 
-The first consists of restricting its usage to a specific subset of the language specification --- for example, exceptions are generally avoided.
+The first consists of restricting its usage to a specific subset of the language specification; for example, exceptions are generally avoided.
 
 The other approach, perhaps an extreme, is for people to become "language lawyers," poring over the language specification for every minute detail.
 
-I try to take a pragmatic approach. I do appreciate C++'s advantage in striking a balance between speed and abstraction, I do limit my use of it to a certain subset of the language, and I do try to learn as much about the language short of actually reading the specification --- which I may yet do some day --- to lower the probability that the language may catch me off guard.
+I try to take a pragmatic approach. I do appreciate C++'s advantage in striking a balance between speed and abstraction, I do limit my use of it to a certain subset of the language, and I do try to learn as much about the language short of actually reading the specification to lower the probability that the language may catch me off guard.
 
-To that end, these are non-exhaustive notes about C++ --- particularly the trickier bits --- including C++11 and C++14 changes.
+To that end, these are non-exhaustive notes about C++---particularly the trickier bits---including C++11 and C++14 changes.
 
 For C++11 in particular, some compilers are faster than others at adopting the new feature set. [Visual Studio](http://msdn.microsoft.com/en-us/library/vstudio/hh567368%28v=vs.120%29.aspx) is particularly behind the rest, while [Clang](http://clang.llvm.org/cxx_status.html) and [GCC](http://gcc.gnu.org/projects/cxx0x.html) seem to be very quick on adopting the new features.
 
@@ -171,7 +171,7 @@ struct A {
 };
 ```
 
-Copy constructors are **synthesized** if none are defined. Synthesized copy constructors perform member-wise copies of the argument. Members of class type are copied using their respective copy constructors and members of built-in type --- including arrays --- are copied directly.
+Copy constructors are **synthesized** if none are defined. Synthesized copy constructors perform member-wise copies of the argument. Members of class type are copied using their respective copy constructors and members of built-in type---including arrays---are copied directly.
 
 ``` cpp
 A::A(const A& toCopy) :
@@ -339,7 +339,7 @@ struct NoCopy {
 };
 ```
 
-The compiler sometimes defines copy-control members --- that it would have otherwise synthesized --- as **deleted** for the following reasons:
+The compiler sometimes defines copy-control members, which it would have otherwise synthesized, as **deleted** for the following reasons:
 
 * **destructor**: if a member has a deleted or inaccessible destructor, e.g. `private`
 * **copy constructor**: if a member has a deleted or inaccessible copy constructor **or** if a member has a deleted or inaccessible destructor
@@ -459,7 +459,7 @@ Base classes that intend to be derived from should define their constructors as 
 
 This has an implication with move semantics. If a destructor is defined, even as `default`, then no move operations are synthesized for that class. This issue percolates throughout the inheritance hierarchy, since classes don't synthesize operations that the base class doesn't define.
 
-For this reason, the base class usually explicitly defines --- even if as `default` --- all of the operations it requires. First the virtual destructor for the aforementioned reasons, then move operations for the aforementioned reasons, and then the copy operations since they would otherwise not be synthesized since the move operations are explicitly defined.
+For this reason, the base class usually explicitly defines---even if as `default`---all of the operations it requires. First the virtual destructor for the aforementioned reasons, then move operations for the aforementioned reasons, and then the copy operations since they would otherwise not be synthesized since the move operations are explicitly defined.
 
 # Move Semantics
 
@@ -535,7 +535,7 @@ It's usually the case that member functions can be called on objects regardless 
 s1 + s2 = "wow!";
 ```
 
-C++11 allows for the explicit restriction on the usage of a member function based on the lvalue/rvalue property of the calling object using a **reference qualifier**, which is similar to a `const` qualifier in that it appears at the end of the parameter list --- but ***after*** the `const` qualifier --- and must appear in both the declaration and definition of the function.
+C++11 allows for the explicit restriction on the usage of a member function based on the lvalue/rvalue property of the calling object using a **reference qualifier**, which is similar to a `const` qualifier in that it appears at the end of the parameter list but ***after*** the `const` qualifier, and must appear in both the declaration and definition of the function.
 
 Two possible reference qualifiers exist:
 
@@ -637,7 +637,7 @@ The `decltype` operator can deduce and "return" the type of the argument to be u
 * **rvalue**, **yields** rvalue reference to type of expression
 * **lvalue**, **yields** lvalue reference to type of expression
 
-The suffix-return syntax is useful when the return type is deduced from information --- such as the function arguments --- and has to appear after the function argument list so that the arguments are "in scope":
+The suffix-return syntax is useful when the return type is deduced from information---such as the function arguments---and has to appear after the function argument list so that the arguments are "in scope":
 
 ``` cpp
 template <class T, class U>

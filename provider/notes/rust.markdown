@@ -1126,7 +1126,7 @@ fn main() {
 
 ## Failure
 
-Exceptions can be raised in Rust using the `fail!()` macro. Exceptions are unrecoverable within a single task. When an exception is raised, the task unwinds its stack --- running destructors and freeing memory along the way --- then exits.
+Exceptions can be raised in Rust using the `fail!()` macro. Exceptions are unrecoverable within a single task. When an exception is raised, the task unwinds its stack, running destructors and freeing memory along the way, then exits.
 
 However, tasks may notify each other of failure. The `try` function is similar to `spawn` but blocks until the child is finish, yielding a return value of `Result<T, ()>` [^either] which has two variants: `Ok(T)` and `Err`. This `Result` can then be pattern-matched to determine the outcome of the task, with `Err` representing termination with an error. **Note** currently, it's not possible to retrieve a useful error value from the `Err` variant, since `try` always returns `()`:
 

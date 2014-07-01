@@ -85,7 +85,7 @@ If a client gets disconnected and a message is sent before it can reconnect, it 
 
 # Sorting
 
-Sorting can be performed on lists, sets, and ordered sets --- even according to data in other structures.
+Sorting can be performed on lists, sets, and ordered sets---even according to data in other structures.
 
 ``` python
 conn.rpush('sort-input', 23, 15, 110, 7)

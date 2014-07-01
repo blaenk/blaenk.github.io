@@ -10,15 +10,15 @@ toc: right
 
 I've been wanting to create a very specific kind of game for a few years now. Game Development was _one_ of the reasons why I initially became interested in software development, but I quickly lost interest in it relative to other areas that piqued my interests. Still, I was always interested in Game Development, particularly with how it seemed to me like a tour de force in software development, requiring expertise in a variety of areas in order to produce a working game.
 
-Over the years I've tried to learn about various different areas of software development --- as different as possible --- to gain as much perspective and become more well rounded. These new things I've learned have provided me with insight and a "bigger picture" with regards to game development, to the point where I feel more strongly than before that I should at least attempt to create the game I've had in mind. For preparation, last year I read a book on [3D Math](/reads/#3dmath) that solely concerned itself with the math, and one on [Direct3D 11](/reads/#d3d11).
+Over the years I've tried to learn about various different areas of software development, as orthogonal as possible, to gain as much perspective and become more well rounded. These new things I've learned have provided me with insight and a "bigger picture" with regards to game development, to the point where I feel more strongly than before that I should at least attempt to create the game I've had in mind. For preparation, last year I read a book on [3D Math](/reads/#3dmath) that solely concerned itself with the math, and one on [Direct3D 11](/reads/#d3d11).
 
 # Architecture
 
 ## New Approach
 
-I'm taking a step back from the overly general architecture discussed in the following sections, consisting of "components everywhere" and a very loose, omnipresent event system that sacrificed the type system. I originally chose to create my engine from scratch because I wanted to use this as a learning experience, but also to have absolute control over what I want to create. However, I'm well aware of the countless games that roll their own engine only to still be working on the engine for years with no game --- oftentimes the primary motivation for creating the engine --- to show for it. I don't want that to happen here.
+I'm taking a step back from the overly general architecture discussed in the following sections, consisting of "components everywhere" and a very loose, omnipresent event system that sacrificed the type system. I originally chose to create my engine from scratch because I wanted to use this as a learning experience, but also to have absolute control over what I want to create. However, I'm well aware of the countless games that roll their own engine only to still be working on the engine for years with no game to show for it. I don't want that to happen here.
 
-My opinion is that this tends to happen because people want to make their engine be everything: fully cross-platform and fully general so that it can scale from a mobile F2P game to a next-gen racing game and further still to an FPS. I'm reminded of the days of the Quake 3 engine, which --- despite [my limited experience with it](/work/#the-instagib-project) --- didn't seem to strive to be everything for everyone, and yet many people adapted it to accommodate all manner of different game types.
+My opinion is that this tends to happen because people want to make their engine be everything: fully cross-platform and fully general so that it can scale from a mobile F2P game to a next-gen racing game and further still to an FPS. I'm reminded of the days of the Quake 3 engine, which---despite [my limited experience with it](/work/#the-instagib-project)---didn't seem to strive to be everything for everyone, and yet many people adapted it to accommodate all manner of different game types.
 
 There is clearly a balance between creating a game and creating a general engine. The end goal is the game, but it's not necessary to completely sacrifice good software architecture practices, specifically those associated with game engine design (e.g. components, event systems, etc.).
 
@@ -120,7 +120,7 @@ Have an `Input` subsystem. In the SDL event loop, feed key events to the `Input`
 
 # Build System
 
-The best build system for a game in my opinion is [CMake](/notes/cmake/), which can generate build files on various platforms. Perhaps the only thing --- as minor as it may be --- that bothered me about developing on Windows was the fact that all settings were mainly configured through a GUI, hidden in various sections and so on. This felt very haphazard to me, mainly difficult to grok which settings were manually specified --- they are emboldened in the GUI, but scattered throughout various property sheets, sections, and dialogs.
+The best build system for a game in my opinion is [CMake](/notes/cmake/), which can generate build files on various platforms. Perhaps the only thing that bothered me about developing on Windows was the fact that all settings were mainly configured through a GUI, hidden in various sections and so on. This felt very haphazard to me, mainly difficult to grok which settings were manually specified.
 
 With CMake, I can define all of the settings I want in a CMake file and have a neat Visual Studio project be generated from it. Likewise on POSIX systems, Makefiles are automatically created.
 
@@ -140,7 +140,7 @@ One of the major questions in engine architecture is the [decoupling of renderin
 
 The main idea behind the solution to this problem, that I have read about, is to define a separate renderer class. This is the class that will concern itself with rendering things.
 
-There is a common data structure called a [scene graph](http://en.wikipedia.org/wiki/Scene_graph) that is a hierarchical representation of coordinate space relationships, specifically for the purpose of facilitating transformations on groups of related objects. For example, a player mesh that holds a weapon mesh in its hands would be represented in the scene graph as a player node with a weapon child node. If the player node is translated or rotated, the transformation will carry through to the weapon node --- as would be logically expected.
+There is a common data structure called a [scene graph](http://en.wikipedia.org/wiki/Scene_graph) that is a hierarchical representation of coordinate space relationships, specifically for the purpose of facilitating transformations on groups of related objects. For example, a player mesh that holds a weapon mesh in its hands would be represented in the scene graph as a player node with a weapon child node. If the player node is translated or rotated, the transformation will carry through to the weapon node.
 
 Aside from this scene graph representation, there would also be another data structure for the purposes of [space partitioning](http://en.wikipedia.org/wiki/Space_partitioning), to facilitate visibility testing, such as [Binary Space Partitions](http://en.wikipedia.org/wiki/Binary_space_partitioning) or [Octrees](http://en.wikipedia.org/wiki/Octree).
 
@@ -199,7 +199,7 @@ However, row-major and column-major matrices are already transposes of each othe
 
 # Voxel Engine
 
-I'd like to have voxel-based terrain --- no, it's not a minecraft clone --- so it's important to keep in mind that there are a variety of efficiency questions involved in creating a robust engine for this kind of world.
+I'd like to have voxel-based terrain (no, it's not a minecraft clone) so it's important to keep in mind that there are a variety of efficiency questions involved in creating a robust engine for this kind of world.
 
 ## Chunks
 
@@ -209,7 +209,7 @@ A chunk may be represented by a volumetric grid such as a 3D array, optimized in
 
 $$ \text {chunk}[x + (y * \text {size}_x) + (z * \text {size}_x * \text {size}_y)] $$
 
-The problem with this is that a lot of space is wasted for empty cells. A 16x16x16 chunk size where every cell conveys its information within one byte of data --- for example, for its block type: lava, grass, etc. --- yields 4096 bytes, or 4 kilobytes. If every single cell in the chunk is empty except for one, then 4095 bytes are being wasted --- that's 99.9% of the space allocated for the chunk.
+The problem with this is that a lot of space is wasted for empty cells. A 16x16x16 chunk size where every cell conveys its information within one byte of data yields 4096 bytes, or 4 kilobytes. If every single cell in the chunk is empty except for one, then 4095 bytes are being wasted. That's 99.9% of the space allocated for the chunk.
 
 One solution to this is to use something similar to a [sparse matrix](http://en.wikipedia.org/wiki/Sparse_matrix). Specifically, the chunk can be represented by a hash table keyed by tuples corresponding to the coordinates within the chunk. This way all cells are implicitly empty cells unless present in the hash table. During the mesh construction phase, the hash table can be iterated for every non-empty cell. Similarly, the hash table can provide amortized constant access to specific cells in the chunk.
 
@@ -219,7 +219,7 @@ Another common solution to this is to use [Run-Length Encoding](http://en.wikipe
 
 One problem with voxel terrain is that it easily allows for overdraw, where non-visible geometry is passed to the GPU for rendering. Non-visible geometry in this case refers to the traditional cases of geometry being outside of the view frustum and geometry occluded by other geometry.
 
-In voxel engines, however, the second case --- occluded geometry --- can also be very important with regards to inter-chunk, non-visible faces. That is, given a 2x2x2 chunk, there is no need to render the faces that intersect the chunk --- the inner faces. The natural solution to this is to [cull the interior faces](http://0fps.wordpress.com/2012/06/30/meshing-in-a-minecraft-game/) by querying the neighbors during chunk geometry generation.
+In voxel engines, however, the second case---occluded geometry---can also be very important with regards to inter-chunk, non-visible faces. That is, given a 2x2x2 chunk, there is no need to render the faces that intersect the chunk, i.e. the inner faces. The natural solution to this is to [cull the interior faces](http://0fps.wordpress.com/2012/06/30/meshing-in-a-minecraft-game/) by querying the neighbors during chunk geometry generation.
 
 A further optimization is back-face culling. This can be done on the GPU based on the ordering of the vertices, but it can also be done on the CPU thereby avoiding the unnecessary transfer of the data. A way to accomplish this is to have separate vertex buffers for the different sides of the chunk. Then, depending on the position of the camera, only sending those buffers that are visible.
 

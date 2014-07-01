@@ -6,7 +6,7 @@ tags: Vim
 toc: off
 ---
 
-Everyone that uses Vim and their grandmothers have apparently adopted the use of statusline plugins like [vim-powerline] or [vim-airline]. The latter, more recent vim-airline has gained popularity due to the fact that vim-powerline was deprecated in favor of a still-in-development [rewrite][powerline] that aims to provide a more general foundation for people to use the same kind of statusline in other areas, such as [tmux] and [shell prompts] (cringe). So now everyone can have the same look: [solarized] and some powerline-like status --- _everywhere_.
+Everyone that uses Vim and their grandmothers have apparently adopted the use of statusline plugins like [vim-powerline] or [vim-airline]. The latter, more recent vim-airline has gained popularity due to the fact that vim-powerline was deprecated in favor of a still-in-development [rewrite][powerline] that aims to provide a more general foundation for people to use the same kind of statusline in other areas, such as [tmux] and [shell prompts] (cringe). So now everyone can have the same look: [solarized] and some powerline-like status, _everywhere_.
 
 [vim-powerline]: https://github.com/Lokaltog/vim-powerline
 [vim-airline]: https://github.com/bling/vim-airline
@@ -45,7 +45,7 @@ Finally, I've rarely cared to know how far I am in the file, but I admit that so
 
 After taking all of this away, what remains is the file name, column number, git branch, and status indicators for whether or not the file is modified, read-only, or in paste mode.
 
-The column number has become indispensable for those language compilers/interpreters that output the column number on which an error was found, such as Haskell's GHC --- in fact, I'm now constantly annoyed by those that don't do this. Given an error on line 30 column 24, I go to the line number with `:30` and the column with `24|` and I'm instantly at the problem location.
+The column number has become indispensable for those language compilers/interpreters that output the column number on which an error was found, such as Haskell's GHC. In fact, I'm now constantly annoyed by those that don't do this. Given an error on line 30 column 24, I go to the line number with `:30` and the column with `24|` and I'm instantly at the problem location.
 
 The file name is of course useful, specifically shown relative to the current working directory. The git branch is also useful and provided by the [fugitive] plugin.
 
@@ -59,7 +59,7 @@ After removing what I didn't need, I ended up with this very customized airline 
 
 ## Redesign
 
-This statusline was fine, but I couldn't shake the thought that it felt out of place with those colors and arrows; it felt overdone. I ended up commenting out my airline configuration --- which was [already pretty long][airline-config] --- and attempted to create a statusline from scratch with the goal of simplicity. I ended up with this, where the number on the left under the number line is the column number:
+This statusline was fine, but I couldn't shake the thought that it felt out of place with those colors and arrows; it felt overdone. I ended up commenting out my airline configuration---which was [already pretty long][airline-config]---and attempted to create a statusline from scratch with the goal of simplicity. I ended up with this, where the number on the left under the number line is the column number:
 
 [airline-config]: https://github.com/blaenk/dots/blob/275b3b40fa0c57f1b48b5ba59b9ecbc00cddf866/vim/vimrc.ln#L80-L202
 
@@ -149,7 +149,7 @@ This actually looked pretty nice, in my opinion, but this look doesn't mesh well
 
 Like I said when I started out this post: there's nothing wrong with using one of these statusline plugins. They certainly look nice and seem like a step up from the default statusline. It's just that I took a step back and realized I didn't need the things they offered, and they didn't look as great as I had originally thought, back when I compared it to a default statusline.
 
-For as much as some of these plugins claim to be "light," it's generally difficult to be lighter than using no plugin at all [^lightline]. It's not that this extra code will make your Vim unusably slow with today's hardware, but that it seems pointless to carry around if you're not even using most of it, especially considering how simple it seems to be to define your own statusline, and --- if you care to --- personalize your setup.
+For as much as some of these plugins claim to be "light," it's generally difficult to be lighter than using no plugin at all [^lightline]. It's not that this extra code will make your Vim unusably slow with today's hardware, but that it seems pointless to carry around if you're not even using most of it, especially considering how simple it seems to be to define your own statusline, and---if you care to---personalize your setup.
 
-[^lightline]: [lightline](https://github.com/itchyny/lightline.vim) is one statusline plugin I know of --- but haven't used --- whose philosophy it is to have the user define as much of the statusline as possible in the hopes of remaining light. I haven't used it, so I can't comment on it, but in my case defining my own from scratch was simple enough already. That said, this might be useful for others who find themselves in a similar position but who would rather use something maintained by someone else.
+[^lightline]: [lightline](https://github.com/itchyny/lightline.vim) is one statusline plugin I know of---but haven't used---whose philosophy it is to have the user define as much of the statusline as possible in the hopes of remaining light. I haven't used it, so I can't comment on it, but in my case defining my own from scratch was simple enough already. That said, this might be useful for others who find themselves in a similar position but who would rather use something maintained by someone else.
 

@@ -21,7 +21,7 @@ Hard links can't be made to directories, thereby preventing circular links. The 
 
 ### Shared Pointers
 
-Hard links remind me of [`shared_ptr`](http://en.cppreference.com/w/cpp/memory/shared_ptr) in C++11. I can imagine a scenario in which different processes need access to a common file but the common file needs to be deleted when all processes are finished with it. They can create a link to the file and use that to do their work, since it will be the same file as the original. When they are finished with the file, they can [`unlink`](http://man7.org/linux/man-pages/man2/unlink.2.html) --- remove the link --- to the file. The file system will automatically delete the file itself when the number of links has reached zero. I don't know if this is common --- or even a correct --- practice, nevertheless I immediately thought of this when I came across links.
+Hard links remind me of [`shared_ptr`](http://en.cppreference.com/w/cpp/memory/shared_ptr) in C++11. I can imagine a scenario in which different processes need access to a common file but the common file needs to be deleted when all processes are finished with it. They can create a link to the file and use that to do their work, since it will be the same file as the original. When they are finished with the file, they can [`unlink`](http://man7.org/linux/man-pages/man2/unlink.2.html) (i.e. remove the link) to the file. The file system will automatically delete the file itself when the number of links has reached zero. I don't know if this is common---or even a correct---practice, nevertheless I immediately thought of this when I came across links.
 
 ### Temporary Files
 

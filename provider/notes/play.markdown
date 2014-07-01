@@ -777,7 +777,7 @@ val contactsForm = Form(tuple(
 
 ## Custom Mappings
 
-There are two ways to construct a custom mapping. The first involves transforming from an existing one, and the second involves building one from scratch. Transforming an existing mapping can be done using the `transform` method, which accepts a function from the existing type to the target type, and another for the reverse --- since mappings are bidirectional. However, `transform`'s limitation is that it has no way of expressing failure.
+There are two ways to construct a custom mapping. The first involves transforming from an existing one, and the second involves building one from scratch. Transforming an existing mapping can be done using the `transform` method, which accepts a function from the existing type to the target type, and another for the reverse since mappings are bidirectional. However, `transform`'s limitation is that it has no way of expressing failure.
 
 ``` scala
 val localDateMapping = text.transform(

@@ -22,7 +22,7 @@ Aside from GDB there's also [LLDB] to keep an eye on, which is the LLVM project'
 [tutorial]: http://lldb.llvm.org/tutorial.html
 [LLDB equivalents]: http://lldb.llvm.org/lldb-gdb.html
 
-Remember that, when debugging, it's best if a program is built with a symbol table --- the list of memory addresses corresponding to the program's variables and lines of code --- by passing the `-g` parameter to gcc or clang.
+Remember that, when debugging, it's best if a program is built with a symbol table---the list of memory addresses corresponding to the program's variables and lines of code---by passing the `-g` parameter to gcc or clang.
 
 For an additional resource, RMS' own [tutorial][rms_tut] on GDB is available, as well as this [very good guide].
 
@@ -52,7 +52,7 @@ $ gdb -p PID
 $ gdb programname PID
 ```
 
-Another thing that can be done is to run GDB and tell it that the program should be run on a different terminal. This is accomplished with the `tty` command. For example, assuming the program should be on `/dev/pts/8` --- perhaps because we have another window paired with that pseudoterminal --- we would run the following:
+Another thing that can be done is to run GDB and tell it that the program should be run on a different terminal. This is accomplished with the `tty` command. For example, assuming the program should be on `/dev/pts/8`---perhaps because we have another window paired with that pseudoterminal---we would run the following:
 
 ``` gdb
 (gdb) tty /dev/pts/8
@@ -176,7 +176,7 @@ A condition can be removed from an existing breakpoint as well:
 (gdb) cond 3
 ```
 
-Pretty much any valid C conditional statement can be used, where true is non-zero and false is zero. This includes equality, logical, and inequality operators, bitwise and shift operators, arithmetic operators, and functions --- either from the program itself or from libraries, provided they're linked into the program.
+Pretty much any valid C conditional statement can be used, where true is non-zero and false is zero. This includes equality, logical, and inequality operators, bitwise and shift operators, arithmetic operators, and functions that are linked into the program.
 
 ``` gdb
 (gdb) break 180 if string == NULL && i < 0
@@ -217,7 +217,7 @@ It's possible to define a list of commands to be run as soon as a particular bre
 
 Commands can be removed from a breakpoint by redefining an empty command list.
 
-It's possible to define macros --- sets of commands --- with the `define` command. Its form is similar to `commands`' but its first argument is the name of the macro. The arguments are accessible as `$argn` where `n` is anywhere from `0` to `9`. Macro arguments aren't comma separated. Useful macros can be placed in the startup file and referenced within GDB. The command `show user` can be used to list all macros.
+It's possible to define macros---sets of commands---with the `define` command. Its form is similar to `commands`' but its first argument is the name of the macro. The arguments are accessible as `$argn` where `n` is anywhere from `0` to `9`. Macro arguments aren't comma separated. Useful macros can be placed in the startup file and referenced within GDB. The command `show user` can be used to list all macros.
 
 ``` gdb
 (gdb) define print_and_go
@@ -262,7 +262,7 @@ A key thing to remember is that whatever line GDB is currently at has _not_ been
 
 ## Stepping
 
-Single-stepping is possible with the `next` command, where a execution proceeds one original-source-code-line --- i.e. 1 C++ line, not assembly --- at a time. The `step` command is similar, but if the line is on a function call, it will enter that function's body if there are debugging symbols available for it, whereas `next` would step over it.
+Single-stepping is possible with the `next` command, where a execution proceeds one original-source-code-line (e.g. 1 C++ line) at a time. The `step` command is similar, but if the line is on a function call, it will enter that function's body if there are debugging symbols available for it, whereas `next` would step over it.
 
 Both `step` and `next` accept optional arguments specifying how far to step.
 
@@ -482,9 +482,13 @@ Usually when a core dump file is generated, it's placed in the current directory
 $ ulimit -c unlimited
 ```
 
-On systems that use [systemd], such as mine, these files are instead managed by systemd's journal --- they don't show up in the current directory regardless of the resource limit. The helper program `systemd-coredumpctl` can be used to extract the core dumps from the journal into individual files:
+On systems that use [systemd], such as mine, these files are instead managed by systemd's journal; they won't show up in the current directory regardless of the resource limit. The helper program `systemd-coredumpctl` can be used to extract the core dumps from the journal into individual files:
 
 [systemd]: http://en.wikipedia.org/wiki/Systemd
+
+<div class="callout">
+**June 23rd, 2014**: It seems this may no longer be the case as of arch package [systemd-214-2](https://projects.archlinux.org/svntogit/packages.git/commit/trunk?h=packages/systemd&id=20f65088398622522bb33e6f53dfde83d31a2208).
+</div>
 
 ``` bash
 # based on PID

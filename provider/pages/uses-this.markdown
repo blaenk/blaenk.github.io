@@ -21,7 +21,7 @@ This site is built with [Hakyll], the static site generator written in Haskell. 
 [Pygments]: http://pygments.org/
 [MathJax]: http://www.mathjax.org/
 
-It is [heavily modified] from plain Hakyll, although that's more or less the point. Hakyll is more of a library for static site generation which one employs how they see fit, rather than a framework that is worked under. I created various Pandoc [abstract syntax tree] (AST) transformers to implement features such as table of contents generation and pygments syntax highlighting integration. I also implemented a Haskell compiler for automatic abbreviation substitution. Perhaps best of all, I also [implemented live editing], where my changes show up instantly in my browser as soon as I save the file --- which has completely changed the way I write content for this site. This is accomplished via Haskell STM Channels piped to HTML5 WebSockets.
+It is [heavily modified] from plain Hakyll, although that's more or less the point. Hakyll is more of a library for static site generation which one employs how they see fit, rather than a framework that is worked under. I created various Pandoc [abstract syntax tree] (AST) transformers to implement features such as table of contents generation and pygments syntax highlighting integration. I also implemented a Haskell compiler for automatic abbreviation substitution. Perhaps best of all, I also [implemented live editing], where my changes show up instantly in my browser as soon as I save the file---which has completely changed the way I write content for this site. This is accomplished via Haskell STM Channels piped to HTML5 WebSockets.
 
 [heavily modified]: /tags/hakyll/
 [abstract syntax tree]: http://en.wikipedia.org/wiki/Abstract_syntax_tree
@@ -55,7 +55,7 @@ This is my primary OS. The distribution I have installed is [arch linux], which 
 [LFS]: http://www.linuxfromscratch.org/index.html
 [Gentoo]: http://www.gentoo.org/
 
-My preferred desktop environment is [gnome]; I don't feel the need to posture with obscure tiling managers --- though I genuinely do enjoy using [xmonad] --- I prefer the experience that Gnome provides. I use [aura] as my [pacman] wrapper for seamless integration with the [AUR]. I am very interested in and regularly read about the POSIX standard ([SUS]) and the Linux Userspace Interface.
+My preferred desktop environment is [gnome]; I don't feel the need to posture with obscure tiling managers---though I genuinely do enjoy using [xmonad]---I prefer the experience that Gnome provides. I use [aura] as my [pacman] wrapper for seamless integration with the [AUR]. I am very interested in and regularly read about the POSIX standard ([SUS]) and the Linux Userspace Interface.
 
 [gnome]: http://en.wikipedia.org/wiki/GNOME
 [xmonad]: http://xmonad.org/
@@ -76,13 +76,13 @@ Mac OS X used to be my general development OS because I really liked OS X's font
 
 ## Editor
 
-I used to believe that people who boasted about using [vim] were just posturing, claiming to work with a seemingly archaic terminal-based editor. However, a friend who first showed me his use of vim through an ssh connection many years ago --- when I was barely starting out with software development --- managed to show me the level of fluent mastery of text editing that could be achieved with the editor. A few years ago I dedicated time to really learning its vocabulary and customization. The result is that I feel to be in complete control over the text that I'm manipulating. That said, I don't engage in petty text editor wars nor do I attempt to push it on others. I simply use vim to my benefit.
+I used to believe that people who boasted about using [vim] were just posturing, claiming to work with a seemingly archaic terminal-based editor. However, a friend who first showed me his use of vim through an ssh connection many years ago---when I was barely starting out with software development---managed to show me the level of fluent mastery of text editing that could be achieved with the editor. A few years ago I dedicated time to really learning its vocabulary and customization. The result is that I feel to be in complete control over the text that I'm manipulating. That said, I don't engage in petty text editor wars nor do I attempt to push it on others. I simply use vim to my benefit.
 
 [vim]: http://en.wikipedia.org/wiki/Vim_(text_editor)
 
 ### Looks
 
-The truth is that the default configuration of vim is pretty ugly, and so are most of the themes it comes with. This shouldn't really matter --- as its benefits greatly outweigh any cosmetic qualities --- but it does matter to me. I use a customized version of [solarized] light; I really dislike the dark version. I primarily use gui versions of vim such as gvim or [MacVim] for their added benefits (e.g. wider range of bindable keys, more colors, etc.). My configuration files [hide the menus and toolbars], making for pretty compact windows.
+The truth is that the default configuration of vim is pretty ugly, and so are most of the themes it comes with. This shouldn't really matter, as its benefits greatly outweigh anything cosmetic, but it does matter to me. I use a customized version of [solarized] light; I really dislike the dark version. I primarily use gui versions of vim such as gvim or [MacVim] for their added benefits (e.g. wider range of bindable keys, more colors, etc.). My configuration files [hide the menus and toolbars], making for pretty compact windows.
 
 [solarized]: http://ethanschoonover.com/solarized
 [MacVim]: https://code.google.com/p/macvim/

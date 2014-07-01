@@ -18,7 +18,7 @@ The probability of an event is the fraction of times it occurs out of the total 
 
 $$ P(E) = \frac {\text {# of events}} {\text {# total outcomes}} $$
 
-The probability is bound in the range of $[0, 1]$. Therefore, the probability of an event not happening --- referred to as the probability of the event's complement --- is simply defined as:
+The probability is bound in the range of $[0, 1]$. Therefore, the probability of an event not happening---referred to as the probability of the event's complement---is simply defined as:
 
 $$ P(E^c) = 1 - P(E) $$
 
@@ -40,7 +40,7 @@ The **conditional probability** of an event $B$ is the probability that the even
 
 $$ P(B \mid A) $$
 
-This is inferred from the problem. For example, in "draw without replacement" problems, the probability of $B$ occurring changes from the mere fact that $A$ occurred, because the total number of outcomes --- the denominator of the probability --- has decreased by one, since the item from event $A$ was not returned. The numerator also could have decreased by one if it corresponds to the same group as $B$'s. On the other hand, in problems that "draw with replacement," the fact that $A$ has already occurred has no effect on any subsequent events because all items are still present.
+This is inferred from the problem. For example, in "draw without replacement" problems, the probability of $B$ occurring changes from the mere fact that $A$ occurred, because the total number of outcomes---the denominator of the probability---has decreased by one, since the item from event $A$ was not returned. The numerator also could have decreased by one if it corresponds to the same group as $B$'s. On the other hand, in problems that "draw with replacement," the fact that $A$ has already occurred has no effect on any subsequent events because all items are still present.
 
 ## Multiplication Rule
 
@@ -74,7 +74,7 @@ $$
 \text {B: The Merchant of Venice but not Hamlet:}\ 40\% - 5\% = 35\%
 $$
 
-We are interested in both outcomes occurring --- the event $A$ _or_ the event $B$ --- and since they are mutually exclusive, the addition rule can be used to arrive at the answer:
+We are interested in both outcomes occurring---the event $A$ _or_ the event $B$---and since they are mutually exclusive, the addition rule can be used to arrive at the answer:
 
 $$
 \begin{alignat*}{3}

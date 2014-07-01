@@ -8,13 +8,13 @@ toc: off
 
 In the post about my [switch to Hakyll](/posts/the-switch-to-hakyll) I talked about the various features I implemented in my Hakyll blog. One feature that was sorely missing was support for drafts: posts which aren't supposed to be published when the site is deployed.
 
-I usually take my time writing posts. Sometimes it can take me days, during which I might want to deploy other minor changes to the site --- or perhaps even a shorter, quicker post. Without a draft system, I'm forced to manually move the draft post out of the provider directory so that it doesn't get generated and subsequently deployed.
+I usually take my time writing posts. Sometimes it can take me days, during which I might want to deploy other minor changes to the site, or perhaps even a shorter, quicker post. Without a draft system, I'm forced to manually move the draft post out of the provider directory so that it doesn't get generated and subsequently deployed.
 
 A draft system is able to clearly distinguish draft posts from regular posts. This way, when it comes to deploying the site, draft posts aren't deployed along with it.
 
 ## Considerations
 
-I believe that the fundamental problem with draft systems in static site generators is that drafts --- like regular posts --- come to permeate the entire site. They accomplish this by showing up on index pages, tag pages, and any other place you might expect regular posts to show up in. This is something to keep in mind when creating a draft system because it means that simply deleting the compiled page won't suffice, as there will still be traces in other pages.
+I believe that the fundamental problem with draft systems in static site generators is that drafts, like regular posts, come to permeate the entire site. They accomplish this by showing up on index pages, tag pages, and any other place you might expect regular posts to show up in. This is something to keep in mind when creating a draft system because it means that simply deleting the compiled page won't suffice, as there will still be traces in other pages.
 
 One approach to this problem is to quarantine the draft posts such that they don't show up on any of these things and instead only show them when you visit them directly. This is not an option for me because when I preview drafts I want to see how they will affect the entire site. I don't preview drafts simply to check how my post is formatted.
 
@@ -34,14 +34,14 @@ The other solution I could think of consisted of detecting when the site was bei
 
 Both approaches amount to hacks on top of Hakyll, but after some consideration, it seems to me that the second option is a lot less messy.
 
-My solution consists of some code that runs before the Hakyll driver. The code extracts the first argument from the program arguments, which by convention is the action to perform --- e.g. build, clean, preview --- and checks to see if it's the **preview** action.
+My solution consists of some code that runs before the Hakyll driver. The code extracts the first argument from the program arguments, which by convention is the action to perform, e.g. build, clean, preview, and checks to see if it's the **preview** action.
 
 ``` haskell
 main = do
   (action:_) <- getArgs
 ```
 
-If the **preview** action is being run, the Hakyll configuration data structure's `destinationDirectory` field --- i.e. the output directory --- is changed to a separate one for previewing purposes. This implies that the field is set to the deployable output directory by default. This is important because it means that all actions other than **preview** will _ignore_ drafts.
+If the **preview** action is being run, the Hakyll configuration data structure's `destinationDirectory` field, i.e. the output directory, is changed to a separate one for previewing purposes. This implies that the field is set to the deployable output directory by default. This is important because it means that all actions other than **preview** will _ignore_ drafts.
 
 Furthermore, if we are previewing, the pattern used to fetch posts is changed to also include the posts in the **drafts/** directory. This is achieved by using the [`.||.`](http://hackage.haskell.org/packages/archive/hakyll/4.2.2.0/doc/html/Hakyll-Core-Identifier-Pattern.html#v:.-38--38-.) function to compose two `Pattern` types.
 
@@ -55,7 +55,7 @@ Furthermore, if we are previewing, the pattern used to fetch posts is changed to
                      else "posts/*"
 ~~~
 
-Finally, we need to make one modification to an existing action. The **clean** action removes the provider, cache, and destination (output) directories. However, we now have two separate destination directories and by default every other action only knows of the deployable destination directory --- i.e. the one without drafts. For this reason, we have to detect if the action being run is **clean**, and if so, remove the preview output directory.
+Finally, we need to make one modification to an existing action. The **clean** action removes the provider, cache, and destination (output) directories. However, we now have two separate destination directories and by default every other action only knows of the deployable destination directory, i.e. the one without drafts. For this reason, we have to detect if the action being run is **clean**, and if so, remove the preview output directory.
 
 Note that this depends on [`System.Directory`](http://hackage.haskell.org/packages/archive/directory/latest/doc/html/System-Directory.html).
 

@@ -84,7 +84,7 @@ Note that in a monadic context, the effects are applied sequentially, from left 
 
 [mobit]: http://www.haskell.org/haskellwiki/What_a_Monad_is_not#Monads_are_not_values
 
-There also exists functions `*>` and `<*` that sequence actions while discarding the value of one of the arguments --- left and right respectively. These are immensely useful for monadic parser combinators such as those found in the [Parsec] library. For example, `*>` is useful in Parsec to consume the first parser but return the second, similar to `>>` in a monadic context.
+There also exists functions `*>` and `<*` that sequence actions while discarding the value of one of the arguments: left and right respectively. These are immensely useful for monadic parser combinators such as those found in the [Parsec] library. For example, `*>` is useful in Parsec to consume the first parser but return the second, similar to `>>` in a monadic context.
 
 [Parsec]: http://hackage.haskell.org/package/parsec
 
@@ -247,7 +247,7 @@ evalPair sa sb (a, b) = do
   return (a', b')
 ```
 
-It's then possible to define a `parPair` function in terms of `evalPair` that evaluates the pair's components in parallel. However, the `rpar` strategy only evaluates to WHNF, restricting the evaluation strategy. We could instead use `rdeepseq` --- a strategy to evaluate to normal form --- by wrapping `rdeepseq` with `rpar`. The `rparWith` combinator allows the wrapping of strategies in this manner:
+It's then possible to define a `parPair` function in terms of `evalPair` that evaluates the pair's components in parallel. However, the `rpar` strategy only evaluates to WHNF, restricting the evaluation strategy. We could instead use `rdeepseq`---a strategy to evaluate to normal form---by wrapping `rdeepseq` with `rpar`. The `rparWith` combinator allows the wrapping of strategies in this manner:
 
 ``` haskell
 rdeepseq :: NFData a => Strategy a

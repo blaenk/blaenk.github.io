@@ -26,7 +26,7 @@ Scala tends to adopt advanced functional programming concepts from Haskell, and 
 
 <img src="/images/books/wor.jpg" class="right" width="128">
 
-<a href="http://amzn.com/0765326361" name="wor">Words of Radiance</a> --- This is the much anticipated sequel to [The Way of Kings] and the second book in the 10-book epic fantasy _Stormlight Archive_. It starts out with an alternate perspective on the event that catalyzed the events of tWoK. All of the characters --- which were previously scattered throughout the world --- are finally converging upon the same location, ramping up anticipation of their first interactions.
+<a href="http://amzn.com/0765326361" name="wor">Words of Radiance</a> --- This is the much anticipated sequel to [The Way of Kings] and the second book in the 10-book epic fantasy _Stormlight Archive_. It starts out with an alternate perspective on the event that catalyzed the events of tWoK. All of the characters---which were previously scattered throughout the world---are finally converging upon the same location, ramping up anticipation of their first interactions.
 
 The magic that was misunderstood and scarce during the first book is slowly becoming more common, and some of the more scholarly characters are attempting to study it.
 
@@ -38,7 +38,7 @@ Sanderson is known to be a very prolific writer, writing thousands of words ever
 
 <img src="/images/books/mistborn2.jpg" class="right" width="128">
 
-<a href="http://amzn.com/0765316889" name="mistborn2">Mistborn: The Well of Ascension</a> --- This is the sequel to _Mistborn: The Final Empire_. It's difficult to talk about this one without spoiling the first book. Suffice it to say that crazy things happen at the end of the first book and this book deals with the repercussions of those events. It seems like it's the least liked of the original trilogy, only because it seems to have gone a little slow --- for a Brandon Sanderson book --- at the beginning. I didn't really mind since I'm used to an even slower, seemingly undirected pace from GRRM's books, and it allowed me to really learn about some of the characters in-depth. Of course, the Sanderson Avalanche starts up towards the end so that even those who did find it to be their least favorite seem to agree that it redeems itself with it.
+<a href="http://amzn.com/0765316889" name="mistborn2">Mistborn: The Well of Ascension</a> --- This is the sequel to _Mistborn: The Final Empire_. It's difficult to talk about this one without spoiling the first book. Suffice it to say that crazy things happen at the end of the first book and this book deals with the repercussions of those events. It seems like it's the least liked of the original trilogy, only because it seems to have gone a little slow---for a Brandon Sanderson book---at the beginning. I didn't really mind since I'm used to an even slower, seemingly undirected pace from GRRM's books, and it allowed me to really learn about some of the characters in-depth. Of course, the Sanderson Avalanche starts up towards the end so that even those who did find it to be their least favorite seem to agree that it redeems itself with it.
 
 *[GRRM]: George RR Martin
 
@@ -52,7 +52,7 @@ One thing I really like about Sanderson is that everything he writes seems to ha
 
 The first book in _Mistborn_ is called _The Final Empire_ and it starts out a lot darker than tWoK, although there are actually a lot of parallels once you learn about a plot twist reveal towards the end of tWoK. The world in general is more somber though. The world seems split between the aristocracy and a subjugated class known as the _skaa_. The skaa has for the most part lost all hope after centuries of subjugation.
 
-Membership into these classes is hereditary, determined by a great war that occurred centuries ago. The leader of the winning side, the Lord Ruler --- who has reigned for centuries --- rewarded all of those that fought for him, and their descendants, by making them members of the aristocracy.
+Membership into these classes is hereditary, determined by a great war that occurred centuries ago. The leader of the winning side, the Lord Ruler---who has reigned for centuries---rewarded all of those that fought for him, and their descendants, by making them members of the aristocracy.
 
 The aristocracy was also rewarded with genes that give them the ability to wield special powers, but very few nobles are actually born with these powers. "Half-bloods" between the aristocracy and the skaa are forbidden and hunted down. There are different kinds of powers, and they're all triggered by consuming certain metals, depending on the power, and "burning" them. Those born with the powers actually only manifest the ability to wield one of these powers, those people are referred to as _Mistings_. Even rarer are those who can wield all of the powers, known as _Mistborns_. That is, it's no powers, one power, or all powers.
 
@@ -105,7 +105,7 @@ However, the coverage of the language was pretty good, perhaps as good as it can
 
 <a href="http://amzn.com/032157351X" name="algorithms">Algorithms</a> [[notes](/notes/algorithms/)] --- I've been refreshing my knowledge of algorithms using this book by Sedgewick. I chose this one for this purpose because it seems to strike a balance between the catalog-formatted coverage of Skiena's book and the in-depth analysis of the classic CLRS. So far it has worked perfectly fine, at times looking to CLRS for more information.
 
-Only one thing really bothered me about the book and that is that it teaches left-leaning red-black trees --- a creation of the author himself --- instead of classical red-black trees, _without_ warning the reader. The main claim to LLRBs that I'm aware of is that they're simpler to teach because they're more consistent, only allowing left-leaning red links, thereby reducing every imbalance to a matter of rotating into left-leaning red links.
+Only one thing really bothered me about the book and that is that it teaches left-leaning red-black trees---a creation of the author himself---instead of classical red-black trees, _without_ warning the reader. The main claim to LLRBs that I'm aware of is that they're simpler to teach because they're more consistent, only allowing left-leaning red links, thereby reducing every imbalance to a matter of rotating into left-leaning red links.
 
 I discovered that the book was teaching LLRBs and not classical RB trees when it got around to "explaining" deletion from LLRBs, in quotes because it left it as an "exercise to the reader." Granted, it provided solution code to the exercise but I figured that I would find some more information online to reinforce my understanding; RB tree deletion is notoriously complex. Of course, every explanation and implementation I found online was entirely different from the red-black trees the book explained.
 
@@ -115,7 +115,7 @@ I ended up reading through the wikipedia page on red-black trees, which is one o
 
 <img src="/images/books/tlpi.jpg" class="right" width="128">
 
-<a href="http://amzn.com/1593272200" name="tlpi">The Linux Programming Interface</a> --- This book concerns the POSIX API as defined by various standards --- e.g., POSIX.1-2001/SUSv3, POSIX.1-2008/SUSv4 --- and platform-specific deviations. It has an emphasis on Linux, at times covering Linux-specific APIs such as epoll and inotify. The book comes in at a hefty 64 chapters and 1500+ pages, covering every possible topic including signals, processes, threads, interprocess-communication (IPC), sockets, terminals and pseudoterminals, evented I/O, and more.
+<a href="http://amzn.com/1593272200" name="tlpi">The Linux Programming Interface</a> --- This book concerns the POSIX API as defined by various standards, e.g. POSIX.1-2001/SUSv3, POSIX.1-2008/SUSv4, and platform-specific deviations. It has an emphasis on Linux, at times covering Linux-specific APIs such as epoll and inotify. The book comes in at a hefty 64 chapters and 1500+ pages, covering every possible topic including signals, processes, threads, interprocess-communication (IPC), sockets, terminals and pseudoterminals, evented I/O, and more.
 
 At the time of writing, the book's reviews consist of 52 five-star reviews and one four-star review (simply because the reviewer didn't like the binding, which I think is excellent). It took me many months to finish, in part from becoming distracted by other books, but it was worth it because every chapter connected many dots, triggering epiphanies left and right. It is liberating to have this much of a deeper understanding of Linux and POSIX systems in general.
 
@@ -125,7 +125,7 @@ At the time of writing, the book's reviews consist of 52 five-star reviews and o
 
 <a href="http://amzn.com/0321714113" name="cpp-primer">C++ Primer</a> [[notes](/notes/cpp/)] ---  The 5th edition of the book was specifically updated for the new C++11 standard release. At one point I came to the realization that I didn't have enough experience with C++, and that my understanding of it was hazy at best. Recognizing this, I dedicated myself to bettering my understanding of C++ by rereading a book I already had on C++. However, I felt I was missing out on the new C++11 features that were recently introduced.
 
-C++ Primer is what I look for in every programming book. It is direct --- to the point, thanks in part to the assumption that the reader is already familiar with programming, or even C++ itself. It diligently scours every nook and cranny of the C++11 standard, almost reading as a commentary of it, and in so doing, masterfully conveys the various intricacies of shared and unique pointers, move semantics, lambdas, variadic templates, and more.
+C++ Primer is what I look for in every programming book. It is direct and to the point, thanks in part to the assumption that the reader is already familiar with programming, or even C++ itself. It diligently scours every nook and cranny of the C++11 standard, almost reading as a commentary of it, and in so doing, masterfully conveys the various intricacies of shared and unique pointers, move semantics, lambdas, variadic templates, and more.
 
 <hr class="book">
 
@@ -141,7 +141,7 @@ After reading RWH, however, I had an insatiable interest in Haskell, and so I wa
 
 <a href="http://amzn.com/0596514980" name="rwh">Real World Haskell</a> --- This book is [freely available](http://book.realworldhaskell.org/read/) online, which is how I read it. I initially bought _Learn You A Haskell_, but I felt like it beat around the bush too much. Conversely, I found _Real World Haskell_ refreshingly direct and practical, living up to its name.
 
-For the longest time I had wanted to learn Haskell, but I wanted to learn it in a practical context so that I may develop a realistic idea of what I can do with it. Specifically, I learned Haskell for the purpose of doing some digital signal processing in order to create a music visualizer. This book was very direct with regard to its teaching practical usage of Haskell. As a result, I was able to see how functors, applicative functors, monoids, monads, monad transformers --- and other seemingly-abstract concepts --- actually helped in developing real-world applications.
+For the longest time I had wanted to learn Haskell, but I wanted to learn it in a practical context so that I may develop a realistic idea of what I can do with it. Specifically, I learned Haskell for the purpose of doing some digital signal processing in order to create a music visualizer. This book was very direct with regard to its teaching practical usage of Haskell. As a result, I was able to see how functors, applicative functors, monoids, monads, monad transformers---and other seemingly-abstract concepts---actually helped in developing real-world applications.
 
 <hr class="book">
 
@@ -194,7 +194,7 @@ Admittedly, in my opinion, while it was fun to read and achieved its purpose, ul
 
 <img src="/images/books/metaruby.jpg" class="right" width="128">
 
-<a href="http://amzn.com/1934356476" name="metaprogramming-ruby">Metaprogramming Ruby</a> --- Ruby has a tradition of employing metaprogramming techniques in various libraries to create DSLs that make programming a lot simpler or straightforward, as is evident in libraries like Rails, Sinatra, Cucumber, etc. --- pretty much any Ruby library defines a form of DSL.
+<a href="http://amzn.com/1934356476" name="metaprogramming-ruby">Metaprogramming Ruby</a> --- Ruby has a tradition of employing metaprogramming techniques in various libraries to create DSLs that make programming a lot simpler or straightforward, as is evident in libraries like Rails, Sinatra, Cucumber, or any other significant Ruby library.
 
 This book covers the details on how the language really lends itself to metaprogramming through mechanisms such as `method_missing()`, `instance_eval()`, and `define_method()` that allow one to dynamically add methods and functionality to classes at run-time. Perhaps most important is its coverage of the Ruby object model (hierarchy) complete with Eigenclasses, and how method calls are resolved in this grand context.
 

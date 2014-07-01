@@ -55,7 +55,7 @@ Scopes pose memory considerations, and are generally destroyed when they're no l
 
 # Services
 
-It's possible to register object-creating recipes that are interpreted by the `$injector` to provide wired-up instances. Objects created by the `$injector` are called **services**, and these are singletons --- only one instance of any given service is created.
+It's possible to register object-creating recipes that are interpreted by the `$injector` to provide wired-up instances. Objects created by the `$injector` are called **services**, and these are singletons. Only one instance of any given service is created.
 
 There are ways to control how objects are created. The first and simplest way is to register a pre-defined instance with `value`. Objects registered with `value` can't express dependencies.
 

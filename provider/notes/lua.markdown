@@ -16,7 +16,7 @@ LuaJIT has an FFI which allows code to be JIT compiled, whereas regular C API ca
 **Cons**:
 
   * Safety. Third-party scripting can easily crash the application
-  * Bindings seem to mainly be simpler from a C-language perspective --- after all, they _are_ made with C in mind. To this end, C++ programs would presumably have to write C ABI functions to be picked up/wrapped on Lua's end via the FFI [^cpp_wrapping]. This contrasts with automatically generated SWIG bindings from C++ to Lua's C API. However, I think a benefit is that it ends up being cleaner and more precise/predictable than generated code.
+  * Bindings seem to be simpler from a C-language perspective. To this end, C++ programs would presumably have to write C ABI functions to be picked up/wrapped on Lua's end via the FFI [^cpp_wrapping]. This contrasts with automatically generated SWIG bindings from C++ to Lua's C API. However, I think a benefit is that it ends up being cleaner and more precise/predictable than generated code.
 
 # Using FFI
 

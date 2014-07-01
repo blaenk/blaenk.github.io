@@ -147,7 +147,7 @@ However, in creating this analogy from the bin example to the learning model, th
 
 The problem so far is that the hypothesis $h$ is fixed, and for a given $h$, $\nu$ generalizes to $\mu$, which ends up being a **verification** of $h$, not learning.
 
-Instead, to make it a learning process, then there needs to be no guarantee that $\nu$ will be small, and we need to choose from multiple $h$'s. To generalize the bin model to more than one hypothesis, we can use multiple bins. Out of the many bins that were created, the hypothesis responsible for the bin with the smallest $\mu$ --- the fraction of red marbles in the bin --- is chosen.
+Instead, to make it a learning process, then there needs to be no guarantee that $\nu$ will be small, and we need to choose from multiple $h$'s. To generalize the bin model to more than one hypothesis, we can use multiple bins. Out of the many bins that were created, the hypothesis responsible for the bin with the smallest $\mu$---the fraction of red marbles in the bin---is chosen.
 
 ## Notation {#notation-for-learning}
 
@@ -311,7 +311,7 @@ For example, if a given data set has positive data points around the center of a
 
 $$ (x_1, x_2) \xrightarrow{\Phi} (x_1^2, x_2^2) $$
 
-This newly transformed data set --- which is now linearly separable --- is used as the new data set.
+This newly transformed data set---which is now linearly separable---is used as the new data set.
 
 To recap, non-linear transformations can be used to transform data such that it becomes linearly separable:
 
@@ -526,7 +526,7 @@ Learning thus reduces to two questions:
 
 There is a difference between training and testing. It's analogous to when one takes a practice exam compared to when one takes a final exam.
 
-In the testing scenario, $\insample$ is how well one did in the final exam, and $\outsample$ is how well one understands the material in general. In this case, the probability that $\insample$ tracks $\outsample$ --- that is, that doing well on the final exam means that they understood the material --- increases as the number of questions in the final exam $N$ increases:
+In the testing scenario, $\insample$ is how well one did in the final exam, and $\outsample$ is how well one understands the material in general. In this case, the probability that $\insample$ tracks $\outsample$---that is, that doing well on the final exam means that they understood the material---increases as the number of questions in the final exam $N$ increases:
 
 $$ P(|\insample - \outsample| \gt \epsilon) \leq 2\phantom {M} e^{-2 \epsilon^2 N} $$
 
@@ -572,7 +572,7 @@ $$
 \end{align}
 $$
 
-Given this observation --- that different hypotheses have significant amounts of overlapping with others --- we would like to make the statement that one hypothesis exceeds epsilon often when another hypothesis exceeds epsilon.
+Given this observation---that different hypotheses have significant amounts of overlapping with others---we would like to make the statement that one hypothesis exceeds epsilon often when another hypothesis exceeds epsilon.
 
 $$ |\insample(h_1) - \outsample(h_1)| \approx |\insample(h_2) - \outsample(h_2)| $$
 
@@ -613,7 +613,7 @@ This can be applied to the perceptron. For example, when $N = 4$, we can lay out
 
 <img src="/images/notes/machine-learning/training-versus-testing/breaking-point.png" class="center">
 
-This is where the perceptron breaks down because it _cannot_ separate that configuration, and so $\growthfunc(4) = 14$ because two configurations --- this one and the one in which the left/right points are blue and top/bottom are red --- cannot be represented.
+This is where the perceptron breaks down because it _cannot_ separate that configuration, and so $\growthfunc(4) = 14$ because two configurations---this one and the one in which the left/right points are blue and top/bottom are red---cannot be represented.
 
 For this reason, we have to expect that that for perceptrons, $m$ can't be the maximum possible because it would imply that perceptrons are as strong as can possibly be.
 
@@ -653,7 +653,7 @@ $$
 
 <img src="/images/notes/machine-learning/training-versus-testing/positive-intervals.png" class="center">
 
-The way to vary the different dichotomies is by choosing two line segments --- of which there are again $N + 1$ --- at which to place the interval ends. For this reason, the growth function is:
+The way to vary the different dichotomies is by choosing two line segments---of which there are again $N + 1$---at which to place the interval ends. For this reason, the growth function is:
 
 $$ \growthfunc(N) = {N + 1 \choose 2} $$
 
@@ -982,7 +982,7 @@ $$ \mathbf {Xw} = \mathbf y $$
 
 This is valid because we're using a binary function.
 
-From here it's a straightforward process to finding the vector $\mathbf w$ by isolating it, made possible by multiplying both sides by the inverse of the feature matrix $\mathrm X$ --- we know it's invertible because we specifically constructed it to be:
+From here it's a straightforward process to finding the vector $\mathbf w$ by isolating it, made possible by multiplying both sides by the inverse of the feature matrix $\mathrm X$, which we know is invertible because we specifically constructed it to be:
 
 $$ \mathbf w = \mathbf {X^{-1}y} $$
 
@@ -1050,7 +1050,7 @@ What is $d + 1$ in the perceptron? It is the number of parameters in the percept
 
 ## Interpretation {#vc-dimension-interpretation}
 
-The parameters in the weight vector correspond to degrees of freedom that allow us to create a specific hypothesis. The number of parameters correspond to **analog** degrees of freedom: varying any single parameter --- which is itself continuous --- yields an entirely new perceptron. The VC dimension translated these into **binary** degrees of freedom, since we're only trying to get a different dichotomy.
+The parameters in the weight vector correspond to degrees of freedom that allow us to create a specific hypothesis. The number of parameters correspond to **analog** degrees of freedom: varying any single parameter---which is itself continuous---yields an entirely new perceptron. The VC dimension translated these into **binary** degrees of freedom, since we're only trying to get a different dichotomy.
 
 This is important because it allows us to ascertain how expressive a model may be; how many different outputs we can actually get.
 
@@ -1165,7 +1165,7 @@ $$
 \end{align}
 $$
 
-The result is an equation that says that the expected error $\mathbb E_{\mathcal D}$ for a particular data set $\mathcal D$ given the hypothesis $g^{(\mathcal D)}(\mathbf x)$ resulting from that given data set is measured against the actual target function $f(\mathbf x)$, and that error measure **is equivalent** to the **variance** --- the expected error of the hypothesis $g^{(\mathcal D)}(\mathbf x)$ measured against the average hypothesis $\bar g(\mathbf x)$ --- **plus** the **bias** --- the error measure of the average hypothesis $\bar g(\mathbf x)$ against the target function $f(\mathbf x)$:
+The result is an equation that says that the expected error $\mathbb E_{\mathcal D}$ for a particular data set $\mathcal D$ given the hypothesis $g^{(\mathcal D)}(\mathbf x)$ resulting from that given data set is measured against the actual target function $f(\mathbf x)$, and that error measure **is equivalent** to the **variance**---the expected error of the hypothesis $g^{(\mathcal D)}(\mathbf x)$ measured against the average hypothesis $\bar g(\mathbf x)$, **plus** the **bias**---the error measure of the average hypothesis $\bar g(\mathbf x)$ against the target function $f(\mathbf x)$:
 
 $$
 \def \bias {\textbf {bias} (\mathbf x)}
@@ -1230,14 +1230,14 @@ It's clear that from approximation, $\mathcal H_1$ seems to be better. We will n
 
 The problem is that these results depend on the two points that we were given, so it complicates the task of comparing the two hypothesis sets. This is why we need bias-variance analysis, it gives us the expected error _with respect to_ the choice of the data set.
 
-If we were derive a hypothesis from any two points, for a large number of different two points, we would come up with something like the left image, where every line represents a derived hypothesis. It therefore stands to reason that the average hypothesis would fall somewhere near $y = 0$ --- the midpoint of the range of possible hypotheses. The error measure of the average hypothesis against the target function is the **bias**, and the **variance** is represented by the gray region which corresponds to the standard deviation of the possible hypotheses. It's apparent that this model has a **high bias** ($0.5$) and a **low variance** ($0.25$):
+If we were derive a hypothesis from any two points, for a large number of different two points, we would come up with something like the left image, where every line represents a derived hypothesis. It therefore stands to reason that the average hypothesis would fall somewhere near $y = 0$---the midpoint of the range of possible hypotheses. The error measure of the average hypothesis against the target function is the **bias**, and the **variance** is represented by the gray region which corresponds to the standard deviation of the possible hypotheses. It's apparent that this model has a **high bias** ($0.5$) and a **low variance** ($0.25$):
 
 <div style="text-align: center; margin-top: 10px">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/multiple-hypotheses.png">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/average-hypothesis.png">
 </div>
 
-The same is slightly more complicated with the second hypothesis $\mathcal H_1$ because of its linear model, which yields very different hypotheses --- that is, **high variance** ($1.69$). There is **low bias** ($0.21$) however, because it has many different hypotheses to average from:
+The same is slightly more complicated with the second hypothesis $\mathcal H_1$ because of its linear model, which yields very different hypotheses, that is, **high variance** ($1.69$). There is **low bias** ($0.21$) however, because it has many different hypotheses to average from:
 
 <div style="text-align: center; margin-top: 10px">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/linear-multiple-hypotheses.png">
@@ -1252,14 +1252,14 @@ The **conclusion** from this example is that we are matching the **model complex
 
 A learning curve plots the expected value of $\outsample$ and $\insample$ as a function of $N$. For a data set of size $N$, how does the expected $\outsample$ and expected $\insample$ vary with $N$?
 
-The following images are learning curves for a simple and complex model. The simple model shows that $\outsample$ decreases with the $N$, but so does $\insample$ --- which can be attributed to exceeding the degrees of freedom available in the hypothesis set. The second model has so many degrees of freedom that it can fit the training set perfectly until the part where the blue curve appears on the left side, however, $\outsample$ is very high before that point --- this corresponds to not learning anything; just memorizing the examples. Therefore if there are very few examples, then it's clear that the simple model would fare better. This is why we want to match the model's complexity to the data resources that we have.
+The following images are learning curves for a simple and complex model. The simple model shows that $\outsample$ decreases with the $N$, but so does $\insample$, which can be attributed to exceeding the degrees of freedom available in the hypothesis set. The second model has so many degrees of freedom that it can fit the training set perfectly until the part where the blue curve appears on the left side, however, $\outsample$ is very high before that point, which corresponds to not learning anything; just memorizing the examples. Therefore if there are very few examples, then it's clear that the simple model would fare better. This is why we want to match the model's complexity to the data resources that we have.
 
 <div style="text-align: center; margin-top: 10px">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/simple-learning-curve.png">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/complex-learning-curve.png">
 </div>
 
-The following is a comparison of the learning curves for a given model using VC analysis and bias-variance analysis. In the VC analysis curve on the left, the blue region is $\insample$ and the red region is $\Omega$ --- what happens within the generalization bound. In the Bias-Variance curve, the black bar is the approximation. Everything below the approximation is the bias, so everything else under the $\outsample$ curve must be the variance. Both curves are talking about approximations. The Bias-Variance curve is concerning over-all approximation, whereas the VC analysis curve is concerning in-sample approximation.
+The following is a comparison of the learning curves for a given model using VC analysis and bias-variance analysis. In the VC analysis curve on the left, the blue region is $\insample$ and the red region is $\Omega$---what happens within the generalization bound. In the Bias-Variance curve, the black bar is the approximation. Everything below the approximation is the bias, so everything else under the $\outsample$ curve must be the variance. Both curves are talking about approximations. The Bias-Variance curve is concerning over-all approximation, whereas the VC analysis curve is concerning in-sample approximation.
 
 <div style="text-align: center; margin-top: 10px">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/vc-learning-curve.png">
@@ -1303,7 +1303,7 @@ $$
 
 ## Non-Linear Transformations II
 
-To recap, a transformation $\Phi$ transforms the input vector $\mathbf x$ to the feature space, resulting in a feature vector $\mathbf z$, where every element $z_i$ is the result of performing a non-linear transformation $\phi_i$ on the _entire_ input vector. Therefore, $\mathbf z$ can be of different size --- often longer --- than the input vector $\mathbf x$:
+To recap, a transformation $\Phi$ transforms the input vector $\mathbf x$ to the feature space, resulting in a feature vector $\mathbf z$, where every element $z_i$ is the result of performing a non-linear transformation $\phi_i$ on the _entire_ input vector. Therefore, $\mathbf z$ can be of different size, often longer, than the input vector $\mathbf x$:
 
 $$
 \begin{align}
@@ -1345,7 +1345,7 @@ We reduce the cost further by adopting the following model, which does away with
 
 $$ \mathbf z = (1, x_1^2 + x_2^2) $$
 
-Now consider the extreme case, where we completely reduce to a single parameter --- completely doing away with the threshold weight:
+Now consider the extreme case, where we completely reduce to a single parameter, completely doing away with the threshold weight:
 
 $$ \mathbf z = (x_1^2 + x_2^2 - 0.6) $$
 
@@ -1444,7 +1444,7 @@ $$
 
 Now that we have the learning model and error measure we can define the learning algorithm. Compared to the closed-form solution from the other two models, we will have to use an iterative solution called **gradient descent**, which is a general method for non-linear optimization.
 
-Gradient descent starts at a point on the error function and iteratively takes steps along the steepest slope towards the minimum. So we'll have a direction unit vector $\hat v$ pointed in the direction of the steepest slope and a fixed step size $\eta$ which we will define as being small since we want to approximate the surface using the first order expansion of the Taylor series --- the linear approximation --- which works best when the distance between the two points is small. With this in mind, the new position after a step can be expressed as:
+Gradient descent starts at a point on the error function and iteratively takes steps along the steepest slope towards the minimum. So we'll have a direction unit vector $\hat v$ pointed in the direction of the steepest slope and a fixed step size $\eta$ which we will define as being small since we want to approximate the surface using the first order expansion of the Taylor series---the linear approximation---which works best when the distance between the two points is small. With this in mind, the new position after a step can be expressed as:
 
 $$ \weight(1) = \weight(0) + \eta \hat v $$
 
@@ -1495,7 +1495,7 @@ $$
 \end{align}
 $$
 
-It's obvious how the gradient can be useful here. It provides us with a way to determine --- at any point on the surface --- in what direction to move to go deeper towards the minimum. This is possible by finding the gradient vector --- which points in the direction of the "steepest ascent" --- and negate it so that it then points in the direction of the "steepest descent". This is clearly useful, and fortunately there is a similar linear approximation to a vector-taking function [for a gradient](http://en.wikipedia.org/wiki/Gradient#Linear_approximation_to_a_function):
+It's obvious how the gradient can be useful here. It provides us with a way to determine---at any point on the surface---in what direction to move to go deeper towards the minimum. This is possible by finding the gradient vector---which points in the direction of the "steepest ascent"---and negate it so that it then points in the direction of the "steepest descent". This is clearly useful, and fortunately there is a similar linear approximation to a vector-taking function [for a gradient](http://en.wikipedia.org/wiki/Gradient#Linear_approximation_to_a_function):
 
 $$ f(\mathbf x) \approx f(\mathbf x_0) + \nabla f(\mathbf x_0) (\mathbf x - \mathbf x_0) $$
 
@@ -1621,7 +1621,7 @@ There are two costs that this seemingly powerful model can incur. The first is *
 
 The problem of optimization can be solved by using soft thresholds instead of the hard thresholds found in perceptrons. This can be facilitated with gradient descent, which features soft thresholds. Once the solution is found with soft thresholds and as a result so are the weights, we can switch to hard thresholds to perform classifications.
 
-A neural network has various inputs and layers. Each layer has a non-linearity $\theta$, which is a generic non-linearity --- not specifically the logistic function in logistic regression. To be precise, the non-linearity $\theta$ is similar to the logistic function except that it ranges from $-1$ to $+1$, to better approximate the hard threshold that goes from $-1$ to $+1$. Each of the non-linearities $\theta$ can be different. A famous approach to take is to make all of the $\theta$'s be non-linear and then make the final $\theta$ actually be linear. The intermediate layers are referred to as **hidden layers**. The final layer is referred to as the **output layer**:
+A neural network has various inputs and layers. Each layer has a non-linearity $\theta$, which is a generic non-linearity---not specifically the logistic function in logistic regression. To be precise, the non-linearity $\theta$ is similar to the logistic function except that it ranges from $-1$ to $+1$, to better approximate the hard threshold that goes from $-1$ to $+1$. Each of the non-linearities $\theta$ can be different. A famous approach to take is to make all of the $\theta$'s be non-linear and then make the final $\theta$ actually be linear. The intermediate layers are referred to as **hidden layers**. The final layer is referred to as the **output layer**:
 
 <img src="/images/notes/machine-learning/neural-networks/neural-network.png" class="center">
 
@@ -1826,7 +1826,7 @@ Deterministic noise differs from stochastic noise in that:
 1. it depends on hypothesis set $\mathcal H$; for the same target function, using a more sophisticated hypothesis set will decrease the deterministic noise
 2. it's fixed for a given $\feature$
 
-When we have a finite $N$ set, we gain the unfortunate ability to fit the noise --- be it stochastic or deterministic, which wouldn't be possible if we had an infinite sized set.
+When we have a finite $N$ set, we gain the unfortunate ability to fit the noise, be it stochastic or deterministic, which wouldn't be possible if we had an infinite sized set.
 
 ## Noise and Bias-Variance
 
@@ -2010,7 +2010,7 @@ This is a general quadratic in matrix form. Weight decay, low-order fits, high-o
 
 ## Weight Growth
 
-Just as big weights were constrained earlier, small weights can also be constrained. The following shows a plot of weight decay's $\outsample$ as a function of the regularization parameter $\lambda$. Notice that it dips before it goes back up again, in which case it begins to underfit. This means that weight decay performs well _given_ the correct choice of $\lambda$. Weight growth on the other hand --- constraining weights to be large --- is considerably worse.
+Just as big weights were constrained earlier, small weights can also be constrained. The following shows a plot of weight decay's $\outsample$ as a function of the regularization parameter $\lambda$. Notice that it dips before it goes back up again, in which case it begins to underfit. This means that weight decay performs well _given_ the correct choice of $\lambda$. Weight growth on the other hand---constraining weights to be large---is considerably worse.
 
 <img src="/images/notes/machine-learning/regularization/regularizers.png" class="center">
 
@@ -2560,7 +2560,7 @@ An important thing to remember is that the distances between the support vectors
 
 ### Kernel Formulation of SVM
 
-In solving support vector machines, we would [pass the inner products](#quadratic-coefficients) of the feature vectors to the quadratic programming library. All that changes now is that we instead pass the result of the kernel function $K$ --- **everything else remains the same**:
+In solving support vector machines, we would [pass the inner products](#quadratic-coefficients) of the feature vectors to the quadratic programming library. All that changes now is that we instead pass the result of the kernel function $K$; **everything else remains the same**:
 
 $$
 \underbrace {\begin{bmatrix}
@@ -2588,7 +2588,7 @@ $$
 
 ### Kernel Function Validity
 
-How can we determine that a kernel is valid --- that is, that it corresponds to an inner product in _some_ space --- _without_ visiting that space? In other words, how do we know that $\mathcal Z$ exists for a given $K(\feature, \feature')$?
+How can we determine that a kernel is valid, i.e. that it corresponds to an inner product in _some_ space, _without_ visiting that space? In other words, how do we know that $\mathcal Z$ exists for a given $K(\feature, \feature')$?
 
 There are three approaches to come up with a valid kernel. The first method is by construction. The second is by using mathematical properties of the kernel (i.e. Mercer's condition), which have already been applied to kernel functions other people have developed which can be applied to our own problems. The third approach is to simply not care whether or not $\mathcal Z$ exists, which is an approach taken by a number of people but for which Professor Yaser Abu-Mostafa has reservations, since the guarantees of the method depend on $\mathcal Z$ existing.
 
@@ -2764,7 +2764,7 @@ This solution can be interpreted as being an **exact interpolation**, because on
 
 ## Effect of $\gamma$
 
-The effect of $\gamma$ is such that if it is small, the Gaussian is a wider curve, whereas if it were larger it'd be a steeper curve. Depending on where the points are --- specifically how sparse they are --- the steepness of the curve makes a difference.
+The effect of $\gamma$ is such that if it is small, the Gaussian is a wider curve, whereas if it were larger it'd be a steeper curve. Depending on where the points are---specifically how sparse they are---the steepness of the curve makes a difference.
 
 The image on the left shows the effect of choosing a small $\gamma$. The three training points are on the curve, since that was what the constraint was. The smaller gray curves are the individual contributions from each of the points, that is, $w_1, w_2, w_3$, such that when they're plugged into the hypothesis function it yields the blue curve.
 
@@ -2807,7 +2807,7 @@ In both cases, the model can be considered as a **similarity-based method**, whe
 
 We are generally mindful of generalization as a ratio between the number of parameters and data points. However, the RBF model we described has $N$ parameters $w_1, \dots, w_N$ based on $N$ data points, so it may seem hopeless to generalize. We can mitigate this by preventing every point from having its own influence, and instead appoint a number $K$ of important centers for the data and have them influence the points around them.
 
-We do this by taking $K \ll N$ centers $\mathbf {\mu_1, \dots, \mu_K}$ as the centers of the RBFs instead of $\feature_1, \dots, \feature_N$. The $K$ centers live in the same space as $\feature$, but they are not necessarily data points --- they could be elected data points from the data set, or they may be specially constructed points that we may deem representative of the data set. We then define the hypothesis function as:
+We do this by taking $K \ll N$ centers $\mathbf {\mu_1, \dots, \mu_K}$ as the centers of the RBFs instead of $\feature_1, \dots, \feature_N$. The $K$ centers live in the same space as $\feature$, but they are not necessarily data points---they could be elected data points from the data set, or they may be specially constructed points that we may deem representative of the data set. We then define the hypothesis function as:
 
 $$h(\feature) = \sum_{k = 1}^K w_k \exp\left(-\gamma\ \lVert \feature - \mu_k \rVert^2\right)$$
 
@@ -2821,7 +2821,7 @@ We begin by splitting the data set $\feature_1, \dots, \feature_N$ into clusters
 
 $$\text {Minimize } \quad \sum_{k = 1}^K \sum_{\feature_n \in S_k} \lVert \feature_n - \mathbf \mu_k \rVert^2$$
 
-This is **unsupervised learning**, since it was performed without any reference to the label $y_n$. The problem is that this is **NP-hard** in general; it is intractable to get the absolute minimum. The problem being NP-hard didn't discourage us before when we realized that finding the absolute minimum error in a neural network was NP-hard as well, in which case we developed a heuristic --- gradient descent --- which led to back-propagation and thus a decent local-minimum.
+This is **unsupervised learning**, since it was performed without any reference to the label $y_n$. The problem is that this is **NP-hard** in general; it is intractable to get the absolute minimum. The problem being NP-hard didn't discourage us before when we realized that finding the absolute minimum error in a neural network was NP-hard as well, in which case we developed a heuristic---gradient descent---which led to back-propagation and thus a decent local-minimum.
 
 ### LLoyd's Algorithm
 
@@ -2997,7 +2997,7 @@ Occam's Razor isn't making the statement that simpler is more elegant. Instead, 
 
 The basic argument to back up this claim, which is a formal proof under different idealized conditions, is as follows. There are fewer simpler hypotheses than complex ones, which was captured by the growth function $\growthfunc(N)$. To recap, the growth function took as parameter the size $N$ of the data set and returned the number of different patterns (dichotomies) that the hypothesis set $\mathcal H$ could generate on those $N$ points. Since there are fewer simpler hypotheses, it is less likely to fit a given data set, specifically, $\growthfunc(N)/2^N$. Since it is less likely for fitting to occur, then when it does occur it is more significant.
 
-The only difference between someone believing in the scam in Puzzle #1 and someone having the big picture was the fact that the growth function, from our point of view, was $\growthfunc(N) = 1$ --- we are only one person, he has one hypothesis, and it was correct, and we gave it a lot of value since that scenario is unlikely to occur. The reality was that the growth function was $\growthfunc(N) = 2^N$, which means it's certain to happen, so that when it _does_ happen, it's meaningless.
+The only difference between someone believing in the scam in Puzzle #1 and someone having the big picture was the fact that the growth function, from our point of view, was $\growthfunc(N) = 1$---we are only one person, he has one hypothesis, and it was correct, and we gave it a lot of value since that scenario is unlikely to occur. The reality was that the growth function was $\growthfunc(N) = 2^N$, which means it's certain to happen, so that when it _does_ happen, it's meaningless.
 
 ### Meaningless Fit
 
@@ -3060,13 +3060,13 @@ The sampling bias lies in the fact that we're only considering the historical da
 
 ## Data Snooping
 
-The data snooping principle doesn't forbid us from doing anything, it simply makes us realize that if we use a particular data set --- the whole, subset, whatever --- to navigate and decide which model, $\lambda$, etc., then when we have an outcome from the learning process and we use the same data set that affected the choice of the learning process, the ability to fairly assess the performance of the outcome has been compromised by the fact that it was chosen according to the data set.
+The data snooping principle doesn't forbid us from doing anything, it simply makes us realize that if we use a particular data set---the whole, subset, or something else---to navigate and decide which model, $\lambda$, etc., then when we have an outcome from the learning process and we use the same data set that affected the choice of the learning process, the ability to fairly assess the performance of the outcome has been compromised by the fact that it was chosen according to the data set.
 
 > If a data set has affected any step of the learning process, it's ability to assess the outcome has been compromised.
 >
 > <cite><strong>Data Snooping Principle</strong></cite>
 
-This is the most common trap for practitioners. A possible reason is that, when we data snoop, we end up with better performance --- or so we think. Data snooping isn't only looking at the data, in fact there are many ways to fall into the trap.
+This is the most common trap for practitioners. A possible reason is that, when we data snoop, we end up with better performance---or so we think. Data snooping isn't only looking at the data, in fact there are many ways to fall into the trap.
 
 ### Looking at the Data
 
@@ -3084,11 +3084,11 @@ The problem is that this process of refining the non-linear transformation is es
 
 It's important to realize that the snooping in this example involves the data set $\mathcal D$. The danger of looking at the data set is that we are vulnerable to designing the model or choices in learning according to the idiosyncrasies of the data set, so we are working well _on that_ data set, but we don't know how we'll be doing in another independently generated data set from the same distribution, which would be the out-of-sample.
 
-On the other hand, we're completely allowed --- encouraged, _ordered_ --- to look at all other information related to the target function and input space, _except for_ the realization of the data set that we're going to use for training, _unless_ we're going to charge accordingly. For example, we may ask: how many inputs do we have, what is the range of the inputs, how did we measure the inputs, are they physically correlated, do we know of any properties that we can apply. This is all valid and important for us to zoom-in correctly, since we're not using the data, and are therefore not subject to overfitting the data. Instead we're using properties of the target function and input space and therefore improving our chances of picking the correct model. **The problem starts** when we look at the data set and _not_ charge accordingly.
+On the other hand, we're completely allowed---encouraged, _ordered_---to look at all other information related to the target function and input space, _except for_ the realization of the data set that we're going to use for training, _unless_ we're going to charge accordingly. For example, we may ask: how many inputs do we have, what is the range of the inputs, how did we measure the inputs, are they physically correlated, do we know of any properties that we can apply. This is all valid and important for us to zoom-in correctly, since we're not using the data, and are therefore not subject to overfitting the data. Instead we're using properties of the target function and input space and therefore improving our chances of picking the correct model. **The problem starts** when we look at the data set and _not_ charge accordingly.
 
 ### Puzzle 4: Financial Forecasting
 
-Suppose we want to predict the exchange rate between the US Dollar versus the British Pound. We have 8 years worth of daily trading --- about 2,000 data points. Our input-to-output model, where $r$ is the rate, can be expressed as getting the change in rate for the past 20 days, hoping that a particular pattern in the exchange rate will make it more likely that today's change is positive or negative and by how much:
+Suppose we want to predict the exchange rate between the US Dollar versus the British Pound. We have 8 years worth of daily trading---about 2,000 data points. Our input-to-output model, where $r$ is the rate, can be expressed as getting the change in rate for the past 20 days, hoping that a particular pattern in the exchange rate will make it more likely that today's change is positive or negative and by how much:
 
 $$\Delta r_{-20}, \Delta r_{-19}, \dots, \Delta r_{-1} \to \Delta r_0$$
 
@@ -3112,7 +3112,7 @@ This problem could occur not only due to the different models that we have attem
 
 The key problem is that we're matching a ***particular*** data set too well; we're married to the data set, so that a completely new data set generated from the same distribution will look completely foreign to the model we created.
 
-For example, the observation that, in the original data set, whenever a particular two points are close, there is always another point on the same line far away --- this is clearly an idiosyncrasy of the data set, so that it would be pointless to try to find it in another data set from the same distribution since we may assume that if doesn't exhibit this same quality, it must be from another distribution. The truth is that the data set is generated from the same distribution, it's just that we got too used to the data set to the point where we were fitting the noise.
+For example, the observation that, in the original data set, whenever a particular pair of points is close, there is always another point on the same line far away---this is clearly an idiosyncrasy of the data set, so that it would be pointless to try to find it in another data set from the same distribution since we may assume that if doesn't exhibit this same quality, it must be from another distribution. The truth is that the data set is generated from the same distribution, it's just that we got too used to the data set to the point where we were fitting the noise.
 
 ### Remedies {#data-snooping-remedies}
 
@@ -3171,9 +3171,9 @@ In fact, the true equivalent would be the image below, where the probability dis
 
 <img src="/images/notes/machine-learning/epilogue/prior-2.png" class="center">
 
-If we actually knew the prior then we could compute the posterior $P(h = f \mid \mathcal D)$ for every hypothesis $h \in \mathcal H$. With this, we could find the most probable hypothesis given the data. In fact, we can derive the expected value of $h$, $\mathbb E(h(\feature))$ for every $\feature$. Further still, we can derive the **error bar** --- the chances that we're wrong. Simply, we can derive everything in a principled way.
+If we actually knew the prior then we could compute the posterior $P(h = f \mid \mathcal D)$ for every hypothesis $h \in \mathcal H$. With this, we could find the most probable hypothesis given the data. In fact, we can derive the expected value of $h$, $\mathbb E(h(\feature))$ for every $\feature$. Further still, we can derive the **error bar**---the chances that we're wrong. Simply, we can derive everything in a principled way.
 
-Bayesian learning can be justified in two main cases. The first is when the prior is **valid**, that is, it is indeed the probability that a particular hypothesis is the target function. The second is when the prior is **irrelevant**, for example, when we place a prior, when get more and more data sets and we look at the posterior we might realize that the posterior is affected largely by the data set and less and less by the prior --- the prior gets factored out as we get more and more data. In this case, we can think of the prior simply as a computational catalyst.
+Bayesian learning can be justified in two main cases. The first is when the prior is **valid**, that is, it is indeed the probability that a particular hypothesis is the target function. The second is when the prior is **irrelevant**, for example, when we place a prior, when get more and more data sets and we look at the posterior we might realize that the posterior is affected largely by the data set and less by the prior; the prior gets factored out as we get more and more data. In this case, we can think of the prior simply as a computational catalyst.
 
 For example, we might choose to use conjugate priors, where we don't have to recompute the posterior as an entire function, but instead parameterize it and change the parameters when we get new data points. This is valid when we're going to be doing it enough that by the time we arrive, it doesn't matter what we started with.
 
@@ -3193,7 +3193,7 @@ This is **different** from performing 2-layer learning. For example, in a 2-laye
 
 <img src="/images/notes/machine-learning/epilogue/aggregation-2.png" class="center">
 
-In the case of aggregation, the units learn **independently** --- as if they were the only unit. In the image below, each node is trying to replicate the function individually. Their outputs are then combined to get the output:
+In the case of aggregation, the units learn **independently**---as if they were the only unit. In the image below, each node is trying to replicate the function individually. Their outputs are then combined to get the output:
 
 <img src="/images/notes/machine-learning/epilogue/aggregation-3.png" class="center">
 

@@ -19,7 +19,7 @@ Here is the end result:
 
 I previously had a simple Rakefile that symlinked all of the files in the dotfiles directory into my home directory, except for some in an exception list. However, this had the consequence that I had to have ruby installed beforehand, and I didn't like to install ruby through means other than something like [rbenv](https://github.com/sstephenson/rbenv/). I preferred instead to be able to get my dotfiles up and running as soon as possible on a new system. As a result I opted to use a shell script to deploy my dotfiles.
 
-After looking around in dotfile repositories I found [hoffman's bootstrap script](https://github.com/holman/dotfiles/blob/master/script/bootstrap). The simple script uses `find` to find files and directories whose names end in ".ln" and symlinks them into the home directory. I modified it a bit to use the ".ln" suffix instead of ".symlink" --- purely cosmetic of course --- as well as some other slight changes. I think I'll change it later so that it can gracefully handle operating system-dependent dotfiles.
+After looking around in dotfile repositories I found [hoffman's bootstrap script](https://github.com/holman/dotfiles/blob/master/script/bootstrap). The simple script uses `find` to find files and directories whose names end in ".ln" and symlinks them into the home directory. I modified it a bit to use the ".ln" suffix instead of ".symlink"---purely cosmetic of course---as well as some other slight changes. I think I'll change it later so that it can gracefully handle operating system-dependent dotfiles.
 
 ## urxvt
 
@@ -49,7 +49,7 @@ My zsh prompt is actually pretty simple. I played around with multiline prompts 
 
 #### Basic
 
-The basic prompt consists of a lambda followed by the path --- which [auto-collapses](http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/#current-directory) `$HOME` to `~` --- with [highlighted path separators](http://superuser.com/questions/49092/how-to-format-the-path-in-a-zsh-prompt) followed by a right arrow. Pretty simple and easy on the colors in my opinion, aside from the unconventional highlighting of the path separators, which was something I had long wanted and took me a while to get right.
+The basic prompt consists of a lambda followed by the path---which [auto-collapses](http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/#current-directory) `$HOME` to `~`---with [highlighted path separators](http://superuser.com/questions/49092/how-to-format-the-path-in-a-zsh-prompt) followed by a right arrow. Pretty simple and easy on the colors in my opinion, aside from the unconventional highlighting of the path separators, which was something I had long wanted and took me a while to get right.
 
 My prompt is inspired by the Haskell [lambda syntax](http://www.haskell.org/haskellwiki/Lambda_abstraction) so that it looks like every line is a lambda operating on the current directory whose code is the command you type:
 
@@ -75,7 +75,7 @@ Here it is in text:
 
 Like any self-respecting modern prompt, mine [incorporates git information](https://github.com/blaenk/dots/blob/master/zsh/zsh/vcsinfo.zsh) when within a git repository. It shows the current branch, whether there are any untracked files (denoted by `.`), modified files (denoted by `#`), or staged files (denoted by `+`). Another nice little thing I added was a marker for how far ahead and/or behind we are from the remote branch. This is appended to the aforementioned information and only shows up when we _are_ ahead or behind.
 
-All of these features were done using zsh's [vcsinfo](http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information) with the help of [Arjan van der Gaag](http://arjanvandergaag.nl/blog/customize-zsh-prompt-with-vcs-info.html) and --- once again --- [sunaku](https://github.com/sunaku/home/blob/master/.zsh/config/prompt.zsh). Here's what it looks like [^echo]:
+All of these features were done using zsh's [vcsinfo](http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information) with the help of [Arjan van der Gaag](http://arjanvandergaag.nl/blog/customize-zsh-prompt-with-vcs-info.html) and, once again, [sunaku](https://github.com/sunaku/home/blob/master/.zsh/config/prompt.zsh). Here's what it looks like [^echo]\:
 
 <img src="/images/posts/terminal-customization/git-prompt.png" class="center">
 
@@ -85,7 +85,7 @@ Again in text:
 λ ~/.dots (master . # +){+1} ➜ 
 ~~~
 
-The branch is `master` and apparently there's unstaged files, modifed files, and staged files. Furthermore, the `{+1}` shows that my branch is one commit ahead of the remote branch. It would also show the number of commits we are behind --- in red --- if that were the case, which in my opinion can be very handy so that you can avoid conflicts by rebasing or merging before you push. This segment only shows up if either of those conditions is met.
+The branch is `master` and apparently there's unstaged files, modifed files, and staged files. Furthermore, the `{+1}` shows that my branch is one commit ahead of the remote branch. It would also show the number of commits we are behind, in red, if that were the case---which in my opinion can be very handy so that you can avoid conflicts by rebasing or merging before you push. This segment only shows up if either of those conditions is met.
 
 #### SSH
 
@@ -100,7 +100,9 @@ Once again in text:
 ~~~
 
 <div class="callout">
-**Update --- October 28, 2013**: I've actually done away with this component of the prompt. I didn't like how the lambda no longer aligned with the arrow symbol --- it created a sort of inconsistency. I've instead decided to add a pretty simple green `R` at the end of the current working path, to signify that I am on a "remote" machine, so it reads something like "currently on x path remotely."
+**Update: October 28, 2013**
+
+I've actually done away with this component of the prompt. I didn't like how the lambda no longer aligned with the arrow symbol. I've instead decided to add a pretty simple green `R` at the end of the current working path, to signify that I am on a "remote" machine, so it reads something like "currently on x path remotely."
 </div>
 
 ```
@@ -120,7 +122,7 @@ If you've been wondering how it is that my commands are highlighted, it's made p
 
 ## Conclusion
 
-I have to say that I love the way my terminal looks and operates now. This has all been in preparation for setting up [xmonad](http://en.wikipedia.org/wiki/xmonad), which I intend to take a shot at soon. For the curious, I'm doing all of this on [arch linux](http://www.archlinux.org/), but I didn't say it earlier because nothing in this post depends on this. In fact, none of the content in this post is all that specific to Linux itself even. I'll try to update this post whenever my setup changes, but I think I'm quite comfortable with the way it is --- and will be --- for the foreseeable future.
+I have to say that I love the way my terminal looks and operates now. This has all been in preparation for setting up [xmonad](http://en.wikipedia.org/wiki/xmonad), which I intend to take a shot at soon. For the curious, I'm doing all of this on [arch linux](http://www.archlinux.org/), but I didn't say it earlier because nothing in this post depends on this. In fact, none of the content in this post is all that specific to Linux itself even. I'll try to update this post whenever my setup changes, but I think I'm quite comfortable with the way it is, and will be for the foreseeable future.
 
 In my opinion, the benefit of using such tried and proven, mature tools is that once you take the time to configure them to your liking you can use them without modification for a long time. Barring some imminent, majorly disruptive paradigm shift in software development, I can see myself using many of these tools throughout my career as a software developer.
 

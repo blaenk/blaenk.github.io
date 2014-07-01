@@ -16,7 +16,7 @@ Now I'm back and would like to pick up Erlang and its OTP library. Even if I don
 
 # Modules
 
-Modules generally take the following form. The first line contains the module directive, known as the _export declaration_, as in Haskell. This lists the functions and their arity --- the number of arguments they take.
+Modules generally take the following form. The first line contains the module directive, known as the _export declaration_, as in Haskell. This lists the functions and their arity.
 
 ``` erlang
 -module(hello).
@@ -35,7 +35,7 @@ $ erl -noshell -s hello start -s init stop
 
 ## Example {#module-example}
 
-The following describes a file server. It defines a convenience function `start` which spawns a process that forever performs the `loop` function inside a particular directory, which simply waits for a message to be received and processes it. Notice that `loop` performs a tail-recursive call --- Erlang has tail-call optimization, so there's no need to worry about overflowing the stack.
+The following describes a file server. It defines a convenience function `start` which spawns a process that forever performs the `loop` function inside a particular directory, which simply waits for a message to be received and processes it. Notice that `loop` performs a tail-recursive call; Erlang has tail-call optimization, so there's no need to worry about overflowing the stack.
 
 This server simply responds to two simple messages: one which requests a file listing and another which request file contents. Notice that the messages are distinguished by pattern matching, which works on atoms as well, such as `list_dir`.
 

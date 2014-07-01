@@ -11,7 +11,7 @@ It's become a common practice to keep one's [dotfiles] version controlled, often
 
 [cargo culting]: http://en.wikipedia.org/wiki/Cargo_cult_programming
 
-I do enjoy looking at other peoples' dotfiles from time to time to see what I can pick out and adapt to my own, but otherwise I like to grow mine organically --- that is, only configure what I need, as I need it --- to ensure that I really understand my configuration. As a result, I created [my own dotfiles] from scratch.
+I do enjoy looking at other peoples' dotfiles from time to time to see what I can pick out and adapt to my own, but otherwise I like to grow mine organically---that is, only configure what I need, as I need it---to ensure that I really understand my configuration. As a result, I created [my own dotfiles] from scratch.
 
 [dotfiles]: http://en.wikipedia.org/wiki/Dotfile#Unix_and_Unix-like_environments
 [my own dotfiles]: https://github.com/blaenk/dots
@@ -26,7 +26,7 @@ My deploy script is called `sprinkle`, which is a heavily modified fork of the d
 
 [holman's dotfiles]: https://github.com/holman/dotfiles
 
-I also liked that the deploy script had a naming convention such that files and folders with a `.symlink` suffix were those that were deployed. However, I didn't like that vim and Github wouldn't detect the filetype --- and therefore wouldn't highlight --- due to the misleading file extension. So I ended up heavily customizing the script.
+I also liked that the deploy script had a naming convention such that files and folders with a `.symlink` suffix were those that were deployed. However, I didn't like that vim and Github wouldn't detect the filetype---and therefore wouldn't highlight---due to the misleading file extension. So I ended up heavily customizing the script.
 
 Now, instead of the `.symlink`-suffix naming convention, those files and folders that should be deployed are themselves hidden. This allows vim, Github, and others to detect the file type and provide highlighting. Running the deploy script for the first time yields something like this:
 
@@ -221,7 +221,7 @@ The cursor color is inherently global, so what happens is that tmux remembers th
 
 For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the "default" color.
 
-The sequence for setting the color is the same in xterm and urxvt: `\033]12;color\007`. However, there is no sequence I know of --- after looking at `man 7 urxvt` --- for resetting the cursor color to the default cursor color. For xterm, it is `\033]112\007`. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).
+The sequence for setting the color is the same in xterm and urxvt: `\033]12;color\007`. However, there is no sequence I know of---after looking at `man 7 urxvt`---for resetting the cursor color to the default cursor color. For xterm, it is `\033]112\007`. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).
 
 ```
 set -g terminal-overrides ',rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007'

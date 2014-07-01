@@ -6,11 +6,11 @@ tags: Hakyll, Haskell
 toc: off
 ---
 
-I use [scss](http://sass-lang.com/) for my site's stylesheets. scss is a language very similar to [CSS](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) that adds support for variables, nesting, mixins, selector inheritance, and more --- while retaining a syntax very similar to CSS itself.
+I use [scss](http://sass-lang.com/) for my site's stylesheets. scss is a language very similar to [CSS](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) that adds support for variables, nesting, mixins, selector inheritance, and more---while retaining a syntax very similar to CSS itself.
 
 ## Split Stylesheets
 
-A common practice I've noticed with the use of scss is to avoid having one monolithic stylesheet and instead opt to split it out into separate semantic files. For example, **post.scss** would concern styling for posts, **syntax.scss** would concern styling for Pygments syntax highlighting, etc. These files are then imported into one stylesheet --- e.g., **screen.scss** --- using the `@import` directive. It is this stylesheet that gets compiled by the scss compiler into the monolithic CSS.
+A common practice I've noticed with the use of scss is to avoid having one monolithic stylesheet and instead opt to split it out into separate semantic files. For example, **post.scss** would concern styling for posts, **syntax.scss** would concern styling for Pygments syntax highlighting, etc. These files are then imported into one stylesheet, e.g., **screen.scss**, using the `@import` directive. It is this stylesheet that gets compiled by the scss compiler into the monolithic CSS.
 
 ## Problem
 
@@ -40,7 +40,7 @@ With the help of Hakyll's creator, Jasper, I learned that the solution involves 
 >
 > <cite><strong>Jasper</strong> on <a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies">Hackage</a></cite>
 
-Now when I'm previewing my site --- or when I build the site in general --- and I modify any scss file, it correctly regenerates the monolithic **css/screen.css** file. Here's my new scss compiler rule:
+Now when I'm previewing my site---or build the site in general---and I modify any scss file, it correctly regenerates the monolithic **css/screen.css** file. Here's my new scss compiler rule:
 
 ``` haskell
 match "scss/**.scss" $ do

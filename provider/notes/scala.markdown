@@ -193,7 +193,7 @@ val partial = some.method _
 
 This syntax creates an ephemeral class [^cpp_partialapplication] that defines an `apply` method that takes the appropriate amount of arguments. When the partially applied value is called, the arguments are forwarded to the underlying function and its result is returned.
 
-[^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a functor, or [function object] --- not to be confused with the category theory [Functor] more common in [Haskell].
+[^cpp_partialapplication]: Reminds me of `std::bind` in C++11, which does the same thing by creating a functor, or [function object] (not to be confused with the category theory [Functor] more common in [Haskell]).
 
 [function object]: http://en.wikipedia.org/wiki/Function_object#In_C_and_C.2B.2B
 [Functor]: http://en.wikipedia.org/wiki/Functor
@@ -1266,7 +1266,7 @@ expr1.withFilter(x => expr2).foreach(x =>
 
 ## Generalized For Expressions
 
-It's possible to add support for `for` expressions to any data type by defining `map`, `flatMap`, and `withFilter`, and `foreach` --- but it's not necessary to define complete support. Depending on the level of support implemented for a data type, the following features of `for` expressions become available:
+It's possible to add support for `for` expressions to any data type by defining `map`, `flatMap`, `withFilter`, and `foreach`. Depending on which of these functions are implemented, the following features of `for` expressions become available:
 
 * `map`: expressions with a single generator
 * `flatMap` and `map`: expressions with multiple generators
