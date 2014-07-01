@@ -2735,3 +2735,167 @@ The values to the keys are vectors where each item is a separate assertion. Post
 ; AssertionError
 ```
 
+# Relational Databases
+
+## JDBC
+
+The `clojure.java.jdbc`{.path} namespace provides a thin layer between Clojure and [JDBC]. A database "spec" is created that is essentially a map of configuration data to locate the JDBC driver and configure it and its connections.
+
+[JDBC]: http://en.wikipedia.org/wiki/Java_Database_Connectivity
+
+``` clojure
+; example sqlite database spec
+(def db-spec {:classname "org.sqlite.JDBC"
+              :subprotocol "sqlite"
+              :subname "test.db"})
+```
+
+The `with-connection` function opens a connection to the database, and any expressions within its scope are executed within context of that connection. For example, `create-table` can be used within the scope to create a database table using either keywords or strings for the table and column names.
+
+``` clojure
+(jdbc/with-connection db-spec
+  (jdbc/create-table :authors
+    [:id "integer primary key"]
+    [:first_name "varchar"]
+    [:last_name "varchar"]))
+```
+
+The `insert-records` function can insert a variable number of records into a database, yielding an equal number of corresponding indices for every inserted record.
+
+``` clojure
+(jdbc/with-connection db-spec
+  (jdbc/insert-records :authors
+    {:first_name "Jackie" :last_name "Chan"}
+    {:first_name "John" :last_name "Doe"}))
+;= ({:last_insert_rowid() 1}
+;=  {:last_insert_rowid() 2})
+```
+
+The `with-query-results` function can be used to fetch data, with the result being a lazy sequence which performs the fetching of data until it's actually necessary, so long as the source remains available. For this reason, it's common to use `doall` on the result to force the data to be fetched.
+
+``` clojure
+(jdbc/with-connection db-spec
+  (jdbc/with-query-results res ["SELECT * FROM authors"]
+    (doall res))
+;= ({:id 1, :first_name "Jackie", :last_name "Chan"}
+;=  {:id 2, :first_name "John", :last_name "Doe"})
+
+  (jdbc/with-query-results res ["SELECT * FROM authors WHERE id = ?" 2]
+    (doall res)))
+;= ({:id 2, :first_name "John", :last_name "Doe"})
+```
+
+Transactions can be performed using the `transaction` form which performs its body within a transaction, aborting the transaction if an exception is thrown of a constraint is violated.
+
+``` clojure
+(jdbc/with-connection db-spec
+  (jdbc/transaction
+    (jdbc/delete-rows :authors ["id = ?" 1])
+    (throw (Exception. "Abort transaction!"))))
+;= ; Exception Abort transaction!
+```
+
+## Korma
+
+[Korma] is a EDSL for relational databases, which handles generating SQL, connection pooling, and so on. The `defdb` form defines a connection for Korma to use, which does this by taking a database spec as with JDBC. The most recently defined database with `defdb` becomes the default connection for Korma for all queries unless otherwise specified. Korma also sets up a connection pool for the database.
+
+[Korma]: http://sqlkorma.com/
+
+Entities express to Korma the specifications of properties in database tables and the relationship between tables, similar to models in ActiveRecord.
+
+``` clojure
+(use '[korma db core])
+(defdb korma-db db-spec)
+
+(declare author)
+
+(defentity country
+  (pk :id)
+  (has-many author))
+
+(defentity author
+  (pk :id)
+  (table :author)
+  (belongs-to country))
+```
+
+Queries can be performed using the `select` macro, which accepts a variety of functions used to build queries. The `with` function, for example, includes a relation in the result.
+
+``` clojure
+(select author
+  (with country)
+  (where (like :first_name "Ja%"))
+  (order :last_name :asc)
+  (limit 1)
+  (offset 1))
+```
+
+A query can be wrapped in the `sql-only` function to only generate the SQL, in order to, for example, print it out.
+
+Korma represents queries as Clojure maps, allowing them to easily be manipulated by using the `select*` function to generate the map used to represent the query, instead of performing the query outright. Refining functions like `order`, `limit`, and `offset` take these maps as parameters to further modify the query. The `exec` function can ultimately be used to execute a query given one of these intermediary maps.
+
+``` clojure
+(def query (-> (select* author)
+             (fields :last_name :first_name)
+             (last 5)))
+;= {:group [],
+;=  :from [{:table "author",
+;= ...
+```
+
+This can be used to great effect, such as performing multiple queries each with a different offset, used to paginate query results, for example.
+
+``` clojure
+(def humans (-> (select* humans)
+                (order :date_of_birth)))
+
+(let [kings-of-germany (-> humans
+                         (where {:country "Germany"
+                                 :profession "King"}))]
+  (doseq [start (range 0 100 10)
+          k (select kings-of-germany
+              (offset start)
+              (limit 10))]
+    ; process results
+    ))
+```
+
+# Deployment
+
+Clojure web applications are generally packaged and deployed as servlets. Servlets are Java classes that extend the `javax.servlet.http.HttpServlet`{.path} base class, which itself defines an interface for handling HTTP requests. Servlets can be deployed to one of many application servers. Application servers usually provide multitenancy, so that multiple applications can be deployed to the same application server. Most application servers are also web servers, but it's possible to proxy to a dedicated web server as well.
+
+A Clojure web application using Ring, for example, can produce a servlet wrapper at runtime and hand that to the application server that runs embedded within the same process.
+
+``` clojure
+(use '[ring.adapter.jetty :only (run-jetty))
+(def server (run-jetty #'app {:port 8080 :join? false}))
+```
+
+It's also possible to deploy to a standalone application server, however, by packaging up the web application into a war file. The war files are a variation of jar files. They contain a `web.xml`{.path} file that describes how the war file should be deployed, a `lib/`{.path} directory containing the application's dependencies so as to make the war self-contained, and a `classes/`{.path} directory containing the Clojure source files, JVM class files, and other assets.
+
+The `web.xml`{.path} file specifies the configuration for the deployment of the war file, including servlet mount points, behavior of user sessions, and app-server specific features.
+
+Leiningen can build war files---as well as accompanying `web.xml`{.path} files---using plug-ins such as `lein-ring`. This plugin requires a `:ring :handler` slot which specifies the namespace-qualified name of the top-level application request handler.
+
+``` clojure
+(defproject com.some/project "1.0.0"
+  :dependencies [[org.clojure/clojure "1.4.0"]
+                 [compojure/compojure "1.0.1"]
+                 [ring/ring-servlet   "1.0.1"]]
+  plugins [[lein-ring "0.6.2"]]
+  :ring {:handler com.some.site/routes})
+```
+
+With this configuration, the war file could be created using the following command:
+
+``` bash
+$ lein ring uberwar
+```
+
+Applications can be run locally for development and testing using Jetty with the following command. On each request, the Clojure source files are reloaded using the `require` function [^play_reload].
+
+[^play_reload]: This is similar to Play's development server.
+
+``` bash
+$ lein ring server
+```
