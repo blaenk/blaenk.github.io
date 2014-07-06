@@ -247,25 +247,23 @@
 .desk_search, .push_config {
   display: none;
   padding-bottom: 15px;
+}
 
-  #search, #push {
-    width: 100%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+#search, #push {
+  width: 100%;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 
-    padding: 5px;
+  padding: 5px;
 
-    font-family: $font-default;
+  font-family: $font-default;
 
-    &:focus { outline: none; }
-  }
+  &:focus { outline: none; }
 }
 
 #search_btn, #push_btn {
   cursor: pointer;
-  @media screen and (max-width: 600px) {
-    display: none !important;
-  }
 }
 
