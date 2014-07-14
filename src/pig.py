@@ -5,6 +5,7 @@ import sys
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
+from pygments.util import ClassNotFound
 
 # for GDB
 from pygments.lexer import RegexLexer, bygroups
@@ -66,7 +67,11 @@ while True:
 
     rv = ""
     try:
-        lex = GDBLexer() if lang == "gdb" else get_lexer_by_name(lang)
+        try:
+            lex = GDBLexer() if lang == "gdb" else get_lexer_by_name(lang)
+        except ClassNotFound as err:
+            lex = get_lexer_by_name("text")
+
         lex.encoding = 'utf-8'
         rv = highlight(code, lex, html)
     except ValueError as err:
