@@ -3239,6 +3239,7 @@ In that case, how can we determine the most valuable hypothesis in the blend? Th
 * [Metacademy](http://www.metacademy.org/)
 * [Probabilistic Programming & Bayesian Methods for Hackers](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/)
 * [Basics of Machine Learning](http://homepages.inf.ed.ac.uk/vlavrenk/iaml.html)
+* [Quoc Le's Lectures on Deep Learning](http://www.trivedigaurav.com/blog/quoc-les-lectures-on-deep-learning/)
 
 *[PLA]: Perceptron Learning Algorithm
 *[SNR]: Signal-to-Noise Ratio
