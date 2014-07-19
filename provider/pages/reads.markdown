@@ -9,6 +9,47 @@ I'm [currently reading](/lately/#reading).
 
 <hr class="book">
 
+<img src="/images/books/clojure-web-development.jpg" class="right" width="128">
+
+<a href="http://amzn.com/1937785645" name="clojure-web">Web Development in Clojure</a> [[notes](/notes/clojure-web-development/)] --- Clojure has gained prominence in web development ranging from the back-end and even in the front-end via ClojureScript. After [learning about Clojure](#clojure), it made sense to learn about Clojure's web ecosystem. Clojure has a preference for mixing and matching individual libraries instead of going for heavy, monolithic frameworks.
+
+This book covered Ring and Compojure, and also went over how the novel ways in which Clojure approaches templating, ClojureScript, and database interaction.
+
+<hr class="book">
+
+<img src="/images/books/swift.jpg" class="right" width="128">
+
+<a href="https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/TheBasics.html" name="swift">Swift</a> [[notes](/notes/swift/)] --- A new language for Mac OS X and iOS development has been anticipated for years, and not it's hear. Swift takes many of the ideas that are found in more advanced functional languages and incorporates them in the most pragmatic way I could have imagined with the intention that mainstream developers will easily be able to adapt to the new ideas.
+
+This official book from Apple did a great job of covering the language, and left me admiring Swift for what it has managed to accomplish.
+
+<hr class="book">
+
+<img src="/images/books/clojure.jpg" class="right" width="128">
+
+<a href="http://amzn.com/1449394701" name="clojure">Clojure Programming</a> [[notes](/notes/clojure/)] --- I've had a recent interest in JVM languages. I already looked into [Scala] and am unsure what I think of it so far. I like a lot of it but I feel like it's overly complex and context-dependent; it reminds me of C++. I decided to look into the other emerging JVM language, the lisp-like Clojure, and its level of simplicity and consistency feels refreshing in comparison.
+
+One of my computer science professors once told me that the reason he likes [Scheme] is because he likes a language where he could easily wrap his head around its computational model so that he may work as effectively as possible. At the time I found his choice of words interesting, "computational model." Now that I'm learning Clojure and the so-called _special forms_ which are [sufficient to describe any possible computation], I understand what he means. I have to agree that the simplicity in this model is empowering.
+
+*[JVM]: Java Virtual Machine
+[Scala]: /notes/scala/
+[Scheme]: http://en.wikipedia.org/wiki/Scheme_(programming_language)
+[sufficient to describe any possible computation]: http://www.paulgraham.com/rootsoflisp.html
+
+<hr class="book">
+
+<img src="/images/books/mistborn3.jpg" class="right" width="128">
+
+<a href="http://amzn.com/0765356147" name="mistborn3">Mistborn: The Hero of Ages</a> --- This is the sequel to [The Well of Ascension] and the third and final book in the original _Mistborn_ trilogy. The end of the second book completely changed the stakes of the world and now the characters must deal with the repercussions.
+
+The world and characters are very different from how they were in the first book. By now the characters have been really developed from the events of the past two books and are efficiently and expertly attempting to deal with a problem that otherwise seems insurmountable to them. Meanwhile, those characters that seemed to have reached the extent of their development have experienced events that have catalyzed further development in ways that would seem uncharacteristic of how we knew them to be.
+
+This is a very beautiful series. It has been tragic, nerve-racking, deep, funny, and heartwarming. There is a recurrent theme of attempting the impossible, of perseverance and determination in the face of apparently unequivocal doom. Of survival.
+
+[The Well of Ascension]: /reads/#mistborn2
+
+<hr class="book">
+
 <img src="/images/books/play.jpg" class="right" width="128">
 
 <a href="http://amzn.com/1617290793" name="play">Play for Scala</a> [[notes](/notes/play/)] --- So now that I [learned][Scala] about the _language_ I figured I'd read up on some of the main Scala libraries and frameworks. The nice thing about it is that it completely rethinks JVM web frameworks, outside of the constraints of the J2EE (over) architecture, whose problem was abstracting away HTTP instead of embracing it.

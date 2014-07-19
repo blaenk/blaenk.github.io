@@ -11,6 +11,18 @@ This page lists some of the things that I've been up to lately.
 
 At any moment I have a handful of books that I'm currently reading. I find that I don't have trouble keeping track of each, thanks in part to keeping [notes](/notes/), and having a set of books allows me to switch to something else temporarily if a particular book falls into a lull. I also keep a page of reviews of [books that I've finished](/reads/).
 
+<img src="/images/books/java.jpg" class="right" width="128">
+
+* [Java: The Complete Reference](http://amzn.com/0071808558) --- I've always "known" Java through my use of it in school where it was sometimes required, but never formally learned it. With the release of Java 8 and the many new languages that are targeting the JVM, I felt it would be a good idea to sweep through a Java book to ensure that I understand the nook and crannies of Java.
+
+    I was specifically looking for a book that served more as a reference instead of a beginner-oriented book that which I would have to sift through to find the nuggets of actual information, past the exercises and code examples. This book seems well regarded and has so far served that purpose.
+
+<img src="/images/books/kingkiller.jpg" class="right" width="128">
+
+* [The Name of the Wind](http://amzn.com/0756405890) --- After finishing two major series from Brandon Sanderson, I felt like changing it up and had heard very good things of Patrick Rothfuss' _Kingkiller Chronicles_. Like Sanderson, Rothfuss seems to be pretty new to epic fantasy but is already very well established and widely acclaimed.
+
+    I'm still going through the phase one goes through when approaching a new epic fantasy series, of getting acclimated to the world and understanding the different elements of it. The world reminds me more of GRRM's world in _A Song of Ice and Fire_ than Sanderson's worlds; it is dark and gritty.
+
 <img src="/images/books/onchina.jpg" class="right" width="128">
 
 * [On China](http://amzn.com/0143121316) --- China has always interested me as seeming like a world within a world. I had previously seen some [edX courses] about China that seemed to be _very_ good, but I tend to prefer reading rather than watching when it comes to learning.
@@ -28,17 +40,6 @@ At any moment I have a handful of books that I'm currently reading. I find that 
 
 [software transactional memory]: http://en.wikipedia.org/wiki/Software_transactional_memory
 
-<img src="/images/books/clojure.jpg" class="right" width="128">
-
-* [Clojure Programming](http://amzn.com/1449394701) [[notes](/notes/clojure/)] --- I've had a recent interest in JVM languages. I already looked into [Scala] and am unsure what I think of it so far. I like a lot of it but I feel like it's overly complex and context-dependent; it reminds me of C++. I decided to look into the other emerging JVM language, the lisp-like Clojure, and its level of simplicity and consistency feels refreshing in comparison.
-
-    One of my computer science professors once told me that the reason he likes [Scheme] is because he likes a language where he could easily wrap his head around its computational model so that he may work as effectively as possible. At the time I found his choice of words interesting, "computational model." Now that I'm learning Clojure and the so-called _special forms_ which are [sufficient to describe any possible computation], I understand what he means. I have to agree that the simplicity in this model is empowering.
-
-*[JVM]: Java Virtual Machine
-[Scala]: /notes/scala/
-[Scheme]: http://en.wikipedia.org/wiki/Scheme_(programming_language)
-[sufficient to describe any possible computation]: http://www.paulgraham.com/rootsoflisp.html
-
 <img src="/images/books/erlang.jpg" class="right" width="128">
 
 * [Programming Erlang](http://amzn.com/193778553X) [[notes](/notes/erlang/)] --- Erlang was the first functional programming language I attempted to learn. The combination of foreign (to me) programming paradigm and actor concurrency model was enough to prevent me from seeing the bigger picture, and so I never finished learning it, instead opting for Haskell.
@@ -52,16 +53,6 @@ At any moment I have a handful of books that I'm currently reading. I find that 
     Angular's templates are directly written in HTML using tag attributes, or _directives_, which are given meaning in code. This makes HTML itself highly extensible and gives the templates clearer meanings. Angular provides a leap in productivity that is similar to jQuery's in its day.
 
 [Angular.js]: http://angularjs.org
-
-<img src="/images/books/mistborn3.jpg" class="right" width="128">
-
-* [Mistborn: The Hero of Ages](http://amzn.com/0765356147) --- This is the sequel to [The Well of Ascension] and the third and final book in the original _Mistborn_ trilogy. The end of the second book completely changed the stakes of the world and now the characters must deal with the repercussions.
-
-    The world and characters are very different from how they were in the first book. By now the characters have been really developed from the events of the past two books and are efficiently and expertly attempting to deal with a problem that otherwise seems insurmountable to them. Meanwhile, those characters that seemed to have reached the extent of their development have experienced events that have catalyzed further development in ways that would seem uncharacteristic of how we knew them to be.
-
-    This is a very beautiful series. It has been tragic, nerve-racking, deep, funny, and heartwarming. There is a recurrent theme of attempting the impossible, of perseverance and determination in the face of apparently unequivocal doom. Of survival.
-
-[The Well of Ascension]: /reads/#mistborn2
 
 ## Studying
 
