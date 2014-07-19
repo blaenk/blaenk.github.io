@@ -11,767 +11,30 @@ I took a shot at [learning Go] recently and I found its simplicity to be refresh
 My main resources are the [tutorial] and [manual], but there are [many more]. As usual, oftentimes some things will be directly from the source, with my commentary surrounding it. There is also a more basic [Rust by Example] which is similar to the go tour.
 
 [learning Go]: /notes/go/
-[tutorial]: http://static.rust-lang.org/doc/master/tutorial.html
-[manual]: http://static.rust-lang.org/doc/master/rust.html
-[many more]: http://static.rust-lang.org/doc/master/index.html
-[Rust by Example]: http://rustbyexample.github.io/
+[tutorial]: http://doc.rust-lang.org/tutorial.html
+[manual]: http://doc.rust-lang.org/rust.html
+[many more]: http://doc.rust-lang.org/
+[Rust by Example]: http://rustbyexample.com/
 
 * toc
 
-# Printing
+# Types
 
-Use the `print!`, `println!`, and `write!` macros to print strings in a `printf`-like manner. If just printing an actual string, then just use the direct functions `print` and `println`. The `format!` macro also exists for creating a `~str` with a specific format. See the docs for [`std::fmt`](http://static.rust-lang.org/doc/master/std/fmt/index.html) for more information.
+Primitive types available in Rust include. There are no implicit type conversions. Instead, the `as` keyword is used to perform explicit type conversions. The `type` keyword can be used to create type aliases.
 
-# Pattern Matching
+Category          Types
+---------         ------
+signed integers   `i8`, `i16`, `i32`, `i64`, `int` (word size)
+unsigned integers `u8`, `u16`, `u32`, `u64`, `uint` (word size)
+floating point    `f32`, `f64`
+Unicode scalars   `char`
+booleans          `bool`
 
-Pattern matching takes the place of regular switch statements. Pattern matches don't fall through. The pipe operator `|` can be used to combine multiple patterns into one arm. The underscore `_` is a wildcard pattern as in Haskell. As in Haskell, matches must be exhaustive. Every case is separated by commas, unless block expressions are used. As in Haskell, pattern matching can be used to bind values. Pattern guards are added using `if` expressions:
+The `Box<T>` type represents a boxed value allocated on the heap. The `Vec<T>` type represents a growable vector. The `String` type represents a growable UTF-8 encoded buffer.
 
-``` rust
-match number {
-  0     => println("zero"),
-  1 | 2 => println("one or two"),
-  3..10 => println("three to ten"),
-  _     => println("something else")
-}
-```
+Nearly every statement in Rust is an expression that yields a value, but this can be suppressed by adding a trailing semicolon `;`, which makes the result be unit `()`.
 
-Patterns can also be bound to variables as in Haskell and Scala:
-
-``` rust
-match age {
-  a @ 0..20 => println!("{} years old", a),
-  _         => println!("older than 21")
-}
-```
-
-# Structures
-
-Structures are laid out in memory the same as as they are in C. Structures are constructed similar to Go structures. Structures have inherited mutability. Structures can be pattern matched on to destructure their fields.
-
-``` rust
-struct Point {
-  x: f64,
-  y: f64
-}
-
-match mypoint {
-  Point { x, .. } => { println(x.to_str()) }
-}
-```
-
-# Enums
-
-Enums in Rust feel similar to algebraic datatypes in Haskell. Enums can be C-like, in which case they can optionally be given specific values. The specific values can be converted to an `int` using the cast operator `as`. Enum variants can be structs as well:
-
-``` rust
-enum Shape {
-  Circle(Point, f64)
-  Rectangle(Point, Point)
-}
-
-enum Direction {
-  Left,
-  Right
-}
-
-enum Color {
-  Red = 0xff0000,
-  Green = 0x00ff00,
-  Blue = 0x0000ff
-}
-
-#[feature(struct_variant)]
-enum Shape {
-  Circle { center: Point, radius: f64 },
-  Rectangle { top_left: Point, bottom_right: Point }
-}
-```
-
-# Tuples
-
-Tuples are available and are most similar to Haskell's. **Tuple structs** behave like both structs and tuples. They're like tuples with names. Tuple structs with a single field are similar to Haskell newtypes and are often called the same thing in Rust. These provide a distinct type from the type they wrap. Newtypes' wrapped values can be extracted using the dereference operator `*`:
-
-``` rust
-let mytup: (int, int, f64) = (10, 20, 30.0)
-
-struct MyTup(int, int, f64);
-let mytup: MyTup = Mytup(10, 20, 30.0)
-
-struct GizmoId(int);
-let my_gizmo_id: GizmoId = GizmoId(10);
-let id_int: int = *my_gizmo_id;
-```
-
-# Functions
-
-Function definitions are similar to Scala's, with the type following the name of the parameter. The return type follows the parameter list as in Scala, but more like C++11's [alternative function syntax]. If the top-level block of the function produces an expression, the `return` statement may be omitted. Functions that return nothing return nil `()`, which can be omitted from the function declaration. However, ending the function with a semicolon is also equivalent to returning `()`. Function arguments can be destructured, but the patterns must be irrefutable:
-
-[alternative function syntax]: http://en.wikipedia.org/wiki/C++11#Alternative_function_syntax
-
-``` rust
-fn line(a: int, b: int, x: int) -> int { a * x + b }
-
-fn do_nothing_the_hard_way() -> () { return (); }
-fn do_nothing_the_easy_way() { }
-fn do_nothing_another_way(a: int) -> () { a; }
-
-fn first((value, _): (int, f64)) -> int { value }
-```
-
-In short, blocks such as `{ expr1; expr2 }` are considered a single expression and evaluate to the result of the last expression if it's not followed by a semicolon, otherwise the block evaluates to `()`.
-
-# Destructors
-
-Destructors are functions responsible for cleaning up resources used by an object that is no longer accessible. Objects are never accessible after their destructor has been called, so it's not possible to fail from accessing freed resources. Further, when a task fails, destructors of all objects in the task are called.
-
-The `~` sigil represents a unique handle for a memory allocation on the heap:
-
-``` rust
-{
-  let y = ~10; // allocated on the heap
-}
-// destructor frees heap memory as soon as `y` goes out of scope
-```
-
-# Ownership
-
-An object's lifetime is determined by its owner, either a variable or a task-local garbage collector. Ownership is recursive so that mutability is inherited recursively and a destructor destroys the contained tree of owned objects. Variables are to-level owners and destroy the contained object when they go out of scope:
-
-``` rust
-struct Foo { x: int, y: ~int }
-
-{
-  // `a` is owner of struct and its fields
-  let a = Foo { x: 5, y: ~10 };
-}
-// `a` goes out of scope, destructor for y's `~int` is called
-
-// `b` is mutable, so the objects it owns are also mutable
-let mut b = Foo { x: 5, y: ~10 };
-b.x = 10
-```
-
-# Boxes
-
-Owned boxes are denoted by the `~` sigil and they use a dynamic memory allocation so that it's always the size of a pointer, regardless of the contained type. This can be used to construct a recursive type, like a list:
-
-``` rust
-enum List {
-  Cons(u32, ~List),
-  Nil
-}
-
-let list = Cons(1, ~Cons(2, ~Cons(3, ~Nil)));
-```
-
-The `list` represents an owned tree of values.
-
-# Move Semantics
-
-Move semantics in Rust is similar to [C++11 move semantics], where the "move" refers to moving ownership. Rust performs a shallow copy for parameter passing, assignment, and returning from functions. Performing such a shallow copy is treated by Rust as "moving ownership" of the value, so that the original source location can no longer be used unless it is reinitialized. A move can be avoided by cloning:
-
-[C++11 move semantics]: /notes/cpp#move-semantics
-
-``` rust
-let mut xs = Nil;
-let ys = xs;
-
-// error if attempt to use `xs`
-
-xs = Nil; // xs can be used again
-
-let x = ~5;
-let y = x.clone(); // y is a newly allocated box
-let z = x; // no new memory alloc'd, x can no longer be used
-```
-
-Mutability can be changed by moving it to a new owner:
-
-``` rust
-let r = ~13;
-let mut s = r; // box becomes mutable
-*s += 1;
-let t = s; // box becomes immutable
-```
-
-# References
-
-The `&` symbol has multiple context-dependent meanings in Rust, as in C++ [^cpp_references]. Remembering that expressions are for constructing and patterns for destructuring, a `&` in a pattern _dereferences_ the expression being destructured. This can be useful to avoid having to manually dereference the variable within the body using `*`.
-
-For example, the `fold` function takes a folding operation in the form of a closure that is passed the accumulator and a reference `&T` to the current element, which means that within the body it would have to be manually dereferenced with `*`, and we can avoid that by specifying the `&` in the pattern.
-
-[^cpp_references]: In C++, an `&` on the lhs can be the ref-qualifier, i.e. _bind by reference_, and on the rhs it can be the address-of operator.
-
-``` rust
-let manual  = v.iter().fold(0, |a, b| a + *b);
-let pattern = v.iter().fold(0, |a, &b| a + b);
-```
-
-It's also necessary when attempting to match on borrowed values. In this case, it reads as _dereference the variable then see if it matches the pattern_.
-
-``` rust
-let x = Some(5);
-let y = (&x, 2);
-
-match y {
-  (&Some(a), b) => a + b,
-  (_, a) => a
-}
-```
-
-A `&` in a function signature means that the parameter accepts a reference. Owned pointers `~` and types that implement the `Deref` trait are automatically converted to references when passed to such functions. Variables on the stack, on the other hand, can yield a reference manually using `&`, which is the address-of operator in that context.
-
-``` rust
-fn eq(xs: &int, ys: &int) -> bool { ... }
-
-let xs = ~34;
-let ys = 34;
-assert!(eq(xs, &ys));
-```
-
-A `&` that's applied to an rvalue is a shorthand for creating a temporary and taking its address.
-
-``` rust
-let explicit = Point {x: 3.0, y: 4.0};
-reference_taking_func(&explicit);
-
-let shorthand = &Point {x: 3.0, y: 4.0};
-reference_taking_func(shorthand);
-```
-
-A mutable reference `&mut` is one through which the pointed-to variable can be modified, provided the pointed-to variable is also mutable. When a mutable reference exists, no other kind of reference can exist, regardless of whether it's mutable or not. Compare this with a regular, immutable reference of which many can exist to the same variable, since the variable cannot be modified through it.
-
-There is also the `ref` keyword that can be used in a pattern. In this context, it is similar to C++'s ref-qualifier, which means bind by reference. This is required when matching on something that can't or we don't want to be taken by value.
-
-For example, we want to get a reference to the `Foo` in `&Option<Foo>`. Taking it by value would require moving ownership, but since the `Option` is borrowed we don't have ownership to begin with. Instead we bind the `foo` by reference which does away with the need to take ownership.
-
-``` rust
-let some = Some(foo);
-let borrowed = &some;
-
-match borrowed {
-  &Some(ref foo) => *foo
-}
-```
-
-There's also a language inconsistency where `"str"` is of type `&str`, but to get a type of `&&str` it doesn't suffice to simply do `&"str"`, because that _too_ is treated as `&str`, so _two_ are needed: `&&str`.
-
-In the following example, `contains_key` takes a value of type `&K` where `K` is the key type. The key type is `&str`, so `&K` is `&&str`. Because of the language inconsistency noted above, two `&`'s must prefix the string literal in order to yield a `&&str` to pass to `contains_key`.
-
-Issue [#10105] is a proposal to fix this. I've also read that [DST] will fix this as a consequence of its implementation.
-
-[#10105]: https://github.com/mozilla/rust/issues/10105
-[DST]: https://github.com/mozilla/rust/issues/6308
-
-``` rust
-use collections::Hashmap;
-
-// type inferred as HashMap<&str, &str>
-let mut items = HashMap::new();
-
-items.insert("key1", "value1");
-items.insert("key2", "value2");
-
-if !items.contains_key(& &"key1") {
-  println!("not present");
-}
-```
-
-# Parameterized Types
-
-Types can be parameterized similar to C++ class templates:
-
-``` rust
-enum List<T> {
-  Const(T, ~List<T>),
-  Nil
-}
-
-fn prepend<T>(xs: List<T>, value: T) -> List<T> {
-  Cons(value, ~xs)
-}
-```
-
-The compiler can infer the type of a list like this:
-
-``` rust
-let mut xs = Nil;
-xs = prepend(xs, 10);
-xs = prepend(xs, 20);
-xs = prepend(xs, 30);
-```
-
-However, it's also possible to explicitly annotate the types:
-
-``` rust
-let mut xs: List<int> = Nil::<int>;
-xs = prepend::<int>(xs, 10);
-xs = prepend::<int>(xs, 20);
-xs = prepend::<int>(xs, 30);
-```
-
-The list equality function can be updated for this generic list by adding a trait bound of `Eq` on the element type and adding `ref` annotations to avoid moving out the element types. In fact, we might as well implement the `Eq` trait for this generic list already:
-
-``` rust
-impl<T: Eq> Eq for List<T> {
-  fn eq(&self, ys: &List<T>) -> bool {
-    match (self, ys) {
-      (&Nil, &Nil) => true,
-      (&Cons(ref x, ~ref next_xs), &Cons(ref y, ~ref next_ys)) if x == y =>
-        next_xs == next_ys,
-      _ => false
-    }
-  }
-}
-```
-
-# Large Parameters and Return Values
-
-It's not necessary to worry about manually boxing large return values or arguments, they are essentially passed by reference if they are larger than the size of the machine's register. To quote the tutorial:
-
-> A large value is returned via a hidden output parameter, and the decision on where to place the return value should be left to the caller
-
-What this essentially means is that if for example function `foo()` returns `BigStruct`, the compiler will pass `foo()` a pointer to an uninitialized `BigStruct` in the local scope, something like:
-
-``` rust
-let x: BigStruct; // uninitialized
-foo(&x); // as if type: foo(_ret: &mut BigStruct)
-```
-
-This allows the caller to decide where to place the return value, for example:
-
-``` rust
-fn foo() -> (u64, u64, u64, u64, u64, u64) {
-  (5, 5, 5, 5, 5, 5)
-}
-
-let x = ~foo(); // allocates ~ box and writes u64's directly to it
-```
-
-# More on References
-
-References don't imply ownership, they're "borrowed." Reference parameters are often used to allow functions to work with all manner of different allocated types.
-
-``` rust
-fn distance(p1: &Point, p2: &Point) -> f64 {
-  let x = p1.x - p2.x;
-  let y = p1.y - p2.y;
-  sqrt(x * x + y * y)
-}
-```
-
-This can be used on stack-allocated variables by using the address-of operator `&` to borrow the local variable, to create an alias for it, i.e. another route to the same data. Managed and owned boxes, on the other hand, are automatically converted to references, in which case the "borrowed" metaphor is more like "lent out".
-
-If the contents of a variable are lent out then the variable can't be sent to another task. Also, no actions can be taken that may cause the borrowed value to be freed or to change its type. It's necessary to wait for the borrowed value to be returned, i.e. reference to go out of scope, before making full use of it again.
-
-Furthermore, the act of lending immutable pointers to variables freezes the objects they point to and prevents their mutation until the reference is destroyed (i.e. out of scope):
-
-``` rust
-let mut x = 5;
-{
-  let y = &x; // x is frozen
-}
-// x is unfrozen
-```
-
-Pointers and boxes are uniformly dereferenced with `*`. The pointer `borrowed` can be read as taking the reference of the mutable `value`, that is, the `mut` is part of the name. Note that the precedence levels of `*` and `.` are similar to those in C/C++, making for the awkward parenthesized dereferencing syntax. Unlike C/C++, there is no `->` shortcut. Instead, there is automatic pointer dereferencing through `*` and `[]`, which applies to any number of levels of indirection:
-
-``` rust
-let mut owned = ~20;
-let mut value = 30;
-let borrowed = &mut value;
-
-*owned = *borrowed + 100;
-*borrowed = 1000;
-
-let point = &@~Point { x: 10.0, y: 20.0 };
-println!("{:f}", point.x); // dereferences all three levels
-```
-
-# Vectors and Strings
-
-Fixed-size vectors are unboxed blocks of memory that owns the elements it contains.
-
-``` rust
-let fixed_size: [1, 2, 3];
-let five_zeroes: [int, ..5] = [0, ..5];
-```
-
-Unique vectors are dynamically-sized and have a destructor that cleans up the allocated memory on the heap. Unique vectors also own the elements they contain.
-
-``` rust
-let mut numbers = ~[1, 2, 3];
-numbers.push(4);
-
-let more_numbers: ~[int] = numbers;
-```
-
-Strings are represented as vectors of `u8` with a guarantee of containing a valid UTF-8 sequence.
-
-``` rust
-let mut string = ~"fo";
-string.push_char('o');
-```
-
-Slices point into blocks of memory and don't have ownership over the elements. Other vector types coerce to slices. An unadorned string literal is an immutable string slice:
-
-``` rust
-let xs = &[1, 2, 3];
-let ys: &[int] = xs;
-
-let three = [1, 2, 3];
-let zs: &[int] = three;
-
-let string = "foobar";
-let view: &str = string.slice(0, 3);
-```
-
-Mutable slices exist, but none for strings, since strings are a multi-byte encoding of Unicode code points, meaning they can't be freely mutated without the ability to alter the length, something that can't be done via slices, which simply provide a window.
-
-``` rust
-let mut xs = [1, 2, 3];
-let view = xs.mut_slice(0, 2);
-view[0] = 5;
-
-let ys: &mut [int] = &mut [1, 2, 3];
-```
-
-Vectors can be destructured using pattern matching:
-
-``` rust
-let numbers: &[int] = &[1, 2, 3];
-let score = match numbers {
-  [] => 0,
-  [a] => a * 10,
-  [a, b] => a * 6 + b * 4,
-  [a, b, c, ..rest] => a * 5 + b * 3 + c * 2 + rest.len() as int
-};
-```
-
-# Ownership Escape Hatches
-
-There are other ownership strategies that can be employed, such as task-local garbage collected and reference counted. Reference counted ownership [^cpp11_shared_ptr] is possible through `std::rc::Rc`:
-
-[^cpp11_shared_ptr]: This of course reminds me of C++11's [`std::shared_ptr`](http://en.cppreference.com/w/cpp/memory/shared_ptr).
-
-``` rust
-use std::rc::Rc;
-
-let x = Rc::new([1, 2, 3]);
-let y = x.clone(); // a new owner
-let z = x; // moves x into z
-
-assert_eq!(*z.borrow(), [1, 2, 3]);
-
-let mut a = Rc::new([1, 2]);
-a = z; // variable is mutable, not its contents
-```
-
-There are also garbage collected pointers via `std::gc::Gc` under ownership of a task-local garbage collector. These pointers allow the creation of cycles. Individual `Gc` pointers don't have destructors.
-
-``` rust
-use std::gc::Gc;
-
-// fixed-sized array allocated in garbage-collected box
-let x = Gc::new([1, 2, 3]);
-let y = x; // doesn't perform a move, unlike Rc
-let z = x;
-
-assert_eq!(*z.borrow(), [1, 2, 3]);
-```
-
-With shared ownership, mutability can't be inherited so the boxes are always immutable. Dynamic mutability is possible via types like `std::cell::Cell`. `Rc` and `Gc` types are not sendable, so they can't be used to share memory between tasks. This is instead possible via the `extra::arc` module.
-
-# Closures
-
-Regular, named functions don't close over their environment, but closures do.
-
-``` rust
-fn call_closure_with_ten(b: |int|) { b(10); }
-
-let captured_var = 20;
-let closure = |arg| println!("captured_var={}, arg={}", captured_var, arg);
-
-call_closure_with_ten(closure);
-```
-
-Stack closures are a specific kind of closure that directly accesses local variables in the enclosing scope, making them very efficient. To ensure that they don't outlive the current scope, they aren't first class, so they can't be assigned to values or returned from functions.
-
-``` rust
-let mut max = 0;
-[1, 2, 3].map(|x| if *x > max { max = *x })
-```
-
-Owned closures are written with `proc`, e.g. `proct(arg: int)`, and they own values that can be sent safely between processes. The values they close over are copied, and they become owned by the closure. These are particularly used in concurrent scenarios, particularly for spawning tasks.
-
-Despite there being different types of closures, functions that expect a `||` closure can accept any kind of closure provided they have the same arguments and return types. For this reason, higher-order functions should usually define their closure types as `||` so that callers can pass any kind of closure.
-
-# Methods
-
-Methods are functions that take `self` as the first argument, which is of the same type as the method's receiver. Implementations are used to define methods on specific types, such as structs and enums.
-
-``` rust
-struct Point {
-  x: f64,
-  y: f64
-}
-
-enum Shape {
-  Circle(Point, f64),
-  Rectangle(Point, Point)
-}
-
-impl Shape {
-  fn draw(&self) {
-    match *self {
-      Circle(p, f)      => draw_circle(p, f),
-      Rectangle(p1, p2) => draw_rectangle(p1, p2)
-    }
-  }
-}
-
-let s = Circle(Point {x: 1.0, y: 2.0}, 3.0);
-s.draw();
-```
-
-It's also possible to define static methods by omitting the `self` parameter. This is usually how constructors are defined:
-
-``` rust
-use std::f64::consts::PI;
-
-struct Circle { radius: f64 }
-
-impl Circle {
-  fn new(area: f64) -> Circle {
-    Circle { radius: (area / PI).sqrt() }
-  }
-}
-
-let c = Circle::new(42.5);
-```
-
-# Generics
-
-Generics are available in Rust which allows for generic functions to be defined, such as a `map` function. Generic functions in Rust have similar performance characteristics as templates in C++ because it performs _monomorphization_ which generates a separate copy of each generic function at each call site, which is specialized to the argument types, optimized specifically for them. This is similar to C++ template instantiation.
-
-``` rust
-fn map<T, U>(vector: &[T], function: |v: &T| -> U) -> ~[U] {
-  let mut accumulator = ~[];
-  for element in vector.iter() {
-    accumulator.push(function(element));
-  }
-  return accumulator;
-}
-```
-
-Type parameters can also be used to define generic types, structs, and enums.
-
-``` rust
-use std::hashmap::HashMap;
-type Set<T> = HashMap<T, ()>;
-// Set<int>
-
-struct Stack<T> {
-  elements: ~[T]
-}
-// Stack<int>
-
-enum Option<T> {
-  Some(T),
-  None
-}
-// Option<int>
-```
-
-# Traits
-
-Traits are similar to type classes in Haskell. They allow the expression of _bounded polymorphism_ which limits the possible types a type parameter could refer to. For example, the `clone` method which allows the copying of a type, isn't defined on all types because it can't be safely performed on all types, due to user-defined destructors for example. Traits allow to bound the polymorphism of a generic function by specifying that a type parameter must implement the `Clone` trait in this case to limit the types on which the function can work:
-
-``` rust
-fn head<T: Clone>(v: &[T]) -> T {
-  v[0].clone()
-}
-```
-
-There are three traits that are automatically derived and implemented for applicable types:
-
-* `Send` is for sendable types, which don't contain managed boxes, managed closures, or references.
-* `Freeze` is for constant/immutable types, types that don't contain anything intrinsically mutable.
-* `'static` is for non-borrowed types, which don't contain any references or any data whose lifetime is bound to a particular stack frame, or they are types where the only contained references have `'static` lifetime.
-
-The `Drop` trait can be used to define destructors via its method `drop`.
-
-``` rust
-struct TimeBomb {
-  explosivity: uint
-}
-
-impl Drop for TimeBomb {
-  fn drop(&mut self) {
-    for _ in range(0, self.explosivity) {
-      println("boom");
-    }
-  }
-}
-```
-
-Traits contain zero or more method signatures. In the following trait, it is said that `Printable` provides a `print` method with the given signature:
-
-``` rust
-trait Printable {
-  fn print(&self);
-}
-
-impl Printable for int {
-  fn print(&self) { println!("{:?}", *self) }
-}
-
-impl Printable for ~str {
-  fn print(&self) { println(*self) }
-}
-```
-
-It's also possible to define default method implementations which can later be overridden on a case-by-case basis:
-
-``` rust
-trait Printable {
-  fn print(&self) { println!("{:?}", *self) }
-}
-
-// these use default implementation
-impl Printable for int {}
-impl Printable for bool {}
-impl Printable for f32 {}
-
-// overrides default implementation
-impl Printable for ~str {
-  fn print(&self) { println(*self) }
-}
-```
-
-Traits may be parameterized by type variables.
-
-``` rust
-trait Seq<T> {
-  fn length(&self) -> uint;
-}
-
-impl<T> Seq<T> for ~[T] {
-  fn length(&self) -> uint {
-    self.len()
-  }
-}
-```
-
-The `Self` type parameter is available within the trait definition and is replaced with the eventual type `T` in the implementation:
-
-``` rust
-trait Eq {
-  fn equals(&self, other: &Self) -> bool;
-}
-
-impl Eq for int {
-  fn equals(&self, other: &int) -> bool {
-    *other == *self;
-  }
-}
-```
-
-Traits can also define static methods which are ultimately called with a `::` prefix as well:
-
-``` rust
-use std::f64::consts::PI;
-
-trait Shape {
-  fn new(area: f64) -> Self;
-}
-
-struct Circle { radius: f64 }
-
-impl Shape for Circle {
-  fn new(area: f64) -> Circle {
-    Circle { radius: (area / PI).sqrt() }
-  }
-}
-
-let c: Circle = Shape::new(area);
-```
-
-Type parameters can have multiple bounds by combining them with `+`. Method calls to bounded type parameters are statically dispatched:
-
-``` rust
-fn print_all<T: Printable + Clone>(printable_things: ~[T]) {
-  // can clone() then print()
-}
-```
-
-It's possible to have method calls to trait types that are dynamically dispatched. With this, it's possible to define a function that performs the `draw` method on type that implements `Drawable`, which itself provides the `draw` method. This particular method takes a borrowed pointer to an array of owned values that implement the `Drawable` trait. Such an array must be constructed by casting each element to `~Drawable`:
-
-``` rust
-fn draw_all(shapes: &[~Drawable]) {
-  for shape in shapes.iter() {
-    shape.draw()
-  }
-}
-
-draw_all([circle as ~Drawable, rectangle as ~Drawable])
-```
-
-The three storage classes enforce a set of traits that their contents must fulfill in order to be packaged up in a trait object for that storage class:
-
-* contents of `~owned` traits must fulfill the `Send` bound
-* contents of `@managed` traits must fulfill the `'static` bound
-* contents of `&reference` traits are not constrained by any bound
-
-Trait objects automatically fulfill their respective trait bounds. This can be overridden by specifying a list of bounds on the trait type, such as `~Trait:Send+Freeze` which indicates that contents must fulfill `Send` and `~Freeze`.
-
-Traits can inherit from other traits, so that the traits they inherit from are referred to as _supertraits_. This means that for any type to implement the derived trait, it must also implement the supertrait:
-
-``` rust
-trait Shape {
-  fn area(&self) -> f64;
-}
-
-trait Circle : Shape {
-  fn radius(&self) -> f64;
-}
-
-struct CircleStruct { center: Point, radius: f64 }
-
-impl Circle for CircleStruct {
-  fn radius(&self) -> f64 {
-    (self.area() / PI).sqrt()
-  }
-}
-
-impl Shape for CircleStruct {
-  fn area(&self) -> f64 {
-    PI * square(self.radius)
-  }
-}
-```
-
-It's also possible to call supertrait methods on subtrait-bound type parameter values. This is also possible from trait objects:
-
-``` rust
-fn radius_times_area<T: Circle>(c: T) -> f64 {
-  c.radius() * c.area()
-}
-
-let concrete = @CircleStruct { center: Point {x: 3f, y: 4f}, radius: 5f }
-let mycircle: @Circle = concrete as @Circle;
-let nonsense = mycircle.radius() * mycircle.area();
-```
-
-Some traits can be automatically derived, similar to Haskell. The full list is `Eq`, `TotalEq`, `Ord`, `TotalOrd`, `Encodable`, `Decodable`, `Clone`, `DeepClone`, `IterBytes`, `Rand`, `Default`, `Zero`, `FromPrimitive`, and `Show`:
-
-``` rust
-#[deriving(Eq)]
-struct Circle { radius: f64 }
-
-#[deriving(Rand, ToStr)]
-enum ABC { A, B, C }
-```
+The `Result<T, E>` type is similar to Haskell's `Either`, containing either `Ok` or `Err`. The `try!` macro makes it easier to work with `Result`, expanding to a `match` expression that returns the contained error or evaluates to the. This reminds me of the `Either` monad.
 
 # Modules
 
@@ -781,12 +44,14 @@ There exists a hierarchy of modules where the root is referred to as **crate roo
 
 Module contents are private by default. They can be made explicitly public with the `pub` qualifier. In fact, visibility restrictions are only applicable at module boundaries. On the other hand, `struct` fields are public by default and are made explicitly private with `priv`. Since visibility restrictions only apply at module boundaries, a private field of a `struct` defined within a module is itself accessible within that module:
 
+The `self` and `super` keywords can be used in module paths for disambiguation to refer to the current or parent scope.
+
 ``` rust
 mod farm {
   pub fn chicken() { ... }
 
   pub struct Farm {
-    priv chickens: ~[Chicken],
+    chickens: Vec<Chicken>,
     farmer: Human
   }
 
@@ -939,14 +204,308 @@ use std::prelude::*;
 #[no_implicit_prelude];
 ```
 
-# Named Lifetimes
+Attributes can be used to specify conditional compilation of code, crate names, disabling or enabling compiler features, and so on. The `cfg` attribute can test for configuration values passed by the rust compiler either implicitly or explicitly with the `--cfg` flag.
+
+``` rust
+// crate-wide attribute
+#![crate_attribute]
+
+// module-wide attribute
+#[module_attribute]
+
+#[cfg(target_os = "linux")]
+fn on_linux() {
+  println!("on linux")
+}
+
+#[cfg(not(target_os = "linux"))]
+fn not_on_linux() {
+  println!("not on linux")
+}
+```
+
+# Ownership
+
+An object's lifetime is determined by its owner, either a variable or a task-local garbage collector. Ownership is recursive so that mutability is inherited recursively and a destructor destroys the contained tree of owned objects. Variables are owners and destroy the contained object when they go out of scope.
+
+``` rust
+struct Foo { x: int, y: box int }
+
+{
+  // `a` is owner of struct and its fields
+  let a = Foo { x: 5, y: box 10 };
+}
+// `a` goes out of scope, destructor for y's `box int` is called
+
+// `b` is mutable, so the objects it owns are also mutable
+let mut b = Foo { x: 5, y: box 10 };
+b.x = 10
+```
+
+Notice that a structure may contain a mutable reference, so that even if the structure is immutable, the pointed-to value can be mutated. Naturally, the reference itself can't be changed since the structure is immutable.
+
+``` rust
+struct S1 {
+  b: int
+}
+
+struct S2<'a> {
+  a: &'a mut S1
+}
+
+let mut s1 = S1 { b: 56 };
+let s2 = S2 { a: &mut s1 };
+
+s2.a.b = 45;    // legal
+s2.a = &mut s1; // illegal
+```
+
+## Boxes
+
+Values are allocated on the stack by default, but they can also be _boxed_, i.e. allocated on the heap. Values are boxed with the `box` keyword and result in a value of type `Box<T>`. Box values can be dereferenced using the `*` operator, or they can be destructured by using the `box` keyword on the LHS.
+
+*[LHS]: Left-Hand Side
+
+``` rust
+enum List {
+  Cons(u32, Box<List>),
+  Nil
+}
+
+let list = Cons(1, box Cons(2, box Cons(3, box Nil)));
+```
+
+The `list` represents an owned tree of values.
+
+It's not necessary to worry about manually boxing large return values or arguments, they are essentially passed by reference if they are larger than the size of the machine's register. To quote the tutorial:
+
+> A large value is returned via a hidden output parameter, and the decision on where to place the return value should be left to the caller
+
+What this essentially means is that if for example function `foo()` returns `BigStruct`, the compiler will pass `foo()` a pointer to an uninitialized `BigStruct` in the local scope, something like:
+
+``` rust
+let x: BigStruct; // uninitialized
+foo(&x); // as if type: foo(_ret: &mut BigStruct)
+```
+
+This allows the caller to decide where to place the return value, for example:
+
+``` rust
+fn foo() -> (u64, u64, u64, u64, u64, u64) {
+  (5, 5, 5, 5, 5, 5)
+}
+
+let x = box foo(); // allocates result in a box and writes u64's directly to it
+```
+
+## Managed Boxes
+
+There are other ownership strategies that can be employed, such as task-local garbage collected and reference counted. Reference counted ownership [^cpp11_shared_ptr] is possible through `std::rc::Rc`:
+
+[^cpp11_shared_ptr]: This of course reminds me of C++11's [`std::shared_ptr`](http://en.cppreference.com/w/cpp/memory/shared_ptr).
+
+``` rust
+use std::rc::Rc;
+
+let x = Rc::new([1, 2, 3]);
+let y = x.clone(); // a new owner
+let z = x; // moves x into z
+
+assert_eq!(*z.borrow(), [1, 2, 3]);
+
+let mut a = Rc::new([1, 2]);
+a = z; // variable is mutable, not its contents
+```
+
+There are also garbage collected pointers via `std::gc::Gc` under ownership of a task-local garbage collector. These pointers allow the creation of cycles. Individual `Gc` pointers don't have destructors.
+
+``` rust
+use std::gc::Gc;
+
+// fixed-sized array allocated in garbage-collected box
+let x = Gc::new([1, 2, 3]);
+let y = x; // doesn't perform a move, unlike Rc
+let z = x;
+
+assert_eq!(*z.borrow(), [1, 2, 3]);
+```
+
+With shared ownership, mutability can't be inherited so the boxes are always immutable. Dynamic mutability is possible via types like `std::cell::Cell`. `Rc` and `Gc` types are not sendable, so they can't be used to share memory between tasks. This is instead possible via the `extra::arc` module.
+
+## Moving
+
+Moving in Rust is similar to [C++11 move semantics], where the "move" refers to moving ownership. Rust performs a shallow copy for parameter passing, assignment, and returning from functions. Performing such a shallow copy is treated by Rust as "moving ownership" of the value, so that the original source location can no longer be used unless it is reinitialized. A move can be avoided by cloning:
+
+[C++11 move semantics]: /notes/cpp#move-semantics
+
+``` rust
+let mut xs = Nil;
+let ys = xs;
+
+// error if attempt to use `xs`
+
+xs = Nil; // xs can be used again
+
+let x = box 5;
+let y = x.clone(); // y is a newly allocated box
+let z = x; // no new memory alloc'd, x can no longer be used
+```
+
+Mutability can be changed by moving it to a new owner:
+
+``` rust
+let r = box 13;
+let mut s = r; // box becomes mutable
+*s += 1;
+let t = s; // box becomes immutable
+```
+
+## Borrowing
+
+References don't imply ownership, they're "borrowed." Reference parameters are often used to allow functions to work with all manner of different allocated types.
+
+``` rust
+fn distance(p1: &Point, p2: &Point) -> f64 {
+  let x = p1.x - p2.x;
+  let y = p1.y - p2.y;
+  sqrt(x * x + y * y)
+}
+```
+
+This can be used on stack-allocated variables by using the address-of operator `&` to borrow the local variable, to create an alias for it, i.e. another route to the same data. Managed and owned boxes, on the other hand, are automatically converted to references, in which case the "borrowed" metaphor is more like "lent out".
+
+If the contents of a variable are lent out then the variable can't be sent to another task. Also, no actions can be taken that may cause the borrowed value to be freed or to change its type. It's necessary to wait for the borrowed value to be returned, i.e. reference to go out of scope, before making full use of it again.
+
+Furthermore, the act of lending immutable pointers to variables freezes the objects they point to and prevents their mutation until the reference is destroyed (i.e. out of scope):
+
+``` rust
+let mut x = 5;
+{
+  let y = &x; // x is frozen
+}
+// x is unfrozen
+```
+
+Pointers and boxes are uniformly dereferenced with `*`. The pointer `borrowed` can be read as taking the reference of the mutable `value`, that is, the `mut` is part of the name. Note that the precedence levels of `*` and `.` are similar to those in C/C++, making for the awkward parenthesized dereferencing syntax. Unlike C/C++, there is no `->` shortcut. Instead, there is automatic pointer dereferencing through `*` and `[]`, which applies to any number of levels of indirection:
+
+``` rust
+let mut owned = box 20;
+let mut value = 30;
+let borrowed = &mut value;
+
+*owned = *borrowed + 100;
+*borrowed = 1000;
+
+let point = box Point { x: 10.0, y: 20.0 };
+println!("{:f}", point.x);
+```
+
+## References
+
+The `&` symbol has multiple context-dependent meanings in Rust, as in C++ [^cpp_references]. Remembering that expressions are for constructing and patterns for destructuring, a `&` in a pattern _dereferences_ the expression being destructured. This can be useful to avoid having to manually dereference the variable within the body using `*`.
+
+For example, the `fold` function takes a folding operation in the form of a closure that is passed the accumulator and a reference `&T` to the current element, which means that within the body it would have to be manually dereferenced with `*`, and we can avoid that by specifying the `&` in the pattern.
+
+[^cpp_references]: In C++, an `&` on the LHS can be the ref-qualifier, i.e. _bind by reference_, and on the RHS it can be the address-of operator.
+
+*[RHS]: Right-Hand Side
+
+``` rust
+let manual  = v.iter().fold(0, |a, b| a + *b);
+let pattern = v.iter().fold(0, |a, &b| a + b);
+```
+
+It's also necessary when attempting to match on borrowed values. In this case, it reads as _dereference the variable then see if it matches the pattern_.
+
+``` rust
+let x = Some(5);
+let y = (&x, 2);
+
+match y {
+  (&Some(a), b) => a + b,
+  (_, a) => a
+}
+```
+
+A `&` in a function signature means that the parameter accepts a reference. Owned pointers `box` and types that implement the `Deref` trait are automatically converted to references when passed to such functions. Variables on the stack, on the other hand, can yield a reference manually using `&`, which is the address-of operator in that context.
+
+``` rust
+fn eq(xs: &int, ys: &int) -> bool { ... }
+
+let xs = box 34;
+let ys = 34;
+assert!(eq(xs, &ys));
+```
+
+A `&` that's applied to an rvalue is a shorthand for creating a temporary and taking its address.
+
+``` rust
+let explicit = Point {x: 3.0, y: 4.0};
+reference_taking_func(&explicit);
+
+let shorthand = &Point {x: 3.0, y: 4.0};
+reference_taking_func(shorthand);
+```
+
+A mutable reference `&mut` is one through which the pointed-to variable can be modified, provided the pointed-to variable is also mutable. When a mutable reference exists to an object, no other reference can exist to the same object, regardless of whether it's mutable or not. Compare this with a regular, immutable reference of which many can exist to the same variable, since the variable cannot be modified through it.
+
+There is also the `ref` keyword that can be used in a pattern. In this context, it is similar to C++'s ref-qualifier, which means bind by reference. This is required when matching on something that can't or we don't want to be taken by value. It can be used with `box` and `mut` as well.
+
+For example, we want to get a reference to the `Foo` in `&Option<Foo>`. Taking it by value would require moving ownership, but since the `Option` is borrowed we don't have ownership to begin with. Instead we bind the `foo` by reference which does away with the need to take ownership.
+
+``` rust
+let some = Some(foo);
+let borrowed = &some;
+
+match borrowed {
+  &Some(ref foo) => *foo
+}
+
+let mut tuple (box 5u, 3u);
+{
+  let (box ref mut i, _) = tuple;
+  *i = 3;
+}
+```
+
+There's also a language inconsistency where `"str"` is of type `&str`, but to get a type of `&&str` it doesn't suffice to simply do `&"str"`, because that _too_ is treated as `&str`, so _two_ are needed: `&&str`.
+
+In the following example, `contains_key` takes a value of type `&K` where `K` is the key type. The key type is `&str`, so `&K` is `&&str`. Because of the language inconsistency noted above, two `&`'s must prefix the string literal in order to yield a `&&str` to pass to `contains_key`.
+
+Issue [#10105] is a proposal to fix this. I've also read that [DST] will fix this as a consequence of its implementation.
+
+[#10105]: https://github.com/mozilla/rust/issues/10105
+[DST]: https://github.com/mozilla/rust/issues/6308
+
+``` rust
+use collections::Hashmap;
+
+// type inferred as HashMap<&str, &str>
+let mut items = HashMap::new();
+
+items.insert("key1", "value1");
+items.insert("key2", "value2");
+
+if !items.contains_key(& &"key1") {
+  println!("not present");
+}
+```
+
+## Lifetimes
+
+Objects have lifetimes which aid the borrow checker in enforcing valid borrowing. The compiler automatically sets the lifetimes. In the following example, the compiler may give `integer` lifetime `'i` and `ref_to_int` lifetime `'r` with type `&'i int` denoting that it's a reference type that points to an `int` of lifetime `'i`.
+
+``` rust
+let integer: Int = 5
+let ref_to_int: &int = &integer;
+```
 
 It's possible to give a lifetime a name in order to explicitly specify the lifetime of a returned reference. In the following case, the named lifetime `'r` is associated with the parameter `p: &Point`, this named lifetime is then also mentioned in the return type. What this means is that the returned reference will have the same lifetime as the passed in pointer parameter `p`. In effect, this means that the returned reference will remain valid as long as `p` itself remains valid.
 
 This is necessary because, generally it's only possible to return references derived from a parameter to the function, and named lifetimes explicitly specify which parameter that is. The lifetime is something that's implicitly passed in from the caller's context, just like the parameter.
 
 ``` rust
-struct Point {x: f64, y: f64}
+struct Point { x: f64, y: f64 }
 
 fn get_x<'r>(p: &'r Point) -> &'r f64 {
   &p.x
@@ -988,6 +547,22 @@ fn select<'r, T>(shape: Shape, threshold: f64, a: &'r T, b: &'r T) -> &'r T {
 }
 ```
 
+It's also necessary to specify explicit lifetimes in structures that contain references.
+
+``` rust
+struct Pair<'a, 'b> {
+  one: &'a mut int,
+  two: &'b mut int,
+}
+```
+
+The `static` keyword can be used to declare global scope constants. The special lifetime `'static` outlives all lifetimes and can be used to declare strings at the global level.
+
+``` rust
+static LANGUAGE: &'static str = "Rust";
+static THRESHOLD: int = 10;
+```
+
 It's also possible to use named lifetime notation to label control structures, allowing for breaking and continuing to specific locations.
 
 ``` rust
@@ -997,6 +572,621 @@ It's also possible to use named lifetime notation to label control structures, a
     if i == 9 { break 'h; }
     break 'g;
   }
+}
+```
+
+## Dropping
+
+Destructors are functions responsible for cleaning up resources used by an object that is no longer accessible. Objects are never accessible after their destructor has been called, so it's not possible to fail from accessing freed resources. Further, when a task fails, destructors of all objects in the task are called.
+
+The `box` keyword represents a unique handle for a memory allocation on the heap:
+
+``` rust
+{
+  let y = box 10; // allocated on the heap
+}
+// destructor frees heap memory as soon as `y` goes out of scope
+```
+
+# Collections
+
+## Arrays
+
+Fixed-size vectors are unboxed blocks of memory that owns the elements it contains.
+
+``` rust
+let fixed_size: [1, 2, 3];
+let five_zeroes: [int, ..5] = [0, ..5];
+```
+
+## Slices
+
+Slices point into blocks of memory and don't have ownership over the elements. Other vector types coerce to slices. An unadorned string literal is an immutable string slice:
+
+``` rust
+let xs = &[1, 2, 3];
+let ys: &[int] = xs;
+
+let three = [1, 2, 3];
+let zs: &[int] = three;
+
+let string = "foobar";
+let view: &str = string.slice(0, 3);
+```
+
+Mutable slices exist, but none for strings, since strings are a multi-byte encoding of Unicode code points, meaning they can't be freely mutated without the ability to alter the length, something that can't be done via slices, which simply provide a window.
+
+``` rust
+let mut xs = [1, 2, 3];
+let view = xs.mut_slice(0, 2);
+view[0] = 5;
+
+let ys: &mut [int] = &mut [1, 2, 3];
+```
+
+Vectors can be destructured using pattern matching:
+
+``` rust
+let numbers: &[int] = &[1, 2, 3];
+let score = match numbers {
+  [] => 0,
+  [a] => a * 10,
+  [a, b] => a * 6 + b * 4,
+  [a, b, c, ..rest] => a * 5 + b * 3 + c * 2 + rest.len() as int
+};
+```
+
+## Vectors
+
+Vectors are dynamically-sized and have a destructor that cleans up the allocated memory on the heap. Vectors own the elements they contain. They are represented with 3 words: a pointer to the data, its length, and its capacity representing how much memory is reserved for the vector.
+
+``` rust
+let mut numbers = vec![1, 2, 3];
+numbers.push(4);
+
+let more_numbers: Vec<int> = numbers;
+```
+
+## Strings
+
+Strings are represented as vectors of `u8` with a guarantee of containing a valid UTF-8 sequence. The `String` type represents a non-null terminated, growable string, while the `&str` type represents fixed-sized one.
+
+`String` is represented as a vector of bytes `Vec<u8>` that is guaranteed to always be a valid UTF-8 sequence. The `&str` type is a slice `&[u8]` that always points to a valid UTF-8 sequence and can be used as a view into String, as `&[T]` is a view into `Vec<T>`.
+
+String literals are stored in the static region of the program's memory, and so Rust treats static strings as slices which serve as views into the region of memory pertaining to the string: `&'static str`.
+
+``` rust
+let mut string = String::from_str("fo");
+string.push_char('o');
+
+// trimmed strings are slices into original string
+// no new allocation required
+let trimmed: &str = string.as_slice().trim_chars(&[',', ' ']);
+println!("Unused characters: {}", trimmed);
+
+let literal: &'static str = "testing";
+```
+
+Raw string literals are possible by surrounding the string with zero or more hashes `#` as needed to disambiguate from the string contents, and prefixed by an `r`.
+
+``` rust
+let pattern = r#"\d+"#;
+```
+
+Byte string literals are possible by prefixing the string with a `b` and are stored as `&'static [u8]`. A byte literal is a single ASCII character surrounded by single quotes and prefixed by `b`.
+
+Byte literals can have raw bodies by appending the `b` prefix with the `r` for raw string literals.
+
+``` rust
+let letter: u8 = b'A'; // 65u8
+let name: &'static [u8] = b"john";
+
+let raw_bytes = br#"test"#;
+```
+
+# Pattern Matching
+
+Pattern matching takes the place of regular switch statements. Pattern matches don't fall through. The pipe operator `|` can be used to combine multiple patterns into one arm. As in Haskell, matches must be exhaustive. Every case is separated by commas, unless block expressions are used. As in Haskell, pattern matching can be used to bind values. Pattern guards are added using `if` expressions:
+
+``` rust
+match number {
+  0     => println("zero"),
+  1 | 2 => println("one or two"),
+  3..10 => println("three to ten"),
+  _     => println("something else")
+}
+```
+
+The underscore `_` is a placeholder and two dots `..` acts as a wildcard pattern for matching the rest of the fields.
+
+``` rust
+match x {
+  Cons(_, box Nil) => fail!("singleton list"),
+  Cons(..)         => return,
+  Nil              => fail!("empty list")
+}
+```
+
+Patterns can also be bound to variables as in Haskell and Scala:
+
+``` rust
+match age {
+  a @ 0..20 => println!("{} years old", a),
+  _         => println!("older than 21")
+}
+```
+
+Pattern matching on structures can use the field name which creates a local varaible with that name [^haskell_named_field_puns].
+
+[^haskell_named_field_puns]: This is like Haskell's [named-field puns](/notes/haskell#named-field-puns).
+
+``` rust
+struct Test {
+  age: int,
+  apples: int
+}
+
+let Test { age, apples } = b;
+```
+
+# Control Structures
+
+The for loop is in the form of `for-in`; there is no explicit increment looping via for loops. The `loop` keyword denotes an infinite loop.
+
+# Structures
+
+Structures are laid out in memory the same as as they are in C. Structures are constructed similar to Go structures. Structures have inherited mutability. Structures can be pattern matched on to destructure their fields.
+
+``` rust
+struct Point {
+  x: f64,
+  y: f64
+}
+
+match mypoint {
+  Point { x, .. } => { println(x.to_str()) }
+}
+```
+
+# Enumerations
+
+Enumerations in Rust feel similar to algebraic datatypes in Haskell. Enumerations can be C-like, in which case they can optionally be given specific values. The specific values can be converted to an `int` using the cast operator `as`. Enumerations can define methods with the `impl` keyword as with structures. Enumerations variants can be structs as well:
+
+``` rust
+enum Shape {
+  Circle(Point, f64)
+  Rectangle(Point, Point)
+}
+
+enum Direction {
+  Left,
+  Right
+}
+
+enum Color {
+  Red = 0xff0000,
+  Green = 0x00ff00,
+  Blue = 0x0000ff
+}
+
+#[feature(struct_variant)]
+enum Shape {
+  Circle { center: Point, radius: f64 },
+  Rectangle { top_left: Point, bottom_right: Point }
+}
+```
+
+# Tuples
+
+Tuples are available and are most similar to Haskell's. **Tuple structs** behave like both structs and tuples. They're like tuples with names. Tuple structs with a single field are similar to Haskell newtypes and are often called the same thing in Rust. These provide a distinct type from the type they wrap. Newtypes' wrapped values can be extracted using the dereference operator `*`:
+
+``` rust
+let mytup: (int, int, f64) = (10, 20, 30.0)
+
+struct MyTup(int, int, f64);
+let mytup: MyTup = Mytup(10, 20, 30.0)
+
+struct GizmoId(int);
+let my_gizmo_id: GizmoId = GizmoId(10);
+let id_int: int = *my_gizmo_id;
+```
+
+# Functions
+
+Function definitions are similar to Scala's, with the type following the name of the parameter. The return type follows the parameter list as in Scala, but more like C++11's [alternative function syntax]. If the top-level block of the function produces an expression, the `return` statement may be omitted. Functions that return nothing return nil `()`, which can be omitted from the function declaration. However, ending the function with a semicolon is also equivalent to returning `()`. Function arguments can be destructured, but the patterns must be irrefutable:
+
+[alternative function syntax]: http://en.wikipedia.org/wiki/C++11#Alternative_function_syntax
+
+``` rust
+fn line(a: int, b: int, x: int) -> int { a * x + b }
+
+fn do_nothing_the_hard_way() -> () { return (); }
+fn do_nothing_the_easy_way() { }
+fn do_nothing_another_way(a: int) -> () { a; }
+
+fn first((value, _): (int, f64)) -> int { value }
+```
+
+In short, blocks such as `{ expr1; expr2 }` are considered a single expression and evaluate to the result of the last expression if it's not followed by a semicolon, otherwise the block evaluates to `()`.
+
+# Methods
+
+Methods are functions that take `self` as the first argument, which is of the same type as the method's receiver. Implementations are used to define methods on specific types, such as structs and enums.
+
+``` rust
+struct Point {
+  x: f64,
+  y: f64
+}
+
+enum Shape {
+  Circle(Point, f64),
+  Rectangle(Point, Point)
+}
+
+impl Shape {
+  // or fn draw(self: &Self)
+  fn draw(&self) {
+    match *self {
+      Circle(p, f)      => draw_circle(p, f),
+      Rectangle(p1, p2) => draw_rectangle(p1, p2)
+    }
+  }
+}
+
+let s = Circle(Point {x: 1.0, y: 2.0}, 3.0);
+s.draw();
+```
+
+It's also possible to define static methods by omitting the `self` parameter. This is usually how constructors are defined:
+
+``` rust
+use std::f64::consts::PI;
+
+struct Circle { radius: f64 }
+
+impl Circle {
+  fn new(area: f64) -> Circle {
+    Circle { radius: (area / PI).sqrt() }
+  }
+}
+
+let c = Circle::new(42.5);
+```
+
+# Closures
+
+Regular, named functions don't close over their environment, but closures do.
+
+``` rust
+fn call_closure_with_ten(b: |int|) { b(10); }
+
+let captured_var = 20;
+let closure = |arg| println!("captured_var={}, arg={}", captured_var, arg);
+
+call_closure_with_ten(closure);
+```
+
+Stack closures are a specific kind of closure that directly accesses local variables in the enclosing scope, making them very efficient. To ensure that they don't outlive the current scope, they aren't first class, so they can't be assigned to values or returned from functions.
+
+``` rust
+let mut max = 0;
+[1, 2, 3].map(|x| if *x > max { max = *x })
+```
+
+Owned closures are written with `proc`, e.g. `proc(arg: int)`, and they own values that can be sent safely between processes. The values they close over are copied, and they become owned by the closure. These are particularly used in concurrent scenarios, particularly for spawning tasks.
+
+Despite there being different types of closures, functions that expect a `||` closure can accept any kind of closure provided they have the same arguments and return types. For this reason, higher-order functions should usually define their closure types as `||` so that callers can pass any kind of closure.
+
+# Generics
+
+Types can be parameterized similar to C++ class templates:
+
+``` rust
+enum List<T> {
+  Const(T, Box<List<T>>),
+  Nil
+}
+
+fn prepend<T>(xs: List<T>, value: T) -> List<T> {
+  Cons(value, box xs)
+}
+```
+
+The compiler can infer the type of a list like this:
+
+``` rust
+let mut xs = Nil;
+xs = prepend(xs, 10);
+xs = prepend(xs, 20);
+xs = prepend(xs, 30);
+```
+
+However, it's also possible to explicitly annotate the types:
+
+``` rust
+let mut xs: List<int> = Nil::<int>;
+xs = prepend::<int>(xs, 10);
+xs = prepend::<int>(xs, 20);
+xs = prepend::<int>(xs, 30);
+```
+
+The list equality function can be updated for this generic list by adding a trait bound of `Eq` on the element type and adding `ref` annotations to avoid moving out the element types. In fact, we might as well implement the `Eq` trait for this generic list already:
+
+``` rust
+impl<T: Eq> Eq for List<T> {
+  fn eq(&self, ys: &List<T>) -> bool {
+    match (self, ys) {
+      (&Nil, &Nil) => true,
+      (&Cons(ref x, box ref next_xs), &Cons(ref y, box ref next_ys)) if x == y =>
+        next_xs == next_ys,
+      _ => false
+    }
+  }
+}
+```
+
+Generic functions in Rust have similar performance characteristics as templates in C++ because it performs _monomorphization_ which generates a separate copy of each generic function at each call site, which is specialized to the argument types, optimized specifically for them. This is similar to C++ template instantiation.
+
+``` rust
+fn map<T, U>(vector: &[T], function: |v: &T| -> U) -> Vec<U> {
+  let mut accumulator = Vec::new();
+  for element in vector.iter() {
+    accumulator.push(function(element));
+  }
+  return accumulator;
+}
+```
+
+Type parameters can also be used to define generic types, structs, and enums.
+
+``` rust
+use std::hashmap::HashMap;
+type Set<T> = HashMap<T, ()>;
+// Set<int>
+
+struct Stack<T> {
+  elements: Vec<T>
+}
+// Stack<int>
+
+enum Option<T> {
+  Some(T),
+  None
+}
+// Option<int>
+```
+
+# Traits
+
+Traits are similar to type classes in Haskell. They allow the expression of _bounded polymorphism_ which limits the possible types a type parameter could refer to. For example, the `clone` method which allows the copying of a type, isn't defined on all types because it can't be safely performed on all types, due to user-defined destructors for example. Traits allow to bound the polymorphism of a generic function by specifying that a type parameter must implement the `Clone` trait in this case to limit the types on which the function can work:
+
+``` rust
+fn head<T: Clone>(v: &[T]) -> T {
+  v[0].clone()
+}
+```
+
+There are three traits that are automatically derived and implemented for applicable types:
+
+* `Send` is for sendable types, which don't contain managed boxes, managed closures, or references.
+* `Freeze` is for constant/immutable types, types that don't contain anything intrinsically mutable.
+* `'static` is for non-borrowed types, which don't contain any references or any data whose lifetime is bound to a particular stack frame, or they are types where the only contained references have `'static` lifetime.
+
+Traits contain zero or more method signatures. In the following trait, it is said that `Printable` provides a `print` method with the given signature:
+
+``` rust
+trait Printable {
+  fn print(&self);
+}
+
+impl Printable for int {
+  fn print(&self) { println!("{:?}", *self) }
+}
+
+impl Printable for String {
+  fn print(&self) { println(*self) }
+}
+```
+
+It's also possible to define default method implementations which can later be overridden on a case-by-case basis:
+
+``` rust
+trait Printable {
+  fn print(&self) { println!("{:?}", *self) }
+}
+
+// these use default implementation
+impl Printable for int {}
+impl Printable for bool {}
+impl Printable for f32 {}
+
+// overrides default implementation
+impl Printable for String {
+  fn print(&self) { println(*self) }
+}
+```
+
+Traits may be parameterized by type variables.
+
+``` rust
+trait Seq<T> {
+  fn length(&self) -> uint;
+}
+
+impl<T> Seq<T> for Vec<T> {
+  fn length(&self) -> uint {
+    self.len()
+  }
+}
+```
+
+The `Self` type parameter is available within the trait definition and is replaced with the eventual type `T` in the implementation:
+
+``` rust
+trait Eq {
+  fn equals(&self, other: &Self) -> bool;
+}
+
+impl Eq for int {
+  fn equals(&self, other: &int) -> bool {
+    *other == *self;
+  }
+}
+```
+
+Traits can also define static methods which are ultimately called with a `::` prefix as well:
+
+``` rust
+use std::f64::consts::PI;
+
+trait Shape {
+  fn new(area: f64) -> Self;
+}
+
+struct Circle { radius: f64 }
+
+impl Shape for Circle {
+  fn new(area: f64) -> Circle {
+    Circle { radius: (area / PI).sqrt() }
+  }
+}
+
+let c: Circle = Shape::new(area);
+```
+
+Type parameters can have multiple bounds by combining them with `+`. Method calls to bounded type parameters are statically dispatched:
+
+``` rust
+fn print_all<T: Printable + Clone>(printable_things: Vec<T>) {
+  // can clone() then print()
+}
+```
+
+It's possible to have method calls to trait types that are dynamically dispatched. With this, it's possible to define a function that performs the `draw` method on type that implements `Drawable`, which itself provides the `draw` method. This particular method takes a borrowed pointer to an array of owned values that implement the `Drawable` trait. Such an array must be constructed by casting each element to `Box<Drawable>`:
+
+``` rust
+fn draw_all(shapes: &[Box<Drawable>]) {
+  for shape in shapes.iter() {
+    shape.draw()
+  }
+}
+
+draw_all([circle as Box<Drawable>, rectangle as Box<Drawable>])
+```
+
+The three storage classes enforce a set of traits that their contents must fulfill in order to be packaged up in a trait object for that storage class:
+
+* contents of `Box<owned>` traits must fulfill the `Send` bound
+* contents of `@managed` traits must fulfill the `'static` bound
+* contents of `&reference` traits are not constrained by any bound
+
+Trait objects automatically fulfill their respective trait bounds. This can be overridden by specifying a list of bounds on the trait type, such as `Box<Trait:Send+Freeze>` which indicates that contents must fulfill `Send` and `Box<Freeze>`.
+
+Traits can inherit from other traits, so that the traits they inherit from are referred to as _supertraits_. This means that for any type to implement the derived trait, it must also implement the supertrait:
+
+``` rust
+trait Shape {
+  fn area(&self) -> f64;
+}
+
+trait Circle : Shape {
+  fn radius(&self) -> f64;
+}
+
+struct CircleStruct { center: Point, radius: f64 }
+
+impl Circle for CircleStruct {
+  fn radius(&self) -> f64 {
+    (self.area() / PI).sqrt()
+  }
+}
+
+impl Shape for CircleStruct {
+  fn area(&self) -> f64 {
+    PI * square(self.radius)
+  }
+}
+```
+
+It's also possible to call supertrait methods on subtrait-bound type parameter values. This is also possible from trait objects:
+
+``` rust
+fn radius_times_area<T: Circle>(c: T) -> f64 {
+  c.radius() * c.area()
+}
+
+let concrete = @CircleStruct { center: Point {x: 3f, y: 4f}, radius: 5f }
+let mycircle: @Circle = concrete as @Circle;
+let nonsense = mycircle.radius() * mycircle.area();
+```
+
+Some traits can be automatically derived, similar to Haskell. The full list is `Eq`, `TotalEq`, `Ord`, `TotalOrd`, `Encodable`, `Decodable`, `Clone`, `DeepClone`, `IterBytes`, `Rand`, `Default`, `Zero`, `FromPrimitive`, and `Show`:
+
+``` rust
+#[deriving(Eq)]
+struct Circle { radius: f64 }
+
+#[deriving(Rand, ToStr)]
+enum ABC { A, B, C }
+```
+
+## Drop
+
+The `Drop` trait can be used to define destructors via its method `drop`. The global `drop` function also exists which essentially takes ownership of the passed value so that the moved variable's destructor---its `drop` method---is called by the end of the function scope.
+
+``` rust
+struct TimeBomb {
+  explosivity: uint
+}
+
+impl Drop for TimeBomb {
+  fn drop(&mut self) {
+    for _ in range(0, self.explosivity) {
+      println("boom");
+    }
+  }
+}
+```
+
+## Clone
+
+The `Clone` trait can be implemented to support copying of types via the `clone` method.
+
+``` rust
+#[deriving(Clone,Show)]
+struct Pair(Box<int>, Box<int>);
+
+fn main() [
+  let pair = Pair(box 1, box 2);
+  let cloned_pair = pair.clone();
+
+  drop(pair);
+
+  println!("clone: {}", cloned_pair);
+]
+```
+
+## Operator Overloading
+
+Most operators are implemented as functions and can be overloaded by implementing the [appropriate traits]. For example, the `Add` trait can be used to overload the `+` operator.
+
+[appropriate traits]: http://doc.rust-lang.org/core/ops/
+
+``` rust
+struct Point {
+  x: int,
+  y: int
+}
+
+impl Add<Point, Point> for Point {
+  fn add(&self, other: &Point) -> Point {
+    Point {x: self.x + other.x, y: self.y + other.y}
+  }
+}
+
+fn main() {
+  println!("{}", Point {x: 1, y: 0} + Point {x: 2, y: 3})
 }
 ```
 
@@ -1040,46 +1230,46 @@ Pipes are used for communication between tasks [^channels]. Each pipe is defined
 The following code creates a channel for sending and receiving `int` types. Note that `Chan` and `Port` are both sendable types that may be captured into task closures or transferred between them.
 
 ``` rust
-let (port, chan): (Port<int>, Chan<int>) = Chan::new();
+let (tx, rx): (Sender<int>, Receiver<int>) = comm::channel();
 
 spawn(proc() {
   let result = expensive_computation();
-  chan.send(result);
+  tx.send(result);
 });
 
 other_expensive_computation();
-let result = port.recv();
+let result = rx.recv();
 ```
 
-A regular `Chan` and `Port` created by `Chan::new` can't be used by more than one task. Attempting to do so leads to an error, since the first task to use it becomes its owner. Instead it's possible to use a `SharedChan` by calling `clone` on the endpoint.
+A regular `Chan` and `Port` created by `comm::channel` can't be used by more than one task. Attempting to do so leads to an error, since the first task to use it becomes its owner. Instead it's possible to use a `SharedChan` by calling `clone` on the endpoint.
 
 ``` rust
-let (port, chan) = Chan::new();
+let (tx, rx) = comm::channel();
 
 for init_val in range(0u, 3) {
   // create a SharedChan
-  let child_chan = chan.clone();
+  let child_rx = tx.clone();
 
   spawn(proc() {
-    child_chan.send(expensive_computation(init_val));
+    child_rx.send(expensive_computation(init_val));
   });
 }
 
-let result = port.recv() + port.recv() + port.recv();
+let result = rx.recv() + rx.recv() + rx.recv();
 ```
 
 The above example is contrived and could've been done with three separate channels:
 
 ``` rust
-let ports = vec::from_fn(3, |init_val| {
-  let (port, chan) = Chan::new();
+let rxs = vec::from_fn(3, |init_val| {
+  let (tx, rx) = comm::channel();
   spawn(proc() {
-    chan.send(some_expensive_computation(init_val));
+    tx.send(some_expensive_computation(init_val));
   });
-  port
+  rx
 });
 
-let result = ports.iter().fold(0, |accum, port| accum + port.recv() );
+let result = rxs.iter().fold(0, |accum, rx| accum + rx.recv() );
 ```
 
 ## Futures
@@ -1102,18 +1292,18 @@ When wanting to share immutable data between tasks, it may be expensive to use a
 use sync::Arc;
 
 fn main() {
-  let big_data = ~[1, 2, 3, 4, 5];
+  let big_data = vec![1, 2, 3, 4, 5];
   let data_arc = Arc::new(big_data);
 
   for num in range(1u, 10) {
-    let (port, chan) = Chan::new();
+    let (tx, rx) = comm::channel();
 
     // send arc
-    chan.send(data_arc.clone());
+    tx.send(data_arc.clone());
 
     spawn(proc() {
       // receive arc
-      let local_arc : Arc<~[f64]> = port.recv();
+      let local_arc : Arc<Vec<f64>> = rx.recv();
 
       // data pointed to by arc
       let task_data = local_arc.get();
@@ -1149,7 +1339,7 @@ assert!(result.is_err());
 A `DuplexStream` can be used to both send and receive from one task to another. The following code creates a task that continually receives a `uint` and sends it back converted to a string.
 
 ``` rust
-fn stringifier(channel: &DuplexStream<~str, uint>) {
+fn stringifier(channel: &DuplexStream<String, uint>) {
   let mut value: uint;
   loop {
     value = channel.recv();
@@ -1165,7 +1355,7 @@ spawn(proc() {
 });
 
 from_child.send(22);
-assert!(from_child.recv() == ~"22");
+assert!(from_child.recv() == box "22");
 ```
 
 # Iterators
@@ -1187,5 +1377,449 @@ Iterators offer a generic conversion to containers with the `collect` adaptor. T
 
 ``` rust
 let xs = [1, 2, 3, 4];
-let ys = xs.rev_iter().skip(1).map(|&x| x * 2).collect::<~[int]>();
+let ys = xs.rev_iter().skip(1).map(|&x| x * 2).collect::<Vec<int>>();
 ```
+
+# Macros
+
+Rust has support for advanced [hygienic macros]. Macros are defined using the `macro_rules!` syntax extension which is followed by the macro name. Its body consists of pattern matching cases, where the LHS is the macro invocation syntax (how macro is called) and the RHS is the macro transcription syntax (what macro expands to).
+
+The macro definition can be surrounded by parentheses, brackets, or braces. Regardless of what was used in the definition, the macro can be invoked using either one as well, such as `vec![]` or `vec!()`. By convention, braces are used for blocks and parentheses for one-liners.
+
+[hygienic macros]: http://en.wikipedia.org/wiki/Hygienic_macro
+
+The macro invocation syntax must be surrounded by parentheses and the parentheses, brackets, or braces contained within must be balanced. Everything contained in the parentheses that isn't prefixed by `$` is taken literally, so that the same thing must be repeated at the call-site in order to match.
+
+``` rust
+// the following
+macro_rules! my_macro {
+  ($x:ident verbatim $e:expr) => {}
+}
+
+// means it could be invoked as
+my_macro!(i verbatim 2+2);
+```
+
+Items prefixed by `$` are ways to refer to different types of syntax such as identifiers, expressions, types, and so on. The `$` is followed by a name to give it within the transcription syntax body followed by the fragment specifier.
+
+Designator  Type
+----------- -----
+`block`     code block
+`expr`      expressions
+`ident`     identifiers
+`item`      [crate component](http://doc.rust-lang.org/rust.html#items)
+`matchers`  LHS of `=>` in macro
+`pat`       patterns
+`path`      module path
+`stmt`      statement
+`tt`        RHS of `=>` in macro
+`ty`        types
+
+The `tt` specifier seems to refer to token tree, and it seems to refer to code within a block's delimiters `{}`. It's used for implementing macros that are [called with code blocks], reminiscent of the removed do-notation syntax.
+
+[called with code blocks]: https://github.com/rust-lang/rust/pull/12497
+
+``` rust
+macro_rules! expr( ($e: expr) => { $e } )
+
+macro_rules! spawn {
+  ($($code: tt)*) => {
+    expr!(spawn(proc() { $($code)* } ))
+  }
+}
+
+spawn! {
+  info!("stmt");
+};
+```
+
+The patterns may also contain the syntax `$(...)*` or `$(...)+` which expresses that the pattern contained must appear zero or more times, or one or more times, respectively---as in regular expressions. This special syntax may be also specify a separator token after the closing parenthesis but before the match-type discriminator, i.e. `$(...),*` would be repeatable and comma-separated.
+
+``` rust
+// from RFC 163: https://github.com/rust-lang/rfcs/pull/163
+// returns true if the expression matches the pattern
+macro_rules! matches {
+  ($expression: expr, $($pattern:pat)|*) => (
+    match $expression {
+      $($pattern: pat)|+ => true,
+      _ => false
+    }
+  );
+}
+
+let input: &str = ...;
+if input.len() >= 2 &&
+   matches!(input.char_at(0), '+' | '-') &&
+   matches!(input.char_at(1), '0'..'9') {
+  // parse signed number
+}
+```
+
+Macros may expand to expressions, items, or statements depending on the arguments it was invoked with and the location at which it was invoked.
+
+The transcription syntax body must be enclosed by delimiters---parentheses, brackets, or braces---which are ignored. The contents of the delimiters must contain regular Rust syntax or interpolated fragments.
+
+``` rust
+macro_rules! min {
+  ($x:expr) => {
+    $x
+  };
+  ($x:expr, $($y:expr),+) => {
+    std::cmp::min($x, min!($(y),+))
+  }
+}
+
+println!("{}", min!(5u, 2u * 3, 4u));
+```
+
+## Syntax Extensions
+
+There are a variety of built-in syntax extensions which expand to expressions with values.
+
+Extension      Purpose
+---------      -------
+`format!`      format data into a string
+`env!`         lookup env-var at compile-time
+`file!`        path to file being compiled
+`stringify!`   pretty-print Rust expression
+`include!`     include expression in given file
+`include_str!` include contents of file as string
+`include_bin!` include contents of file as binary
+`info!`        print diagnostics. also `error!`, `warn!`, and `debug!`
+
+# Foreign Function Interface
+
+The `extern` block can be used to list function signatures in a foreign library, and is usually paired with a `link` attribute to link against the library in question. Foreign functions are considered unsafe, so they must be wrapped in `unsafe`, which essentially tells the compiler that everything within is truly safe.
+
+``` rust
+#[link(name = "snappy")]
+extern {
+  fn snappy_max_compressed_length(
+    source_length: size_t
+  ) -> size_t;
+  fn snappy_compress(
+    input: *const u8,
+    input_length: size_t,
+    compressed: *mut u8,
+    compressed_length: *mut size_t
+  ) -> c_int;
+}
+```
+
+To avoid requiring `unsafe` blocks at the call-site, safe wrappers are usually created with native Rust types.
+
+``` rust
+pub fn compress(src: &[u8]) -> Vec<u8> {
+  unsafe {
+    let srclen = src.len() as size_t;
+    let psrc = src.as_ptr();
+
+    let mut dstlen = snappy_max_compressed_length(srclen);
+    let mut dst = Vec::with_capacity(dstlen as uint);
+    let pdst = dst.as_mut_ptr();
+
+    snappy_compress(psrc, srclen, pdst, &mut dstlen);
+    dst.set_len(dstlen as uint);
+    dst
+  }
+}
+```
+
+Rust functions can be made available to C code, such as for callbacks, by marking them as `extern` with the correct calling convention.
+
+``` rust
+extern fn callback(a: i32) {
+  println!("I'm called from C with the value {0}", a);
+}
+
+#[link(name = "extlib")]
+extern {
+  fn register_callback(cb: extern fn(i32)) -> i32;
+  fn trigger_callback();
+}
+
+unsafe {
+  register_callback(callback);
+  trigger_callback();
+}
+```
+
+The `link` attribute can take a `kind` argument that specifies the type of library being linked. If the `kind` argument is not provided, it is assumed to be dynamic. Otherwise, the `kind` may be `static` or, if on OS X, `framework`.
+
+Linked static libraries are included within the output crate. Dynamic dependencies (and OS X frameworks), however, aren't linked until the rlib is included in the final target (e.g. binary).
+
+``` rust
+#[link(name = "dependency", kind = "static")]
+#[link(name = "CoreFoundation", kind = "framework")]
+```
+
+Global variables must also be declared within `extern` blocks before they're accessible. They may also be marked as `mut`.
+
+``` rust
+#[link(name = "readline")]
+extern {
+  static rl_readline_version: libc::c_int;
+  static mut rl_prompt: *const libc::c_char;
+}
+
+println!("readline version {}", rl_readline_version as int);
+
+">> ".with_c_str(|buf| {
+  unsafe { rl_prompt = buf; }
+  // get a line
+  unsafe { rl_prompt = ptr::null(); }
+})
+```
+
+The `extern` keyword can also take as argument a calling convention to use with the contained function declarations. The `system` calling convention selects the appropriate calling convention for interoperating with the target's libraries, e.g. `stdcall` on x86 or `C` on x86_64.
+
+``` rust
+#[link(name = "kernel32")]
+extern "stdcall" {
+  fn SetEnvironmentVariableA(n: *const u8, v: *const u8) -> libc::c_int;
+}
+```
+
+Structures are guaranteed to be compatible with the platform's representation in C. Since strings aren't null terminated, the `c_str::to_c_str` function is used to null-terminate them.
+
+# Unsafe
+
+The `unsafe` blocks are mainly used for dereferencing raw pointers, calling FFI functions, casting types in a bitwise manner using `transmute`, and inline assembly.
+
+*[FFI]: Foreign Function Interface
+
+There are two additional raw pointer types that are an approximation of pointer types in C, namely `*const T` which is an approximation of `const T*` and `*mut T` is an approximation of `T*`.
+
+Rust       C
+-----      --
+`*const T` `const T*`
+`*mut T`   `T*`
+
+Rust pointer types aren't guaranteed to not be null or even to point to valid memory, nor do they also don't implement RAII for automatic resource management, like `Box`. Raw pointers are considered plain-old-data, and don't have a notion of move ownership so that Rust can't protect against bugs like use-after-free. Raw pointers are also considered sendable, allowing them to be access from multiple concurrent threads without synchronization.
+
+*[RAII]: Resource Allocation Is Initialization
+
+Dereferencing raw pointers is only possible within `unsafe` blocks, since it may result in crashes. Pointer arithmetic also needs to be within `unsafe` blocks. Creating a raw pointer or converting one to an integer is not unsafe.
+
+At run-time, raw pointers `*` and references `&` pointing to the same data have identical representations. A `&T` reference implicitly coerces to raw pointer `*const T` in safe code, and can even be made explicit as `value as *const T`.
+
+``` rust
+// explicit
+let i: u32 = 1;
+let p_imm: *const u32 = &i as *const u32;
+
+// implicit
+let mut m: u32 = 2;
+let p_mut: *mut u32 = &mut m;
+```
+
+However, the reverse isn't true, since a reference `&` is always valid, but a `*const T` may not be, since the pointed object has to be a valid instance of the correct type and it must satisfy the aliasing and mutability laws of references. Raw pointers can be converted back to references by using the `&*p` syntax where `p` must be a pointer.
+
+``` rust
+unsafe {
+  let ref_imm: &u32 = &*p_imm;
+  let ref_mut: &mut u32 = &mut *p_mut;
+}
+```
+
+Inline assembly is possible via the `asm!` macro which requires the `asm` feature and must be within an `unsafe` block. The template parameter is the only one that is required.
+
+``` rust
+asm!(template
+   : output
+   : input
+   : clobbers
+   : options);
+```
+
+Input and output operands consist of `constraint(expr)` [as in GCC].
+
+[as in GCC]: https://gcc.gnu.org/onlinedocs/gcc/Constraints.html
+
+``` rust
+asm!("add $2, $0"
+   : "=r"(c)
+   : "0"(a), "r"(b)
+   );
+```
+
+Clobbers are used to list registers that may have been modified by the assembly code. If the code changes the condition code register or modifies memory, `cc` and `memory` should be specified in the clobbers list respectively.
+
+Inputs and outputs are omitted from the following code as they're not required by the assembly code, and no whitespace is necessary between the colon delimiters.
+
+``` rust
+// put 0x200 in eax
+asm!("mov $$0x200, %eax" ::: "eax");
+```
+
+The final parameter is a list of options to apply to the assembly code, such as `volatile`, `alignstack` to align the stack, or `intel` to use Intel syntax.
+
+The standard library `std` can be avoided by using the `no_std` attribute. Further, the entry point can be modified by applying the `start` attribute to what will be the entry point.
+
+``` rust
+#![no_std]
+
+extern crate libc;
+
+#[start]
+fn start(_argc: int, _argv: *const *const *u8) -> int {
+  0
+}
+```
+
+Alternatively, the compiler-inserted `main` shim can be disabled and overridden using the `no_main` attribute. Another one must then be provided with the correct name and bypassing compiler name mangling.
+
+``` rust
+#![no_std]
+#![no_main]
+
+extern crate libc;
+
+#[no_mangle]
+pub extern fn main(_argc: int, _argv: *const *const *u8) -> int {
+  0
+}
+```
+
+There are also two functions that are normally provided by the standard library must de defined. The `stack_exhausted` function is called whenever a stack overflow is detected, and the `eh_personality` function is used by the failure mechanisms of the compiler.
+
+The [`libcore`](http://doc.rust-lang.org/core/) library provides the minimum necessary functionality for writing idiomatic Rust.
+
+Lang items are pluggable operations that aren't hard-coded into the language but instead implemented in libraries. The `lang` attribute is used to inform the compiler of a given implementation.
+
+The [`transmute`] function is essentially like C's [`reinterpret_cast`]. Both types must have the same size and alignment.
+
+[`transmute`]: http://doc.rust-lang.org/core/intrinsics/ffi.transmute.html
+[`reinterpret_cast`]: http://en.cppreference.com/w/cpp/language/reinterpret_cast
+
+# Comments
+
+Comments are available in single and multi-line variants as in C. Single line comments with three slashes `///` and multi-line comments with one extra asterisk `/**` are interpreted as documentation
+
+# Testing
+
+Test functions are marked with the `test` attribute and use the `assert!` macro for asserting conditions. Test functions must not have any arguments or return values. A test is considered successful if the function returns, and fails if the test fails through `fail!`, `assert`, or any other means.
+
+``` rust
+fn return_two() -> int { 2  }
+
+#[test]
+fn return_two_test() {
+  let x = return_two();
+  assert!(x == 2);
+}
+```
+
+For tests to be run, the crate has to be compiled with the `--test` flag. The resulting executable will then run all tests.
+
+``` bash
+$ rustc --test foo.rs
+$ ./foo
+running 1 test
+test return_two_test ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
+```
+
+The `ignore` attribute can be used to specify that a test should not be run. The existence of the test will be noted in the runner's output. The `ignore` attribute can take a configuration value as predicate, to ignore a given test depending on a configuration value.
+
+``` rust
+#[ignore(cfg(target_os = "win32"))]
+#[test]
+fn linux_test() {}
+```
+
+Tests that are intended to fail can be annotated with the `should_fail` attribute.
+
+The test runner can take as argument a regular expression used to run the matching tests, and the `--ignored` flag can tell the runner to only run the ignored tests.
+
+It's also possible to benchmark functions using the `bench` attribute. Benchmarks are compiled along with tests when compiled with the `--test` flag. Benchmark functions take as parameter a mutable reference to type `test::Bencher`. Setup should happen at the beginning of the function, and the actual code to be benchmarked should occur within a closure passed to `test::Bencher`'s `iter` method.
+
+``` rust
+#[bench]
+fn bench_sum_1024_ints(b: &mut Bencher) {
+  let v = Vec::from_fn(1024, |n| n); // setup
+  b.iter(|| v.iter().fold(0, |old, new| old + *new))
+}
+```
+
+If measuring throughput, the `bytes` field of the `Bencher` can be set to the bytes consumed/produced in each iteration.
+
+``` rust
+#[bench]
+fn initialize_vector(b: &mut Bencher) {
+  b.iter(|| Vec::from_elem(1024, 0u64));
+  b.bytes = 1024 * 8;
+}
+```
+
+The `--bench` flag must be passed to the compiled test-runner to run the benchmarks.
+
+``` bash
+$ rustc mytests.rs -O --test
+$ mytests --bench
+
+running 2 tests
+test bench_sum_1024_ints ... bench: 709 ns/iter (+/- 82)
+test initialise_a_vector ... bench: 424 ns/iter (+/- 99) = 19320 MB/s
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 2 measured
+```
+
+It's possible that the optimizer might optimize away what is being measured. One way to avoid this is to have the closure return a value or to wrap the contents in `test::black_box`, which forces the optimizer to consider any argument used. Larger values can be passed by reference to `black_box` for efficiency.
+
+The testsuite supports ratcheting against a metrics file, which basically compares benchmark results with previously saved results and considers it a regression if the results are worse by a certain noise value. This is possible through the `--save-metrics=file.json` parameter to save the results, and the `--ratchet-metrics=file.json` parameter to ratchet the results against those saved in the specified file.
+
+# Cargo
+
+[Cargo] is the package manager for Rust, which actually reminds me a lot of Haskell's [Cabal]. The package configuration is defined in a `Cargo.toml`{.path} file which is written in [TOML] format. The TOML file [contains] a `package` section which establishes the project's metadata. A `[[bin]]` section can also be created to specify that the target is to be a binary, as well as information pertaining to it, such as its name.
+
+[Cargo]: http://crates.io/
+[TOML]: https://github.com/toml-lang/toml
+[Cabal]: http://www.haskell.org/cabal/
+[contains]: http://crates.io/manifest.html
+
+``` ini
+[package]
+
+name = "hello_world"
+version = "0.1.0"
+authors = [ "someone@example.com" ]
+
+[[bin]]
+
+name = "hello_world"
+```
+
+The project can then be built using the `build` command.
+
+``` bash
+$ cargo build
+   Compiling hello_world v0.1.0 (file:/home/yourname/projects/hello_world)
+$ ./target/hello_world
+Hello, world!
+```
+
+Dependencies may be expressed by adding sections of the form `[dependency.name]` with a property of type `git` or `path` with the appropriate path.
+
+``` ini
+[dependencies.color]
+
+git = "https://github.com/bjz/color-rs"
+```
+
+# Printing
+
+Use the `print!`, `println!`, and `write!` macros to print strings in a `printf`-like manner. If just printing an actual string, then just use the direct functions `print` and `println`. The `format!` macro also exists for creating a `String` with a specific format. See the docs for [`std::fmt`](http://static.rust-lang.org/doc/master/std/fmt/index.html) for more information.
+
+# Input
+
+Simple input can be achieved using the `io::stdin()` function to retrieve a [`BufferedReader`] which has functions such as `read_line()`.
+
+[`BufferedReader`]: http://doc.rust-lang.org/std/io/struct.BufferedReader.html
+
+``` rust
+let input = io::stdin().read_line().ok().expect("failed to read line");
+println!("{}", input);
+```
+
