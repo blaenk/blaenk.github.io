@@ -533,6 +533,20 @@ var reversed = sorted(names) { $0 > $1 } // trailing closure
 var reversed = sorted(names, >) // operator functions
 ```
 
+The `@auto_closure` attribute can be used to specify that a closure argument should be taken as a closure even if it's not within braces.
+
+``` swift
+func myassert(predicate: @auto_closure () -> Bool) {
+  #if !NDEBUG
+    if predicate() {
+      abort()
+    }
+  #endif
+}
+
+myassert(someExpensiveComputation() != 42)
+```
+
 # Enumerations
 
 Enumerations may provide computed properties, instance methods, initializers, be extended by extensions, and adopt protocols.
