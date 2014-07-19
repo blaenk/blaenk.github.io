@@ -54,7 +54,7 @@ Clojure AST structures can be deserialized into Clojure structures using the `re
 
 The reader allows for different syntax to make code more concise. For example, evaluation of a form can be suppressed by prefixing it with a quote `'`. Anonymous function literals can be defined with `#()`.
 
-# Scalar Literals
+## Scalar Literals
 
 Characters are denoted by a blackslash, as in `\c`, and they natively support Unicode. It's also possible to use special characters such as `\n` would be used in strings, but individually:
 
@@ -165,7 +165,7 @@ Commas are considered whitespace by the reader. Whether to use them or not is a 
 (create-user {:name user, :email email})
 ```
 
-## Collection {#collection-literals}
+## Collections {#collection-literals}
 
 There are literals for lists, vectors, maps, and sets. Note that since lists denote calls in Clojure, it's necessary to quote them to prevent their evaluation as a call.
 
