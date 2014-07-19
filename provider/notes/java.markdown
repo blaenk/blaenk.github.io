@@ -22,6 +22,12 @@ These notes are a recap of Java and also cover Java 8.
 
 * toc
 
+# JVM
+
+Java is an interpreted language. Java code is compiled to highly optimized bytecode which is run by the JVM. HotSpot provides a Just-in-Time (JIT) compiler for Java bytecode. However, this doesn't mean that the entire Java program is compiled into executable code, which would be too complicated since it requires many run-time checks that can only be performed at run-time. Instead, the JIT compiler compiles parts of the program as it sees fit.
+
+*[JIT]: Just-in-Time
+
 # Primitives
 
 Java doesn't support unsigned integers. The `double` floating-point type is more commonly used than `float` because all of the standard library's math functions use doubles. The `char` can hold unsigned 16-bit values and uses UTF-16.
