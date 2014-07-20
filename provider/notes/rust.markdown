@@ -323,14 +323,45 @@ There are also garbage collected pointers via `std::gc::Gc` under ownership of a
 use std::gc::Gc;
 
 // fixed-sized array allocated in garbage-collected box
-let x = Gc::new([1, 2, 3]);
+let x = box(GC) [1, 2, 3];
 let y = x; // doesn't perform a move, unlike Rc
 let z = x;
 
 assert_eq!(*z.borrow(), [1, 2, 3]);
 ```
 
-With shared ownership, mutability can't be inherited so the boxes are always immutable. Dynamic mutability is possible via types like `std::cell::Cell`. `Rc` and `Gc` types are not sendable, so they can't be used to share memory between tasks. This is instead possible via the `extra::arc` module.
+## Cells
+
+Mutability can't be inherited when shared ownership is involved, since the contained values may be multiply-aliased, so boxes are always immutable and the contained values can only be borrowed as shared references, not mutable references.
+
+However, dynamic mutability is possible via types like `Cell` and `RefCell` where freezing is handled via dynamic checks which can fail at run-time. Specifically, `Cell` is for types that implement `Copy`, and `RefCell` is for all others.
+
+`Rc` and `Gc` types are not sendable, so they can't be used to share memory between tasks. This is instead possible via the `extra::arc` module.
+
+``` rust
+let shared_map: Rc<RefCell<_>> = Rc::new(RefCell::new(HashMap::new()));
+shared_map.borrow_mut().insert("africa", 92388i);
+shared_map.borrow_mut().insert("kyoto", 11837i);
+shared_map.borrow_mut().insert("piccadilly", 11826i);
+```
+
+A `Cell` may also be used to hide mutability for operations that appear to be immutable. A good example of this is `Rc` whose `clone()` method must increment the reference count, but `clone` is not expected to change the source value, which is [why it takes] `&self` and not `&mut self`. This can be reconciled by storing the reference count in a `Cell`.
+
+[why it takes]: http://doc.rust-lang.org/std/clone/trait.Clone.html
+
+``` rust
+struct Rc<T> { ptr: *mut RcBox<T> }
+struct RcBox<T> { value: T, refcount: Cell<uint> }
+
+impl<T> Clone for Rc<T> {
+  fn clone(&self) -> Rc<T> {
+    unsafe {
+      (*self.ptr).refcount.set((*self.ptr).refcount.get() + 1);
+      Rc { ptr: self.ptr }
+    }
+  }
+}
+```
 
 ## Moving
 
