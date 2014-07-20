@@ -36,46 +36,47 @@ Nearly every statement in Rust is an expression that yields a value, but this ca
 
 The `Result<T, E>` type is similar to Haskell's `Either`, containing either `Ok` or `Err`. The `try!` macro makes it easier to work with `Result`, expanding to a `match` expression that returns the contained error or evaluates to the. This reminds me of the `Either` monad.
 
+Types are categorized into _kinds_ based on various properties of the components of the type.
+
+* `Send` is for types that can be safely sent between tasks. Includes scalars, owning pointers, owned closures, and structural types containing only other owned types. All `Send` types are `'static`
+* `Share` for types that are thread-safe
+* `Copy` is for types that consist of Plain Old Data. Includes scalars, immutable references, and structural types containing other `Copy` types
+* `'static` is for types that don't contain any references except those with `static` lifetime
+* `Drop` is for types that need to be cleaned up by a destructor. Only `Send` types can implement `Drop`
+* Default is for types with destructors, closure environments, or other non-first-class types which aren't copyable at all and are only accessible through pointers
+
 # Modules
 
 The content of all source code that the compiler directly had to compile in order to end up with a particular binary is collectively called a **crate**. A crate is a unit of independent compilation in Rust. Using an already compiled library in code doesn't make it part of a crate.
 
-There exists a hierarchy of modules where the root is referred to as **crate root**. Global paths begin with the root path `::`, all other paths are local paths, similar to the distinction between absolute `/`-prefixed paths and relative paths.
+There exists a hierarchy of modules where the root is referred to as **crate root**. Global paths begin with the root path `::`, all other paths are local paths, similar to the distinction between absolute `/`-prefixed paths and relative paths in a POSIX file system.
 
-Module contents are private by default. They can be made explicitly public with the `pub` qualifier. In fact, visibility restrictions are only applicable at module boundaries. On the other hand, `struct` fields are public by default and are made explicitly private with `priv`. Since visibility restrictions only apply at module boundaries, a private field of a `struct` defined within a module is itself accessible within that module:
+Everything in Rust is private by default with a single exception. If an enumeration is declared public, then its variants are public as well by default, though this may be overridden with the `priv` keyword.
 
-The `self` and `super` keywords can be used in module paths for disambiguation to refer to the current or parent scope.
-
-``` rust
-mod farm {
-  pub fn chicken() { ... }
-
-  pub struct Farm {
-    chickens: Vec<Chicken>,
-    farmer: Human
-  }
-
-  impl Farm {
-    fn feed_chickens(&self) { ... }
-    pub fn add_chickens(&self, c: Chicken) { ... }
-  }
-
-  pub fn feed_animals(farm: &Farm) {
-    farm.feed_chickens();
-  }
-}
-
-fn main() {
-  ::farm::chicken();
-
-  let f = make_farm();
-  f.add_chicken(make_chicken());
-  farm::feed_animals(&f);
-  f.farmer.rest();
-}
-```
+Visibility restrictions are only applicable at module boundaries, so that private items are available within the same module and its descendants.
 
 Source files and modules are not the same thing. The only file that's relevant when compiling is the one that contains the body of the crate root. Declaring a module without a body prompts the compiler to look for a file named after that module or for a file named `mod.rs` in a folder named after that module.
+
+``` rust
+mod plants;
+mod animals {
+  mod fish;
+  mod mammals {
+    mod humans;
+  }
+}
+
+// looks for:
+
+// src/plants.rs
+// src/plants/mod.rs
+
+// src/animals/fish.rs
+// src/animals/fish/mod.rs
+
+// src/animals/mammals/humans.rs
+// src/animals/mammals/humans/mod.rs
+```
 
 The `use` statement can be used to bring in a module's contents into the current block by providing a global path without the `::` prefix. It's possible to prefix with `super::` to start the path in the parent module, and `self::` to start the path in the current module.
 
@@ -120,7 +121,7 @@ use farm::*;
 use egg_layer = farm::chicken;
 ```
 
-Likewise, it's possible to re-export items from another module:
+Likewise, it's possible to re-export items from another module. Notice that the `use` declaration needs to have `pub` in order for the module to be accessible outside the current module.
 
 ``` rust
 mod farm {
@@ -128,7 +129,9 @@ mod farm {
 }
 ```
 
-It's common to use existing libraries, which in rust are simply referred to as other crates. The `extern mod` declaration is used to be able to reference other crates, similar to `extern` in C. `extern mod`-imported items can be shadowed by local declarations and `use`-imported items, so they must go before both. Crates declared in an `extern mod` declaration are looked for in the library search path, which can be expanded with the `-L` switch.
+It's common to use existing libraries, which in rust are simply referred to as crates. The `extern mod` declaration is used to reference other crates, similar to `extern` in C.
+
+Items imported via `extern mod` can be shadowed by local declarations and by items imported by `use`, so they must go before both. Crates declared in an `extern mod` declaration are looked for in the library search path, which can be expanded with the `-L` switch.
 
 ``` rust
 extern mod num;
@@ -149,10 +152,14 @@ fn main() {
 Crates can contain metadata used for the resultant libraries, such as the package ID:
 
 ``` rust
-#[crate_id = "farm#2.5"];
+#![crate_id = "farm#2.5"];
+
+#![desc = "Farm"]
+#![license = "BSD"]
+#![comment = "Farm library"]
 
 // specify that it's a library
-#[crate_type = "lib"];
+#![crate_type = "lib"];
 ```
 
 This information can be used to select the crate from the `extern mod` declaration:
@@ -594,6 +601,18 @@ static LANGUAGE: &'static str = "Rust";
 static THRESHOLD: int = 10;
 ```
 
+It's also possible to define mutable statics, though using these is considered unsafe as it can introduce race conditions. Because of this, mutable static can only be read or written to within `unsafe` blocks.
+
+``` rust
+static mut LEVELS: uint = 0;
+
+unsafe fn bump_levels_unsafe1() -> uint {
+  let ret = LEVELS;
+  LEVELS += 1;
+  return ret;
+}
+```
+
 It's also possible to use named lifetime notation to label control structures, allowing for breaking and continuing to specific locations.
 
 ``` rust
@@ -807,6 +826,26 @@ enum Shape {
 }
 ```
 
+# Implementations
+
+Implementations specifically provide implementations for traits, and they can be type parameterized as well. The type parameter list after the `impl` introduces the type parameters used in the rest of the declaration.
+
+``` rust
+trait Seq<T> {
+   fn len(&self) -> uint;
+   fn elt_at(&self, n: uint) -> T;
+   fn iter(&self, |T|);
+}
+
+impl<T> Seq<T> for Vec<T> {
+  // implement Seq for all types T on Vec
+}
+
+impl Seq<bool> for u32 {
+  // implement Seq<bool> for u32
+}
+```
+
 # Tuples
 
 Tuples are available and are most similar to Haskell's. **Tuple structs** behave like both structs and tuples. They're like tuples with names. Tuple structs with a single field are similar to Haskell newtypes and are often called the same thing in Rust. These provide a distinct type from the type they wrap. Newtypes' wrapped values can be extracted using the dereference operator `*`:
@@ -839,6 +878,25 @@ fn first((value, _): (int, f64)) -> int { value }
 ```
 
 In short, blocks such as `{ expr1; expr2 }` are considered a single expression and evaluate to the result of the last expression if it's not followed by a semicolon, otherwise the block evaluates to `()`.
+
+A diverging function is one that never returns a value to the caller. Every control path must end in `fail!()` or another diverging function. This is informs the compiler that execution will never return to the original context, allowing things to type-check where they wouldn't otherwise.
+
+In the following example, `my_err` can be used even though it's not of type `int` because it's a diverging function.
+
+``` rust
+fn my_err(s: &str) -> ! {
+  println!("{}", s);
+  fail!();
+}
+
+fn f(i: int) -> int {
+  if i == 42 {
+    return 42;
+  } else {
+    my_err("Bad number!");
+  }
+}
+```
 
 # Methods
 
@@ -998,12 +1056,6 @@ fn head<T: Clone>(v: &[T]) -> T {
 }
 ```
 
-There are three traits that are automatically derived and implemented for applicable types:
-
-* `Send` is for sendable types, which don't contain managed boxes, managed closures, or references.
-* `Freeze` is for constant/immutable types, types that don't contain anything intrinsically mutable.
-* `'static` is for non-borrowed types, which don't contain any references or any data whose lifetime is bound to a particular stack frame, or they are types where the only contained references have `'static` lifetime.
-
 Traits contain zero or more method signatures. In the following trait, it is said that `Printable` provides a `print` method with the given signature:
 
 ``` rust
@@ -1106,14 +1158,6 @@ fn draw_all(shapes: &[Box<Drawable>]) {
 draw_all([circle as Box<Drawable>, rectangle as Box<Drawable>])
 ```
 
-The three storage classes enforce a set of traits that their contents must fulfill in order to be packaged up in a trait object for that storage class:
-
-* contents of `Box<owned>` traits must fulfill the `Send` bound
-* contents of `@managed` traits must fulfill the `'static` bound
-* contents of `&reference` traits are not constrained by any bound
-
-Trait objects automatically fulfill their respective trait bounds. This can be overridden by specifying a list of bounds on the trait type, such as `Box<Trait:Send+Freeze>` which indicates that contents must fulfill `Send` and `Box<Freeze>`.
-
 Traits can inherit from other traits, so that the traits they inherit from are referred to as _supertraits_. This means that for any type to implement the derived trait, it must also implement the supertrait:
 
 ``` rust
@@ -1164,7 +1208,7 @@ enum ABC { A, B, C }
 
 ## Drop
 
-The `Drop` trait can be used to define destructors via its method `drop`. The global `drop` function also exists which essentially takes ownership of the passed value so that the moved variable's destructor---its `drop` method---is called by the end of the function scope.
+The `Drop` trait can be used to define destructors via its method `drop`. The global `drop` function also exists which essentially takes ownership of the passed value so that the moved variable's destructor---its `drop` method---is called by the end of the function scope. Destructors are run in top-down order, so that the value is completely destroyed before any values it owns run their destructors.
 
 ``` rust
 struct TimeBomb {
@@ -1320,26 +1364,18 @@ println!("fib(50) = {:?}", delayed_fib.get());
 When wanting to share immutable data between tasks, it may be expensive to use a typical pipe as that would create a copy of the data on each transfer. For this it would be more efficient to use an Atomically Reference Counted wrapper, `Arc`, which is implemented in the `sync` library. `Arc` acts as a reference to shared data so that only the reference itself is shared and cloned.
 
 ``` rust
-use sync::Arc;
+use std::sync::Arc;
 
 fn main() {
-  let big_data = vec![1, 2, 3, 4, 5];
-  let data_arc = Arc::new(big_data);
+  let numbers = Vec::from_fn(100, |i| i as f32);
+  let shared_numbers = Arc::new(numbers);
 
-  for num in range(1u, 10) {
-    let (tx, rx) = comm::channel();
-
-    // send arc
-    tx.send(data_arc.clone());
+  for _ in range(0u, 10) {
+    let child_numbers = shared_numbers.clone();
 
     spawn(proc() {
-      // receive arc
-      let local_arc : Arc<Vec<f64>> = rx.recv();
-
-      // data pointed to by arc
-      let task_data = local_arc.get();
-
-      expensive_computation(task_data);
+      let local_numbers = child_numbers.as_slice();
+      // Work with the local numbers
     });
   }
 }
@@ -1379,17 +1415,50 @@ fn stringifier(channel: &DuplexStream<String, uint>) {
   }
 }
 
-let (from_child, to_child) = DuplexStream::new();
+let (from_child, to_child) = duplex();
 
 spawn(proc() {
   stringifier(&to_child);
 });
 
 from_child.send(22);
-assert!(from_child.recv() == box "22");
+assert!(from_child.recv() == "22");
 ```
 
 # Iterators
+
+Iterators can be created by implementing the `Iterator` trait, particularly its `next` method. Notice that an `Option` is returned to indicate whether or not the iterator has finished, which is signified by yielding `None`.
+
+``` rust
+struct ZeroStream { remaining: uint }
+
+impl ZeroStream {
+  fn new(n: uint) -> ZeroStream {
+    ZeroStream { remaining: n }
+  }
+}
+
+impl Iterator<int> for ZeroStream {
+  fn next(&mut self) -> Option<int> {
+    if self.remaining == 0 {
+      None
+    } else {
+      self.remaining -= 1;
+      Some(0)
+    }
+  }
+}
+
+fn main() {
+  let mut nums = ZeroStream::new(3);
+
+  for i in nums {
+    print!("{}", i);
+  }
+}
+
+// prints "000"
+```
 
 Iterators can be transformed by adaptors that themselves return another iterator:
 
