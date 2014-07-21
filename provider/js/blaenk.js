@@ -46,9 +46,6 @@ $(function() {
   };
 
   toggleForm($('#search_btn'), $('.desk_search'));
-  toggleForm($('#push_btn'), $('.push_config'));
-
-  $('#push').val(localStorage['push']);
 
   window.refresh = function () {
     // header links

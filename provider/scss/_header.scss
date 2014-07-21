@@ -244,12 +244,12 @@
   }
 }
 
-.desk_search, .push_config {
+.desk_search {
   display: none;
   padding-bottom: 15px;
 }
 
-#search, #push {
+#search {
   width: 100%;
   border: 1px solid #ddd;
   box-sizing: border-box;
@@ -263,7 +263,7 @@
   &:focus { outline: none; }
 }
 
-#search_btn, #push_btn {
+#search_btn {
   cursor: pointer;
 }
 

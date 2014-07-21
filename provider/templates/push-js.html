@@ -1,41 +1,15 @@
-<!-- preview push -->
-<div class="push_config">
-  <input id="push" type="text" results="0" placeholder="Push address" autocomplete="off" spellcheck="false">
-</div>
-
 <script type="text/javascript">
   jQuery(function (){
-    var listen = function(addr) {
-      var ws = new WebSocket('ws://' + addr + ':9160/$path$');
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/$path$');
 
-      ws.onmessage = function (e) {
-        console.log('msg')
-        var content = jQuery('article .entry-content');
-        content.html(e.data);
+    ws.onmessage = function (e) {
+      console.log('msg')
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
 
-        window.refresh();
+      window.refresh();
 
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
-      };
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
     };
-
-    var addr = localStorage['push'];
-
-    if (addr)
-      listen(addr);
-    else {
-      jQuery('#push').keyup(function(e) {
-        if (e.which == 13) {
-          var value = jQuery(this).val();
-
-          if (value) {
-            localStorage['push'] = value;
-            listen(localStorage['push']);
-          } else localStorage.removeItem('push');
-
-          jQuery(this).parent('.push_config').fadeOut('fast');
-        }
-      });
-    }
   });
 </script>
