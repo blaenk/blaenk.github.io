@@ -383,6 +383,8 @@ Multiple mixins can be "stacked," in which case the same function is called in r
 
 # Packages
 
+The `package` statement is used as in Java to specify that what follows is to be part of the specified package. However, it can also be used with braces to only insert the contained code within the package.
+
 The `import` statement can be used to import packages and symbols in different ways:
 
 ``` scala
