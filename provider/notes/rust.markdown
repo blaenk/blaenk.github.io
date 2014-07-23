@@ -625,6 +625,108 @@ It's also possible to use named lifetime notation to label control structures, a
 }
 ```
 
+### Elision
+
+RFC [#39] proposed expanded lifetime elision rules and was implemented with PR [#15552]. The practical effect of this is that a lot of omitted, or _elided_, lifetime annotations can be inferred by the compiler.
+
+*[RFC]: Request for Comments
+*[PR]: Pull Request
+
+[#39]: https://github.com/rust-lang/rfcs/blob/master/active/0039-lifetime-elision.md
+[#15552]: https://github.com/rust-lang/rust/issues/15552
+
+To facilitate this, the compiler has notions of input or output. For **functions**, inputs are the lifetimes on arguments and outputs are the lifetimes on result types; this _doesn't_ include lifetimes that appear in the method's `impl` or `trait` header. For **implementations**, inputs are the lifetimes on the type receiving the implementation, and the outputs are the lifetimes on the trait.
+
+``` rust
+// elided one input and two outputs
+fn foo(s: &str) -> (&str, &str)
+
+// input:  'a, 'c
+// output: 'b, 'c
+impl<'a, 'b, 'c> Trait<'b, 'c> for Type<'a, 'c>
+```
+
+Given this distinction between lifetime parameters, the rules are simple:
+
+1. each elided lifetime in input position becomes a distinct lifetime parameter, as was already the case
+
+    ``` rust
+    fn print(s: &str);
+    fn print<'a>(s: &'a str);
+
+    impl Reader for (&str, &str) { ... }
+    impl<'a, 'b> Reader for (&'a str, &'b str) { ... }
+    ```
+
+2. if there's only one input lifetime position, its lifetime is assigned to all elided output lifetimes
+
+    ``` rust
+    fn substr(s: &str, until: uint) -> &str;
+    fn substr<'a>(s: &'a str, until: uint) -> &'a str;
+
+    impl StrSlice for &str { ... }
+    impl<'a> StrSlice<'a> for &'a str { ... }
+    ```
+
+3. if there are multiple input lifetime positions and one of them is `&self` or `&mut self`, the lifetime of `self` is assigned to all elided output lifetimes
+
+    ``` rust
+    fn args<T:ToCStr>(&mut self, args: &[T]) -> &mut Command
+    fn args<'a, 'b, T:ToCStr>(&'a mut self, args: &'b [T]) -> &'a mut Command
+    ```
+
+4. otherwise, it's an error to elide an output lifetime
+
+    ``` rust
+    fn get_str() -> &str;
+    fn frob(s: &str, t: &str) -> &str;
+    ```
+
+Lifetime elision with implementations is a bit trickier. Elision inference occurs at two levels: the implementation header line and its methods. Expansion can occur in trait methods since they're treated as any other function.
+
+``` rust
+trait Bar<'a> {
+  fn bound(&'a self) -> &int { ... }
+  fn fresh(&self) -> &int { ... }
+}
+
+// fresh expands like any other function
+trait Bar<'a> {
+  fn bound(&'a self) -> &'a int { ... }
+  fn fresh<'b>(&'b self) -> &'b int { ... }
+}
+```
+
+In general, the elided signatures of the `impl` should match those of the `trait` so that the `impl` expansion matches the `trait` and thus will compile. Failing to do this might break the relationship between an `impl` header-level lifetime and a method's lifetime.
+
+Consider the following example where the `impl` header-level was expanded, and then the `bound` method expanded separately with a distinct lifetime (as per rule #1) even though they're supposed to be the same as specified in the `trait`.
+
+``` rust
+impl Bar for &str {
+  fn bound(&self) -> &int { ... }
+}
+
+// bound's lifetime should've been 'a
+impl<'a> Bar<'a> for &'a str {
+  fn bound<'b>(&'b self) -> &'b int { ... }
+}
+```
+
+If the signatures are used exactly as in the `trait`, with the same lifetime elisions, the `impl` expansion will most likely expand to match the `trait`'s expansion.
+
+``` rust
+impl<'a> Bar<'a> for &'a str {
+  fn bound(&'a self) -> &'a int { ... }
+  fn fresh(&self) -> &int { ... }
+}
+
+// fresh method expands correctly
+impl<'a> Bar<'a> for &'a str {
+  fn bound(&'a self) -> &'a int { ... }
+  fn fresh<'b>(&'b self) -> &'b int { ... }
+}
+```
+
 ## Dropping
 
 Destructors are functions responsible for cleaning up resources used by an object that is no longer accessible. Objects are never accessible after their destructor has been called, so it's not possible to fail from accessing freed resources. Further, when a task fails, destructors of all objects in the task are called.
