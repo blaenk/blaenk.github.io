@@ -634,3 +634,4 @@ type EmptyWithEmpty = EmptyWithPhantom Empty
 * [CS 194](http://www.seas.upenn.edu/~cis194/lectures.html)
 * [Performance profiling with ghc-events-analyze](http://www.well-typed.com/blog/86/)
 * [Haskell Wikibooks - Category Theory](http://en.wikibooks.org/wiki/Haskell/Category_theory)
+* [Getting it Done with Haskell](https://docs.google.com/presentation/d/1suMuLRo1xS5NxWn-L9lGHtVNpOH48F9ZnDyv5PyxEpI/)
