@@ -15,6 +15,11 @@ $solar-blue:    #268bd2 !default; // haskell: function
 $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
 $solar-green:   #859900 !default; //
 
+.language-javascript {
+  .kd { color: $solar-cyan; }
+  .nx { color: $solar-blue; }
+}
+
 .language-clojure {
   // .ss { color: $solar-green; }
 }
