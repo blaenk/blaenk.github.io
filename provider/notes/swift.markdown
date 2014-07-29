@@ -1416,3 +1416,33 @@ func +- (left: Vector2D, right: Vector2D) -> Vector2D {
 }
 ```
 
+# Access Control
+
+Xcode 6 beta 4 [added support][access-control] for access control [^rust_access_control]. By default most entities have `internal` access. Swift also allows the `get` property to be more accessible than the `set`.
+
+[access-control]: https://developer.apple.com/swift/blog/?id=5
+
+[^rust_access_control]: This reminds me of Rust, where access control isn't specific to classes but rather to modules, so that an access control modifier on a structure member is enforced at the module level.
+
+Level      Accessible From
+------     -------------
+`private`  within source file where defined
+`internal` entire module (app or framework) that includes definition
+`public`   any file that imports the module (for APIs)
+
+``` swift
+public class ListItem {
+  public var text: String
+  public var isComplete: Bool
+
+  // readable throughout module
+  // writeable within this file
+  private(set) var UUID: NSUUID
+
+  // usable within framework target
+  func refreshIdentity() {
+    self.UUID = NSUUID()
+  }
+}
+```
+
