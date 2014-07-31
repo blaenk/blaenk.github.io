@@ -176,6 +176,25 @@ There are literals for lists, vectors, maps, and sets. Note that since lists den
 #{1 2 3}              ;; set
 ```
 
+## Record Literals
+
+Record literals consist of the pound sign `#` followed by the record name and a map literal containing the field names as keyword keys with their associated values. See [records](#records).
+
+## Tagged Literals
+
+Tagged literals are custom data readers. On startup, Clojure looks for files named `data_readers.clj`{.path} at the root of the classpath which must contain a map of symbols mapping tags---to be recognized by the Clojure reader---to the name of fully-qualified Vars that are invoked by the reader to parse the form following the tag.
+
+``` clojure
+{foo/bar my.project.foo/bar
+ foo/baz my.project/baz}
+
+#foo/bar [1 2 3]
+```
+
+The Var `#'my.project.foo/bar` is invoked by the reader on vector `[1 2 3]` _after_ it has been read as a normal Clojure data structure by the reader. That is, the reader will parse the form after the tag as a data structure, then invoke the tagged literal function on the data structure itself. The tagged literal function should then return a value that _replaces_ the tagged data structure in the final result [^clojurescript_js].
+
+[^clojurescript_js]: This is used in Om in the form of `#j` to parse a map and output JSON in its place, or parse a vector and output an array in its place.
+
 # Namespaces
 
 Vars are defined using the `def` special form which takes the symbol used to refer to the var and the value to store in that var. When the symbol is used on its own to access the var's value, the symbol is said to be _unqualified_ and so it is resolved within the current namespace. Vars can also be redefined by supplying the same symbol with a different value to the `def` function.
@@ -1796,6 +1815,16 @@ The `ensure` function is equivalent to dummy writes, which end up requiring that
 (ref-set a @a)
 ```
 
+## Channels
+
+The [`core.async`{.path}](https://clojure.github.io/core.async/) library provides an implementation of channels similar to Go's. `go` is a macro that examines its body for any channel operations and turns it into a state machine, immediately returning a channel on which it eventually places the value of its body's last expression, if non-nil, and closes it. Upon a blocking operation, the state machine is parked and the actual thread of control is released. The body is resumed on a thread-pool thread (or the sole JavaScript VM thread) when the blocking operation completes,
+
+The primary channel operations within go blocks are `>!` for putting and `<!` for taking. There are also analogous operations for ordinary threads which block the thread on which they're called until complete `->!!` for putting and `<!!` for taking. These can be used on threads created with, for example, `future`, but there's also a macro called `thread` that's similar to `go` which launches a first-class thread and returns a channel, and should be preferred over `future` for channel work.
+
+The `alts!` function can be used in `go` blocks to wait for any one of a set of operations to complete, much like `select`. Timeouts are channels that close after a period of time, and can be created with the `timeout` function and included in the set given to an `alt` variant to place an upper bound on the amount of time spent waiting for an operation to complete.
+
+Given the persistent, immutable nature of data structures in Clojure, it's safe and efficient to place them in channels.
+
 # Macros
 
 Code in Clojure is represented as data structures, as was described in [homoiconicity](#homoiconicity). These structures are then evaluated depending on the data type's rules, such as most literals evaluating to themselves (integers, strings, keywords, etc.), symbols evaluating to the value in the var in some namespace, and lists to calls of functions, special forms, or macros.
@@ -2321,7 +2350,7 @@ The hierarchy can be modified dynamically with `alter-var-root`, which can be us
 The `isa?` function treats vectors, specifically pairs, as special cases. As a result, dispatch values can be vectors consisting of a relationship. Since the Java class hierarchy is in every hierarchy, a pattern is to piggyback a Java class as added information. The implementation method below, for example, applies when the dispatch value is a `::checkable` and the value in question is a Clojure set. This is possible because the dispatch function returns a pair of the dispatch value and the value's class, both encoded as a hierarchical relationship.
 
 ``` clojure
-;equivalent
+; equivalent
 (isa? [::checkbox ::checkable])
 (isa? ::checkbox ::checkable)
 
