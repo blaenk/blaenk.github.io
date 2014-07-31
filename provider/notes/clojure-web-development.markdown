@@ -12,11 +12,11 @@ On the server-side, Clojure seems to favor basic libraries to build up applicati
 
 [^micro_frameworks]: This is an increasingly popular approach with other languages as well, such as Python and Flask, or Go and its variety of web development libraries.
 
-On the client-side, there's the venerable [ClojureScript] which I consider to be a more appealing JavaScript-based language than the existing ones (e.g. CoffeeScript). This has become a powerful technology to use alongside [Om/React], which provides a ClojureScript interface to [React.js], and leverages persistent, immutable datastructures for [remarkable performance increases].
+On the client-side, there's the venerable [ClojureScript] which I consider to be a more appealing JavaScript-based language than the existing ones (e.g. CoffeeScript). This has become a powerful technology to use alongside [Om], which provides a ClojureScript interface to [React], and leverages persistent, immutable datastructures for [remarkable performance increases].
 
 [ClojureScript]: https://github.com/clojure/clojurescript/
-[Om/React]: https://github.com/swannodette/om
-[React.js]: http://facebook.github.io/react/
+[Om]: https://github.com/swannodette/om
+[React]: http://facebook.github.io/react/
 [remarkable performance increases]: http://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs/
 
 * toc
@@ -608,6 +608,55 @@ Macros must be referenced with the `:require-macros` keyword in the namespace de
   (:require-macros [app.macros :as m]))
 ```
 
+The `#js` tagged literal is for producing JavaScript objects and arrays, depending on the provided data structure. The literal is shallow, so that nesting JSON or arrays must also carry the `#js` literal tag.
+
+``` clojure
+; both produce the same JSON
+#js {:foo "bar"}
+#js {"foo" "bar"}
+
+; produces JavaScript array
+#js [1 2 3]
+
+; #js is shallow
+; this object contains a persistent vector
+#js {:foo [1 2 3]}
+
+; this object contains an array
+#js {:foo #js [1 2 3]}
+```
+
+The `..` Clojure macro can be used to chain multiple properties, for example.
+
+``` clojure
+; would access obj.prop.value.text
+(.. obj -prop -value -text)
+```
+
+Functions that need to be accessible from outside the ClojureScript must be "exported" to prevent the Google Closure compiler from changing the function name during the minification process.
+
+``` clojure
+(defn ^:export init []
+  (something))
+```
+
+External libraries can also be affected by this. A separate file can contain functions and variables that should be ignored by the minification process. This file should then be specified in the configuration map.
+
+``` clojure
+:prod {:source-paths ["src-cljs"]
+       :compiler
+         {:optimizations :advanced
+          :externs ["resources/externs.js"]
+          :output-to "output/file.js"}}
+```
+
+The [Domina] library is a ClojueScript interface to the DOM manipulation facilities of the Google Closure library. The [cljs-ajax] library can be used for AJAX calls.
+
+[Domina]: https://github.com/levand/domina
+[cljs-ajax]: https://github.com/JulianBirch/cljs-ajax
+
+## Building {#building-clojurescript}
+
 The [lein-cljsbuild] plug-in for lein can automate the compilation of ClojureScript by defining---in the `project.clj`{.path} file---the namespaces to reference and the JavaScript files to output.
 
 [lein-cljsbuild]: https://github.com/emezeske/lein-cljsbuild
@@ -648,27 +697,131 @@ $ lein cljsbuild once
 $ lein cljsbuild auto
 ```
 
-Functions that need to be accessible from outside the ClojureScript must be "exported" to prevent the Google Closure compiler from changing the function name during the minification process.
+# Om
+
+[Om] is a ClojureScript interface to [React] leveraging immutable data structures for increased speed. One thing to keep in mind is that Om uses an optimization that always renders on `requestAnimationFrame`, unlike React, and so the state has to be set even if it's not changed.
+
+[React]: /notes/react/
+
+Application state in Om is held in an `atom`, which is the only reference type in ClojureScript. The application state can be transitioned with the `transact!` function which takes a transition function that shouldn't rely on information obtained by dereferencing a cursor, `get-state`, `transact!`, or `update!`. Changing the value via `swap!` or `reset!` always triggers a re-render of any roots attached to it. Everything in the atom must be an associative data structure, either map or an indexed sequence such as a vector. No lists or lazy sequences should be inside this state.
+
+As in React, components take props, which in Om are actually [cursors] into the application state. This is relevant because in Om, the entire application state is stored in an atom, but individual components generally don't care about the entire scope of the application data. Each component gets cursors at construction time and automatically re-render themselves when the value underneath the cursor changes.
+
+[cursors]: /notes/clojure#zippers
+
+During the render phase, cursors can be treated as their underlying value (e.g. map or vector), but outside of the render phase they need to explicitly be dereferenced to yield this underlying value.
+
+It's possible to create sub-cursors using the `get` or `get-in` functions---which only work during the render phase---but if the underlying value is a primitive, then the primitive is returned and not a cursor.
+
+The consequence of this is that it's not possible to create a component that depends on a single string, such as a text-input. A workaround for this would be to make the component depend on a _vector_ of the single string.
 
 ``` clojure
-(defn ^:export init []
-  (something))
+(def state (atom {:name ["Igor"]}))
+
+(defn text-input [cursor _]
+  (render [_] (dom/input #js {:value (first cursor)})))
+
+(render [_]
+  ; yield sub-cursor to vector containing the string
+  (om/build text-input (:name app-cursor)))
 ```
 
-External libraries can also be affected by this. A separate file can contain functions and variables that should be ignored by the minification process. This file should then be specified in the configuration map.
+Cursors can propagate changes back to the original atom using the `transact!` function, which is available during and outside of the render phase. During the render phase, the `transact!`ed changes aren't visible until the next render. Outside of the render phase, `deref` returns the current value and `value` returns the last rendered value.
+
+Components can depend on multiple cursors by simply wrapping them in a map or vector.
 
 ``` clojure
-:prod {:source-paths ["src-cljs"]
-       :compiler
-         {:optimizations :advanced
-          :externs ["resources/externs.js"]
-          :output-to "output/file.js"}}
+(def state (atom {:courses [...], :classes [...], ...}))
+
+(render [_]
+  (om/build table-view {:rows (:courses state),
+                       {:cols (:classes state)}}))
 ```
 
-The [Domina] library is a ClojueScript interface to the DOM manipulation facilities of the Google Closure library. The [cljs-ajax] library can be used for AJAX calls.
+The `root` function is used for mounting a component on a specific element in the DOM, like `React.renderComponent`. It takes a function that returns an Om component conforming to the `IRender` interface (like the `component` macro generates when the owner doesn't need to be accessed) given the application state and the backing React component, the application state atom, and a map containing the `:target` DOM node and any other options.
 
-[Domina]: https://github.com/levand/domina
-[cljs-ajax]: https://github.com/JulianBirch/cljs-ajax
+``` clojure
+(om/root
+  (fn [app owner]
+    (om/component (dom/h1 nil (:text app))))
+  app-state
+  {:target (. js/document (getElementById "app"))})
+```
+
+DOM elements take the same attributes as in React: attributes and a body.
+
+``` clojure
+(def app-state (atom {:list ["Lion" "Zebra" "Buffalo" "Antelope"]}))
+
+(om/root
+  (fn [app owner]
+    (apply dom/ul #js {:className "animals"}
+      (map (fn [text] (dom/li nil text)) (:list app))))
+  app-state
+  {:target (. js/document (getElementById "app"))})
+```
+
+Om components have to be built using `build` for single components or `build-all`.
+
+``` clojure
+(defn contact-view [contact owner]
+  (reify
+    om/IRender
+    (render [this]
+      (dom/li nil (display-name contact)))))
+
+(defn contacts-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+      (dom/div nil
+        (dom/h2 nil "Contact list")
+        (apply dom/ul nil
+          (om/build-all contact-view (:contacts app)))))))
+```
+
+Components can communicate using `core.async`{.path} channels. To use this it is recommended to use `IRenderState` instead of `IRender`, so that state can be passed to it as the component state.
+
+``` clojure
+(defn contact-view [contact owner]
+  (reify
+    om/IRenderState
+    (render-state [this {:keys [delete]}]
+      (dom/li nil
+        (dom/span nil (display-name contact))
+        (dom/button #js {:onClick (fn [e] (put! delete @contact))} "Delete")))))
+```
+
+The encompassing component can implement `IInitState` in order to initialize the state, which in this case is simply a `core.async`{.path} channel. This implements `IRenderState` as well so that it can receive the state and pass it on to its children.
+
+``` clojure
+(defn contacts-view [app owner]
+  (reify
+    om/IInitState
+    (init-state [_]
+      {:delete (chan)})
+
+    om/IRenderState
+    (render-state [this {:keys [delete]}]
+      (dom/div nil
+        (dom/h2 nil "Contact list")
+        (apply dom/ul nil
+          (om/build-all contact-view (:contacts app)
+            {:init-state {:delete delete}}))))))
+```
+
+The protocol `IWillMount` is then implemented to establish a `go` loop that listens for events from the children contact views. The `get-state` function can be used to get a component's state. The `get-node` function can be used to get a reference to a component via a `ref`.
+
+``` clojure
+    om/IWillMount
+    (will-mount [_]
+      (let [delete (om/get-state owner :delete)]
+        (go (loop []
+          (let [contact (<! delete)]
+            (om/transact! app :contacts
+              (fn [xs] (vec (remove #(= contact %) xs))))
+            (recur))))))
+```
 
 # Deployment
 
