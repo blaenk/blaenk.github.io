@@ -21,6 +21,9 @@ $solar-green:   #859900 !default; //
 }
 
 .language-clojure {
+  .kd { color: $solar-green; }
+  .nf { color: $solar-cyan; }
+  .nb { color: $solar-violet; }
   // .ss { color: $solar-green; }
 }
 
