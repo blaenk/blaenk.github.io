@@ -885,7 +885,7 @@ JDK 8 contains predefined functional interfaces in `java.util.function`{.path}.
 
 # IO
 
-IO is performed in Java through the stream abstraction which are split into two types: byte streams reserved for binary data and character streams reserved for internationalizable Unicode text (and are sometimes more efficient than byte streams).
+IO is performed in Java through the stream abstraction which is split into two types: byte streams reserved for binary data and character streams reserved for internationalizable Unicode text (and are sometimes more efficient than byte streams).
 
 Byte streams consist of two hierarchies with the following abstract classes at the top: `InputStream` and `OutputStream`. Character streams are similar, with `Reader` and `Writer` being at the top. Each of these sets of classes define `read` and `write` methods respectively.
 
