@@ -735,7 +735,7 @@ Components can depend on multiple cursors by simply wrapping them in a map or ve
 
 (render [_]
   (om/build table-view {:rows (:courses state),
-                       {:cols (:classes state)}}))
+                        :cols (:classes state)}))
 ```
 
 The `root` function is used for mounting a component on a specific element in the DOM, like `React.renderComponent`. It takes a function that returns an Om component conforming to the `IRender` interface (like the `component` macro generates when the owner doesn't need to be accessed) given the application state and the backing React component, the application state atom, and a map containing the `:target` DOM node and any other options.
