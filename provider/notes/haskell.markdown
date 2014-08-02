@@ -625,6 +625,31 @@ data EmptyWithPhantom x
 type EmptyWithEmpty = EmptyWithPhantom Empty
 ```
 
+### Phantom Types
+
+Phantom types are parameterized types where some of the parameters only appear on the RHS. They are often used to encode information at the type level to make code much more strict, usually paired with empty data types.
+
+Consider an API for [sending encrypted messages]. It's possible to encode---at the type-system level---that only _encrypted_ messages may be sent using the `send` function, thus preventing plain-text messages from being sent. This is further enforced by making the `Message` constructor private and exposing a single constructor to build a plain-text message, such as `newMessage`.
+
+[sending encrypted messages]: http://blog.jakubarnold.cz/2014/07/08/using-phantom-types-for-extra-safety.html
+
+``` haskell
+data Message a = Message String
+
+data Encrypted
+data PlainText
+
+send    :: Message Encrypted -> Recipient -> IO ()
+encrypt :: Message PlainText -> Message Encrypted
+decrypt :: Message Encrypted -> Message PlainText
+
+newMessage :: String -> Message PlainText
+newMessage s = Message s
+
+-- this would not type-check
+send (newMessage "test") "recipient@server"
+```
+
 # Resources
 
 * [Categories from Scratch](http://staff.science.uva.nl/~poss/categories-from-scratch.html)
