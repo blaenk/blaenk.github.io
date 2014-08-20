@@ -1217,7 +1217,7 @@ yield n
 
 Generators are of the form `pat <- expr` where the pattern `pat` is matched for each element in the list. If the match succeeds, the variables are bound to the pattern components. If the match fails, the element is discarded from iteration.
 
-# Translation {#for-expression-translation}
+## Translation {#for-expression-translation}
 
 The following are examples of how `for` expressions are translated into combinations of `map`, `flatMap`, and `withFilter`.
 
