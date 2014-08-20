@@ -67,7 +67,7 @@ Characters are denoted by a blackslash, as in `\c`, and they natively support Un
 
 ## Keywords
 
-Keywords I believe are similar to Ruby/Scala symbols and Erlang atoms. The are prefixed by a colon `:` and consist of any non-whitespace character, where a slash `/` denotes a _namespaced keyword_, and a double colon `::` is expanded by the reader to a namespaced keyword in the current namespace, or another namespace if the keyword started by a namespace alias as in `::alias/keyword`.
+Keywords are similar to Ruby/Scala symbols and Erlang atoms. They are prefixed by a colon `:` and consist of any non-whitespace character, where a slash `/` denotes a _namespaced keyword_, and a double colon `::` is expanded by the reader to a namespaced keyword in the current namespace, or another namespace if the keyword started by a namespace alias as in `::alias/keyword`.
 
 ``` clojure
 (def pizza {:name "Ramunto's"
@@ -2259,7 +2259,7 @@ Multimethods work by passing the arguments passed to the multimethod are passed 
 In the example below, the `:tag` is is the dispatch value.
 
 ``` clojure
-(defmulti multi fill
+(defmulti fill
   "Fill xml/html node with the provided value"
   (fn [node value] (:tag node)))
 
