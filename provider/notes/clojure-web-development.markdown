@@ -601,7 +601,7 @@ Properties are accessed using `.-` prefix notation. Properties can be set with t
   (set! (.-width canvas) 42))
 ```
 
-Macros must be referenced with the `:require-macros` keyword in the namespace declaration.
+Macros must be referenced with the `:require-macros` keyword in the namespace declaration. The macros must be defined in a _regular_ Clojure file with a `.clj`{.path} extension, and can have the same name for file and namespace as the file which references it.
 
 ``` clojure
 (ns my.app
@@ -624,6 +624,14 @@ The `#js` tagged literal is for producing JavaScript objects and arrays, dependi
 
 ; this object contains an array
 #js {:foo #js [1 2 3]}
+```
+
+The `js->clj` function can be used to convert JSON to a Clojure map. The option `:keywordize-keys` can be used to turn the keys into keywords.
+
+``` clojure
+(let [cljmap (js->clj :keywordize-keys true)]
+  ;; whatever
+  )
 ```
 
 The `..` Clojure macro can be used to chain multiple properties, for example.
@@ -711,7 +719,7 @@ As in React, components take props, which in Om are actually [cursors] into the 
 
 During the render phase, cursors can be treated as their underlying value (e.g. map or vector), but outside of the render phase they need to explicitly be dereferenced to yield this underlying value.
 
-It's possible to create sub-cursors using the `get` or `get-in` functions---which only work during the render phase---but if the underlying value is a primitive, then the primitive is returned and not a cursor.
+It's possible to create sub-cursors **only during the render phase** using the `get` or `get-in` functions but if the underlying value is a primitive, then the primitive is returned and not a cursor.
 
 The consequence of this is that it's not possible to create a component that depends on a single string, such as a text-input. A workaround for this would be to make the component depend on a _vector_ of the single string.
 
