@@ -25,6 +25,12 @@
   #stamp {
     float: left;
     font-size: 14px;
+    text-transform: uppercase;
+    font-family: $font-sans;
+
+    .emboldened {
+      font-weight: bold;
+    }
 
     @media screen and (max-width: 766px) {
       float: none;
@@ -33,17 +39,17 @@
       margin: 0 auto;
     }
 
-    h1 {
-      font-weight: 400;
+    #name {
       font-size: 2em;
       line-height: 1;
+      font-weight: 400;
     }
 
-    h4 {
+    #pseudonym {
       color: $color-gray01;
       text-align: right;
       cursor: default;
-      font-family: $font-sans;
+      font-weight: 400;
     }
   }
 }
