@@ -116,16 +116,16 @@ An alternative is to modify the executable's rpath using the `$ORIGIN` linker va
 The simplest way to accomplish this is to use the `CMAKE_EXE_LINKER_FLAGS` variable to specify the linker flag. Clang will complain if these are defined in `CMAKE_CXX_FLAGS` because those flags are passed to it even when it's merely compiling `-c` source files, to which linker flags obviously don't apply.
 
 ``` cmake
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN'")
+set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags")
+set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,'$ORIGIN'")
 ```
 
 There's also a "built-in" way to accomplish this using CMake. By default, this method only applies to installed files, which means it won't apply until the project's installation procedure is run. This is easily changed so that it applies during regular builds:
 
 ``` cmake
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags")
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-set(CMAKE_INSTALL_RPATH "$ORIGIN")
+set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags")
+set (CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set (CMAKE_INSTALL_RPATH "$ORIGIN")
 ```
 
 It's important to note that the rpath corresponds to an ELF dynamic section attribute. Historically the attribute has been `DT_RPATH`, but recently it has fallen out of favor for a more flexible `DT_RUNPATH` which honors `LD_LIBRARY_PATH`, allowing for greater user flexibility.
