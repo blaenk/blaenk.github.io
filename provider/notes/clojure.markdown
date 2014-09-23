@@ -193,7 +193,7 @@ Tagged literals are custom data readers. On startup, Clojure looks for files nam
 
 The Var `#'my.project.foo/bar` is invoked by the reader on vector `[1 2 3]` _after_ it has been read as a normal Clojure data structure by the reader. That is, the reader will parse the form after the tag as a data structure, then invoke the tagged literal function on the data structure itself. The tagged literal function should then return a value that _replaces_ the tagged data structure in the final result [^clojurescript_js].
 
-[^clojurescript_js]: This is used in Om in the form of `#j` to parse a map and output JSON in its place, or parse a vector and output an array in its place.
+[^clojurescript_js]: This is used in Om in the form of `#js` to parse a map and output JSON in its place, or parse a vector and output an array in its place.
 
 # Namespaces
 
@@ -1825,6 +1825,8 @@ The `alts!` function can be used in `go` blocks to wait for any one of a set of 
 
 Given the persistent, immutable nature of data structures in Clojure, it's safe and efficient to place them in channels.
 
+Broadcast channels can be created by creating a _mult_ channel from the source channel with the `mult` function. Other channels can _tap into_ the mult channel with the `tap` function, which copies the mult channel into an existing channel (i.e. mutates the channel). Data is sent through the source channel as usual. To stop listening into the mult channel, the `untap` channel is used with the mult channel and the end channel as arguments.
+
 # Macros
 
 Code in Clojure is represented as data structures, as was described in [homoiconicity](#homoiconicity). These structures are then evaluated depending on the data type's rules, such as most literals evaluating to themselves (integers, strings, keywords, etc.), symbols evaluating to the value in the var in some namespace, and lists to calls of functions, special forms, or macros.
@@ -2436,6 +2438,8 @@ To perform ahead-of-time (AOT) compilation, an `:aot` slot needs to be added to 
 *[AOT]: Ahead-of-Time
 
 It may be useful to perform AOT compilation as a sanity check, but ignore the produced class files. While Maven has support for this, Leiningen doesn't and so the best approximation would be to perform a `compile` followed by a `clean`.
+
+I encountered problems when setting `:aot` in the `dev` environment, it seems to particularly conflict with leiningen plugins. For this reason it's probably best to reserve this option for the `uberjar` or other release environment.
 
 # Java Interoperability
 
