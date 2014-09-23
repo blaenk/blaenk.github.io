@@ -55,7 +55,7 @@ Everything in Rust is private by default with a single exception. If an enumerat
 
 Visibility restrictions are only applicable at module boundaries, so that private items are available within the same module and its descendants.
 
-Source files and modules are not the same thing. The only file that's relevant when compiling is the one that contains the body of the crate root. Declaring a module without a body prompts the compiler to look for a file named after that module or for a file named `mod.rs` in a folder named after that module.
+Source files and modules are not the same thing. The only file that's relevant when compiling is the one that contains the body of the crate root. Declaring a module without a body prompts the compiler to look for a file named after that module or for a file named `mod.rs` in a folder named after that module, and use its contents as the module's body.
 
 ``` rust
 mod plants;
@@ -129,12 +129,12 @@ mod farm {
 }
 ```
 
-It's common to use existing libraries, which in rust are simply referred to as crates. The `extern mod` declaration is used to reference other crates, similar to `extern` in C.
+It's common to use existing libraries, which in rust are simply referred to as crates. The `extern crate` declaration is used to reference other crates, similar to `extern` in C.
 
-Items imported via `extern mod` can be shadowed by local declarations and by items imported by `use`, so they must go before both. Crates declared in an `extern mod` declaration are looked for in the library search path, which can be expanded with the `-L` switch.
+Items imported via `extern crate` can be shadowed by local declarations and by items imported by `use`, so they must go before both. Crates declared in an `extern crate` declaration are looked for in the library search path, which can be expanded with the `-L` switch.
 
 ``` rust
-extern mod num;
+extern crate num;
 
 use farm::dog;
 use num::rational::Ratio;
@@ -149,10 +149,10 @@ fn main() {
 }
 ```
 
-Crates can contain metadata used for the resultant libraries, such as the package ID:
+Crates can contain metadata used for the resultant libraries:
 
 ``` rust
-#![crate_id = "farm#2.5"];
+#![crate_name = "farm"];
 
 #![desc = "Farm"]
 #![license = "BSD"]
@@ -162,25 +162,23 @@ Crates can contain metadata used for the resultant libraries, such as the packag
 #![crate_type = "lib"];
 ```
 
-This information can be used to select the crate from the `extern mod` declaration:
+This information can be used to select the crate from the `extern crate` declaration:
 
 ``` rust
-extern mod farm = "farm#2.5";
-// or
-extern mod my_farm = "farm";
+extern crate farm = "farm";
 ```
 
 For example, here's an example library, its compilation, and usage:
 
 ~~~ {.rust text="world.rs"}
-#[crate_id = "world#0.42"];
+#[crate_name = "world"];
 #[crate_type = "lib"];
 
 pub fn explore() -> &'static str { "world" }
 ~~~
 
 ~~~ {.rust text="main.rs"}
-extern mod world;
+extern crate world;
 fn main() {
   println!("hello {}", world::explore());
 }
@@ -196,7 +194,7 @@ $ ./main
 Many predefined items such as `range` and `Option<T>` come from the standard library's prelude, similar to Haskell's. The rust compiler automatically inserts the following into the crate root:
 
 ``` rust
-extern mod std;
+extern crate std;
 
 // to prevent: in crate root
 #[no_std];
@@ -302,7 +300,8 @@ fn foo() -> (u64, u64, u64, u64, u64, u64) {
   (5, 5, 5, 5, 5, 5)
 }
 
-let x = box foo(); // allocates result in a box and writes u64's directly to it
+// allocates result in a box and writes u64's directly to it
+let x = box foo();
 ```
 
 ## Managed Boxes
@@ -534,7 +533,7 @@ if !items.contains_key(& &"key1") {
 Objects have lifetimes which aid the borrow checker in enforcing valid borrowing. The compiler automatically sets the lifetimes. In the following example, the compiler may give `integer` lifetime `'i` and `ref_to_int` lifetime `'r` with type `&'i int` denoting that it's a reference type that points to an `int` of lifetime `'i`.
 
 ``` rust
-let integer: Int = 5
+let integer: int = 5
 let ref_to_int: &int = &integer;
 ```
 
@@ -776,16 +775,15 @@ view[0] = 5;
 let ys: &mut [int] = &mut [1, 2, 3];
 ```
 
-Vectors can be destructured using pattern matching:
+[RFC #58](https://github.com/rust-lang/rfcs/pull/198) adds overloaded slice notation via the `Slice` and `SliceMut` traits.
 
 ``` rust
-let numbers: &[int] = &[1, 2, 3];
-let score = match numbers {
-  [] => 0,
-  [a] => a * 10,
-  [a, b] => a * 6 + b * 4,
-  [a, b, c, ..rest] => a * 5 + b * 3 + c * 2 + rest.len() as int
-};
+let xs = &[1, 2, 3, 4, 5];
+
+assert_eq!(xs[], xs.as_slice());
+assert_eq!(xs[n..m], xs.slice(n, m));
+assert_eq!(xs[n..], xs.slice_from(n));
+assert_eq!(xs[..m], xs.slice_to(m));
 ```
 
 ## Vectors
@@ -881,6 +879,14 @@ struct Test {
 let Test { age, apples } = b;
 ```
 
+[RFC #51](https://github.com/rust-lang/rfcs/blob/master/active/0051-if-let.md) added support for `if-let` pattern matching as in [swift](/notes/swift/#optionals), where the condition succeeds if the pattern matches.
+
+``` rust
+if let Some(x) = optional {
+  doSomething(x);
+}
+```
+
 # Control Structures
 
 The for loop is in the form of `for-in`; there is no explicit increment looping via for loops. The `loop` keyword denotes an infinite loop.
@@ -897,6 +903,21 @@ struct Point {
 
 match mypoint {
   Point { x, .. } => { println(x.to_str()) }
+}
+```
+
+Structures can define methods by providing implementations.
+
+``` rust
+impl Point {
+  fn static() {
+    // static method
+  }
+
+  // or fn something(self: &Self)
+  fn something(&self) {
+    // method
+  }
 }
 ```
 
@@ -928,26 +949,6 @@ enum Shape {
 }
 ```
 
-# Implementations
-
-Implementations specifically provide implementations for traits, and they can be type parameterized as well. The type parameter list after the `impl` introduces the type parameters used in the rest of the declaration.
-
-``` rust
-trait Seq<T> {
-   fn len(&self) -> uint;
-   fn elt_at(&self, n: uint) -> T;
-   fn iter(&self, |T|);
-}
-
-impl<T> Seq<T> for Vec<T> {
-  // implement Seq for all types T on Vec
-}
-
-impl Seq<bool> for u32 {
-  // implement Seq<bool> for u32
-}
-```
-
 # Tuples
 
 Tuples are available and are most similar to Haskell's. **Tuple structs** behave like both structs and tuples. They're like tuples with names. Tuple structs with a single field are similar to Haskell newtypes and are often called the same thing in Rust. These provide a distinct type from the type they wrap. Newtypes' wrapped values can be extracted using the dereference operator `*`:
@@ -961,6 +962,17 @@ let mytup: MyTup = Mytup(10, 20, 30.0)
 struct GizmoId(int);
 let my_gizmo_id: GizmoId = GizmoId(10);
 let id_int: int = *my_gizmo_id;
+```
+
+[RFC #53](https://github.com/rust-lang/rfcs/blob/master/complete/0053-tuple-accessors.md) adds tuple accessor syntax which applies to tuples and tuple structs. Only one level is possible since more than one would be considered a float.
+
+``` rust
+let mut tpl = (0, 1);
+tpl.1 = 2;
+
+struct Foo(int, int);
+let mut foo = Foo(3, -15);
+foo.0 = 5;
 ```
 
 # Functions
@@ -1016,7 +1028,6 @@ enum Shape {
 }
 
 impl Shape {
-  // or fn draw(self: &Self)
   fn draw(&self) {
     match *self {
       Circle(p, f)      => draw_circle(p, f),
@@ -1065,7 +1076,7 @@ let mut max = 0;
 [1, 2, 3].map(|x| if *x > max { max = *x })
 ```
 
-Owned closures are written with `proc`, e.g. `proc(arg: int)`, and they own values that can be sent safely between processes. The values they close over are copied, and they become owned by the closure. These are particularly used in concurrent scenarios, particularly for spawning tasks.
+Owned closures are written with `proc`, e.g. `proc(arg: int)`, and they own values that can be sent safely between processes. As a result, they can only be called once. The values they close over are copied, and they become owned by the closure. These are particularly used in concurrent scenarios, particularly for spawning tasks.
 
 Despite there being different types of closures, functions that expect a `||` closure can accept any kind of closure provided they have the same arguments and return types. For this reason, higher-order functions should usually define their closure types as `||` so that callers can pass any kind of closure.
 
@@ -1109,8 +1120,8 @@ impl<T: Eq> Eq for List<T> {
   fn eq(&self, ys: &List<T>) -> bool {
     match (self, ys) {
       (&Nil, &Nil) => true,
-      (&Cons(ref x, box ref next_xs), &Cons(ref y, box ref next_ys)) if x == y =>
-        next_xs == next_ys,
+      (&Cons(ref x, box ref next_xs), &Cons(ref y, box ref next_ys))
+        if x == y => next_xs == next_ys,
       _ => false
     }
   }
@@ -1192,7 +1203,7 @@ impl Printable for String {
 }
 ```
 
-Traits may be parameterized by type variables.
+Traits may be parameterized by type variables. Traits can be implemented generically or specifically for a particular type.
 
 ``` rust
 trait Seq<T> {
@@ -1203,6 +1214,10 @@ impl<T> Seq<T> for Vec<T> {
   fn length(&self) -> uint {
     self.len()
   }
+}
+
+impl Seq<bool> for u32 {
+  // implement Seq<bool> for u32
 }
 ```
 
@@ -1293,8 +1308,8 @@ fn radius_times_area<T: Circle>(c: T) -> f64 {
   c.radius() * c.area()
 }
 
-let concrete = @CircleStruct { center: Point {x: 3f, y: 4f}, radius: 5f }
-let mycircle: @Circle = concrete as @Circle;
+let concrete = box CircleStruct { center: Point {x: 3f, y: 4f}, radius: 5f }
+let mycircle: Box<Circle> = concrete as Box<Circle>;
 let nonsense = mycircle.radius() * mycircle.area();
 ```
 
@@ -1334,14 +1349,14 @@ The `Clone` trait can be implemented to support copying of types via the `clone`
 #[deriving(Clone,Show)]
 struct Pair(Box<int>, Box<int>);
 
-fn main() [
+fn main() {
   let pair = Pair(box 1, box 2);
   let cloned_pair = pair.clone();
 
   drop(pair);
 
   println!("clone: {}", cloned_pair);
-]
+}
 ```
 
 ## Operator Overloading
@@ -1903,7 +1918,7 @@ Comments are available in single and multi-line variants as in C. Single line co
 Test functions are marked with the `test` attribute and use the `assert!` macro for asserting conditions. Test functions must not have any arguments or return values. A test is considered successful if the function returns, and fails if the test fails through `fail!`, `assert`, or any other means.
 
 ``` rust
-fn return_two() -> int { 2  }
+fn return_two() -> int { 2 }
 
 #[test]
 fn return_two_test() {
@@ -1981,7 +1996,7 @@ The testsuite supports ratcheting against a metrics file, which basically compar
 [Cabal]: http://www.haskell.org/cabal/
 [contains]: http://crates.io/manifest.html
 
-``` ini
+``` toml
 [package]
 
 name = "hello_world"
@@ -2004,7 +2019,7 @@ Hello, world!
 
 Dependencies may be expressed by adding sections of the form `[dependency.name]` with a property of type `git` or `path` with the appropriate path.
 
-``` ini
+``` toml
 [dependencies.color]
 
 git = "https://github.com/bjz/color-rs"
@@ -2024,4 +2039,50 @@ Simple input can be achieved using the `io::stdin()` function to retrieve a [`Bu
 let input = io::stdin().read_line().ok().expect("failed to read line");
 println!("{}", input);
 ```
+
+# Documentation
+
+A built-in tool called `rustdoc` can be used to generate documentation, similar to [haddock](/notes/haskell#documentation) with Haskell. Documentation is primarily provided using "doc comments" which are simply line comments immediately followed by an exclamation mark: `//!`. Doc comments are implicitly converted to `doc` attributes by the compiler, which themselves may be used explicitly as well.
+
+``` rust
+//! Calculates the factorial of a number
+
+#[doc = "
+Calculates the factorial of a number.
+"]
+pub fn factorial(n: int) -> int { ... }
+```
+
+The `doc` attribute can also be used to control how documentation is emitted, such as to prevent inlining documentation of a `pub use`.
+
+``` rust
+#[doc(no_inline)]
+pub use std::option::Option;
+```
+
+Code examples can be provided within documentation as regular code blocks, and those marked as being Rust code can be tested using the `--test` option with `rustdoc`. The `ignore` directive can be provided instead of a language to not run that code block but still highlight it as rust. The `should_fail` directive specifies that the code block is expected to fail, and thus shouldn't be considered an error when testing. The `no_run` directive specifies that the code block should be compiled but not run. The `test_harness` directive compiles the code as if `--test` were passed to the compiler.
+
+~~~ rust
+```rust{.example}
+// some code
+```
+
+```test_harness
+#[test]
+fn foo() {
+  fail!("runs and registers as failure");
+}
+```
+~~~
+
+Tests are facilitated by implicitly adding `extern crate doc-target` at the top of each code example.
+
+If a line is prefixed with `#`, then the line won't show up in the resulting HTML but it _will_ be used when testing the code block.
+
+~~~ rust
+```
+# fn fib(n: int) { n + 2 }
+spawn(proc() { fib(200); })
+```
+~~~
 
