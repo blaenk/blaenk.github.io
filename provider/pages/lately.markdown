@@ -5,7 +5,7 @@ comments: off
 toc: off
 ---
 
-This page lists some of the things that I've been up to lately.
+This page lists some of the things that I've been up to lately. I try my best to keep it up-to-date.
 
 ## Reading
 
@@ -13,21 +13,15 @@ At any moment I have a handful of books that I'm currently reading. I find that 
 
 <img src="/images/books/java.jpg" class="right" width="128">
 
-* [Java: The Complete Reference](http://amzn.com/0071808558) --- I've always "known" Java through my use of it in school where it was sometimes required, but never formally learned it. With the release of Java 8 and the many new languages that are targeting the JVM, I felt it would be a good idea to sweep through a Java book to ensure that I understand the nook and crannies of Java.
+* [Java: The Complete Reference](http://amzn.com/0071808558) --- I've always "known" Java through my use of it in school where it was sometimes required, but I never formally learned it. With the release of Java 8 and the many new languages that are targeting the JVM, I felt it would be a good idea to sweep through a Java book to ensure that I understand the nook and crannies of Java.
 
     I was specifically looking for a book that served more as a reference instead of a beginner-oriented book that which I would have to sift through to find the nuggets of actual information, past the exercises and code examples. This book seems well regarded and has so far served that purpose.
-
-<img src="/images/books/kingkiller.jpg" class="right" width="128">
-
-* [The Name of the Wind](http://amzn.com/0756405890) --- After finishing two major series from Brandon Sanderson, I felt like changing it up and had heard very good things of Patrick Rothfuss' _Kingkiller Chronicles_. Like Sanderson, Rothfuss seems to be pretty new to epic fantasy but is already very well established and widely acclaimed.
-
-    I'm still going through the phase one goes through when approaching a new epic fantasy series, of getting acclimated to the world and understanding the different elements of it. The world reminds me more of GRRM's world in _A Song of Ice and Fire_ than Sanderson's worlds; it is dark and gritty.
 
 <img src="/images/books/onchina.jpg" class="right" width="128">
 
 * [On China](http://amzn.com/0143121316) --- China has always interested me as seeming like a world within a world. I had previously seen some [edX courses] about China that seemed to be _very_ good, but I tend to prefer reading rather than watching when it comes to learning.
 
-    This book by [Henry Kissinger] goes over the historical perspective that informs China's current state of affairs. Henry Kissinger is the one that orchestrated the opening of relations with China when he served as Secretary of State during the Nixon Administration, so he's no stranger to the country. The book seems to go over parts of Chinese history in chronologically leading up to modern day, and it is simply _engrossing_.
+    This book by [Henry Kissinger] goes over the historical perspective that informs China's current state of affairs. Henry Kissinger is the one that orchestrated the opening of relations with China when he served as Secretary of State during the Nixon Administration, so he's no stranger to the country. The book seems to go over parts of Chinese history chronologically leading up to modern day, and it is simply _engrossing_.
 
 [Henry Kissinger]: http://en.wikipedia.org/wiki/Henry_Kissinger
 [edX courses]: https://www.edx.org/course/harvardx/harvardx-sw12x-china-920
@@ -45,14 +39,6 @@ At any moment I have a handful of books that I'm currently reading. I find that 
 * [Programming Erlang](http://amzn.com/193778553X) [[notes](/notes/erlang/)] --- Erlang was the first functional programming language I attempted to learn. The combination of foreign (to me) programming paradigm and actor concurrency model was enough to prevent me from seeing the bigger picture, and so I never finished learning it, instead opting for Haskell.
 
     I don't like to leave things like these unfinished, so now that I have a solid understanding of functional programming and the actor concurrency model, I'm attempting to give Erlang a second chance. I don't particularly see myself using Erlang; I think Haskell is a superior language and Scala has access to a more vibrant and robust package ecosystem. However, Erlang and its OTP library are known to be very robust, so my intention with learning it is to see what ideas I can pick up from them.
-
-<img src="/images/books/angularjs.jpg" class="right" width="128">
-
-* [Mastering Web Application Development with AngularJS](http://amzn.com/1782161821) [[notes](/notes/angular/)] --- I've found [Angular.js] to be an immensely powerful tool for front-end development. Gone are the days of manual, ad-hoc data-binding. Like other MVC-like front-end frameworks, Angular encourages structure and testability over jQuery spaghetti in a front-end application.
-
-    Angular's templates are directly written in HTML using tag attributes, or _directives_, which are given meaning in code. This makes HTML itself highly extensible and gives the templates clearer meanings. Angular provides a leap in productivity that is similar to jQuery's in its day.
-
-[Angular.js]: http://angularjs.org
 
 ## Studying
 
