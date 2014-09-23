@@ -8,7 +8,7 @@ $base2:         #eee8d5 !default; //
 $base3:         #fdf6e3 !default; //
 $solar-yellow:  #b58900 !default; //
 $solar-orange:  #cb4b16 !default; //
-$solar-red:     #dc322f !default; // parentheses
+$solar-red:     #C82829 !default; // parentheses
 $solar-magenta: #d33682 !default; //
 $solar-violet:  #6c71c4 !default; //
 $solar-blue:    #268bd2 !default; // haskell: function
@@ -17,34 +17,48 @@ $solar-green:   #859900 !default; //
 
 .language-javascript {
   .kd { color: $solar-cyan; }
-  .nx { color: $solar-blue; }
+  .nx { color: inherit; }
+}
+
+.language-go {
+  .nx { color: inherit; }
+  .kn { color: $solar-violet; }
 }
 
 .language-clojure {
-  .kd { color: $solar-green; }
-  .nf { color: $solar-cyan; }
-  .nb { color: $solar-violet; }
-  // .ss { color: $solar-green; }
+  .kd, .k {
+    color: $solar-violet;
+    font-weight: bold;
+  }
+  .nv { color: inherit; }
+  .nb, .nf {
+    color: $solar-blue;
+  }
 }
 
 .language-haskell {
-  .nn { color: $solar-blue; }
+  .nn {
+    color: $solar-magenta;
+  }
+  .cm { color: $base01; }
 }
 
 .language-scala {
-  .nc { color: $solar-yellow; }
+  .nc { color: $solar-red; }
   .nn { color: $solar-cyan; }
 }
 
 .language-gdb {
   .kt { color: $solar-cyan; }
-  .nb { color: $solar-red; }
+  .nb { color: $solar-violet; }
   .nv { color: $solar-green; }
 }
 
 .language-rust {
-  .cp { color: $solar-orange; }
   .k { color: $solar-violet; }
+  .kd { color: $solar-green; }
+  .nl { color: $solar-orange; }
+  .s-Raw { color: $solar-orange; }
 }
 
 .language-html {
@@ -71,19 +85,20 @@ $solar-green:   #859900 !default; //
 }
 
 .language-java {
-  .o { color: $solar-red; }
-  .nc { color: $solar-cyan; }
+  .o { color: $base1; }
+  .nc { color: $solar-red; }
   .nn { color: $solar-violet; }
+  .kc { color: $solar-cyan; }
 }
 
 .language-lua {
-  .kd { color: $solar-green; } // local etc.
+  .kd { color: $solar-violet; } // local etc.
 }
 
 .language-cmake {
-  .nb { color: $solar-green; }
-  .nv { color: $solar-yellow; }
-  .s { color: $solar-blue; }
+  .nb { color: $solar-blue; }
+  .nv { color: $solar-green; }
+  .s { color: inherit; }
 }
 
 // inline
@@ -97,17 +112,12 @@ code.path {
   padding: 0;
 }
 
-.highlight {
-   color: #2381c4;
-   background-color: inherit;
-}
-
 code {
   .bp { color: $solar-blue }   // Name.Builtin.Pseudo
   .c { color: $base1 }        // Comment
   .c1 { color: $base1 }        // Comment.Single
   .cm { color: $base1 }       // Comment.Multiline
-  .cp { color: $solar-green }  // Comment.Preproc
+  .cp { color: $base01 }  // Comment.Preproc
   .cs { color: $solar-green }  // Comment.Special
   .err { color: $base1 }       // Error
   .g { color: $base1 }         // Generic
@@ -126,38 +136,38 @@ code {
   .gt { color: $base1 }        // Generic.Traceback
   .gu { color: $solar-orange } // Generic.Subheading
   .il { color: $solar-cyan }   // Literal.Number.Integer.Long
-  .k { color: $solar-green }   // Keyword
+  .k { color: $solar-violet }   // Keyword
   .kc { color: $solar-orange } // Keyword.Constant
   .kd { color: $solar-blue }   // Keyword.Declaration
   .kn { color: $solar-green }  // Keyword.Namespace
   .kp { color: $solar-green }  // Keyword.Pseudo
   .kr { color: $solar-cyan }   // Keyword.Reserved
-  .kt { color: $solar-yellow } // Keyword.Type
+  .kt { color: $solar-red } // Keyword.Type
   .l { color: $base1 }         // Literal
   .ld { color: $base1 }        // Literal.Date
-  .m { color: $solar-cyan }    // Literal.Number
-  .mf { color: $solar-cyan }   // Literal.Number.Float
-  .mh { color: $solar-cyan }   // Literal.Number.Hex
-  .mi { color: $solar-cyan }   // Literal.Number.Integer
-  .mo { color: $solar-cyan }   // Literal.Number.Oct
-  .n { color: $solar-blue }    // Name
+  .m { color: $solar-orange }    // Literal.Number
+  .mf { color: $solar-orange }   // Literal.Number.Float
+  .mh { color: $solar-orange }   // Literal.Number.Hex
+  .mi { color: $solar-orange }   // Literal.Number.Integer
+  .mo { color: $solar-orange }   // Literal.Number.Oct
+  .n { color: inherit }    // Name
   .na { color: $solar-blue }        // Name.Attribute
-  .nb { color: $solar-yellow } // Name.Builtin
+  .nb { color: $solar-red } // Name.Builtin
   .nbp { color: $solar-red }   // Name.Builtin.Pseudo (self, this)
   .nc { color: $solar-blue }   // Name.Class
   .nd { color: $solar-blue }   // Name.Decorator
   .ne { color: $solar-orange } // Name.Exception
   .nf { color: $solar-blue }   // Name.Function
   .ni { color: $solar-orange } // Name.Entity
-  .nl { color: $base1 }        // Name.Label
+  .nl { color: inherit }        // Name.Label
   .nn { color: $base1 }        // Name.Namespace
   .no { color: $solar-green }  // Name.Constant
   .nt { color: $solar-blue }   // Name.Tag
   .nv { color: $solar-blue }   // Name.Variable
-  .nx { color: $base1 }        // Name.Other
+  .nx { color: inherit }        // Name.Other
   .o { color: $solar-cyan }    // Operator
   .ow { color: $solar-cyan }   // Operator.Word
-  .p { color: $solar-red }     // Punctuation
+  .p { color: $base1 }     // Punctuation
   .py { color: $base1 }        // Name.Property
   .s { color: $solar-green }   // Literal.String
   .s1 { color: $solar-green }  // Literal.String.Single
@@ -181,19 +191,19 @@ code {
 figure.codeblock {
   margin: 15px 0;
   cursor: default;
-  background: #F2F9FF;
   overflow: hidden;
+  background-color: transparent;
 
   figcaption {
     @media screen and (max-width: 600px) {
       display: none;
     }
 
-    background-color: #D0E9FF;
+    background-color: #cdcdcd;
     padding: 5px 10px;
     position: relative;
     font-size: 87.5%;
-    color: #00427B;
+    color: #444;
     text-align: center;
 
     abbr {
@@ -226,7 +236,7 @@ figure.codeblock {
 
   pre {
     overflow-x: auto;
-    background: #F2F9FF;
+    background: #f7f7f7;
     font-size: 0.875em;
     line-height: 1.3;
     padding: 10px;
@@ -237,6 +247,7 @@ figure.codeblock {
 
     .highlight {
       padding: 0;
+      background-color: transparent;
     }
   }
 }
