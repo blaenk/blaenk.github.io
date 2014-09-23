@@ -443,7 +443,7 @@ class ElementSuite extends FunSuite {
 }
 ```
 
-The assertions used in the previous two ScalaTest suites would only show an error that the assertion failed, without showing what the two values were. ScalaTest also provides a `===` operator that is more descriptived:
+The assertions used in the previous two ScalaTest suites would only show an error that the assertion failed, without showing what the two values were. ScalaTest also provides a `===` operator that is more descriptive:
 
 ``` scala
 assert(ele.width === 2) // "3 did not equal 2"
