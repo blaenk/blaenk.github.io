@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 import sys
 
 # for pig
@@ -10,6 +10,43 @@ from pygments.util import ClassNotFound
 # for GDB
 from pygments.lexer import RegexLexer, bygroups
 from pygments.token import *
+
+class TOMLLexer(RegexLexer):
+    """
+    Lexer for TOML, a simple language for config files
+    """
+
+    name = 'TOML'
+    aliases = ['toml']
+    filenames = ['*.toml']
+
+    tokens = {
+        'root': [
+
+            # Basics, comments, strings
+            (r'\s+', Text),
+            (r'#.*?$', Comment.Single),
+            (r'"(\\\\|\\"|[^"])*"', String),
+            (r'(true|false)$', Keyword.Constant),
+            ('[a-zA-Z_][a-zA-Z0-9_\-]*', Name),
+
+            # Datetime
+            (r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z', Number.Integer),
+
+            # Numbers
+            (r'(\d+\.\d*|\d*\.\d+)([eE][+-]?[0-9]+)?j?', Number.Float),
+            (r'\d+[eE][+-]?[0-9]+j?', Number.Float),
+            (r'\-?\d+', Number.Integer),
+
+            # Punctuation
+            (r'[]{}:(),;[]', Punctuation),
+            (r'\.', Punctuation),
+
+            # Operators
+            (r'=', Operator)
+
+        ]
+    }
 
 # courtesy of https://github.com/snarez/gdb_lexer
 class GDBLexer(RegexLexer):
@@ -61,24 +98,34 @@ if sys.platform == "win32":
 html = HtmlFormatter(encoding='utf-8', nowrap=True)
 
 while True:
-    lang = sys.stdin.readline().strip()
-    amt = int(sys.stdin.readline())
+    lang = sys.stdin.readline().rstrip("\n")
+    amt = int(sys.stdin.readline().rstrip("\n"))
     code = sys.stdin.read(amt)
 
     rv = ""
     try:
         try:
-            lex = GDBLexer() if lang == "gdb" else get_lexer_by_name(lang)
+            if lang == "gdb":
+                lex = GDBLexer(encoding="utf-8")
+            elif lang == "toml":
+                lex = TOMLLexer(encoding="utf-8")
+            else:
+                lex = get_lexer_by_name(lang, encoding="utf-8")
         except ClassNotFound as err:
-            lex = get_lexer_by_name("text")
+            lex = get_lexer_by_name("text", encoding="utf-8")
 
-        lex.encoding = 'utf-8'
         rv = highlight(code, lex, html)
     except ValueError as err:
-        rv = "Pygments Error: %s" % (err)
+        rv = "Pygments Error: {}".format(err)
 
     sys.stdout.write(str(len(rv)))
     sys.stdout.write("\n")
-    sys.stdout.write(rv)
     sys.stdout.flush()
+
+    if not hasattr(sys.stdout, 'buffer'):
+        sys.stdout.write(rv)
+        sys.stdout.flush()
+    else:
+        sys.stdout.buffer.write(rv)
+        sys.stdout.buffer.flush()
 

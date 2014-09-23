@@ -30,13 +30,7 @@ import qualified Text.Blaze.Html5.Attributes as A
 
 pygmentsServer :: IO Streams
 pygmentsServer = do
-#ifdef mingw32_HOST_OS
-  let python = "python"
-#else
-  let python = "python2"
-#endif
-
-  (inp, out, _, _) <- runInteractiveProcess python ["src/pig.py"] Nothing Nothing
+  (inp, out, _, _) <- runInteractiveProcess "python" ["src/pig.py"] Nothing Nothing
   return (inp, out)
 
 pygments :: Streams -> Pandoc -> Compiler Pandoc
@@ -63,7 +57,7 @@ pygmentize :: Streams -> String -> String -> Compiler String
 pygmentize (os, is) lang contents = unsafeCompiler $ do
   let lang'     = U8.fromString lang
       contents' = U8.fromString contents
-      len       = C.pack . show . C.length $ contents'
+      len       = U8.fromString . show . U8.length $ contents'
 
       -- REQUEST:  LANG\nLENGTH\nCODE
       request = C.intercalate "\n" [lang', len, contents']
@@ -71,6 +65,6 @@ pygmentize (os, is) lang contents = unsafeCompiler $ do
   mapM_ (flip S.write os) $ map Just [request, ""]
 
   -- RESPONSE: LENGTH\nRESPONSE
-  responseLength <- read . C.unpack . fromJust <$> (S.lines >=> S.read) is
+  responseLength <- read . U8.toString . fromJust <$> (S.lines >=> S.read) is
   U8.toString <$> S.readExactly responseLength is
 
