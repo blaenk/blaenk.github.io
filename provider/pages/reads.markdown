@@ -9,6 +9,14 @@ I'm [currently reading](/lately/#reading).
 
 <hr class="book">
 
+<img src="/images/books/kingkiller.jpg" class="right" width="128">
+
+<a href="http://amzn.com/0756405890" name="kingkiller1">The Name of the Wind</a> --- After finishing two major series from Brandon Sanderson, I felt like changing it up and had heard very good things of Patrick Rothfuss' _Kingkiller Chronicles_. Like Sanderson, Rothfuss seems to be pretty new to epic fantasy but is already very well established and widely acclaimed.
+
+I'm still going through the phase one goes through when approaching a new epic fantasy series, of getting acclimated to the world and understanding the different elements of it. The world reminds me more of GRRM's world in _A Song of Ice and Fire_ than Sanderson's worlds; it is dark and gritty.
+
+<hr class="book">
+
 <img src="/images/books/clojure-web-development.jpg" class="right" width="128">
 
 <a href="http://amzn.com/1937785645" name="clojure-web">Web Development in Clojure</a> [[notes](/notes/clojure-web-development/)] --- Clojure has gained prominence in web development ranging from the back-end and even in the front-end via ClojureScript. After [learning about Clojure](#clojure), it made sense to learn about Clojure's web ecosystem. Clojure has a preference for mixing and matching individual libraries instead of going for heavy, monolithic frameworks.
