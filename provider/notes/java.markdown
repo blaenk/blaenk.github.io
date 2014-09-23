@@ -28,11 +28,11 @@ Java is an interpreted language. Java code is compiled to highly optimized bytec
 
 *[JIT]: Just-in-Time
 
-JDK 8 ads the concept of compact profiles which contain a subset of the Java API. Profiles go from 1 to 3, where `compact1` is the smallest profile. When compiling a program, the profile can be specified to determine if the program conforms to the subset specified by the profile.
+JDK 8 adds the concept of compact profiles which contain a subset of the Java API. Profiles go from 1 to 3, where `compact1` is the smallest profile. When compiling a program, the profile can be specified to determine if the program conforms to the subset specified by the profile.
 
 ``` bash
 # ensure Program only uses compact1 subset
-javac -profile compact1 Program
+$ javac -profile compact1 Program
 ```
 
 # Primitives
@@ -119,10 +119,10 @@ Assertions aren't run by default due to the performance impact, but can be enabl
 
 ``` bash
 # enable all assertions
-java -ea Program
+$ java -ea Program
 
 # only enable assertions from Core package
-java -ea:Core... Program
+$ java -ea:Core... Program
 ```
 
 # Classes
@@ -902,4 +902,26 @@ Likewise, to print characters to the terminal it's preferred to use a `PrintWrit
 ``` java
 PrintWriter pw = new PrintWriter(System.out, true);
 ```
+
+# Strings
+
+String objects are automatically created from string literals, which means that string literals may be used as if they were String objects themselves. When working with regions, the end index is one-past the last affected index, as with C++ iterators.
+
+Java automatically converts data to strings using the `String`'s static method `valueOf`, which is overloaded for all primitive types and `Object`. For other objects, `valueOf` calls the object's `toString` method.
+
+The `equals` and `equalsIgnoreCase` methods can be used to determine if a string is equal to another. The `regionMatches` method can be used to determine if separate regions of two different strings match. The `startsWith` and `endsWith` methods can be used to determine if a string ends or begins with another string. The `Comparable` interface's `compareTo` and `compareToIgnoreCase` methods can be used to get a less, equal, or greater than result with respect to another string.
+
+The `indexOf` and `lastIndexOf` methods can be used to obtain the index where the first occurrence of a substring begins. There are overloads which take a starting point as well, which can simplify getting all the positions of all of the occurrences.
+
+Strings are immutable, so operations that appear to modify them simply return new copies of the resulting strings. The `substring` method can be used to extract a copy of a region of a string given a starting index and optionally en ending index. The `replace` method can replace all occurrences of a character with another. An overload exists which replaces character sequences. The `replaceAll` method can replace any substring that matches the given regex with the specified string.
+
+JDK 8 adds a static `join` method that can join a number of strings with a given delimiter. Conversely, the `split` method can split a string based on a regex.
+
+## StringBuffer
+
+The `StringBuffer` class can represent a growable, mutable string. JDK 5 added `StringBuilder` which is similar but not thread-safe, making it inadvertently faster.
+
+It's possible to ensure a certain capacity is available with the `ensureCapacity` method which is given the minimum size that the buffer should have. The `setLength` method can be used to either extend the string by adding null characters or to truncate the string.
+
+`StringBuffer` provides a `setCharAt` method that can modify a character at the provided position. The `append` method can concatenate strings to the buffer while returning the updated buffer, allowing calls to this method to be chained. The `insert` method can insert a given string at the specified index. The `reverse` method can reverse the string. The `delete` and `deleteCharAt` methods can remove a region of the string or a single character, respectively. The `replace` method is similar to `String`'s except it's in-place.
 
