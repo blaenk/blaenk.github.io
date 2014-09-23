@@ -294,24 +294,22 @@ Finally, I added support for basic HTTP authentication.
 
 ## Projects
 
-##### Carson: Lightweight, "Real-Time" Web Interface for rtorrent {#carson .collapse}
+##### Levee: Web Interface for rtorrent {#levee .collapse}
 
 <div class="collapsible">
 
-[Carson] is a web interface for [rtorrent]. The back-end is a Python [Flask] application serving a simple JSON API to an [Angular.js] front-end. The back-end communicates with rtorrent via [SCGI]-transported [XML-RPC]. The front-end uses HTML5 Canvas to render download progress elegantly and WebSockets to continuously provide the user with updates on the state of the downloads (e.g. progress, status, etc.). The front-end is designed to be highly interactive and responsive, allowing drag-and-drop file uploads for example.
+[Levee] is a web interface for [rtorrent]. The back-end is written in Clojure using a combination of [http-kit] and [compojure], while the front-end is written in ClojureScript using [Om], which itself is built on top of Facebook's [React].
 
-[Carson]: https://github.com/blaenk/carson
-[rtorrent]: http://libtorrent.rakshasa.no/
-[Flask]: http://flask.pocoo.org/
-[Angular.js]: http://angularjs.org/
-[SCGI]: http://en.wikipedia.org/wiki/Simple_Common_Gateway_Interface
-[XML-RPC]: http://en.wikipedia.org/wiki/XML-RPC
+[Levee]: https://github.com/blaenk/levee
+[rtorrent]: http://rakshasa.github.io/rtorrent/
+[http-kit]: http://http-kit.org
+[compojure]: https://github.com/weavejester/compojure
+[Om]: https://github.com/swannodette/om
+[React]: http://facebook.github.io/react/
 
-It's also made with multiple users in mind, complete with a simple role-based authorization system, invitation system, and lock system. A user can express interest in a particular download by "locking" it, which prevents it from automatically being removed after a certain amount of time as part of the back-end management systems.
+It consists of a clean, responsive UI with support for drag-and-drop file uploads, WebSockets for up-to-date information, and a simple locking system to facilitate a multi-user environment.
 
-Creating an interface for rtorrent---or any separate and independent program---presents a problem of where to store additional interface-related metadata per item in the program. For example, with the aforementioned locking system, it's necessary to know which download is locked by which users. This can easily be stored in a secondary location, such as a traditional RDBMS, but this creates a problem of synchronization. Background jobs should be run to ensure that the data in the RDBMS reflects the latest state of the delegate program, to ensure that data doesn't linger in the RDBMS for items which are no longer even present in the delegate program.
-
-I decided to circumvent the issue entirely by storing the data inside the items in the delegate program itself. This is done by using an rtorrent XML-RPC API function to store arbitrary data in a particular download. I serialize my interface's metadata in JSON, encode it with Base64, then use this function to store this data inside the item. When the interface then goes to collected the data from rtorrent, it pulls this data along as well and decodes it into data usable by the interface. If a download is removed from rtorrent, the accompanying metadata is simply removed along with it.
+Torrent metadata pertaining to Levee is stored in the torrent itself, thereby avoiding the need to maintain consistency between rtorrent and a separate database.
 
 </div>
 
