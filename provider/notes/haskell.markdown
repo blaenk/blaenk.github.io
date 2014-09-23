@@ -15,6 +15,35 @@ I'm actually familiar with Haskell now. This very site is written in Haskell, an
 *[PLT]: Programming Language Theory
 *[GHC]: Glasgow Haskell Compiler
 
+It's possible to build an EPUB eBook of the [GHC User Guide]. You'll need to have the [required dependencies] to build the documentation. In my experience I ended up having to boot an Ubuntu VM because the xsltproc packages on arch were too new. It's necessary to [build the documentation] at least once to generate the necessary files, which unfortunately ends up building GHC itself it seems.
+
+[GHC User Guide]: https://www.haskell.org/ghc/docs/latest/html/users_guide/
+[required dependencies]: https://ghc.haskell.org/trac/ghc/wiki/Building/Preparation/Linux
+[build the documentation]: https://ghc.haskell.org/trac/ghc/wiki/Building/Docs
+
+``` bash
+$ ./configure
+$ cd docs/users_guide
+$ make html stage=0 FAST=YES
+$ cd ..
+$ /usr/bin/xsltproc \
+    --stringparam base.dir docs/users_guide/users_guide/ \
+    --stringparam use.id.as.filename 1 \
+    --stringparam epub.stylesheet fptools.css \
+    --nonet \
+    --stringparam toc.section.depth 3 \
+    --stringparam section.autolabel 1 \
+    --stringparam section.label.includes.component.label 1 \
+    http://docbook.sourceforge.net/release/xsl/current/epub3/chunk.xsl \
+    docs/users_guide/users_guide.xml
+$ cd docs/users_guide
+$ rm *.html
+$ echo "application/epub+zip" > mimetype
+$ zip -0Xq ghc.epub mimetype
+$ zip -Xr9D ghc.epub *
+$ stat ghc.epub
+```
+
 * toc
 
 # Type Classes
@@ -343,20 +372,20 @@ Images can be embedded with `<<path.png title>>` syntax.
 
 It's possible to link to Haskell identifiers that are types, classes, constructors, or functions by surrounding them with single quotes. If the target is not in the scope, they may be referenced by fully qualifying them.
 
-``` haskell
+```
 -- | This module defines the type 'T'
 -- It has nothing to do with 'M.T'
 ```
 
 Alternatively, it's possible to link to a module entirely by surrounding the name with double quotes.
 
-``` haskell
+```
 -- | This is a reference to the "Foo" module
 ```
 
 Code blocks may be inserted by surrounding the paragraph with `@` signs, where its content is interpreted as normal markup. Alternatively, it's possible to do so by preceding each line with a `>`, in which case the text is interpreted literally.
 
-``` haskell
+```
 -- | this is some documentation that includes code
 --
 -- @
@@ -368,7 +397,7 @@ Code blocks may be inserted by surrounding the paragraph with `@` signs, where i
 
 It's possible to denote REPL examples with `>>>`, followed by the result.
 
-``` haskell
+```
 -- | demonstrating the REPL example syntax
 --
 -- >>> fib 10
