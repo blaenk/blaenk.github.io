@@ -75,14 +75,14 @@ var optionalString: String? = "hi"
 var surveyAnswer: String? // set to nil
 ```
 
-If statements can operate on an optional value, evaluating to `true` if the optional does contain a value and `false` otherwise. A `!` suffix on an optional can then _force unwrap_ the contained value, though note that force unwrapping an optional with no contained value produces a run-time error.
+Optionals can be compared explicitly against `nil` to see if they have a value. A `!` suffix on an optional can then _force unwrap_ the contained value, though note that force unwrapping an optional with no contained value produces a run-time error.
 
 An alternative to this is to perform an _optional binding_ to bind the contained value within the body in the event that there is a value present. Note that either `let` or `var` can be used for the binding, depending on the situation.
 
 ``` swift
 var optionalString: String? = "hi"
 
-if optionalString {
+if optionalString == nil {
   println("force unwrapped: \(optionalString!)")
 }
 
@@ -94,6 +94,14 @@ if let actualNumber = possibleNumber.toInt() {
 ```
 
 When working with optional values, the `?` can be written before operations such as methods, properties, and subscripting. If the value before the `?` is `nil`, the result of the whole expression is `nil`. Otherwise, the operation continues. In either case, the result is an optional value.
+
+Tuples can also be marked optional by following the type with a question mark:
+
+``` swift
+var someTuple: (Int, Int)? = nil
+```
+
+There is a nil coalescing operator as in C# that unwraps the optional's value if it exists or returns a default value if it's `nil`.
 
 ## Implicit Optionals
 
@@ -199,8 +207,7 @@ Unicode scalars can be inserted into strings using the following notation, where
 Notation    Type
 ---------   -----
 Single-byte `\xnn`
-Two-byte    `\unnnn`
-Four-byte   `\Unnnnnnnn`
+Arbitrary   `\u{nnnn}`
 
 The `isEmpty` property can be used to determine if the string is empty.
 
@@ -216,14 +223,14 @@ let yenSign: Character = "¥"
 
 The number of characters in a string can be calculated using the global `countElements` function, which iterates through the length of the string to count the number characters, taking into account the fact that different Unicode characters may require more than one 16-bit unit.
 
-The original `length` function of `NSString` doesn't do this, and instead returns the number of 16-bit units. Swift's `utf16count` function on `String` types is its equivalent.
+The original `length` function of `NSString` doesn't do this, and instead returns the number of 16-bit units. Swift's `utf16Count` function on `String` types is its equivalent.
 
 ``` swift
 let test = "Koala 🐨, Snail 🐌, Penguin 🐧, Dromedary 🐪"
 println("test has \(countElements(test)) characters")
 ```
 
-The addition `+` operator can be used for `String` concatenation, either between two `String` values, two `Character` values, or one of each. The same can be done with the compound `+=` operator, though not if the LHS is a character.
+Characters can be added to strings using the `append` method.
 
 *[LHS]: Left-Hand Side
 
@@ -278,7 +285,7 @@ var shoppingList: [String] = [
   ]
 ```
 
-Arrays support `count` and `isEmpty` properties, as well as an `append` method which is aliased to the `+=` operator, which supports appending either a single item or an array of items.
+Arrays support `count` and `isEmpty` properties, as well as an `append` method, which supports appending either a single item or an array of items.
 
 Arrays can be accessed and modified via subscript. It's also possible to modify multiple values at once using range syntax within the subscript. A run-time error is triggered if the range is exceeds the array's bounds. If less items are provided than the specified range allows, the remaining elements are removed.
 
@@ -634,11 +641,11 @@ struct FixedLengthRange {
 }
 ```
 
-Lazy stored properties, denoted by the `@lazy` attribute, are properties whose initial values are not calculated until the first time they are accessed. Since the initial value may not be retrieved until after initialization completes, lazy properties must be defined as variable and not constants, since constant properties must be initialized before initialization completes.
+Lazy stored properties, denoted by the `lazy` declaration modifier, are properties whose initial values are not calculated until the first time they are accessed. Since the initial value may not be retrieved until after initialization completes, lazy properties must be defined as variable and not constants, since constant properties must be initialized before initialization completes.
 
 ``` swift
 class SomeClass {
-  @lazy var expensiveValue = ExpensiveObject()
+  lazy var expensiveValue = ExpensiveObject()
 }
 ```
 
@@ -849,7 +856,7 @@ A read-only property can be overridden as a read-write property by providing a g
 
 An overriding setter and overriding property observer are mutually exclusive, since the changes can already be observed in the setter.
 
-It's possible to outright prevent overriding of a method, property, or subscript in subsequent subclasses by marking the item as final with the `@final` attribute by placing this marker before the introducer keywords `var`, `func`, `class func`, `subscript`, or even `class` to mark the entire class as final.
+It's possible to outright prevent overriding of a method, property, or subscript in subsequent subclasses by marking the item as final with the `final` declaration modifier by placing this marker before the introducer keywords `var`, `func`, `class func`, `subscript`, or even `class` to mark the entire class as final.
 
 # Initialization
 
@@ -871,7 +878,7 @@ struct Size {
 let twoByTwo = Size(width: 2.0, height: 2.0)
 ```
 
-It's also possible to use a closure or function to initialize a property, though due to two-phase initialization, no other property, instance method, or `self` be used unless the property is marked as `@lazy`, which would denote that it wouldn't accessed until after initialization.
+It's also possible to use a closure or function to initialize a property, though due to two-phase initialization, no other property, instance method, or `self` be used unless the property is marked as `lazy`, which would denote that it wouldn't accessed until after initialization.
 
 ``` swift
 class SomeClass {
@@ -902,6 +909,8 @@ convenience init(params) {
   // ...
 }
 ```
+
+The `required` modifier can be used on an initializer to specify that every subclass of the class must implement that initializer. This modifier must also be included in every subclass' implementation of the required initializer.
 
 ## Two-Phase Initialization
 
@@ -982,7 +991,7 @@ Capture lists define the rules to use when capturing reference types within the 
 Unowned references should be used when the closure and instance always refer to each other, and will be deallocated at the same time. Weak references should be used when the captured reference may become `nil` at any time and so can be checked within the closure's body.
 
 ``` swift
-@lazy var someClosure: (Int, String) -> String = {
+lazy var someClosure: (Int, String) -> String = {
   [unowned self] (index: Int, stringToProcess: String) -> String in
 
   // or with parameter list inferred
@@ -1000,6 +1009,8 @@ Optional chaining can be used on properties, methods, and subscripts in an elabo
 
 When using optional chaining, the resulting value will _always_ be **one** level of optional regardless of the number of levels of chaining used or whether the resulting value was already optional.
 
+It's possible to set a property's value, assign to a subscript, or calla  mutating method or operator through optional chaining.
+
 ``` swift
 let obj = SomeType()
 
@@ -1014,6 +1025,10 @@ if let test = obj.someSubscript?[0].name {
 if let test = obj.methodReturningOptional()?.uppercaseString {
   // ...
 }
+
+var testScores = ["A": [1, 2, 3], "B": [4, 5, 6]]
+testScores["A"]?[0] = 91
+testScores["A"]?[0]++
 ```
 
 # Type Casting
@@ -1208,6 +1223,14 @@ protocol SomeProtocol {
 }
 ```
 
+It's possible to restrict protocols so that they can only be adopted by class types by beginning the inheritance list with the `class` keyword.
+
+``` swift
+protocol ClassOnlyProtocol: class, InheritedProtocol {
+  // ...
+}
+```
+
 Protocols can require adopting types to provide specified instance or type methods. As with type properties, the `class` keyword must prefix type methods regardless of whether or not the adopting type is a class. Methods that are intended to mutate instances of any type that adopts the protocol should be marked as `mutating`, which allows structures and enumerations to adopt the protocol.
 
 ``` swift
@@ -1262,7 +1285,7 @@ func someFunc(item: protocol<First, Second>) {
 
 Protocol conformance can be checked with the `is` operator, and instances can be cast to a specific protocol with the `as` operator. However, conformance can only be checked if the protocol is marked with the `@objc` attribute---which indicates that the protocol should be exposed to Objective-C code---even if in reality it _won't_ be used by Objective-C code. A consequence of this is that `@objc` protocols can only be adopted by classes and not structures or enumerations.
 
-It's also possible to define optional requirements within protocols by prefixing the requirement with `@optional`. Optional property or method requirements that return a value always return it as an optional, and so optional chaining may be used. Again, optional requirements are only possible if the protocol is marked as `@objc`.
+It's also possible to define optional requirements within protocols by prefixing the requirement with `optional`. Optional property or method requirements that return a value always return it as an optional, and so optional chaining may be used. Again, optional requirements are only possible if the protocol is marked as `@objc`.
 
 # Generics
 
@@ -1357,35 +1380,35 @@ As mentioned in the [operators](#operators) section, mathematical operators don'
 let y = x &/ 0 // y = 0
 ```
 
-Operators can be overloaded within classes or structures. In the following operator overloading, the `@infix` attribute specifies that the operator is to be an infix operator. There are also `@prefix` and `@postfix` attributes. Operator functions that implement compound assignment must be marked with the `@assignment` attribute, and the left parameter must be specified as `inout`. Attributes can be combined, such as `@prefix` and `@assignment` for the purpose of implementing the postfix increment operator.
+Operators can be overloaded within classes or structures. In the following operator overloading, the `infix` attribute specifies that the operator is to be an infix operator. There are also `prefix` and `postfix` attributes.
 
 ``` swift
 struct Vector2D {
   var x = 0.0, y = 0.0
 }
 
-@infix func + (left: Vector2D, right: Vector2D) -> Vector2D {
+func + (left: Vector2D, right: Vector2D) -> Vector2D {
   return Vector2D(x: left.x + right.x, y: left.y + right.y)
 }
 
-@prefix func - (vector: Vector2D) -> Vector2D {
+prefix func - (vector: Vector2D) -> Vector2D {
   return Vector2D(x: -vector.x, y: -vector.y)
 }
 
-@assignment func += (inout left: Vector2D, right: Vector2D) {
+func += (inout left: Vector2D, right: Vector2D) {
   left = left + right
 }
 
-@prefix @assignment func ++ (inout vector: Vector2D) -> Vector2D {
+prefix func ++ (inout vector: Vector2D) -> Vector2D {
   vector += Vector2D(x: 1.0, y: 1.0)
   return vector
 }
 
-@infix func == (left: Vector2D, right: Vector2D) -> Bool {
+func == (left: Vector2D, right: Vector2D) -> Bool {
   return (left.x == right.x) && left.y == right.y)
 }
 
-@infix func != (left: Vector2D, right: Vector2D) -> Bool {
+func != (left: Vector2D, right: Vector2D) -> Bool {
   return !(left == right)
 }
 ```
@@ -1395,9 +1418,9 @@ struct Vector2D {
 Custom operators can be defined with the characters `/ = - + * % < > ! & | ^ . ~`. New operators are declared at the global level with the `operator` keyword, and can be declared as `prefix`, `infix`, or `postfix`. After being declared, it can be implemented by any type.
 
 ``` swift
-operator prefix +++ {}
+prefix operator +++ {}
 
-@prefix @assignment func +++ (inout vector: Vector2D) -> Vector2D {
+prefix func +++ (inout vector: Vector2D) -> Vector2D {
   vector += vector
   return vector
 }
@@ -1406,7 +1429,7 @@ operator prefix +++ {}
 Custom infix operators can specify their precedence and associativity. Associativity can be `left`, `right`, or `none`. Associativity defaults to `none` if none is specified, and the precedence defaults to `100` if none is specified.
 
 ``` swift
-operator infix +- {
+infix operator +- {
   associativity left
   precedence 140
 }
@@ -1418,9 +1441,10 @@ func +- (left: Vector2D, right: Vector2D) -> Vector2D {
 
 # Access Control
 
-Xcode 6 beta 4 [added support][access-control] for access control [^rust_access_control]. By default most entities have `internal` access. Swift also allows the `get` property to be more accessible than the `set`.
+Xcode 6 beta 4 [added support][access-control] for [access control][access-control-docs] [^rust_access_control]. By default most entities have `internal` access. Swift also allows the `get` property to be more accessible than the `set`.
 
 [access-control]: https://developer.apple.com/swift/blog/?id=5
+[access-control-docs]: https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/AccessControl.html#//apple_ref/doc/uid/TP40014097-CH41-XID_29
 
 [^rust_access_control]: This reminds me of Rust, where access control isn't specific to classes but rather to modules, so that an access control modifier on a structure member is enforced at the module level.
 
