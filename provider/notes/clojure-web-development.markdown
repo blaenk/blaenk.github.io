@@ -797,7 +797,8 @@ Components can communicate using `core.async`{.path} channels. To use this it is
     (render-state [this {:keys [delete]}]
       (dom/li nil
         (dom/span nil (display-name contact))
-        (dom/button #js {:onClick (fn [e] (put! delete @contact))} "Delete")))))
+        (dom/button
+          #js {:onClick (fn [e] (put! delete @contact))} "Delete")))))
 ```
 
 The encompassing component can implement `IInitState` in order to initialize the state, which in this case is simply a `core.async`{.path} channel. This implements `IRenderState` as well so that it can receive the state and pass it on to its children.
