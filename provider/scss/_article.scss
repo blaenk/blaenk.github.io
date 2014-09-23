@@ -22,11 +22,6 @@ article {
 
   .entry-content {
     padding-bottom: 15px;
-    line-height: 1.6;
-
-    @media screen and (max-width: 600px) {
-      line-height: 1.6;
-    }
 
     // DEFAULTS
     h1, h2, h3, h4, h5 { line-height: 2; }
@@ -52,8 +47,6 @@ article {
     }
 
     ul, ol {
-      li { line-height: 1.5; }
-
       li p {
         margin-top: 0;
         margin-bottom: 10px;
@@ -79,7 +72,7 @@ article {
     }
 
     strong {
-      color: #222;
+      color: #333;
     }
 
     em {
@@ -151,6 +144,8 @@ article {
 
     blockquote {
       font-size: 1.1em;
+      font-weight: 100;
+      color: #333;
       line-height: 1.4;
       padding: 20px;
       margin-top: 0;
@@ -168,6 +163,7 @@ article {
         text-align: left;
         font-size: 0.9em;
         font-style: italic;
+        font-weight: 400;
 
         code {
           background-color: inherit;
@@ -213,12 +209,8 @@ article {
     }
 
     abbr {
-      cursor: help;
-      border-bottom: 1px dotted #ddd;
-
-      @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
-        &:hover { border-bottom: 1px solid #ccc; }
-      }
+      cursor: default;
+      border-bottom: 1px solid #ccc;
     }
 
     a[id^="fnref"] {
@@ -236,11 +228,12 @@ article {
     }
 
     .footnotes {
-      font-size: 12px;
+      font-size: 0.8em;
       padding: 0 25px;
 
       @media screen and (max-width: 600px) {
         padding: 0;
+        font-size: 0.9em;
       }
 
       a[href^="#fnref"] {
@@ -275,10 +268,10 @@ article {
           cursor: default;
           display: inline-block;
           position: relative;
-          font-size: 2em;
+          font-size: 1.8em;
           padding: 0 0.25em;
           background: white;
-          top: -0.7em;
+          top: -0.75em;
         }
       }
     }
@@ -309,7 +302,7 @@ article {
       float: right;
       margin-left: 15px;
       margin-bottom: 15px;
-      margin-top: 0;
+      margin-top: 15px;
       padding: 0;
 
       @media screen and (max-width: 600px) {
@@ -331,11 +324,7 @@ article {
       & > ol {
         margin-left: 0;
         margin-top: 5px;
-        font-size: 14px;
-
-        @media screen and (max-width: 600px) {
-          font-size: 13px;
-        }
+        font-size: 0.9em;
       }
 
       ol {
@@ -470,7 +459,7 @@ article {
     position: absolute;
     top: 85px;
     line-height: 2;
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: $color-gray02;
     width: 230px;
     padding: 10px 0;
@@ -478,6 +467,10 @@ article {
     clear: both;
     position: static;
     width: auto;
+
+    @media screen and (max-width: 600px) {
+      font-size: 0.9em;
+    }
 
     @media not screen and (max-width: 600px), not screen and (max-width: 766px) {
       text-align: center;
