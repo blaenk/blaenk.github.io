@@ -15,11 +15,16 @@ I'm actually familiar with Haskell now. This very site is written in Haskell, an
 *[PLT]: Programming Language Theory
 *[GHC]: Glasgow Haskell Compiler
 
-It's possible to build an EPUB eBook of the [GHC User Guide]. You'll need to have the [required dependencies] to build the documentation. In my experience I ended up having to boot an Ubuntu VM because the xsltproc packages on arch were too new. It's necessary to [build the documentation] at least once to generate the necessary files, which unfortunately ends up building GHC itself it seems.
+* toc
+
+# User Guide
+
+It's possible to build an EPUB eBook of the [GHC User Guide]. You'll need to have the [required dependencies] to build the documentation. In my experience I ended up having to boot an Ubuntu VM because the xsltproc packages on arch were too new. It's necessary to [build the documentation] at least once to generate the necessary files, which unfortunately ends up building GHC itself it seems. See this [IBM article] for more information on building eBooks with docbook.
 
 [GHC User Guide]: https://www.haskell.org/ghc/docs/latest/html/users_guide/
 [required dependencies]: https://ghc.haskell.org/trac/ghc/wiki/Building/Preparation/Linux
 [build the documentation]: https://ghc.haskell.org/trac/ghc/wiki/Building/Docs
+[IBM article]: https://www.ibm.com/developerworks/xml/tutorials/x-epubtut/
 
 ``` bash
 $ ./configure
@@ -43,8 +48,6 @@ $ zip -0Xq ghc.epub mimetype
 $ zip -Xr9D ghc.epub *
 $ stat ghc.epub
 ```
-
-* toc
 
 # Type Classes
 
