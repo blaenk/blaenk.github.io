@@ -29,7 +29,7 @@ $ cd ..
 $ /usr/bin/xsltproc \
     --stringparam base.dir docs/users_guide/users_guide/ \
     --stringparam use.id.as.filename 1 \
-    --stringparam epub.stylesheet fptools.css \
+    --stringparam html.stylesheet fptools.css \
     --nonet \
     --stringparam toc.section.depth 3 \
     --stringparam section.autolabel 1 \
