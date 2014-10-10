@@ -1,16 +1,16 @@
 $base03:        #002b36 !default; //
 $base02:        #073642 !default; //
 $base01:        #586e75 !default; //
-$base00:        #657b83 !default; //
+$base00:        #555555 !default; //
 $base0:         #839496 !default; //
 $base1:         #93a1a1 !default; // comment, string
-$base2:         #eee8d5 !default; //
-$base3:         #fdf6e3 !default; //
+$base2:         #e6e6e6 !default; //
+$base3:         #f7f7f7 !default; //
 $solar-yellow:  #b58900 !default; //
 $solar-orange:  #cb4b16 !default; //
 $solar-red:     #C82829 !default; // parentheses
 $solar-magenta: #d33682 !default; //
-$solar-violet:  #6c71c4 !default; //
+$solar-violet:  #8959A8 !default; //
 $solar-blue:    #268bd2 !default; // haskell: function
 $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
 $solar-green:   #859900 !default; //
@@ -18,6 +18,10 @@ $solar-green:   #859900 !default; //
 .language-javascript {
   .kd { color: $solar-cyan; }
   .nx { color: inherit; }
+}
+
+.language-erlang {
+  .nv { color: $solar-red; }
 }
 
 .language-go {
@@ -199,7 +203,7 @@ figure.codeblock {
       display: none;
     }
 
-    background-color: #cdcdcd;
+    background-color: $base2;
     padding: 5px 10px;
     position: relative;
     font-size: 87.5%;
@@ -228,7 +232,6 @@ figure.codeblock {
         position: absolute;
         top: 5px;
         right: 28px;
-        color: #00427B;
         font-weight: bold;
       }
     }
@@ -236,9 +239,9 @@ figure.codeblock {
 
   pre {
     overflow-x: auto;
-    background: #f7f7f7;
-    font-size: 0.875em;
-    line-height: 1.3;
+    background: $base3;
+    font-size: 0.8em;
+    line-height: 1.5;
     padding: 10px;
 
     @media screen and (max-width: 600px) {
