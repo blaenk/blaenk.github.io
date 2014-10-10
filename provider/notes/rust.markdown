@@ -20,7 +20,7 @@ My main resources are the [tutorial] and [manual], but there are [many more]. As
 
 # Types
 
-Primitive types available in Rust include. There are no implicit type conversions. Instead, the `as` keyword is used to perform explicit type conversions. The `type` keyword can be used to create type aliases.
+There are no implicit type conversions. Instead, the `as` keyword is used to perform explicit type conversions. The `type` keyword can be used to create type aliases.
 
 Category          Types
 ---------         ------
@@ -45,11 +45,45 @@ Types are categorized into _kinds_ based on various properties of the components
 * `Drop` is for types that need to be cleaned up by a destructor. Only `Send` types can implement `Drop`
 * Default is for types with destructors, closure environments, or other non-first-class types which aren't copyable at all and are only accessible through pointers
 
+# Variables
+
+Variables are immutable by default and are defined using the `let` keyword, though one can be made mutable by providing the `mut` keyword after `let`.
+
+``` rust
+let x     = 3; // immutable
+let mut y = 4; // mutable
+```
+
+Constants represent a value, not a memory address, and can be declared using the `const` keyword. Constants can be declared in any scope, can't be shadowed, and are considered rvalues. Constants are essentially inlined wherever they are used, like `#define` constants in C.
+
+``` rust
+const age: int = value;
+```
+
+Global variables represent a memory address and can be declared using the `static` keyword. Static variables can be created using the `static` keyword and always have a single address. If the static doesn't contain an `UnsafeCell` then it may be placed in read-only memory.
+
+``` rust
+static LANGUAGE: &'static str = "Rust";
+static THRESHOLD: int = 10;
+```
+
+It's also possible to define mutable statics, though using these is considered unsafe as it can introduce race conditions. Because of this, mutable static can only be read or written to within `unsafe` blocks, and can't be placed in read-only memory.
+
+``` rust
+static mut LEVELS: uint = 0;
+
+unsafe fn bump_levels_unsafe1() -> uint {
+  let ret = LEVELS;
+  LEVELS += 1;
+  return ret;
+}
+```
+
 # Modules
 
-The content of all source code that the compiler directly had to compile in order to end up with a particular binary is collectively called a **crate**. A crate is a unit of independent compilation in Rust. Using an already compiled library in code doesn't make it part of a crate.
+The content of all source code that the compiler directly had to compile in order to end up with a particular binary is collectively called a _crate_. A crate is a unit of independent compilation in Rust. Using an already compiled library in code doesn't make it part of a crate.
 
-There exists a hierarchy of modules where the root is referred to as **crate root**. Global paths begin with the root path `::`, all other paths are local paths, similar to the distinction between absolute `/`-prefixed paths and relative paths in a POSIX file system.
+There exists a hierarchy of modules where the root is referred to as _crate root_. Global paths begin with the root path `::`, all other paths are local paths, similar to the distinction between absolute `/`-prefixed paths and relative paths in a POSIX file system.
 
 Everything in Rust is private by default with a single exception. If an enumeration is declared public, then its variants are public as well by default, though this may be overridden with the `priv` keyword.
 
@@ -57,7 +91,12 @@ Visibility restrictions are only applicable at module boundaries, so that privat
 
 Source files and modules are not the same thing. The only file that's relevant when compiling is the one that contains the body of the crate root. Declaring a module without a body prompts the compiler to look for a file named after that module or for a file named `mod.rs` in a folder named after that module, and use its contents as the module's body.
 
+The `path` attribute may be used to manually specify a module's path.
+
 ``` rust
+#[path = "manual.rs"]
+mod aliased;
+
 mod plants;
 mod animals {
   mod fish;
@@ -67,6 +106,8 @@ mod animals {
 }
 
 // looks for:
+
+// src/manual.rs
 
 // src/plants.rs
 // src/plants/mod.rs
@@ -118,15 +159,31 @@ use farm::{chicken, cow};
 #[feature(globs)]
 use farm::*;
 
-use egg_layer = farm::chicken;
+use farm::chicken as egg_layer;
 ```
 
-Likewise, it's possible to re-export items from another module. Notice that the `use` declaration needs to have `pub` in order for the module to be accessible outside the current module.
+It's possible to make a module available through another module by using `pub mod`. This allows the exposed module's public items to be accessible using path-notation.
 
 ``` rust
-mod farm {
-  pub use self::barn::hay;
-}
+// secondmod.rs
+pub fn hi() { println!("hi"); };
+
+// firstmod.rs
+pub mod secondmod;
+
+// main.rs
+firstmod::secondmod::hi();
+```
+
+Likewise, it's possible to re-export specific items to make them appear to be part of the module in which they're exposed, using `pub use`.
+
+``` rust
+// firstmod.rs
+pub use secondmod::hi;
+mod secondmod;
+
+// main.rs
+firstmod::hi();
 ```
 
 It's common to use existing libraries, which in rust are simply referred to as crates. The `extern crate` declaration is used to reference other crates, similar to `extern` in C.
@@ -505,14 +562,32 @@ let mut tuple (box 5u, 3u);
 }
 ```
 
+Another example is the `Option` type's [`as_mut`](http://doc.rust-lang.org/core/option/enum.Option.html#method.as_mut) method which converts an `Option<T>` to `Option<&mut T>`. It essentially provides a mutable reference to the contained value to facilitate its mutation.
+
+In order to avoid moving the reference out of the `Option` and thereby invalidating it later on, it's necessary to bind it by reference with `ref`.
+
+However, this would yield a `& &mut uint`, and since it's not a mutable reference it would prevent us from mutating the value, otherwise it would essentially break the rule of not allowing more than one mutable reference to any one thing.
+
+For this reason, it's necessary to bind it by mutable reference with `ref mut`, yielding a `&mut &mut uint`, allowing us to mutate the value by doing `**v = 1;`. To avoid having to dereference twice, we would include the dereference operator `&` in the pattern position, to finally arrive at `&ref mut v`.
+
+``` rust
+let mut x = Some(2u);
+match x.as_mut() {
+  Some(&ref mut v) => *v = 42,
+  None => {},
+}
+
+assert_eq!(x, Some(42u));
+```
+
 There's also a language inconsistency where `"str"` is of type `&str`, but to get a type of `&&str` it doesn't suffice to simply do `&"str"`, because that _too_ is treated as `&str`, so _two_ are needed: `&&str`.
 
-In the following example, `contains_key` takes a value of type `&K` where `K` is the key type. The key type is `&str`, so `&K` is `&&str`. Because of the language inconsistency noted above, two `&`'s must prefix the string literal in order to yield a `&&str` to pass to `contains_key`.
+In the following example, `contains_key` takes a value of type `&K` where `K` is the key type. The key type is `&str`, so `&K` is `&&str`. Because of the language inconsistency noted above, two `&`'s must prefix the string literal in order to yield a `&&str` to pass to `contains_key`. Alternatively, a single `&` can be used if the string literal is surrounded in parentheses.
 
 Issue [#10105] is a proposal to fix this. I've also read that [DST] will fix this as a consequence of its implementation.
 
-[#10105]: https://github.com/mozilla/rust/issues/10105
-[DST]: https://github.com/mozilla/rust/issues/6308
+[#10105]: https://github.com/rust-lang/rust/issues/10105
+[DST]: https://github.com/rust-lang/rust/issues/6308
 
 ``` rust
 use collections::Hashmap;
@@ -524,6 +599,11 @@ items.insert("key1", "value1");
 items.insert("key2", "value2");
 
 if !items.contains_key(& &"key1") {
+  println!("not present");
+}
+
+// or
+if !items.contains_key(&("key1")) {
   println!("not present");
 }
 ```
@@ -563,7 +643,7 @@ fn select<'r, T>(shape: &'r Shape, threshold: f64, a: &'r T, b: &'r T) -> &'r T 
 
 For example, if `select()` were called by the following function it would produce an error. The reason is that the lifetime of the first parameter to `select()` is the function body of `select_unit()`. The second two parameters to `select()` share a lifetime in `select_unit()`, so there are actually two lifetimes. The intersection between these two lifetimes would be the `Shape`'s lifetime which is the function body, so the return value of the `select()` call will be the function body of `select_unit()`.
 
-This would lead to a **compilation error**, because `select_unit()` is supposed to return a value with a lifetime of `r`, which is the lifetime of `a` and `b`, _not_ the lifetime of the local `Circle`.
+This would lead to a _compilation error_, because `select_unit()` is supposed to return a value with a lifetime of `r`, which is the lifetime of `a` and `b`, _not_ the lifetime of the local `Circle`.
 
 ``` rust
 fn select_unit<'r, T>(threshold: f64, a: &'r T, b: &'r T) -> &'r T {
@@ -593,25 +673,6 @@ struct Pair<'a, 'b> {
 }
 ```
 
-The `static` keyword can be used to declare global scope constants. The special lifetime `'static` outlives all lifetimes and can be used to declare strings at the global level.
-
-``` rust
-static LANGUAGE: &'static str = "Rust";
-static THRESHOLD: int = 10;
-```
-
-It's also possible to define mutable statics, though using these is considered unsafe as it can introduce race conditions. Because of this, mutable static can only be read or written to within `unsafe` blocks.
-
-``` rust
-static mut LEVELS: uint = 0;
-
-unsafe fn bump_levels_unsafe1() -> uint {
-  let ret = LEVELS;
-  LEVELS += 1;
-  return ret;
-}
-```
-
 It's also possible to use named lifetime notation to label control structures, allowing for breaking and continuing to specific locations.
 
 ``` rust
@@ -634,7 +695,7 @@ RFC [#39] proposed expanded lifetime elision rules and was implemented with PR [
 [#39]: https://github.com/rust-lang/rfcs/blob/master/active/0039-lifetime-elision.md
 [#15552]: https://github.com/rust-lang/rust/issues/15552
 
-To facilitate this, the compiler has notions of input or output. For **functions**, inputs are the lifetimes on arguments and outputs are the lifetimes on result types; this _doesn't_ include lifetimes that appear in the method's `impl` or `trait` header. For **implementations**, inputs are the lifetimes on the type receiving the implementation, and the outputs are the lifetimes on the trait.
+To facilitate this, the compiler has notions of input or output. For _functions_, inputs are the lifetimes on arguments and outputs are the lifetimes on result types; this _doesn't_ include lifetimes that appear in the method's `impl` or `trait` header. For _implementations_, inputs are the lifetimes on the type receiving the implementation, and the outputs are the lifetimes on the trait.
 
 ``` rust
 // elided one input and two outputs
@@ -784,6 +845,11 @@ assert_eq!(xs[], xs.as_slice());
 assert_eq!(xs[n..m], xs.slice(n, m));
 assert_eq!(xs[n..], xs.slice_from(n));
 assert_eq!(xs[..m], xs.slice_to(m));
+
+assert_eq!(xs[mut], xs.as_mut_slice());
+assert_eq!(xs[mut n..m], xs.slice_mut(n, m));
+assert_eq!(xs[mut n..], xs.slice_from_mut(n));
+assert_eq!(xs[mut ..m], xs.slice_to_mut(m));
 ```
 
 ## Vectors
@@ -879,11 +945,19 @@ struct Test {
 let Test { age, apples } = b;
 ```
 
-[RFC #51](https://github.com/rust-lang/rfcs/blob/master/active/0051-if-let.md) added support for `if-let` pattern matching as in [swift](/notes/swift/#optionals), where the condition succeeds if the pattern matches.
+[RFC #51](https://github.com/rust-lang/rfcs/blob/master/active/0051-if-let.md) added support for `if-let` pattern matching as in [Swift](/notes/swift/#optionals), where the condition succeeds if the pattern matches.
 
 ``` rust
 if let Some(x) = optional {
   doSomething(x);
+}
+```
+
+Similarly, [RFC #68](https://github.com/rust-lang/rfcs/blob/master/active/0068-while-let.md) added support for `while-let`. It works in a similar manner to the above `if-let`, essentially continuing the loop so long as the pattern matches. This is useful for iterators.
+
+``` rust
+while let Some(value) = iter.next() {
+  // ...
 }
 ```
 
@@ -914,11 +988,17 @@ impl Point {
     // static method
   }
 
-  // or fn something(self: &Self)
   fn something(&self) {
     // method
   }
 }
+```
+
+Functional updates can be performed by terminating the structure expression syntax with `..` followed by another value of the same type as the structure being defined. This is similar to what is commonly done in Haskell.
+
+``` rust
+let base = Point3d {x: 1, y: 2, z: 3};
+Point3d {y: 0, z: 10, ..base}
 ```
 
 # Enumerations
@@ -951,13 +1031,13 @@ enum Shape {
 
 # Tuples
 
-Tuples are available and are most similar to Haskell's. **Tuple structs** behave like both structs and tuples. They're like tuples with names. Tuple structs with a single field are similar to Haskell newtypes and are often called the same thing in Rust. These provide a distinct type from the type they wrap. Newtypes' wrapped values can be extracted using the dereference operator `*`:
+Tuples are available and are most similar to Haskell's. _Tuple structs_ behave like both structs and tuples. They're like tuples with names. Tuple structs with a single field are similar to Haskell newtypes and are often called the same thing in Rust. These provide a distinct type from the type they wrap. Newtypes' wrapped values can be extracted using the dereference operator `*`:
 
 ``` rust
 let mytup: (int, int, f64) = (10, 20, 30.0)
 
 struct MyTup(int, int, f64);
-let mytup: MyTup = Mytup(10, 20, 30.0)
+let mytup: MyTup = MyTup(10, 20, 30.0)
 
 struct GizmoId(int);
 let my_gizmo_id: GizmoId = GizmoId(10);
@@ -1012,6 +1092,15 @@ fn f(i: int) -> int {
 }
 ```
 
+Parameters can be marked as to be moved into the function. They can also be borrowed immutably, or mutably which allows the variable to be mutated. Finally, a parameter can also be moved into the function and marked as mutable, so that once moved into the function it can be mutated within the scope of the function.
+
+``` rust
+fn m(x: T);      // move
+fn m(mut x: T);  // move and mark mutable
+fn m(&x: T);     // immutably borrow
+fn m(&mut x: T); // mutably borrow
+```
+
 # Methods
 
 Methods are functions that take `self` as the first argument, which is of the same type as the method's receiver. Implementations are used to define methods on specific types, such as structs and enums.
@@ -1056,6 +1145,34 @@ impl Circle {
 let c = Circle::new(42.5);
 ```
 
+## Universal Function Call Syntax
+
+[RFC #46] specifies a _universal function call syntax_ (UFCS) which provides a way to completely disambiguate a particular method call, which is particularly useful when a type implements more than one trait that contains the same method.
+
+[RFC #46]: https://github.com/rust-lang/rfcs/blob/master/active/0046-ufcs.md
+
+*[UFCS]: Universal Function Call Syntax
+
+Given a particular call syntax, different behavior occurs:
+
+* `Trait::method()`: the same behavior occurs as it does now.
+
+* `T::method()` where `T` is a path that resolves to a type: it is rewritten internally to `<T>::method())`.
+
+* `<T>::method()`: if type `T` implements only one trait in the scope that provides `method()`, then that method is called. Otherwise, the call must be disambiguated using the syntax `<T as DesiredTrait>::method()`.
+
+A nice consequence of UFCS is that static methods on traits can be called through the implementing type now, instead of having to be called on the trait itself.
+
+``` rust
+#[deriving(Default)]
+struct S;
+
+S::default();
+Default::default();
+```
+
+In fact, UFCS completely erases the distinction between static methods and regular methods, so that `t.a(b)` is also equivalent to `T::a(t, b)`.
+
 # Closures
 
 Regular, named functions don't close over their environment, but closures do.
@@ -1079,6 +1196,50 @@ let mut max = 0;
 Owned closures are written with `proc`, e.g. `proc(arg: int)`, and they own values that can be sent safely between processes. As a result, they can only be called once. The values they close over are copied, and they become owned by the closure. These are particularly used in concurrent scenarios, particularly for spawning tasks.
 
 Despite there being different types of closures, functions that expect a `||` closure can accept any kind of closure provided they have the same arguments and return types. For this reason, higher-order functions should usually define their closure types as `||` so that callers can pass any kind of closure.
+
+## Unboxed Closures
+
+[RFC #44] proposed unboxed closure traits `Fn`, `FnMut`, and `FnOnce`, along with new closure syntax which was refined by [RFC #63]. These traits are defined in [`std::ops`][std-ops], which is a module that defines traits for overloading operators. In effect, implementing these traits is equivalent to overloading the function call operator `()` in C++.
+
+[RFC #44]: https://github.com/rust-lang/rfcs/blob/master/active/0044-closures.md
+[RFC #63]: https://github.com/rust-lang/rfcs/blob/master/active/0063-upvar-capture-inference.md
+[std-ops]: http://doc.rust-lang.org/std/ops/index.html
+
+As in C++, unboxed closures essentially expand to an anonymous structure which contains the captured variables---known as _upvars_---as well as an implementation of one of these traits, which has the effect of overloading the function call operator `()`.
+
+In this context, the receiving parameter `self` refers to the instance of the generated structure, so that the type of `self` determines whether the upvars can be moved or mutated. This is exactly the difference between the three unboxed closure traits.
+
+Trait    Self
+-----    ----
+`Fn`     `&self`
+`FnMut`  `&mut self`
+`FnOnce` `self`
+
+RFC #63 defines two types of closures: escaping and non-escaping closures. _Escaping closures_ are closures that will escape the stack frame that created them---such as task bodies---and are created using the `move ||` syntax. _Non-escaping closures_ are the most common and therefore use the default `||` syntax.
+
+Both escaping and non-escaping closures can implement any of the closure traits, depending on how the upvars are used within the closure.
+
+1. `FnOnce` if any upvars are moved out of the closure
+2. `FnMut` if any upvars are mutably borrowed within the closure
+3. otherwise: `Fn`
+
+Notice that moving an upvar out of the closure essentially means to move it out of the closure's environment, that is, its implementing anonymous structure.
+
+_Capture modes_ determine the manner in which upvars are captured. With escaping closures, all upvars are moved into the closure. For non-escaping closures, there are three different capture modes that are applied depending on three different situations which are checked in-order:
+
+1. if an upvar is mutably borrowed within the closure, it is mutably borrowed into the closure
+2. if an upvar is moved within the closure and doesn't implement `Copy`, it is moved into the closure
+3. otherwise: the upvar is immutably borrowed
+
+Notice that regular non-escaping closures can end up moving all of the upvars _only_ if they're moved within the closure. This is why the separate escaping closure syntax `move ||` is necessary, for cases where the closure escapes the stack frame, in order to ensure that all upvars are moved into the closure regardless of how they're used within.
+
+There exists sugar for denoting unboxed closure traits at the type level.
+
+``` rust
+fn foo<F>() where F: FnMut(int, int) -> int {
+  // ...
+}
+```
 
 # Generics
 
@@ -1157,6 +1318,42 @@ enum Option<T> {
   None
 }
 // Option<int>
+```
+
+## Where Clauses
+
+[RFC PR #135] adds support for `where` clauses similar to [those in Swift] which allow type bounds to be specified for the type parameters in a generic declaration. Where clauses can be added to anything that can be parameterized with type or lifetime parameters, except for trait method definitions. This includes `impl`, `fn`, `trait`, `struct`, as well as [associated types](#associated-types).
+
+Multiple bounds declarations are separated by commas, and multiple bounds for a given type parameter can be written separately or in a compound form using `+`.
+
+[RFC PR #135]: https://github.com/rust-lang/rfcs/pull/135
+[those in Swift]: /notes/swift/#where-clauses
+
+``` rust
+impl<K: Hash + Eq, V> HashMap<K, V> {
+  // ...
+}
+
+impl<K, V> HashMap<K, V>
+  where K: Hash + Eq {
+  // ...
+}
+```
+
+With [associated types](#associated-types), a trait like `Iterator` might no longer have type parameters, since it'll be an associated type. As a result, a bound can't be provided for the type parameter using regular syntax. Instead, `where` clauses can be used to express the bound.
+
+``` rust
+// Iterator has no type parameter, so this doesn't work
+fn sum<I: Iterator<int>>(i: I) -> int {
+  // ...
+}
+
+// the where clause can express a bound
+// on the Iterator's associated type `E`
+fn sum<I: Iterator>(i: I) -> int
+  where I::E == int {
+  // ...
+}
 ```
 
 # Traits
@@ -1323,6 +1520,131 @@ struct Circle { radius: f64 }
 enum ABC { A, B, C }
 ```
 
+## Associated Items
+
+[RFC #59] adds support for associated functions, statics, types, and lifetimes. Both associated types and statics allow defaults, just as associated methods and functions do. However, if an implementation overrides any default associted types, then they must override _all_ default functions and methods.
+
+### Associated Types
+
+Consider a `Graph` type with node and edge type parameters. Without associated types, any function that operates on generic `Graph`s has to parameterize on all type parameters even when they're not relevant.
+
+``` rust
+trait Graph<N, E> {
+  fn has_edge(&self, &N, &N) -> bool;
+}
+
+fn distance<N, E, G: Graph<N, E>>(graph: &G, start: &N, end: &N) -> uint {
+  // ...
+}
+```
+
+With associated types, it's made clear that the node and edge types are defined by specific implementations. This way, code can abstract over the entire `Graph` and refer to associated types through the `Graph` as needed.
+
+``` rust
+trait Graph {
+  // trait bounds can be specified with the usual + delimited syntax
+  type N;
+  type E;
+  fn has_edge(&self, &N, &N) -> bool;
+}
+
+fn distance<G: Graph>(graph: &G, start: &G::N, end: &G::N) -> uint {
+  // ...
+}
+```
+
+As shown, associated types make code more readable and also scalable, since traits can incorporate additional associated types without breaking code that doesn't care about them.
+
+Currently, before associated types, traits' type parameters are considered either inputs or outputs, where the input type parameter determines which implementation to use and the output type parameter is determined by the implementation itself but otherwise plays no role in implementation selection.
+
+Typically the only input type is `Self`, i.e. the type implementing the trait, while all other trait type parameters are outputs. It would be useful to be able to specify other input type parameters so that the implementation could be chosen depending on `Self` _and_ the additional input type parameters.
+
+``` rust
+trait Add<Rhs, Sum> {
+  fn add(&self, rhs: &Rhs) -> Sum;
+}
+
+impl Add<int, int> for int { ... }
+impl Add<Complex, Complex> for int { ... }
+```
+
+This is impossible without this RFC, which implements the equivalent of Haskell's [multi-parameter type classes], effectively treating all trait type parameters as input types and allowing output types to be specified via associated types. Specifying traits like this essentially defines a family of traits, one for each combination of input types (e.g. of `Rhs` in this example), each for which an implementation can be provided.
+
+[multi-parameter type classes]: http://en.wikibooks.org/wiki/Haskell/Advanced_type_classes#Multi-parameter_type_classes
+
+``` rust
+// Self and Rhs are input types
+// Self is defined at the impl site,
+// it's the type in `for T`
+trait Add<Rhs> {
+  type Sum; // output type
+  fn add(&self, &Rhs) -> Sum;
+}
+
+// Sum = Self + Rhs
+// int = int  + Complex
+impl Add<int> for int {
+  type Sum = int;
+  fn add(&self, rhs: &int) -> int { ... }
+}
+
+// Complex = int + Complex
+impl Add<Complex> for int {
+  type Sum = Complex;
+  // or fn add(&self, rhs: &Complex) -> Sum { ... }
+  fn add(&self, rhs: &Complex) -> Complex { ... }
+}
+```
+
+Equality constraints and trait bounds can be provided for associated types using where clauses.
+
+``` rust
+trait Iterator {
+  type A;
+  fn next(&mut self) -> Option<A>;
+}
+
+// associated type A must implement Show
+fn print_iter<I>(iter: I) where I: Iterator, I::A: Show { ... }
+
+// associated type must be uint (i.e. specialization)
+fn sum_uints<I>(iter: I) where I: Iterator, I::A = uint { ... }
+
+// or sugar
+fn sum_uints<I: Iterator<A = uint>>(iter: I) { ... }
+```
+
+When using a trait as a type (e.g. trait object) then all input and output types must be provided as part of the type.
+
+``` rust
+fn consume_obj(t: Box<Foo<IT1, IT2, OT1 = int, OT2 = String, 'a = 'static>>)
+```
+
+All associated items are also allowed in inherent implementations, i.e. implementations for a particular struct. However, output constraints don't make sense for inherent outputs. In inherent implementations, associated types act more like type aliases with the added benefit that the associated types can be referred to using path syntax without having to import the modules that define those types.
+
+### Associated Statics
+
+Currently, without associated statics, numeric traits like `Float` need to expose constants as static functions---which would be useful when writing a function generic over the type of `Float`---but these functions can't be used in static initializers, so modules for the numeric type implementation (e.g. `f64`) also export a separate set of statics outside of traits. Associated statics allow statics to be declared within traits.
+
+``` rust
+trait Float {
+  static NAN: Self;
+  static INFINITY: Self;
+  static PI: Self;
+  static TWO_PI: Self;
+  // ...
+}
+```
+
+[Where clauses](#where-clauses) can be used within object types using a type-parameterization syntax.
+
+[RFC #59]: https://github.com/rust-lang/rfcs/blob/master/active/0059-associated-items.md
+
+``` rust
+// create and get reference to an Iterator for int
+&Iterator<where E=int>
+```
+
 ## Drop
 
 The `Drop` trait can be used to define destructors via its method `drop`. The global `drop` function also exists which essentially takes ownership of the passed value so that the moved variable's destructor---its `drop` method---is called by the end of the function scope. Destructors are run in top-down order, so that the value is completely destroyed before any values it owns run their destructors.
@@ -1382,6 +1704,17 @@ fn main() {
 }
 ```
 
+# Dynamically Sized Types
+
+[Dynamically Sized Types] (DST) [[metabug]] introduces two new types: `[T]` representing some number of instances of `T` laid out sequentially in memory with the exact number unknown to the compiler, and `Trait` representing some type `T` that implements the trait `Trait`.
+
+[Dynamically Sized Types]: http://smallcultfollowing.com/babysteps/blog/2014/01/05/dst-take-5/
+[metabug]: https://github.com/rust-lang/rust/issues/12938
+
+*[DST]: Dynamically Sized Types
+
+Smart pointers, for example, can implement `Deref` and automatically dereference down to the base type that is indexable. Concretely, `r` of type `Rc<[T]>` would autoderef to `*r` which is of type `&[T]` which is not indexable either and so would autoderef to `**r` which is of type `[T]` which _is_ indexable, and so Rust indexes into that. The same thing is done for trait objects, where `Rc<Trait>` is derefed to `&Trait`.
+
 # Tasks
 
 Tasks have dynamically sized stacks, starting out with small ones and dynamically growing as required. This means that unlike C/C++, it's not possible to write beyond the end of the stack. Tasks provide failure isolation and recovery. When a problem occurs, the runtime destroys the entire task, and other tasks can monitor each other for failure.
@@ -1415,7 +1748,7 @@ spawn(proc() {
 
 ## Channels
 
-Pipes are used for communication between tasks [^channels]. Each pipe is defined by a pair of endpoints: one for sending and another for receiving. In Rust, a channel is the **sending** endpoint of a pipe and the **port** is the receiving endpoint.
+Pipes are used for communication between tasks [^channels]. Each pipe is defined by a pair of endpoints: one for sending and another for receiving. In Rust, a channel is the _sending_ endpoint of a pipe and the _port_ is the receiving endpoint.
 
 [^channels]: Pipes remind me of Go's channels, or Haskell's.
 
@@ -1682,7 +2015,7 @@ macro_rules! min {
     $x
   };
   ($x:expr, $($y:expr),+) => {
-    std::cmp::min($x, min!($(y),+))
+    std::cmp::min($x, min!($($y),+))
   }
 }
 
@@ -1720,6 +2053,22 @@ extern {
     compressed: *mut u8,
     compressed_length: *mut size_t
   ) -> c_int;
+}
+```
+
+The `link_name` attribute could be used to specify an alternative function name, which is useful when a function collides with the Rust namespace.
+
+``` rust
+extern {
+  // reference exit(i32) as die(i32)
+  #[link_name = "exit"]
+  fn die(x: i32) -> !;
+}
+
+fn main() {
+  unsafe {
+    die(2)
+  }
 }
 ```
 
@@ -2042,10 +2391,15 @@ println!("{}", input);
 
 # Documentation
 
-A built-in tool called `rustdoc` can be used to generate documentation, similar to [haddock](/notes/haskell#documentation) with Haskell. Documentation is primarily provided using "doc comments" which are simply line comments immediately followed by an exclamation mark: `//!`. Doc comments are implicitly converted to `doc` attributes by the compiler, which themselves may be used explicitly as well.
+A built-in tool called `rustdoc` can be used to generate documentation, similar to [haddock](/notes/haskell#documentation) with Haskell. Documentation is primarily provided using "doc comments" which are simply line comments of three forward slashes: `///`. If a `//!` comment is used, it applies to the parent of the comment rather than what follows. Doc comments are implicitly converted to `doc` attributes by the compiler, which themselves may be used explicitly as well.
 
 ``` rust
-//! Calculates the factorial of a number
+/// this documentation applies to S
+pub struct S { a: int }
+
+fn test() {
+  //! this documentation applies to `test`
+}
 
 #[doc = "
 Calculates the factorial of a number.
