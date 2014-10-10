@@ -19,7 +19,7 @@ $$-3\delta[n-8] \mapsto -3h[n-8]$$
 
 What this means is that if we know the unit impulse response of a system, we consequently know how the system will react to _any_ impulse, not just a unit impulse. These impulse responses can then be synthesized to form the output signal that would result from running the input signal through the actual system. An example of the powerful implications of this property is [convolution reverb](http://en.wikipedia.org/wiki/Convolution_reverb), in which an impulse response of a physical or virtual space is generated and then convolved with any input signal to simulate the effect of reverberation in that space.
 
-In short, the input signal **convolved** with the unit impulse response results in the output signal. Convolution of input signal $x[n]$ with unit impulse $h[n]$ to generate output signal $y[n]$ is denoted as:
+In short, the input signal _convolved_ with the unit impulse response results in the output signal. Convolution of input signal $x[n]$ with unit impulse $h[n]$ to generate output signal $y[n]$ is denoted as:
 
 $$x[n] * h[n] = y[n]$$
 
@@ -27,7 +27,7 @@ Since convolution allows us to go from input signal $x[n]$ to output signal $y[n
 
 ## Definition
 
-Convolution can be described by the so-called **convolution summation**. The convolution summation is pretty simple, and is defined as follows:
+Convolution can be described by the so-called _convolution summation_. The convolution summation is pretty simple, and is defined as follows:
 
 $$y[i] = \sum_{j=0}^{M-1} h[j]\ x[i-j]$$
 

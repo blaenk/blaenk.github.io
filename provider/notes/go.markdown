@@ -247,7 +247,7 @@ func main() {
 
 # Methods
 
-While Go doesn't have classes, it has a syntax for defining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with `type`, but **not** on types from other packages or basic types. A pointer receiver can be modified and doesn't have to copy the entire structure on the method call, just like in C/C++:
+While Go doesn't have classes, it has a syntax for defining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with `type`, but _not_ on types from other packages or basic types. A pointer receiver can be modified and doesn't have to copy the entire structure on the method call, just like in C/C++:
 
 ``` go
 func (v *Vertex) Abs() float64 {

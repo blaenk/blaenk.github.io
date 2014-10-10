@@ -42,7 +42,7 @@ Given that it's tucked away deep inside dconf, and given Gnome developers' track
 
 <div class="callout">
 
-**Update**: On archlinux, `pacman -Qo` shows that the **evdev** file is owned by the [xkeyboard-config] package. Whenever this package is updated, it overwrites this file, necessitating the change to be added once again. I'll have to look into a more resilient way to have this setup.
+**Update**: On archlinux, `pacman -Qo` shows that the `evdev`{.path} file is owned by the [xkeyboard-config] package. Whenever this package is updated, it overwrites this file, necessitating the change to be added once again. I'll have to look into a more resilient way to have this setup.
 
 </div>
 

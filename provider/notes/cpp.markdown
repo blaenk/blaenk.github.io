@@ -149,9 +149,9 @@ class A {
 };
 ~~~
 
-Class members can be initialized inside the class definition. These initializers are known as **in-class initializers**. In-class initializers must be defined either using the `=` assignment operator or list initialization syntax `{}`.
+Class members can be initialized inside the class definition. These initializers are known as _in-class initializers_. In-class initializers must be defined either using the `=` assignment operator or list initialization syntax `{}`.
 
-Constructors can **delegate** their constructing to other constructors inside the constructor initializer list.
+Constructors can _delegate_ their constructing to other constructors inside the constructor initializer list.
 
 Virtual functions can be explicitly overridden in derived classes using the `override` trailing keyword.
 
@@ -171,7 +171,7 @@ struct A {
 };
 ```
 
-Copy constructors are **synthesized** if none are defined. Synthesized copy constructors perform member-wise copies of the argument. Members of class type are copied using their respective copy constructors and members of built-in type---including arrays---are copied directly.
+Copy constructors are _synthesized_ if none are defined. Synthesized copy constructors perform member-wise copies of the argument. Members of class type are copied using their respective copy constructors and members of built-in type---including arrays---are copied directly.
 
 ``` cpp
 A::A(const A& toCopy) :
@@ -179,7 +179,7 @@ A::A(const A& toCopy) :
   secondMember(toCopy.secondMember) {}
 ```
 
-**Copy initialization** occurs when:
+_Copy initialization_ occurs when:
 
 * assigning variables with the `=` assignment operator
 * pass object as argument to parameter of non-reference type. **note** that this is why the parameter to the copy constructor has to be a reference type, or infinite recursion would occur
@@ -202,7 +202,7 @@ A& A::operator=(const A& rhs) {
 }
 ```
 
-Copy-assignment operators are **synthesized** if none are define. Synthesized copy-assignment operators perform member-wise assignment before returning a reference to the left-hand object.
+Copy-assignment operators are _synthesized_ if none are define. Synthesized copy-assignment operators perform member-wise assignment before returning a reference to the left-hand object.
 
 ## Conversion Constructors
 
@@ -224,7 +224,7 @@ explicit A::A(std::string str) : internal(std::move(str)) {}
 
 ## Conversion Operators
 
-Where as [conversion constructors](#conversion-constructors) provide a way of converting another type **to** the class type, conversion operators provide a way of converting a class type to another type. They are defined using the `operator` keyword followed by the type it converts to.
+Where as [conversion constructors](#conversion-constructors) provide a way of converting another type _to_ the class type, conversion operators provide a way of converting a class type to another type. They are defined using the `operator` keyword followed by the type it converts to.
 
 ``` cpp
 struct A {
@@ -342,9 +342,9 @@ struct NoCopy {
 The compiler sometimes defines copy-control members, which it would have otherwise synthesized, as **deleted** for the following reasons:
 
 * **destructor**: if a member has a deleted or inaccessible destructor, e.g. `private`
-* **copy constructor**: if a member has a deleted or inaccessible copy constructor **or** if a member has a deleted or inaccessible destructor
-* **copy-assignment operator**: if a member has a deleted or inaccessible copy-assignment operator **or** if the class has a `const` or reference member
-* **default constructor**: if a member has a deleted or inaccessible destructor **or** has a reference member without an in-class initializer **or** has a `const` member whose type has no explicit default constructor and the member has no in-class initializer
+* **copy constructor**: if a member has a deleted or inaccessible copy constructor _or_ if a member has a deleted or inaccessible destructor
+* **copy-assignment operator**: if a member has a deleted or inaccessible copy-assignment operator _or_ if the class has a `const` or reference member
+* **default constructor**: if a member has a deleted or inaccessible destructor _or_ has a reference member without an in-class initializer _or_ has a `const` member whose type has no explicit default constructor and the member has no in-class initializer
 
 ## Swapping
 
@@ -382,9 +382,9 @@ It's important to note that this implementation passes the right-hand side by va
 
 Constructors, copy and move operations, and assignment operations all have to handle initializing not only their members but also those of the base class. This is usually accomplished by delegating that work to the equivalent operation from the base class.
 
-**However**, a destructor is always only in charge of destroying only its own members. The base class destructor is implicitly invoked after the completion of the derived class destructor.
+_However_, a destructor is always only in charge of destroying only its own members. The base class destructor is implicitly invoked after the completion of the derived class destructor.
 
-**Name lookup** is affected by inheritance and virtual functions. Given a call `p->mem()` or `p.mem()`:
+_Name lookup_ is affected by inheritance and virtual functions. Given a call `p->mem()` or `p.mem()`:
 
 1. determine the static type of `p`
 2. look for `mem` in the class that corresponds to the static type of `p`. If it's not found, continue the lookup up the inheritance hierarchy. Error if not found.
@@ -463,13 +463,13 @@ For this reason, the base class usually explicitly defines---even if as `default
 
 # Move Semantics
 
-C++11 introduced **move semantics** which simply refers to recognizing the notion of moving objects instead of only being able to copy them. With this introduction came **rvalue-references** which designate an object as being "moveable," usually because it's about to be destroyed anyways.
+C++11 introduced _move semantics_ which simply refers to recognizing the notion of moving objects instead of only being able to copy them. With this introduction came _rvalue-references_ which designate an object as being "moveable," usually because it's about to be destroyed anyways.
 
 A simple explanation for the act of "moving" is that of a string class with an underlying `char` array. If there is an instance **A** that needs to be replicated into instance **B**, it can be done by copying **A** into **B** using a copy constructor which would make a copy of the underlying array. However, if **A** was going to be destroyed shortly after, then the copy would have been unnecessary. Instead of copying the array from **A**, it could simply _steal_ its pointer.
 
 ## rvalue-references
 
-**rvalue-references** are simply references that can _only_ be bound to rvalues. rvalues are either temporary objects or literals, both of which are ephemeral over the course of evaluating an expression. It then follows naturally that an object bound to an rvalue-reference has no "owner", and more importantly that the object is _about to be destroyed_, **so code is free to steal its contents**. rvalue-references are simply a way of "tagging" such objects, to be able to write functions that apply specifically to objects that are about to be destroyed, i.e. a move constructor.
+_rvalue-references_ are simply references that can _only_ be bound to rvalues. rvalues are either temporary objects or literals, both of which are ephemeral over the course of evaluating an expression. It then follows naturally that an object bound to an rvalue-reference has no "owner", and more importantly that the object is _about to be destroyed_, **so code is free to steal its contents**. rvalue-references are simply a way of "tagging" such objects, to be able to write functions that apply specifically to objects that are about to be destroyed, i.e. a move constructor.
 
 Aside from binding rvalue-references to rvalues, it is possible to derive an rvalue-reference from an lvalue through the use of `static_cast`. Such a cast has been implemented as the function `std::move` in order to be more semantic:
 
@@ -489,7 +489,7 @@ template <typename T> void func(T&&);
 
 If an lvalue `int` is passed to the function, a language rule states that the template parameter `T` will be deduced as being an lvalue-refernece, `int&`. This poses a problem, since the function parameter's type ends up being an lvalue-reference to an rvalue-reference, `int& &&`. A reference to a reference, of any type, can't usually be created but an **exception** is made for template parameters.
 
-Template parameters that are deduced as being references to references undergo a process that is referred to as **reference collapsing**, the rules of which are as follows:
+Template parameters that are deduced as being references to references undergo a process that is referred to as _reference collapsing_, the rules of which are as follows:
 
 * `X& &`, `X& &&`, `X&& &` &rarr; `X&`
 * `X&& &&` &rarr; `X&&`
@@ -535,7 +535,7 @@ It's usually the case that member functions can be called on objects regardless 
 s1 + s2 = "wow!";
 ```
 
-C++11 allows for the explicit restriction on the usage of a member function based on the lvalue/rvalue property of the calling object using a **reference qualifier**, which is similar to a `const` qualifier in that it appears at the end of the parameter list but ***after*** the `const` qualifier, and must appear in both the declaration and definition of the function.
+C++11 allows for the explicit restriction on the usage of a member function based on the lvalue/rvalue property of the calling object using a _reference qualifier_, which is similar to a `const` qualifier in that it appears at the end of the parameter list but *_after_* the `const` qualifier, and must appear in both the declaration and definition of the function.
 
 Two possible reference qualifiers exist:
 
@@ -606,7 +606,7 @@ If a class defines move operations, the respective copy operation will be define
 
 If a default implementation is explicitly requested with the `default` directive, but the compiler can't define one due to the following reasons, then it will be defined as `deleted`:
 
-* the class has a member that defines its own copy constructor but not a move constructor **or** if the class has a member that doesn't define its own copy operations **and** for which the compiler is unable to synthesize a move constructor. The same applies for move-assignment.
+* the class has a member that defines its own copy constructor but not a move constructor _or_ if the class has a member that doesn't define its own copy operations _and_ for which the compiler is unable to synthesize a move constructor. The same applies for move-assignment.
 * the class has a member whose respective move operation is deleted or inaccessible
 * the destructor is deleted or inaccessible
 * the class has a `const` or reference member
@@ -631,11 +631,11 @@ The `auto` keyword allows for type-deduction and should be preferred in the foll
 
 The `decltype` operator can deduce and "return" the type of the argument to be used to declare something else such as a variable of a function. The rules for what gets returned depends on the expression:
 
-* **identifier** (name of object or function) or **class member access**, **yieds** type of identifier or class member access
-* **parenthesized identifier** becomes an lvalue expresion, **yields** lvalue reference to type of expression
-* **function call**, **yields** return type of the function
-* **rvalue**, **yields** rvalue reference to type of expression
-* **lvalue**, **yields** lvalue reference to type of expression
+* **identifier** (name of object or function) or **class member access**, _yieds_ type of identifier or class member access
+* **parenthesized identifier** becomes an lvalue expresion, _yields_ lvalue reference to type of expression
+* **function call**, _yields_ return type of the function
+* **rvalue**, _yields_ rvalue reference to type of expression
+* **lvalue**, _yields_ lvalue reference to type of expression
 
 The suffix-return syntax is useful when the return type is deduced from information---such as the function arguments---and has to appear after the function argument list so that the arguments are "in scope":
 
@@ -682,7 +682,7 @@ Out otherVar = "testing"_strlit;
 
 ## Enumerations
 
-**Scoped enumerations** can be created to avoid symbol clashing and enumerations' underlying type can be specified explicitly:
+_Scoped enumerations_ can be created to avoid symbol clashing and enumerations' underlying type can be specified explicitly:
 
 ``` cpp
 enum class EventType : uint8_t { STATUS, LOG, ERROR };

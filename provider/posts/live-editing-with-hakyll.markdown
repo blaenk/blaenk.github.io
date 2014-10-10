@@ -48,7 +48,7 @@ The WebSocket server that comes with the websockets package forks separate threa
 
 ## State
 
-First, however, I had to think about how the WebSocket server would communicate with the clients. I decided that the most straightforward thing to do would be to communicate on a per-route basis. A route in this case refers to a post, such as **posts/live-editing-with-hakyll.markdown**. The clients use that path to establish the connection, which tells the WebSocket server that they're interested in data about that particular post. This way, the client doesn't get updates about posts it doesn't care about.
+First, however, I had to think about how the WebSocket server would communicate with the clients. I decided that the most straightforward thing to do would be to communicate on a per-route basis. A route in this case refers to a post, such as `posts/live-editing-with-hakyll.markdown.`{.path} The clients use that path to establish the connection, which tells the WebSocket server that they're interested in data about that particular post. This way, the client doesn't get updates about posts it doesn't care about.
 
 An alternative to this would've perhaps been to use a single communication channel, where the server would send data about every post that was changed, and clients decided which applied to them. While this seems simpler, it has the consequence that _every_ post's data is sent to the client, even posts no one is actually paying attention to. This is inefficient, and to avoid this inefficiency would again require some form of "interest-registration" which is implicit in the aforementioned method.
 
@@ -186,7 +186,7 @@ Finally we need to gracefully handle the case where the client leaves by either 
 
 ## Hakyll Compiler
 
-Remember that we also need a Hakyll compiler to insert into the Hakyll compiler pipeline. This compiler will read the server state Map and determine if if there's a channel to send the item body to, and if there isn't, does nothing.
+Remember that we also need a Hakyll compiler to insert into the Hakyll compiler pipeline. This compiler will read the server state `Map` and determine if if there's a channel to send the item body to, and if there isn't, does nothing.
 
 We will need two pieces of data relevant to the `Item` being compiled: the path to the file responsible for this `Item` as well as the `Item`'s body. The path is what we'll use as the key into the Map, and the body is what we'll pipe through the channel:
 
@@ -254,7 +254,7 @@ postCtx preview = mconcat
   , defaultCtx ]
 ```
 
-Before we get to `pushJS`, consider that we might want to disable this feature on a per-post basis. Personally I'd like this functionality to be on by default, but there are some posts I have such as [this one](/notes/machine-learning-theory) that are ridiculously long and take a very long time to load, so I'd like to be able to set a metadata `push: off` option in that particular post to disable it. Let's define a function that gets the metadata value and assumes its `True` unless it's explicitly set to `false` or `off`:
+Before we get to `pushJS`, consider that we might want to disable this feature on a per-post basis. Personally I'd like this functionality to be on by default, but there are some posts I have such as [this one](/notes/machine-learning) that are ridiculously long and take a very long time to load, so I'd like to be able to set a metadata `push: off` option in that particular post to disable it. Let's define a function that gets the metadata value and assumes its `True` unless it's explicitly set to `false` or `off`:
 
 ``` haskell
 pushOn :: (MonadMetadata m) => Item a -> m Bool

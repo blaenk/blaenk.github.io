@@ -101,7 +101,7 @@ Have an `Input` subsystem. In the SDL event loop, feed key events to the `Input`
 
 ## Optimizations
 
-**Object state caching** entails an object keeping a "double buffer" of its state: one for the previously calculated state, and another for the to-be calculated state. This helps, but doesn't completely solve, the problem of one-frame-off lag. It also allows for easy interpolation between two states for easy feeding into an interpolating render function. This only guarantees that the previous frame's state is fully consistent, but not the current state.
+_Object state caching_ entails an object keeping a "double buffer" of its state: one for the previously calculated state, and another for the to-be calculated state. This helps, but doesn't completely solve, the problem of one-frame-off lag. It also allows for easy interpolation between two states for easy feeding into an interpolating render function. This only guarantees that the previous frame's state is fully consistent, but not the current state.
 
 * [quaternion rotation without euler angles](http://stackoverflow.com/questions/17044296/quaternion-rotation-without-euler-angles/17047931#17047931)
 * [renderable components](http://gamedev.stackexchange.com/questions/47079/component-based-object-traversal)
@@ -183,7 +183,7 @@ $$
 
 ### Storage
 
-When it comes to matrix storage in memory, the key is that they are both stored the same way. A row-major matrix is stored in contiguous memory one row at a time, whereas a column-major matrix is stored one column at a time. The **implication** is that a stored row-major matrix can be passed to an API that expects column-major matrices _without_ needing to transpose the matrix first.
+When it comes to matrix storage in memory, the key is that they are both stored the same way. A row-major matrix is stored in contiguous memory one row at a time, whereas a column-major matrix is stored one column at a time. The _implication_ is that a stored row-major matrix can be passed to an API that expects column-major matrices _without_ needing to transpose the matrix first.
 
 ### Multiplication
 
@@ -203,7 +203,7 @@ I'd like to have voxel-based terrain (no, it's not a minecraft clone) so it's im
 
 ## Chunks
 
-The most common optimization is to treat the world as a composition of **chunks**, each chunk being a composition of WxHxD voxels, Minecraft [uses a](http://www.minecraftwiki.net/wiki/Chunks) logical chunk size of 16x16x256 and graphics chunk size of 16x16x16. Chunks have a variety of purposes. One of them is that they do away with having to instantiate a multitude of individual voxel objects. Instead, chunks are in charge of keeping the information of the blocks that constitute it.
+The most common optimization is to treat the world as a composition of _chunks_, each chunk being a composition of WxHxD voxels, Minecraft [uses a](http://www.minecraftwiki.net/wiki/Chunks) logical chunk size of 16x16x256 and graphics chunk size of 16x16x16. Chunks have a variety of purposes. One of them is that they do away with having to instantiate a multitude of individual voxel objects. Instead, chunks are in charge of keeping the information of the blocks that constitute it.
 
 A chunk may be represented by a volumetric grid such as a 3D array, optimized into a flat slab of memory indexed with the formula:
 

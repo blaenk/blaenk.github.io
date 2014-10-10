@@ -30,7 +30,7 @@ compile $ getResourceBody
   >>= pandocCompiler -- or pandocFeedCompiler
 ~~~
 
-So it would have been preferable if I could save the state of the `Item` (i.e. post) as it was right after abbreviation substitution. Fortunately, Hakyll has support for this in the form of **snapshots**.
+So it would have been preferable if I could save the state of the `Item` (i.e. post) as it was right after abbreviation substitution. Fortunately, Hakyll has support for this in the form of _snapshots_.
 
 The solution was to save a snapshot of the post from the regular compiler for posts after it had been through the abbreviation substitution [^1]:
 
@@ -46,7 +46,7 @@ match postsPattern $ do
 
 ## Implementation
 
-This meant that I could now refer to the "abbreviated" snapshot of any post. All I had to do now was to define a `Rule` to compile posts specifically for the syndication feed. Hakyll also has support for this in the form of **versions**, in which one can compile different versions of the same thing and refer to them later on.
+This meant that I could now refer to the "abbreviated" snapshot of any post. All I had to do now was to define a `Rule` to compile posts specifically for the syndication feed. Hakyll also has support for this in the form of _versions_, in which one can compile different versions of the same thing and refer to them later on.
 
 So what I do in the "feed" version of the post compiler was to get the underlying `Identifier` for the given post and load the "abbreviated" snapshot of the version of that post that has no name, i.e. the version of the post compiled by the regular post compiler.
 

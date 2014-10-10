@@ -28,7 +28,7 @@ The following two draft system implementations exemplify the two approaches I ca
 
 Octopress' draft system was pretty straightforward in my opinion, despite being a pretty hack-ish implementation. I would create drafts in the same directory as all of the other posts, and would simply set metadata `published: false`. This would allow the draft to show up when I previewed the site, but not when it was ultimately deployed. This was accomplished by regenerating the site on deploy, this time without the preview posts.
 
-The other solution I could think of consisted of detecting when the site was being previewed, and if that were the case, establish a different output directory and a different posts pattern which would include the posts in a separate **drafts/** directory. When the site _wasn't_ being previewed, the regular output directory would be used.
+The other solution I could think of consisted of detecting when the site was being previewed, and if that were the case, establish a different output directory and a different posts pattern which would include the posts in a separate `drafts/`{.path} directory. When the site _wasn't_ being previewed, the regular output directory would be used.
 
 ## Implementation
 
@@ -43,7 +43,7 @@ main = do
 
 If the **preview** action is being run, the Hakyll configuration data structure's `destinationDirectory` field, i.e. the output directory, is changed to a separate one for previewing purposes. This implies that the field is set to the deployable output directory by default. This is important because it means that all actions other than **preview** will _ignore_ drafts.
 
-Furthermore, if we are previewing, the pattern used to fetch posts is changed to also include the posts in the **drafts/** directory. This is achieved by using the [`.||.`](http://hackage.haskell.org/packages/archive/hakyll/4.2.2.0/doc/html/Hakyll-Core-Identifier-Pattern.html#v:.-38--38-.) function to compose two `Pattern` types.
+Furthermore, if we are previewing, the pattern used to fetch posts is changed to also include the posts in the `drafts/`{.path} directory. This is achieved by using the [`.||.`](http://hackage.haskell.org/packages/archive/hakyll/4.2.2.0/doc/html/Hakyll-Core-Identifier-Pattern.html#v:.-38--38-.) function to compose two `Pattern` types.
 
 ~~~ {lang="haskell"}
   let previewMode  = action == "preview"

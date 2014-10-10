@@ -24,19 +24,19 @@ $$ P(E^c) = 1 - P(E) $$
 
 ## Addition Rule
 
-The probability of the union of multiple **mutually exclusive** events can be determined by simply adding the probabilities of the individual events:
+The probability of the union of multiple _mutually exclusive_ events can be determined by simply adding the probabilities of the individual events:
 
 $$
 P(E_1 \cup E_2) = P(E_1) + P(E_2) = \sum_{i=1}^{N} P(E_i)
 $$
 
-However, if the events are **not mutually exclusive**, then the concept of **inclusion-exclusion** must be practiced in order to avoid _double counting_, where portions of the probabilities represent the same event:
+However, if the events are _not mutually exclusive_, then the concept of _inclusion-exclusion_ must be practiced in order to avoid _double counting_, where portions of the probabilities represent the same event:
 
 $$ P(E_1 \cup E_2) = P(E_1) + P(E_2) - P(E_1 \cap E_2) $$
 
 ## Conditional Probability
 
-The **conditional probability** of an event $B$ is the probability that the event $B$ happens given that another event $A$ occurred, and is written as:
+The _conditional probability_ of an event $B$ is the probability that the event $B$ happens given that another event $A$ occurred, and is written as:
 
 $$ P(B \mid A) $$
 
@@ -44,7 +44,7 @@ This is inferred from the problem. For example, in "draw without replacement" pr
 
 ## Multiplication Rule
 
-Conditional probability allows us to compute the probability of one event occurring followed by another. This is solved using the **multiplication rule**:
+Conditional probability allows us to compute the probability of one event occurring followed by another. This is solved using the _multiplication rule_:
 
 $$
 \begin{align}

@@ -10,7 +10,7 @@ toc: off
 
 # General Usage
 
-CMake directives are stored in files named **CMakeLists.txt**, and there is usually one such file present for each sub-directory in the source tree, each one conventionally containing directives pertinent to the files in that directory. These separate CMake files are then "merged together" using the `add_subdirectory` directive, which immediately makes the CMake interpreter load and evaluate the CMake file in the provided directory.
+CMake directives are stored in files named `CMakeLists.txt`{.path}, and there is usually one such file present for each sub-directory in the source tree, each one conventionally containing directives pertinent to the files in that directory. These separate CMake files are then "merged together" using the `add_subdirectory` directive, which immediately makes the CMake interpreter load and evaluate the CMake file in the provided directory.
 
 Variables can be set using the `set` directive in the following format:
 
@@ -48,7 +48,7 @@ Targets are essentially products of the build process: oftentimes this is either
 add_executable (sometarget file.cpp)
 ```
 
-In the above, **file.cpp** refers to the file containing the `main` entry point. Likewise, a library can be created using the `add_library` directive:
+In the above, `file.cpp`{.path} refers to the file containing the `main` entry point. Likewise, a library can be created using the `add_library` directive:
 
 ``` cmake
 add_library (sometarget STATIC ${SRC})
@@ -76,7 +76,7 @@ Furthermore, on Windows, the `source_group` directive can help organize source f
 source_group (sometarget FILES ${SRC})
 ```
 
-Libraries built in project are **automatically found**, there's no need for `include_directories` or `find_library`. Try to avoid `link_directories`.
+Libraries built in project are automatically found, there's no need for `include_directories` or `find_library`. Try to avoid `link_directories`.
 
 It's possible to wire-up what would happen upon invoking `make install` by using the `install` directive:
 
@@ -86,7 +86,7 @@ install (TARGET sometarget
          LIBRARY DESTINATION lib)
 ```
 
-This would install to **/usr/local/bin** and **/usr/local/lib** on POSIX.
+This would install to `/usr/local/bin`{.path} and `/usr/local/lib`{.path} on POSIX.
 
 A configuration include file can be created using `configure_file`:
 
@@ -159,7 +159,7 @@ $ readelf -d thebinary
 
 # SWIG Bindings
 
-It's possible to automatically generate [SWIG](http://www.swig.org/) bindings using built-in CMake modules. The following creates a **swig.(dll|so|dylib)** which a Lua script can subsequently `require`.
+It's possible to automatically generate [SWIG](http://www.swig.org/) bindings using built-in CMake modules. The following creates a a dynamic library which a Lua script can subsequently `require`.
 
 ``` cmake
 find_package (SWIG)

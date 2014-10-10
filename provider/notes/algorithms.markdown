@@ -18,7 +18,7 @@ What follows are some notes on algorithms I've been reviewing from [Algorithms](
 
 **General Flow**: Sites are all partitioned into singleton sets. Successive `union()` operations merge sets together. The `find()` operation determines if a given pair of sites are from the same component.
 
-A **site** is an element or node in a disjoint set. The disjoint set is known as a **component**, which typically models a set or graph. Two sites are **connected** if they are part of the same component.
+A _site_ is an element or node in a disjoint set. The disjoint set is known as a _component_, which typically models a set or graph. Two sites are _connected_ if they are part of the same component.
 
 ## Quick-Find
 
@@ -140,7 +140,7 @@ Union            $\approx 1$
 
 </div>
 
-A further improvement can be done called **path compression** in which every site traversed due to a call to `find()` is directly linked to the component root.
+A further improvement can be done called _path compression_ in which every site traversed due to a call to `find()` is directly linked to the component root.
 
 ~~~ {lang="java" text="path compression"}
 public int find(int p) {
@@ -159,11 +159,11 @@ Many problems can be reduced to sorting.
 
 **Data Structure**: Array or other sequence.
 
-The following algorithms are described with the assumption that the sequence is an array of contiguous memory and constant access time. This is **noteworthy** because it is important to recognize algorithms can have different speeds depending on the underlying data structure.
+The following algorithms are described with the assumption that the sequence is an array of contiguous memory and constant access time. This is _noteworthy_ because it is important to recognize algorithms can have different speeds depending on the underlying data structure.
 
 For example, selection sort backed by a priority queue or balanced binary tree can help to speed up the operation of finding the smallest element in the unsorted region. Instead of being linear, the operation would be $\lg(n)$. Given that this is done at every element in the sequence, of which there are $N$, this means that selection sort backed by such a structure can be improved from $O(n^2)$ to $O(n\lg(n))$ [^sorting_improvements].
 
-A sorting algorithm is known as **stable** if it maintains the same relative order of equal keys as it was before the sorting operation.
+A sorting algorithm is known as _stable_ if it maintains the same relative order of equal keys as it was before the sorting operation.
 
 ## Selection Sort
 
@@ -211,7 +211,7 @@ Worst  $O(n^2)$
 
 </div>
 
-This is a **stable** algorithm that is still pretty straightforward but somewhat improves upon selection sort if the array is already sorted or if it's nearly sorted.
+This is a _stable_ algorithm that is still pretty straightforward but somewhat improves upon selection sort if the array is already sorted or if it's nearly sorted.
 
 It operates as follows:
 
@@ -254,7 +254,7 @@ Shell sort aims to mitigate this by doing the following:
 5. repeat steps 2 - 4 but with $H$ reduced by some factor until the reduction reaches $1$
 6. ultimately do regular insertion sort, i.e. $H = 1$
 
-The value picked for $H$ and the factor which is used to reduce it form what is known as a [gap sequence](http://en.wikipedia.org/wiki/Shellsort#Gap_sequences). The overall worst-case time complexity **depends on the chosen gap sequence**. A commonly chosen gap sequence with a worst-case time complexity of $O(n^{3/_2})$ is:
+The value picked for $H$ and the factor which is used to reduce it form what is known as a [gap sequence](http://en.wikipedia.org/wiki/Shellsort#Gap_sequences). The overall worst-case time complexity _depends on the chosen gap sequence_. A commonly chosen gap sequence with a worst-case time complexity of $O(n^{3/_2})$ is:
 
 $$\frac {(3^k - 1)} {2} \text{, not greater than}\ \lceil N/3 \rceil$$
 
@@ -291,7 +291,7 @@ Space  $O(n)$
 
 </div>
 
-This is a **stable** algorithm and the first algorithm that is linearithmic in complexity. The general idea is that the sequence is split into many pieces and then they're all merged back together. The sorting occurs during the merging phase. The merging algorithm works such that the resultant merged piece is sorted.
+This is a _stable_ algorithm and the first algorithm that is linearithmic in complexity. The general idea is that the sequence is split into many pieces and then they're all merged back together. The sorting occurs during the merging phase. The merging algorithm works such that the resultant merged piece is sorted.
 
 The main drawback is that it has $O(n)$ space complexity because an auxiliary sequence has to be created to facilitate the merging process.
 
@@ -1042,13 +1042,13 @@ At any given node representing the set of ranges intersected by the median at th
 
 The general operation for queries is to test the set of ranges in a node and then test those in the appropriate child node if the query isn't equal to the median.
 
-Given a **point** query, the current node is compared with the median. If it's equal, then every range in that node matches and the search is complete. If the query is less than the median, then the list of beginning points is searched for those beginning points that start before the query point, all of which are matches. Then the search continues into the left child.
+Given a _point_ query, the current node is compared with the median. If it's equal, then every range in that node matches and the search is complete. If the query is less than the median, then the list of beginning points is searched for those beginning points that start before the query point, all of which are matches. Then the search continues into the left child.
 
-Given an **interval query**, the set of beginning and end points are searched to see if they fall within the query interval. These ranges are matches, and they have potential for duplicates if the matched interval begins and ends within the query interval. Finally, to match for ranges which possibly contain the query interval, a point is chosen in the query interval, perhaps the begin or end point, and that point is used as a point query as in the aforementioned point query algorithm.
+Given an _interval query_, the set of beginning and end points are searched to see if they fall within the query interval. These ranges are matches, and they have potential for duplicates if the matched interval begins and ends within the query interval. Finally, to match for ranges which possibly contain the query interval, a point is chosen in the query interval, perhaps the begin or end point, and that point is used as a point query as in the aforementioned point query algorithm.
 
 ## Hash Tables
 
-Hash tables consist of an array coupled with a **hash function**---such as [MurmurHash](http://en.wikipedia.org/wiki/MurmurHash) or [CityHash](http://en.wikipedia.org/wiki/CityHash)---and a **collision resolution** scheme, both of which help map the key to an index within the array.
+Hash tables consist of an array coupled with a _hash function_---such as [MurmurHash](http://en.wikipedia.org/wiki/MurmurHash) or [CityHash](http://en.wikipedia.org/wiki/CityHash)---and a _collision resolution_ scheme, both of which help map the key to an index within the array.
 
 ### Hash Functions
 
@@ -1144,7 +1144,7 @@ As a result, after setting the entry to null, every key to the right of the remo
 
 #### Load Factor {#hash-table-load-factor}
 
-The **load factor** is defined by $\alpha = N/M$ where $\alpha$ is the percentage of table entries that are occupied, which can never be 1 since, if the table becomes full, a search miss would go into an infinite loop. Instead, array resizing is performed to ensure that the load factor is between $\frac {1} {8}$ and $\frac {1} {2}$.
+The _load factor_ is defined by $\alpha = N/M$ where $\alpha$ is the percentage of table entries that are occupied, which can never be 1 since, if the table becomes full, a search miss would go into an infinite loop. Instead, array resizing is performed to ensure that the load factor is between $\frac {1} {8}$ and $\frac {1} {2}$.
 
 The average number of compares, or _probes_, in a linear-probing hash table of size $M$ and $N = \alpha M$ keys is:
 
@@ -1163,17 +1163,17 @@ Instead, sparse vectors are vectors backed by hash tables where the keys corresp
 
 # Graphs
 
-A **graph** is a set of **vertices** and a collection of **edges** that each connect a pair of vertices. This definition allows for **self-loops** (edges that connect a vertex to itself) and **parallel edges** (multiple edges connecting the same vertex pair).
+A _graph_ is a set of _vertices_ and a collection of _edges_ that each connect a pair of vertices. This definition allows for _self-loops_ (edges that connect a vertex to itself) and _parallel edges_ (multiple edges connecting the same vertex pair).
 
-Graphs with parallel edges are sometimes known as **multigraphs**, whereas graphs with no parallel edges or self-loops are **simple graphs**.
+Graphs with parallel edges are sometimes known as _multigraphs_, whereas graphs with no parallel edges or self-loops are _simple graphs_.
 
-Two vertices connected by an edge are **adjacent**, and the edge is **incident** to both vertices. A vertex' **degree** is the number of edges connected to it. A **subgraph** is a sub-set of edges and associated vertices that still constitutes a graph.
+Two vertices connected by an edge are _adjacent_, and the edge is _incident_ to both vertices. A vertex' _degree_ is the number of edges connected to it. A _subgraph_ is a sub-set of edges and associated vertices that still constitutes a graph.
 
-Paths in graphs are sequences of vertices connected by edges. **Simple paths** have no repeated vertices. A path forms a **cycle** if it has at least one edge whose first and last vertices are the same, and a **simple cycle** if the cycle consists of no repeated edges or vertices. The number of edges in a path determines its **length**.
+Paths in graphs are sequences of vertices connected by edges. _Simple paths_ have no repeated vertices. A path forms a _cycle_ if it has at least one edge whose first and last vertices are the same, and a _simple cycle_ if the cycle consists of no repeated edges or vertices. The number of edges in a path determines its _length_.
 
-A graph is **connected** if a path exists from every vertex to every other vertex. A graph that isn't connected consists of **connected components** which are connected subgraphs of the graph.
+A graph is _connected_ if a path exists from every vertex to every other vertex. A graph that isn't connected consists of _connected components_ which are connected subgraphs of the graph.
 
-**Acyclic graphs** are graphs with no cycles. A tree is an acyclic connected graph, and a disjoint set of trees is a **forest**.
+_Acyclic graphs_ are graphs with no cycles. A tree is an acyclic connected graph, and a disjoint set of trees is a _forest_.
 
 A graph $G$ with $V$ vertices is a tree if any of the following are satisfied:
 
@@ -1183,11 +1183,11 @@ A graph $G$ with $V$ vertices is a tree if any of the following are satisfied:
 * $G$ is acyclic but adding any edge creates a cycle
 * exactly one simple path connects each pair of vertices in $G$
 
-A **spanning tree** of a connected graph is a subgraph that contains all of the vertices as a single tree. A **spanning forest** of a graph is the union of all spanning trees of its connected components.
+A _spanning tree_ of a connected graph is a subgraph that contains all of the vertices as a single tree. A _spanning forest_ of a graph is the union of all spanning trees of its connected components.
 
-A graph's **density** is its proportion of possible paris of vertices that are connected. A **sparse** graph has relatively few of the possible edges present, compared to a **dense** one.
+A graph's _density_ is its proportion of possible paris of vertices that are connected. A _sparse_ graph has relatively few of the possible edges present, compared to a _dense_ one.
 
-A **bipartite graph** is one whose vertices can be divided into two sets such that all edges connect a vertex in one set with a vertex in the other.
+A _bipartite graph_ is one whose vertices can be divided into two sets such that all edges connect a vertex in one set with a vertex in the other.
 
 **Answers**:
 
@@ -1197,7 +1197,7 @@ A **bipartite graph** is one whose vertices can be divided into two sets such th
 
 ## Undirected Graphs
 
-An **undirected graph** is one in which the connections don't have an associated direction. There are various data structures that can be used represent graphs:
+An _undirected graph_ is one in which the connections don't have an associated direction. There are various data structures that can be used represent graphs:
 
 * **adjacency matrix**: a $V \times V$ boolean array where row $v$ and column $w$ are set to true if vertices $v$ and $w$ are connected with an edge.
 * **array of adjacency lists**: a vertex-indexed array of lists of the vertices adjacent to each vertex, similar to hash tables with separate chaining
@@ -1331,9 +1331,9 @@ bool dfs(const Graph &G, int v) {
 
 ## Directed Graphs
 
-The edges in **directed graphs** have an associated one-way direction, such that edges are defined by an ordered pair of vertices that define a one-way adjacency. A directed graph (or **digraph**) is a set of vertices and a collection of directed edges, each connecting an ordered pair of vertices. The **outdegree** of a vertex is the number of edges pointing from it, while the **indegree** is the number of edges pointing to it.
+The edges in _directed graphs_ have an associated one-way direction, such that edges are defined by an ordered pair of vertices that define a one-way adjacency. A directed graph (or _digraph_) is a set of vertices and a collection of directed edges, each connecting an ordered pair of vertices. The _outdegree_ of a vertex is the number of edges pointing from it, while the _indegree_ is the number of edges pointing to it.
 
-The first vertex in a directed edge is the **head** and the second vertex is the **tail**. Edges are drawn as arrows pointing from head to tail, such as $v \rightarrow w$.
+The first vertex in a directed edge is the _head_ and the second vertex is the _tail_. Edges are drawn as arrows pointing from head to tail, such as $v \rightarrow w$.
 
 Directed graphs can be represented by adjacency lists with the stricter property that if node $w$ is present in the adjacency list corresponding to $v$, it simply means that there is a directed edge $v \rightarrow w$, but not vice versa unless explicitly defined.
 
@@ -1341,7 +1341,7 @@ Directed graphs can be represented by adjacency lists with the stricter property
 
 The same exact implementation of reachability testing by DFS used in undirected graphs can be used for digraphs, and can be expanded to allow for reachability testing from multiple sources which has applications in regular expression matchers or mark-and-sweep garbage collection strategies, for example.
 
-Mark-and-sweep garbage collection (GC) strategies typically reserve one bit per object for the purpose of garbage collection. The GC then periodically **marks** a set of potentially accessible objects by running digraph reachability tests on the graph of object references, then it **sweeps** through all of the unmarked objects, collecting them for reuse for new objects.
+Mark-and-sweep garbage collection (GC) strategies typically reserve one bit per object for the purpose of garbage collection. The GC then periodically _marks_ a set of potentially accessible objects by running digraph reachability tests on the graph of object references, then it _sweeps_ through all of the unmarked objects, collecting them for reuse for new objects.
 
 ### Cycle Detection {#directed-cycle-detection}
 
@@ -1386,7 +1386,7 @@ This ability of DFS follows from the fact that DFS covers each vertex exactly on
 
 ### Strong Connectivity
 
-Two vertices $v$ and $w$ are **strongly connected** if they are mutually reachable, i.e. $v \leftrightarrow w$. Consequently, an entire digraph is **strongly connected** if _all_ of its vertices are strongly connected to one another. Further, **strong components** are connected components of a graph that are strongly connected.
+Two vertices $v$ and $w$ are _strongly connected_ if they are mutually reachable, i.e. $v \leftrightarrow w$. Consequently, an entire digraph is _strongly connected_ if _all_ of its vertices are strongly connected to one another. Further, _strong components_ are connected components of a graph that are strongly connected.
 
 The [Kosaraju-Sharir](http://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) algorithm is able to find strongly connected components in digraphs. The algorithm operates as follows:
 
@@ -1422,7 +1422,7 @@ void dfs(const Digraph &G, int v) {
 
 The algorithm can be understood by considering a kernel DAG, or _condensation digraph_, associated with each digraph, formed by collapsing all vertices in each strong component to a single vertex. This DAG can then be put into reverse topological order. Remember that reverse postorder of a DAG is equivalent to topological sort.
 
-The algorithm begins by finding a vertex that is in a sink component of the kernel DAG. A **sink component** is one that has no edges pointing from it. Running DFS from this vertex only visits the vertices in that component. DFS then marks the vertices in that component, effectively removing them from further consideration in that digraph. It then repeats this by finding another sink component in the resulting kernel DAG.
+The algorithm begins by finding a vertex that is in a sink component of the kernel DAG. A _sink component_ is one that has no edges pointing from it. Running DFS from this vertex only visits the vertices in that component. DFS then marks the vertices in that component, effectively removing them from further consideration in that digraph. It then repeats this by finding another sink component in the resulting kernel DAG.
 
 The first vertex in a reverse postorder of $G$ is in a _source_ component of the kernel DAG, whereas the first vertex in a reverse postorder of the _reverse_ digraph $G^R$ is in a _sink_ component of the kernel DAG.
 
@@ -1432,17 +1432,17 @@ All-Pairs reachability asks: given a digraph, is there a directed path from a gi
 
 <img src="/images/notes/algorithms/graphs/transitive-closure.png" class="right">
 
-The **transitive closure** of digraph $G$ is another digraph with the same set of vertices but with an edge from $v$ to $w$ in the transitive closure if and only if $w$ is reachable from $v$ in $G$. Transitive closures are generally represented as a matrix of booleans where row $v$ at column $w$ is true if $w$ is reachable from $v$ in the digraph.
+The _transitive closure_ of digraph $G$ is another digraph with the same set of vertices but with an edge from $v$ to $w$ in the transitive closure if and only if $w$ is reachable from $v$ in $G$. Transitive closures are generally represented as a matrix of booleans where row $v$ at column $w$ is true if $w$ is reachable from $v$ in the digraph.
 
 Finding the transitive closure of a digraph can be accomplished by running DFS on every vertex of the digraph and storing the resulting reachability array for each each vertex from which DFS was run. However, it can be impractical for large graphs because it uses space proportional to $V^2$ and time proportional to $V(V + E)$.
 
 ## Minimum Spanning Trees
 
-An **edge-weighted graph** is a graph where the edges have associated weights or costs. Edge-weighted graphs can be represented with adjacency lists containing edge objects which contain the two vertices, one of which is the index of the adjacency list, as well as the weight for that edge.
+An _edge-weighted graph_ is a graph where the edges have associated weights or costs. Edge-weighted graphs can be represented with adjacency lists containing edge objects which contain the two vertices, one of which is the index of the adjacency list, as well as the weight for that edge.
 
-A **spanning tree** is a connected subgraph with no cycles that includes all of the vertices in the graph. A **minimum spanning tree** (MST) is a spanning tree whose weight---the sum of all of its edges' weights---is no larger than the weight of any other spanning tree for that graph.
+A _spanning tree_ is a connected subgraph with no cycles that includes all of the vertices in the graph. A _minimum spanning tree_ (MST) is a spanning tree whose weight---the sum of all of its edges' weights---is no larger than the weight of any other spanning tree for that graph.
 
-Adding an edge to a tree creates a cycle and removing an edge from a tree breaks it into two separate subtrees. Knowing this, a **cut** of a graph is a partition of its vertices into two nonempty disjoint sets, connected by a **crossing edge**.
+Adding an edge to a tree creates a cycle and removing an edge from a tree breaks it into two separate subtrees. Knowing this, a _cut_ of a graph is a partition of its vertices into two nonempty disjoint sets, connected by a _crossing edge_.
 
 ### Prim's Algorithm
 
@@ -1500,7 +1500,7 @@ Space   $O(V)$
 
 The above implementation is lazy with respect to ignoring ineligible edges in the priority queue. That approach leaves ineligible edges in the priority queue until they're dequeued for consideration and discarded if they are ineligible.
 
-By contrast, an **eager approach** would make sure those edges aren't present in the priority queue from the beginning. The eager version of Prim's algorithm uses two vertex-index arrays:
+By contrast, an _eager approach_ would make sure those edges aren't present in the priority queue from the beginning. The eager version of Prim's algorithm uses two vertex-index arrays:
 
 * an array for the shortest edges to vertices which are reachable from the tree within one edge
 * an array for the weight of the shortest edge stored in the aforementioned array
@@ -1577,9 +1577,9 @@ void kruskal(EdgeWeightedGraph G) {
 
 ## Shortest Paths
 
-The **shortest path** from vertex $s$ to $t$ in an edge-weighted digraph is a directed path from $s$ to $t$ such that no other such path has a lower weight. A **shortest-path tree** (SPT) for a source vertex $s$ is a subgraph containing $s$ and all the vertices reachable from $s$ that forms a directed tree rooted at $s$ such that every path is a shortest path in the digraph.
+The _shortest path_ from vertex $s$ to $t$ in an edge-weighted digraph is a directed path from $s$ to $t$ such that no other such path has a lower weight. A _shortest-path tree_ (SPT) for a source vertex $s$ is a subgraph containing $s$ and all the vertices reachable from $s$ that forms a directed tree rooted at $s$ such that every path is a shortest path in the digraph.
 
-**Edge relaxation** refers to replacing an existing edge that reaches $w$ with a new edge $v \rightarrow w$ if the new edge makes the path from the source vertex to $w$ be of lower cost than it was previously.
+_Edge relaxation_ refers to replacing an existing edge that reaches $w$ with a new edge $v \rightarrow w$ if the new edge makes the path from the source vertex to $w$ be of lower cost than it was previously.
 
 ~~~ {lang="java" text="edge relaxation"}
 void relax(DirectedEdge e) {
@@ -1592,7 +1592,7 @@ void relax(DirectedEdge e) {
 }
 ~~~
 
-**Vertex relaxation** is similar to edge relaxation except that it relaxes all of the edges pointing from a given vertex.
+_Vertex relaxation_ is similar to edge relaxation except that it relaxes all of the edges pointing from a given vertex.
 
 ~~~ {lang="java" text="vertex relaxation"}
 void relax(EdgeWeightedDigraph G, int v) {
@@ -1620,7 +1620,7 @@ Space   $O(V)$
 
 Dijkstra's alrogithm is similar to Prim's algorithm for finding the MST. Dijkstra's algorithm finds the SPT by finding the lowest-weight non-tree vertex as provided by an index minimum-priority queue and relaxing that vertex.
 
-Dijkstra's algorithm **requires** that edges be non-negative.
+Dijkstra's algorithm _requires_ that edges be non-negative.
 
 ~~~ {lang="java" text="dijkstra's algorithm"}
 void dijkstra(EdgeWeightedDigraph G, int s) {
@@ -1679,7 +1679,7 @@ This approach can be used for finding the longest path between two vertices in a
 
 ### Parallel Job Scheduling
 
-The **critical path method** for parallel job scheduling consists of encoding the constraints of the scheduling problem in a DAG. Both a source vertex $s$ and a sink vertex $t$ are created on either ends of the graph. Jobs are encoded in the graph as a pair of nodes connected by an edge whose weight corresponds to that job's duration. For each precedence constraint $v \rightarrow w$, add a zero-weight edge from $v$ to $w$. Finally, add a zero-weight edge from the source to every job's start vertex and from every job's end vertex to the sink.
+The _critical path method_ for parallel job scheduling consists of encoding the constraints of the scheduling problem in a DAG. Both a source vertex $s$ and a sink vertex $t$ are created on either ends of the graph. Jobs are encoded in the graph as a pair of nodes connected by an edge whose weight corresponds to that job's duration. For each precedence constraint $v \rightarrow w$, add a zero-weight edge from $v$ to $w$. Finally, add a zero-weight edge from the source to every job's start vertex and from every job's end vertex to the sink.
 
 When the scheduling problem is encoded in this manner, it can be solved by scheduling each job at the time corresponding to its longest path from the source vertex.
 
@@ -1699,7 +1699,7 @@ Space   $O(V)$
 
 The problem of finding the shortest paths can be generalized to graphs containing negative cycles. The Bellman-Ford algorithm accomplishes this by adding the source vertex to a queue and entering a loop where a vertex is dequeued and relaxed, and any vertex affected by that relaxation gets enqueued.
 
-A **negative cycle** is a directed cycle with net negative weight. No shortest path between $s$ and $v$ can consist of a vertex that lies within a negative cycle, or the weight of the path can be made arbitrarily low and a _shortest_ path would "never" be achieved.
+A _negative cycle_ is a directed cycle with net negative weight. No shortest path between $s$ and $v$ can consist of a vertex that lies within a negative cycle, or the weight of the path can be made arbitrarily low and a _shortest_ path would "never" be achieved.
 
 To prevent the Bellman-Ford algorithm from looping infinitely due to negative cycles, it has to ensure to terminate after $V$ passes either by keeping track with a counter or by detecting negative cycles within a subgraph.
 
@@ -1946,9 +1946,9 @@ Trie structures exploit string properties to provide much faster string search, 
 
 <img src="/images/notes/algorithms/tries/trie.png" class="right">
 
-The structure of tries is comprised of a tree where every node has $R$ **links** where $R$ is the size of the alphabet. Every node also has an associated **label** corresponding to the character value consumed to reach the node. The root node has no such label as there is no link pointing to it. Every node also also has an associated **value** corresponding to the value associated with the key denoted by the path ending at the particular node.
+The structure of tries is comprised of a tree where every node has $R$ _links_ where $R$ is the size of the alphabet. Every node also has an associated _label_ corresponding to the character value consumed to reach the node. The root node has no such label as there is no link pointing to it. Every node also also has an associated _value_ corresponding to the value associated with the key denoted by the path ending at the particular node.
 
-A **search hit** occurs when the trie search arrives at the final node and that node's value is not empty. A **search hit** occurs both if the final node's value is empty or if the search terminated on a null link.
+A _search hit_ occurs when the trie search arrives at the final node and that node's value is not empty. A _search hit_ occurs both if the final node's value is empty or if the search terminated on a null link.
 
 ~~~ {lang="java" text="trie search"}
 Value get(String key) {
@@ -2145,9 +2145,9 @@ A B C D E F
   A B C D F
 ~~~
 
-However, this essentially means that the text segment from position 1 to 3 has to be rechecked, which we would prefer to avoid. The important observation to make is that the text had **already matched** the pattern _up to_ (but not including) position `j` where the mismatch occurred. That is, the text segment `t[i .. i + j - 1]` is equal to `p[0 .. j - 1]` where `p` is the pattern. Since we would have to shift to the right one character, this means that the text that would have to be rechecked corresponds to `p[1 .. j - 1]`. Feeding this to the DFA takes us to the state where we can appropriately handle `t[i + j]`.
+However, this essentially means that the text segment from position 1 to 3 has to be rechecked, which we would prefer to avoid. The important observation to make is that the text had _already matched_ the pattern _up to_ (but not including) position `j` where the mismatch occurred. That is, the text segment `t[i .. i + j - 1]` is equal to `p[0 .. j - 1]` where `p` is the pattern. Since we would have to shift to the right one character, this means that the text that would have to be rechecked corresponds to `p[1 .. j - 1]`. Feeding this to the DFA takes us to the state where we can appropriately handle `t[i + j]`.
 
-**Based on this observation**, we can conclude that at every state we can add transitions for mismatch cases based on the transitions that would be made for the equivalent mismatch that would occur at the state we would arrive at if we had fed the input `p[0 .. j - 1]` to the DFA. For this reason, a "pointer" to this state is kept at every iteration of the DFA construction, where each iteration is comprised of defining all transitions for a given state.
+_Based on this observation_, we can conclude that at every state we can add transitions for mismatch cases based on the transitions that would be made for the equivalent mismatch that would occur at the state we would arrive at if we had fed the input `p[0 .. j - 1]` to the DFA. For this reason, a "pointer" to this state is kept at every iteration of the DFA construction, where each iteration is comprised of defining all transitions for a given state.
 
 #### DFA Construction {#kmp-dfa-construction}
 
@@ -2378,7 +2378,7 @@ Once the entire text has been consumed, the final iteration of the above loop wo
 
 The construction of the NFA is accomplished similar to how Djikstra's [shunting-yard algorithm](http://en.wikipedia.org/wiki/Shunting-yard_algorithm) works for evaluating mathematical expressions in infix notation by using two stacks: one for operators and another for values.
 
-In this context, a stack is maintained for the operators and a digraph the size of the length of the pattern plus one (to account for the accept state) is maintained to represent the NFA's $\epsilon$-transitions. **Concatenation** is already handled implicitly by nature of how the pattern is stored.
+In this context, a stack is maintained for the operators and a digraph the size of the length of the pattern plus one (to account for the accept state) is maintained to represent the NFA's $\epsilon$-transitions. _Concatenation_ is already handled implicitly by nature of how the pattern is stored.
 
 ~~~ {lang="java"}
 Digraph NFA(String regex) {
@@ -2391,14 +2391,14 @@ Digraph NFA(String regex) {
     int lp = i;
 ~~~
 
-For **parentheses** and **or expressions**, the position of the `(` or `|` is pushed.
+For _parentheses_ and _or expressions_, the position of the `(` or `|` is pushed.
 
 ~~~ {lang="java"}
     if (re[i] == '(' || re[i] == '|')
       ops.push(i);
 ~~~
 
-If a `)` is encountered and it signified the end of an **or expression**, then the appropriate edges must be created. A regex `(A | B)` is handled by adding two $\epsilon$-transitions: one from the `(` to the `B` and the other from the `|` to the `)`. Push the position of the `|` (having previously pushed the `(`).
+If a `)` is encountered and it signified the end of an _or expression_, then the appropriate edges must be created. A regex `(A | B)` is handled by adding two $\epsilon$-transitions: one from the `(` to the `B` and the other from the `|` to the `)`. Push the position of the `|` (having previously pushed the `(`).
 
 ~~~ {lang="java"}
     else if (re[i] == ')') {
@@ -2412,7 +2412,7 @@ If a `)` is encountered and it signified the end of an **or expression**, then t
     }
 ~~~
 
-**Closures** are detected by looking ahead of the current state (if possible). If one is found, then an edge is created to the `*` and another is created from the `*` to the current state.
+_Closures_ are detected by looking ahead of the current state (if possible). If one is found, then an edge is created to the `*` and another is created from the `*` to the current state.
 
 ~~~ {lang="java"}
     if (i < M - 1 && re[i + 1] == '*') {
@@ -2458,7 +2458,7 @@ Huffman Compression exploits the frequency of individual characters. For example
 
 The problem with the above representation is that the interpretation of the above encoded data is ambiguous because the characters aren't delimited and some of the characters' codes are prefixes of others. For example, `A` is `0`, `B` is `1`, and `C` is `01`, so when `01` is read, it isn't clear if it is meant to be interpreted as `AB` or `C`.
 
-Instead, a property known as **prefix-free code** is enforced for the encodings, which prevents any code from being a prefix of another. In the above, a possible representation could be `A` with `0`, `B` with `1111`, `C` with `110`, `D` with `100`, `R` with `1110`, and `!` with `101`, yielding the encoding `011111110011001000111111100101`. While this is a slightly longer representation, it is unambiguous.
+Instead, a property known as _prefix-free code_ is enforced for the encodings, which prevents any code from being a prefix of another. In the above, a possible representation could be `A` with `0`, `B` with `1111`, `C` with `110`, `D` with `100`, `R` with `1110`, and `!` with `101`, yielding the encoding `011111110011001000111111100101`. While this is a slightly longer representation, it is unambiguous.
 
 Prefix-free codes can be easily represented using a trie where left links are `0` and right links are `1`. Leave nodes contain the character represented by the bits of the edges of the path used to reach them. Each node in the trie has an associated frequency (used during construction) and character (for leaves).
 
@@ -2493,13 +2493,13 @@ One thing to recognize is that the trie has to somehow be encoded in the compres
 
 Reading the trie into an actual trie structure is just as straightforward, where the type of node to create is determined by the leading bit.
 
-**Decompression** consists of simply traversing the trie as each bit is read. If a leaf is encountered, output the character and restart traversal from the root.
+_Decompression_ consists of simply traversing the trie as each bit is read. If a leaf is encountered, output the character and restart traversal from the root.
 
-**Compression** requires the existence of a code table mapping each character to the appropriate code. This table is derived from the trie by traversing the trie, keeping track of the bitstring along its path, and when a leaf node is encountered, the bitstring is associated with that character in the code table. Compression then simply requires looking up each character from the data in the code table and outputting the appropriate code.
+_Compression_ requires the existence of a code table mapping each character to the appropriate code. This table is derived from the trie by traversing the trie, keeping track of the bitstring along its path, and when a leaf node is encountered, the bitstring is associated with that character in the code table. Compression then simply requires looking up each character from the data in the code table and outputting the appropriate code.
 
 ### LZW Compression
 
-LZW **compression** works by having variable-length code words for fixed-length input patterns. Code words are kept in a trie as with Huffman compression. A code counter is maintained and incremented after each new code is added to the trie. The initial trie is constructed from the alphabet, one node being created from each character with its code stored within. The rest of the trie is constructed as the input is read:
+LZW _compression_ works by having variable-length code words for fixed-length input patterns. Code words are kept in a trie as with Huffman compression. A code counter is maintained and incremented after each new code is added to the trie. The initial trie is constructed from the alphabet, one node being created from each character with its code stored within. The rest of the trie is constructed as the input is read:
 
 1. the longest prefix of the input present in the trie is found and its value output to the compressed stream
 2. if the length of the prefix is shorter than the remaining input length, a new code is added for the string consisting of the prefix concatenated with the next character in the input stream. This is a simple operation, essentially done by adding a new node with the new code to the node at which the prefix ends
@@ -2529,7 +2529,7 @@ void compress(String input) {
 }
 ~~~
 
-**Decompression** depends on a table indexed by codes and valued by strings (prefixes), this is constructed from the alphabet. The code of the first character in the input stream is read and its associated string is retrieved from the table. Decompression continues until the EOF character is encountered, on each iteration doing the following:
+_Decompression_ depends on a table indexed by codes and valued by strings (prefixes), this is constructed from the alphabet. The code of the first character in the input stream is read and its associated string is retrieved from the table. Decompression continues until the EOF character is encountered, on each iteration doing the following:
 
 1. the string associated with the code is output
 2. another code is read, break if EOF
@@ -2577,7 +2577,7 @@ Miscellaneous algorithms follow.
 
 ## B-Trees
 
-A B-Trees of order $M$ is a tree consisting of internal and external $k$-nodes each consisting of $k$ keys where $2 \leq k \leq M - 1$ at the root and $M/2 \leq k \leq M - 1$ at every other node. **Internal nodes** contain copies of keys, where every key is greater than or equal to its parent node's associated key, but not greater than the parent node's next largest key. **External nodes** are the leaves of the tree that associate keys with data. A **sentinel key** is created to be less than all other keys and is the first key in the root node.
+A B-Trees of order $M$ is a tree consisting of internal and external $k$-nodes each consisting of $k$ keys where $2 \leq k \leq M - 1$ at the root and $M/2 \leq k \leq M - 1$ at every other node. _Internal nodes_ contain copies of keys, where every key is greater than or equal to its parent node's associated key, but not greater than the parent node's next largest key. _External nodes_ are the leaves of the tree that associate keys with data. A _sentinel key_ is created to be less than all other keys and is the first key in the root node.
 
 ### Insertion {#b-tree-insertion}
 
@@ -2662,23 +2662,23 @@ void main(String[] args) {
 
 The Network-Flow problem concerns itself with finding the settings in a network that maximize the flow from source to sink. At each junction in the network there are switches that control the flow's distribution between it's outgoing edges. The problem can be modeled as an edge-weighted digraph with a single source and sink pair, where the weights correspond to the capacity of the edge.
 
-An **st-flow** is a set of edge flows for the network that represent the distribution of flow values for each edge. An **st-flow value** is the sink's inflow. The network-flow problem can be described as finding an st-flow such that no other st-flow has a larger st-flow value. Such an st-flow can be referred to as a **maxflow**.
+An _st-flow_ is a set of edge flows for the network that represent the distribution of flow values for each edge. An _st-flow value_ is the sink's inflow. The network-flow problem can be described as finding an st-flow such that no other st-flow has a larger st-flow value. Such an st-flow can be referred to as a _maxflow_.
 
 ### Ford-Fulkerson
 
 The Ford-Fulkerson algorithm, also known as the _augmenting-path algorithm_, works by increasing flows incrementally along paths from the source to the sink. It works by considering that each edge consists of a _forward edge_ and a _backward edge_.
 
-A path is found in the network in which there are no full forward edges and no empty backward edges. The flow of the network can then be increased by an amount $X$, by increasing flow in forward edges by $X$ and decreasing flow in backward edges by $X$ in this path. The value of $X$ is the minimum of the unused capacities in forward edges and backward edges in the path. This path that can be used to increase flow in the network is known as an **augmenting path**.
+A path is found in the network in which there are no full forward edges and no empty backward edges. The flow of the network can then be increased by an amount $X$, by increasing flow in forward edges by $X$ and decreasing flow in backward edges by $X$ in this path. The value of $X$ is the minimum of the unused capacities in forward edges and backward edges in the path. This path that can be used to increase flow in the network is known as an _augmenting path_.
 
 Following from this, the maxflow can be found by starting with zero flow everywhere and gradually increase the flow along any augmenting path from source to sink until there are no more augmenting paths.
 
-A **residual network** has the same vertices as the original. For every edge in the original network: if its flow is positive, an edge should be created in the residual with an opposite direction and capacity equal to the flow. Also, if its flow is less than its capacity, an edge should be added in the same direction as the original edge with capacity equal to the difference between its capacity and flow.
+A _residual network_ has the same vertices as the original. For every edge in the original network: if its flow is positive, an edge should be created in the residual with an opposite direction and capacity equal to the flow. Also, if its flow is less than its capacity, an edge should be added in the same direction as the original edge with capacity equal to the difference between its capacity and flow.
 
 This means that if, in the original, an edge's flow is zero then there'll only be one edge (in the same direction) and if instead the flow is full there'll only be one edge (in the opposite direction).
 
 The residual network is useful because any path in it from source to sink corresponds directly to an augmenting path in the original network. As an augmenting path's flow is incremented, when an edge in the path becomes full or empty, it corresponds to changing direction or disappearing in the residual network.
 
-The **shortest-augmenting-path** method finds the maxflow by finding an augmenting path using BFS and incrementing it.
+The _shortest-augmenting-path_ method finds the maxflow by finding an augmenting path using BFS and incrementing it.
 
 ## NP-Complete Problems
 

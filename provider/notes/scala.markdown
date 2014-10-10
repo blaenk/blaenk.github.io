@@ -141,7 +141,7 @@ object Singleton {
 }
 ```
 
-When a singleton object is named after an existing class, it is referred to as the class' **companion object** [^companion_ruby]. They must both be defined in the same source file. They can access each other's private members.
+When a singleton object is named after an existing class, it is referred to as the class' _companion object_ [^companion_ruby]. They must both be defined in the same source file. They can access each other's private members.
 
 [^companion_ruby]: Reminds me of Ruby's 'EigenClasses', but I'm not quite sure yet if it's indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.
 
@@ -151,10 +151,10 @@ A class is defined using the class keyword, and it can take parameters:
 class Rational(num: Int, den: Int)
 ```
 
-Any code inside the class body will be put inside the **primary constructor**.
+Any code inside the class body will be put inside the _primary constructor_.
 
 
-**Fields**, accessible publicly, are created by defining class-level values:
+_Fields_, accessible publicly, are created by defining class-level values:
 
 ``` scala
 class Rational(num: Int, den: Int) {
@@ -163,7 +163,7 @@ class Rational(num: Int, den: Int) {
 }
 ```
 
-**Auxiliary constructors** are additional constructors that simply directly or indirectly delegate object construction to the primary constructor. They are named after `this`, and their first action must be invoking another constructor:
+_Auxiliary constructors_ are additional constructors that simply directly or indirectly delegate object construction to the primary constructor. They are named after `this`, and their first action must be invoking another constructor:
 
 ``` scala
 class Rational(num: Int, den: Int) {
@@ -173,7 +173,7 @@ class Rational(num: Int, den: Int) {
 
 Fields and methods can be defined private using the `private` keyword.
 
-**Literal identifiers** are ones that are enclosed in backticks, so that any string that would be accepted by the runtime will result in an identifier.
+_Literal identifiers_ are ones that are enclosed in backticks, so that any string that would be accepted by the runtime will result in an identifier.
 
 Implicit conversions can be defined so that values of a certain time are implicitly converted to another type in order for an operation to go through. For example, if there's an addition function for `Rational` that takes a `Rational` and an Integer, we can do `r + 1` but not `1 + r` since that would attempt to invoke the function on the Integer itself. To solve this, we can define an implicit conversion to `Rational` on Integer:
 
@@ -516,7 +516,7 @@ class ElementSpec extends WordSpec with Checkers {
 
 # Pattern Matching
 
-**Case Classes** are like stub classes which contain and are mainly about publicly accessible data. They're very similar to Haskell's algebraic data types (ADT). Consider the following domain specific language (DSL):
+_Case Classes_ are like stub classes which contain and are mainly about publicly accessible data. They're very similar to Haskell's algebraic data types (ADT). Consider the following domain specific language (DSL):
 
 *[ADT]: Algebraic Data Type
 *[DSL]: Domain Specific Language
@@ -553,9 +553,9 @@ def simplifyTop(expr: Expr): Expr =
   }
 ```
 
-This is very similar to other pattern matching features available in Haskell for example. In cases, we can use **constructor patterns**, **constant patterns**, and **variable patterns**. Variable patterns are simply those that begin with lower case characters, but we can force a lowercase identifier to be treated as a constant by surrounding it with backticks.
+This is very similar to other pattern matching features available in Haskell for example. In cases, we can use _constructor patterns_, _constant patterns_, and _variable patterns_. Variable patterns are simply those that begin with lower case characters, but we can force a lowercase identifier to be treated as a constant by surrounding it with backticks.
 
-It's also to use **sequence patterns**. In this case, the `_*` operator can be used to specify "the rest of the sequence," like so:
+It's also to use _sequence patterns_. In this case, the `_*` operator can be used to specify "the rest of the sequence," like so:
 
 ``` scala
 expr match {
@@ -564,7 +564,7 @@ expr match {
 }
 ```
 
-It's also possible to use **type patterns** to match the type of the expression:
+It's also possible to use _type patterns_ to match the type of the expression:
 
 ``` scala
 def generalSize(x: Any) = x match {
@@ -574,7 +574,7 @@ def generalSize(x: Any) = x match {
 }
 ```
 
-**Type Erasure** means that information about type arguments is not maintained at runtime. This is an artifact of the erasure model of generics that Java uses. As a result, it's not possible to pattern match on the type of `Map`, and the following code will return `true` for any `Map`:
+_Type Erasure_ means that information about type arguments is not maintained at runtime. This is an artifact of the erasure model of generics that Java uses. As a result, it's not possible to pattern match on the type of `Map`, and the following code will return `true` for any `Map`:
 
 ``` scala
 def isIntToIntMap(x: Any) = x match {
@@ -583,7 +583,7 @@ def isIntToIntMap(x: Any) = x match {
 }
 ```
 
-It's possible to use `@` for **variable binding** in pattern matching, just as in Haskell:
+It's possible to use `@` for _variable binding_ in pattern matching, just as in Haskell:
 
 ``` scala
 expr match {
@@ -592,7 +592,7 @@ expr match {
 }
 ```
 
-**Pattern guards** are additional conditions placed on pattern matches. For example, to simplify an addition expression with identical operands to a multiplication by two, we can use:
+_Pattern guards_ are additional conditions placed on pattern matches. For example, to simplify an addition expression with identical operands to a multiplication by two, we can use:
 
 ``` scala
 def simplifyAdd(e: Expr) = e match {
@@ -602,7 +602,7 @@ def simplifyAdd(e: Expr) = e match {
 }
 ```
 
-A **sealed class** is one that restricts subclassing of that class to the file it's defined in. This way the compiler can guarantee and enforce exhaustive pattern matching, which it couldn't do otherwise because the class could be extended in another file:
+A _sealed class_ is one that restricts subclassing of that class to the file it's defined in. This way the compiler can guarantee and enforce exhaustive pattern matching, which it couldn't do otherwise because the class could be extended in another file:
 
 ``` scala
 sealed abstract class Expr
@@ -620,7 +620,7 @@ def describe(e: Expr): String = (e: @unchecked) match {
 The `Option` type is equivalent to Haskell's `Maybe` type. It can take on either a parameterized `Some` value or `None`.
 
 <a name="case-sequence"></a>
-A **case sequence** is a function literal specific defined as a pattern match where each case is an entry point to the function:
+A _case sequence_ is a function literal specific defined as a pattern match where each case is an entry point to the function:
 
 ``` scala
 val withDefault: Option[Int] => Int = {
@@ -644,7 +644,7 @@ react {
 }
 ```
 
-If a case sequence doesn't provide exhaustive patterns, it is considered a **partial function** since it doesn't provide an output for every input. If it's applied to a value that it can't match, it throws a run-time exception.
+If a case sequence doesn't provide exhaustive patterns, it is considered a _partial function_ since it doesn't provide an output for every input. If it's applied to a value that it can't match, it throws a run-time exception.
 
 The parameterized type `PartialFunction` can represent partial functions:
 
@@ -777,7 +777,7 @@ object Queue {
 }
 ```
 
-Another way is to define a **generic trait**, i.e. one that is parameterized, and hide the implementation inside the companion object, along with a factory method in the companion object:
+Another way is to define a _generic trait_, i.e. one that is parameterized, and hide the implementation inside the companion object, along with a factory method in the companion object:
 
 ``` scala
 trait Queue[T] {
@@ -802,17 +802,17 @@ object Queue {
 
 ## Variance
 
-**Variance** refers to inheritance relationships of parameterized types, such as whether `Set[String]` is a subtype of `Set[AnyRef]`.
+_Variance_ refers to inheritance relationships of parameterized types, such as whether `Set[String]` is a subtype of `Set[AnyRef]`.
 
-For example, if `S` is a subtype of `T` and `Queue[S]` is considered a subtype of `Queue[T]`, then `Queue` is **covariant** in its type parameter `T`. This would mean for example that we could pass `Queue[String]` to a method that accepted types `Queue[AnyRef]`.
+For example, if `S` is a subtype of `T` and `Queue[S]` is considered a subtype of `Queue[T]`, then `Queue` is _covariant_ in its type parameter `T`. This would mean for example that we could pass `Queue[String]` to a method that accepted types `Queue[AnyRef]`.
 
-However, generic types are **nonvariant** by default, meaning that there would be no such subtype relationship. It's possible to annotate the type parameter as being **covariant** by prepending the type parameter with `+`:
+However, generic types are _nonvariant_ by default, meaning that there would be no such subtype relationship. It's possible to annotate the type parameter as being _covariant_ by prepending the type parameter with `+`:
 
 ``` scala
 trait Queue[+T] { ... }
 ```
 
-**Contravariance** would mean that if `T` is a subtype of `S`, then `Queue[S]` is a subtype of `Queue[T]`. It's also possible to annotate the type parameter to be **contravariant** by using the `-` annotation:
+_Contravariance_ would mean that if `T` is a subtype of `S`, then `Queue[S]` is a subtype of `Queue[T]`. It's also possible to annotate the type parameter to be _contravariant_ by using the `-` annotation:
 
 ``` scala
 trait Queue[-T] { ... }
@@ -839,7 +839,7 @@ def orderedMergeSort[T <: Ordered[T]](xs: List[T]): List[T] = ...
 
 # Abstract Members
 
-A member of a class or trait is **abstract** if it doesn't have a complete definition within the class. The implementations are meant to be defined in subclasses. Unlike other object-oriented languages, it's also possible to declare abstract fields and even abstract types. It's possible to declare abstract types, methods, `val`s and `var`s:
+A member of a class or trait is _abstract_ if it doesn't have a complete definition within the class. The implementations are meant to be defined in subclasses. Unlike other object-oriented languages, it's also possible to declare abstract fields and even abstract types. It's possible to declare abstract types, methods, `val`s and `var`s:
 
 ``` scala
 trait Abstract {
@@ -936,11 +936,11 @@ abstract class Animal {
 }
 ```
 
-A **path-dependent type** is one that depends on its path, i.e. `some.object.Type`. Such a type can be instantiated using that syntax, since it implies a reference to `Type`'s outer object, particularly `object`. The syntax `Outer#Inner` can't be used to instantiate `Inner` since it doesn't refer to any instance of `Outer`.
+A _path-dependent type_ is one that depends on its path, i.e. `some.object.Type`. Such a type can be instantiated using that syntax, since it implies a reference to `Type`'s outer object, particularly `object`. The syntax `Outer#Inner` can't be used to instantiate `Inner` since it doesn't refer to any instance of `Outer`.
 
 ## Structural Subtyping
 
-**Structural subtyping** is when two types get a subtyping relationship because they have the same members [^go_interfaces]. This is contrasted to the more traditional **nominal subtyping**, where each type has a name they have an explicitly declared subtyping relationship. Structural subtyping is achieved in Scala using **refinement types**.
+_Structural subtyping_ is when two types get a subtyping relationship because they have the same members [^go_interfaces]. This is contrasted to the more traditional _nominal subtyping_, where each type has a name they have an explicitly declared subtyping relationship. Structural subtyping is achieved in Scala using _refinement types_.
 
 [^go_interfaces]: This reminds me of [Go's interfaces].
 
@@ -1033,7 +1033,7 @@ There are a variety of rules concerning implicit definitions.
 
 * Only functions marked as `implicit` are tried.
 * The implicit conversion must be in the scope as a single identifier, i.e. not `some.convert`. This is why some libraries include a `Preamble` object which often contains useful implicit conversions which can be imported with `import.Preamble._`
-    * The **exception** to this rule is that the compiler also looks inside the companion object of the source or target types of the conversion.
+    * The _exception_ to this rule is that the compiler also looks inside the companion object of the source or target types of the conversion.
 * The compiler only attempts one implicit conversion, i.e. it won't attempt converting `x + y` into `convert1(convert2(x)) + y`.
 
 Implicit conversions are also used on the receiver of a selection. For example, `"abc".exists` is converted to `stringWrapper("abc").exists`.
@@ -1091,7 +1091,7 @@ def maxList[T](elements: List[T])(implicit orderer: T => Ordered[T]): T =
   }
 ```
 
-Also note that the implicit parameter can be used as an implicit parameter and conversion in the body, as a result, `ordered` doesn't appear anywhere in the function body. This is a very common thing to do, and since the name of the implicit parameter isn't used anywhere, it's possible to use a **view bound**.
+Also note that the implicit parameter can be used as an implicit parameter and conversion in the body, as a result, `ordered` doesn't appear anywhere in the function body. This is a very common thing to do, and since the name of the implicit parameter isn't used anywhere, it's possible to use a _view bound_.
 
 For example, the following code essentially enforces the requirement that `T` can be _treated_ as an `Ordered[T]`, where _treated_ would mean that there is an implicit conversion available. If `T` is already an `Ordered[T]`, then an identity function is used as the implicit conversion:
 
@@ -1355,7 +1355,7 @@ Ranges can be defined as follows:
 
 Scala arrays correspond to Java arrays such that `Array[T]` in Scala is a `T[]` in Java. Scala arrays are compatible with sequences, and provide all operations that sequences provide. This is facilitated through implicit conversions to `scala.collection.mutable.WrappedArray`. There's also an implicit conversion to `ArrayOps` which supports various methods available to sequences, without actually turning the array into a sequence.
 
-Java doesn't allow generic arrays `T[]`, but this is made possible in Scala by creating an array of `Objects`. Creating generic arrays in Scala through `Array[T]` requires a run-time hint, since the information about the type `T` gets erased at runtime. This is done with a **class manifest** of type `scala.reflect.ClassManifest`, which is a type descriptor object that describes the top-level class of a type. The compiler can be instructed to generate code to construct and pass a class manifest, this is done via an implicit parameter. This way, the compiler looks for an implicit value of type `ClassManifest[T]` so that the correct type of array can be constructed at run-time:
+Java doesn't allow generic arrays `T[]`, but this is made possible in Scala by creating an array of `Objects`. Creating generic arrays in Scala through `Array[T]` requires a run-time hint, since the information about the type `T` gets erased at runtime. This is done with a _class manifest_ of type `scala.reflect.ClassManifest`, which is a type descriptor object that describes the top-level class of a type. The compiler can be instructed to generate code to construct and pass a class manifest, this is done via an implicit parameter. This way, the compiler looks for an implicit value of type `ClassManifest[T]` so that the correct type of array can be constructed at run-time:
 
 ``` scala
 def someMethod[T](xs: Vector[T])(implicit m: ClassManifest[T]): Array[T] = ...
@@ -1375,7 +1375,7 @@ def lazyMap[T, U](coll: Iterable[T], f: T => U) =
   }
 ```
 
-Most collections are strict by default in their transformers except for `Stream`. It's possible to turn a collection into a lazy one and vice versa through **collection views**, which represent a base collection with the difference that the transformers are lazy. The `view` method is used to make the transformers lazy, and `force` is used to go back to strict transformers.
+Most collections are strict by default in their transformers except for `Stream`. It's possible to turn a collection into a lazy one and vice versa through _collection views_, which represent a base collection with the difference that the transformers are lazy. The `view` method is used to make the transformers lazy, and `force` is used to go back to strict transformers.
 
 ``` scala
 (v.view.map(_ + 1).map(_ * 2)).force
@@ -1447,7 +1447,7 @@ class Builder[-Elem, +To] {
 
 ### Implementation Traits
 
-The code is kept DRY by using **implementation traits** which are named with a `Like` suffix, such as `TraversableLike`. These traits implement concrete methods and are parameterized using the collection's element type and its representation type, i.e. `Seq[I]` or `List[I]`. For example, `filter` is implemented here such that it creates a new builder for the representation type and appends elements to it if they satisfy the predicate, then the builder's result is returned.
+The code is kept DRY by using _implementation traits_ which are named with a `Like` suffix, such as `TraversableLike`. These traits implement concrete methods and are parameterized using the collection's element type and its representation type, i.e. `Seq[I]` or `List[I]`. For example, `filter` is implemented here such that it creates a new builder for the representation type and appends elements to it if they satisfy the predicate, then the builder's result is returned.
 
 *[DRY]: Don't Repeat Yourself
 
@@ -1710,7 +1710,7 @@ def proc(node: scala.xml.Node): String =
 
 When a module grows too large for a single file, it may be useful to split the module up into separate traits defined in separate files, which can then be mixed into the original module.
 
-A problem can arise when one such compartmentalized trait wants to refer to another trait that ultimately gets mixed into the same class. This can be circumvented by specifying the **self type** which essentially defines the value of type of `this` for whenever it's referred to in the class. For example, assuming trait `Second` needs to refer to trait `First`'s method `count`, we can do:
+A problem can arise when one such compartmentalized trait wants to refer to another trait that ultimately gets mixed into the same class. This can be circumvented by specifying the _self type_ which essentially defines the value of type of `this` for whenever it's referred to in the class. For example, assuming trait `Second` needs to refer to trait `First`'s method `count`, we can do:
 
 ``` scala
 trait First {
@@ -1905,7 +1905,7 @@ Existential types in Scala are mainly used to facilitate Java's wildcard types a
 type forSome { declarations }
 ```
 
-For example, the following is equivalent to Java's `Iterator <?>` and reads as it being an `Iterator` of `T`'s for some type `T`. It's also possible to use **placeholder syntax** which is similar to the one used in patterns. For each underscore present in the type a type parameter is added to the `forSome` clause:
+For example, the following is equivalent to Java's `Iterator <?>` and reads as it being an `Iterator` of `T`'s for some type `T`. It's also possible to use _placeholder syntax_ which is similar to the one used in patterns. For each underscore present in the type a type parameter is added to the `forSome` clause:
 
 ``` scala
 Iterator[T] forSome { type T }

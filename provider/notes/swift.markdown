@@ -941,8 +941,8 @@ A run-down of two-phase initialization follows:
 
 Initializers are automatically inherited in two situations, assuming that any newly introduced properties have default values provided.
 
-1. the class doesn't define any designated initializers, it automatically inherits all of the superclass' **designated initializers**
-2. the class provides implementations for _all_ of the superclass' designated initializers---either implicitly via #1 or explicitly---then it automatically inherits all of the superclass **convenience initializers**
+1. the class doesn't define any designated initializers, it automatically inherits all of the superclass' _designated initializers_
+2. the class provides implementations for _all_ of the superclass' designated initializers---either implicitly via #1 or explicitly---then it automatically inherits all of the superclass _convenience initializers_
 
 # Deinitialization
 

@@ -55,7 +55,7 @@ Scopes pose memory considerations, and are generally destroyed when they're no l
 
 # Services
 
-It's possible to register object-creating recipes that are interpreted by the `$injector` to provide wired-up instances. Objects created by the `$injector` are called **services**, and these are singletons. Only one instance of any given service is created.
+It's possible to register object-creating recipes that are interpreted by the `$injector` to provide wired-up instances. Objects created by the `$injector` are called _services_, and these are singletons. Only one instance of any given service is created.
 
 There are ways to control how objects are created. The first and simplest way is to register a pre-defined instance with `value`. Objects registered with `value` can't express dependencies.
 
@@ -120,7 +120,7 @@ mod.provider('someService', function () {
 });
 ```
 
-Providers can be configured before they produce any object instances. To facilitate this, module lifecycles consist of a **configuration phase** where recipes are collected and configured, and a **run phase** where it's possible to execute any post-instantiation logic.
+Providers can be configured before they produce any object instances. To facilitate this, module lifecycles consist of a _configuration phase_ where recipes are collected and configured, and a _run phase_ where it's possible to execute any post-instantiation logic.
 
 The configuration phase allows providers to be configured as follows:
 

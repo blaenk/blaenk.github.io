@@ -42,7 +42,7 @@ The machine learning aspect would take an actual user rating, and given two cont
 * **Hypothesis Set**: $\cal H$
     * The set of candidate hypotheses where $g \in \cal H$
 
-Together, $\cal A$ and $\cal H$ are known as the **learning model**.
+Together, $\cal A$ and $\cal H$ are known as the _learning model_.
 
 ## Perceptrons
 
@@ -126,7 +126,7 @@ $$ \text {frequency of red marbles in sample} = \nu $$
 
 The question is: does $\nu$ say anything about $\mu$? It might appear that it **doesn't**. For example, if there are 100 marbles in the bin and only 10 of them are red, just because we happen to take out all 10 ($\nu  = 1$) doesn't mean that that sample is representative of the distribution in the bin ($\mu = 1$).
 
-However, in a **big sample**, it's more probable that $\nu$ is close to $\mu$, that is, they are within $\epsilon$ of each other. This can be formally expressed as **Hoeffding's Inequality**:
+However, in a **big sample**, it's more probable that $\nu$ is close to $\mu$, that is, they are within $\epsilon$ of each other. This can be formally expressed as _Hoeffding's Inequality_:
 
 $$
 P \left( \left| \nu - \mu \right| \gt \epsilon \right) \leq 2e^{- 2\epsilon^2 N}
@@ -145,7 +145,7 @@ This relates to learning in the following way. In the bin, $\mu$ is unknown, but
 
 However, in creating this analogy from the bin example to the learning model, the bin example has a probability component in picking a marble from the bin. This must be mapped to the learning model as well, in the form of introducing a probability distribution $P$, where $P$ is not restricted over $\mathcal {X}$, and $P$ doesn't have to be known. It is then assumed that the probability is used to generate the input data points.
 
-The problem so far is that the hypothesis $h$ is fixed, and for a given $h$, $\nu$ generalizes to $\mu$, which ends up being a **verification** of $h$, not learning.
+The problem so far is that the hypothesis $h$ is fixed, and for a given $h$, $\nu$ generalizes to $\mu$, which ends up being a _verification_ of $h$, not learning.
 
 Instead, to make it a learning process, then there needs to be no guarantee that $\nu$ will be small, and we need to choose from multiple $h$'s. To generalize the bin model to more than one hypothesis, we can use multiple bins. Out of the many bins that were created, the hypothesis responsible for the bin with the smallest $\mu$---the fraction of red marbles in the bin---is chosen.
 
@@ -153,9 +153,9 @@ Instead, to make it a learning process, then there needs to be no guarantee that
 
 Both $\mu$ and $\nu$ depend on which hypothesis $h$:
 
-$\nu$ is the error "**in sample**", which is denoted by $\def \insample {E_{\text {in}}} \insample(h)$
+$\nu$ is the error _in sample_, which is denoted by $\def \insample {E_{\text {in}}} \insample(h)$
 
-$\mu$ is the error "**out of sample**", which is denoted by $\def \outsample {E_{\text {out}}} \outsample(h)$
+$\mu$ is the error _out of sample_, which is denoted by $\def \outsample {E_{\text {out}}} \outsample(h)$
 
 For clarification, if something performs well "out of sample" then it's likely that learning actually took place. This notation can be used to modify Hoeffding's Inequality:
 
@@ -197,7 +197,7 @@ The Pocket algorithm is a simple modification to the PLA which simply keeps trac
 
 ## Linear Regression
 
-The word **regression** simply means real-valued output. For example, in the scenario of credit approval, a classification problem would consist of determining whether or not to grant a credit line to an applicant. However, a regression problem would be determining the dollar amount for a particular credit line.
+The word _regression_ simply means real-valued output. For example, in the scenario of credit approval, a classification problem would consist of determining whether or not to grant a credit line to an applicant. However, a regression problem would be determining the dollar amount for a particular credit line.
 
 The linear regression output is defined as:
 
@@ -209,7 +209,7 @@ $$ (x_1, y_1), (x_2, y_2), \dots, (x_n, y_n) $$
 
 Here $y_n \in \mathbb {R}$ is the credit line for customer $x_n$.
 
-The measure of how well $h$ approximates $f$ is referred to as the error. With linear regression, the standard error function used is the **squared error**, defined as:
+The measure of how well $h$ approximates $f$ is referred to as the error. With linear regression, the standard error function used is the _squared error_, defined as:
 
 $$ \text {squared error} = (h(x) - f(x))^2 $$
 
@@ -255,7 +255,7 @@ $$
 \end{align}
 $$
 
-Knowing this, an equation for the weight vector can be found by distributing the $\mathrm {X}^{\mathrm {T}}$ factor. The $\mathrm {w}$ factor can then be isolated by multiplying both sides by the inverse of $\mathrm {X}^{\mathrm {T}} \mathrm {X}$. The resulting factor $X^\dagger$ on the right side is known as the **pseudo-inverse** of $\mathrm {X}$.
+Knowing this, an equation for the weight vector can be found by distributing the $\mathrm {X}^{\mathrm {T}}$ factor. The $\mathrm {w}$ factor can then be isolated by multiplying both sides by the inverse of $\mathrm {X}^{\mathrm {T}} \mathrm {X}$. The resulting factor $X^\dagger$ on the right side is known as the _pseudo-inverse_ of $\mathrm {X}$.
 
 $$
 \begin{align}
@@ -580,7 +580,7 @@ $$ |\insample(h_1) - \outsample(h_1)| \approx |\insample(h_2) - \outsample(h_2)|
 
 When counting the number of hypotheses, the entire input space is taken into consideration. In the case of a perceptron, each perceptron differs from another if they differ in at least one input point, and since the input is continuous, there are an infinite number of different perceptrons.
 
-Instead of counting the number of hypotheses in the entire input space, we are going to restrict the count only to the sample: a finite set of input points. Then, simply count the number of the possible **dichotomies**. A dichotomy is like a mini-hypothesis, it's a configuration of labels on the sample's input points.
+Instead of counting the number of hypotheses in the entire input space, we are going to restrict the count only to the sample: a finite set of input points. Then, simply count the number of the possible _dichotomies_. A dichotomy is like a mini-hypothesis, it's a configuration of labels on the sample's input points.
 
 A hypothesis is a function that maps an input from the entire _input space_ to a result:
 
@@ -596,7 +596,7 @@ The number of dichotomies $|\mathcal H(\mathbf {x_1, x_2, \dots, x_N})|$ is at m
 
 ## Growth Function
 
-The **growth function** counts the _most_ dichotomies on any $N$ points.
+The _growth function_ counts the _most_ dichotomies on any $N$ points.
 
 $$
 \def \growthfunc {m_{\mathcal H}}
@@ -694,7 +694,7 @@ When a hypothesis set is able to reach every possible dichotomy, it is said that
 
 What happens when $\growthfunc(N)$ replaces $M$? If the growth function is polynomial then everything will be fine. So we need to prove that $\growthfunc(N)$ is polynomial.
 
-If no data set of size $k$ can be shattered by $\mathcal H$, then $k$ is a **break point** for $\mathcal H$. By extension, this means that a bigger data set cannot be shattered either. In other words, given a hypothesis set, a break point is the point at which we fail to achieve all possible dichotomies.
+If no data set of size $k$ can be shattered by $\mathcal H$, then $k$ is a _break point_ for $\mathcal H$. By extension, this means that a bigger data set cannot be shattered either. In other words, given a hypothesis set, a break point is the point at which we fail to achieve all possible dichotomies.
 
 We [already saw](#growth-function) that for perceptrons, $k = 4$.
 
@@ -763,7 +763,7 @@ We can say this is true because, if it weren't, then it would mean that it would
 
 However, we must remember that we're only focusing on one sub-matrix within the overall matrix. Further, we know that by definition there is another sub-matrix $S_2^-$ with the same amount of rows.
 
-Therefore, if we then were to add back in the $\mathbf x_n$ column and also consider the rows from $S_2^-$, we would have $2^k$ rows with every possible combination (i.e. shattering $k$ points), which would **contradict** the fact that $k$ is the break point for the larger matrix. Therefore, we can be certain that the break point for the mini-matrix is at most $k - 1$. It could be lower, but since we are trying to achieve an upper bound, this is irrelevant.
+Therefore, if we then were to add back in the $\mathbf x_n$ column and also consider the rows from $S_2^-$, we would have $2^k$ rows with every possible combination (i.e. shattering $k$ points), which would _contradict_ the fact that $k$ is the break point for the larger matrix. Therefore, we can be certain that the break point for the mini-matrix is at most $k - 1$. It could be lower, but since we are trying to achieve an upper bound, this is irrelevant.
 
 With this in mind, we can define a relation for the maximum number of dichotomies within this mini-matrix which is composed of $N - 1$ points and for which we have proved that $k - 1$ is the break point:
 
@@ -896,7 +896,7 @@ We could alleviate this by getting rid of $\outsample$. To do this, we pick **tw
 
 The advantage of this fact is that, when considering multiple bins, the same situation applies. That is, with multiple bins, the tie between $\outsample$ and $\insample$ became looser and looser. Likewise, when considering two samples, they do track each other but it becomes looser and looser. The advantage of using two samples is that we are in the realm of dichotomies. We are in the realm of dichotomies because we now only care about what happens in the sample, not the input space, even though the sample is larger now at $2N$ not $N$.
 
-With all of this in mind, the **Vapnik-Chervonenkis Inequality** is defined as:
+With all of this in mind, the _Vapnik-Chervonenkis Inequality_ is defined as:
 
 $$ P(|\insample(g) - \outsample(g)| \gt \epsilon) \leq 4 \growthfunc(2N) e^{-{\frac 1 8} \epsilon^2 N} $$
 
@@ -904,7 +904,7 @@ The growth function is parameterized with $2N$ because we are now considering tw
 
 # VC Dimension
 
-The **VC Dimension** is a quantity defined for a hypothesis set $\mathcal H$ denoted by $\def \vc {d_{\text {VC}}} \vc(\mathcal H)$ and is defined as the most points that $\mathcal H$ can shatter; the largest value of $N$ for which $\growthfunc(N) = 2^N$.
+The _VC Dimension_ is a quantity defined for a hypothesis set $\mathcal H$ denoted by $\def \vc {d_{\text {VC}}} \vc(\mathcal H)$ and is defined as the most points that $\mathcal H$ can shatter; the largest value of $N$ for which $\growthfunc(N) = 2^N$.
 
 $$
 \begin{align}
@@ -1050,7 +1050,7 @@ What is $d + 1$ in the perceptron? It is the number of parameters in the percept
 
 ## Interpretation {#vc-dimension-interpretation}
 
-The parameters in the weight vector correspond to degrees of freedom that allow us to create a specific hypothesis. The number of parameters correspond to **analog** degrees of freedom: varying any single parameter---which is itself continuous---yields an entirely new perceptron. The VC dimension translated these into **binary** degrees of freedom, since we're only trying to get a different dichotomy.
+The parameters in the weight vector correspond to degrees of freedom that allow us to create a specific hypothesis. The number of parameters correspond to _analog_ degrees of freedom: varying any single parameter---which is itself continuous---yields an entirely new perceptron. The VC dimension translated these into _binary_ degrees of freedom, since we're only trying to get a different dichotomy.
 
 This is important because it allows us to ascertain how expressive a model may be; how many different outputs we can actually get.
 
@@ -1060,7 +1060,7 @@ For example, consider a 1D perceptron. This consists of a weight parameter and a
 
 Now consider the situation where the output of this model is fed as input into another perceptron, which is fed to another perceptron and so on, for a total of four linked perceptrons. This corresponds to $8$ parameters since each perceptron contains $2$. **However**, there are still only $2$ degrees of freedom because every perceptron after the first simply returns the input; they are redundant.
 
-For this reason, we can think of $\vc$ as measuring the **effective** number of parameters.
+For this reason, we can think of $\vc$ as measuring the _effective_ number of parameters.
 
 ## Minimum Sample Size
 
@@ -1076,7 +1076,7 @@ $$ N^d e^{-N} $$
 
 An observation made from plotting the above for increasing values of $d$ with $N$ vs the logarithm of the probability shows that $N$ is proportional to $\vc$. A practical observation made by machine learning academics and practitioners is that the actual quantity we are trying to bound follows the same monotonicity as the actual bound, e.g. a bigger VC dimension yields bigger quantities, if not close to proportional. The higher the VC dimension, the more examples that are required.
 
-The **rule of thumb** is that for a large range of reasonable $\epsilon$ and $\delta$, and for a large range of practical applications, you need at least 10 times the VC dimension:
+The _rule of thumb_ is that for a large range of reasonable $\epsilon$ and $\delta$, and for a large range of practical applications, you need at least 10 times the VC dimension:
 
 $$ N \geq 10\ \vc $$
 
@@ -1096,11 +1096,11 @@ This means that the probability that $\insample$ tracks $\outsample$ within $\Om
 
 $$ P(|\outsample - \insample| \leq \Omega(N, \mathcal H, \delta)) \geq 1 - \delta $$
 
-The absolute value can be removed because $\insample$ is usually much smaller than $\outsample$, since $\insample$ is the value we minimize deliberately. The difference between $\outsample$ and $\insample$ is known as the **generalization error**:
+The absolute value can be removed because $\insample$ is usually much smaller than $\outsample$, since $\insample$ is the value we minimize deliberately. The difference between $\outsample$ and $\insample$ is known as the _generalization error_:
 
 $$ P(\outsample - \insample \leq \Omega) \geq 1 - \delta $$
 
-This can then be rearranged and simplified further into the **generalization bound**:
+This can then be rearranged and simplified further into the _generalization bound_:
 
 $$ P(\outsample \leq \insample + \Omega) \geq 1 - \delta $$
 
@@ -1108,7 +1108,7 @@ The effect of the generalization bound is that it bounds the unknown value $\out
 
 # Bias-Variance Tradeoff
 
-We have noticed that there is a trade off between approximation and generalization. In other words, we want to minimize $\outsample$, such that we attain a good approximation of $f$ out of sample. The more complex the hypothesis set $\mathcal H$, the better chance we have of **approximating** $f$. However, the less complex of a hypothesis set $\mathcal H$, the better the chance of **generalizing** out of sample.
+We have noticed that there is a trade off between approximation and generalization. In other words, we want to minimize $\outsample$, such that we attain a good approximation of $f$ out of sample. The more complex the hypothesis set $\mathcal H$, the better chance we have of _approximating_ $f$. However, the less complex of a hypothesis set $\mathcal H$, the better the chance of _generalizing_ out of sample.
 
 $$
 \begin{align}
@@ -1126,7 +1126,7 @@ Bias-Variance analysis is another approach to decomposing $\outsample$, which do
 * how well $\mathcal H$ can approximate $f$
 * how well we can zoom in on a good $h \in \mathcal H$
 
-Bias-Variance applies to **real-valued targets** and uses **squared error**.
+Bias-Variance applies to _real-valued targets_ and uses _squared error_.
 
 $$ \outsample(g^{(\mathcal D)}) = \mathbb E_{\mathrm x} \left[ (g^{(\mathcal D)}(\mathbf x) - f(\mathbf x))^2 \right] $$
 
@@ -1165,7 +1165,7 @@ $$
 \end{align}
 $$
 
-The result is an equation that says that the expected error $\mathbb E_{\mathcal D}$ for a particular data set $\mathcal D$ given the hypothesis $g^{(\mathcal D)}(\mathbf x)$ resulting from that given data set is measured against the actual target function $f(\mathbf x)$, and that error measure **is equivalent** to the **variance**---the expected error of the hypothesis $g^{(\mathcal D)}(\mathbf x)$ measured against the average hypothesis $\bar g(\mathbf x)$, **plus** the **bias**---the error measure of the average hypothesis $\bar g(\mathbf x)$ against the target function $f(\mathbf x)$:
+The result is an equation that says that the expected error $\mathbb E_{\mathcal D}$ for a particular data set $\mathcal D$ given the hypothesis $g^{(\mathcal D)}(\mathbf x)$ resulting from that given data set is measured against the actual target function $f(\mathbf x)$, and that error measure **is equivalent** to the _variance_---the expected error of the hypothesis $g^{(\mathcal D)}(\mathbf x)$ measured against the average hypothesis $\bar g(\mathbf x)$, **plus** the _bias_---the error measure of the average hypothesis $\bar g(\mathbf x)$ against the target function $f(\mathbf x)$:
 
 $$
 \def \bias {\textbf {bias} (\mathbf x)}
@@ -1230,14 +1230,14 @@ It's clear that from approximation, $\mathcal H_1$ seems to be better. We will n
 
 The problem is that these results depend on the two points that we were given, so it complicates the task of comparing the two hypothesis sets. This is why we need bias-variance analysis, it gives us the expected error _with respect to_ the choice of the data set.
 
-If we were derive a hypothesis from any two points, for a large number of different two points, we would come up with something like the left image, where every line represents a derived hypothesis. It therefore stands to reason that the average hypothesis would fall somewhere near $y = 0$---the midpoint of the range of possible hypotheses. The error measure of the average hypothesis against the target function is the **bias**, and the **variance** is represented by the gray region which corresponds to the standard deviation of the possible hypotheses. It's apparent that this model has a **high bias** ($0.5$) and a **low variance** ($0.25$):
+If we were derive a hypothesis from any two points, for a large number of different two points, we would come up with something like the left image, where every line represents a derived hypothesis. It therefore stands to reason that the average hypothesis would fall somewhere near $y = 0$---the midpoint of the range of possible hypotheses. The error measure of the average hypothesis against the target function is the _bias_, and the _variance_ is represented by the gray region which corresponds to the standard deviation of the possible hypotheses. It's apparent that this model has a _high bias_ ($0.5$) and a _low variance_ ($0.25$):
 
 <div style="text-align: center; margin-top: 10px">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/multiple-hypotheses.png">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/average-hypothesis.png">
 </div>
 
-The same is slightly more complicated with the second hypothesis $\mathcal H_1$ because of its linear model, which yields very different hypotheses, that is, **high variance** ($1.69$). There is **low bias** ($0.21$) however, because it has many different hypotheses to average from:
+The same is slightly more complicated with the second hypothesis $\mathcal H_1$ because of its linear model, which yields very different hypotheses, that is, _high variance_ ($1.69$). There is _low bias_ ($0.21$) however, because it has many different hypotheses to average from:
 
 <div style="text-align: center; margin-top: 10px">
   <img src="/images/notes/machine-learning/bias-variance-tradeoff/linear-multiple-hypotheses.png">
@@ -1246,7 +1246,7 @@ The same is slightly more complicated with the second hypothesis $\mathcal H_1$ 
 
 It's clear that when the two components are summed for both models, the expected error of the first hypothesis set $\mathcal H_0$ is much lower than $\mathcal H_1$'s.
 
-The **conclusion** from this example is that we are matching the **model complexity** to the **data resources**, not to the **target complexity**.
+The **conclusion** from this example is that we are matching the _model complexity_ to the _data resources_, not to the _target complexity_.
 
 ## Learning Curves
 
@@ -1351,17 +1351,17 @@ $$ \mathbf z = (x_1^2 + x_2^2 - 0.6) $$
 
 The problem with these reductions is that the guarantee of the VC inequality is forfeited if we look at the data. We can consider the concept of us simplifying the model for the machine as performing a hierarchical learning process, where we the human do some learning, and then pass the result for the machine to finish the learning process. From this perspective, it's apparent that the VC dimension resulting from this process is that of the entire hypothesis space that we as the human considered during the simplification process.
 
-The bottom line is that **looking at the data _before_ choosing the model can be hazardous to your** $\outsample$. The act of looking at the data before choosing the model is one of the many mistakes that fall under **data snooping**.
+The bottom line is that **looking at the data _before_ choosing the model can be hazardous to your** $\outsample$. The act of looking at the data before choosing the model is one of the many mistakes that fall under _data snooping_.
 
 ## Logistic Regression
 
-We're already familiar with two linear models. The first is **linear classification** which classifies data points based on what side of a hyperplane they're on. The second is **linear regression**, which makes it straightforward to predict a regression, and is computed by skipping the last step of linear classification, the part where it determines the sign of the result.
+We're already familiar with two linear models. The first is _linear classification_ which classifies data points based on what side of a hyperplane they're on. The second is _linear regression_, which makes it straightforward to predict a regression, and is computed by skipping the last step of linear classification, the part where it determines the sign of the result.
 
-A third model called **logistic regression** can predict the probability of an event occurring, and is defined as:
+A third model called _logistic regression_ can predict the probability of an event occurring, and is defined as:
 
 $$ h(\mathbf x) = \theta(s) $$
 
-Where $s$ is simply the dot product of the weight and feature vectors as is done in the other two linear models, and $\theta$ is a non-linear function that is often called a **sigmoid**, and looks something like this:
+Where $s$ is simply the dot product of the weight and feature vectors as is done in the other two linear models, and $\theta$ is a non-linear function that is often called a _sigmoid_, and looks something like this:
 
 <img src="/images/notes/machine-learning/linear-model-ii/sigmoid.png" class="center">
 
@@ -1394,7 +1394,7 @@ $$ g(\mathbf x) = \theta(\mathbf w^{\mathrm T} \mathbf x) \approx f(\mathbf x) $
 
 ### Error Measure {#logistic-regression-error-measure}
 
-We have established that for each data point $(\mathbf x, y)$, $y$ is generated by the probability $f(\mathbf x)$. The plausible error measure is based on **likelihood**, that is, we are going to grade different hypotheses according to the likelihood that they are actually the target that generated the data. In other words, we are going to assume that a given hypothesis is indeed the target function, and then we will determine how likely it is to get a given result from its corresponding feature vector. Expressed mathematically:
+We have established that for each data point $(\mathbf x, y)$, $y$ is generated by the probability $f(\mathbf x)$. The plausible error measure is based on _likelihood_, that is, we are going to grade different hypotheses according to the likelihood that they are actually the target that generated the data. In other words, we are going to assume that a given hypothesis is indeed the target function, and then we will determine how likely it is to get a given result from its corresponding feature vector. Expressed mathematically:
 
 $$
 P(y \mid \mathbf x) = \begin{cases}
@@ -1442,7 +1442,7 @@ $$
 
 ### Learning Algorithm {#logistic-regression-learning-algorithm}
 
-Now that we have the learning model and error measure we can define the learning algorithm. Compared to the closed-form solution from the other two models, we will have to use an iterative solution called **gradient descent**, which is a general method for non-linear optimization.
+Now that we have the learning model and error measure we can define the learning algorithm. Compared to the closed-form solution from the other two models, we will have to use an iterative solution called _gradient descent_, which is a general method for non-linear optimization.
 
 Gradient descent starts at a point on the error function and iteratively takes steps along the steepest slope towards the minimum. So we'll have a direction unit vector $\hat v$ pointed in the direction of the steepest slope and a fixed step size $\eta$ which we will define as being small since we want to approximate the surface using the first order expansion of the Taylor series---the linear approximation---which works best when the distance between the two points is small. With this in mind, the new position after a step can be expressed as:
 
@@ -1556,7 +1556,7 @@ probability of default logistic regression cross-entropy error  gradient descent
 
 ## Stochastic Gradient Descent
 
-Gradient descent minimizes $\insample$ by iterative steps $\Delta \weight$ along $- \nabla \insample$, and each one of those steps occurs only after a full **epoch**, where an epoch marks the event of having examined all of the examples. Instead of being restricted to taking steps only after having examined all of the examples, we would like to try to adapt it so that it can perform a step after having considered a single random example. This modified gradient descent is known as **stochastic gradient descent**, whereas comparatively the "original" gradient descent will be referred to henceforth as **batch gradient descent** because it performed a step $\Delta \weight$ only after having examined all of the examples.
+Gradient descent minimizes $\insample$ by iterative steps $\Delta \weight$ along $- \nabla \insample$, and each one of those steps occurs only after a full _epoch_, where an epoch marks the event of having examined all of the examples. Instead of being restricted to taking steps only after having examined all of the examples, we would like to try to adapt it so that it can perform a step after having considered a single random example. This modified gradient descent is known as _stochastic gradient descent_, whereas comparatively the "original" gradient descent will be referred to henceforth as _batch gradient descent_ because it performed a step $\Delta \weight$ only after having examined all of the examples.
 
 This is accomplished by performing epochs until a tolerance is met, where each epoch consists of examining every single example in a random order, and for every example considered, recomputing the gradient based on that example alone and descending along its negative direction. Compare this to batch gradient descent, which had to compute the gradient based on all of the points and summing up the result.
 
@@ -1617,11 +1617,11 @@ This new model seems very powerful, with a seemingly infinite degree of freedom 
 
 <img src="/images/notes/machine-learning/neural-networks/circular-perceptron-model.png" class="center">
 
-There are two costs that this seemingly powerful model can incur. The first is **generalization** because we have so many perceptrons, yielding a higher VC dimension and with it higher degrees of freedom. This is a problem, but at least being aware of it means that we can overcome it by simply using an adequate number of examples. The other, perhaps more important cost, is that of **optimization**. When the data is not separable, it becomes a combinatorial optimization problem that is very difficult to solve.
+There are two costs that this seemingly powerful model can incur. The first is _generalization_ because we have so many perceptrons, yielding a higher VC dimension and with it higher degrees of freedom. This is a problem, but at least being aware of it means that we can overcome it by simply using an adequate number of examples. The other, perhaps more important cost, is that of _optimization_. When the data is not separable, it becomes a combinatorial optimization problem that is very difficult to solve.
 
 The problem of optimization can be solved by using soft thresholds instead of the hard thresholds found in perceptrons. This can be facilitated with gradient descent, which features soft thresholds. Once the solution is found with soft thresholds and as a result so are the weights, we can switch to hard thresholds to perform classifications.
 
-A neural network has various inputs and layers. Each layer has a non-linearity $\theta$, which is a generic non-linearity---not specifically the logistic function in logistic regression. To be precise, the non-linearity $\theta$ is similar to the logistic function except that it ranges from $-1$ to $+1$, to better approximate the hard threshold that goes from $-1$ to $+1$. Each of the non-linearities $\theta$ can be different. A famous approach to take is to make all of the $\theta$'s be non-linear and then make the final $\theta$ actually be linear. The intermediate layers are referred to as **hidden layers**. The final layer is referred to as the **output layer**:
+A neural network has various inputs and layers. Each layer has a non-linearity $\theta$, which is a generic non-linearity---not specifically the logistic function in logistic regression. To be precise, the non-linearity $\theta$ is similar to the logistic function except that it ranges from $-1$ to $+1$, to better approximate the hard threshold that goes from $-1$ to $+1$. Each of the non-linearities $\theta$ can be different. A famous approach to take is to make all of the $\theta$'s be non-linear and then make the final $\theta$ actually be linear. The intermediate layers are referred to as _hidden layers_. The final layer is referred to as the _output layer_:
 
 <img src="/images/notes/machine-learning/neural-networks/neural-network.png" class="center">
 
@@ -1728,17 +1728,17 @@ Imagine that we are given five points along with the target function in blue. We
 
 <img src="/images/notes/machine-learning/overfitting/polynomial-overfit.png" class="center">
 
-**Overfitting** is the act of fitting the data more than is warranted. It is a comparative term used to express that a solution went past a desirable point in terms of fitting, more so than another solution, where the different solutions can be different instances within the same model or different models entirely. For example, if we had used a 3rd-order polynomial instead, we would not have achieved $\insample = 0$ but $\outsample$ would have been considerably less. In that case, the 4th-order solution could have been considered overfitting compared to the 3rd-order solution. In other words, there is a distinction between overfitting and just plain bad generalization.
+_Overfitting_ is the act of fitting the data more than is warranted. It is a comparative term used to express that a solution went past a desirable point in terms of fitting, more so than another solution, where the different solutions can be different instances within the same model or different models entirely. For example, if we had used a 3rd-order polynomial instead, we would not have achieved $\insample = 0$ but $\outsample$ would have been considerably less. In that case, the 4th-order solution could have been considered overfitting compared to the 3rd-order solution. In other words, there is a distinction between overfitting and just plain bad generalization.
 
 Overfitting within the same model occurs when $\insample$ is decreasing but $\outsample$ is beginning to increase, that is, when both error measures begin to diverge:
 
 $$ \text {overfitting:} \quad \insample \downarrow \quad \outsample \uparrow $$
 
-If we stop right before this occurs, we call it **early stopping**:
+If we stop right before this occurs, we call it _early stopping_:
 
 <img id="early-stopping" src="/images/notes/machine-learning/overfitting/early-stopping.png" class="center">
 
-The main culprit cause for overfitting is **fitting the noise**, which is a natural side-effect of fitting the data. Fitting the noise is harmful because the learning algorithm is forming its solution from it, trying to detect a pattern, and therefore "hallucinating" an out-of-sample solution extrapolated from the in-sample noise.
+The main culprit cause for overfitting is _fitting the noise_, which is a natural side-effect of fitting the data. Fitting the noise is harmful because the learning algorithm is forming its solution from it, trying to detect a pattern, and therefore "hallucinating" an out-of-sample solution extrapolated from the in-sample noise.
 
 Consider two different target functions with accompanying data points. The first target on the left is a simpler 10th-order polynomial but has noise involved (noisy low-order target), whereas the one on the right is a more complicated 50th-order polynomial but is noiseless (noiseless high-order target):
 
@@ -1777,7 +1777,7 @@ In the case of the 50th-order polynomial, $O$ chooses $\mathcal H_{10}$ and $R$ 
 
 ## Role of Noise
 
-We will conduct an experiment to observe the effects of overfitting, specifically to observe the impact of **noise level** and **target complexity**. Consider the general target function with added noise:
+We will conduct an experiment to observe the effects of overfitting, specifically to observe the impact of _noise level_ and _target complexity_. Consider the general target function with added noise:
 
 $$ y = f(x) + \underbrace {\epsilon(x)}_{\sigma^2} =
 \underbrace {\sum_{q = 0}^{Q_f} \alpha_q x^q}_{\text {normalized}} + \epsilon(x) $$
@@ -1799,7 +1799,7 @@ If we run an experiment for tens of millions of iterations (complete runs). The 
   <img src="/images/notes/machine-learning/overfitting/complexity-impact.png">
 </div>
 
-The main takeaway from these results is that there seems to be another factor aside from "conventional noise" that affects overfitting. The truth is that the noise $\sigma^2$ measured in the left image is called **stochastic noise** (the more conventional noise). Meanwhile, the effect observed in the right image which seems to be related to an increase in complexity that brings about a higher overfit measure is caused by **deterministic noise**.
+The main takeaway from these results is that there seems to be another factor aside from "conventional noise" that affects overfitting. The truth is that the noise $\sigma^2$ measured in the left image is called _stochastic noise_ (the more conventional noise). Meanwhile, the effect observed in the right image which seems to be related to an increase in complexity that brings about a higher overfit measure is caused by _deterministic noise_.
 
 $$
 \begin{align}
@@ -1811,7 +1811,7 @@ $$
 
 ## Deterministic Noise
 
-**Deterministic noise** is the part of $f$ that the best hypothesis function $h^*$ from $\mathcal H$ cannot capture:
+_Deterministic noise_ is the part of $f$ that the best hypothesis function $h^*$ from $\mathcal H$ cannot capture:
 
 $$ \text {deterministic noise:}\ f(\feature) - h^*(\feature) $$
 
@@ -1859,7 +1859,7 @@ Notice that the bias consists of the deterministic noise. This is because the av
 
 ## Dealing with Overfitting
 
-There are two cures for overfitting. **Regularization** can be described as hitting the breaks to avoid going into the point of overfitting. **Validation** on the other hand involves checking the bottom line and making sure it doesn't overfit.
+There are two cures for overfitting. _Regularization_ can be described as hitting the breaks to avoid going into the point of overfitting. _Validation_ on the other hand involves checking the bottom line and making sure it doesn't overfit.
 
 # Regularization
 
@@ -1884,11 +1884,11 @@ Because of the summation, we're going to apply linear regression in the $\mathca
 
 We've already placed a _hard_ constraint on the weights in the previous section, in which case $\mathcal H_2$ was the constrained version of $\mathcal H_{10}$. This is represented in the polynomial model by having set $w_q = 0$ for $q > 2$.
 
-However, we'd like more of a _softer_ constraint. Given a budget $C$ for the total magnitude squared of the weights, $w_q^2$. Instead of the harder constraint above where we outright set some of the weights to $0$, we just want them to be generally small. This can be thought of as a "**soft-order**" constraint:
+However, we'd like more of a _softer_ constraint. Given a budget $C$ for the total magnitude squared of the weights, $w_q^2$. Instead of the harder constraint above where we outright set some of the weights to $0$, we just want them to be generally small. This can be thought of as a _soft-order_ constraint:
 
 $$ \sum_{q = 0}^Q w_q^2 \leq C $$
 
-Given this model, we now want to minimize $\insample$ while **being subject to** the constraint (shown in vector form):
+Given this model, we now want to minimize $\insample$ while _being subject to_ the constraint (shown in vector form):
 
 $$
 \begin{align}
@@ -1971,7 +1971,7 @@ We can now observe the effects of varying $\lambda$. In the first example, there
 
 ## Weight Decay
 
-The name of the regularizer that involves minimizing the following quantity is referred to as **weight 'decay'**:
+The name of the regularizer that involves minimizing the following quantity is referred to as _weight 'decay'_:
 
 $$ \insample(\weight) + \frac \lambda N \weightT \weight $$
 
@@ -1996,13 +1996,13 @@ Instead of having a fixed budget $C$ and having the sum of the squared weights b
 
 $$ \sum_{q = 0}^Q \gamma_q w_q^2 $$
 
-Here, $\gamma$ is referred to as the **importance factor**. For example, if a particular $\gamma_q$ is small then the equivalent weight $w_q$ is less restricted; it can be made larger while knowing it won't take up too much of the budget $C$. On the other hand, if a particular $\gamma_q$ is big, then the corresponding weight doesn't have that luxury.
+Here, $\gamma$ is referred to as the _importance factor_. For example, if a particular $\gamma_q$ is small then the equivalent weight $w_q$ is less restricted; it can be made larger while knowing it won't take up too much of the budget $C$. On the other hand, if a particular $\gamma_q$ is big, then the corresponding weight doesn't have that luxury.
 
-For example, imagine that $\gamma_q$ is set to $2^q$. In this case, the regularizer is giving a larger emphasis on higher order terms. What this means is that the regularizer is trying to find a **low-order fit**. For example, a 10th-order polynomial would quickly kill the budget because $\gamma_{10} = 2^{10}$. If instead we had $\gamma_q$ set to $2^{-q}$, it would look for a **high-order fit**.
+For example, imagine that $\gamma_q$ is set to $2^q$. In this case, the regularizer is giving a larger emphasis on higher order terms. What this means is that the regularizer is trying to find a _low-order fit_. For example, a 10th-order polynomial would quickly kill the budget because $\gamma_{10} = 2^{10}$. If instead we had $\gamma_q$ set to $2^{-q}$, it would look for a _high-order fit_.
 
 In neural networks, the importance factor $\gamma$ is given different values for each each layer, in other words, giving different emphasis for the weights in different layers.
 
-The most general regularizer is called the **Tikhonov regularizer**, which has the form:
+The most general regularizer is called the _Tikhonov regularizer_, which has the form:
 
 $$ \weightT \mathbf \Gamma^\intercal \mathbf \Gamma \weight $$
 
@@ -2032,7 +2032,7 @@ $$ \outsample(h) \leq \insample(h) + \Omega(\mathcal H) $$
 
 From this, we make the claim that $\augerror$ is better than $\insample$ as a proxy of $\outsample$.
 
-The perfect regularizer is one that restricts in the "direction" of the target function. Regularization generically applies a methodology which harms the overfitting (fitting the noise) more than it harms the fitting (fitting the guideline), therefore it's a **heuristic**. For this reason, we move in the direction of **smoother** or "simpler" because the noise itself **is not** smooth. For example, in the case of movie ratings, this kind of regularization guideline tends to opt for the average rating in the absence of enough examples.
+The perfect regularizer is one that restricts in the "direction" of the target function. Regularization generically applies a methodology which harms the overfitting (fitting the noise) more than it harms the fitting (fitting the guideline), therefore it's a _heuristic_. For this reason, we move in the direction of _smoother_ or "simpler" because the noise itself **is not** smooth. For example, in the case of movie ratings, this kind of regularization guideline tends to opt for the average rating in the absence of enough examples.
 
 If we choose a bad regularizer $\Omega$, we still have $\lambda$ that can save us by means of validation, which can set $\lambda$ such that it completely ignores the bad regularizer $\Omega$. In any case, having a regularizer is necessary to avoid overfitting.
 
@@ -2046,13 +2046,13 @@ If we use small weights, then the signal is constrained to the range that produc
 
 If weights are increased to the maximum, $\tanh$ outputs binary values, which results in a logical dependency that can be used to implement any kind of functionality.
 
-Given these two extremes, it's apparent that as weights are increased, the model produces more complex models. This represents a clear correspondence between the simplicity of the function being implemented and the size of the weights, which is properly represented by **weight decay**.
+Given these two extremes, it's apparent that as weights are increased, the model produces more complex models. This represents a clear correspondence between the simplicity of the function being implemented and the size of the weights, which is properly represented by _weight decay_.
 
 ### Weight Elimination {#neural-network-weight-elimination}
 
-**Weight elimination** works by remembering that the VC dimension of neural networks is more or less the number of weights, so it simply eliminates some of the weights by forcing them to be $0$, so that the number of free parameters decreases, as does the VC dimension, leading to a better chance of generalizing and less chance of overfitting.
+_Weight elimination_ works by remembering that the VC dimension of neural networks is more or less the number of weights, so it simply eliminates some of the weights by forcing them to be $0$, so that the number of free parameters decreases, as does the VC dimension, leading to a better chance of generalizing and less chance of overfitting.
 
-Determining which weights to eliminate can is a combinatorial problem. **Soft weight elimination** is an optimization of weight elimination. For very small weights, regular weight decay is applied. For very large weights, the result is close to $1$. In other words, big weights are left alone and small weights are pushed towards $0$, or "soft eliminated":
+Determining which weights to eliminate can is a combinatorial problem. _Soft weight elimination_ is an optimization of weight elimination. For very small weights, regular weight decay is applied. For very large weights, the result is close to $1$. In other words, big weights are left alone and small weights are pushed towards $0$, or "soft eliminated":
 
 $$
 \Omega(\weight) = \sum_{i,j,l} \frac {\left( \neuronweight \right)^2} {\beta^2 + \left( \neuronweight \right)^2}
@@ -2066,11 +2066,11 @@ Recall that [early stopping](#early-stopping) consists of stopping before $\outs
 
 Observing the optimal value of $\lambda$ given the different levels of noise provides some insight as to how deterministic noise is treated by the regularizer compared to how it treats stochastic noise.
 
-As the level of **stochastic noise** $\sigma^2$ increases, the level of regularization $\lambda$ necessary to achieve the minimum $\outsample$ increases. For example, when there is no noise, the minimum $\outsample$ can be achieved with $\lambda = 0$. However, as the noise increases, regularization is **necessary** to achieve the best possible $\outsample$. The left side of the red and green curves represent the overfitting that occurs without regularization.
+As the level of _stochastic noise_ $\sigma^2$ increases, the level of regularization $\lambda$ necessary to achieve the minimum $\outsample$ increases. For example, when there is no noise, the minimum $\outsample$ can be achieved with $\lambda = 0$. However, as the noise increases, regularization is _necessary_ to achieve the best possible $\outsample$. The left side of the red and green curves represent the overfitting that occurs without regularization.
 
 <img src="/images/notes/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
 
-The same behavior is observed as the level of **deterministic noise** $Q_f$ (complexity of the target function) increases.
+The same behavior is observed as the level of _deterministic noise_ $Q_f$ (complexity of the target function) increases.
 
 <img src="/images/notes/machine-learning/regularization/lambda-for-stochastic-noise.png" class="center">
 
@@ -2078,9 +2078,9 @@ This cements the correspondence that regularization behaves with respect to dete
 
 # Validation
 
-Remember that regularization tried to estimate the "overfit penalty;" so that instead of minimizing just $\insample$ it would minimize $\insample$ plus the overfit penalty, a quantity known as the augmented error $\augerror$. **Validation** instead tries to estimate the actual $\outsample$ and tries to minimize it directly.
+Remember that regularization tried to estimate the "overfit penalty;" so that instead of minimizing just $\insample$ it would minimize $\insample$ plus the overfit penalty, a quantity known as the augmented error $\augerror$. _Validation_ instead tries to estimate the actual $\outsample$ and tries to minimize it directly.
 
-To arrive at this estimate, we first find an out-of-sample point $(\weight, y)$, that is, a point that was not involved in training, otherwise known as a **validation point**. The error for this point is $\crossentropy(h(\weight), y)$. The error itself could be the squared error, binary error, etc., and we consider it to be an estimate of $\outsample$, which we can do because:
+To arrive at this estimate, we first find an out-of-sample point $(\weight, y)$, that is, a point that was not involved in training, otherwise known as a _validation point_. The error for this point is $\crossentropy(h(\weight), y)$. The error itself could be the squared error, binary error, etc., and we consider it to be an estimate of $\outsample$, which we can do because:
 
 $$\mathbb E \left[ \crossentropy(h(\weight), y) \right] = \outsample(h)$$
 
@@ -2088,7 +2088,7 @@ This is an unbiased estimate of $\outsample$. The variance is known as $\sigma^2
 
 $$\text {var} \left[ \crossentropy(h(\weight), y) \right] = \sigma^2$$
 
-The variance of estimating $\outsample$ from a single point would be very high, so instead of calculating this estimate from a single point, we do it from an entire **validation set** $(\weight_1, y_1), \dots, (\weight_K, y_K)$. Notice that the total number of points in the validation set is $K$, as opposed to $N$ in the training set. The validation error derived from this validation set is known as $\def \valerror {E_{\text {val}}} \valerror$:
+The variance of estimating $\outsample$ from a single point would be very high, so instead of calculating this estimate from a single point, we do it from an entire _validation set_ $(\weight_1, y_1), \dots, (\weight_K, y_K)$. Notice that the total number of points in the validation set is $K$, as opposed to $N$ in the training set. The validation error derived from this validation set is known as $\def \valerror {E_{\text {val}}} \valerror$:
 
 $$\valerror(h) = \frac 1 K \sum_{k = 1}^K \crossentropy(h(\weight_k), y_k)$$
 
@@ -2114,13 +2114,13 @@ $\trainingset$ yields $g^-$ which is then evaluated on $\validationset$ in order
 
 <img src="/images/notes/machine-learning/validation/validation.png" class="center">
 
-The **rule of thumb** for the choice of the size $K$ of $\validationset$ is to make it $1/4^{\text {th}}$ the size of of the full set $\mathcal D$:
+The _rule of thumb_ for the choice of the size $K$ of $\validationset$ is to make it $1/4^{\text {th}}$ the size of of the full set $\mathcal D$:
 
 $$K = \frac N 5$$
 
 ## Purpose of Validation
 
-Looking back at the [early stopping](#early-stopping) curve, if we used $K$ points to estimate $\outsample$ then the estimate would be called $E_{\text {test}}$ _if_ we don't perform any actions based on this estimate. As soon as we decide to perform an action based on it, such as stopping, then the previous $\insample$ is considered the **validation error**, because it is now considered to be biased. The difference is that the test set is unbiased, whereas the validation set has an optimistic bias.
+Looking back at the [early stopping](#early-stopping) curve, if we used $K$ points to estimate $\outsample$ then the estimate would be called $E_{\text {test}}$ _if_ we don't perform any actions based on this estimate. As soon as we decide to perform an action based on it, such as stopping, then the previous $\insample$ is considered the _validation error_, because it is now considered to be biased. The difference is that the test set is unbiased, whereas the validation set has an optimistic bias.
 
 For example, given two hypotheses $h_1$ and $h_2$ with $\outsample(h_1) = \outsample(h_2) = 0.5$ and error estimates $\crossentropy_1$ and $\crossentropy_2$ that are uniform on $[0,1]$. Now pick $h \in \{h_1, h_2\}$ based on $\crossentropy = \min(\crossentropy_1, \crossentropy_2)$. The value of $\mathbb E(\crossentropy) < 0.5$, because given two variables, the probability that one of them is $< 0.5$ is $75\%$, since the probability that both them are $0.5$ is $0.5 * 0.5 = 25\%$. This means that $\mathbb E(\crossentropy)$ is an optimistic bias. This bias has a negligible effect on overall learning.
 
@@ -2142,7 +2142,7 @@ The curve for $\valerror$ goes up because the higher the $K$, the less points th
 
 The curve for $\valerror$ converges with $\outsample$ because $K$ is increasing, which means that the estimate $\valerror$ is more and more accurate.
 
-It can be considered that $\validationset$ is actually used for "training" on a very special kind of hypothesis set, known as the **finalists model**, which consists of the hypotheses derived from each model:
+It can be considered that $\validationset$ is actually used for "training" on a very special kind of hypothesis set, known as the _finalists model_, which consists of the hypotheses derived from each model:
 
 $$\mathcal H_{\text {val}} = \{g_1^-, g_2^-, \dots, g_M^-\}$$
 
@@ -2157,7 +2157,7 @@ If for example we're trying to determine the value of $\lambda$, it can be thoug
 
 ## Data Contamination
 
-The error estimates encountered so far have been $\insample$, $E_{\text {test}}$, and $\valerror$. These can be described as data contaminations, where if the data is used to make choices, it is being contaminated as far as its ability to estimate the real performance. In this sense, **contamination** is the optimistic (deceptive) bias in estimating $\outsample$.
+The error estimates encountered so far have been $\insample$, $E_{\text {test}}$, and $\valerror$. These can be described as data contaminations, where if the data is used to make choices, it is being contaminated as far as its ability to estimate the real performance. In this sense, _contamination_ is the optimistic (deceptive) bias in estimating $\outsample$.
 
 The training set is totally contaminated. For example, if it's put through a neural network with 70 parameters that yielded a very low $\insample$, we can be assured that $\insample$ is no indication of $\outsample$, in which case $\insample$ can't be relied upon as an estimate for $\outsample$.
 
@@ -2167,11 +2167,11 @@ The test set, on the other hand, is completely clean, since it wasn't used in an
 
 ## Cross-Validation
 
-We would like to know the actual $\outsample(g)$, but we only have $\valerror(g^-)$, which is supposed to be an estimate for $\outsample(g^-)$. Therefore it is necessary for $K$ to be small so that $g^-$ is fairly close to $g$, since the bigger $K$ is, the larger the discrepancy between the training set and the full set, and therefore larger the discrepancy between $g^-$ and $g$. This creates a **dilemma** because we would like $K$ to be large, to increase the reliability of $\valerror(g^-)$ as an estimate for $\outsample(g^-)$.
+We would like to know the actual $\outsample(g)$, but we only have $\valerror(g^-)$, which is supposed to be an estimate for $\outsample(g^-)$. Therefore it is necessary for $K$ to be small so that $g^-$ is fairly close to $g$, since the bigger $K$ is, the larger the discrepancy between the training set and the full set, and therefore larger the discrepancy between $g^-$ and $g$. This creates a _dilemma_ because we would like $K$ to be large, to increase the reliability of $\valerror(g^-)$ as an estimate for $\outsample(g^-)$.
 
 $$\outsample(g) \approx \outsample(g^-) \approx \valerror(g^-)$$
 
-It's possible to achieve both constraints by using a technique called **leave one out**. First choose $N - 1$ points for training and $1$ point for validation. The training set $\mathcal D_n$ is denoted by the point that was $n$ that was left out:
+It's possible to achieve both constraints by using a technique called _leave one out_. First choose $N - 1$ points for training and $1$ point for validation. The training set $\mathcal D_n$ is denoted by the point that was $n$ that was left out:
 
 $$\mathcal D_n = (\feature_1, y_1), \dots, (\feature_{n - 1}, y_{n - 1}), \underbrace {(\feature_n, y_n)}_{\text {validation point}}, (\feature_{n + 1}, y_{n + 1}), \dots, (\feature_N, y_N)$$
 
@@ -2181,7 +2181,7 @@ $$\crossentropy_n = \valerror(g_n^-) = \crossentropy(g_n^-(\weight_n), y_n)$$
 
 This can then be repeated for every point in the data set using every $\mathcal D_n$. What is common between every error measure is that it was computed using the hypothesis derived using a training set of $N - 1$ points, albeit different points.
 
-The **cross validation error** is then defined as:
+The _cross validation error_ is then defined as:
 
 $$
 \def \crossvalidation {E_{\text {ev}}}
@@ -2229,7 +2229,7 @@ When we use leave one out, we have $N$ training sessions on $N - 1$ points each.
 
 <img src="/images/notes/machine-learning/validation/leave-more-than-one-out.png" class="center">
 
-This results in $\frac N K$ training sessions on $N - K$ points each. Specifically, **10-fold cross validation** is very useful in practice.
+This results in $\frac N K$ training sessions on $N - K$ points each. Specifically, _10-fold cross validation_ is very useful in practice.
 
 # Support Vector Machines
 
@@ -2359,7 +2359,7 @@ Now we find the derivative of the Lagrangian with respect to $b$ in order to min
 
 $$\frac {\partial \mathcal L} {\partial b} = - \sum_{n = 1}^N \alpha_n y_n$$
 
-We now want to combine these optimization components in order to remove the $\weight$ and $b$ from the optimization problem, so that it's instead only a function of $\alpha$. This is referred to as the **dual formulation** of the problem:
+We now want to combine these optimization components in order to remove the $\weight$ and $b$ from the optimization problem, so that it's instead only a function of $\alpha$. This is referred to as the _dual formulation_ of the problem:
 
 $$
 \begin{align}
@@ -2421,7 +2421,7 @@ $$
 
 We saw this before in [regularization](#solution-visualization), where we had a constraint which was to be within the red circle while optimizing a function represented by the blue circle. When the constraint didn't really constraint us and the absolute optimal was within the blue circle, there was no need for regularization and so $\lambda = 0$.
 
-The points which define the plane and margin are the ones for which the $\alpha$ values are positive, and all of these values form a **support vector**:
+The points which define the plane and margin are the ones for which the $\alpha$ values are positive, and all of these values form a _support vector_:
 
 $$\alpha_n > 0 \Longrightarrow \feature_n \text { is a } \textbf {support vector}$$
 
@@ -2493,7 +2493,7 @@ We can then substitute the weight's definition into the hypothesis function, in 
 
 ### Polynomial Kernel
 
-Given two points $\feature$ and $\feature' \in \mathcal X$, we need $\mathbf z^\intercal \mathbf z'$. Let $\mathbf z^\intercal \mathbf z' = K(\feature, \feature')$, where $K$ is referred to as the **kernel**, which corresponds to some $\mathcal Z$-space, it is considered the "inner product" of $\feature$ and $\feature'$ after some transormation. For example $\feature = (x_1, x_2)$ undergoes a 2nd-order non-linear transformation:
+Given two points $\feature$ and $\feature' \in \mathcal X$, we need $\mathbf z^\intercal \mathbf z'$. Let $\mathbf z^\intercal \mathbf z' = K(\feature, \feature')$, where $K$ is referred to as the _kernel_, which corresponds to some $\mathcal Z$-space, it is considered the "inner product" of $\feature$ and $\feature'$ after some transormation. For example $\feature = (x_1, x_2)$ undergoes a 2nd-order non-linear transformation:
 
 $$\mathbf z = \Phi(\feature) = (1, x_1, x_2, x_1^2, x_2^2, x_1 x_2)$$
 
@@ -2524,7 +2524,7 @@ $$
 
 The advantage of the kernel is that we don't have to take each feature and expand it per the non-linear transformation in order to perform the inner product, instead we directly compute the inner product from the $\mathcal X$-space feature vector.
 
-More specifically, this is called the **polynomial kernel**. Generally, given a general d-dimensional space $\mathcal X = \mathbb R^d$ with a transformation of that space into a Qth-order polynomial $\Phi\colon \mathcal {X \to Z}$, the "equivalent" kernel would be:
+More specifically, this is called the _polynomial kernel_. Generally, given a general d-dimensional space $\mathcal X = \mathbb R^d$ with a transformation of that space into a Qth-order polynomial $\Phi\colon \mathcal {X \to Z}$, the "equivalent" kernel would be:
 
 $$
 \begin{align}
@@ -2538,7 +2538,7 @@ A kernel of the above form corresponds to an inner product in a higher space. So
 
 $$K(\feature, \feature') = \exp\left(-\gamma\ \lVert \feature - \feature' \rVert^2\right)$$
 
-This kernel is clearly a function of $\feature$ and $\feature'$. It doesn't have a clear inner product. Does this correspond to an inner product in $\mathcal Z$-space? Indeed it is, if the $\mathcal Z$-space is treated as being **infinite-dimensional**. In this case we would get the full benefit of a non-linear transformation, without worrying about the generalization ramifications of going to an infinite-dimensional space. For example, take a simple case where the kernel is applied to a one-dimensional $\mathcal X$-space and $\gamma = 1$:
+This kernel is clearly a function of $\feature$ and $\feature'$. It doesn't have a clear inner product. Does this correspond to an inner product in $\mathcal Z$-space? Indeed it is, if the $\mathcal Z$-space is treated as being _infinite-dimensional_. In this case we would get the full benefit of a non-linear transformation, without worrying about the generalization ramifications of going to an infinite-dimensional space. For example, take a simple case where the kernel is applied to a one-dimensional $\mathcal X$-space and $\gamma = 1$:
 
 $$
 \begin{align}
@@ -2548,7 +2548,7 @@ K(x, x') &= \exp\left(-(x - x')^2\right) \\
 \end{align}
 $$
 
-The $x$ terms can be grouped together and so can the $x'$ terms, and ultimately this equation can be transformed to look like an inner product in an infinite space, due to the infinite summation. This kernel is called the **radial basis function** (RBF) kernel.
+The $x$ terms can be grouped together and so can the $x'$ terms, and ultimately this equation can be transformed to look like an inner product in an infinite space, due to the infinite summation. This kernel is called the _radial basis function_ (RBF) kernel.
 
 To see it in action, in the case of a slightly non-separable case in the $\mathcal X$-space with a slightly curvy target function. We transform this dataset into an $\infty$-dimensional $\mathcal Z$-space. The red and blue points are the support vectors (9 total; 4 blue, 5 red), the lime curve is the target function and the black curve is the $\mathcal Z$-space hyperplane:
 
@@ -2595,7 +2595,7 @@ There are three approaches to come up with a valid kernel. The first method is b
 To take the second approach for the purposes of designing our own kernel. A kernel $K(\feature, \feature')$ is a valid kernel iff:
 
 1. It is symmetric so that $K(\feature, \feature') = K(\feature', \feature)$
-2. The matrix of all possible pairs of feature vectors applied to the kernel function is **positive semi-definite**, that is, the matrix should be greater than or equal to 0, for any $\feature_1, \dots, \feature_N$. This is known as **Mercer's condition**:
+2. The matrix of all possible pairs of feature vectors applied to the kernel function is _positive semi-definite_, that is, the matrix should be greater than or equal to 0, for any $\feature_1, \dots, \feature_N$. This is known as _Mercer's condition_:
 
 $$
 \underbrace {\begin{bmatrix}
@@ -2619,7 +2619,7 @@ Slightly-separable data can be handled by soft-margin SVM, while seriously non-s
 
 ### Error Measure {#soft-margin-svm-error-measure}
 
-The error measure will be defined by a so-called margin violation, which could be the point within the margin in the image below. Even though it is correctly classified by the hyperplane, it's considered a **margin violation** because it falls within the margin.
+The error measure will be defined by a so-called margin violation, which could be the point within the margin in the image below. Even though it is correctly classified by the hyperplane, it's considered a _margin violation_ because it falls within the margin.
 
 <img src="/images/notes/machine-learning/kernel-methods/margin-violation.png" class="center">
 
@@ -2698,11 +2698,11 @@ In practical terms, well we have to do to use a soft-margin is to ensure that $0
 
 ### Types of Support Vectors
 
-We call the support vectors that fall on the hyperplane boundary **margin support vectors** ($0 \lt \alpha_n \lt C$):
+We call the support vectors that fall on the hyperplane boundary _margin support vectors_ ($0 \lt \alpha_n \lt C$):
 
 $$y_n(\weightT \feature_n + b) = 1 \quad (\xi_n = 0)$$
 
-The other vectors that don't fall on the hyperplane boundary but are still correctly classified are referred to as **non-margin support vectors** ($\alpha_n = C$):
+The other vectors that don't fall on the hyperplane boundary but are still correctly classified are referred to as _non-margin support vectors_ ($\alpha_n = C$):
 
 $$y_n(\weightT \feature_n + b) \lt 1 \quad (\xi_n \gt 0)$$
 
@@ -2726,7 +2726,7 @@ The standard form of of a radial basis function embeds the notion that the close
 
 $$h(\feature) = \sum_{n = 1}^N w_n \underbrace {\exp\left( -\gamma\ \lVert \feature - \feature_n \rVert^2 \right)}_{\text {basis function}}$$
 
-The equation shows the source of the **basis function** part of the name, while the **radial** part of the name comes from the $\lVert \feature - \feature_n \rVert$.
+The equation shows the source of the _basis function_ part of the name, while the _radial_ part of the name comes from the $\lVert \feature - \feature_n \rVert$.
 
 Now that we have the model, we can move on to the learning algorithm, where we want to find the parameters $w_1, \dots, w_n$. First it's useful to note that we have $N$ parameters $w_n$, so it shouldn't be difficult to find parameters such that $\insample = 0$, so that $h(\feature_n) = y_n$ for $n = 1, \dots, N$. This constraint can be expressed as follows:
 
@@ -2760,7 +2760,7 @@ If $\mathbf \Phi$ is invertible, then the solution is simply:
 
 $$\weight = \mathbf \Phi^{-1} \mathbf y \quad \text {if } \mathbf \Phi \text { is invertible}$$
 
-This solution can be interpreted as being an **exact interpolation**, because on the points for which we know the value of the hypothesis, we're getting the exact output $y$ value.
+This solution can be interpreted as being an _exact interpolation_, because on the points for which we know the value of the hypothesis, we're getting the exact output $y$ value.
 
 ## Effect of $\gamma$
 
@@ -2801,7 +2801,7 @@ The nearest-neighbor approach is pretty brittle, as the boundaries between the r
 
 The RBF can be smoothed similarly by using a Gaussian instead of a cylinder, which does a good job of representing a gradual decrease in influence.
 
-In both cases, the model can be considered as a **similarity-based method**, where we are classifying points according to how similar they are to points in the training set.
+In both cases, the model can be considered as a _similarity-based method_, where we are classifying points according to how similar they are to points in the training set.
 
 ### K-Centers RBF
 
@@ -2815,13 +2815,13 @@ This hypothesis function now reflects the fact that every point $\feature_n$ is 
 
 ### K-Means Clustering {#k-center-rbf-center-selection}
 
-To choose the $K$ centers, we are going to choose the centers as representative of the data inputs, that is, a representative center will exist for every cluster of data points. Such representative centers would be achieved by minimizing the distance between $\feature_n$ and the **closest** center $\mathbf \mu_k$. This is called **K-means clustering** because the center of a cluster will end up being the mean of the points in that cluster.
+To choose the $K$ centers, we are going to choose the centers as representative of the data inputs, that is, a representative center will exist for every cluster of data points. Such representative centers would be achieved by minimizing the distance between $\feature_n$ and the **closest** center $\mathbf \mu_k$. This is called _K-means clustering_ because the center of a cluster will end up being the mean of the points in that cluster.
 
 We begin by splitting the data set $\feature_1, \dots, \feature_N$ into clusters $S_1, \dots, S_K$. Again, a good representative center $\mathbf \mu_k$ of a cluster $S_k$ would minimize the distance between the points in the cluster and itself, represented as the sum of the Euclidean MSE between the candidate center and each of the points in the cluster. The optimal cluster configuration is achieved by then minimizing the sum of each cluster's error measure.
 
 $$\text {Minimize } \quad \sum_{k = 1}^K \sum_{\feature_n \in S_k} \lVert \feature_n - \mathbf \mu_k \rVert^2$$
 
-This is **unsupervised learning**, since it was performed without any reference to the label $y_n$. The problem is that this is **NP-hard** in general; it is intractable to get the absolute minimum. The problem being NP-hard didn't discourage us before when we realized that finding the absolute minimum error in a neural network was NP-hard as well, in which case we developed a heuristic---gradient descent---which led to back-propagation and thus a decent local-minimum.
+This is _unsupervised learning_, since it was performed without any reference to the label $y_n$. The problem is that this is _NP-hard_ in general; it is intractable to get the absolute minimum. The problem being NP-hard didn't discourage us before when we realized that finding the absolute minimum error in a neural network was NP-hard as well, in which case we developed a heuristic---gradient descent---which led to back-propagation and thus a decent local-minimum.
 
 ### LLoyd's Algorithm
 
@@ -2910,7 +2910,7 @@ Any two-layer network with a structure similar to an RBF network lends itself to
 
 ## Choosing $\gamma$
 
-The final parameter to choose was the width of the Gaussian curve $\gamma$. This is now treated as a genuine parameter to be learned using an iterative approach using an algorithm known as the **Expectation Maximization** (EM) algorithm, which is used for solving the mixture of Gaussians. The algorithm is as follows:
+The final parameter to choose was the width of the Gaussian curve $\gamma$. This is now treated as a genuine parameter to be learned using an iterative approach using an algorithm known as the _Expectation Maximization_ (EM) algorithm, which is used for solving the mixture of Gaussians. The algorithm is as follows:
 
 1. Fix $\gamma$, solve for $w_1, \dots, w_K$ (using the pseudo-inverse)
 2. Fix $w_1, \dots, w_K$, minimize error w.r.t. $\gamma$ (using gradient descent)
@@ -3008,7 +3008,7 @@ Suppose two scientists conduct an experiment to determine if conductivity is lin
   <img src="/images/notes/machine-learning/three-learning-principles/experiment-b.png">
 </div>
 
-Clearly the experiment that used three points to fit the line provided more evidence than the other. The experiment that used two points provided no evidence at all, because two points can always be connected by a line. This introduces the notion of **falsifiability**: if your data has no chance of falsifying your assertion, then it doesn't provide any evidence for the assertion. We have to have a chance to falsify the assertion in order to be able to draw the evidence (axiom of non-falsifiability).
+Clearly the experiment that used three points to fit the line provided more evidence than the other. The experiment that used two points provided no evidence at all, because two points can always be connected by a line. This introduces the notion of _falsifiability_: if your data has no chance of falsifying your assertion, then it doesn't provide any evidence for the assertion. We have to have a chance to falsify the assertion in order to be able to draw the evidence (axiom of non-falsifiability).
 
 For example, the linear model is _too complex_ for the data set size of $N = 2$ to be able to generalize at all, so there is no evidence. On the other hand, with a data set size of $N = 3$ the assertion could've been falsified if one of the three points was not collinear with the other two.
 
@@ -3024,7 +3024,7 @@ This wasn't $\delta$'s fault, where $\delta$ was the discrepancy between in-samp
 
 $$\mathbb P \left[ |\insample - \outsample| \gt \epsilon \right] \leq \delta$$
 
-It was not bad luck, however, because if they had run the poll again with a larger and larger sample size, they would've gotten the same result. The problem was that there was a **sampling bias** in the poll they conducted, and that is that in 1948, phones were expensive, and in that era, rich people favored Dewey more than they favored Truman.
+It was not bad luck, however, because if they had run the poll again with a larger and larger sample size, they would've gotten the same result. The problem was that there was a _sampling bias_ in the poll they conducted, and that is that in 1948, phones were expensive, and in that era, rich people favored Dewey more than they favored Truman.
 
 > If the data is sampled in a biased way, then learning will produce a similarly biased outcome.
 >
@@ -3104,7 +3104,7 @@ To recap, there's **nothing wrong with normalization**, as long as the normaliza
 
 ### Data Set Reuse
 
-If we try one model after another **on the same data set**, we will eventually "succeed." The problem is that in doing this, we're increasing the VC dimension without realizing it, since the final model that we end up using in order to learn is **the union of all of the attempted models**. Think of the VC dimension of the **total** learning model.
+If we try one model after another **on the same data set**, we will eventually "succeed." The problem is that in doing this, we're increasing the VC dimension without realizing it, since the final model that we end up using in order to learn is **the union of all of the attempted models**. Think of the VC dimension of the _total_ learning model.
 
 > <p style="text-align:center">If you torture the data long enough, it will confess.</p>
 
@@ -3157,7 +3157,7 @@ $$
 
 The probability $P(\mathcal D \mid h = f)$ can be computed the same way as in logistic regression, and the probability $P(\mathcal D)$ can also be computed by simply integrating out what we don't want from the joint probability distribution in order to end up with the marginal $P(\mathcal D)$. In fact, since we're only picking the hypothesis according to the aforementioned criteria, we don't really care about $P(\mathcal D)$ since it only scales the value up or down, and instead we can only worry about picking the hypothesis that yields the largest numerator.
 
-The quantity that we don't know is the **prior**: $P(h = f)$, that is, the probability that the current hypothesis is the target function. It's called the prior because it's our belief of the hypothesis set before we got any data. We can modify this value after we get the data to get the **posterior**: $P(h = f \mid \mathcal D)$, which is more informed based on the data.
+The quantity that we don't know is the _prior_: $P(h = f)$, that is, the probability that the current hypothesis is the target function. It's called the prior because it's our belief of the hypothesis set before we got any data. We can modify this value after we get the data to get the _posterior_: $P(h = f \mid \mathcal D)$, which is more informed based on the data.
 
 Given the prior, we have the full distribution. For example, consider a perceptron $h$ determined by $\weight = w_0, w_1, \dots, w_d$. A possible prior on $\weight$ can take into account the fact that the magnitude of the weights doesn't matter, so that each weight $w_i$ is independent and uniform over $[-1, 1]$. This determines the prior over $h$, $P(h = f)$. Given $\mathcal D$, we can compute $P(\mathcal D \mid h = f)$. Putting them together we get $P(h = f \mid \mathcal D) \propto P(h = f)P(\mathcal D \mid h = f)$.
 
@@ -3171,9 +3171,9 @@ In fact, the true equivalent would be the image below, where the probability dis
 
 <img src="/images/notes/machine-learning/epilogue/prior-2.png" class="center">
 
-If we actually knew the prior then we could compute the posterior $P(h = f \mid \mathcal D)$ for every hypothesis $h \in \mathcal H$. With this, we could find the most probable hypothesis given the data. In fact, we can derive the expected value of $h$, $\mathbb E(h(\feature))$ for every $\feature$. Further still, we can derive the **error bar**---the chances that we're wrong. Simply, we can derive everything in a principled way.
+If we actually knew the prior then we could compute the posterior $P(h = f \mid \mathcal D)$ for every hypothesis $h \in \mathcal H$. With this, we could find the most probable hypothesis given the data. In fact, we can derive the expected value of $h$, $\mathbb E(h(\feature))$ for every $\feature$. Further still, we can derive the _error bar_---the chances that we're wrong. Simply, we can derive everything in a principled way.
 
-Bayesian learning can be justified in two main cases. The first is when the prior is **valid**, that is, it is indeed the probability that a particular hypothesis is the target function. The second is when the prior is **irrelevant**, for example, when we place a prior, when get more and more data sets and we look at the posterior we might realize that the posterior is affected largely by the data set and less by the prior; the prior gets factored out as we get more and more data. In this case, we can think of the prior simply as a computational catalyst.
+Bayesian learning can be justified in two main cases. The first is when the prior is _valid_, that is, it is indeed the probability that a particular hypothesis is the target function. The second is when the prior is _irrelevant_, for example, when we place a prior, when get more and more data sets and we look at the posterior we might realize that the posterior is affected largely by the data set and less by the prior; the prior gets factored out as we get more and more data. In this case, we can think of the prior simply as a computational catalyst.
 
 For example, we might choose to use conjugate priors, where we don't have to recompute the posterior as an entire function, but instead parameterize it and change the parameters when we get new data points. This is valid when we're going to be doing it enough that by the time we arrive, it doesn't matter what we started with.
 
@@ -3185,21 +3185,21 @@ Aggregation is a method that applies to all models, which combines different sol
 
 For example, when trying to detect a face with computer vision, we can instead detect components related to a face, such as an eye, nose, are the positions of these relative to each other, etc. If we were to try to determine whether or not a face was detected from just one of these features, the error would be large. However, if these are combined correctly, we might perform better. This is important in computer vision because we want to perform at or near real-time, so it helps to base the decision on simple computations.
 
-If the problem is a **regression**, then we can combine the results by simply taking an average. If the problem is a **classification**, then we can take a vote.
+If the problem is a _regression_, then we can combine the results by simply taking an average. If the problem is a _classification_, then we can take a vote.
 
-Aggregation is also known as **ensemble learning** and **boosting**.
+Aggregation is also known as _ensemble learning_ and _boosting_.
 
-This is **different** from performing 2-layer learning. For example, in a 2-layer model such as a neural network with one hidden layer, all units learn **jointly**. In the case of the neural network, each of the nodes are updated jointly via back-propagation. A single node isn't trying to replicate the function, it's just trying to contribute positively to the function:
+This is **different** from performing 2-layer learning. For example, in a 2-layer model such as a neural network with one hidden layer, all units learn _jointly_. In the case of the neural network, each of the nodes are updated jointly via back-propagation. A single node isn't trying to replicate the function, it's just trying to contribute positively to the function:
 
 <img src="/images/notes/machine-learning/epilogue/aggregation-2.png" class="center">
 
-In the case of aggregation, the units learn **independently**---as if they were the only unit. In the image below, each node is trying to replicate the function individually. Their outputs are then combined to get the output:
+In the case of aggregation, the units learn _independently_---as if they were the only unit. In the image below, each node is trying to replicate the function individually. Their outputs are then combined to get the output:
 
 <img src="/images/notes/machine-learning/epilogue/aggregation-3.png" class="center">
 
 ### Before the Fact
 
-Aggregation before the fact creates the solutions with a view to the fact that they will be combined, such that they will "blend well" together. An example of this is **bagging**, where we're given the data set and we resample it so that every solution uses a different bootstrap sample, in order to introduce some independence.
+Aggregation before the fact creates the solutions with a view to the fact that they will be combined, such that they will "blend well" together. An example of this is _bagging_, where we're given the data set and we resample it so that every solution uses a different bootstrap sample, in order to introduce some independence.
 
 In fact, instead leaving the decorrelation to chance, we can enforce it. We can build each hypothesis by making sure that what it covers is different from what other hypotheses cover. This is done by creating each of the hypotheses $h_1, \dots, h_t, \dots$ sequentially, making each hypothesis $h_t$ decorrelated with previous hypotheses. That is, after the third hypothesis for example, we consider what the best fourth hypothesis would be to add to the mix such that it is sufficiently different from the previous other three. This is accomplished by analyzing how the previous three performed, and based on that performance, providing a data set to the fourth hypothesis so that it develops something fairly independent from the previous three.
 
@@ -3207,7 +3207,7 @@ In fact, instead leaving the decorrelation to chance, we can enforce it. We can 
 
 For example, consider that the hypothesis functions that exist so far, combined, can correctly classify 60% of the data points in the set. In order to make the new hypothesis fairly independent from the existing ones, we can emphasize those points on which we performed poorly by giving them larger weights and conversely deemphasize those we got right, such that it looks like 50-50 so that the weighted error is 50%. If we take this distribution and learn on it with the new hypothesis and do better than 50%, then the new hypothesis is adding value to what we had before.
 
-In effect, we choose the weight of $h_t$ based on $\insample(h_t)$. The most famous algorithm that specifies this behavior is **adaptive boosting** AKA **AdaBoost**.
+In effect, we choose the weight of $h_t$ based on $\insample(h_t)$. The most famous algorithm that specifies this behavior is _adaptive boosting_ AKA _AdaBoost_.
 
 ### After the Fact
 
