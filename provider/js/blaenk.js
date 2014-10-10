@@ -49,7 +49,7 @@ $(function() {
 
   window.refresh = function () {
     // header links
-    $('.entry-content').find('h1, h2, h3, h4, h5').each(function() {
+    $('.entry-content').children('h1, h2, h3, h4, h5').each(function() {
       var $id = $(this).attr('id');
       var $text = $(this).text();
 
