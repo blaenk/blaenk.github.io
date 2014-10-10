@@ -59,7 +59,7 @@ markupHeaders = mconcat . map markupHeader
 createTable :: Forest Block -> H.Html
 createTable headers =
   (H.nav ! A.id "toc") $ do
-    H.p "Contents"
+    H.h3 "Contents"
     H.ol $ markupHeaders headers
 
 generateTOC :: [Block] -> String -> Block -> Block
