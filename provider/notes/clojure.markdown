@@ -503,8 +503,8 @@ The special form `fn` is used to create functions. A function defined this way h
 ;= 30
 
 (def strange-adder (fn adder-self-reference
-                    ([x] (adder-self-reference x 1))
-                    ([x y] (+ x y))))
+                     ([x] (adder-self-reference x 1))
+                     ([x y] (+ x y))))
 
 (strange-adder 10)
 ;= 11
@@ -1930,7 +1930,7 @@ A macro that deliberately exposes a name to the caller of the macro is _anaphori
   `(let [~name 5]
     ~@body))
 
-(with bar (+10 bar))
+(with bar (+ 10 bar))
 ;= 15
 ```
 
