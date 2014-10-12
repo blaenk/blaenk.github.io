@@ -1851,30 +1851,6 @@ let result: Result<int, ()> = task::try(proc() {
 assert!(result.is_err());
 ```
 
-## Duplex Streams
-
-A `DuplexStream` can be used to both send and receive from one task to another. The following code creates a task that continually receives a `uint` and sends it back converted to a string.
-
-``` rust
-fn stringifier(channel: &DuplexStream<String, uint>) {
-  let mut value: uint;
-  loop {
-    value = channel.recv();
-    channel.send(value.to_str());
-    if value == 0 { break; }
-  }
-}
-
-let (from_child, to_child) = duplex();
-
-spawn(proc() {
-  stringifier(&to_child);
-});
-
-from_child.send(22);
-assert!(from_child.recv() == "22");
-```
-
 # Iterators
 
 Iterators can be created by implementing the `Iterator` trait, particularly its `next` method. Notice that an `Option` is returned to indicate whether or not the iterator has finished, which is signified by yielding `None`.
