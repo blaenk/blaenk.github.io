@@ -1149,7 +1149,7 @@ let c = Circle::new(42.5);
 
 [RFC #132] specifies a _universal function call syntax_ (UFCS) which provides a way to completely disambiguate a particular method call, which is particularly useful when a type implements more than one trait that contains the same method.
 
-[RFC #132]: https://github.com/rust-lang/rfcs/blob/master/text/132-ufcs.md
+[RFC #132]: https://github.com/rust-lang/rfcs/blob/master/text/0132-ufcs.md
 
 *[UFCS]: Universal Function Call Syntax
 
@@ -1157,7 +1157,7 @@ Given a particular call syntax, different behavior occurs:
 
 * `Trait::method()`: the same behavior occurs as it does now.
 
-* `T::method()` where `T` is a path that resolves to a type: it is rewritten internally to `<T>::method())`.
+* `T::method()` where `T` is a path that resolves to a type: it is rewritten internally to `<T>::method()`.
 
 * `<T>::method()`: if type `T` implements only one trait in the scope that provides `method()`, then that method is called. Otherwise, the call must be disambiguated using the syntax `<T as DesiredTrait>::method()`.
 
