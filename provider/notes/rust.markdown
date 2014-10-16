@@ -687,12 +687,12 @@ It's also possible to use named lifetime notation to label control structures, a
 
 ### Elision
 
-RFC [#39] proposed expanded lifetime elision rules and was implemented with PR [#15552]. The practical effect of this is that a lot of omitted, or _elided_, lifetime annotations can be inferred by the compiler.
+RFC [#141] proposed expanded lifetime elision rules and was implemented with PR [#15552]. The practical effect of this is that a lot of omitted, or _elided_, lifetime annotations can be inferred by the compiler.
 
 *[RFC]: Request for Comments
 *[PR]: Pull Request
 
-[#39]: https://github.com/rust-lang/rfcs/blob/master/active/0039-lifetime-elision.md
+[#141]: https://github.com/rust-lang/rfcs/blob/master/text/0141-lifetime-elision.md
 [#15552]: https://github.com/rust-lang/rust/issues/15552
 
 To facilitate this, the compiler has notions of input or output. For _functions_, inputs are the lifetimes on arguments and outputs are the lifetimes on result types; this _doesn't_ include lifetimes that appear in the method's `impl` or `trait` header. For _implementations_, inputs are the lifetimes on the type receiving the implementation, and the outputs are the lifetimes on the trait.
@@ -836,7 +836,7 @@ view[0] = 5;
 let ys: &mut [int] = &mut [1, 2, 3];
 ```
 
-[RFC #58](https://github.com/rust-lang/rfcs/pull/198) adds overloaded slice notation via the `Slice` and `SliceMut` traits.
+[RFC #198](https://github.com/rust-lang/rfcs/blob/master/text/0198-slice-notation.md) adds overloaded slice notation via the `Slice` and `SliceMut` traits.
 
 ``` rust
 let xs = &[1, 2, 3, 4, 5];
@@ -945,7 +945,7 @@ struct Test {
 let Test { age, apples } = b;
 ```
 
-[RFC #51](https://github.com/rust-lang/rfcs/blob/master/active/0051-if-let.md) added support for `if-let` pattern matching as in [Swift](/notes/swift/#optionals), where the condition succeeds if the pattern matches.
+[RFC #160](https://github.com/rust-lang/rfcs/blob/master/text/0160-if-let.md) added support for `if-let` pattern matching as in [Swift](/notes/swift/#optionals), where the condition succeeds if the pattern matches.
 
 ``` rust
 if let Some(x) = optional {
@@ -953,7 +953,7 @@ if let Some(x) = optional {
 }
 ```
 
-Similarly, [RFC #68](https://github.com/rust-lang/rfcs/blob/master/active/0068-while-let.md) added support for `while-let`. It works in a similar manner to the above `if-let`, essentially continuing the loop so long as the pattern matches. This is useful for iterators.
+Similarly, [RFC #214](https://github.com/rust-lang/rfcs/blob/master/text/0214-while-let.md) added support for `while-let`. It works in a similar manner to the above `if-let`, essentially continuing the loop so long as the pattern matches. This is useful for iterators.
 
 ``` rust
 while let Some(value) = iter.next() {
@@ -1044,7 +1044,7 @@ let my_gizmo_id: GizmoId = GizmoId(10);
 let id_int: int = *my_gizmo_id;
 ```
 
-[RFC #53](https://github.com/rust-lang/rfcs/blob/master/complete/0053-tuple-accessors.md) adds tuple accessor syntax which applies to tuples and tuple structs. Only one level is possible since more than one would be considered a float.
+[RFC #184](https://github.com/rust-lang/rfcs/blob/master/text/0184-tuple-accessors.md) adds tuple accessor syntax which applies to tuples and tuple structs. Only one level is possible since more than one would be considered a float.
 
 ``` rust
 let mut tpl = (0, 1);
@@ -1096,9 +1096,9 @@ Parameters can be marked as to be moved into the function. They can also be borr
 
 ``` rust
 fn m(x: T);      // move
-fn m(mut x: T);  // move and mark mutable
-fn m(&x: T);     // immutably borrow
-fn m(&mut x: T); // mutably borrow
+fn m(x: mut T);  // move and mark mutable
+fn m(x: &T);     // immutably borrow
+fn m(x: &mut T); // mutably borrow
 ```
 
 # Methods
@@ -1147,9 +1147,9 @@ let c = Circle::new(42.5);
 
 ## Universal Function Call Syntax
 
-[RFC #46] specifies a _universal function call syntax_ (UFCS) which provides a way to completely disambiguate a particular method call, which is particularly useful when a type implements more than one trait that contains the same method.
+[RFC #132] specifies a _universal function call syntax_ (UFCS) which provides a way to completely disambiguate a particular method call, which is particularly useful when a type implements more than one trait that contains the same method.
 
-[RFC #46]: https://github.com/rust-lang/rfcs/blob/master/active/0046-ufcs.md
+[RFC #132]: https://github.com/rust-lang/rfcs/blob/master/text/132-ufcs.md
 
 *[UFCS]: Universal Function Call Syntax
 
@@ -1199,10 +1199,10 @@ Despite there being different types of closures, functions that expect a `||` cl
 
 ## Unboxed Closures
 
-[RFC #44] proposed unboxed closure traits `Fn`, `FnMut`, and `FnOnce`, along with new closure syntax which was refined by [RFC #63]. These traits are defined in [`std::ops`][std-ops], which is a module that defines traits for overloading operators. In effect, implementing these traits is equivalent to overloading the function call operator `()` in C++.
+[RFC #114] proposed unboxed closure traits `Fn`, `FnMut`, and `FnOnce`, along with new closure syntax which was refined by [RFC #231]. These traits are defined in [`std::ops`][std-ops], which is a module that defines traits for overloading operators. In effect, implementing these traits is equivalent to overloading the function call operator `()` in C++.
 
-[RFC #44]: https://github.com/rust-lang/rfcs/blob/master/active/0044-closures.md
-[RFC #63]: https://github.com/rust-lang/rfcs/blob/master/active/0063-upvar-capture-inference.md
+[RFC #114]: https://github.com/rust-lang/rfcs/blob/master/text/0114-closures.md
+[RFC #231]: https://github.com/rust-lang/rfcs/blob/master/text/0231-upvar-capture-inference.md
 [std-ops]: http://doc.rust-lang.org/std/ops/index.html
 
 As in C++, unboxed closures essentially expand to an anonymous structure which contains the captured variables---known as _upvars_---as well as an implementation of one of these traits, which has the effect of overloading the function call operator `()`.
@@ -1326,7 +1326,7 @@ enum Option<T> {
 
 Multiple bounds declarations are separated by commas, and multiple bounds for a given type parameter can be written separately or in a compound form using `+`.
 
-[RFC PR #135]: https://github.com/rust-lang/rfcs/pull/135
+[RFC PR #135]: https://github.com/rust-lang/rfcs/blob/master/text/0135-where.md
 [those in Swift]: /notes/swift/#where-clauses
 
 ``` rust
@@ -1522,7 +1522,9 @@ enum ABC { A, B, C }
 
 ## Associated Items
 
-[RFC #59] adds support for associated functions, statics, types, and lifetimes. Both associated types and statics allow defaults, just as associated methods and functions do. However, if an implementation overrides any default associted types, then they must override _all_ default functions and methods.
+[RFC #195] adds support for associated functions, statics, types, and lifetimes. Both associated types and statics allow defaults, just as associated methods and functions do. However, if an implementation overrides any default associted types, then they must override _all_ default functions and methods.
+
+[RFC #195]: https://github.com/rust-lang/rfcs/blob/master/text/0195-associated-items.md
 
 ### Associated Types
 
@@ -1638,8 +1640,6 @@ trait Float {
 
 [Where clauses](#where-clauses) can be used within object types using a type-parameterization syntax.
 
-[RFC #59]: https://github.com/rust-lang/rfcs/blob/master/active/0059-associated-items.md
-
 ``` rust
 // create and get reference to an Iterator for int
 &Iterator<where E=int>
@@ -1752,7 +1752,7 @@ Pipes are used for communication between tasks [^channels]. Each pipe is defined
 
 [^channels]: Pipes remind me of Go's channels, or Haskell's.
 
-The following code creates a channel for sending and receiving `int` types. Note that `Chan` and `Port` are both sendable types that may be captured into task closures or transferred between them.
+The following code creates a channel for sending and receiving `int` types. Note that `Sender` and `Receiver` are both sendable types that may be captured into task closures or transferred between them.
 
 ``` rust
 let (tx, rx): (Sender<int>, Receiver<int>) = comm::channel();
@@ -1766,7 +1766,7 @@ other_expensive_computation();
 let result = rx.recv();
 ```
 
-A regular `Chan` and `Port` created by `comm::channel` can't be used by more than one task. Attempting to do so leads to an error, since the first task to use it becomes its owner. Instead it's possible to use a `SharedChan` by calling `clone` on the endpoint.
+A regular `Sender` and `Receiver` created by `comm::channel` can't be used by more than one task. Attempting to do so leads to an error, since the first task to use it becomes its owner. Instead it's necessary to clone the given endpoint.
 
 ``` rust
 let (tx, rx) = comm::channel();
@@ -2415,4 +2415,36 @@ If a line is prefixed with `#`, then the line won't show up in the resulting HTM
 spawn(proc() { fib(200); })
 ```
 ~~~
+
+API stability can be documented by using stability attributes. There are six stability levels, where levels _stable_, _frozen_, and _locked_ convey a guarantee of backwards-compatibility. The levels are listed below in order of increasing stability.
+
+Level        Meaning
+------       --------
+deprecated   should no longer be used
+experimental may change or be removed
+unstable     still under development
+stable       will not change significantly
+frozen       very stable; unlikely to change
+locked       never change unless there are bugs
+
+Individual items such as functions and structs can be annotated with an API stability level of the form `#[level]`.
+
+``` rust
+#[deprecated = "was stupid to begin with"]
+pub fn learn_visual_basic() {
+  // ...
+}
+
+#[stable]
+pub fn use_rust() {
+  // ...
+}
+```
+
+When importing another crate, lints can be enabled to, for example, warn when a given item is used from it with a stability less than the one specified.
+
+``` rust
+#![warn(unstable)]
+extern crate other_crate;
+```
 
