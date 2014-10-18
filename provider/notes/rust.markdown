@@ -1171,7 +1171,24 @@ S::default();
 Default::default();
 ```
 
-In fact, UFCS completely erases the distinction between static methods and regular methods, so that `t.a(b)` is also equivalent to `T::a(t, b)`.
+In fact, UFCS completely erases the distinction between static methods and regular methods, so that `t.a(b)` is also equivalent to `T::a(t, b)`. This means that methods can be called [like functions]:
+
+[like functions]: https://github.com/rust-lang/rust/pull/18053
+
+``` rust
+struct Foo;
+
+impl Foo {
+  fn bar(&self) {
+    // ...
+  }
+}
+
+let x = Foo;
+
+x.bar();
+Foo::bar(&x);
+```
 
 # Closures
 
@@ -2448,3 +2465,14 @@ When importing another crate, lints can be enabled to, for example, warn when a 
 extern crate other_crate;
 ```
 
+# Debugging
+
+Existing debugging infrastructure such as [GDB](/notes/gdb) can be used to debug Rust programs. It may be useful to set the optimization level to 0 and enable debugging symbols in Cargo using a development profile:
+
+``` toml
+[profile.dev]
+opt-level = 0
+debug = true
+```
+
+There's also the `RUST_BACKTRACE` environment variable which, when set (e.g. to 1), will output a backtrace when a Rust program crashes.
