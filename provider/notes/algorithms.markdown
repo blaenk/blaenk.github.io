@@ -735,6 +735,7 @@ Case    Growth
 Worst   $O(2 \lg {n})$
 
 </div>
+
 [Red-Black trees](http://en.wikipedia.org/wiki/Red–black_tree) are trees that guarantee near-perfect balance by maintaining 5 invariants:
 
 1. a node is either **red** or **black**
@@ -1753,6 +1754,130 @@ void findNegativeCycle() {
   cycle = cf.cycle();
 }
 ~~~
+
+## Constraint Satisfaction Problems
+
+_Constraint Satisfaction Problems_ (CSP) [^cs188_csp] are a special subset of search problems where the state is defined by variables $X_i$ with corresponding values from a domain $D$ (which may depend on $i$), and the goal test is a set of constraints specifying the allowable combinations of values for the variables. A solution in this case is simply an assignment to all variables which satisfies the constraints.
+
+*[CSP]: Constraint Satisfaction Problems
+
+[^cs188_csp]: See [Week 3](https://courses.edx.org/courses/BerkeleyX/CS188.1x/2012_Fall/courseware/Week_3/Lecture_4_CSPs/) of CS 188.1x for more information.
+
+Example problems that may be modeled as CSPs are map coloring, N-Queens, and Sudoku. [Map coloring] consists of coloring in different regions in a map such that their bordering regions don't have the same color. In this case, the variables would be the individual regions and the domain would consist of the possible set of colors, e.g. $D = \{\text{red}, \text{green}, \text{blue}\}$. The constraints could then be modeled implicitly in the form Region1 ≠ Region2 where Region2 borders Region1, or by explicitly specifying every legitimate configuration.
+
+[Map coloring]: http://en.wikipedia.org/wiki/Map_coloring
+
+[N-Queens] looks for a possible configuration of an N×N chess board with N queens on it such that there is one queen on each row and none of them threaten each other, i.e. they cannot be on the same row, column, or diagonal. This problem can be modeled so that there is one variable $Q_k$ for each queen taking on a value from the domain $D = \{1, 2, \ldots N\}$ which corresponds to the column the queen is on. The constraints can be modeled implicitly with $\forall_{i,j}\ \text {non-threatening} (Q_i, Q_j)$.
+
+[N-Queens]: http://en.wikipedia.org/wiki/Eight_queens_puzzle
+
+### Backtracking Search
+
+<div class="right">
+
+Case    Growth
+-----   -------
+Worst   $O(d^n)$
+
+Table: $d:$ domain size
+
+</div>
+
+Given a state tree of the constraint satisfaction problem, all of the solutions would be at the bottom, so BFS would experience the worst-case. DFS with its backtracking gets to the bottom quicker, but it must be adapted to the context of CSPs in order to be optimal.
+
+This adaptation is known as _backtracking search_. Backtracking search only considers one variable at a time and checks the constraints at each step, so that only values that don't conflict with previous assignments are considered. Backtracking naturally occurs if there are no more successors. A naive implementation of this, that will be optimized later, follows:
+
+1. start with an empty solution
+2. if the solution is complete, return it
+3. select an unassigned variable
+4. try giving it a value from its domain that hasn't been tried:
+    1. if there are no more values in the domain, return failure (no successors). This goes back to the previous variable, i.e. backtracking, so that it may try another value for it (and backtracking again if there are no more).
+    2. if the value satisfies the constraints, set it
+    3. recurse starting at #2 and get its result
+        1. if the result didn't fail, return it
+        2. otherwise unset the variable and go to #4 to try another value
+
+This algorithm can be optimized further by ordering the variables in a specific way, filtering out values from domains as other variables are set in order to detect failure earlier, and exploiting the problem's structure.
+
+_Forward checking_ keeps track of domains for unassigned variables and removes from them values which would violate a constraint when added to the existing assignment. This is done whenever a new variable is assigned. For example, in a map coloring problem, if the domain is $D = \{\text{red}, \text{green}, \text{blue}\}$ and Region1 is set to red, then red would be removed from the domain of Region2 which borders it, since setting Region2 to red would violate the constraints.
+
+_Constraint propagation_ takes this further by propagating these effects farther, in order to detect potential failures earlier. This is done by having a notion of an _arc_ which leads from other variables on the constraint graph to the variable in question, so that the _head_ of the arc is the variable in question and the tail is the other variable. Then it is said that a given arc $X \to Y$ is _consistent_ iff for _every_ $x$ in the tail's domain, there is some $y$ in the head's domain which could be assigned without violating the constraint.
+
+_Forward checking_ uses this concept so that, when a new variable is assigned, arc consistency is enforced for each variable by removing values from their domain which would otherwise make them inconsistent. Naturally, when a value is removed from a varible's domain, all neighbors of that variable (incoming arcs) have to be re-enforced. Arc consistency is run after every assignment in backtracking search.
+
+The algorithm, known as the [AC-3 algorithm](http://en.wikipedia.org/wiki/AC-3_algorithm) for enforcing arc consistency follows (specifically for binary CSPs, where there are at most two variables per constraint):
+
+1. create a queue containing all of the arcs in the CSP
+2. while the queue is not empty:
+    1. retrieve an arc from the queue
+    2. for each value $x$ in the tail's domain:
+        1. if no value $y$ in the head's domain satisfies the constraints given $x$:
+            1. delete $x$ from the tail's domain
+    3. if there were values removed, then add an arc to the queue for each neighbor (i.e. each incoming arc)
+
+_Variable Ordering_ refers to optimizing by prioritizing some variables over others. _Minimum Remaining Values_ (MRV) consists of prioritizing variables which have the fewest legal values left in their domain. This is so that, if backtracking becomes necessary, the amount of backtracking will be much less.
+
+_Value Ordering_ refers to optimizing by prioritizing certain values in a domain. _Least Constraining Value_ refers to choosing the value which rules out the fewest values in the remaining variables. Knowledge of this may require re-running filtering.
+
+### K-Consistency
+
+There are increasing degrees of consistency. For example, _1-Consistency_ (Node Consistency) is when each single variable's (node) domain has a value which meets that node's unary constraints. _2-Consistency_ (Arc Consistency) is when any consistent assignment for one variable can be extended to the other for each pair of nodes. _K-Consistency_ is the generalized notion where any consistent assignment to $k - 1$ variables can be extended to the $k^{th}$ node for each $k$ nodes, i.e. whatever is done at the tail $k - 1$ variables can be extended to the head.
+
+_Strong N-Consistency_ requires that all of the lower orders of K-Consistency are also satisfied, e.g. $k - 1$, $k - 2$, etc. This would mean that the CSP could be solved without backtracking, since the constraints could be enforced further and further until the entire constraint graph is enforced. Naturally this is very difficult to accomplish, though a good middle ground is where $k = 3$, referred to as _path consistency_.
+
+### Tree-Structured CSPs
+
+<div class="right">
+
+Case    Growth
+-----   -------
+Worst   $O(n d^2)$
+
+Table: $d:$ domain size
+
+</div>
+
+The CSP can be solved _much_ faster if there are no cycles in the constraint graph, specifically linear in the size of the graph and quadratic in the size of the domains.
+
+The tree must first be re-ordered by choosing a root variable so that all parents precede children by replacing the undirected connections with directed connections. Once the constraint graph is structured in this manner, the algorithm is simple:
+
+1. all nodes are traversed one level at a time, starting at the lowest level and going towards but not including the root
+    1. for a given node, its incoming arc's consistency is enforced
+2. set all of the nodes starting at the root. Each node is guaranteed by step #1 to have at least one valid value
+
+### Cutset Conditioning
+
+<div class="right">
+
+Case    Growth
+-----   -------
+Worst   $O(d^c\ (n - c)\ d^2)$
+
+Table: $c:$ cutset size
+
+</div>
+
+This optimization only applies to tree-structured CSPs, but not all problems are tree-structured. However, sometimes a constraint graph can easily be converted into a tree-structured CSP by removing a particular set of nodes. This is accomplished by setting the value of the variable and then severing the connection to its neighbors, imposing an additional unary constraint on the neighbors reflecting the value the node was set to, essentially removing the now-invalid values from the domains of the neighbors.
+
+_Cutset conditioning_ is an algorithm that accomplishes this transformation, which essentially works by instantiating (in all ways) a set of variables so that the remaining constraint graph is a tree.
+
+1. choose a cutset
+2. instantiate the cutset in all possible ways
+3. compute residual CSP by removing instantiated nodes and replacing their constraints with smaller constraints over remaining neighboring variables (NP-Hard)
+4. solve residual tree-structured CSP
+
+### Iterative Algorithms
+
+Iterative algorithms begin with a constraint graph where every variable is set to a value, whether or not the value satisfies the constraints.
+
+1. while not solved:
+    1. select a conflicted variable
+    2. choose a new value (min-conflicts heuristic)
+        1. choose value that violates the fewest constraints (i.e. hill climb with h(n) = total number of violated constraints)
+
+This approach to CSP solving is _very_ performant for any randomly-generated CSP particularly if there are many variables but few constraints or vice versa, but _not_ when both are the case:
+
+$$ R = \frac {\text {# of constraints}} {\text {# of variables}} $$
 
 # Strings
 
