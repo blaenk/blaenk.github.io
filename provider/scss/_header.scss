@@ -55,7 +55,7 @@
 }
 #main-nav {
   float: left;
-  margin-left: 35px;
+  margin-left: 25px;
 
   @media screen and (max-width: 766px) {
     text-align: center;
@@ -240,8 +240,8 @@
       background: #fff;
       border: 1px solid $color-gray04;
       border-right: none;
-      color: $color-gray02;
-      font: 13px $font-default;
+      color: $color-gray01;
+      font-family: $font-default;
       height: 30px;
       width: 100%;
       padding: 0 10px;

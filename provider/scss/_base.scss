@@ -18,8 +18,8 @@ body {
   border-top: 3px solid #2A9AF9;
   font-family: $font-default;
   font-weight: 400;
-  font-size: 17px;
-  line-height: 1.7;
+  font-size: 18px;
+  line-height: 1.6;
   background: white;
   color: $color-gray01;
   -webkit-text-size-adjust: 100%;
@@ -27,7 +27,7 @@ body {
   -webkit-font-smoothing: antialiased;
 
   @media screen and (max-width: 600px) {
-    font-size: 13px;
+    font-size: 14px;
   }
 }
 
@@ -107,3 +107,7 @@ p.notfound {
   }
 }
 
+// so that iOS doesn't zoom in on input
+select,   textarea,   input[type="text"],   input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+  font-size: 16px;
+}

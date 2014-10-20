@@ -139,21 +139,23 @@ article {
     }
 
     blockquote {
-      font-size: 1.1em;
-      font-weight: 100;
-      color: #333;
-      line-height: 1.6;
-      padding: 20px;
-      margin-top: 0;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      margin-left: 10px;
+
+      padding-left: 15px;
+
+      border-left: 2px solid #999;
 
       @media screen and (max-width: 600px) {
-        padding: 10px;
-      }
+        margin-left: 5px;
+        padding-left: 10px;
 
-      text-align: justify;
-      -webkit-hyphens: auto;
-      -moz-hyphens: auto;
-      hyphens: auto;
+        text-align: justify;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+      }
 
       cite {
         text-align: left;
@@ -298,7 +300,7 @@ article {
       float: right;
       margin-left: 15px;
       margin-bottom: 15px;
-      margin-top: 15px;
+      margin-top: 0;
       padding: 0;
 
       @media screen and (max-width: 600px) {
@@ -307,6 +309,15 @@ article {
         margin-left: 0;
         margin-top: 10px;
       }
+
+      h3 {
+        line-height: 1;
+        margin-top: 4px;
+      }
+    }
+
+    p ~ #toc.right-toc h3 {
+      margin-top: 18px;
     }
 
     #toc {
