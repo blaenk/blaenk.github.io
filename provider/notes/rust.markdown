@@ -87,7 +87,7 @@ There exists a hierarchy of modules where the root is referred to as _crate root
 
 Everything in Rust is private by default with a single exception. If an enumeration is declared public, then its variants are public as well by default, though this may be overridden with the `priv` keyword.
 
-Visibility restrictions are only applicable at module boundaries, so that private items are available within the same module and its descendants.
+Visibility restrictions are only applicable at module boundaries, so that private items are available within the same module and its descendants. Descendants still have to bring the parent items into view using `use`, however---this simply means that they have permission view private items.
 
 Source files and modules are not the same thing. The only file that's relevant when compiling is the one that contains the body of the crate root. Declaring a module without a body prompts the compiler to look for a file named after that module or for a file named `mod.rs` in a folder named after that module, and use its contents as the module's body.
 
@@ -378,19 +378,6 @@ assert_eq!(*z.borrow(), [1, 2, 3]);
 
 let mut a = Rc::new([1, 2]);
 a = z; // variable is mutable, not its contents
-```
-
-There are also garbage collected pointers via `std::gc::Gc` under ownership of a task-local garbage collector. These pointers allow the creation of cycles. Individual `Gc` pointers don't have destructors.
-
-``` rust
-use std::gc::Gc;
-
-// fixed-sized array allocated in garbage-collected box
-let x = box(GC) [1, 2, 3];
-let y = x; // doesn't perform a move, unlike Rc
-let z = x;
-
-assert_eq!(*z.borrow(), [1, 2, 3]);
 ```
 
 ## Cells
@@ -687,13 +674,12 @@ It's also possible to use named lifetime notation to label control structures, a
 
 ### Elision
 
-RFC [#141] proposed expanded lifetime elision rules and was implemented with PR [#15552]. The practical effect of this is that a lot of omitted, or _elided_, lifetime annotations can be inferred by the compiler.
+RFC [#141] proposed expanded lifetime elision rules. The practical effect of this is that a lot of omitted, or _elided_, lifetime annotations can be inferred by the compiler.
 
 *[RFC]: Request for Comments
 *[PR]: Pull Request
 
 [#141]: https://github.com/rust-lang/rfcs/blob/master/text/0141-lifetime-elision.md
-[#15552]: https://github.com/rust-lang/rust/issues/15552
 
 To facilitate this, the compiler has notions of input or output. For _functions_, inputs are the lifetimes on arguments and outputs are the lifetimes on result types; this _doesn't_ include lifetimes that appear in the method's `impl` or `trait` header. For _implementations_, inputs are the lifetimes on the type receiving the implementation, and the outputs are the lifetimes on the trait.
 
@@ -1339,11 +1325,11 @@ enum Option<T> {
 
 ## Where Clauses
 
-[RFC PR #135] adds support for `where` clauses similar to [those in Swift] which allow type bounds to be specified for the type parameters in a generic declaration. Where clauses can be added to anything that can be parameterized with type or lifetime parameters, except for trait method definitions. This includes `impl`, `fn`, `trait`, `struct`, as well as [associated types](#associated-types).
+[RFC #135] adds support for `where` clauses similar to [those in Swift] which allow type bounds to be specified for the type parameters in a generic declaration. Where clauses can be added to anything that can be parameterized with type or lifetime parameters, except for trait method definitions. This includes `impl`, `fn`, `trait`, `struct`, as well as [associated types](#associated-types).
 
 Multiple bounds declarations are separated by commas, and multiple bounds for a given type parameter can be written separately or in a compound form using `+`.
 
-[RFC PR #135]: https://github.com/rust-lang/rfcs/blob/master/text/0135-where.md
+[RFC #135]: https://github.com/rust-lang/rfcs/blob/master/text/0135-where.md
 [those in Swift]: /notes/swift/#where-clauses
 
 ``` rust
