@@ -151,6 +151,15 @@ mod b;
 fn main() { foo(); }
 ```
 
+These restrictions have been removed by [RFC #385], so that it's now possible to use any order:
+
+[RFC #385]: https://github.com/rust-lang/rfcs/blob/master/text/0385-module-system-cleanup.md
+
+``` rust
+mod b;
+use b::foo;
+```
+
 It's possible to import by wildcard or selectively, similar to Scala. It's also possible to rename an imported item:
 
 ``` rust
