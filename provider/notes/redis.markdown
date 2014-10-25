@@ -17,11 +17,7 @@ There's also a [guide on MDN] with suggestions on how to use Redis.
 
 * toc
 
-# Data Structures
-
-Most commands are prefixed by the first letter of the data structure on which they operate.
-
-## Strings
+# Strings
 
 Strings can store values of type byte string, integer (signed platform size), or floating-point (64-bit doubles). Strings support simple key-value store operations such as `GET`, `SET`, and `DEL`. The `DEL` command returns the number of items that were deleted.
 
@@ -31,7 +27,7 @@ Strings also support string operations such as `APPEND` for concatenation, subst
 
 Strings can also be manipulated as bitstring values with `GETBIT` and `SETBIT`, the population count can be retrieved with `BITCOUNT`, and bitwise operations can be performed with `BITOP`.
 
-## Lists
+# Lists
 
 Linked-lists support left/right push and pop with `LPUSH`/`RPUSH` and `LPOP`/`RPOP`. Specific elements can be retrieved with `LINDEX`, where -1 is the last index, and a range with `LRANGE`. Lists can be trimmed so that they only include the items in the range provided to `LTRIM`.
 
@@ -45,7 +41,7 @@ The operations `BLPOP` and `BRPOP` which pop the left/right-most item from the f
 
 The operation `RPOPLPUSH` pops the right-most item from the source and pushes it onto the left end of the destination, also returning the item to the user. Similarly, `BRPOPLPUSH` does the same but blocks until the source is not empty, or until the provided timeout in seconds.
 
-## Sets
+# Sets
 
 Sets can be added to and removed from with `SADD` and `SREM`. The `SPOP` command removes and returns a random item from the set. The `SMOVE` command can be used to move items between sets. Membership tests are possible with `SISMEMBER`. The number of items in a set (its cardinality) can be retrieved with `SCARD`.
 
@@ -53,7 +49,7 @@ All of the members from the set can be fetched with `SMEMBERS`. An arbitrary num
 
 Set operations such as intersection, union, and difference are possible with `SINTER`, `SUNION`, and `SDIFF`. There are also `STORE`-suffixed variants to these set operations that store their results in a specified key instead of returning them.
 
-## Ordered Sets
+# Ordered Sets
 
 Ordered sets hold unique keys called members and associated values called scores that are limited to floating-point numbers (doubles) and are used to store the items in ascending order.
 
@@ -67,7 +63,7 @@ Given that the ordering of ordered sets is ascending, many commands have analogu
 
 There are set operations `ZINTERSTORE` and `ZUNIONSTORE` whose semantics differ from regular set operations due to the added complexity of score-handling. These commands can take as option an operation to perform to aggregate the scores of items with the same keys, the default of which is to add them but can also be to take the min or max. Another option that can be passed are weights that are used to multiply the scores of the corresponding set before passing them to the aggregation operation. If these ordered-set operations are used on a regular set, the scores of the items in that set are interpreted as being 1.
 
-## Hashes
+# Hashes
 
 Hashes can be thought of as a separate namespace within Redis. They support setting, getting, and deleting values with `HSET`, `HGET`, and `HDEL`. There are `HMSET` and `HMGET` variants that allow for _multiple_ fields to be retrieved or key-value pairs to be set. The `HLEN` command yields the number of key-value pairs in the hash.
 
@@ -75,7 +71,7 @@ The `HGETALL` command can get all of the key-value pairs, though it's possible t
 
 `HINCRBY`/`HINCRBYFLOAT` can be used to increment a value by a specific amount.
 
-## Publish/Subscribe {#publish-subscribe}
+# Publish/Subscribe {#publish-subscribe}
 
 Redis supports publish/subscribe operations. There are straightforward commands `SUBSCRIBE`, `UNSUBSCRIBE`, and `PUBLISH`. There are also (un)subscribe commands that apply to channels that match a given pattern: `PSUBSCRIBE` and `PUNSUBSCRIBE`.
 
