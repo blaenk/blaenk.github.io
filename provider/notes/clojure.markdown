@@ -1356,7 +1356,13 @@ See the section on [Software Transactional Memory](#software-transactional-memor
 
 ### Vars {#reference-types-vars}
 
-Vars are generally used implicitly in Clojure. Top-level functions and values are stored in vars, which are defined in the current namespace using the special form `def` or its derivatives, which also copies the metadata provided. Evaluating a symbol in Clojure involves looking for a var with that name in the current namespace and dereferencing it to obtain its value. [Recall](#symbols) that vars can be created with reader syntax `#'`, but they can also be explicitly created using the `var` function.
+Vars are generally used implicitly in Clojure. Top-level functions and values are stored in vars, which are defined in the current namespace using the special form `def` or its derivatives, which also copies the metadata provided. [Recall](#symbols) that vars can be created with reader syntax `#'`, but they can also be explicitly created using the `var` function.
+
+> Words are pale shadows of forgotten names. As names have power, words have power. Words can light fires in the minds of men. Words can wring tears from the hardest hearts. There are seven words that will break a strong man's will. But a word is nothing but a painting of a fire. A name is the fire itself.
+>
+> <cite>**The Name of the Wind** by Patrick Rothfuss</cite>
+
+Evaluating a symbol involves looking for a var with the name of the symbol in the current namespace and dereferencing it to obtain its value. The above passage reminds me of this relationship, where words are to names as symbols are to vars.
 
 ``` clojure
 map
