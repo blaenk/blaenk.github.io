@@ -530,10 +530,10 @@ assert!(eq(xs, &ys));
 A `&` that's applied to an rvalue is a shorthand for creating a temporary and taking its address.
 
 ``` rust
-let explicit = Point {x: 3.0, y: 4.0};
+let explicit = Point { x: 3.0, y: 4.0 };
 reference_taking_func(&explicit);
 
-let shorthand = &Point {x: 3.0, y: 4.0};
+let shorthand = &Point { x: 3.0, y: 4.0 };
 reference_taking_func(shorthand);
 ```
 
@@ -643,7 +643,7 @@ This would lead to a _compilation error_, because `select_unit()` is supposed to
 
 ``` rust
 fn select_unit<'r, T>(threshold: f64, a: &'r T, b: &'r T) -> &'r T {
-  let shape = Circle(Point {x: 0., y: 0.}, 1.);
+  let shape = Circle(Point { x: 0., y: 0. }, 1.);
   select(&shape, threshold, a, b);
 }
 ```
@@ -726,8 +726,8 @@ Given this distinction between lifetime parameters, the rules are simple:
 3. if there are multiple input lifetime positions and one of them is `&self` or `&mut self`, the lifetime of `self` is assigned to all elided output lifetimes
 
     ``` rust
-    fn args<T:ToCStr>(&mut self, args: &[T]) -> &mut Command
-    fn args<'a, 'b, T:ToCStr>(&'a mut self, args: &'b [T]) -> &'a mut Command
+    fn args<T: ToCStr>(&mut self, args: &[T]) -> &mut Command
+    fn args<'a, 'b, T: ToCStr>(&'a mut self, args: &'b [T]) -> &'a mut Command
     ```
 
 4. otherwise, it's an error to elide an output lifetime
@@ -992,8 +992,8 @@ impl Point {
 Functional updates can be performed by terminating the structure expression syntax with `..` followed by another value of the same type as the structure being defined. This is similar to what is commonly done in Haskell.
 
 ``` rust
-let base = Point3d {x: 1, y: 2, z: 3};
-Point3d {y: 0, z: 10, ..base}
+let base = Point3d { x: 1, y: 2, z: 3 };
+Point3d { y: 0, z: 10, ..base }
 ```
 
 # Enumerations
@@ -1091,7 +1091,7 @@ Parameters can be marked as to be moved into the function. They can also be borr
 
 ``` rust
 fn m(x: T);      // move
-fn m(x: mut T);  // move and mark mutable
+fn m(mut x: T);  // move and mark mutable
 fn m(x: &T);     // immutably borrow
 fn m(x: &mut T); // mutably borrow
 ```
@@ -1120,7 +1120,7 @@ impl Shape {
   }
 }
 
-let s = Circle(Point {x: 1.0, y: 2.0}, 3.0);
+let s = Circle(Point { x: 1.0, y: 2.0 }, 3.0);
 s.draw();
 ```
 
@@ -1517,7 +1517,7 @@ fn radius_times_area<T: Circle>(c: T) -> f64 {
   c.radius() * c.area()
 }
 
-let concrete = box CircleStruct { center: Point {x: 3f, y: 4f}, radius: 5f }
+let concrete = box CircleStruct { center: Point { x: 3f, y: 4f }, radius: 5f }
 let mycircle: Box<Circle> = concrete as Box<Circle>;
 let nonsense = mycircle.radius() * mycircle.area();
 ```
@@ -1707,12 +1707,12 @@ struct Point {
 
 impl Add<Point, Point> for Point {
   fn add(&self, other: &Point) -> Point {
-    Point {x: self.x + other.x, y: self.y + other.y}
+    Point { x: self.x + other.x, y: self.y + other.y }
   }
 }
 
 fn main() {
-  println!("{}", Point {x: 1, y: 0} + Point {x: 2, y: 3})
+  println!("{}", Point { x: 1, y: 0 } + Point { x: 2, y: 3 })
 }
 ```
 
@@ -2275,6 +2275,13 @@ test return_two_test ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured
 ```
 
+The `--nocapture` flag can be provided to the test harness to prevent it from stealing standard output, so that tests can print messages to the terminal.
+
+``` bash
+$ ./foo --nocapture
+$ cargo test -- --nocapture
+```
+
 The `ignore` attribute can be used to specify that a test should not be run. The existence of the test will be noted in the runner's output. The `ignore` attribute can take a configuration value as predicate, to ignore a given test depending on a configuration value.
 
 ``` rust
@@ -2286,6 +2293,11 @@ fn linux_test() {}
 Tests that are intended to fail can be annotated with the `should_fail` attribute.
 
 The test runner can take as argument a regular expression used to run the matching tests, and the `--ignored` flag can tell the runner to only run the ignored tests.
+
+``` bash
+$ ./foo sometest
+$ cargo test -- sometest
+```
 
 It's also possible to benchmark functions using the `bench` attribute. Benchmarks are compiled along with tests when compiled with the `--test` flag. Benchmark functions take as parameter a mutable reference to type `test::Bencher`. Setup should happen at the beginning of the function, and the actual code to be benchmarked should occur within a closure passed to `test::Bencher`'s `iter` method.
 
