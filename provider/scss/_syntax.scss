@@ -1,106 +1,105 @@
 // blaenk
-$base03:        #002b36 !default; //
-$base02:        #073642 !default; //
-$base01:        #555555 !default; //
-$base00:        #555555 !default; //
-$base0:         #839496 !default; //
-$base1:         #93a1a1 !default; // comment, string
-$base2:         #e6e6e6 !default; //
-$base3:         #f7f7f7 !default; //
-$solar-yellow:  #a47c00 !default; //
-$solar-orange:  #cb4b16 !default; //
-$solar-red:     #C82829 !default; // parentheses
-$solar-magenta: #d33682 !default; //
-$solar-violet:  #8959A8 !default; //
-$solar-blue:    #4271AE !default; // haskell: function
-$solar-cyan:    #3E999F !default; // haskell: let, where, operator
-$solar-green:   #768800 !default; //
-
-// Solarized Light
 // $base03:        #002b36 !default; //
 // $base02:        #073642 !default; //
-// $base01:        #586e75 !default; //
-// $base00:        #657b83 !default; //
+// $base01:        #555555 !default; //
+// $base00:        #555555 !default; //
 // $base0:         #839496 !default; //
 // $base1:         #93a1a1 !default; // comment, string
-// $base2:         #eee8d5 !default; //
-// $base3:         #fdf6e3 !default; //
-// $solar-yellow:  #b58900 !default; //
+// $base2:         #e6e6e6 !default; //
+// $base3:         #f7f7f7 !default; //
+// $solar-yellow:  #a47c00 !default; //
 // $solar-orange:  #cb4b16 !default; //
-// $solar-red:     #dc322f !default; // parentheses
+// $solar-red:     #C82829 !default; // parentheses
 // $solar-magenta: #d33682 !default; //
-// $solar-violet:  #6c71c4 !default; //
-// $solar-blue:    #268bd2 !default; // haskell: function
-// $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
-// $solar-green:   #859900 !default; //
+// $solar-violet:  #8959A8 !default; //
+// $solar-blue:    #4271AE !default; // haskell: function
+// $solar-cyan:    #3E999F !default; // haskell: let, where, operator
+// $solar-green:   #718C00 !default; //
 
-.language-javascript {
-  .kd { color: $solar-cyan; }
-  .nx { color: inherit; }
-}
+// Solarized Light
+$base03:        #002b36 !default; //
+$base02:        #073642 !default; //
+$base01:        #586e75 !default; //
+$base00:        #657b83 !default; //
+$base0:         #839496 !default; //
+$base1:         #93a1a1 !default; // comment, string
+$base2:         #f1ede4 !default; //
+$base3:         #f8f5ec !default; //
+$solar-yellow:  #b58900 !default; //
+$solar-orange:  #cb4b16 !default; //
+$solar-red:     #dc322f !default; // parentheses
+$solar-magenta: #d33682 !default; //
+$solar-violet:  #6c71c4 !default; //
+$solar-blue:    #268bd2 !default; // haskell: function
+$solar-cyan:    #2aa198 !default; // haskell: let, where, operator
+$solar-green:   #859900 !default; //
 
-.language-erlang {
-  .nv { color: $solar-red; }
-}
+// .language-javascript {
+//   .kd { color: $solar-cyan; }
+//   .nx { color: inherit; }
+// }
 
-.language-go {
-  .nx { color: inherit; }
-}
+// .language-erlang {
+//   .nv { color: $solar-red; }
+// }
 
-.language-clojure {
-  .ss { color: $solar-violet }
-  .nv { color: inherit; }
-  .nb, .nf {
-    color: $solar-blue;
-  }
-}
+// .language-go {
+//   .nx { color: inherit; }
+// }
+
+// .language-clojure {
+//   .ss { color: $solar-violet }
+//   .nv { color: inherit; }
+//   .nb, .nf {
+//     color: $solar-blue;
+//   }
+// }
 
 .language-haskell {
-  .nn {
-    color: $solar-magenta;
-  }
+  .nn { color: $solar-magenta; }
+  .nb { color: $solar-yellow; }
   .cm { color: $base01; }
 }
 
-.language-scala {
-  .nc { color: $solar-red; }
-  .nn { color: $solar-cyan; }
-}
+// .language-scala {
+//   .nc { color: $solar-red; }
+//   .nn { color: $solar-cyan; }
+// }
 
-.language-gdb {
-  .kt { color: $solar-cyan; }
-  .nv { color: $solar-green; }
-}
+// .language-gdb {
+//   .kt { color: $solar-cyan; }
+//   .nv { color: $solar-green; }
+// }
 
-.language-rust {
-  .nl { color: $solar-orange; }
-  .s-Raw { color: $solar-orange; }
-}
+// .language-rust {
+//   .nl { color: $solar-orange; }
+//   .s-Raw { color: $solar-orange; }
+// }
 
-.language-html {
-  .nt { color: $solar-cyan; }
-  .na { color: $solar-violet; }
-}
+// .language-html {
+//   .nt { color: $solar-cyan; }
+//   .na { color: $solar-violet; }
+// }
 
-.language-bash {
-}
+// .language-bash {
+// }
 
-.language-python {
-  .kn { color: $solar-violet; }
-  .nn { color: $solar-cyan; }
-}
+// .language-python {
+//   .kn { color: $solar-violet; }
+//   .nn { color: $solar-cyan; }
+// }
 
-.language-java {
-  .nc { color: $solar-red; }
-  .nn { color: $solar-violet; }
-  .kc { color: $solar-cyan; }
-}
+// .language-java {
+//   .nc { color: $solar-red; }
+//   .nn { color: $solar-violet; }
+//   .kc { color: $solar-cyan; }
+// }
 
-.language-cmake {
-  .nb { color: $solar-blue; }
-  .nv { color: $solar-green; }
-  .s { color: inherit; }
-}
+// .language-cmake {
+//   .nb { color: $solar-blue; }
+//   .nv { color: $solar-green; }
+//   .s { color: inherit; }
+// }
 
 // inline
 code {
