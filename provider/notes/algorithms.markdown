@@ -10,147 +10,6 @@ What follows are some notes on algorithms I've been reviewing from [Algorithms](
 
 * toc
 
-# Dynamic Connectivity
-
-**Answers**: Is a pair of nodes connected?
-
-**Data Structure**: Array, indexed by any given site to the value corresponding to the component its a part of: `id[site] = component`. All sites are initially set to be members of their own component, i.e. `id[5] = 5`.
-
-**General Flow**: Sites are all partitioned into singleton sets. Successive `union()` operations merge sets together. The `find()` operation determines if a given pair of sites are from the same component.
-
-A _site_ is an element or node in a disjoint set. The disjoint set is known as a _component_, which typically models a set or graph. Two sites are _connected_ if they are part of the same component.
-
-## Quick-Find
-
-<div class="right">
-
-Operation    Growth
-----------  --------
-Find        $O(1)$
-Union       $O(n)$
-
-</div>
-
-This algorithm favors a quick `find()` operation by sacrificing the `union()` operation.
-
-Union operates as follows:
-
-1. of the two sites $P$ and $Q$, _arbitrarily_ choose one to merge under the other
-2. gets the associated components of $P$ and $Q$
-2. goes through the whole array, setting sites which were part of $P$'s component to now be part of $Q$'s
-3. decrements the number of components in the disjoint-set
-
-~~~ {lang="java" text="quick-find"}
-public int find(int site) { return id[site]; }
-
-public void union(int a, int b) {
-  int pID = find(p);
-  int qID = find(q);
-
-  if (pID == qID) return;
-
-  for (int i = 0; i < id.length; i++)
-    if (id[i] == pID) id[i] = qID;
-
-  count--;
-}
-~~~
-
-## Quick-Union
-
-<div class="right">
-
-Operation    Growth
-----------  --------
-Find        $\text{tree height}$
-Union       $\text{tree height}$
-
-</div>
-
-This algorithm aims to speed up the `union()` operation by avoiding the act of going through the whole array to change the component of every affected site.
-
-This is accomplished by creating a tree-like relationship between sites. With a tree representation, sites are added as direct leaves to the root node of the component to which they were merged.
-
-As a result of this, the `find()` operation needs to walk up the tree from any given site to find the root note which designates the component to which the given site belongs to. The walk is terminated when it encounters a site whose component is itself.
-
-~~~ {lang="java" text="quick-union"}
-public int find(int p) {
-  while (p != id[p]) p = id[p];
-  return p;
-}
-
-public void union(int p, int q) {
-  int i = find(p);
-  int j = find(q);
-
-  if (i == j) return;
-
-  id[i] = j;
-
-  count--;
-}
-~~~
-
-## Weighted Quick-Union
-
-<div class="right">
-
-Operation         Growth
-----------       --------
-Find             $\lg(n)$
-Union            $\lg(n)$
-
-</div>
-
-The problem with vanilla Quick-Union is that the trees are merged arbitrarily. This can cause bad performance depending on which tree is merged under the other.
-
-Given the arbitrary form in which components are merged in Quick-Union, input of the form 0-1, 0-2, 0-3, ... 0-N can have worst-case effects:
-
-1. 0-1 can connect component 0 under component 1
-2. 0-2 can connect component 1 under component 2
-3. 0-3 can connect component 2 under component 3
-
-This input eventually creates a linked-list, where the deepest node in the tree incurs the cost of having to traverse the entire list of sites before determining the component to which it belongs.
-
-Weighted Quick-Union fixes this by keeping track of each component's size in a separate array. With this information it then chooses to merge the smaller component under the larger one.
-
-In the example above, by step 2, component 1 is size 2, so component 2, being size 1, is merged under component 1 and not the other way around.
-
-~~~ {lang="java" text="weighted quick-union"}
-public void union(int p, int q) {
-  int i = find(p);
-  int j = find(q);
-
-  if (i == j) return;
-
-  if (sz[i] < sz[j]) { id[i] = j; sz[j] += sz[i]; }
-  else               { id[j] = i; sz[i] += sz[j]; }
-
-  count--;
-}
-~~~
-
-### Path Compression
-
-<div class="right">
-
-Operation         Growth
-----------       --------
-Union            $\approx 1$
-
-</div>
-
-A further improvement can be done called _path compression_ in which every site traversed due to a call to `find()` is directly linked to the component root.
-
-~~~ {lang="java" text="path compression"}
-public int find(int p) {
-  if (p != id[p])
-    id[p] = find(id[p]);
-
-  return id[p];
-}
-~~~
-
 # Sorting
 
 Many problems can be reduced to sorting.
@@ -1436,6 +1295,147 @@ All-Pairs reachability asks: given a digraph, is there a directed path from a gi
 The _transitive closure_ of digraph $G$ is another digraph with the same set of vertices but with an edge from $v$ to $w$ in the transitive closure if and only if $w$ is reachable from $v$ in $G$. Transitive closures are generally represented as a matrix of booleans where row $v$ at column $w$ is true if $w$ is reachable from $v$ in the digraph.
 
 Finding the transitive closure of a digraph can be accomplished by running DFS on every vertex of the digraph and storing the resulting reachability array for each each vertex from which DFS was run. However, it can be impractical for large graphs because it uses space proportional to $V^2$ and time proportional to $V(V + E)$.
+
+## Dynamic Connectivity
+
+**Answers**: Is a pair of nodes connected?
+
+**Data Structure**: Array, indexed by any given site to the value corresponding to the component its a part of: `id[site] = component`. All sites are initially set to be members of their own component, i.e. `id[5] = 5`.
+
+**General Flow**: Sites are all partitioned into singleton sets. Successive `union()` operations merge sets together. The `find()` operation determines if a given pair of sites are from the same component.
+
+A _site_ is an element or node in a disjoint set. The disjoint set is known as a _component_, which typically models a set or graph. Two sites are _connected_ if they are part of the same component.
+
+### Quick-Find
+
+<div class="right">
+
+Operation    Growth
+----------  --------
+Find        $O(1)$
+Union       $O(n)$
+
+</div>
+
+This algorithm favors a quick `find()` operation by sacrificing the `union()` operation.
+
+Union operates as follows:
+
+1. of the two sites $P$ and $Q$, _arbitrarily_ choose one to merge under the other
+2. gets the associated components of $P$ and $Q$
+2. goes through the whole array, setting sites which were part of $P$'s component to now be part of $Q$'s
+3. decrements the number of components in the disjoint-set
+
+~~~ {lang="java" text="quick-find"}
+public int find(int site) { return id[site]; }
+
+public void union(int p, int q) {
+  int pID = find(p);
+  int qID = find(q);
+
+  if (pID == qID) return;
+
+  for (int i = 0; i < id.length; i++)
+    if (id[i] == pID) id[i] = qID;
+
+  count--;
+}
+~~~
+
+### Quick-Union
+
+<div class="right">
+
+Operation    Growth
+----------  --------
+Find        $\text{tree height}$
+Union       $\text{tree height}$
+
+</div>
+
+This algorithm aims to speed up the `union()` operation by avoiding the act of going through the whole array to change the component of every affected site.
+
+This is accomplished by creating a tree-like relationship between sites. With a tree representation, sites are added as direct leaves to the root node of the component to which they were merged.
+
+As a result of this, the `find()` operation needs to walk up the tree from any given site to find the root note which designates the component to which the given site belongs to. The walk is terminated when it encounters a site whose component is itself.
+
+~~~ {lang="java" text="quick-union"}
+public int find(int p) {
+  while (p != id[p]) p = id[p];
+  return p;
+}
+
+public void union(int p, int q) {
+  int i = find(p);
+  int j = find(q);
+
+  if (i == j) return;
+
+  id[i] = j;
+
+  count--;
+}
+~~~
+
+### Weighted Quick-Union
+
+<div class="right">
+
+Operation         Growth
+----------       --------
+Find             $\lg(n)$
+Union            $\lg(n)$
+
+</div>
+
+The problem with vanilla Quick-Union is that the trees are merged arbitrarily. This can cause bad performance depending on which tree is merged under the other.
+
+Given the arbitrary form in which components are merged in Quick-Union, input of the form 0-1, 0-2, 0-3, ... 0-N can have worst-case effects:
+
+1. 0-1 can connect component 0 under component 1
+2. 0-2 can connect component 1 under component 2
+3. 0-3 can connect component 2 under component 3
+
+This input eventually creates a linked-list, where the deepest node in the tree incurs the cost of having to traverse the entire list of sites before determining the component to which it belongs.
+
+Weighted Quick-Union fixes this by keeping track of each component's size in a separate array. With this information it then chooses to merge the smaller component under the larger one.
+
+In the example above, by step 2, component 1 is size 2, so component 2, being size 1, is merged under component 1 and not the other way around.
+
+~~~ {lang="java" text="weighted quick-union"}
+public void union(int p, int q) {
+  int i = find(p);
+  int j = find(q);
+
+  if (i == j) return;
+
+  if (sz[i] < sz[j]) { id[i] = j; sz[j] += sz[i]; }
+  else               { id[j] = i; sz[i] += sz[j]; }
+
+  count--;
+}
+~~~
+
+#### Path Compression
+
+<div class="right">
+
+Operation         Growth
+----------       --------
+Union            $\approx 1$
+
+</div>
+
+A further improvement can be done called _path compression_ in which every site traversed due to a call to `find()` is directly linked to the component root.
+
+~~~ {lang="java" text="path compression"}
+public int find(int p) {
+  if (p != id[p])
+    id[p] = find(id[p]);
+
+  return id[p];
+}
+~~~
 
 ## Minimum Spanning Trees
 
