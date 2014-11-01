@@ -597,11 +597,7 @@ What this means is that the second signature would accept any function from `n -
 
 For example, `(+1)` would be valid for both signatures, since every `Num` defines `(+)`. However, `(/5)` would only be valid for the second signature because it's a function from `n -> n` that only applies for _some_ `Num n`, particularly the subset of `Num n` that also implements `Fractional`. Since not _every_ `Num n` implements `Fractional`, that function is _not_ valid for the first signature.
 
-<div class="callout">
-
 **Note**: This extension deprecates the less general extensions `Rank2Types` and `Polymorphic​Components`.
-
-</div>
 
 ``` haskell
 {-# LANGUAGE RankNTypes #-}

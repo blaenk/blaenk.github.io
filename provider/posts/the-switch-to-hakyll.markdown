@@ -128,9 +128,7 @@ abbreviationReplace body =
 
 In a [previous post](/posts/commit-tag-for-jekyll/) I talked about a liquid tag I created for Jekyll which inserts the SHA of the commit on which the site was last generated. I have come to like this small feature of my site. It's not some tacky "Powered by blah" footer. It's pretty unobtrusive. It seems unimportant to people who wouldn't understand what it's about, and those who would understand it might immediately recognize its purpose.
 
-<div class="callout">
 **Update**: I have stopped including the git commit in the footer of every page. The problem with doing this was that, in order to have every page reflect the new commit, I had to regenerate every page before deploy. This obviously doesn't scale well once more and more pages are added to the site. Instead I have adopted a per-post commit and history link which I believe is a lot more meaningful and meshes perfectly well with generation of pages, i.e. if a post is modified, there'll be a commit made for it and since it was modified it will have to be regenerated anyways. Now I simply include social links in the footer.
-</div>
 
 One thing I forgot to update the previous post about was that I ended up switching from using the Rugged git-bindings for Ruby to just using straight up commands and reading their output. The reason for doing this was that, while everything worked perfectly fine on Linux, Rugged had problems building on Windows. It turned out that taking this approach ended up being simpler and had the added benefit of decreasing my dependencies.
 
@@ -164,15 +162,11 @@ There is actually work towards implementing abbreviation substitution according 
 
 ### Pygments {#pygments}
 
-<div class="callout">
-
 **Update**: This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I've created a pygments server that the site opens alongside it at launch, and this Pandoc AST transformer communicates with it through its stdout/stdin handles. It works perfectly and the site compiles a lot quicker. It also fully supports UTF-8:
 
 ```
 ¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹
 ```
-
-</div>
 
 One of the first things I wanted to implement right away was syntax highlighting with [Pygments](http://pygments.org/). There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for [kate](http://johnmacfarlane.net/highlighting-kate/): a Haskell package for syntax highlighting written by the author of Pandoc. However, I don't find it to be on par with Pygments. In the past, I simply posted code to [gist](https://gist.github.com/) and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.
 

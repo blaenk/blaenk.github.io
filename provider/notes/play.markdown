@@ -173,13 +173,9 @@ DROP TABLE IF EXISTS products;
 
 Play comes with Squeryl, a DSL for generating SQL in a type-safe manner, and Anorm, which allows raw SQL queries to be written explicitly.
 
-<div class="callout">
-
 **Note**: Recent versions of Play allow the use of [Slick], which is the preferred method of interfacing with databases going forward.
 
 [Slick]: http://slick.typesafe.com/
-
-</div>
 
 Anorm has three ways of processing results: Stream API, pattern matching, and parser combinators. SQL queries are constructed using the `SQL` class. The `apply` method of `SQL` accepts an implicit parameter of type `java.sql.Connection`, which `Play` provides from `DB.withConnection`. This `apply` method returns a `Stream[SqlRow]` which can be `map`ped over.
 

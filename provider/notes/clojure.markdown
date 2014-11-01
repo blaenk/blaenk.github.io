@@ -46,11 +46,7 @@ Clojure AST structures can be deserialized into Clojure structures using the `re
 ;= [1 2 3]
 ```
 
-<div class="callout">
-
 **Note**: the Clojure REPL always starts in the default `user` namespace.
-
-</div>
 
 The reader allows for different syntax to make code more concise. For example, evaluation of a form can be suppressed by prefixing it with a quote `'`. Anonymous function literals can be defined with `#()`.
 
@@ -573,11 +569,7 @@ Function literals have specific, concise syntax by being prepended with `#`. Pla
 #(- % (apply + %&))
 ```
 
-<div class="callout">
-
 **Note**: Function literals cannot be nested.
-
-</div>
 
 ## Conditionals
 

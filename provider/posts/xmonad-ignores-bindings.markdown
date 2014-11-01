@@ -8,9 +8,7 @@ toc: off
 
 In my [previous post](/posts/terminal-customization/) I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up [xmonad](http://xmonad.org). I've finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.
 
-<div class="callout">
 **Update**: Shortly after posting in the [issue tracker entry](https://code.google.com/p/xmonad/issues/detail?id=273) for this issue relating my experience and affirming that the proposed patch fixed the problem, the gracious developers merged the patch into the main tree. This problem should no longer affect anyone!
-</div>
 
 ## Media Keys
 

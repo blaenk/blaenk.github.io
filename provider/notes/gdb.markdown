@@ -486,9 +486,7 @@ On systems that use [systemd], such as mine, these files are instead managed by 
 
 [systemd]: http://en.wikipedia.org/wiki/Systemd
 
-<div class="callout">
 **June 23rd, 2014**: It seems this may no longer be the case as of arch package [systemd-214-2](https://projects.archlinux.org/svntogit/packages.git/commit/trunk?h=packages/systemd&id=20f65088398622522bb33e6f53dfde83d31a2208).
-</div>
 
 ``` bash
 # based on PID

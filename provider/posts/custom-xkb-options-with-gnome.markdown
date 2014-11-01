@@ -40,10 +40,6 @@ You can now go ahead and bind the appropriate keys to volume functions inside Gn
 
 Given that it's tucked away deep inside dconf, and given Gnome developers' track record of pruning "cruft" or anything that the lowest common denominator user doesn't use, the future availability of this option is in question. That said, it currently works perfectly fine.
 
-<div class="callout">
-
 **Update**: On archlinux, `pacman -Qo` shows that the `evdev`{.path} file is owned by the [xkeyboard-config] package. Whenever this package is updated, it overwrites this file, necessitating the change to be added once again. I'll have to look into a more resilient way to have this setup.
-
-</div>
 
 [xkeyboard-config]: https://www.archlinux.org/packages/extra/any/xkeyboard-config/
