@@ -1,59 +1,59 @@
 // blaenk
-// $base03:        #002b36 !default; //
-// $base02:        #073642 !default; //
-// $base01:        #555555 !default; //
-// $base00:        #555555 !default; //
-// $base0:         #839496 !default; //
-// $base1:         #93a1a1 !default; // comment, string
-// $base2:         #e6e6e6 !default; //
-// $base3:         #f7f7f7 !default; //
-// $solar-yellow:  #a47c00 !default; //
-// $solar-orange:  #cb4b16 !default; //
-// $solar-red:     #C82829 !default; // parentheses
-// $solar-magenta: #d33682 !default; //
-// $solar-violet:  #8959A8 !default; //
-// $solar-blue:    #4271AE !default; // haskell: function
-// $solar-cyan:    #3E999F !default; // haskell: let, where, operator
-// $solar-green:   #718C00 !default; //
-
-// Solarized Light
 $base03:        #002b36 !default; //
 $base02:        #073642 !default; //
-$base01:        #586e75 !default; //
-$base00:        #657b83 !default; //
+$base01:        #555555 !default; //
+$base00:        #555555 !default; //
 $base0:         #839496 !default; //
 $base1:         #93a1a1 !default; // comment, string
-$base2:         #f1ede4 !default; //
-$base3:         #f8f5ec !default; //
-$solar-yellow:  #b58900 !default; //
+$base2:         #e6e6e6 !default; //
+$base3:         #f7f7f7 !default; //
+$solar-yellow:  #a47c00 !default; //
 $solar-orange:  #cb4b16 !default; //
-$solar-red:     #dc322f !default; // parentheses
+$solar-red:     #C82829 !default; // parentheses
 $solar-magenta: #d33682 !default; //
-$solar-violet:  #6c71c4 !default; //
-$solar-blue:    #268bd2 !default; // haskell: function
-$solar-cyan:    #2aa198 !default; // haskell: let, where, operator
-$solar-green:   #859900 !default; //
+$solar-violet:  #8959A8 !default; //
+$solar-blue:    #4271AE !default; // haskell: function
+$solar-cyan:    #3E999F !default; // haskell: let, where, operator
+$solar-green:   #718C00 !default; //
 
-// .language-javascript {
-//   .kd { color: $solar-cyan; }
-//   .nx { color: inherit; }
-// }
+// Solarized Light
+// $base03:        #002b36 !default; //
+// $base02:        #073642 !default; //
+// $base01:        #586e75 !default; //
+// $base00:        #657b83 !default; //
+// $base0:         #839496 !default; //
+// $base1:         #93a1a1 !default; // comment, string
+// $base2:         #f1ede4 !default; //
+// $base3:         #f8f5ec !default; //
+// $solar-yellow:  #b58900 !default; //
+// $solar-orange:  #cb4b16 !default; //
+// $solar-red:     #dc322f !default; // parentheses
+// $solar-magenta: #d33682 !default; //
+// $solar-violet:  #6c71c4 !default; //
+// $solar-blue:    #268bd2 !default; // haskell: function
+// $solar-cyan:    #2aa198 !default; // haskell: let, where, operator
+// $solar-green:   #859900 !default; //
 
-// .language-erlang {
-//   .nv { color: $solar-red; }
-// }
+.language-javascript {
+  .kd { color: $solar-cyan; }
+  .nx { color: inherit; }
+}
 
-// .language-go {
-//   .nx { color: inherit; }
-// }
+.language-erlang {
+  .nv { color: $solar-red; }
+}
 
-// .language-clojure {
-//   .ss { color: $solar-violet }
-//   .nv { color: inherit; }
-//   .nb, .nf {
-//     color: $solar-blue;
-//   }
-// }
+.language-go {
+  .nx { color: inherit; }
+}
+
+.language-clojure {
+  .ss { color: $solar-violet }
+  .nv { color: inherit; }
+  .nb, .nf {
+    color: $solar-blue;
+  }
+}
 
 .language-haskell {
   .nn { color: $solar-magenta; }
@@ -61,45 +61,45 @@ $solar-green:   #859900 !default; //
   .cm { color: $base01; }
 }
 
-// .language-scala {
-//   .nc { color: $solar-red; }
-//   .nn { color: $solar-cyan; }
-// }
+.language-scala {
+  .nc { color: $solar-red; }
+  .nn { color: $solar-cyan; }
+}
 
-// .language-gdb {
-//   .kt { color: $solar-cyan; }
-//   .nv { color: $solar-green; }
-// }
+.language-gdb {
+  .kt { color: $solar-cyan; }
+  .nv { color: $solar-green; }
+}
 
-// .language-rust {
-//   .nl { color: $solar-orange; }
-//   .s-Raw { color: $solar-orange; }
-// }
+.language-rust {
+  .nl { color: $solar-orange; }
+  .s-Raw { color: $solar-orange; }
+}
 
-// .language-html {
-//   .nt { color: $solar-cyan; }
-//   .na { color: $solar-violet; }
-// }
+.language-html {
+  .nt { color: $solar-cyan; }
+  .na { color: $solar-violet; }
+}
 
-// .language-bash {
-// }
+.language-bash {
+}
 
-// .language-python {
-//   .kn { color: $solar-violet; }
-//   .nn { color: $solar-cyan; }
-// }
+.language-python {
+  .kn { color: $solar-violet; }
+  .nn { color: $solar-cyan; }
+}
 
-// .language-java {
-//   .nc { color: $solar-red; }
-//   .nn { color: $solar-violet; }
-//   .kc { color: $solar-cyan; }
-// }
+.language-java {
+  .nc { color: $solar-red; }
+  .nn { color: $solar-violet; }
+  .kc { color: $solar-cyan; }
+}
 
-// .language-cmake {
-//   .nb { color: $solar-blue; }
-//   .nv { color: $solar-green; }
-//   .s { color: inherit; }
-// }
+.language-cmake {
+  .nb { color: $solar-blue; }
+  .nv { color: $solar-green; }
+  .s { color: inherit; }
+}
 
 // inline
 code {
@@ -114,10 +114,10 @@ code.path {
 
 code {
   .bp { color: $solar-blue }   // Name.Builtin.Pseudo
-  .c { color: $base1 }        // Comment
+  .c { color: $base1 }         // Comment
   .c1 { color: $base1 }        // Comment.Single
-  .cm { color: $base1 }       // Comment.Multiline
-  .cp { color: $base01 }  // Comment.Preproc
+  .cm { color: $base1 }        // Comment.Multiline
+  .cp { color: $base01 }       // Comment.Preproc
   .cs { color: $solar-green }  // Comment.Special
   .err { color: $base1 }       // Error
   .g { color: $base1 }         // Generic
@@ -138,41 +138,41 @@ code {
   .il { color: $solar-cyan }   // Literal.Number.Integer.Long
   .k { color: $solar-green }   // Keyword
   .kc { color: $solar-orange } // Keyword.Constant
-  .kd { color: $solar-green }   // Keyword.Declaration
+  .kd { color: $solar-green }  // Keyword.Declaration
   .kn { color: $solar-green }  // Keyword.Namespace
   .kp { color: $solar-green }  // Keyword.Pseudo
-  .kr { color: $solar-green }   // Keyword.Reserved
+  .kr { color: $solar-green }  // Keyword.Reserved
   .kt { color: $solar-yellow } // Keyword.Type
   .l { color: $base1 }         // Literal
   .ld { color: $base1 }        // Literal.Date
-  .m { color: $solar-orange }    // Literal.Number
-  .mf { color: $solar-orange }   // Literal.Number.Float
-  .mh { color: $solar-orange }   // Literal.Number.Hex
-  .mi { color: $solar-orange }   // Literal.Number.Integer
-  .mo { color: $solar-orange }   // Literal.Number.Oct
-  .n { color: $base01 }    // Name
-  .na { color: $solar-blue }        // Name.Attribute
-  .nb { color: $solar-red } // Name.Builtin
+  .m { color: $solar-orange }  // Literal.Number
+  .mf { color: $solar-orange } // Literal.Number.Float
+  .mh { color: $solar-orange } // Literal.Number.Hex
+  .mi { color: $solar-orange } // Literal.Number.Integer
+  .mo { color: $solar-orange } // Literal.Number.Oct
+  .n { color: $base01 }        // Name
+  .na { color: $solar-blue }   // Name.Attribute
+  .nb { color: $solar-red }    // Name.Builtin
   .nbp { color: $solar-red }   // Name.Builtin.Pseudo (self, this)
   .nc { color: $solar-blue }   // Name.Class
   .nd { color: $solar-blue }   // Name.Decorator
   .ne { color: $solar-orange } // Name.Exception
   .nf { color: $solar-blue }   // Name.Function
   .ni { color: $solar-orange } // Name.Entity
-  .nl { color: inherit }        // Name.Label
+  .nl { color: inherit }       // Name.Label
   .nn { color: $base1 }        // Name.Namespace
   .no { color: $solar-green }  // Name.Constant
   .nt { color: $solar-blue }   // Name.Tag
   .nv { color: $solar-blue }   // Name.Variable
-  .nx { color: inherit }        // Name.Other
-  .o { color: $base1 }    // Operator
+  .nx { color: inherit }       // Name.Other
+  .o { color: $base1 }         // Operator
   .ow { color: $solar-cyan }   // Operator.Word
-  .p { color: $base1 }     // Punctuation
+  .p { color: $base1 }         // Punctuation
   .py { color: $base1 }        // Name.Property
-  .s { color: $solar-cyan }   // Literal.String
-  .s1 { color: $solar-cyan }  // Literal.String.Single
-  .s2 { color: $solar-cyan }  // Literal.String.Double
-  .sb { color: $solar-cyan }  // Literal.String.Backtick
+  .s { color: $solar-cyan }    // Literal.String
+  .s1 { color: $solar-cyan }   // Literal.String.Single
+  .s2 { color: $solar-cyan }   // Literal.String.Double
+  .sb { color: $solar-cyan }   // Literal.String.Backtick
   .sc { color: $solar-cyan }   // Literal.String.Char
   .sd { color: $base1 }        // Literal.String.Doc
   .se { color: $solar-orange } // Literal.String.Escape
