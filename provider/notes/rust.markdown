@@ -912,9 +912,9 @@ The underscore `_` is a placeholder and two dots `..` acts as a wildcard pattern
 
 ``` rust
 match x {
-  Cons(_, box Nil) => fail!("singleton list"),
+  Cons(_, box Nil) => panic!("singleton list"),
   Cons(..)         => return,
-  Nil              => fail!("empty list")
+  Nil              => panic!("empty list")
 }
 ```
 
@@ -1068,14 +1068,14 @@ fn first((value, _): (int, f64)) -> int { value }
 
 In short, blocks such as `{ expr1; expr2 }` are considered a single expression and evaluate to the result of the last expression if it's not followed by a semicolon, otherwise the block evaluates to `()`.
 
-A diverging function is one that never returns a value to the caller. Every control path must end in `fail!()` or another diverging function. This is informs the compiler that execution will never return to the original context, allowing things to type-check where they wouldn't otherwise.
+A diverging function is one that never returns a value to the caller. Every control path must end in `panic!()` or another diverging function. This is informs the compiler that execution will never return to the original context, allowing things to type-check where they wouldn't otherwise.
 
 In the following example, `my_err` can be used even though it's not of type `int` because it's a diverging function.
 
 ``` rust
 fn my_err(s: &str) -> ! {
   println!("{}", s);
-  fail!();
+  panic!();
 }
 
 fn f(i: int) -> int {
@@ -1845,7 +1845,7 @@ fn main() {
 
 ## Failure
 
-Exceptions can be raised in Rust using the `fail!()` macro. Exceptions are unrecoverable within a single task. When an exception is raised, the task unwinds its stack, running destructors and freeing memory along the way, then exits.
+Exceptions can be raised in Rust using the `panic!()` macro. Exceptions are unrecoverable within a single task. When an exception is raised, the task unwinds its stack, running destructors and freeing memory along the way, then exits.
 
 However, tasks may notify each other of failure. The `try` function is similar to `spawn` but blocks until the child is finish, yielding a return value of `Result<T, ()>` [^either] which has two variants: `Ok(T)` and `Err`. This `Result` can then be pattern-matched to determine the outcome of the task, with `Err` representing termination with an error. **Note** currently, it's not possible to retrieve a useful error value from the `Err` variant, since `try` always returns `()`:
 
@@ -1856,11 +1856,53 @@ let result: Result<int, ()> = task::try(proc() {
   if some_condition() {
     calculate_result()
   } else {
-    fail!("oops!");
+    panic!("oops!");
   }
 });
 
 assert!(result.is_err());
+```
+
+# Errors
+
+It can quickly become unwieldly to handle multiple kinds of error types. For example, your application might define its own error type for a particular task, such as a service API, but the lower-level components that facilitate the API have their own error types as well, such as IO or more specifically network errors.
+
+One solution to this is to define an enum with a variant for each kind of error type possible for a particular action (e.g. API requests). The `FromError` trait can be used to define how to convert from one error type to another, therefore allowing the `try!` macro to work with any that can be converted to a common type.
+
+``` rust
+enum MyError {
+  Io(IoError),
+  Map(MapError)
+}
+
+// how to convert IoError to MyError
+impl FromError<IoError> for MyError {
+  fn from_error(err: IoError) -> MyError { Io(err) }
+}
+
+// how to convert MapError to MyError
+impl FromError<MapError> for MyError {
+  fn from_error(err: MapError) -> MyError { Map(err) }
+}
+
+fn open_and_map() -> Result<(), MyError> {
+  let f = try!(File::open(&Path::new("foo.txt")));
+  let m = try!(MemoryMap::new(0, &[]));
+  // ...
+}
+```
+
+The `Error` trait can be used to provide uniform base functionality for errors. The `description` method is the only necessary one and it yields a very short string that identifies the error type, and so is usually a static string. The `detail` method, if implemented, yields a string that is much more descriptive of the actual error, usually including dynamic information, hence the `String` return type.
+
+The `cause` method, if implemented, can yield the lower-level cause for the current error, allowing for the possibility of maintaining a chain of errors which led to the current one. For example, an API service error type might include a network error as its cause if a request failed for that reason.
+
+``` rust
+pub trait Error: Send {
+  fn description(&self) -> &str;
+
+  fn detail(&self) -> Option<String> { None }
+  fn cause(&self) -> Option<&Error> { None }
+}
 ```
 
 # Iterators
@@ -2252,7 +2294,7 @@ Comments are available in single and multi-line variants as in C. Single line co
 
 # Testing
 
-Test functions are marked with the `test` attribute and use the `assert!` macro for asserting conditions. Test functions must not have any arguments or return values. A test is considered successful if the function returns, and fails if the test fails through `fail!`, `assert`, or any other means.
+Test functions are marked with the `test` attribute and use the `assert!` macro for asserting conditions. Test functions must not have any arguments or return values. A test is considered successful if the function returns, and fails if the test fails through `panic!`, `assert`, or any other means.
 
 ``` rust
 fn return_two() -> int { 2 }
@@ -2424,7 +2466,7 @@ Code examples can be provided within documentation as regular code blocks, and t
 ```test_harness
 #[test]
 fn foo() {
-  fail!("runs and registers as failure");
+  panic!("runs and registers as failure");
 }
 ```
 ~~~
