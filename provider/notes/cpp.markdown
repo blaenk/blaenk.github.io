@@ -110,6 +110,17 @@ The copy constructor, move constructor, copy-assignment operator, move-assignmen
 * if a class needs a destructor, it likely also needs a copy-assignment operator and copy constructor
 * if a class needs a copy constructor, it likely so needs a copy-assignment operator, **and vice versa**
 
+## Rule of Zero
+
+This [recent rule] is unlike the [other two] in that it instead says that classes that contain custom destructors, copy/move constructors, or copy/move assignment operators should deal _exclusively_ with ownership, i.e. encapsulating a so called _ownership policy_ which handles the allocation and deallocation of a particular resource (via RAII). All other classes should **not have** custom destructors, copy/move constructors, or copy/move assignment operators.
+
+[recent rule]: http://flamingdangerzone.com/cxx11/2012/08/15/rule-of-zero.html
+[other two]: http://en.cppreference.com/w/cpp/language/rule_of_three
+
+*[RAII]: Resource Allocation Is Initialization
+
+This rule is enforceable out-of-the-box in C++11 through the use of smart pointers such as `shared_ptr` and `unique_ptr` along with custom deleters when necessary.
+
 ## Member Initialization
 
 The order of initializing member variables is:
@@ -224,7 +235,7 @@ explicit A::A(std::string str) : internal(std::move(str)) {}
 
 ## Conversion Operators
 
-Where as [conversion constructors](#conversion-constructors) provide a way of converting another type _to_ the class type, conversion operators provide a way of converting a class type to another type. They are defined using the `operator` keyword followed by the type it converts to.
+Where as [conversion constructors](#conversion-constructors) provide a way of converting another type to the class type, conversion operators provide a way of converting the class type to another type. They are defined using the `operator` keyword followed by the type it converts to.
 
 ``` cpp
 struct A {
