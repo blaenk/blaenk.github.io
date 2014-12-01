@@ -1227,7 +1227,7 @@ Trait    Self
 `FnMut`  `&mut self`
 `FnOnce` `self`
 
-RFC #63 defines two types of closures: escaping and non-escaping closures. _Escaping closures_ are closures that will escape the stack frame that created them---such as task bodies---and are created using the `move ||` syntax. _Non-escaping closures_ are the most common and therefore use the default `||` syntax.
+The RFC defines two types of closures: escaping and non-escaping closures. _Escaping closures_ are closures that will escape the stack frame that created them---such as task bodies---and are created using the `move ||` syntax. _Non-escaping closures_ are the most common and therefore use the default `||` syntax.
 
 Both escaping and non-escaping closures can implement any of the closure traits, depending on how the upvars are used within the closure.
 
@@ -1236,6 +1236,14 @@ Both escaping and non-escaping closures can implement any of the closure traits,
 3. otherwise: `Fn`
 
 Notice that moving an upvar out of the closure essentially means to move it out of the closure's environment, that is, its implementing anonymous structure.
+
+The trait above is inferred, but inference of these traits is not completely implemented yet. As a result, there exists syntax sugar to explicitly declare which trait to choose.
+
+Trait    Sugar
+------   ------
+`Fn`     `|&:|`
+`FnMut`  `|&mut:|`
+`FnOnce` `|:|`
 
 _Capture modes_ determine the manner in which upvars are captured. With escaping closures, all upvars are moved into the closure. For non-escaping closures, there are three different capture modes that are applied depending on three different situations which are checked in-order:
 
