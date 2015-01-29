@@ -1245,6 +1245,8 @@ Trait    Sugar
 `FnMut`  `|&mut:|`
 `FnOnce` `|:|`
 
+A simple way to remember this sugar is to imagine that the `self` keyword precedes the colon `:`, which makes it obvious that this sugar is designating the type of the `self` parameter, which corresponds to the appropriate trait.
+
 _Capture modes_ determine the manner in which upvars are captured. With escaping closures, all upvars are moved into the closure. For non-escaping closures, there are three different capture modes that are applied depending on three different situations which are checked in-order:
 
 1. if an upvar is mutably borrowed within the closure, it is mutably borrowed into the closure
