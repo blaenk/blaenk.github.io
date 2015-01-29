@@ -242,6 +242,8 @@ More powerful watchpoints can be established that are based on conditions relate
 (gdb) watch (z > 28)
 ```
 
+There is also `rwatch` which triggers when a variable is read, and `awatch` which triggers when a variable is read _or_ written.
+
 Watchpoints are deleted as soon as any variable in the expression goes out of scope, requiring one to re-establish them the next time that function is called, if necessary. This can be automated by a command on a breakpoint in the relevant scope that establishes the watchpoint.
 
 ## Signals
@@ -273,6 +275,8 @@ Execution can be resumed until the next breakpoint with the `continue` command. 
 The `finish` command instructs GDB to resume execution until just after the current stack frame finishes, i.e. until just after the current function call finishes. However, if there are any intervening breakpoints, GDB _will_ pause at them.
 
 The `until` command resumes execution until GDB reaches a machine instruction that has a higher memory address than the current one. Like `finish`, it pauses at intervening breakpoints. The `until` command is usually useful when used on loops. It also accepts arguments similar to `break`, which causes execution to continue until that location is reached.
+
+The `advance` command continues to a specific location which is specified in the same form that `break` accepts. This essentially has the effect of continuing to a temporary breakpoint denoted by the location.
 
 # Inspecting
 
@@ -437,7 +441,7 @@ The command `where` can be used to determine where one is at any given moment.
 It's possible to set the value of variables mid-execution using the `set` command, which provides no output from GDB. Variables can also be set using the print command, which follows the setting of the variable with printing out its new value:
 
 ``` gdb
-(gdb) set x = 12
+(gdb) set variable x = 12
 (gdb) print x = 12
 ```
 
