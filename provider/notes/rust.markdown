@@ -956,6 +956,14 @@ while let Some(value) = iter.next() {
 }
 ```
 
+With the `advanced_slice_patterns` feature gate, it's possible to use more advanced pattern matching on slices. With these patterns, `..` can be used to match any number of elements, which can also be bound to a name.
+
+``` rust
+match slice {
+  [first, second, rest..] => blah,
+}
+```
+
 # Control Structures
 
 The for loop is in the form of `for-in`; there is no explicit increment looping via for loops. The `loop` keyword denotes an infinite loop.
