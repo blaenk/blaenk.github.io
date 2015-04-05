@@ -1,0 +1,1025 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Play - Blaenk Denum</title>
+  <meta name="author" content="Jorge Israel Peña">
+  <meta name="description" content="AKA Blaenk Denum">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="/favicon.png" rel="shortcut icon">
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src='/js/blaenk.js' type='text/javascript'></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header id="header">
+  <div id="stamp">
+    <h1 id="name">
+      <a href="/">
+        <span class="emboldened">Jorge</span>.Israel.<span class="emboldened">Peña</span>
+      </a>
+    </h1>
+    <h4 id="pseudonym">
+      AKA <span class="emboldened">Blaenk</span>.Denum
+    </h4>
+  </div>
+  <nav id="main-nav">
+    <ul class="main">
+      <li><a href="/about/">About</a></li>
+      <li><a href="/work/">Work</a></li>
+      <li><a href="/lately/">Lately</a></li>
+      <li><a href="/notes/">Notes</a></li>
+      <li><a id="search_btn">Search</a></li>
+    </ul>
+  </nav>
+  <nav id="mobile-nav">
+    <div class="menu">
+      <a class="button">Menu</a>
+      <div class="container">
+        <ul class="main">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/lately/">Lately</a></li>
+          <li><a href="/notes/">Notes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="search">
+      <a class="button"></a>
+      <div class="container">
+        <form action="http://google.com/search" method="get">
+          <input type="text" name="q" results="0">
+          <input type="hidden" name="q" value="site:blaenkdenum.com">
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<form class="desk_search" action="http://google.com/search" method="get">
+  <input id="search" type="text" name="q" results="0" placeholder="Search" autocomplete="off" spellcheck="false">
+  <input type="hidden" name="q" value="site:blaenkdenum.com">
+</form>
+
+    <article class="post">
+  <h2 class="title"><a href="/notes/play/"><span>Play</span></a></h2>
+  <div class="entry-content"><p>So I’ve <a href="/notes/scala/">learned</a> Scala the language, and now I think it’s time to learn <a href="http://www.playframework.com/">Play</a>, a popular web framework for it. There is also a browsable <a href="http://www.playframework.com/documentation/2.0.x/api/scala/index.html#package">API documentation</a>.</p>
+<nav id="toc"><h3>Contents</h3><ol><li><a href="#command">Command</a></li><li><a href="#configuration">Configuration</a><ol><li><a href="#routing">Routing</a></li><li><a href="#environments">Environments</a></li></ol></li><li><a href="#models">Models</a><ol><li><a href="#persistence">Persistence</a></li></ol></li><li><a href="#views">Views</a><ol><li><a href="#escaping">Escaping</a></li><li><a href="#includes">Includes</a></li><li><a href="#layouts">Layouts</a></li><li><a href="#localization">Localization</a></li></ol></li><li><a href="#controllers">Controllers</a><ol><li><a href="#session">Session</a></li><li><a href="#assets">Assets</a></li></ol></li><li><a href="#forms">Forms</a><ol><li><a href="#view-helpers">View Helpers</a></li><li><a href="#validation">Validation</a></li><li><a href="#optional-values">Optional Values</a></li><li><a href="#repeated-values">Repeated Values</a></li><li><a href="#nested-mappings">Nested Mappings</a></li><li><a href="#custom-mappings">Custom Mappings</a></li><li><a href="#file-uploads">File Uploads</a></li></ol></li><li><a href="#json">JSON</a></li><li><a href="#authentication">Authentication</a></li><li><a href="#modules">Modules</a></li><li><a href="#deployment">Deployment</a></li><li><a href="#web-services">Web Services</a></li><li><a href="#caching">Caching</a></li><li><a href="#iteratees">Iteratees</a><ol><li><a href="#websockets">WebSockets</a></li><li><a href="#body-parsers">Body Parsers</a></li></ol></li></ol></nav>
+<h1 id="command">Command</h1>
+<p>The <code>play</code> command is similar to the <code>rails</code> command. The <code>new</code> option bootstraps a simple application with the following directory structure:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Directory</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">app</td>
+<td style="text-align: left;">application source</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">conf</td>
+<td style="text-align: left;">configuration files/data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">project</td>
+<td style="text-align: left;">project build scripts</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">public</td>
+<td style="text-align: left;">static files</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">test</td>
+<td style="text-align: left;">tests</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>run</code> option starts the Play server and runs the application. Specifying it as <code>~run</code> performs compilation as files are modified, whereas regular <code>run</code> recompiles upon the next HTTP request.</p>
+<p>Running <code>play</code> without any options starts the Play console. The <code>console</code> command can then start a Scala console which provides access to the Play application.</p>
+<h1 id="configuration">Configuration</h1>
+<p>The <code class="path">conf​/application​.conf</code> file is the master configuration file in Play. From there all aspects of Play and other third-party libraries like Akka can be configured. The configuration format is based on the <a href="https://github.com/typesafehub/config">config</a> library which supports a superset of <abbr title="JavaScript Object Notation">JSON</abbr>, Java Properties, comments, file includes, file merging, units (e.g. days, MB, etc.), and so on.</p>
+<p>Environment variables are often used for operating system-independent, machine-specific configuration. The <code>${}</code> syntax is used to interpolate environment variables and other properties as well. These can be interpolated into other values.</p>
+<figure class="codeblock"><pre><code class="highlight language-text">db.default.url = ${DATABASE_URL}
+
+log.directory = /var/log
+log.access = ${log.directory}/access.log
+log.error  = ${log.directory}/error.log</code></pre></figure>
+<p>It’s also possible to include other files, which allows to create context-specific configuration files that are then included into the larger configuration file. Objects can be merged together as well based on the order in which they appear.</p>
+<figure class="codeblock"><figcaption><span>db.conf</span></figcaption><pre><code class="highlight language-text">db: {
+  default: {
+    driver: &quot;org.h2.Driver&quot;,
+    url: &quot;jdbc:h2:mem:play&quot;,
+    user: &quot;sa&quot;,
+    password: &quot;&quot;,
+  }
+}</code></pre></figure>
+<figure class="codeblock"><figcaption><span>application.conf</span></figcaption><pre><code class="highlight language-text">include &quot;db.conf&quot;
+
+db.default.user = products
+db.default.password = clippy</code></pre></figure>
+<p>There’s also a configuration API for type-safe access to configuration properties. Currently the supported types are <code>String</code>, <code>Int</code>, and <code>Boolean</code>, where <code>Boolean</code> can take on <code>true</code>, <code>yes</code>, and <code>enabled</code> (and their opposites).</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">import</span> <span class="nn">play.api.Play.current</span>
+
+<span class="n">current</span><span class="o">.</span><span class="n">configuration</span><span class="o">.</span><span class="n">getString</span><span class="o">(</span><span class="s">&quot;db.default.url&quot;</span><span class="o">).</span><span class="n">map</span> <span class="o">{</span>
+  <span class="n">databaseUrl</span> <span class="k">=&gt;</span> <span class="nc">Logger</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="n">databaseUrl</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>Since the configuration is structured hierarchically, it’s possible to get sub-configuration values for a given level:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="n">current</span><span class="o">.</span><span class="n">configuration</span><span class="o">.</span><span class="n">getConfig</span><span class="o">(</span><span class="s">&quot;db.default&quot;</span><span class="o">).</span><span class="n">map</span> <span class="o">{</span>
+  <span class="n">dbConfig</span> <span class="k">=&gt;</span>
+  <span class="n">dbConfig</span><span class="o">.</span><span class="n">getString</span><span class="o">(</span><span class="s">&quot;driver&quot;</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="nc">Logger</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+  <span class="n">dbConfig</span><span class="o">.</span><span class="n">getString</span><span class="o">(</span><span class="s">&quot;url&quot;</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="nc">Logger</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="routing">Routing</h2>
+<p>The <code class="path">conf​/routes</code> file contains the mapping of routes to controller actions.</p>
+<figure class="codeblock"><pre><code class="highlight language-text">GET /         controllers.Products.home()
+
+# if parameter not passed, assume to be 1
+GET /products controllers.Products.list(page: Int ?= 1)
+
+# parameter is optional; may or may not appear
+GET /apples   controllers.Apples.show(page: Option[Int])
+
+# parameter is fixed to 1
+GET /oranges  controllers.Oranges.show(page: Int = 1)
+
+# route variable
+GET /product/:ean controllers.Products.details(ean: Long)
+
+# path parameter
+GET /photo/*filepath controllers.Media.photo(file: String)
+
+# path parameter with different external prefix
+GET /assets/*filepath controllers.Assets.at(path=&quot;/public&quot;, file)
+
+GET /product/$ean&lt;\d{13}&gt; controllers.Products.details(ean: Long)</code></pre></figure>
+<p>Reverse routing is a means of programmatically generating routes for a given action method invocation.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">delete</span><span class="o">(</span><span class="n">ean</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+  <span class="nc">Product</span><span class="o">.</span><span class="n">delete</span><span class="o">(</span><span class="n">ean</span><span class="o">)</span>
+  <span class="c1">// or url with routes.Products.list().url</span>
+  <span class="nc">Redirect</span><span class="o">(</span><span class="n">routes</span><span class="o">.</span><span class="nc">Products</span><span class="o">.</span><span class="n">list</span><span class="o">())</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="environments">Environments</h2>
+<p>It’s straightforward to setup different configuration environments by using the <code>include</code> directive in configuration files. Production configuration files would need to use the <code>classpath</code> function to refer to files within the deployed archive. This can be used to define a configuration file at a system path such as <code class="path">/etc​/paperclips​/production​.conf</code>, which can then be imported with the <code>-Dconfig​.file</code> parameter.</p>
+<figure class="codeblock"><pre><code class="highlight language-text">include classpath(&quot;application.conf&quot;)
+
+email.override.enabled=false</code></pre></figure>
+<h1 id="models">Models</h1>
+<p>A model tends to consist of a model class (definition and attributes), data access object (to access model data), and some test data. The model is typically defined as a case class and its data access object is represented by a companion object.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">package</span> <span class="nn">models</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Product</span><span class="o">(</span>
+  <span class="n">ean</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">description</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">object</span> <span class="nc">Product</span> <span class="o">{</span>
+  <span class="k">var</span> <span class="n">products</span> <span class="k">=</span> <span class="nc">Set</span><span class="o">(</span>
+    <span class="nc">Product</span><span class="o">(</span><span class="mi">1L</span><span class="o">,</span> <span class="s">&quot;House&quot;</span><span class="o">,</span> <span class="s">&quot;A huge house&quot;</span><span class="o">),</span>
+    <span class="nc">Product</span><span class="o">(</span><span class="mi">2L</span><span class="o">,</span> <span class="s">&quot;Boat&quot;</span><span class="o">,</span> <span class="s">&quot;A tug boat&quot;</span><span class="o">),</span>
+    <span class="nc">Product</span><span class="o">(</span><span class="mi">3L</span><span class="o">,</span> <span class="s">&quot;Car&quot;</span><span class="o">,</span> <span class="s">&quot;A luxurious car&quot;</span><span class="o">)</span>
+  <span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">findAll</span> <span class="k">=</span> <span class="n">products</span><span class="o">.</span><span class="n">toList</span><span class="o">.</span><span class="n">sortBy</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">ean</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="persistence">Persistence</h2>
+<p>Play allows for <em>evolutions</em> which are similar to Rails database migrations, which are stored in <code class="path">conf​/evolutions​/default​/</code> and are named <code>#.sql</code> where <code>#</code> is the revision number. Play automatically asks to apply the evolution the next time the application is accessed. Evolutions take the following form:</p>
+<figure class="codeblock"><pre><code class="highlight language-sql"><span class="o">#</span> <span class="c1">--- !Ups</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">products</span> <span class="p">(</span><span class="n">id</span> <span class="n">long</span><span class="p">,</span> <span class="n">ean</span> <span class="n">long</span><span class="p">);</span>
+
+<span class="o">#</span> <span class="c1">--- !Downs</span>
+
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">products</span><span class="p">;</span>
+</code></pre></figure>
+<p>Play comes with Squeryl, a DSL for generating SQL in a type-safe manner, and Anorm, which allows raw SQL queries to be written explicitly.</p>
+<p><strong>Note</strong>: Recent versions of Play allow the use of <a href="http://slick.typesafe.com/">Slick</a>, which is the preferred method of interfacing with databases going forward.</p>
+<p>Anorm has three ways of processing results: Stream API, pattern matching, and parser combinators. SQL queries are constructed using the <code>SQL</code> class. The <code>apply</code> method of <code>SQL</code> accepts an implicit parameter of type <code>java​.sql​.Connection</code>, which <code>Play</code> provides from <code>DB​.withConnection</code>. This <code>apply</code> method returns a <code>Stream​[SqlRow]</code> which can be <code>map</code>ped over.</p>
+<p>The SQL query contains <code>SqlRow</code> objects which have an <code>apply</code> method that retrieves the field by name. An explicit type parameter is provided to ensure that the field gets cast to the correct Scala type.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">import</span> <span class="nn">play.api.Play.current</span>
+<span class="k">import</span> <span class="nn">play.api.db.DB</span>
+
+<span class="k">import</span> <span class="nn">anorm.SQL</span>
+<span class="k">import</span> <span class="nn">anorm.SqlQuery</span>
+
+<span class="k">object</span> <span class="nc">Product</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">getAll</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">.</span><span class="n">withConnection</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">connection</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">sql</span><span class="k">:</span> <span class="kt">SqlQuery</span> <span class="o">=</span> <span class="nc">SQL</span><span class="o">(</span><span class="s">&quot;select * from products order by name asc&quot;</span><span class="o">)</span>
+
+    <span class="n">sql</span><span class="o">().</span><span class="n">map</span> <span class="o">(</span> <span class="n">row</span> <span class="k">=&gt;</span>
+      <span class="nc">Product</span><span class="o">(</span><span class="n">row</span><span class="o">[</span><span class="kt">Long</span><span class="o">](</span><span class="s">&quot;id&quot;</span><span class="o">),</span> <span class="n">row</span><span class="o">[</span><span class="kt">Long</span><span class="o">](</span><span class="s">&quot;ean&quot;</span><span class="o">),</span>
+              <span class="n">row</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;name&quot;</span><span class="o">),</span> <span class="n">row</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;description&quot;</span><span class="o">))</span>
+    <span class="o">).</span><span class="n">toList</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>The above transformation can also be applied with pattern matching.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">getAll</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">.</span><span class="n">withConnection</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">connection</span> <span class="k">=&gt;</span>
+  <span class="k">import</span> <span class="nn">anorm.Row</span>
+
+  <span class="k">val</span> <span class="n">sql</span><span class="k">:</span> <span class="kt">SqlQuery</span> <span class="o">=</span> <span class="nc">SQL</span><span class="o">(</span><span class="s">&quot;select * from products order by name asc&quot;</span><span class="o">)</span>
+
+  <span class="n">sql</span><span class="o">().</span><span class="n">collect</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Row</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">),</span> <span class="nc">Some</span><span class="o">(</span><span class="n">ean</span><span class="k">:</span> <span class="kt">Long</span><span class="o">),</span>
+             <span class="nc">Some</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">),</span> <span class="nc">Some</span><span class="o">(</span><span class="n">description</span><span class="k">:</span> <span class="kt">String</span><span class="o">))</span> <span class="k">=&gt;</span>
+         <span class="nc">Product</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">ean</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">description</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">toList</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>Finally, the query can also be transformed with parser combinators.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">import</span> <span class="nn">anorm.RowParser</span>
+
+<span class="k">val</span> <span class="n">productParser</span><span class="k">:</span> <span class="kt">RowParser</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">anorm.</span><span class="o">~</span>
+  <span class="k">import</span> <span class="nn">anorm.SqlParser._</span>
+
+  <span class="n">long</span><span class="o">(</span><span class="s">&quot;id&quot;</span><span class="o">)</span> <span class="o">~</span>
+  <span class="n">long</span><span class="o">(</span><span class="s">&quot;ean&quot;</span><span class="o">)</span> <span class="o">~</span>
+  <span class="n">str</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">)</span> <span class="o">~</span>
+  <span class="n">str</span><span class="o">(</span><span class="s">&quot;description&quot;</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">id</span> <span class="o">~</span> <span class="n">ean</span> <span class="o">~</span> <span class="n">name</span> <span class="o">~</span> <span class="n">description</span> <span class="k">=&gt;</span>
+      <span class="nc">Product</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">ean</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">description</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>This creates a <code>RowParser</code> but Anorm expects a <code>ResultSetParser</code>. The <code>*</code> means to try to match zero or more rows.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">import</span> <span class="nn">anorm.ResultSetParser</span>
+
+<span class="k">val</span> <span class="n">productsParser</span><span class="k">:</span> <span class="kt">ResultSetParser</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">Product</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">productParser</span> <span class="o">*</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>The <code>ResultSetParser</code> can then be passed to the query with the <code>as</code> method:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">getAllWithParser</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">.</span><span class="n">withConnection</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="n">connection</span> <span class="k">=&gt;</span>
+
+  <span class="n">sql</span><span class="o">.</span><span class="n">as</span><span class="o">(</span><span class="n">productsParser</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>A multirecord parser can be written to construct instances of objects that themselves contain other class instances from a different table. We start out by writing a <code>StockItem</code> parser.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">stockItemParser</span><span class="k">:</span> <span class="kt">RowParser</span><span class="o">[</span><span class="kt">StockItem</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">anorm.SqlParser._</span>
+  <span class="k">import</span> <span class="nn">anorm.</span><span class="o">~</span>
+
+  <span class="n">long</span><span class="o">(</span><span class="s">&quot;id&quot;</span><span class="o">)</span> <span class="o">~</span> <span class="n">long</span><span class="o">(</span><span class="s">&quot;product_id&quot;</span><span class="o">)</span> <span class="o">~</span>
+  <span class="n">long</span><span class="o">(</span><span class="s">&quot;warehouse_id&quot;</span><span class="o">)</span> <span class="o">~</span> <span class="n">long</span><span class="o">(</span><span class="s">&quot;quantity&quot;</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">id</span> <span class="o">~</span> <span class="n">productId</span> <span class="o">~</span> <span class="n">warehouseId</span> <span class="o">~</span> <span class="n">quantity</span> <span class="k">=&gt;</span>
+      <span class="nc">StockItem</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">productId</span><span class="o">,</span> <span class="n">warehouseId</span><span class="o">,</span> <span class="n">quantity</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>Now a parser is needed which can parse the combination of product and stock item. The SQL join query will return a list of single arrays containing the joined parts, <code>[Product​, StockItem]</code>. The <code>flatten</code> method transforms each of the single arrays into a two element tuple.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">productStockItemParser</span><span class="k">:</span> <span class="kt">RowParser</span><span class="o">[(</span><span class="kt">Product</span>, <span class="kt">StockItem</span><span class="o">)]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">anorm.SqlParser._</span>
+  <span class="k">import</span> <span class="nn">anorm.</span><span class="o">~</span>
+
+  <span class="n">productParser</span> <span class="o">~</span> <span class="nc">StockItem</span><span class="o">.</span><span class="n">stockItemParser</span> <span class="n">map</span> <span class="o">(</span><span class="n">flatten</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>Finally we can construct the method that will retrieve each of the values and transform them into a map keyed by the <code>Product</code> and containing <code>StockItem</code> values. This transformation is possible by using the <code>groupBy</code> function to group the results by the first tuple element, the <code>Product</code>. This still leaves the values containing <code>Product</code>, specifically a <code>Map​[Product​,List​[(Product​,StockItem)]]</code>, which can be removed by using <code>mapValues</code> and mapping the tuples to replace themselves with the second tuple element, the <code>StockItem</code> values, leaving a <code>Map​[Product​,List​[StockItem]]</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">getAllProductsWithStockItems</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Product</span>, <span class="kt">List</span><span class="o">[</span><span class="kt">StockItem</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="nc">DB</span><span class="o">.</span><span class="n">withConnection</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">connection</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">sql</span> <span class="k">=</span> <span class="nc">SQL</span><span class="o">(</span><span class="s">&quot;select p.*, s.*&quot;</span> <span class="o">+</span>
+                  <span class="s">&quot;from products p&quot;</span> <span class="o">+</span>
+                  <span class="s">&quot;inner join stock_items s on (p.id = s.product_id)&quot;</span><span class="o">)</span>
+
+    <span class="k">val</span> <span class="n">results</span><span class="k">:</span> <span class="kt">List</span><span class="o">[(</span><span class="kt">Product</span>, <span class="kt">StockItem</span><span class="o">)]</span> <span class="k">=</span> <span class="n">sql</span><span class="o">.</span><span class="n">as</span><span class="o">(</span><span class="n">productStockItemParser</span> <span class="o">*)</span>
+
+    <span class="n">results</span><span class="o">.</span><span class="n">groupBy</span> <span class="o">{</span> <span class="k">_</span><span class="o">.</span><span class="n">_1</span> <span class="o">}.</span><span class="n">mapValues</span> <span class="o">{</span> <span class="k">_</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="k">_</span><span class="o">.</span><span class="n">_2</span> <span class="o">}</span> <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>It’s also possible to insert, update, and delete with Anorm. This is generally accomplished by preparing statements and calling <code>executeUpdate</code> on them.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">insert</span><span class="o">(</span><span class="n">product</span><span class="k">:</span> <span class="kt">Product</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+  <span class="nc">DB</span><span class="o">.</span><span class="n">withConnection</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">connection</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">addedRows</span> <span class="k">=</span> <span class="nc">SQL</span><span class="o">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    insert into products</span>
+<span class="s">    values ({id}, {ean}, {name}, {description})</span>
+<span class="s">    &quot;&quot;&quot;</span><span class="o">).</span><span class="n">on</span><span class="o">(</span>
+      <span class="s">&quot;id&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="o">,</span>
+      <span class="s">&quot;ean&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">ean</span><span class="o">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">name</span><span class="o">,</span>
+      <span class="s">&quot;description&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">description</span>
+    <span class="o">).</span><span class="n">executeUpdate</span><span class="o">()</span>
+
+    <span class="n">addedRows</span> <span class="o">==</span> <span class="mi">1</span>
+  <span class="o">}</span>
+
+<span class="k">def</span> <span class="n">update</span><span class="o">(</span><span class="n">product</span><span class="k">:</span> <span class="kt">Product</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+  <span class="nc">DB</span><span class="o">.</span><span class="n">withConnection</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">connection</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">updatedRows</span> <span class="k">=</span> <span class="nc">SQL</span><span class="o">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    update products</span>
+<span class="s">    set name = {name},</span>
+<span class="s">        ean = {ean},</span>
+<span class="s">        description = {description},</span>
+<span class="s">    where id = {id}</span>
+<span class="s">    &quot;&quot;&quot;</span><span class="o">).</span><span class="n">on</span><span class="o">(</span>
+      <span class="s">&quot;id&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="o">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">name</span><span class="o">,</span>
+      <span class="s">&quot;ean&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">ean</span><span class="o">,</span>
+      <span class="s">&quot;description&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">description</span>
+    <span class="o">).</span><span class="n">executeUpdate</span><span class="o">()</span>
+
+    <span class="n">updateRows</span> <span class="o">==</span> <span class="mi">1</span>
+  <span class="o">}</span>
+
+<span class="k">def</span> <span class="n">delete</span><span class="o">(</span><span class="n">product</span><span class="k">:</span> <span class="kt">Product</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span>
+  <span class="nc">DB</span><span class="o">.</span><span class="n">withConnection</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">connection</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">updatedRows</span> <span class="k">=</span> <span class="nc">SQL</span><span class="o">(</span><span class="s">&quot;delete from products where id = {id}&quot;</span><span class="o">).</span>
+      <span class="n">on</span><span class="o">(</span><span class="s">&quot;id&quot;</span> <span class="o">-&gt;</span> <span class="n">product</span><span class="o">.</span><span class="n">id</span><span class="o">).</span>
+      <span class="n">executeUpdate</span><span class="o">()</span>
+
+    <span class="n">updatedRows</span> <span class="o">==</span> <span class="mi">0</span>
+  <span class="o">}</span>
+</code></pre></figure>
+<h1 id="views">Views</h1>
+<p>Templates in Play are type-safe and consist of interspersed Scala, avoiding the need to learn a template DSL. Templates can specify a parameter list as the first line, which can be used to provide data from the controller’s end.</p>
+<p>The <code>@</code> character is used to denote the start of a Scala expression, where the parser <em>conservatively</em> determines the extent of the expression. Sometimes it may be necessary to explicitly define this range, which is possible by using parentheses. If it’s necessary to print a <code>@</code> character verbatim, it must be escaped by another <code>@</code>. Comments are delimited with <code>@* *@</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-text">Hello @name!
+
+@* output the year *@
+
+Next year, your age will be @(user.age + 1)</code></pre></figure>
+<p>The template parser encloses all template expressions in curly braces, so it’s not possible to define a variable in one expression and use it in another in the same level. More specifically, the bodies of functions, for comprehensions, and so on are treated as “sub-templates,” so the body isn’t treated as XML literals in the case of HTML templates.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="o">@{</span><span class="k">var</span> <span class="n">i</span> <span class="k">=</span> <span class="mi">0</span><span class="o">}</span>
+<span class="nd">@articles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">article</span> <span class="k">=&gt;</span>
+  <span class="o">@{</span><span class="n">i</span> <span class="k">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">}</span> <span class="c1">// yields not found: value i</span>
+  <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;@</span><span class="n">i</span> <span class="o">-</span> <span class="nd">@article</span><span class="o">.</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">}</span>
+
+<span class="nd">@for</span><span class="o">((</span><span class="n">article</span><span class="o">,</span> <span class="n">index</span><span class="o">)</span> <span class="k">&lt;-</span> <span class="n">articles</span><span class="o">.</span><span class="n">zipWithIndex</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;@(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">-</span> <span class="nd">@article</span><span class="o">.</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>It’s possible to clean up a lot of value declarations by defining them inside the for comprehension:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nd">@for</span><span class="o">((</span><span class="n">article</span><span class="o">,</span> <span class="n">index</span><span class="o">)</span> <span class="k">&lt;-</span> <span class="n">articles</span><span class="o">.</span><span class="n">zipWithIndex</span><span class="o">;</span>
+     <span class="n">rank</span> <span class="k">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+     <span class="n">first</span> <span class="k">=</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span>
+     <span class="n">last</span> <span class="k">=</span> <span class="n">index</span> <span class="o">==</span> <span class="n">articles</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// use values here</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>It’s also possible to define a scope with an associated value, to avoid having to re-evaluate that expression each time.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nd">@defining</span><span class="o">(</span><span class="n">article</span><span class="o">.</span><span class="n">countReview</span><span class="o">())</span> <span class="o">{</span> <span class="n">total</span> <span class="k">=&gt;</span>
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;@</span><span class="n">total</span> <span class="nd">@total</span> <span class="nd">@total</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="escaping">Escaping</h2>
+<p>All Scala expressions’ output is escaped. Values can be output unescaped by wrapping them in the <code>Html</code> type.</p>
+<h2 id="includes">Includes</h2>
+<p>There is no distinction between partials, known as <em>includes</em> in Play, and regular templates. Any template can be embedded within another by simply calling the generated object’s apply method in a Scala expression.</p>
+<figure class="codeblock"><figcaption><span>partial.scala.html</span></figcaption><pre><code class="highlight language-html">@()
+<span class="nt">&lt;strong&gt;</span>This is a partial<span class="nt">&lt;/strong&gt;</span>
+</code></pre></figure>
+<figure class="codeblock"><figcaption><span>index.scala.html</span></figcaption><pre><code class="highlight language-html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;announcement&quot;</span><span class="nt">&gt;</span>
+  @navigation()
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></figure>
+<h2 id="layouts">Layouts</h2>
+<p>A layout can be created in a straightforward manner from the template concepts covered so far. First it’s necessary to add a parameter of type <code>Html</code> to the layout template. Other templates that want to embed themselves in a layout simply call the layout template and use the braces <code>{}</code> method call syntax to pass the entire template to the layout.</p>
+<figure class="codeblock"><figcaption><span>main.scala.html</span></figcaption><pre><code class="highlight language-html">@(title=&quot;Default Title&quot;)(content: Html)
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>@title<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  @content
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></figure>
+<figure class="codeblock"><figcaption><span>products.scala.html</span></figcaption><pre><code class="highlight language-html">@main(&quot;Products&quot;) {
+  <span class="nt">&lt;strong&gt;</span>Some Products<span class="nt">&lt;/strong&gt;</span>
+}
+</code></pre></figure>
+<p>It’s possible to define implicit parameters on template parameter lists to avoid having to explicitly pass parameters to the templates. A common pattern is to define a reusable trait with the appropriate implicit values. The <code>WrappedRequest</code> class wraps a <code>Request</code> and can be extended by a class that defines other values that should be accessible by a template.</p>
+<h2 id="localization">Localization</h2>
+<p>Localization is pretty straightforward in Play. The <code class="path">application​.conf</code> file can take an <code class="path">application​.langs</code> option that defines a comma-separated list of languages in ISO 639-2 format optionally followed by an ISO 3166-1 alpha-2 country code.</p>
+<figure class="codeblock"><pre><code class="highlight language-text">application.langs=&quot;en,en-US,nl&quot;</code></pre></figure>
+<p>For each of these languages there should be a corresponding <code class="path">conf​/messages​.lang</code> file which defines localized messages. These messages can then be referenced using the <code>Messages</code> object which takes the message’s key as well as an implicit <code>Lang</code> value which can be implicitly converted from a <code>Request</code> in the scope.</p>
+<p>Messages in the file are patterns formatted using <a href="http://docs.oracle.com/javase/8/docs/api/java/text/MessageFormat.html"><code class="path">java​.text​.MessageFormat</code></a>, so that arguments can be inserted with <code>{#}</code> where the <code>#</code> is the position of the argument. It’s also possible to define different messages for zero, one, more items:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="c1">// cart=Cart {0,choice,0#is empty|1#has one item|1&lt; has {0} items}.</span>
+
+<span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;@</span><span class="nc">Messages</span><span class="o">(</span><span class="s">&quot;cart&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span> <span class="c1">// is empty</span>
+<span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;@</span><span class="nc">Messages</span><span class="o">(</span><span class="s">&quot;cart&quot;</span><span class="o">,</span> <span class="mi">1</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span> <span class="c1">// has one item</span>
+<span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;@</span><span class="nc">Messages</span><span class="o">(</span><span class="s">&quot;cart&quot;</span><span class="o">,</span> <span class="mi">2</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span> <span class="c1">// has 2 items</span>
+</code></pre></figure>
+<h1 id="controllers">Controllers</h1>
+<p>Controllers derive from <code>Controller</code> and are basically generators of actions by defining methods that return an instance of <code>Action</code>, which constructs a function that handles a request and returns a result. More specifically, this function is of type <code>Request​[A] =&gt; Result</code> where <code>A</code> is the type of the request body.</p>
+<p>They generally mark the <code>request</code> object as <code>implicit</code> so that it may be passed to functions implicitly.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">package</span> <span class="nn">controllers</span>
+
+<span class="k">import</span> <span class="nn">play.api.mvc.</span><span class="o">{</span><span class="nc">Action</span><span class="o">,</span> <span class="nc">Controller</span><span class="o">}</span>
+<span class="k">import</span> <span class="nn">models.Product</span>
+
+<span class="k">object</span> <span class="nc">Products</span> <span class="k">extends</span> <span class="nc">Controller</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">list</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">request</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">products</span> <span class="k">=</span> <span class="nc">Product</span><span class="o">.</span><span class="n">findAll</span>
+    <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">list</span><span class="o">(</span><span class="n">products</span><span class="o">))</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">details</span><span class="o">(</span><span class="n">ean</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+    <span class="nc">NotImplemented</span> <span class="c1">// HTTP 501</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>The <code>as</code> method allows setting the mime-type in a convenient manner, and the <code>withHeaders</code> method allows setting headers.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nc">Ok</span><span class="o">(</span><span class="s">&quot;some result&quot;</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">as</span><span class="o">(</span><span class="nc">JSON</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">withHeaders</span><span class="o">(</span><span class="nc">LOCATION</span> <span class="o">-&gt;</span> <span class="n">url</span><span class="o">)</span>
+</code></pre></figure>
+<p>Actions can be composed, facilitating the re-use of common handlers such as authentication checking and caching:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">list</span> <span class="k">=</span>
+  <span class="nc">Authenticate</span> <span class="o">{</span>
+    <span class="nc">Cached</span> <span class="o">{</span>
+      <span class="nc">Action</span> <span class="o">{</span>
+        <span class="c1">// process request</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+</code></pre></figure>
+<h2 id="session">Session</h2>
+<p>The session is represented as a map <code>Map​[String​, String]</code> in <code>request​.session</code> and can easily be modified with the <code>withSession</code> method.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nc">Ok</span><span class="o">(</span><span class="n">result</span><span class="o">).</span><span class="n">withSession</span><span class="o">(</span>
+  <span class="n">request</span><span class="o">.</span><span class="n">session</span> <span class="o">+</span> <span class="o">(</span><span class="s">&quot;some.data&quot;</span> <span class="o">-&gt;</span> <span class="n">value</span><span class="o">)</span>
+<span class="o">)</span>
+
+<span class="c1">// later on</span>
+
+<span class="k">val</span> <span class="n">data</span> <span class="k">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="s">&quot;some.data&quot;</span><span class="o">)</span>
+</code></pre></figure>
+<p>A flash scope is available as in most other web frameworks which is essentially stored in the session and the values only live on until the next request. The <code>flashing</code> method makes this straightforward:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nc">Redirect</span><span class="o">(</span><span class="n">routes</span><span class="o">.</span><span class="nc">Products</span><span class="o">.</span><span class="n">list</span><span class="o">()).</span><span class="n">flashing</span><span class="o">(</span><span class="s">&quot;info&quot;</span> <span class="o">-&gt;</span> <span class="s">&quot;Product deleted!&quot;</span><span class="o">)</span>
+
+<span class="c1">// later on</span>
+
+<span class="k">val</span> <span class="n">message</span> <span class="k">=</span> <span class="n">request</span><span class="o">.</span><span class="n">flash</span><span class="o">(</span><span class="s">&quot;info&quot;</span><span class="o">)</span>
+</code></pre></figure>
+<h2 id="assets">Assets</h2>
+<p>The assets controller allows for reverse routing to asset files.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="o">&lt;</span><span class="n">link</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;@routes.Assets.at(&quot;</span><span class="n">images</span><span class="o">/</span><span class="n">favicon</span><span class="o">.</span><span class="n">png</span><span class="s">&quot;)&quot;</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;image/png&quot;</span><span class="o">&gt;</span>
+</code></pre></figure>
+<p>The assets controller handles this automatically by adding an <code>Etag</code> header. HTTP Entity Tags (ETags) allows a client to make a conditional HTTP request for a resource so that the server can tell it whether or not to use the cached copy instead.</p>
+<p>Compression is also automatically enabled if:</p>
+<ul>
+<li>in production mode</li>
+<li>request is routed to assets controller</li>
+<li>HTTP request has <code>Accept-Encoding​: gzip</code></li>
+<li>file with same name and <code>.gz</code> suffix is found</li>
+</ul>
+<p>Play has built-in support for Less and CoffeeScript. Such files can easily be referenced using the assets reverse router by its target extension. The extension can be prefixed by <code>min</code> to use a minified version. A file can opt-out of compilation by prefixing its name with an underscore.</p>
+<h1 id="forms">Forms</h1>
+<p>Play provides a forms API which is used for general validation, not just HTML forms. A <code>Mapping</code> is an object that constructs an object from an HTTP request, a process called <em>binding</em>, where the type of the object constructed is a type parameter of <code>Mapping</code>.</p>
+<p>The data from an HTTP request is transformed into a <code>Map​[String​, String]</code>, and a mapping performs its construction off of this map. A mapping can also perform the reverse process, <em>unbinding</em>.</p>
+<p>A mapping can also define constraints and errors to provide when data doesn’t satisfy the constraints.</p>
+<p><a href="http://www.playframework.com/documentation/2.0/api/scala/play/api/data/Forms$.html">Predefined mappings</a> exist in the <code>Forms</code> namespace, such as <code>Forms​.text</code>. Mappings can be composed together, for example using <code>Forms​.tuple</code> which can bind values to a tuple type.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">data</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span>
+  <span class="s">&quot;name&quot;</span>   <span class="o">-&gt;</span> <span class="s">&quot;Box of paper clips&quot;</span><span class="o">,</span>
+  <span class="s">&quot;ean&quot;</span>    <span class="o">-&gt;</span> <span class="s">&quot;1234567890123&quot;</span><span class="o">,</span>
+  <span class="s">&quot;pieces&quot;</span> <span class="o">-&gt;</span> <span class="s">&quot;300&quot;</span>
+<span class="o">)</span>
+
+<span class="k">val</span> <span class="n">mapping</span><span class="k">:</span> <span class="kt">Mapping</span><span class="o">[(</span><span class="kt">String</span>, <span class="kt">String</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span>
+  <span class="nc">Forms</span><span class="o">.</span><span class="n">tuple</span><span class="o">(</span>
+    <span class="s">&quot;name&quot;</span>   <span class="o">-&gt;</span> <span class="nc">Forms</span><span class="o">.</span><span class="n">text</span><span class="o">,</span>
+    <span class="s">&quot;ean&quot;</span>    <span class="o">-&gt;</span> <span class="nc">Forms</span><span class="o">.</span><span class="n">text</span><span class="o">,</span>
+    <span class="s">&quot;pieces&quot;</span> <span class="o">-&gt;</span> <span class="nc">Forms</span><span class="o">.</span><span class="n">number</span>
+<span class="o">)</span>
+</code></pre></figure>
+<p>To be able to bind data, it’s necessary to wrap a mapping in a <code>Form</code>, which can also contain the data that will eventually be bound. The <code>Form</code>’s type parameter is the same as the <code>Mapping</code>’s, representing the data that would be available if it validates. Once the form is created, the data can be bound using the <code>bind</code> method. Since <code>Form</code> is immutable, the <code>bind</code> method returns a new <code>Form</code> populated with the bound data.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">productForm</span> <span class="k">=</span> <span class="nc">Form</span><span class="o">(</span><span class="n">mapping</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">processedForm</span> <span class="k">=</span> <span class="n">productForm</span><span class="o">.</span><span class="n">bind</span><span class="o">(</span><span class="n">data</span><span class="o">)</span>
+</code></pre></figure>
+<p>The form can be checked for errors with <code>hasErrors</code> and if there are any the errors can be fetched with <code>getErrors</code>, otherwise the data can be retrieved with <code>get</code>.</p>
+<p>An alternative method of processing the result of binding the data is to use the <code>fold</code> method in the same manner that it’d be used on the <code>Either</code> type, where the first function is the error handler which is passed the form, and the second function is the success handler which is passed the bound data:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="n">processedForm</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span>
+  <span class="n">formWithErrors</span> <span class="k">=&gt;</span> <span class="nc">BadRequest</span><span class="o">,</span>
+  <span class="n">productTuple</span> <span class="k">=&gt;</span> <span class="o">{</span>
+    <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">product</span><span class="o">.</span><span class="n">show</span><span class="o">(</span><span class="n">product</span><span class="o">))</span>
+  <span class="o">}</span>
+<span class="o">)</span>
+</code></pre></figure>
+<p>Aside from tuple mappings, it’s also possible to construct objects from mappings. This is possible by using the <code>mapping</code> method which takes a map of mappings, a function used to construct the object, and one to deconstruct it. These last two functions are provided for free by case classes in the form of <code>apply</code> and <code>unapply</code>. The first takes a parameter for every field in the case class, whereas the second takes an object of that type and deconstructs it into an <code>Option</code> tuple containing each of the fields.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">import</span> <span class="nn">play.api.data.Forms._</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Product</span><span class="o">(</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">ean</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">pieces</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">productMapping</span> <span class="k">=</span> <span class="n">mapping</span><span class="o">(</span>
+  <span class="s">&quot;name&quot;</span>   <span class="o">-&gt;</span> <span class="n">text</span><span class="o">,</span>
+  <span class="s">&quot;ean&quot;</span>    <span class="o">-&gt;</span> <span class="n">text</span><span class="o">,</span>
+  <span class="s">&quot;pieces&quot;</span> <span class="o">-&gt;</span> <span class="n">number</span><span class="o">)(</span><span class="nc">Product</span><span class="o">.</span><span class="n">apply</span><span class="o">)(</span><span class="nc">Product</span><span class="o">.</span><span class="n">unapply</span><span class="o">)</span>
+<span class="o">)</span>
+</code></pre></figure>
+<p>Creating a mapping for a class allows the construction of a <code>Form</code> parameterized by that class, making it much more natural to handle forms.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">productForm</span> <span class="k">=</span> <span class="nc">Form</span><span class="o">(</span><span class="n">productMapping</span><span class="o">)</span>
+
+<span class="n">productForm</span><span class="o">.</span><span class="n">bind</span><span class="o">(</span><span class="n">data</span><span class="o">).</span><span class="n">fold</span><span class="o">(</span>
+  <span class="n">formWithErrors</span> <span class="k">=&gt;</span> <span class="o">...,</span>
+  <span class="n">product</span> <span class="k">=&gt;</span> <span class="o">...</span>
+<span class="o">)</span>
+</code></pre></figure>
+<p>So far forms have been found from maps, but yielding a map from an HTTP request isn’t very straightforward. For this reason, the <code>bindFromRequest</code> form method exists which works the same way as <code>bind</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">processForm</span><span class="o">()</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">request</span> <span class="k">=&gt;</span>
+  <span class="n">productForm</span><span class="o">.</span><span class="n">bindFromRequest</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span>
+    <span class="o">...</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="view-helpers">View Helpers</h2>
+<p>There are helper methods for generating forms whose output can be customized. As in Rails, the helpers can take extra parameters of type <code>(Symbol​, Any)</code> to specify attributes such as the <code>class</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nd">@helper</span><span class="o">.</span><span class="n">form</span><span class="o">(</span><span class="n">action</span> <span class="k">=</span> <span class="n">routes</span><span class="o">.</span><span class="nc">GeneratedForm</span><span class="o">.</span><span class="n">create</span><span class="o">)</span> <span class="o">{</span>
+  <span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">productForm</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">))</span>
+  <span class="nd">@helper</span><span class="o">.</span><span class="n">textarea</span><span class="o">(</span><span class="n">productForm</span><span class="o">(</span><span class="s">&quot;description&quot;</span><span class="o">))</span>
+  <span class="nd">@helper</span><span class="o">.</span><span class="n">checkbox</span><span class="o">(</span><span class="n">productForm</span><span class="o">(</span><span class="s">&quot;active&quot;</span><span class="o">))</span>
+
+  <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;form-actions&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">button</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span><span class="o">&gt;</span><span class="nc">Create</span> <span class="nc">Product</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>The action must then pass the form to the action so that it may be accessed by the helper:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">createForm</span><span class="o">()</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+  <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">form</span><span class="o">(</span><span class="n">productForm</span><span class="o">))</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>A custom input element is possible with the following:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nd">@helper</span><span class="o">.</span><span class="n">input</span><span class="o">(</span><span class="n">myForm</span><span class="o">(</span><span class="s">&quot;mydatetime&quot;</span><span class="o">))</span> <span class="o">{</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">args</span><span class="o">)</span> <span class="k">=&gt;</span>
+  <span class="o">&lt;</span><span class="n">input</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;datetime&quot;</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;@name&quot;</span>
+    <span class="n">id</span><span class="o">=</span><span class="s">&quot;@id&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s">&quot;@value&quot;</span> <span class="nd">@toHtmlArgs</span><span class="o">(</span><span class="n">args</span><span class="o">)&gt;</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>It’s also possible to customize the HTML that’s generated from a particular helper. This HTML is generated by a <code>FieldConstructor</code> which is an implicit parameter to helper methods. The <code>FieldConstructor</code> trait has a single <code>apply</code> method which takes a <code>FieldElements</code> object and returns <code>Html</code>. The <code>FieldElements</code> object contains information about the data that gets passed through to the HTML. The simplest way to use this is by creating a template that takes a <code>FieldElements</code> parameter.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="o">@(</span><span class="n">elements</span><span class="k">:</span> <span class="kt">views.html.helper.FieldElements</span><span class="o">)</span>
+
+<span class="nd">@import</span> <span class="n">play</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">i18n</span><span class="o">.</span><span class="k">_</span>
+<span class="nd">@import</span> <span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="k">_</span>
+
+<span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;control-group @elements.args.get(&#39;_class)</span>
+<span class="s">            @if(elements.hasErrors) {error}&quot;</span>
+     <span class="n">id</span><span class="o">=</span><span class="s">&quot;@elements.args.get(&#39;_id).getOrElse(elements.id + &quot;</span><span class="nc">_field</span><span class="s">&quot;)&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">label</span> <span class="n">class</span><span class="o">=</span><span class="s">&quot;control-label&quot;</span> <span class="k">for</span><span class="o">=</span><span class="s">&quot;@elements.id&quot;</span><span class="o">&gt;</span>
+    <span class="nd">@elements</span><span class="o">.</span><span class="n">label</span><span class="o">(</span><span class="n">elements</span><span class="o">.</span><span class="n">lang</span><span class="o">)</span>
+  <span class="o">&lt;/</span><span class="n">label</span><span class="o">&gt;</span>
+  <span class="nd">@elements</span><span class="o">.</span><span class="n">input</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</code></pre></figure>
+<p>However, although this template takes a <code>FieldConstructor</code> and returns <code>Html</code>, it doesn’t extend the <code>FieldConstructor</code> trait. This can be remedied simply by creating a wrapper and defining an <code>apply</code> method that calls the template.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">package</span> <span class="nn">object</span> <span class="n">bootstrap</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="n">fieldConstructor</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">FieldConstructor</span> <span class="o">{</span>
+    <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">elements</span><span class="k">:</span> <span class="kt">FieldElements</span><span class="o">)</span> <span class="k">=</span>
+      <span class="n">bootstrap</span><span class="o">.</span><span class="n">bootstrapFieldConstructor</span><span class="o">(</span><span class="n">elements</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="validation">Validation</h2>
+<p>Although mappings are immutable, the <code>verifying</code> method takes <code>Constraint​[T]*</code> which copies the mapping and adds the provided constraints. There are some predefined constraints:</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="c1">// maximum value for an Int mapping</span>
+<span class="n">max</span><span class="o">(</span><span class="n">maxValue</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Constraint</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
+
+<span class="c1">// maximum length for a String mapping</span>
+<span class="n">maxLength</span><span class="o">(</span><span class="n">length</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Constraint</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+
+<span class="c1">// e.g.</span>
+<span class="s">&quot;name&quot;</span> <span class="o">-&gt;</span> <span class="n">text</span><span class="o">.</span><span class="n">verifying</span><span class="o">(</span><span class="nc">Constraints</span><span class="o">.</span><span class="n">nonEmpty</span><span class="o">)</span>
+</code></pre></figure>
+<p>Custom validators can be created by using the <code>verifying</code> method on mappings, which accepts a function that gets passed the bound object and returns a boolean indicating whether the constraint is met. It’s possible to pass a string as the first parameter, which serves as the custom validation message.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">eanExists</span><span class="o">(</span><span class="n">ean</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Product</span><span class="o">.</span><span class="n">findByEan</span><span class="o">(</span><span class="n">ean</span><span class="o">).</span><span class="n">isempty</span>
+
+<span class="s">&quot;ean&quot;</span> <span class="o">-&gt;</span> <span class="n">longNumber</span><span class="o">.</span><span class="n">verifying</span><span class="o">(</span><span class="n">eanExists</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</code></pre></figure>
+<p>Since mappings can be composed of other mappings, we can put constraints on more than one constituent mapping by applying the <code>verifying</code> method at the outer level. However, the error message for the top-level mapping has no key. Instead, if the top-level mapping produces an error, it’s called the <em>global error</em> which can be retrieved with the <code>globalError</code> method on <code>Form</code>, which returns an <code>Option​[Error]</code>.</p>
+<h2 id="optional-values">Optional Values</h2>
+<p>Optional form values can be represented with the <code>Option</code> type by using the <code>Forms​.optional</code> method which transforms <code>Mapping​[A]</code> into <code>Mapping​[Option​[A]]</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">case</span> <span class="k">class</span> <span class="nc">Person</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">age</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">])</span>
+
+<span class="k">val</span> <span class="n">personMapping</span> <span class="k">=</span> <span class="n">mapping</span><span class="o">(</span>
+  <span class="s">&quot;name&quot;</span> <span class="o">-&gt;</span> <span class="n">nonEmptyText</span><span class="o">,</span>
+  <span class="s">&quot;age&quot;</span> <span class="o">-&gt;</span> <span class="n">optional</span><span class="o">(</span><span class="n">number</span><span class="o">)</span>
+<span class="o">)(</span><span class="nc">Person</span><span class="o">.</span><span class="n">apply</span><span class="o">)(</span><span class="nc">Person</span><span class="o">.</span><span class="n">unapply</span><span class="o">)</span>
+</code></pre></figure>
+<h2 id="repeated-values">Repeated Values</h2>
+<p>It’s also possible to repeat mappings to accept a list of values using the <code>list</code> mapping transformer, which transforms a mapping from <code>Mapping​[A]</code> to <code>Mapping​[List​[A]]</code>. The <code>seq</code> transformer is similar, but using a <code>Seq</code> instead of a <code>List</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="cm">/*</span>
+<span class="cm">&lt;input type=&quot;text&quot; name=&quot;tags[0]&quot;&gt;</span>
+<span class="cm">&lt;input type=&quot;text&quot; name=&quot;tags[1]&quot;&gt;</span>
+<span class="cm">&lt;input type=&quot;text&quot; name=&quot;tags[2]&quot;&gt;</span>
+<span class="cm">*/</span>
+
+<span class="s">&quot;tags&quot;</span> <span class="o">-&gt;</span> <span class="n">list</span><span class="o">(</span><span class="n">text</span><span class="o">)</span>
+</code></pre></figure>
+<p>Repeated mappings like these can be displayed easily with form helpers by using the <code>repeat</code> helper.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nd">@helper</span><span class="o">.</span><span class="n">repeat</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;tags&quot;</span><span class="o">),</span> <span class="n">min</span> <span class="k">=</span> <span class="mi">3</span><span class="o">)</span> <span class="o">{</span> <span class="n">tagField</span> <span class="k">=&gt;</span>
+  <span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">tagField</span><span class="o">,</span> <span class="-Symbol">&#39;_label</span> <span class="o">-&gt;</span> <span class="s">&quot;Tag&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="nested-mappings">Nested Mappings</h2>
+<p>Nested mappings can be referred to using dot-notation similar to object dot notation. One reason for nesting mappings, aside from organizational purposes, is to avoid reaching the hard limit of 18 tuple fields which are used to back mappings.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">contactMapping</span> <span class="k">=</span> <span class="n">tuple</span><span class="o">(</span>
+  <span class="s">&quot;name&quot;</span> <span class="o">-&gt;</span> <span class="n">text</span><span class="o">,</span>
+  <span class="s">&quot;email&quot;</span> <span class="o">-&gt;</span> <span class="n">email</span>
+<span class="o">)</span>
+
+<span class="k">val</span> <span class="n">contactsForm</span> <span class="k">=</span> <span class="nc">Form</span><span class="o">(</span><span class="n">tuple</span><span class="o">(</span>
+  <span class="s">&quot;main_contact&quot;</span> <span class="o">-&gt;</span> <span class="n">contactMapping</span><span class="o">,</span>
+  <span class="s">&quot;technical_contact&quot;</span> <span class="o">-&gt;</span> <span class="n">contactMapping</span><span class="o">,</span>
+  <span class="s">&quot;administrative_contact&quot;</span> <span class="o">-&gt;</span> <span class="n">contactMapping</span><span class="o">,</span>
+<span class="o">))</span>
+
+<span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;main_contact.name&quot;</span><span class="o">))</span>
+<span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;main_contact.email&quot;</span><span class="o">))</span>
+</code></pre></figure>
+<h2 id="custom-mappings">Custom Mappings</h2>
+<p>There are two ways to construct a custom mapping. The first involves transforming from an existing one, and the second involves building one from scratch. Transforming an existing mapping can be done using the <code>transform</code> method, which accepts a function from the existing type to the target type, and another for the reverse since mappings are bidirectional. However, <code>transform</code>’s limitation is that it has no way of expressing failure.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">localDateMapping</span> <span class="k">=</span> <span class="n">text</span><span class="o">.</span><span class="n">transform</span><span class="o">(</span>
+  <span class="o">(</span><span class="n">dateString</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">LocalDate</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">dateString</span><span class="o">),</span>
+  <span class="o">(</span><span class="n">localDate</span><span class="k">:</span> <span class="kt">LocalDate</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">localDate</span><span class="o">.</span><span class="n">toString</span>
+<span class="o">)</span>
+</code></pre></figure>
+<p>The process of creating a custom mapping from scratch involves implementing the <code>Formatter</code> trait. The mapping can then be constructed using the <code>Forms​.of</code> method.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">trait</span> <span class="nc">Formatter</span><span class="o">[</span><span class="kt">T</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">bind</span><span class="o">(</span><span class="n">key</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">data</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">String</span><span class="o">])</span><span class="k">:</span>
+    <span class="kt">Either</span><span class="o">[</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">FormError</span><span class="o">]</span>, <span class="kt">T</span><span class="o">]</span>
+
+  <span class="k">def</span> <span class="n">unbind</span><span class="o">(</span><span class="n">key</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">value</span><span class="k">:</span> <span class="kt">T</span><span class="o">)</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">String</span><span class="o">]</span>
+
+  <span class="k">val</span> <span class="n">format</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[(</span><span class="kt">String</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">])]</span> <span class="k">=</span> <span class="nc">None</span>
+<span class="o">}</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">localDateFormatter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Formatter</span><span class="o">[</span><span class="kt">LocalDate</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">bind</span><span class="o">(</span><span class="n">key</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">data</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">String</span><span class="o">])</span> <span class="k">=</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">key</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span> <span class="n">value</span> <span class="k">=&gt;</span>
+      <span class="nc">Try</span> <span class="o">{</span>
+        <span class="nc">Right</span><span class="o">(</span><span class="nc">LocalDate</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">value</span><span class="o">))</span>
+      <span class="o">}</span> <span class="n">getOrElse</span> <span class="nc">Left</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="nc">FormError</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="s">&quot;error.date&quot;</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">)))</span>
+    <span class="o">}</span> <span class="n">getOrElse</span> <span class="nc">Left</span><span class="o">(</span><span class="nc">Seq</span><span class="o">(</span><span class="nc">FormError</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="s">&quot;error.required&quot;</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">)))</span>
+
+  <span class="k">def</span> <span class="n">unbind</span><span class="o">(</span><span class="n">key</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">ld</span><span class="k">:</span> <span class="kt">LocalDate</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="n">key</span> <span class="o">-&gt;</span> <span class="n">ld</span><span class="o">.</span><span class="n">toString</span><span class="o">)</span>
+
+  <span class="k">override</span> <span class="k">val</span> <span class="n">format</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">((</span><span class="s">&quot;date.format&quot;</span><span class="o">,</span> <span class="nc">Nil</span><span class="o">))</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">localDateMapping</span> <span class="k">=</span> <span class="nc">Forms</span><span class="o">.</span><span class="n">of</span><span class="o">(</span><span class="n">localDateFormatter</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">localDateForm</span> <span class="k">=</span> <span class="nc">Form</span><span class="o">(</span><span class="n">single</span><span class="o">(</span>
+  <span class="s">&quot;introductionDate&quot;</span> <span class="o">-&gt;</span> <span class="n">localDateMapping</span>
+<span class="o">))</span>
+</code></pre></figure>
+<h2 id="file-uploads">File Uploads</h2>
+<p>File uploads require the <code>multipart​/form-data</code> encoding on forms.</p>
+<p>It can be handled using the <code>parse​.multipartFormData</code> body parser.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">upload</span><span class="o">()</span> <span class="k">=</span> <span class="nc">Action</span><span class="o">(</span><span class="n">parse</span><span class="o">.</span><span class="n">multipartFormData</span><span class="o">)</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">request</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="n">form</span> <span class="k">=</span> <span class="nc">Form</span><span class="o">(</span><span class="n">tuple</span><span class="o">(</span>
+    <span class="s">&quot;description&quot;</span> <span class="o">-&gt;</span> <span class="n">text</span><span class="o">,</span>
+    <span class="s">&quot;image&quot;</span> <span class="o">-&gt;</span> <span class="n">ignored</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">file</span><span class="o">(</span><span class="s">&quot;image&quot;</span><span class="o">)).</span>
+                 <span class="n">verifying</span><span class="o">(</span><span class="s">&quot;File missing&quot;</span><span class="o">,</span> <span class="k">_</span><span class="o">.</span><span class="n">isDefined</span><span class="o">)</span>
+  <span class="o">))</span>
+
+  <span class="n">form</span><span class="o">.</span><span class="n">bindFromRequest</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span>
+    <span class="n">formWithErrors</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">fileupload</span><span class="o">.</span><span class="n">uploadform</span><span class="o">(</span><span class="n">formWithErrors</span><span class="o">))</span>
+    <span class="o">},</span>
+    <span class="n">value</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="n">file</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">moveTo</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;/tmp/image&quot;</span><span class="o">))</span>
+      <span class="nc">Ok</span><span class="o">(</span><span class="s">&quot;Retrieved file %s&quot;</span> <span class="n">format</span> <span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>The above handler would correspond to the following.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nd">@helper</span><span class="o">.</span><span class="n">form</span><span class="o">(</span><span class="n">action</span> <span class="k">=</span> <span class="n">routes</span><span class="o">.</span><span class="nc">FileUpload</span><span class="o">.</span><span class="n">upload</span><span class="o">,</span>
+             <span class="-Symbol">&#39;enctype</span> <span class="o">-&gt;</span> <span class="s">&quot;multipart/form-data&quot;</span><span class="o">)</span> <span class="o">{</span>
+  <span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;description&quot;</span><span class="o">))</span>
+  <span class="nd">@helper</span><span class="o">.</span><span class="n">inputFile</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;image&quot;</span><span class="o">))</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h1 id="json">JSON</h1>
+<p>Play’s <code class="path">play​.api​.libs​.json​.Json</code> module contains support for <abbr title="JavaScript Object Notation">JSON</abbr>. Default types can be converted to <abbr title="JavaScript Object Notation">JSON</abbr> with the <code>toJson</code> method resulting in a <code>JsValue</code>, which can be converted to a string with the <code>stringify</code> method. The response methods such as <code>Ok</code> know about <code>JsValue</code> and automatically set the <code>Content-Type</code> header to <code>application​/json</code>. The <abbr title="JavaScript Object Notation">JSON</abbr> types include:</p>
+<ul>
+<li><code>JsString</code></li>
+<li><code>JsNumber</code></li>
+<li><code>JsBoolean</code></li>
+<li><code>JsObject</code></li>
+<li><code>JsArray</code></li>
+<li><code>JsNull</code></li>
+</ul>
+<p>Arbitrary objects can be converted to <abbr title="JavaScript Object Notation">JSON</abbr> using a <abbr title="JavaScript Object Notation">JSON</abbr> formatter. The way this works is that <code>toJson</code> takes a second, implicit parameter of type <code>Writes​[T]</code> where <code>T</code> is the type being serialized. <code>Writes​[T]</code> is a trait with a single method that takes an object of type <code>T</code> and returns a <code>JsValue</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">import</span> <span class="nn">play.api.libs.json._</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Product</span><span class="o">(</span><span class="n">ean</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">description</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">implicit</span> <span class="k">object</span> <span class="nc">ProductWrites</span> <span class="k">extends</span> <span class="nc">Writes</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">writes</span><span class="o">(</span><span class="n">p</span><span class="k">:</span> <span class="kt">Product</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Json</span><span class="o">.</span><span class="n">obj</span><span class="o">(</span>
+    <span class="s">&quot;ean&quot;</span> <span class="o">-&gt;</span> <span class="nc">Json</span><span class="o">.</span><span class="n">toJson</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">ean</span><span class="o">),</span>
+    <span class="s">&quot;name&quot;</span> <span class="o">-&gt;</span> <span class="nc">Json</span><span class="o">.</span><span class="n">toJson</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">),</span>
+    <span class="s">&quot;description&quot;</span> <span class="o">-&gt;</span> <span class="nc">Json</span><span class="o">.</span><span class="n">toJson</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">description</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+
+<span class="c1">// alternatively</span>
+<span class="k">val</span> <span class="n">adminProductWrites</span><span class="k">:</span> <span class="kt">Writes</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span> <span class="k">=</span> <span class="o">(</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;ean&quot;</span><span class="o">).</span><span class="n">write</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="n">and</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;name&quot;</span><span class="o">).</span><span class="n">write</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">and</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;description&quot;</span><span class="o">).</span><span class="n">write</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">and</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;price&quot;</span><span class="o">).</span><span class="n">write</span><span class="o">[</span><span class="kt">BigDecimal</span><span class="o">]</span> <span class="n">and</span>
+<span class="o">)(</span><span class="n">unlift</span><span class="o">(</span><span class="nc">Product</span><span class="o">.</span><span class="n">unapply</span><span class="o">))</span>
+</code></pre></figure>
+<p>To go in the other direction, parsing an object from a <abbr title="JavaScript Object Notation">JSON</abbr> value, we use the <code>Reads</code> trait.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">implicit</span> <span class="k">val</span> <span class="n">productReads</span><span class="k">:</span> <span class="kt">Reads</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span> <span class="k">=</span> <span class="o">(</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;ean&quot;</span><span class="o">).</span><span class="n">read</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="n">and</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;name&quot;</span><span class="o">).</span><span class="n">read</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">and</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;description&quot;</span><span class="o">).</span><span class="n">read</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">and</span>
+<span class="o">)(</span><span class="nc">Product</span><span class="o">.</span><span class="n">apply</span> <span class="k">_</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">parsedProduct</span> <span class="k">=</span> <span class="nc">JsValue</span><span class="o">.</span><span class="n">as</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span>
+</code></pre></figure>
+<p>There are a couple of query methods that can be used on <abbr title="JavaScript Object Notation">JSON</abbr> values. The <code>\</code> method selects an element. The <code>\\</code> method selects a property anywhere in the <abbr title="JavaScript Object Notation">JSON</abbr> tree. The <code>apply</code> method returns an element from a <code>JsArray</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">companyName</span> <span class="k">=</span> <span class="o">(</span><span class="n">json</span> <span class="o">\</span> <span class="s">&quot;company&quot;</span> <span class="o">\</span> <span class="s">&quot;name&quot;</span><span class="o">).</span><span class="n">asOpt</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+</code></pre></figure>
+<p>Since it’s common to want to implement <code>Reads</code> and <code>Writes</code> to serialize and deserialize objects, the <code>Format​[T]</code> exists that represents both.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">case</span> <span class="k">class</span> <span class="nc">PricedProduct</span><span class="o">(</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">description</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span>
+  <span class="n">purchasePrice</span><span class="k">:</span> <span class="kt">BigDecimal</span><span class="o">,</span>
+  <span class="n">sellingPrice</span><span class="k">:</span> <span class="kt">BigDecimal</span>
+<span class="o">)</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">productFormat</span> <span class="k">=</span> <span class="o">(</span>
+  <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;name&quot;</span><span class="o">).</span><span class="n">format</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">and</span>
+    <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;description&quot;</span><span class="o">).</span><span class="n">formatNullable</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">and</span>
+    <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;purchase_price&quot;</span><span class="o">).</span><span class="n">formatNullable</span><span class="o">[</span><span class="kt">BigDecimal</span><span class="o">]</span> <span class="n">and</span>
+    <span class="o">(</span><span class="nc">JsPath</span> <span class="o">\</span> <span class="s">&quot;selling_price&quot;</span><span class="o">).</span><span class="n">formatNullable</span><span class="o">[</span><span class="kt">BigDecimal</span><span class="o">]</span>
+<span class="o">)(</span><span class="nc">PricedProduct</span><span class="o">.</span><span class="n">apply</span><span class="o">,</span> <span class="n">unlift</span><span class="o">(</span><span class="nc">PricedProduct</span><span class="o">.</span><span class="n">unapply</span><span class="o">))</span>
+</code></pre></figure>
+<p>Formatters can also be created at compile time.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">implicit</span> <span class="k">val</span> <span class="n">productReads</span> <span class="k">=</span> <span class="nc">Json</span><span class="o">.</span><span class="n">reads</span><span class="o">[</span><span class="kt">PricedProduct</span><span class="o">]</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">productWrites</span> <span class="k">=</span> <span class="nc">Json</span><span class="o">.</span><span class="n">writes</span><span class="o">[</span><span class="kt">PricedProduct</span><span class="o">]</span>
+
+<span class="c1">// or</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">productFormat</span> <span class="k">=</span> <span class="nc">Json</span><span class="o">.</span><span class="n">format</span><span class="o">[</span><span class="kt">PricedProduct</span><span class="o">]</span>
+</code></pre></figure>
+<p>Constraints can be added to fields to perform validation. This is done by supplying a custom <code>Reads</code> implementation to use for the validation as an implicit parameter to <code>read</code> or <code>readNullable</code>. The <abbr title="JavaScript Object Notation">JSON</abbr> can then be validated using the <code>validate</code> method.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">save</span> <span class="k">=</span> <span class="nc">Actions</span><span class="o">(</span><span class="n">parse</span><span class="o">.</span><span class="n">json</span><span class="o">)</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">request</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="n">json</span> <span class="k">=</span> <span class="n">request</span><span class="o">.</span><span class="n">body</span>
+  <span class="n">json</span><span class="o">.</span><span class="n">validate</span><span class="o">[</span><span class="kt">Product</span><span class="o">].</span><span class="n">fold</span><span class="o">(</span>
+    <span class="n">valid</span> <span class="k">=</span> <span class="o">{</span> <span class="n">product</span> <span class="k">=&gt;</span>
+      <span class="nc">Product</span><span class="o">.</span><span class="n">save</span><span class="o">(</span><span class="n">product</span><span class="o">)</span>
+      <span class="nc">Ok</span><span class="o">(</span><span class="s">&quot;Saved&quot;</span><span class="o">)</span>
+    <span class="o">},</span>
+    <span class="n">invalid</span> <span class="k">=</span> <span class="o">{</span>
+      <span class="n">errors</span> <span class="k">=&gt;</span> <span class="nc">BadRequest</span><span class="o">(</span><span class="nc">JsError</span><span class="o">.</span><span class="n">toFlatJson</span><span class="o">(</span><span class="n">errors</span><span class="o">))</span>
+    <span class="o">}</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h1 id="authentication">Authentication</h1>
+<p>One way to handle authentication is to create a wrapper around <code>Action</code> that serves an HTTP Unauthorized error code if authentication fails.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="nc">AuthenticatedAction</span><span class="o">(</span><span class="n">f</span><span class="k">:</span> <span class="kt">Request</span><span class="o">[</span><span class="kt">AnyContent</span><span class="o">]</span> <span class="k">=&gt;</span> <span class="nc">Result</span><span class="o">)</span><span class="k">:</span>
+  <span class="kt">Action</span><span class="o">[</span><span class="kt">AnyContent</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="nc">Action</span> <span class="o">{</span> <span class="n">request</span> <span class="k">=&gt;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">authenticate</span><span class="o">(</span><span class="n">request</span><span class="o">))</span> <span class="o">{</span>
+      <span class="n">f</span><span class="o">(</span><span class="n">request</span><span class="o">)</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="nc">Unauthorized</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h1 id="modules">Modules</h1>
+<p>Modules can be added via sbt, which the <code>play</code> command is actually a wrapper of. Some modules may be found in repositories other than the default ones, in which case a <em>resolver</em> must be added. The following shows how to add the <a href="http://securesocial.ws/">SecureSocial</a> module.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">import</span> <span class="nn">sbt._</span>
+<span class="k">import</span> <span class="nn">Keys._</span>
+<span class="k">import</span> <span class="nn">PlayProject._</span>
+
+<span class="k">object</span> <span class="nc">ApplicationBuild</span> <span class="k">extends</span> <span class="nc">Build</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">appName</span> <span class="k">=</span> <span class="s">&quot;product-details&quot;</span>
+  <span class="k">val</span> <span class="n">appVersion</span> <span class="k">=</span> <span class="s">&quot;1.0-SNAPSHOT&quot;</span>
+
+  <span class="k">val</span> <span class="n">appDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+    <span class="s">&quot;securesocial&quot;</span> <span class="o">%%</span> <span class="s">&quot;securesocial&quot;</span> <span class="o">%</span> <span class="s">&quot;2.1.0&quot;</span>
+  <span class="o">)</span>
+
+  <span class="k">val</span> <span class="n">main</span> <span class="k">=</span> <span class="nc">PlayProject</span><span class="o">(</span><span class="n">appName</span><span class="o">,</span> <span class="n">appVersion</span><span class="o">,</span>
+    <span class="n">appDependencies</span><span class="o">,</span> <span class="n">mainLang</span> <span class="k">=</span> <span class="nc">SCALA</span>
+  <span class="o">).</span><span class="n">settings</span><span class="o">(</span>
+    <span class="n">resolvers</span> <span class="o">+=</span> <span class="nc">Resolver</span><span class="o">.</span><span class="n">url</span><span class="o">(</span><span class="s">&quot;SecureSocial Repository&quot;</span><span class="o">,</span>
+      <span class="n">url</span><span class="o">(</span><span class="s">&quot;http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/&quot;</span><span class="o">)</span>
+    <span class="o">)(</span><span class="nc">Resolver</span><span class="o">.</span><span class="n">ivyStylePatterns</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>Creating modules is also straightforward and begins by creating a new Play application and only keeping the necessary files. This means that if we can remove <code class="path">app​/public</code> and <code class="path">app​/views</code> if we don’t need them. It’s important to keep in mind naming collisions however, which is why it’s useful to create packages out of source files with the <code>package</code> keyword in Scala.</p>
+<h1 id="deployment">Deployment</h1>
+<p>Play has two commands that make it very easy to deploy. The <code>stage</code> command compiles the application to a JAR file together with all dependency JARs and places the file in <code class="path">target​/staged</code> along with script <code class="path">target​/start</code> which can be used to start the application. The <code>dist</code> command packages up start script and dependencies into a zip archive which can easily be transferred.</p>
+<p>Packaging up the application in this manner allows it to be deployed on any target that contains a Java runtime installation.</p>
+<h1 id="web-services">Web Services</h1>
+<p>The <code>WS</code> object makes it simple to consume web services. The <code>WS​.url</code> method creates a <code>WSRequestHolder</code> object can be constructed in method-chaining style, ultimately followed by a call to the request type, i.e. <code>get</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">itemList</span><span class="o">()</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+  <span class="nc">Async</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">response</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Response</span><span class="o">]</span> <span class="k">=</span>
+      <span class="nc">WS</span><span class="o">.</span><span class="n">url</span><span class="o">(</span><span class="s">&quot;http://someservice.com/api.json&quot;</span><span class="o">)</span>
+        <span class="o">.</span><span class="n">withQueryString</span><span class="o">(</span><span class="s">&quot;q&quot;</span> <span class="o">-&gt;</span> <span class="n">query</span><span class="o">)</span>
+        <span class="o">.</span><span class="n">get</span>
+
+    <span class="n">response</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">response</span> <span class="k">=&gt;</span>
+      <span class="k">val</span> <span class="n">items</span> <span class="k">=</span> <span class="nc">Json</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">).\(</span><span class="s">&quot;results&quot;</span><span class="o">).</span><span class="n">as</span><span class="o">[</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">Item</span><span class="o">]]</span>
+      <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">itemList</span><span class="o">(</span><span class="n">items</span><span class="o">))</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h1 id="caching">Caching</h1>
+<p>There’s a caching API represented by the <code>Cache</code> object that can be accessed by having an implicit <code class="path">play​.api​.Application</code> in the scope, which can be fulfilled by importing <code class="path">play​.api​.Play​.current</code>. The <code>getOrElse</code> method can get a value for a given key and if not found, compute it and store it with an optional expiration time.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="nc">Cache</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="s">&quot;user-key&quot;</span><span class="o">,</span> <span class="nc">User</span><span class="o">(</span><span class="s">&quot;John Doe&quot;</span><span class="o">))</span>
+<span class="k">val</span> <span class="n">userOption</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">User</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Cache</span><span class="o">.</span><span class="n">getAs</span><span class="o">[</span><span class="kt">User</span><span class="o">](</span><span class="s">&quot;user-key&quot;</span><span class="o">)</span>
+</code></pre></figure>
+<p>It’s also possible to use the <code>Cached</code> object to wrap an <code>Action</code> that can take a key and optional expiration time.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">handler</span><span class="o">()</span> <span class="k">=</span> <span class="nc">Cached</span><span class="o">(</span><span class="s">&quot;handler&quot;</span><span class="o">,</span> <span class="mi">120</span><span class="o">)</span> <span class="o">{</span>
+  <span class="nc">Action</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>It’s also possible to cache dynamic content by supplying a function to <code>Cached</code> that determines the string key to use based on the <code>RequestHeader</code>.</p>
+<h1 id="iteratees">Iteratees</h1>
+<p>Iteratees are objects that received individual chunks of data and does something with them. They have two type parameters: the first indicating the type of chunks it accepts and the second indicates the type of the final result the iteratee produces. Consider an iteratee that logs every chunk using the <code>foreach</code> function which takes a chunk of type <code>A</code> and returns an <code>Iteratee​[A​, Unit]</code>. It can be used with a <code>WSRequestHolder</code> by passing a function of type <code>ResponseHeaders =&gt; Iteratee</code> to the request type.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">loggingIteratee</span> <span class="k">=</span> <span class="nc">Iteratee</span><span class="o">.</span><span class="n">foreach</span><span class="o">[</span><span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">]]</span> <span class="o">{</span> <span class="n">chunk</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="n">chunkString</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="n">chunk</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">)</span>
+  <span class="n">println</span><span class="o">(</span><span class="n">chunkString</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="nc">WS</span><span class="o">.</span><span class="n">url</span><span class="o">(</span><span class="s">&quot;https://stream.twitter.com/1/statuses/sample.json&quot;</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">sign</span><span class="o">(</span><span class="nc">OAuthCalculator</span><span class="o">(</span><span class="n">consumerKey</span><span class="o">,</span> <span class="n">accessToken</span><span class="o">))</span>
+  <span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="n">loggingIteratee</span><span class="o">)</span>
+</code></pre></figure>
+<p>Alternatively we can create an iteratee that produces an end-result, such as summing up integer chunks. Enumerators are the counterpart to iteratees in that they are producers of chunks and can be applied to iteratees, yielding futures of the new iteratee. Iteratees are immutable, so the result is simply a new iteratee with a new state.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">val</span> <span class="n">summingIteratee</span> <span class="k">=</span> <span class="nc">Iteratee</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">{</span> <span class="o">(</span><span class="n">sum</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">chunk</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
+  <span class="n">sum</span> <span class="o">+</span> <span class="n">chunk</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">intEnumerator</span> <span class="k">=</span> <span class="nc">Enumerator</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">newIterateeFuture</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Iteratee</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span>
+  <span class="n">intEnumerator</span><span class="o">(</span><span class="n">summingIteratee</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">resultFuture</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="n">newIterateeFuture</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">run</span><span class="o">)</span>
+<span class="n">resultFuture</span><span class="o">.</span><span class="n">onComplete</span><span class="o">(</span><span class="n">sum</span> <span class="k">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="s">&quot;Sum is %d&quot;</span> <span class="n">format</span> <span class="n">sum</span><span class="o">))</span>
+</code></pre></figure>
+<h2 id="websockets">WebSockets</h2>
+<p>WebSockets are created using a pair of an iteratee used to process the incoming data stream and an enumator used to send data to the client.</p>
+<p>In a simple chat application, an Akka actor can be used to process users, specifically to keep track of all of the users in the room. A <code>Concurrent​.broadcast</code> yields a pair of an enumerator and a channel tied to that enumerator which allows one to push additional data to it after it has been created. The actor’s private state will therefore include a set of users and a broadcast channel and its associated enumerator.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">class</span> <span class="nc">ChatRoom</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">users</span> <span class="k">=</span> <span class="nc">Set</span><span class="o">[</span><span class="kt">String</span><span class="o">]()</span>
+  <span class="k">val</span> <span class="o">(</span><span class="n">enumerator</span><span class="o">,</span> <span class="n">channel</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Concurrent</span><span class="o">.</span><span class="n">broadcast</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span>
+</code></pre></figure>
+<p>The <code>receive</code> method will handle events where a user joins, leaves, or broadcasts a message. Joining is handled by first checking if that user exists, and if so, ignoring anything that user might say. Otherwise, a message is broadcast to the room announcing that the user joined and adding them to the set of user names taken. The <code>mapDone</code> method is used to specify the behavior to perform when the iteratee has finished sending data.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala">  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Join</span><span class="o">(</span><span class="n">nick</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(!</span><span class="n">users</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">nick</span><span class="o">))</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="n">iteratee</span> <span class="k">=</span> <span class="nc">Iteratee</span><span class="o">.</span><span class="n">foreach</span><span class="o">[</span><span class="kt">String</span><span class="o">]{</span> <span class="n">message</span> <span class="k">=&gt;</span>
+          <span class="n">self</span> <span class="o">!</span> <span class="nc">Broadcast</span><span class="o">(</span><span class="s">&quot;%s: %s&quot;</span> <span class="n">format</span> <span class="o">(</span><span class="n">nick</span><span class="o">,</span> <span class="n">message</span><span class="o">))</span>
+        <span class="o">}.</span><span class="n">mapDone</span> <span class="o">{</span> <span class="k">_</span> <span class="k">=&gt;</span>
+          <span class="n">self</span> <span class="o">!</span> <span class="nc">Leave</span><span class="o">(</span><span class="n">nick</span><span class="o">)</span>
+        <span class="o">}</span>
+
+        <span class="n">users</span> <span class="o">+=</span> <span class="n">nick</span>
+        <span class="n">channel</span><span class="o">.</span><span class="n">push</span><span class="o">(</span><span class="s">&quot;User %s has joined the room, now %s users&quot;</span>
+          <span class="n">format</span><span class="o">(</span><span class="n">nick</span><span class="o">,</span> <span class="n">users</span><span class="o">.</span><span class="n">size</span><span class="o">))</span>
+        <span class="n">sender</span> <span class="o">!</span> <span class="o">(</span><span class="n">iteratee</span><span class="o">,</span> <span class="n">enumerator</span><span class="o">)</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="n">enumerator</span> <span class="k">=</span> <span class="nc">Enumerator</span><span class="o">(</span>
+          <span class="s">&quot;Nickname %s is already in use.&quot;</span> <span class="n">format</span> <span class="n">nick</span><span class="o">)</span>
+        <span class="k">val</span> <span class="n">iteratee</span> <span class="k">=</span> <span class="nc">Iteratee</span><span class="o">.</span><span class="n">ignore</span>
+        <span class="n">sender</span> <span class="o">!</span> <span class="o">(</span><span class="n">iteratee</span><span class="o">,</span> <span class="n">enumerator</span><span class="o">)</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></figure>
+<p>The Akka actor can also handle the case where a user leaves by simply removing the username from the set of usernames and broadcasting the event to the room.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala">    <span class="k">case</span> <span class="nc">Leave</span><span class="o">(</span><span class="n">nick</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="n">users</span> <span class="o">-=</span> <span class="n">nick</span>
+      <span class="n">channel</span><span class="o">.</span><span class="n">push</span><span class="o">(</span><span class="s">&quot;User %s has left the room, %s users left&quot;</span>
+        <span class="n">format</span><span class="o">(</span><span class="n">nick</span><span class="o">,</span> <span class="n">users</span><span class="o">.</span><span class="n">size</span><span class="o">))</span>
+    <span class="o">}</span>
+</code></pre></figure>
+<p>Finally, the broadcast event simply adds a message to the channel that was created with <code>Concurrent​.broadcast</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala">    <span class="k">case</span> <span class="nc">Broadcast</span><span class="o">(</span><span class="n">msg</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">channel</span><span class="o">.</span><span class="n">push</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>This actor can then be used in a controller by creating an instance of the actor. The <code>showRoom</code> method will render the template showing the chat room. The <code>chatSocket</code> is an action of type <code>WebSocket​.async</code> which accepts parameters of type <code>Future​[(Iteratee​, Enumerator)]</code>.</p>
+<p>The <code>chatSocket</code> action sends the <code>Join</code> message to the actor using the <code>?</code> method which essentially expects a response, which in this case is a pair of iteratee and enumerator, with the iteratee being the stream used to communicate with the server and the enumerator being the broadcast stream that is sent to the user. Finally, the <code>mapTo</code> method is used to cast the <code>Future​[Any]</code> to the appropriate type of <code>Future​[(Iteratee​, Enumerator)]</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">object</span> <span class="nc">Chat</span> <span class="k">extends</span> <span class="nc">Controller</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="n">timeout</span> <span class="k">=</span> <span class="nc">Timeout</span><span class="o">(</span><span class="mi">1</span> <span class="n">seconds</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">room</span> <span class="k">=</span> <span class="nc">Akka</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">ChatRoom</span><span class="o">])</span>
+
+  <span class="k">def</span> <span class="n">showRoom</span><span class="o">(</span><span class="n">nick</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">request</span> <span class="k">=&gt;</span>
+    <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">showRoom</span><span class="o">(</span><span class="n">nick</span><span class="o">))</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">chatSocket</span><span class="o">(</span><span class="n">nick</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="nc">WebSocket</span><span class="o">.</span><span class="n">async</span> <span class="o">{</span> <span class="n">request</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">channelsFuture</span> <span class="k">=</span> <span class="n">room</span> <span class="o">?</span> <span class="nc">Join</span><span class="o">(</span><span class="n">nick</span><span class="o">)</span>
+    <span class="n">channelsFuture</span><span class="o">.</span><span class="n">mapTo</span><span class="o">[(</span><span class="kt">Iteratee</span><span class="o">[</span><span class="kt">String</span>, <span class="k">_</span><span class="o">]</span>, <span class="kt">Enumerator</span><span class="o">[</span><span class="kt">String</span><span class="o">])]</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure>
+<h2 id="body-parsers">Body Parsers</h2>
+<p>Normally actions are only invoked when the request is complete, once the body parser is done parsing the body of the request. Suppose a user is uploading a large file only to be rejected once the upload is complete because the file is of the wrong type. A body parser can respond before the request is complete.</p>
+<p>A body parser is an object that can process an HTTP request body, such as the <code>json</code> or <code>multipartFormData</code> body parsers. More specifically, a body parser is a function that takes a <code>RequestHeader</code> parameter and returns an iteratee <code>Iteratee​[Array​[Byte]​, Either​[Result​, A]]</code>, that is, it processes the body of type <code>Array​[Byte]</code> and returns an <code>Either​[Result​, A]</code>, where an error <code>Result</code> is return in the event of failure to construct <code>A</code>.</p>
+<p>Essentially, Play creates a <code>RequestHeader</code> which is used to route to the appropriate <code>Action</code> and the body parser is used to create an <code>Iteratee</code> that’s fed the body of the request. When the body is finished constructing, it’s used to construct a complete <code>Request</code> which is then fed to the <code>Action</code>. If the construction fails, a <code>Request</code> won’t be constructed and instead the <code>Result</code> will be returned to the client.</p>
+<p>Built-in body parsers allow a maximum body size to be specified, which defaults to 512 kilobytes, and if exceeded, yields a <code>EntityTooLarge</code> HTTP error response.</p>
+<p>The <code>temporaryFile</code> body parser parses the body and put its in a temporary file, which can then be moved to a permanent location with the <code>moveTo</code> method if the file satisfies any constraints. The <code>Play​.getFile</code> method can yield a path relative to the application root.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">upload</span> <span class="k">=</span> <span class="nc">Action</span><span class="o">(</span><span class="n">parse</span><span class="o">.</span><span class="n">temporaryFile</span><span class="o">)</span> <span class="o">{</span> <span class="n">request</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="n">destinationFile</span> <span class="k">=</span> <span class="nc">Play</span><span class="o">.</span><span class="n">getFile</span><span class="o">(</span><span class="s">&quot;uploads/myfile&quot;</span><span class="o">)</span>
+  <span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">moveTo</span><span class="o">(</span><span class="n">destinationFile</span><span class="o">)</span>
+  <span class="nc">Ok</span><span class="o">(</span><span class="s">&quot;File successfully uploaded!&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></figure>
+<p>It’s possible to compose body parsers. For example, the <code>when</code> method allows one to specify a predicate and a parser to use if it’s satisfied, as well as a failure result if not.</p>
+<figure class="codeblock"><pre><code class="highlight language-scala"><span class="k">def</span> <span class="n">fileWithContentType</span><span class="o">(</span><span class="n">filename</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">contentType</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span>
+  <span class="n">parse</span><span class="o">.</span><span class="n">when</span><span class="o">(</span>
+    <span class="n">requestHeader</span> <span class="k">=&gt;</span> <span class="n">requestHeader</span><span class="o">.</span><span class="n">contentType</span> <span class="o">==</span> <span class="n">contentType</span><span class="o">,</span>
+    <span class="n">parse</span><span class="o">.</span><span class="n">file</span><span class="o">(</span><span class="nc">Play</span><span class="o">.</span><span class="n">getFile</span><span class="o">(</span><span class="n">filename</span><span class="o">)),</span>
+    <span class="n">requestHeader</span> <span class="k">=&gt;</span> <span class="nc">BadRequest</span><span class="o">(</span>
+      <span class="s">&quot;Expected a &#39;%s&#39; content type, but fuond %s&quot;</span><span class="o">.</span>
+        <span class="n">format</span><span class="o">(</span><span class="n">contentType</span><span class="o">,</span> <span class="n">requestHeader</span><span class="o">.</span><span class="n">contentType</span><span class="o">)))</span>
+
+<span class="k">def</span> <span class="n">savePdf</span><span class="o">(</span><span class="n">filename</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Action</span><span class="o">(</span>
+  <span class="n">fileWithContentType</span><span class="o">(</span><span class="n">filename</span><span class="o">,</span> <span class="s">&quot;application/pdf&quot;</span><span class="o">))</span> <span class="o">{</span> <span class="n">request</span> <span class="k">=&gt;</span>
+    <span class="nc">Ok</span><span class="o">(</span><span class="s">&quot;Your file is saved!&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">)</span>
+</code></pre></figure>
+<p>Body parsers also support the <code>map</code> function to transform the body parser’s constructed type. This has the advantage of constructing the desired type and making it available within the action.</p></div>
+  <div class="meta">
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> April  7, 2014</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/play.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/8c3304b" title="remove callout styling">8c3304b</a></span></div>
+    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+  </div>
+</article>
+
+
+    <footer id="footer">
+  <div id="social">
+    <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
+    &middot;
+    <a href="http://stackoverflow.com/users/101090/jorge-israel-pena" title="stackoverflow"><i class="fa fa-stack-overflow"></i></a>
+    &middot;
+    <a href="https://twitter.com/blaenk" title="twitter"><i class="fa fa-twitter"></i></a>
+    &middot;
+    <a href="mailto:jorge.israel.p@gmail.com" title="email"><i class="fa fa-envelope"></i></a>
+    &middot;
+    <a href="/atom.xml" title="feed"><i class="fa fa-rss-square"></i></a>
+  </div>
+  <!-- <div id="credit">
+    Designed by <a href="http://www.blaenkdenum.com">Jorge Israel Peña</a>
+  </div> -->
+</footer>
+
+
+
+
+
+<!-- google analytics -->
+<script async="true" type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37339861-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!--MathJax CDN-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: "none"
+  });
+
+  MathJax.Hub.Register.MessageHook('End Process', function() {
+    jQuery('#MathJax_Font_Test').empty();
+    jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+  });
+</script>
+<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+
+  </div>
+</body>
+</html>

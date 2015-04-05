@@ -1,0 +1,1228 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Swift - Blaenk Denum</title>
+  <meta name="author" content="Jorge Israel Peña">
+  <meta name="description" content="AKA Blaenk Denum">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="/favicon.png" rel="shortcut icon">
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src='/js/blaenk.js' type='text/javascript'></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header id="header">
+  <div id="stamp">
+    <h1 id="name">
+      <a href="/">
+        <span class="emboldened">Jorge</span>.Israel.<span class="emboldened">Peña</span>
+      </a>
+    </h1>
+    <h4 id="pseudonym">
+      AKA <span class="emboldened">Blaenk</span>.Denum
+    </h4>
+  </div>
+  <nav id="main-nav">
+    <ul class="main">
+      <li><a href="/about/">About</a></li>
+      <li><a href="/work/">Work</a></li>
+      <li><a href="/lately/">Lately</a></li>
+      <li><a href="/notes/">Notes</a></li>
+      <li><a id="search_btn">Search</a></li>
+    </ul>
+  </nav>
+  <nav id="mobile-nav">
+    <div class="menu">
+      <a class="button">Menu</a>
+      <div class="container">
+        <ul class="main">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/lately/">Lately</a></li>
+          <li><a href="/notes/">Notes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="search">
+      <a class="button"></a>
+      <div class="container">
+        <form action="http://google.com/search" method="get">
+          <input type="text" name="q" results="0">
+          <input type="hidden" name="q" value="site:blaenkdenum.com">
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<form class="desk_search" action="http://google.com/search" method="get">
+  <input id="search" type="text" name="q" results="0" placeholder="Search" autocomplete="off" spellcheck="false">
+  <input type="hidden" name="q" value="site:blaenkdenum.com">
+</form>
+
+    <article class="post">
+  <h2 class="title"><a href="/notes/swift/"><span>Swift</span></a></h2>
+  <div class="entry-content"><p>People have been wishing for a new language to work with in the Apple environment. There were rumors that Ruby would be chosen, but that didn’t seem to pan-out. Instead, a variety of different companies have created products that allow different languages to compile to iOS, such as <a href="http://xamarin.com/platform">Xamarin</a>, <a href="http://www.rubymotion.com/">RubyMotion</a>, and many others, particularly game engines like <a href="http://unity3d.com">Unity</a> and the <a href="https://www.unrealengine.com/">Unreal Engine</a>.</p>
+<p>Then, in <abbr title="World Wide Developer Conference">WWDC</abbr> 2014, Apple announced <a href="https://developer.apple.com/swift/">Swift</a>. It appears to be influenced by Objective-C <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, Rust, Haskell, Ruby, Python, and C#. It has completely surprised me how well designed the language appears to be. It seems like a mixture of Go and Rust.</p>
+<p>An interesting characteristic of Swift is that code written at the global scope is considered the entry point of the program.</p>
+<nav id="toc"><h3>Contents</h3><ol><li><a href="#basics">Basics</a><ol><li><a href="#implicit-conversions">Implicit Conversions</a></li><li><a href="#interpolation">Interpolation</a></li><li><a href="#collections">Collections</a></li><li><a href="#optionals">Optionals</a></li><li><a href="#implicit-optionals">Implicit Optionals</a></li><li><a href="#numbers">Numbers</a></li><li><a href="#type-aliases">Type Aliases</a></li><li><a href="#tuples">Tuples</a></li><li><a href="#assertions">Assertions</a></li></ol></li><li><a href="#operators">Operators</a></li><li><a href="#strings-and-characters">Strings and Characters</a><ol><li><a href="#unicode">Unicode</a></li></ol></li><li><a href="#collections-1">Collections</a></li><li><a href="#control-flow">Control Flow</a></li><li><a href="#functions">Functions</a></li><li><a href="#closures">Closures</a></li><li><a href="#enumerations">Enumerations</a></li><li><a href="#classes-and-structures">Classes and Structures</a></li><li><a href="#properties">Properties</a></li><li><a href="#methods">Methods</a></li><li><a href="#subscripts">Subscripts</a></li><li><a href="#inheritance">Inheritance</a></li><li><a href="#initialization">Initialization</a><ol><li><a href="#initializer-delegation">Initializer Delegation</a></li><li><a href="#two-phase-initialization">Two-Phase Initialization</a></li><li><a href="#automatic-initializer-inheritance">Automatic Initializer Inheritance</a></li></ol></li><li><a href="#deinitialization">Deinitialization</a></li><li><a href="#automatic-reference-counting">Automatic Reference Counting</a><ol><li><a href="#weak-references">Weak References</a></li><li><a href="#unowned-references">Unowned References</a></li><li><a href="#closure-reference-cycles">Closure Reference Cycles</a></li></ol></li><li><a href="#optional-chaining">Optional Chaining</a></li><li><a href="#type-casting">Type Casting</a></li><li><a href="#nested-types">Nested Types</a></li><li><a href="#extensions">Extensions</a></li><li><a href="#protocols">Protocols</a></li><li><a href="#generics">Generics</a><ol><li><a href="#type-constraints">Type Constraints</a></li><li><a href="#associated-types">Associated Types</a></li><li><a href="#where-clauses">Where Clauses</a></li></ol></li><li><a href="#advanced-operators">Advanced Operators</a><ol><li><a href="#custom-operators">Custom Operators</a></li></ol></li><li><a href="#access-control">Access Control</a></li></ol></nav>
+<h1 id="basics">Basics</h1>
+<p>A distinction is made between mutable and immutable variables. The <code>let</code> keyword defines an immutable variable—a constant. The <code>var</code> keyword defines a mutable variable. Types can be inferred in general situations. Names can be surrounded in backticks to treat them literally, i.e. to use a Swift keyword as a name.</p>
+<h2 id="implicit-conversions">Implicit Conversions</h2>
+<p>There are no implicit conversions. Instead, instances must be created of the desired type.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">width</span> <span class="p">=</span> <span class="mi">94</span>
+<span class="kd">let</span> <span class="nv">widthLabel</span> <span class="p">=</span> <span class="n">label</span> <span class="o">+</span> <span class="nb">String</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+</code></pre></figure>
+<h2 id="interpolation">Interpolation</h2>
+<p>Values can be interpolated into strings by surrounding them in parentheses and escaping that group with a backslash.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">apples</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="kd">let</span> <span class="nv">summary</span> <span class="p">=</span> <span class="s">&quot;I have </span><span class="si">\(</span><span class="n">apples</span><span class="si">)</span><span class="s"> apples.&quot;</span>
+</code></pre></figure>
+<h2 id="collections">Collections</h2>
+<p>Arrays and dictionaries have literal support with brackets. Empty ones can be created using initializer syntax. If the type of the collection can be inferred, then <code>[]</code> or <code>[:]</code> can be used as an empty array and dictionary respectively.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">shoppingList</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;one&quot;</span><span class="p">,</span> <span class="s">&quot;two&quot;</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">]</span>
+<span class="n">shoppingList</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;changed&quot;</span>
+
+<span class="kd">var</span> <span class="nv">occupations</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="s">&quot;key1&quot;</span><span class="p">:</span> <span class="s">&quot;val1&quot;</span><span class="p">,</span>
+  <span class="s">&quot;key2&quot;</span><span class="p">:</span> <span class="s">&quot;val2&quot;</span>
+<span class="p">]</span>
+
+<span class="n">occupations</span><span class="p">[</span><span class="s">&quot;key3&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;val3&quot;</span>
+
+<span class="kd">let</span> <span class="nv">emptyArray</span> <span class="p">=</span> <span class="nb">String</span><span class="p">[]()</span>
+<span class="kd">let</span> <span class="nv">emptyDict</span>  <span class="p">=</span> <span class="nb">Dictionary</span><span class="p">&lt;</span><span class="nb">String</span><span class="p">,</span> <span class="nb">Float</span><span class="p">&gt;()</span>
+</code></pre></figure>
+<h2 id="optionals">Optionals</h2>
+<p>Optional values have special syntax with a <code>?</code> suffix on the type to denote that they are optional. Optional values are either <code>nil</code> or contain the value stored for that type. Declaring an optional without providing a value automatically sets it to <code>nil</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">optionalString</span><span class="p">:</span> <span class="nb">String</span><span class="p">?</span> <span class="p">=</span> <span class="s">&quot;hi&quot;</span>
+<span class="kd">var</span> <span class="nv">surveyAnswer</span><span class="p">:</span> <span class="nb">String</span><span class="p">?</span> <span class="c1">// set to nil</span>
+</code></pre></figure>
+<p>Optionals can be compared explicitly against <code>nil</code> to see if they have a value. A <code>!</code> suffix on an optional can then <em>force unwrap</em> the contained value, though note that force unwrapping an optional with no contained value produces a run-time error.</p>
+<p>An alternative to this is to perform an <em>optional binding</em> to bind the contained value within the body in the event that there is a value present. Note that either <code>let</code> or <code>var</code> can be used for the binding, depending on the situation.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">optionalString</span><span class="p">:</span> <span class="nb">String</span><span class="p">?</span> <span class="p">=</span> <span class="s">&quot;hi&quot;</span>
+
+<span class="k">if</span> <span class="n">optionalString</span> <span class="p">==</span> <span class="kc">nil</span> <span class="p">{</span>
+  <span class="bp">println</span><span class="p">(</span><span class="s">&quot;force unwrapped: </span><span class="si">\(</span><span class="n">optionalString</span><span class="p">!</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nv">possibleNumber</span> <span class="p">=</span> <span class="s">&quot;123&quot;</span>
+
+<span class="k">if</span> <span class="kd">let</span> <span class="nv">actualNumber</span> <span class="p">=</span> <span class="n">possibleNumber</span><span class="p">.</span><span class="n">toInt</span><span class="p">()</span> <span class="p">{</span>
+  <span class="bp">println</span><span class="p">(</span><span class="s">&quot;let binding: </span><span class="si">\(</span><span class="n">actualNumber</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>When working with optional values, the <code>?</code> can be written before operations such as methods, properties, and subscripting. If the value before the <code>?</code> is <code>nil</code>, the result of the whole expression is <code>nil</code>. Otherwise, the operation continues. In either case, the result is an optional value.</p>
+<p>Tuples can also be marked optional by following the type with a question mark:</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">someTuple</span><span class="p">:</span> <span class="p">(</span><span class="nb">Int</span><span class="p">,</span> <span class="nb">Int</span><span class="p">)?</span> <span class="p">=</span> <span class="kc">nil</span>
+</code></pre></figure>
+<p>There is a nil coalescing operator as in C# that unwraps the optional’s value if it exists or returns a default value if it’s <code>nil</code>.</p>
+<h2 id="implicit-optionals">Implicit Optionals</h2>
+<p>If a given optional can be safely assumed to always contain a value once it is set for the first time, it can get tedious to have to explicitly unwrap it or test it each time. Implicit optionals can be used for these situations and are written with a <code>!</code> suffix in the type declaration instead of a <code>?</code>. Implicit optionals are more or less like specifying in the type declaration that forced unwrapping should occur whenever it’s used.</p>
+<p>Implicit optionals can be used to mitigate a scenario of two-phase initialization and reference cycles. The <code>self</code> reference can’t be used elsewhere—such as in other initializers—until all fields have been initialized. This poses a problem with a field that is of a type that should contain a reference to the object being constructed: a circular reference.</p>
+<p>Normally a field of this type would be instantiated by passing <code>self</code> to that field’s initializer so that it can set its reference to the parent object, but again the object wouldn’t be finished initializing by then because that field remains to be initialized, but that field can’t be initialized since it requires a reference to the initializing object <code>self</code> which again can’t be used until the object is finished initializing, and so on.</p>
+<p>A work-around for this is to make that value be an implicit optional type. This way—like all optionals that aren’t given an initial value—it will receive an initial value of <code>nil</code>, meaning that the object will essentially be finished initializing after all other fields have been initialized, and so <code>self</code> can be passed to the initializer of the problem field. The fact that it is an implicit optional allows it to continue to be used transparently as any other field without needing to explicitly unwrap the optional.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">Country</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nv">name</span><span class="p">:</span> <span class="nb">String</span>
+  <span class="kd">let</span> <span class="nv">capitalCity</span><span class="p">:</span> <span class="n">City</span><span class="p">!</span> <span class="c1">// implicit optional</span>
+  <span class="kd">init</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">capitalName</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kc">self</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">name</span>
+    <span class="kc">self</span><span class="p">.</span><span class="n">capitalCity</span> <span class="p">=</span> <span class="n">City</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n">capitalName</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="kc">self</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">City</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nv">name</span><span class="p">:</span> <span class="nb">String</span>
+  <span class="kr">unowned</span> <span class="kd">let</span> <span class="nv">country</span><span class="p">:</span> <span class="n">Country</span> <span class="c1">// weak reference</span>
+  <span class="kd">init</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="n">Country</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kc">self</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">name</span>
+    <span class="kc">self</span><span class="p">.</span><span class="n">country</span> <span class="p">=</span> <span class="n">country</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h2 id="numbers">Numbers</h2>
+<p>Integers exist in 8, 16, 32, and 64 bit forms in both signed and unsigned forms. Their names are like the C equivalents but without underscores and capitalized names: <code>UInt8</code> or <code>Int8</code> for example. Bare <code>Int</code> and <code>UInt</code> types correspond to the word-size of the machine, i.e. on a 64-bit platform it will be an <code>Int64</code>.</p>
+<p>The bounds of integers can be found using the <code>min</code> and <code>max</code> properties, e.g. <code>UInt8​.max</code>.</p>
+<p>Binary literals are possible with a <code>0b</code> prefix, octal with a <code>0o</code> prefix, and hexadecimal with a <code>0x</code> prefix.</p>
+<p>Assigning literal numbers to types that cannot hold them, e.g. negative number in unsigned integer or value that exceeds bounds, emits a compile-time error.</p>
+<p>Numeric type conversion is opt-in and explicit, and required in order to mix numbers of different types in the same expression. This is done by instantiating a new value of the target type out of the source value. Failure to do this leads to a compile-time error.</p>
+<p>Note that this does not apply to literals, as they can be inferred to the correct type.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">twoThousand</span><span class="p">:</span> <span class="nb">UInt16</span> <span class="p">=</span> <span class="mi">2_000</span>
+<span class="kd">let</span> <span class="nv">one</span><span class="p">:</span> <span class="nb">UInt8</span> <span class="p">=</span> <span class="mi">1</span>
+<span class="kd">let</span> <span class="nv">twoThousandAndOne</span> <span class="p">=</span> <span class="n">twoThousand</span> <span class="o">+</span> <span class="nb">UInt16</span><span class="p">(</span><span class="n">one</span><span class="p">)</span>
+
+<span class="kd">let</span> <span class="nv">three</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="kd">let</span> <span class="nv">pointOneFourOneFiveNine</span> <span class="p">=</span> <span class="mf">0.14159</span>
+<span class="kd">let</span> <span class="nv">pi</span> <span class="p">=</span> <span class="nb">Double</span><span class="p">(</span><span class="n">three</span><span class="p">)</span> <span class="o">+</span> <span class="n">pointOneFourOneFiveNine</span>
+</code></pre></figure>
+<h2 id="type-aliases">Type Aliases</h2>
+<p>Type aliases are possible through the <code>typealias</code> keyword.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">typealias</span> <span class="n">AudioSample</span> <span class="p">=</span> <span class="nb">UInt16</span>
+<span class="kd">var</span> <span class="nv">maxAmplitudeFound</span> <span class="p">=</span> <span class="n">AudioSample</span><span class="p">.</span><span class="bp">min</span>
+</code></pre></figure>
+<h2 id="tuples">Tuples</h2>
+<p>Tuples are available as in Haskell and Rust, and can be destructured with pattern matching. Tuple components can be ignored in pattern matching with <code>_</code> as in Haskell. Tuples can be accessed by 0-based indices. Individual tuple elements can be named at time of definition, and individual components can be accessed by those names.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">tpl</span> <span class="p">=</span> <span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s">&quot;not found&quot;</span><span class="p">)</span>
+<span class="bp">println</span><span class="p">(</span><span class="s">&quot;status message is </span><span class="si">\(</span><span class="n">tpl</span><span class="p">.</span><span class="mi">1</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="kd">let</span> <span class="nv">http200Status</span> <span class="p">=</span> <span class="p">(</span><span class="n">statusCode</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="s">&quot;OK&quot;</span><span class="p">)</span>
+<span class="bp">println</span><span class="p">(</span><span class="s">&quot;status message is </span><span class="si">\(</span><span class="n">http200Status</span><span class="p">.</span><span class="n">description</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+</code></pre></figure>
+<h2 id="assertions">Assertions</h2>
+<p>Assertions are possible with the <code>assert</code> function which takes a condition and an optional message which <em>cannot</em> use string interpolation.</p>
+<h1 id="operators">Operators</h1>
+<p>The assignment <code>=</code> operator doesn’t return a value to avoid errors related to the equality <code>==</code> operator.</p>
+<p>Arithmetic operators detect and disallow value overflow, though this can be opted-out of by prefixing the operator with <code>&amp;</code>.</p>
+<p>There are range operators <code>..&lt;</code> (exclusive) and <code>..​.</code> (inclusive) to specify a range of values.</p>
+<p>The remainder operator <code>%</code> also works on floating-point numbers.</p>
+<p>The unary <code>+</code> prefix operator doesn’t do anything, but can be used for symmetry where other variables or literals have the unary <code>-</code> prefix operator.</p>
+<p>Compound assignment operators like <code>+=</code> <strong>do not</strong> return a value.</p>
+<p>There are also identity operators <code>===</code> and <code>!==</code> which test whether two object references refer to the same instance.</p>
+<h1 id="strings-and-characters">Strings and Characters</h1>
+<p>The <code>String</code> type in Swift is interchangeable with Foundation’s <code>NSString</code> and they are value types, so that strings are copied when they’re passed to functions or assigned to other variables. Value semantics clarify ownership ambiguities. The compiler optimizes string use so that the copying only takes place if necessary.</p>
+<p>Unicode scalars can be inserted into strings using the following notation, where the <code>n</code> sequences represent hexadecimal digits:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Notation</th>
+<th style="text-align: left;">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Single-byte</td>
+<td style="text-align: left;"><code>\xnn</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Arbitrary</td>
+<td style="text-align: left;"><code>\u{nnnn}</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <code>isEmpty</code> property can be used to determine if the string is empty.</p>
+<p>String mutability is determined by the way the variable is defined.</p>
+<p>Strings can be iterated over with a <code>for-in</code> loop to access individual <code>Character</code> values.</p>
+<p>Single characters can be initialized using a single character in a string literal.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">yenSign</span><span class="p">:</span> <span class="nb">Character</span> <span class="p">=</span> <span class="s">&quot;¥&quot;</span>
+</code></pre></figure>
+<p>The number of characters in a string can be calculated using the global <code>countElements</code> function, which iterates through the length of the string to count the number characters, taking into account the fact that different Unicode characters may require more than one 16-bit unit.</p>
+<p>The original <code>length</code> function of <code>NSString</code> doesn’t do this, and instead returns the number of 16-bit units. Swift’s <code>utf16Count</code> function on <code>String</code> types is its equivalent.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">test</span> <span class="p">=</span> <span class="s">&quot;Koala 🐨, Snail 🐌, Penguin 🐧, Dromedary 🐪&quot;</span>
+<span class="bp">println</span><span class="p">(</span><span class="s">&quot;test has </span><span class="si">\(</span><span class="bp">countElements</span><span class="si">(</span><span class="n">test</span><span class="si">))</span><span class="s"> characters&quot;</span><span class="p">)</span>
+</code></pre></figure>
+<p>Characters can be added to strings using the <code>append</code> method.</p>
+<p>Strings can be compared using the <code>==</code> operator, or using the <code>hasPrefix</code> and <code>hasSuffix</code> methods.</p>
+<p>The <code>uppercaseString</code> and <code>lowercaseString</code> properties can yield their respective equivalents.</p>
+<h2 id="unicode">Unicode</h2>
+<p>Characters are represented in Unicode by one or more Unicode scalars. A unicode scalar is a 21-bit number (and a name) for a character or modifier, e.g. <code class="path">U+0061</code> is LOWERCASE LATIN LETTER A, <code>a</code>.</p>
+<p>Unicode scalars are encoded as small chunks called code units, which in UTF-8 would be 8-bit code units, and so on.</p>
+<p>Unicode strings can be represented in Swift as a collection of characters, UTF-8 or UTF-16 code units, or 21-bit Unicode scalar values.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Collection Of</th>
+<th style="text-align: left;">Accessor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">characters</td>
+<td style="text-align: left;"><code>for-in</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">UTF-8 code units</td>
+<td style="text-align: left;"><code>utf8</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">UTF-16 code units</td>
+<td style="text-align: left;"><code>utf16</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">21-bit Unicode scalar values</td>
+<td style="text-align: left;"><code>unicodeScalars</code></td>
+</tr>
+</tbody>
+</table>
+<p>For example <code>utf8</code> is a property of type <code>UTF8View</code> which is a collection of <code>UInt8</code> values. In this representation, the last four code units are the four-byte UTF-8 representation of the DOG FACE character.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">dogString</span> <span class="p">=</span> <span class="s">&quot;Dog!🐶&quot;</span>
+
+<span class="k">for</span> <span class="n">codeUnit</span> <span class="k">in</span> <span class="n">dogString</span><span class="p">.</span><span class="n">utf8</span> <span class="p">{</span>
+  <span class="bp">print</span><span class="p">(</span><span class="s">&quot;</span><span class="si">\(</span><span class="n">codeunit</span><span class="si">)</span><span class="s"> &quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 68 111 103 33 240 159 144 182</span>
+</code></pre></figure>
+<p>Unicode scalars can be interpolated into a string as their string value.</p>
+<h1 id="collections-1">Collections</h1>
+<p>Declaring collections as immutable with <code>let</code>, when the collection doesn’t need to be changed, allows the compiler to optimize the collections.</p>
+<p>Array types are declared as <code>Array&lt;SomeType&gt;</code> or in the more idiomatic shorthand <code>[SomeType]</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">shoppingList</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="s">&quot;Eggs&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Milk&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Flour&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Baking Powder&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Chocolate Spread&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Cheese&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Butter&quot;</span>
+  <span class="p">]</span>
+</code></pre></figure>
+<p>Arrays support <code>count</code> and <code>isEmpty</code> properties, as well as an <code>append</code> method, which supports appending either a single item or an array of items.</p>
+<p>Arrays can be accessed and modified via subscript. It’s also possible to modify multiple values at once using range syntax within the subscript. A run-time error is triggered if the range is exceeds the array’s bounds. If less items are provided than the specified range allows, the remaining elements are removed.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="n">shoppingList</span><span class="p">[</span><span class="mf">4.</span><span class="p">..</span><span class="mi">6</span><span class="p">]</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;Bananas&quot;</span><span class="p">,</span> <span class="s">&quot;Apples&quot;</span><span class="p">]</span>
+</code></pre></figure>
+<p>The <code>insert(atIndex​:)</code> method can be used to insert an item before the item at the provided index. The converse is also possible via <code>removeAtIndex</code>, which removes the specified item and also returns it. The <code>removeLast</code> method is a shorter way of using <code>removeAtIndex</code> on the last element.</p>
+<p>A for-in loop can be used to iterate over every item in the list. If an index is wanted, the global <code>enumerate</code> function can yield an index-value pair for every item in the array <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="k">for</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">in</span> <span class="bp">enumerate</span><span class="p">(</span><span class="n">shoppingList</span><span class="p">)</span> <span class="p">{</span>
+  <span class="bp">println</span><span class="p">(</span><span class="s">&quot;Item </span><span class="si">\(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="si">)</span><span class="s">: </span><span class="si">\(</span><span class="n">value</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Arrays can be initialized using initializer syntax. The default initializer initializes an empty array. There’s also an initializer that takes parameters <code>count</code> and <code>repeatedValue</code> to initialize an array of specified count each with the specified value.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">threeDoubles</span> <span class="p">=</span> <span class="p">[</span><span class="nb">Double</span><span class="p">](</span><span class="bp">count</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">repeatedValue</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="c1">// threeDoubles = [0.0, 0.0, 0.0]</span>
+
+<span class="c1">// or leveraging type inference</span>
+<span class="kd">var</span> <span class="nv">threeDoubles</span> <span class="p">=</span> <span class="nb">Array</span><span class="p">(</span><span class="bp">count</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">repeatedValue</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+</code></pre></figure>
+<p>Dictionaries are written as key-value pairs separated by commas in a list. Shorthand for dictionary types is <code>[KeyType​: ValueType]</code>. Empty dictionaries can be written using the shorthand <code>[:]</code>, similar to <code>[]</code> with arrays.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">airports</span><span class="p">:</span> <span class="nb">Dictionary</span><span class="p">&lt;</span><span class="nb">String</span><span class="p">,</span> <span class="nb">String</span><span class="p">&gt;</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="s">&quot;TYO&quot;</span><span class="p">:</span> <span class="s">&quot;Tokyo&quot;</span><span class="p">,</span>
+  <span class="s">&quot;DUB&quot;</span><span class="p">:</span> <span class="s">&quot;Dublin&quot;</span>
+  <span class="p">]</span>
+
+<span class="c1">// or using the shorthand</span>
+<span class="kd">var</span> <span class="nv">airports</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">:</span> <span class="nb">String</span><span class="p">]</span> <span class="p">=</span> <span class="p">[</span> <span class="cm">/* ... */</span> <span class="p">]</span>
+
+<span class="c1">// or leveraging type inference</span>
+<span class="kd">var</span> <span class="nv">airpots</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;TYO&quot;</span><span class="p">:</span> <span class="s">&quot;Tokyo&quot;</span><span class="p">,</span> <span class="s">&quot;DUB&quot;</span><span class="p">:</span> <span class="s">&quot;Dublin&quot;</span><span class="p">]</span>
+</code></pre></figure>
+<p>The <code>updateValue(forKey​:)</code> can be used to update a value for a given key as with subscript notation, except that it returns an optional of the old value after performing the update or <code>nil</code> if no value existed, allowing one to know if an update took place or not.</p>
+<p>Accessing a value via subscript notation yields an optional of the contained type, equaling <code>nil</code> if there is no value associated with the provided key.</p>
+<p>As a result, assigning <code>nil</code> to a given key using subscript notation removes that key-value pair from the dictionary. The <code>removeValueForKey</code> function returns the value after removing it of type optional, yielding <code>nil</code> if no value existed for that key.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="n">airports</span><span class="p">[</span><span class="s">&quot;LHR&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;London&quot;</span>
+<span class="n">airports</span><span class="p">.</span><span class="n">updateValue</span><span class="p">(</span><span class="n">forKey</span><span class="p">:</span> <span class="s">&quot;LHR&quot;</span><span class="p">,</span> <span class="s">&quot;London Heathrow&quot;</span><span class="p">)</span>
+</code></pre></figure>
+<p>Iterating over a dictionary with a for-in loop yields a key-value pair for every association.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="k">for</span> <span class="p">(</span><span class="n">airportCode</span><span class="p">,</span> <span class="n">airportName</span><span class="p">)</span> <span class="k">in</span> <span class="n">airports</span> <span class="p">{</span>
+  <span class="bp">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">\(</span><span class="n">airportCode</span><span class="si">)</span><span class="s">: </span><span class="si">\(</span><span class="n">airportName</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>The <code>keys</code> and <code>values</code> properties yield a collection of the keys and values, respectively.</p>
+<h1 id="control-flow">Control Flow</h1>
+<p>It’s possible to use an underscore <code>_</code> in for loops when a certain value isn’t needed within the body.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">power</span> <span class="p">=</span> <span class="mi">10</span>
+<span class="kd">var</span> <span class="nv">answer</span> <span class="p">=</span> <span class="mi">1</span>
+
+<span class="k">for</span> <span class="kc">_</span> <span class="k">in</span> <span class="mf">1.</span><span class="p">..</span><span class="n">power</span> <span class="p">{</span>
+  <span class="n">answer</span> <span class="o">*=</span> <span class="n">base</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>If conditionals <em>must</em> be booleans or optionals.</p>
+<p>Switch statements must be exhaustive, and automatically break out at the end of each case body unless the <code>fallthrough</code> keyword is used to explicitly express that a fallthrough is desired. The <code>default</code> keyword may be used to specify a catch-all case.</p>
+<p>Switch statements can use ranges to test the value for inclusion.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="k">switch</span> <span class="mi">5</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">// ...</span>
+  <span class="k">case</span> <span class="mf">1.</span><span class="p">..</span><span class="mi">3</span><span class="p">:</span> <span class="c1">// ...</span>
+  <span class="k">case</span> <span class="mf">4.</span><span class="p">..</span><span class="mi">7</span><span class="p">:</span> <span class="c1">// ...</span>
+  <span class="k">default</span><span class="p">:</span> <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Tuples’ component values can also be tested using pattern matching, and the underscore <code>_</code> can be used to ignore certain components. Components can be bound to temporary names using the <code>let</code> or <code>var</code> keywords, where it can prefix the entire tuple as a simple way of binding every component.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="k">switch</span> <span class="n">somePair</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="p">(</span><span class="kd">let</span> <span class="nv">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="c1">// uses x</span>
+  <span class="k">case</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kd">let</span> <span class="nv">y</span><span class="p">):</span> <span class="c1">// uses y</span>
+  <span class="k">case</span> <span class="kd">let</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="c1">// uses both x and y</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Switch statement cases can specify <code>where</code> clauses to check for additional conditions.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="k">switch</span> <span class="n">somePair</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="kd">let</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">where</span> <span class="n">x</span> <span class="p">==</span> <span class="n">y</span><span class="p">:</span> <span class="c1">// ...</span>
+  <span class="k">default</span><span class="p">:</span> <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Loops and switch statements can be labeled for the purpose of breaking to or continuing specific control structures, oftentimes useful for breaking out of outter-loops given inner-control structure conditions. This is possible by prefixing the control structure with a label, followed by a colon <code>:</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="n">labelName</span><span class="p">:</span> <span class="k">while</span> <span class="n">condition</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="n">otherCondition</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">someCondition</span> <span class="p">{</span>
+      <span class="k">break</span> <span class="n">labelName</span>
+    <span class="p">}</span>
+  <span class="p">}</span> 
+<span class="p">}</span>
+</code></pre></figure>
+<h1 id="functions">Functions</h1>
+<p>Functions that don’t have an explicit return type gain an implicit return type of <code>Void</code>, which can be written simply as <code>()</code>, and don’t need to specify the return arrow or return type. Function return values can also be ignored if they are not needed.</p>
+<p>If returning a tuple that has named components, they don’t need to be named at return-time if they are already named in the function return type.</p>
+<p>By default, function parameter names are referred to as <em>local parameter names</em> because they’re only available within the function’s body. It’s also possible to provide <em>external</em> parameter names which can make functions be self-documenting by <em>requiring</em> each parameter to be named each time the function is called. External parameter names are specified before the local parameter names, separated by a space.</p>
+<p>Alternatively, the parameter name can be prefixed by the hash symbol <code>#</code> to make the local name be the same as the external name.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">someFunc</span><span class="p">(</span><span class="n">externalName</span> <span class="n">localName</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">otherFunc</span><span class="p">(#</span><span class="n">sameName</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Default parameter values can be specified by using the assignment operator. Swift automatically creates an external name the same as the local name for default parameters, as if it had been prefixed by <code>#</code>. It’s possible to opt-out of this by providing an underscore <code>_</code> as the explicit external name.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">join</span><span class="p">(#</span><span class="n">string</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="bp">toString</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">withJoiner</span><span class="p">:</span> <span class="nb">String</span> <span class="p">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Variadic parameters are also possible by appending three dots <code>..​.</code> after the variadic parameter’s type. The values passed to the parameter are available within the function body as an array.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">mean</span><span class="p">(</span><span class="n">numbers</span><span class="p">:</span> <span class="nb">Double</span><span class="p">...)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">total</span> <span class="p">=</span> <span class="mf">0.0</span>
+  <span class="k">for</span> <span class="n">number</span> <span class="k">in</span> <span class="n">numbers</span> <span class="p">{</span>
+    <span class="n">total</span> <span class="o">+=</span> <span class="n">number</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">total</span> <span class="o">/</span> <span class="nb">Double</span><span class="p">(</span><span class="n">numbers</span><span class="p">.</span><span class="bp">count</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>It’s possible to define a parameter as variable, which allows the parameter to be modified <em>within</em> the function, avoiding the need to explicitly create a temporary copy of the parameter.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">someFunc</span><span class="p">(</span><span class="kd">var</span> <span class="nv">param</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Int</span> <span class="p">{</span>
+  <span class="o">++</span><span class="n">param</span> 
+  <span class="k">return</span> <span class="n">param</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>In-out parameters, denoted by the <code>inout</code> keyword, have the ability to actually modify the variable passed into the function, much like pointers and references. The variable that’s passed to this parameter needs to be prefixed by an ampersand <code>&amp;</code> to denote that the function may modify the variable <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>.</p>
+<p>Constants or literals can’t be passed as in-out parameters. Variadic parameters can’t be in-out parameters. In-out parameters can’t be marked as <code>var</code> or <code>let</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">addOne</span><span class="p">(</span><span class="kr">inout</span> <span class="n">a</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+  <span class="o">++</span><span class="n">a</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">anInt</span> <span class="p">=</span> <span class="mi">3</span>
+
+<span class="n">addOne</span><span class="p">(&amp;</span><span class="n">anInt</span><span class="p">)</span>
+
+<span class="c1">// anInt = 4</span>
+</code></pre></figure>
+<p>Function types can be used like any other types, such as for annotating parameters, return types, or variables. Note that functions can be nested within each other.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">callFunc</span><span class="p">(</span><span class="kd">func</span><span class="p">:</span> <span class="p">(</span><span class="nb">Int</span><span class="p">,</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s">&quot;result is </span><span class="si">\(</span><span class="kd">func</span><span class="si">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="si">))</span><span class="s">&quot;</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">retFunc</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="p">(</span><span class="nb">Int</span><span class="p">,</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Int</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">add</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h1 id="closures">Closures</h1>
+<p>Closures are available in Swift, and all memory handling of captured entities is handled automatically. Global functions and nested functions are special cases of closures. Specifically, there are three kinds of closures:</p>
+<ul>
+<li><strong>global functions</strong> have a name and don’t capture any values</li>
+<li><strong>nested functions</strong> have a name and capture values from the enclosing function.</li>
+<li><strong>closure expressions</strong> have no name and can capture values from the surrounding context</li>
+</ul>
+<p>Closure expressions are written in the form of braces which contain the closure body, where the first line in the body is the parameter list and return type, followed by the <code>in</code> keyword and the closure’s body of statements.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="p">{</span> <span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">returntype</span> <span class="k">in</span>
+  <span class="n">statement1</span>
+  <span class="n">statement2</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Consider the global <code>sorted</code> function which takes an array of values and a function used to sort them, specifically, it should return <code>true</code> if the first value should appear before the second, and <code>false</code> otherwise. Once sorted, it returns a new, sorted array.</p>
+<p>A named, global function may be provided as the sorting function. Alternatively, a closure expression may be provided. The types of the parameters may be inferred from the context, however, specifically the type of the parameter it’s being passed to. Further, single statement closures may omit the <code>return</code> keyword, as it’s implied.</p>
+<p>Within closures, shorthand argument names are available in the form of <code>$n</code> where <code>n</code> starts with 0 corresponding to the first parameter.</p>
+<p>If the final parameter in a function is of function type and a closure is going to be passed, it can be passed after the parameter list, which is known as trailing closure syntax <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>. Further, if the closure expression is the <em>only</em> argument provided to the function, then the pair of parentheses is can be omitted.</p>
+<p>Finally, operators are generally implemented as functions, and so they alone may be passed in many cases <a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">backwards</span><span class="p">(</span><span class="n">s1</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">s2</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Bool</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">s1</span> <span class="o">&gt;</span> <span class="n">s2</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nv">reversed</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">backwards</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nv">reversed</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="p">{</span> <span class="p">(</span><span class="n">s1</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">s2</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Bool</span> <span class="k">in</span>
+  <span class="k">return</span> <span class="n">s1</span> <span class="o">&gt;</span> <span class="n">s2</span>
+<span class="p">})</span>
+<span class="kd">var</span> <span class="nv">reversed</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="p">{</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="k">in</span> <span class="k">return</span> <span class="n">s1</span> <span class="o">&gt;</span> <span class="n">s2</span> <span class="p">})</span> <span class="c1">// inferred types</span>
+<span class="kd">var</span> <span class="nv">reversed</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="p">{</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="k">in</span> <span class="n">s1</span> <span class="o">&gt;</span> <span class="n">s2</span> <span class="p">})</span> <span class="c1">// implicit return</span>
+<span class="kd">var</span> <span class="nv">reversed</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="p">{</span> <span class="nv">$0</span> <span class="o">&gt;</span> <span class="nv">$1</span> <span class="p">})</span> <span class="c1">// shorthand arguments</span>
+<span class="kd">var</span> <span class="nv">reversed</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="p">{</span> <span class="nv">$0</span> <span class="o">&gt;</span> <span class="nv">$1</span> <span class="p">}</span> <span class="c1">// trailing closure</span>
+<span class="kd">var</span> <span class="nv">reversed</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="o">&gt;</span><span class="p">)</span> <span class="c1">// operator functions</span>
+</code></pre></figure>
+<p>The <code>@auto_closure</code> attribute can be used to specify that a closure argument should be taken as a closure even if it’s not within braces.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">myassert</span><span class="p">(</span><span class="n">predicate</span><span class="p">:</span> <span class="p">@</span><span class="n">auto_closure</span> <span class="p">()</span> <span class="p">-&gt;</span> <span class="nb">Bool</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cp">#if</span> <span class="o">!</span><span class="cp">NDEBUG</span>
+    <span class="k">if</span> <span class="n">predicate</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">abort</span><span class="p">()</span>
+    <span class="p">}</span>
+  <span class="cp">#endif</span>
+<span class="p">}</span>
+
+<span class="n">myassert</span><span class="p">(</span><span class="n">someExpensiveComputation</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">42</span><span class="p">)</span>
+</code></pre></figure>
+<h1 id="enumerations">Enumerations</h1>
+<p>Enumerations may provide computed properties, instance methods, initializers, be extended by extensions, and adopt protocols.</p>
+<p>It’s not necessary to provide a raw value for members of an enumeration. If no raw value is provided, then it must be of type string, character, integer, or floating-point. If no raw value is provided, then each member is its own kind of value. Enumeration members may also specify associated values of any type to be stored <a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a>.</p>
+<p>When the enumeration’s type can be inferred, a shorter dot syntax can be used which omits the enumeration type.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">enum</span> <span class="nc">CompassPoint</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">North</span><span class="p">,</span> <span class="n">South</span><span class="p">,</span> <span class="n">East</span><span class="p">,</span> <span class="n">West</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nv">someValue</span> <span class="p">=</span> <span class="n">CompassPoint</span><span class="p">.</span><span class="n">North</span>
+
+<span class="c1">// or</span>
+<span class="kd">var</span> <span class="nv">someValue</span><span class="p">:</span> <span class="n">CompassPoint</span> <span class="p">=</span> <span class="p">.</span><span class="n">North</span>
+
+<span class="k">switch</span> <span class="n">someValue</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="p">.</span><span class="n">North</span><span class="p">:</span> <span class="c1">// ...</span>
+  <span class="k">case</span> <span class="p">.</span><span class="n">South</span><span class="p">:</span> <span class="c1">// ...</span>
+  <span class="k">case</span> <span class="p">.</span><span class="n">East</span><span class="p">:</span>  <span class="c1">// ...</span>
+  <span class="k">case</span> <span class="p">.</span><span class="n">West</span><span class="p">:</span>  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>The components of enumeration members’ associated values can be bound to names within a switch statement in the same manner as tuples.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="c1">// associated values</span>
+<span class="kd">enum</span> <span class="nc">Barcode</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">UPCA</span><span class="p">(</span><span class="nb">Int</span><span class="p">,</span> <span class="nb">Int</span><span class="p">,</span> <span class="nb">Int</span><span class="p">)</span>
+  <span class="k">case</span> <span class="n">QRCode</span><span class="p">(</span><span class="nb">String</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">code</span> <span class="p">=</span> <span class="n">BarCode</span><span class="p">.</span><span class="n">QRCode</span><span class="p">(</span><span class="s">&quot;TEST&quot;</span><span class="p">)</span>
+
+<span class="k">switch</span> <span class="n">code</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="kd">let</span> <span class="p">.</span><span class="n">UPCA</span><span class="p">(</span><span class="n">numSystem</span><span class="p">,</span> <span class="n">ident</span><span class="p">,</span> <span class="n">check</span><span class="p">):</span> <span class="c1">// ...</span>
+  <span class="k">case</span> <span class="p">.</span><span class="n">QRCode</span><span class="p">(</span><span class="kd">let</span> <span class="nv">code</span><span class="p">):</span> <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Raw values must be unique within the enumeration. If an integer is used, it auto-increments for remaining members if they don’t specify a raw value. Raw values may be accessed using the <code>toRaw</code> function, and an enumeration member can be produced given a raw value using the <code>fromValue</code> function, which yields an optional of the enumeration’s type in case member associated with that raw value isn’t defined.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">enum</span> <span class="nc">Planet</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">Mercury</span> <span class="p">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">Venus</span><span class="p">,</span> <span class="n">Earth</span><span class="p">,</span> <span class="n">Mars</span><span class="p">,</span> <span class="n">Jupeter</span><span class="p">,</span> <span class="n">Saturn</span><span class="p">,</span> <span class="n">Uranus</span><span class="p">,</span> <span class="n">Neptune</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">earthsOrder</span> <span class="p">=</span> <span class="n">Planet</span><span class="p">.</span><span class="n">Earth</span><span class="p">.</span><span class="n">toRaw</span><span class="p">()</span> <span class="c1">// = 3</span>
+<span class="kd">let</span> <span class="nv">possiblePlanet</span><span class="p">:</span> <span class="n">Planet</span><span class="p">?</span> <span class="p">=</span> <span class="n">Planet</span><span class="p">.</span><span class="n">fromRaw</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="c1">// = Planet.Uranus</span>
+</code></pre></figure>
+<h1 id="classes-and-structures">Classes and Structures</h1>
+<p>The only difference between classes and structures is that classes can inherit from other classes, type cast, specify deinitializers, and allow for more than one reference to a particular instance.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">SomeClass</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">SomeStruct</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Structures and enumerations are value types that are always copied when passed around (subject to compiler optimizations). Classes are reference types so that assigning it to another variable or constant simply creates another reference to the instance.</p>
+<p>Structures have automatically generated memberwise initializers.</p>
+<p>Testing whether two references point to the same instance is possible via the identity operators <code>===</code> and <code>!==</code>.</p>
+<h1 id="properties">Properties</h1>
+<p>Stored properties store constant or variable values that are part of an instance. Naturally, if a structure instance is assigned to a constant, properties of that instance may not be modified even if they are defined as variable. On the other hand, instances of a class assigned to a constant can still have their properties modified.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">FixedLengthRange</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">firstValue</span><span class="p">:</span> <span class="nb">Int</span>
+  <span class="kd">let</span> <span class="nv">length</span><span class="p">:</span> <span class="nb">Int</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Lazy stored properties, denoted by the <code>lazy</code> declaration modifier, are properties whose initial values are not calculated until the first time they are accessed. Since the initial value may not be retrieved until after initialization completes, lazy properties must be defined as variable and not constants, since constant properties must be initialized before initialization completes.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">SomeClass</span> <span class="p">{</span>
+  <span class="kr">lazy</span> <span class="kd">var</span> <span class="nv">expensiveValue</span> <span class="p">=</span> <span class="n">ExpensiveObject</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Computed properties can define getters and setters to compute a property on the fly. The name to use for the value provided to the setter can be placed within parentheses after the <code>set</code> keyword, and if omitted, defaults to <code>newValue</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">Rect</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">origin</span> <span class="p">=</span> <span class="n">Point</span><span class="p">()</span> <span class="c1">// .x and .y</span>
+  <span class="kd">var</span> <span class="nv">size</span> <span class="p">=</span> <span class="n">Size</span><span class="p">()</span>    <span class="c1">// .height and .width</span>
+
+  <span class="kd">var</span> <span class="nv">center</span><span class="p">:</span> <span class="n">Point</span> <span class="p">{</span>
+    <span class="kr">get</span> <span class="p">{</span>
+      <span class="c1">// calculate x and y given origin and width/height</span>
+    <span class="p">}</span>
+
+    <span class="kr">set</span><span class="p">(</span><span class="n">newCenter</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// set new origin given new center and width/height</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Read-only computed properties are ones that only define a getter. They must still be defined as variables because their value is not fixed. Since only the getter is defined, the <code>get</code> and <code>set</code> keywords may be omitted.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">Cuboid</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">width</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">height</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">depth</span> <span class="p">=</span> <span class="mf">0.0</span> 
+  <span class="kd">var</span> <span class="nv">volume</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="n">depth</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Property observers can monitor changes to a property’s value, specifically before and after a value has been set, even if the new value is the same. Property observers can be added for any stored properties, even inherited ones, except lazy stored properties.</p>
+<p>The <code>willSet</code> and <code>didSet</code> keywords are used to establish property observers for before and after a value is stored, respectively. Both kinds of property observers can define a name for a value to be passed as with computed property setters, and if omitted, take on the name of <code>newValue</code> and <code>oldValue</code> for <code>willSet</code> and <code>didSet</code> respectively.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">StepCounter</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">totalSteps</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">0</span>
+  <span class="kr">willSet</span><span class="p">(</span><span class="n">newTotalSteps</span><span class="p">)</span> <span class="p">{</span>
+    <span class="bp">println</span><span class="p">(</span><span class="s">&quot;About to set to </span><span class="si">\(</span><span class="n">newTotalSteps</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="kr">didSet</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">totalSteps</span> <span class="o">&gt;</span> <span class="n">oldValue</span> <span class="p">{</span>
+      <span class="bp">println</span><span class="p">(</span><span class="s">&quot;added </span><span class="si">\(</span><span class="n">totalSteps</span> <span class="o">-</span> <span class="n">oldValue</span><span class="si">)</span><span class="s"> steps&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Global and local variables can also make use of computed and observing properties. Global variables are always computed</p>
+<p>Type properties are properties that belong to the type itself, such that there is only one copy of the property regardless of the number of instances created. Specifically, value types may define stored and computed type properties, while reference types can only define computed type properties, read-only or read-write.</p>
+<p>Stored type properties must <em>always</em> be given a default value, since types can’t define initializers.</p>
+<p>Type properties may be defined for value types with the <code>static</code> keyword placed before the introducer keyword and for reference types with the <code>class</code> keyword.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">SomeStructure</span> <span class="p">{</span>
+  <span class="kd">static</span> <span class="kd">var</span> <span class="nv">storedProperty</span> <span class="p">=</span> <span class="s">&quot;Some Value&quot;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">SomeClass</span> <span class="p">{</span>
+  <span class="kd">class</span> <span class="nc">var</span> <span class="n">computedTypeProperty</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">3</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">SomeStructure</span><span class="p">.</span><span class="n">storedProperty</span> <span class="c1">// = &quot;Some Value&quot;</span>
+<span class="n">SomeClass</span><span class="p">.</span><span class="n">computedTypeProperty</span> <span class="c1">// = 3</span>
+</code></pre></figure>
+<h1 id="methods">Methods</h1>
+<p>By default, Swift treats the first parameter of a method as a local name only, but subsequent parameters as both local and external names. This is to facilitate the convention of ending a method name in a preposition like <code>with</code>, <code>for</code>, or <code>by</code>, thereby preventing the first parameter from causing redundancy.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">Counter</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">count</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">0</span>
+  <span class="kd">func</span> <span class="nf">incrementBy</span><span class="p">(</span><span class="n">amount</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numberOfTimes</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="bp">count</span> <span class="o">+=</span> <span class="n">amount</span> <span class="o">*</span> <span class="n">numberOfTimes</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">counter</span> <span class="p">=</span> <span class="n">Counter</span><span class="p">()</span>
+<span class="n">counter</span><span class="p">.</span><span class="n">incrementBy</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">numberOfTimes</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></figure>
+<p>This can be changed by specifying a separate external name or prefixing the name with a <code>#</code> to use the same local name as the external name.</p>
+<p>It’s also possible to opt-out of this behavior for subsequent names by specifying an explicit external name as an underscore <code>_</code>.</p>
+<p>By default, instance methods of value types like structures and enumerations cannot modify properties of that instance, unless marked with the <code>mutating</code> keyword. Note that mutating methods can’t be called on immutable values.</p>
+<p>Mutating methods can replace the instance with another one by assigning to <code>self</code>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">Point</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="p">=</span> <span class="mf">0.0</span>
+  <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">moveByX</span><span class="p">(</span><span class="n">deltaX</span><span class="p">:</span> <span class="nb">Double</span><span class="p">,</span> <span class="n">y</span> <span class="n">deltaY</span><span class="p">:</span> <span class="nb">Double</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kc">self</span> <span class="p">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">deltaX</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span> <span class="o">+</span> <span class="n">deltaY</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span> <span class="nc">TriStateSwitch</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">Off</span><span class="p">,</span> <span class="n">Low</span><span class="p">,</span> <span class="n">High</span>
+  <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">next</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="kc">self</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="n">Off</span><span class="p">:</span>
+        <span class="kc">self</span> <span class="p">=</span> <span class="n">Low</span>
+      <span class="k">case</span> <span class="n">Low</span><span class="p">:</span>
+        <span class="kc">self</span> <span class="p">=</span> <span class="n">High</span>
+      <span class="k">case</span> <span class="n">High</span><span class="p">:</span>
+        <span class="kc">self</span> <span class="p">=</span> <span class="n">Off</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Type methods are methods that are written on the type itself, more or less like static methods in other languages. They’re written by prefixing the <code>func</code> keyword by <code>class</code> in a class and <code>static</code> in structures and enumerations.</p>
+<p>In type methods, the <code>self</code> keyword refers to the type itself.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">SomeClass</span> <span class="p">{</span>
+  <span class="kd">class</span> <span class="nc">func</span> <span class="n">someTypeMethod</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">SomeClass</span><span class="p">.</span><span class="n">someTypeMethod</span><span class="p">()</span>
+</code></pre></figure>
+<h1 id="subscripts">Subscripts</h1>
+<p>Overloaded subscript accessors/setters can be defined for classes, structures, and enumerations. The syntax is facilitated by the <code>subscript</code> keyword and looks similar to computed properties, so that if the subscript is read-only, the <code>get</code> and <code>set</code> keywords can be omitted.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">subscript</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Int</span> <span class="p">{</span>
+  <span class="kr">get</span> <span class="p">{</span>
+    <span class="c1">// return value</span>
+  <span class="p">}</span>
+
+  <span class="kr">set</span><span class="p">(</span><span class="n">newValue</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// set value</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>It’s also possible to define a subscript with multiple parameters.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">Matrix</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">grid</span><span class="p">:</span> <span class="p">[</span><span class="nb">Double</span><span class="p">]</span>
+  <span class="c1">// ...</span>
+  <span class="kd">subscript</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Double</span> <span class="p">{</span>
+    <span class="kr">get</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="n">grid</span><span class="p">[(</span><span class="n">row</span> <span class="o">*</span> <span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="n">column</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="kr">set</span> <span class="p">{</span>
+      <span class="n">grid</span><span class="p">[(</span><span class="n">row</span> <span class="o">*</span> <span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="n">column</span><span class="p">]</span> <span class="p">=</span> <span class="n">newvalue</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nv">matrix</span> <span class="p">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mf">1.5</span>
+</code></pre></figure>
+<h1 id="inheritance">Inheritance</h1>
+<p>Inheritance is what differentiates classes from structures and enumerations. Classes can call, access, and override methods, properties, and subscripts of the superclass. Overrides are ensured by the compiler to actually be overriding an item in the superclass. It’s also possible to add property observers to inherited properties.</p>
+<p>Unlike other languages, classes in Swift don’t automatically inherit from a universal base class like <code>Object</code>, so an inheritance relationship must be defined explicitly by following the class name with a colon <code>:</code> and the name of the superclass from which to inherit.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">SomeClass</span><span class="p">:</span> <span class="n">SomeSuperclass</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>The superclass’s initializer can be called within the initializer of the subclass, usually at the very beginning.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">init</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kc">super</span><span class="p">.</span><span class="kd">init</span><span class="p">()</span>
+
+  <span class="kc">self</span><span class="p">.</span><span class="n">otherProperty</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Overriding is explicitly denoted by the <code>override</code> keyboard. The <code>super</code> keyword can be used to refer to the superclass version of methods, properties, or subscripts.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">Car</span><span class="p">:</span> <span class="n">Vehicle</span> <span class="p">{</span>
+  <span class="kr">override</span> <span class="kd">func</span> <span class="nf">description</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">super</span><span class="p">.</span><span class="n">description</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;; traveling at </span><span class="si">\(</span><span class="n">speed</span><span class="si">)</span><span class="s"> mph&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>A read-only property can be overridden as a read-write property by providing a getter and setter. The reverse is not possible, however, a read-write property overridden as a read-only property.</p>
+<p>An overriding setter and overriding property observer are mutually exclusive, since the changes can already be observed in the setter.</p>
+<p>It’s possible to outright prevent overriding of a method, property, or subscript in subsequent subclasses by marking the item as final with the <code>final</code> declaration modifier by placing this marker before the introducer keywords <code>var</code>, <code>func</code>, <code>class func</code>, <code>subscript</code>, or even <code>class</code> to mark the entire class as final.</p>
+<h1 id="initialization">Initialization</h1>
+<p>Swift requires that all classes and structures set <em>all</em> of their stored properties to an appropriate initial value by the time the instance is created. This can be achieved either within an initializer or, more idiomatically, by assigning a default value within the property’s definition. Note that this bypasses property observers.</p>
+<p>Since there is no differentiating initializer name for each initializer in a class, the parameters are used as a means of differentiating, and so Swift provides automatic external names for every parameter if one isn’t provided. Further, if an external name is defined—if an underscore <code>_</code> isn’t specified as the external name—then the external names must <em>always</em> be used when calling the initializer.</p>
+<p>Optionals are given a <code>nil</code> value if no initial value is provided.</p>
+<p>Constant properties can be modified at any point during initialization. With respect to classes, a constant property can only be modified by the class that defined it.</p>
+<p>Structures automatically receive a memberwise initializer that has parameters named after the corresponding properties. However, defining a custom initializer removes this default memberwise initializer. One method to circumvent this is to define the custom initializers within an extension.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">Size</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">width</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">height</span> <span class="p">=</span> <span class="mf">0.0</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">twoByTwo</span> <span class="p">=</span> <span class="n">Size</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">)</span>
+</code></pre></figure>
+<p>It’s also possible to use a closure or function to initialize a property, though due to two-phase initialization, no other property, instance method, or <code>self</code> be used unless the property is marked as <code>lazy</code>, which would denote that it wouldn’t accessed until after initialization.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">SomeClass</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nv">someProperty</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">4</span>
+  <span class="p">}()</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h2 id="initializer-delegation">Initializer Delegation</h2>
+<p>Designated initializers are initializers that can <em>fully</em> initialize an instance by initializing all properties in its class and its superclass. Convenience initializers are usually simpler initializers which delegate to designated initializers. There are three rules that are enforced for initializer delegation:</p>
+<ol type="1">
+<li>designated initializers must call a designated initializer in the immediate superclass</li>
+<li>convenience initializers must call another initializer in the same class</li>
+<li>convenience initializers must ultimately end up calling a designated initializer</li>
+</ol>
+<p>In other words, designated initializers must delegate up and convenience initializers must delegate across.</p>
+<p>Designated initializers use the simple syntax denoted by the <code>init</code> keyword, while convenience initializers use the same syntax prepended by the <code>convenience</code> keyword.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">init</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kr">convenience</span> <span class="kd">init</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>The <code>required</code> modifier can be used on an initializer to specify that every subclass of the class must implement that initializer. This modifier must also be included in every subclass’ implementation of the required initializer.</p>
+<h2 id="two-phase-initialization">Two-Phase Initialization</h2>
+<p>Classes are initialized in two phases. In the first phase, each property is assigned an initial value by the class that introduced it. In the second phase, each class is given the opportunity to customize its stored properties.</p>
+<p>Two-phase initialization prevents property values from being accessed before they’re initialized or changed by another initializer unexpectedly.</p>
+<p>Two-phase initialization is validated by four safety checks:</p>
+<ol type="1">
+<li><strong>designated initializers</strong> must ensure that <em>all</em> properties introduced by its class are initialized before delegating to a superclass initializer</li>
+<li><strong>designated initializers</strong> must delegate to a superclass initializer <em>before</em> assigning a value to an inherited property, otherwise it would be overwritten by the superclass initializer.</li>
+<li>like #2, <strong>convenience initializers</strong> must delegate to another initializer before assigning a value to <em>any</em> property, otherwise it would be overwritten by the designated initializer</li>
+<li><strong>initializers</strong> can’t call instance methods, read values of instance properties, or refer to <code>self</code> <em>until</em> the first phase of initialization is complete</li>
+</ol>
+<p>A run-down of two-phase initialization follows:</p>
+<ol type="1">
+<li>first phase: initializer called on a class
+<ol start="2" type="1">
+<li>memory is allocated but not initialized</li>
+<li>designated initializer confirms all stored properties introduced by the class have a value and their memory are initialized</li>
+<li>designated initializer delegates to superclass initializer to do the same</li>
+<li>continue until top of inheritance chain is reached</li>
+<li>instance’s memory is considered to be fully initialized</li>
+</ol></li>
+<li>second phase: working back from top to bottom of inheritance chain
+<ol type="1">
+<li>designated initializers have the option to customize the instance further, as the are able to access <code>self</code> and modify its properties, call instance methods, etc.</li>
+<li>convenience initializers can customize the instance and to work with <code>self</code></li>
+</ol></li>
+</ol>
+<h2 id="automatic-initializer-inheritance">Automatic Initializer Inheritance</h2>
+<p>Initializers are automatically inherited in two situations, assuming that any newly introduced properties have default values provided.</p>
+<ol type="1">
+<li>the class doesn’t define any designated initializers, it automatically inherits all of the superclass’ <em>designated initializers</em></li>
+<li>the class provides implementations for <em>all</em> of the superclass’ designated initializers—either implicitly via #1 or explicitly—then it automatically inherits all of the superclass <em>convenience initializers</em></li>
+</ol>
+<h1 id="deinitialization">Deinitialization</h1>
+<p>Deinitializers are called right before a class instance is deallocated, and are written using the <code>deinit</code> keyword. Superclass deinitializers are inherited automatically and are automatically called at the end of a class’ deinitializer implementation, even if one isn’t explicitly provided.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">class</span> <span class="nc">Player</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">coinsInPurse</span><span class="p">:</span> <span class="nb">Int</span>
+  <span class="c1">// ...</span>
+  <span class="kd">deinit</span> <span class="p">{</span>
+    <span class="n">Bank</span><span class="p">.</span><span class="n">receiveCoins</span><span class="p">(</span><span class="n">coinsInPurse</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h1 id="automatic-reference-counting">Automatic Reference Counting</h1>
+<p>Automatic Reference Counting (<abbr title="Automatic Reference Counting">ARC</abbr>) tracks memory usage as in modern Objective-C. Whenever a class instance is assigned to a property, constant, or variable, that target makes a strong reference to the instance, preventing it from being deallocated so long as the strong reference remains.</p>
+<p>Circular strong references can prevent involved instances from ever being deallocated, causing a memory leak in the application.</p>
+<h2 id="weak-references">Weak References</h2>
+<p>A weak reference is one that doesn’t establish a strong reference to the instance it refers to, thereby not preventing <abbr title="Automatic Reference Counting">ARC</abbr> from disposing of the referenced instance when necessary. Weak references are denoted by the <code>weak</code> keyword before the property or variable declaration, and are used when it’s possible for that reference to have no referred instance during its lifetime.</p>
+<p>Weak references must be declared as optionals since they are allowed to not refer to any instance, and must be declared as variables since they’re allowed to change the instance to which they refer.</p>
+<p><abbr title="Automatic Reference Counting">ARC</abbr> is able to deallocate instances referred to by weak references—since they don’t establish strong references—and <abbr title="Automatic Reference Counting">ARC</abbr> automatically sets the weak reference to <code>nil</code> if this occurs.</p>
+<h2 id="unowned-references">Unowned References</h2>
+<p>Unowned references are similar to weak references, except they are assumed to <em>always</em> hold a value. They are denoted by the <code>unowned</code> keyword on non-optional types.</p>
+<p>Since unowned references are assumed to always hold a value, and as a result aren’t optional types, <abbr title="Automatic Reference Counting">ARC</abbr> can’t set them to <code>nil</code> when the instances to which they refer have been deallocated. Consequently, attempting to access the instance through that reference in such circumstance would yield a run-time error.</p>
+<p><a href="#implicit-optionals">Implicit optionals</a> can be used to simplify situations in which both properties in a reference cycle must always have a value and should never be <code>nil</code> once initialized. In such a scenario, one class defines the property as an unowned reference while the other defines it as an implicit optional.</p>
+<h2 id="closure-reference-cycles">Closure Reference Cycles</h2>
+<p>Strong reference cycles may also occur if a closure is assigned to a property of an instance that captures that instance by accessing an instance property or method. Such reference cycles occur because closures are reference types, such that assigning a closure to a property assigns a reference to that closure and not the closure itself.</p>
+<p>Capture lists define the rules to use when capturing reference types within the closure’s body, declaring them as either weak or unowned references. Capture lists are written within brackets <code>[]</code> and consist of lists of pairs of reference types, unowned or weak, and the parameter being captured.</p>
+<p>Unowned references should be used when the closure and instance always refer to each other, and will be deallocated at the same time. Weak references should be used when the captured reference may become <code>nil</code> at any time and so can be checked within the closure’s body.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kr">lazy</span> <span class="kd">var</span> <span class="nv">someClosure</span><span class="p">:</span> <span class="p">(</span><span class="nb">Int</span><span class="p">,</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">=</span> <span class="p">{</span>
+  <span class="p">[</span><span class="kr">unowned</span> <span class="kc">self</span><span class="p">]</span> <span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">stringToProcess</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="k">in</span>
+
+  <span class="c1">// or with parameter list inferred</span>
+  <span class="p">[</span><span class="kr">unowned</span> <span class="kc">self</span><span class="p">]</span> <span class="k">in</span>
+
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h1 id="optional-chaining">Optional Chaining</h1>
+<p>Optional chaining can be used on properties, methods, and subscripts in an elaborate expression such that if any point in its evaluation yields <code>nil</code>, the entire expression evaluates as <code>nil</code> <a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>. Otherwise, the result of the expression is an optional containing the resulting value.</p>
+<p>When using optional chaining, the resulting value will <em>always</em> be <strong>one</strong> level of optional regardless of the number of levels of chaining used or whether the resulting value was already optional.</p>
+<p>It’s possible to set a property’s value, assign to a subscript, or calla mutating method or operator through optional chaining.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">obj</span> <span class="p">=</span> <span class="n">SomeType</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="kd">let</span> <span class="nv">test</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">optionalProperty</span><span class="p">?.</span><span class="n">property</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="kd">let</span> <span class="nv">test</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">someSubscript</span><span class="p">?[</span><span class="mi">0</span><span class="p">].</span><span class="n">name</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="kd">let</span> <span class="nv">test</span> <span class="p">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">methodReturningOptional</span><span class="p">()?.</span><span class="n">uppercaseString</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nv">testScores</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s">&quot;B&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>
+<span class="n">testScores</span><span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">]?[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">91</span>
+<span class="n">testScores</span><span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">]?[</span><span class="mi">0</span><span class="p">]</span><span class="o">++</span>
+</code></pre></figure>
+<h1 id="type-casting">Type Casting</h1>
+<p>If an array is defined containing instances of related classes, their most common base class is inferred as the type of the array. When iterating through the array, each instance will be treated as the base class, therefore losing the functionality provided by their actual class. To get that functionality back, it’s necessary to check their type and downcast them to their appropriate type.</p>
+<p>The type of an instance can be checked with the type check operator <code>is</code>, which returns <code>true</code> if the instance is a <em>subclass</em> of the provided type.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="k">for</span> <span class="n">item</span> <span class="k">in</span> <span class="n">items</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">item</span> <span class="kc">is</span> <span class="n">SomeType</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>An instance can be downcast with the type cast operator <code>as</code>. Since downcasting may fail, the <code>as?</code> variant returns an optional, whereas the <code>as</code> performs a forced unwrapping on that optional, which would yield a run-time error if the downcast fails.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="k">for</span> <span class="n">item</span> <span class="k">in</span> <span class="n">items</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="kd">let</span> <span class="nv">someType</span> <span class="p">=</span> <span class="n">item</span> <span class="kc">as</span><span class="p">?</span> <span class="n">SomeType</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>There are two type aliases for working with non-specific types. The <code>AnyObject</code> alias can represent an instance of any class type, while the <code>Any</code> alias can represent an instance of any type except function types.</p>
+<p>For example, Cocoa APIs might return arrays of <code>[AnyObject]</code>, even though it may be obvious what the type of the elements may be. For this, the forced downcast operator <code>as</code> can be used to downcast each item to the appropriate type. A temporary for the downcast instance can be avoided by providing the downcasting directive in the for loop itself.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">someObjects</span><span class="p">:</span> <span class="p">[</span><span class="nb">AnyObject</span><span class="p">]</span> <span class="p">=</span> <span class="p">[</span> <span class="cm">/* all are SomeType */</span> <span class="p">]</span>
+
+<span class="k">for</span> <span class="n">item</span> <span class="k">in</span> <span class="n">someObjects</span> <span class="kc">as</span> <span class="p">[</span><span class="n">SomeType</span><span class="p">]</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>The <code>is</code> and <code>as</code> operators can be used within switch statement cases. Note that the forced cast operator <code>as</code> can be used safely within a switch statement, such that if the downcast fails then that case statement simply does not apply.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">var</span> <span class="nv">items</span> <span class="p">=</span> <span class="p">[</span><span class="nb">Any</span><span class="p">]()</span>
+<span class="n">items</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">items</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">items</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
+<span class="n">items</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">item</span> <span class="k">in</span> <span class="n">items</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="n">item</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="mi">0</span> <span class="kc">as</span> <span class="nb">Int</span><span class="p">:</span>
+  <span class="k">case</span> <span class="mi">0</span> <span class="kc">as</span> <span class="nb">Double</span><span class="p">:</span>
+  <span class="k">case</span> <span class="kd">let</span> <span class="nv">someInt</span> <span class="kc">as</span> <span class="nb">Int</span><span class="p">:</span>
+  <span class="k">case</span> <span class="kd">let</span> <span class="nv">someDouble</span> <span class="kc">as</span> <span class="nb">Double</span> <span class="k">where</span> <span class="n">someDouble</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="k">case</span> <span class="kc">is</span> <span class="nb">Double</span><span class="p">:</span>
+  <span class="k">case</span> <span class="kd">let</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="kc">as</span> <span class="p">(</span><span class="nb">Double</span><span class="p">,</span> <span class="nb">Double</span><span class="p">):</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h1 id="nested-types">Nested Types</h1>
+<p>Swift allows nesting types within other types, which is particularly useful when the nested type need only be available within the outter type. Nested types can be referred to using dot notation, traversing the types that it’s nested under to get to it.</p>
+<h1 id="extensions">Extensions</h1>
+<p>Extensions can add new functionality to existing classes, structures, or enumerations—even to types for which the original source is not available, which is known as retroactive modeling.</p>
+<p>Extensions are declared using the <code>extension</code> keyword. If an extension is extending a type to adopt one or more protocols, they’re written as in a class declaration.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">extension</span> <span class="nc">Sometype</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="c1">// or adopting a protocol</span>
+<span class="kd">extension</span> <span class="nc">SomeType</span><span class="p">:</span> <span class="n">SomeProtocol</span><span class="p">,</span> <span class="n">AnotherProtocol</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Extensions can add new computed properties—but <em>not</em> stored properties—to an existing type.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">extension</span> <span class="nc">Double</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">km</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">self</span> <span class="o">*</span> <span class="mf">1_000.0</span> <span class="p">}</span>
+  <span class="kd">var</span> <span class="nv">m</span><span class="p">:</span> <span class="nb">Double</span>  <span class="p">{</span> <span class="k">return</span> <span class="kc">self</span> <span class="p">}</span>
+  <span class="kd">var</span> <span class="nv">cm</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">self</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">oneInch</span> <span class="p">=</span> <span class="mf">25.4</span><span class="p">.</span><span class="n">mm</span>
+</code></pre></figure>
+<p>Extensions can add new convenience initializers—but <em>not</em> designated initializers—to an existing type. When a custom initializer is defined for a class, the default and memberwise initializers no longer become available. These initializers remain available if the custom initializer is defined via an extension.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">extension</span> <span class="nc">Rect</span> <span class="p">{</span>
+  <span class="kd">init</span><span class="p">(</span><span class="n">center</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Size</span><span class="p">)</span> <span class="p">{</span>
+   <span class="c1">// delegate to the memberwise initializer</span>
+   <span class="kc">self</span><span class="p">.</span><span class="kd">init</span><span class="p">(</span><span class="cm">/* ... /*)</span>
+<span class="cm">  }</span>
+<span class="cm">}</span>
+</code></pre></figure>
+<p>Extensions can add new instance and type methods to existing types. These methods can also modify the instance, and such methods must be marked as <code>mutating</code> for structures and enumerations.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">extension</span> <span class="nc">Int</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="nf">repetitions</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="p">()</span> <span class="p">-&gt;</span> <span class="p">())</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="kc">self</span> <span class="p">{</span> <span class="n">task</span><span class="p">()</span> <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">square</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kc">self</span> <span class="p">=</span> <span class="kc">self</span> <span class="o">*</span> <span class="kc">self</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="mf">3.</span><span class="n">repetitions</span> <span class="p">{</span>
+  <span class="bp">println</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nv">someInt</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="n">someInt</span><span class="p">.</span><span class="n">square</span><span class="p">()</span> <span class="c1">// someInt = 9</span>
+</code></pre></figure>
+<p>Extensions can define new subscripts to existing types.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">extension</span> <span class="nc">Int</span> <span class="p">{</span>
+  <span class="kd">subscript</span><span class="p">(</span><span class="n">digitIndex</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Int</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">decimalBase</span> <span class="p">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="kc">_</span> <span class="k">in</span> <span class="mf">1.</span><span class="p">..</span><span class="n">digitIndex</span> <span class="p">{</span>
+      <span class="n">decimalBase</span> <span class="o">*=</span> <span class="mi">10</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="kc">self</span> <span class="o">/</span> <span class="n">decimalBase</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="mi">746381295</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="c1">// 8th digit is 7</span>
+</code></pre></figure>
+<p>Extensions can add nested types to existing types.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">extension</span> <span class="nc">Character</span> <span class="p">{</span>
+  <span class="c1">// nested type</span>
+  <span class="kd">enum</span> <span class="nc">Kind</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">Vowel</span><span class="p">,</span> <span class="n">Consonant</span><span class="p">,</span> <span class="n">Other</span>
+  <span class="p">}</span>
+
+  <span class="c1">// computed property</span>
+  <span class="kd">var</span> <span class="nv">kind</span><span class="p">:</span> <span class="n">Kind</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="nb">String</span><span class="p">(</span><span class="kc">self</span><span class="p">).</span><span class="n">lowercaseString</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;e&quot;</span><span class="p">,</span> <span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="s">&quot;u&quot;</span><span class="p">:</span> <span class="k">return</span> <span class="p">.</span><span class="n">Vowel</span>
+    <span class="k">case</span> <span class="cm">/* consonant */</span><span class="p">:</span> <span class="k">return</span> <span class="p">.</span><span class="n">Consonant</span>
+    <span class="k">default</span><span class="p">:</span> <span class="k">return</span> <span class="p">.</span><span class="n">Other</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nv">char</span><span class="p">:</span> <span class="nb">Character</span> <span class="p">=</span> <span class="s">&quot;c&quot;</span>
+<span class="n">char</span><span class="p">.</span><span class="n">kind</span> <span class="c1">// Character.Kind.Consonant</span>
+</code></pre></figure>
+<h1 id="protocols">Protocols</h1>
+<p>Protocols are like interfaces in object-oriented languages, typeclasses in Haskell, and traits in Rust. Protocols are declared with the <code>protocol</code> keyword. Types can express the fact that they adopt a particular set of protocols by listing them after the type name and a colon. If the type is a class and it has a superclass, the superclass comes before any protocol in the list.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">protocol</span> <span class="nc">SomeProtocol</span> <span class="p">{</span>
+  <span class="c1">// ... </span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">SomeStructure</span><span class="p">:</span> <span class="n">SomeProtocol</span><span class="p">,</span> <span class="n">AnotherProtocol</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">SomeClass</span><span class="p">:</span> <span class="n">SuperClass</span><span class="p">,</span> <span class="n">Protocol1</span><span class="p">,</span> <span class="n">Protocol2</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Protocols can require that adopting types provide an instance or type property with a given name, type and access policy (i.e. read-only or read-write), regardless of whether it is a stored or computed property.</p>
+<p>Property requirements are always written as variables with the <code>var</code> keyword. Type properties should always be prefixed with the <code>class</code> keyword regardless of whether the adopting type is a class or not.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">protocol</span> <span class="nc">SomeProtocol</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">readWrite</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span> <span class="kr">get</span> <span class="kr">set</span> <span class="p">}</span>
+  <span class="kd">var</span> <span class="nv">readOnly</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+
+  <span class="kd">class</span> <span class="nc">var</span> <span class="n">typeProperty</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span> <span class="kr">get</span> <span class="kr">set</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>It’s possible to restrict protocols so that they can only be adopted by class types by beginning the inheritance list with the <code>class</code> keyword.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">protocol</span> <span class="nc">ClassOnlyProtocol</span><span class="p">:</span> <span class="kd">class</span><span class="p">,</span> <span class="n">InheritedProtocol</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Protocols can require adopting types to provide specified instance or type methods. As with type properties, the <code>class</code> keyword must prefix type methods regardless of whether or not the adopting type is a class. Methods that are intended to mutate instances of any type that adopts the protocol should be marked as <code>mutating</code>, which allows structures and enumerations to adopt the protocol.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">protocol</span> <span class="nc">SomeProtocol</span> <span class="p">{</span>
+  <span class="kd">class</span> <span class="nc">func</span> <span class="n">typeMethod</span><span class="p">()</span>
+  <span class="kd">func</span> <span class="nf">random</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="nb">Double</span>
+  <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">toggle</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Protocols can be treated as fully-fledged types, allowing them to be used as parameter or return types, variable types, or the type of contained elements in collections—while providing uniform functionality as defined by the specified protocol.</p>
+<p>Protocols can be adopted by existing types via an extension.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">protocol</span> <span class="nc">Display</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="nf">display</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="nc">Int</span><span class="p">:</span> <span class="n">Display</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="nf">display</span><span class="p">()</span> <span class="p">{</span>
+    <span class="bp">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">\(</span><span class="kc">self</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>It’s also possible that a type already conforms to a protocol, but hasn’t explicitly expressed that it does by simply providing an empty extension declaration stating this <a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a>.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">SomeType</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">name</span> <span class="p">=</span> <span class="s">&quot;test&quot;</span>
+
+  <span class="kd">func</span> <span class="nf">display</span><span class="p">()</span> <span class="p">{</span>
+    <span class="bp">println</span><span class="p">(</span><span class="s">&quot;displaying as </span><span class="si">\(</span><span class="n">name</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="nc">SomeType</span><span class="p">:</span> <span class="n">Display</span> <span class="p">{}</span>
+</code></pre></figure>
+<p>Protocols can inherit from one or more other protocols to add further requirements. The syntax is similar to class inheritance.</p>
+<p>Protocol composition allows one to specify that a type must conform to multiple protocols at once. Protocol compositions essentially define a temporary local protocol that has the combined requirements of all protocols in the composition.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">someFunc</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="kd">protocol</span><span class="p">&lt;</span><span class="n">First</span><span class="p">,</span> <span class="n">Second</span><span class="p">&gt;)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Protocol conformance can be checked with the <code>is</code> operator, and instances can be cast to a specific protocol with the <code>as</code> operator. However, conformance can only be checked if the protocol is marked with the <code>@objc</code> attribute—which indicates that the protocol should be exposed to Objective-C code—even if in reality it <em>won’t</em> be used by Objective-C code. A consequence of this is that <code>@objc</code> protocols can only be adopted by classes and not structures or enumerations.</p>
+<p>It’s also possible to define optional requirements within protocols by prefixing the requirement with <code>optional</code>. Optional property or method requirements that return a value always return it as an optional, and so optional chaining may be used. Again, optional requirements are only possible if the protocol is marked as <code>@objc</code>.</p>
+<h1 id="generics">Generics</h1>
+<p>Generics are available and they seem most similar to Rust’s. They can be used to define generic functions and generic types.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">swapTwoValues</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="kr">inout</span> <span class="n">a</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="kr">inout</span> <span class="n">b</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nv">tempA</span> <span class="p">=</span> <span class="n">a</span>
+  <span class="n">a</span> <span class="p">=</span> <span class="n">b</span>
+  <span class="n">b</span> <span class="p">=</span> <span class="n">tempA</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">Stack</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">items</span> <span class="p">=</span> <span class="p">[</span><span class="n">T</span><span class="p">]()</span>
+  <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">push</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">items</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">pop</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="n">T</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">.</span><span class="n">removeList</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>When extending a generic type, a type parameter list doesn’t need to be provided. Instead, the type parameter list from the original definition is available within the body of the extension.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">extension</span> <span class="nc">Stack</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">topItem</span><span class="p">:</span> <span class="n">T</span><span class="p">?</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">.</span><span class="bp">isEmpty</span> <span class="p">?</span> <span class="kc">nil</span> <span class="p">:</span> <span class="n">items</span><span class="p">[</span><span class="n">items</span><span class="p">.</span><span class="bp">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h2 id="type-constraints">Type Constraints</h2>
+<p>Type constraints can specify that a type parameter must inherit from a specific class or conform to a particular protocol or protocol composition. The syntax for this is pretty straightforward.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">someFunc</span><span class="p">&lt;</span><span class="n">T</span><span class="p">:</span> <span class="n">SomeClass</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">SomeProtocol</span><span class="p">&gt;(</span><span class="n">someT</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">someU</span><span class="p">:</span> <span class="n">U</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h2 id="associated-types">Associated Types</h2>
+<p>Associated types can be expressed within protocols as types that are related to that protocol’s requirements, but won’t be specified until the protocol is adopted, and are expressed using the <code>typealias</code> keyword.</p>
+<p>At time of protocol adoption, the associated type is usually inferred by the implementations of the requirements using that associated type. If it can’t successfully be inferred for whatever reason, the associated time may be provided explicitly using a <code>typealias</code> directive.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">protocol</span> <span class="nc">Container</span> <span class="p">{</span>
+  <span class="kd">typealias</span> <span class="n">ItemType</span>
+  <span class="kr">mutating</span> <span class="kd">func</span> <span class="nf">append</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n">ItemType</span><span class="p">)</span>
+  <span class="kd">var</span> <span class="nv">count</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+  <span class="kd">subscript</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">ItemType</span> <span class="p">{</span> <span class="kr">get</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>When existing types are explicitly declared as conforming to a particular protocol via an empty extension declaration, the associated type is picked up as well.</p>
+<h2 id="where-clauses">Where Clauses</h2>
+<p>Constraints and equality relationships can be expressed between types and associated types in parameter lists using where clauses, denoted by the keyword <code>where</code>.</p>
+<p>The following example uses a where clause to enforce that the contained items’ types are the same in both containers, even if the type of the containers differs. It also enforces that the contained items’ types conform to the <code>Equatable</code> protocol.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">func</span> <span class="nf">allItemsMatch</span><span class="o">&lt;</span>
+  <span class="n">C1</span><span class="p">:</span> <span class="n">Container</span><span class="p">,</span> <span class="n">C2</span><span class="p">:</span> <span class="n">Container</span>
+  <span class="k">where</span> <span class="n">C1</span><span class="p">.</span><span class="n">ItemType</span> <span class="p">==</span> <span class="n">C2</span><span class="p">.</span><span class="n">ItemType</span><span class="p">,</span>
+        <span class="n">C1</span><span class="p">.</span><span class="n">ItemType</span><span class="p">:</span> <span class="nb">Equatable</span><span class="p">&gt;</span>
+  <span class="p">(</span><span class="n">someContainer</span><span class="p">:</span> <span class="n">C1</span><span class="p">,</span> <span class="n">anotherContainer</span><span class="p">:</span> <span class="n">C2</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Bool</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="n">someContainer</span><span class="p">.</span><span class="bp">count</span> <span class="o">!=</span> <span class="n">anotherContainer</span><span class="p">.</span><span class="bp">count</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">someContainer</span><span class="p">.</span><span class="bp">count</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">someContainer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">anotherContainer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h1 id="advanced-operators">Advanced Operators</h1>
+<p>As mentioned in the <a href="#operators">operators</a> section, mathematical operators don’t overflow by default, but this can be opted-into by prefixing the operator with the ampersand <code>&amp;</code>. If the overflow division <code>&amp;/</code> or remainder operators <code>&amp;%</code> are used and the right operand is zero, a value of zero is returned.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">let</span> <span class="nv">y</span> <span class="p">=</span> <span class="n">x</span> <span class="o">&amp;/</span> <span class="mi">0</span> <span class="c1">// y = 0</span>
+</code></pre></figure>
+<p>Operators can be overloaded within classes or structures. In the following operator overloading, the <code>infix</code> attribute specifies that the operator is to be an infix operator. There are also <code>prefix</code> and <code>postfix</code> attributes.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">struct</span> <span class="nc">Vector2D</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span> <span class="p">=</span> <span class="mf">0.0</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="o">+</span> <span class="p">(</span><span class="kr">left</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">,</span> <span class="kr">right</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Vector2D</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">Vector2D</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kr">left</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="kr">right</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kr">left</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="kr">right</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kr">prefix</span> <span class="kd">func</span> <span class="o">-</span> <span class="p">(</span><span class="n">vector</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Vector2D</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">Vector2D</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">vector</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="o">-</span><span class="n">vector</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="o">+=</span> <span class="p">(</span><span class="kr">inout</span> <span class="kr">left</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">,</span> <span class="kr">right</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kr">left</span> <span class="p">=</span> <span class="kr">left</span> <span class="o">+</span> <span class="kr">right</span>
+<span class="p">}</span>
+
+<span class="kr">prefix</span> <span class="kd">func</span> <span class="o">++</span> <span class="p">(</span><span class="kr">inout</span> <span class="n">vector</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Vector2D</span> <span class="p">{</span>
+  <span class="n">vector</span> <span class="o">+=</span> <span class="n">Vector2D</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">vector</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">==</span> <span class="p">(</span><span class="kr">left</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">,</span> <span class="kr">right</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Bool</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="kr">left</span><span class="p">.</span><span class="n">x</span> <span class="p">==</span> <span class="kr">right</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="kr">left</span><span class="p">.</span><span class="n">y</span> <span class="p">==</span> <span class="kr">right</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="o">!=</span> <span class="p">(</span><span class="kr">left</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">,</span> <span class="kr">right</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Bool</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="kr">left</span> <span class="p">==</span> <span class="kr">right</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h2 id="custom-operators">Custom Operators</h2>
+<p>Custom operators can be defined with the characters <code>/ = - + * % &lt; &gt; ! &amp; | ^ ​. ~</code>. New operators are declared at the global level with the <code>operator</code> keyword, and can be declared as <code>prefix</code>, <code>infix</code>, or <code>postfix</code>. After being declared, it can be implemented by any type.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kr">prefix</span> <span class="kd">operator</span> <span class="o">+++</span> <span class="p">{}</span>
+
+<span class="kr">prefix</span> <span class="kd">func</span> <span class="o">+++</span> <span class="p">(</span><span class="kr">inout</span> <span class="n">vector</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Vector2D</span> <span class="p">{</span>
+  <span class="n">vector</span> <span class="o">+=</span> <span class="n">vector</span>
+  <span class="k">return</span> <span class="n">vector</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Custom infix operators can specify their precedence and associativity. Associativity can be <code>left</code>, <code>right</code>, or <code>none</code>. Associativity defaults to <code>none</code> if none is specified, and the precedence defaults to <code>100</code> if none is specified.</p>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kr">infix</span> <span class="kd">operator</span> <span class="o">+-</span> <span class="p">{</span>
+  <span class="kr">associativity</span> <span class="kr">left</span>
+  <span class="kr">precedence</span> <span class="mi">140</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="o">+-</span> <span class="p">(</span><span class="kr">left</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">,</span> <span class="kr">right</span><span class="p">:</span> <span class="n">Vector2D</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Vector2D</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">Vector2D</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kr">left</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="kr">right</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kr">left</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="kr">right</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></figure>
+<h1 id="access-control">Access Control</h1>
+<p>Xcode 6 beta 4 <a href="https://developer.apple.com/swift/blog/?id=5">added support</a> for <a href="https://developer.apple.com/library/prerelease/ios/documentation/swift/conceptual/swift_programming_language/AccessControl.html#//apple_ref/doc/uid/TP40014097-CH41-XID_29">access control</a> <a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a>. By default most entities have <code>internal</code> access. Swift also allows the <code>get</code> property to be more accessible than the <code>set</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Accessible From</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>private</code></td>
+<td style="text-align: left;">within source file where defined</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>internal</code></td>
+<td style="text-align: left;">entire module (app or framework) that includes definition</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>public</code></td>
+<td style="text-align: left;">any file that imports the module (for APIs)</td>
+</tr>
+</tbody>
+</table>
+<figure class="codeblock"><pre><code class="highlight language-swift"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ListItem</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="kd">var</span> <span class="nv">text</span><span class="p">:</span> <span class="nb">String</span>
+  <span class="kd">public</span> <span class="kd">var</span> <span class="nv">isComplete</span><span class="p">:</span> <span class="nb">Bool</span>
+
+  <span class="c1">// readable throughout module</span>
+  <span class="c1">// writeable within this file</span>
+  <span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">UUID</span><span class="p">:</span> <span class="bp">NSUUID</span>
+
+  <span class="c1">// usable within framework target</span>
+  <span class="kd">func</span> <span class="nf">refreshIdentity</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kc">self</span><span class="p">.</span><span class="n">UUID</span> <span class="p">=</span> <span class="bp">NSUUID</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>With which it must interoperate, after all.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Much like the <a href="https://docs.python.org/2/library/functions.html#enumerate">Python function</a> of the same name.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>I have to say, I like the fact that this needs to be explicitly declared in the function declaration and at the call site. This completely side-steps ambiguities found in C++ with reference parameters. Since this has to be expressed explicitly at the call-site, the reader of the source can know that the passed variable is being modified by the function without having to consult the documentation or definition.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>This is very much like a feature in early Rust—which has since been removed—called do notation. Scala supports this via multiple parameter lists.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>This is very much like Haskell, except for the lack of <a href="http://www.haskell.org/haskellwiki/Section_of_an_infix_operator">sections</a>.<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>This is very much like Rust enumerations or Scala case classes.<a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>This is an elegant way to mimic Haskell’s <code>Maybe</code> monad behavior.<a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p>This is unlike Go, in which types automatically conform to interfaces they fulfill. I believe this is known as <a href="http://en.wikipedia.org/wiki/Structural_type_system">structural typing</a>.<a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p>This reminds me of Rust, where access control isn’t specific to classes but rather to modules, so that an access control modifier on a structure member is enforced at the module level.<a href="#fnref9">↩</a></p></li>
+</ol>
+</section></div>
+  <div class="meta">
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> July  5, 2014</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/swift.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/5fedf3b" title="prefer italic over bold">5fedf3b</a></span></div>
+    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+  </div>
+</article>
+
+
+    <footer id="footer">
+  <div id="social">
+    <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
+    &middot;
+    <a href="http://stackoverflow.com/users/101090/jorge-israel-pena" title="stackoverflow"><i class="fa fa-stack-overflow"></i></a>
+    &middot;
+    <a href="https://twitter.com/blaenk" title="twitter"><i class="fa fa-twitter"></i></a>
+    &middot;
+    <a href="mailto:jorge.israel.p@gmail.com" title="email"><i class="fa fa-envelope"></i></a>
+    &middot;
+    <a href="/atom.xml" title="feed"><i class="fa fa-rss-square"></i></a>
+  </div>
+  <!-- <div id="credit">
+    Designed by <a href="http://www.blaenkdenum.com">Jorge Israel Peña</a>
+  </div> -->
+</footer>
+
+
+
+
+
+<!-- google analytics -->
+<script async="true" type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37339861-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!--MathJax CDN-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: "none"
+  });
+
+  MathJax.Hub.Register.MessageHook('End Process', function() {
+    jQuery('#MathJax_Font_Test').empty();
+    jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+  });
+</script>
+<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>I’m Back - Blaenk Denum</title>
+  <meta name="author" content="Jorge Israel Peña">
+  <meta name="description" content="AKA Blaenk Denum">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="/favicon.png" rel="shortcut icon">
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src='/js/blaenk.js' type='text/javascript'></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header id="header">
+  <div id="stamp">
+    <h1 id="name">
+      <a href="/">
+        <span class="emboldened">Jorge</span>.Israel.<span class="emboldened">Peña</span>
+      </a>
+    </h1>
+    <h4 id="pseudonym">
+      AKA <span class="emboldened">Blaenk</span>.Denum
+    </h4>
+  </div>
+  <nav id="main-nav">
+    <ul class="main">
+      <li><a href="/about/">About</a></li>
+      <li><a href="/work/">Work</a></li>
+      <li><a href="/lately/">Lately</a></li>
+      <li><a href="/notes/">Notes</a></li>
+      <li><a id="search_btn">Search</a></li>
+    </ul>
+  </nav>
+  <nav id="mobile-nav">
+    <div class="menu">
+      <a class="button">Menu</a>
+      <div class="container">
+        <ul class="main">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/lately/">Lately</a></li>
+          <li><a href="/notes/">Notes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="search">
+      <a class="button"></a>
+      <div class="container">
+        <form action="http://google.com/search" method="get">
+          <input type="text" name="q" results="0">
+          <input type="hidden" name="q" value="site:blaenkdenum.com">
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<form class="desk_search" action="http://google.com/search" method="get">
+  <input id="search" type="text" name="q" results="0" placeholder="Search" autocomplete="off" spellcheck="false">
+  <input type="hidden" name="q" value="site:blaenkdenum.com">
+</form>
+
+    <article class="post">
+  <h2 class="title"><a href="/posts/im-back/"><span>I’m Back</span></a></h2>
+  <div class="entry-content"><p>It’s been a while since I last had a blog. In fact, I think it’s been two, maybe three years now. I previously had a WordPress blog that I updated regularly. However, the things I was studying on my own at the time consumed me and I considered writing about those things to be a low priority. After all, who want’s to hear what a noob thinks about something he’s barely beginning to learn about? So instead I figured I’d continue reading and studying, and maintaining a blog kind of fell into the backburner.</p>
+<h2 id="blogging" class="notoc">Blogging</h2>
+<p>For over a year now I had wanted to get back into blogging, at the very least to serve as a sort of journal for what I’ve learned, what I’m working on, etc. I didn’t want to bother maintaining a WordPress blog anymore, so I gave tumblr a shot. I felt that tumblr wasn’t as flexible as I would like and lost interest again. A few months ago I got the urge again to set up a blog, and having heard of static site generators on hacker news, I ended up giving Jekyll/Octopress a try. That’s what I’m running right now and so far it’s working out well. I actually set this up a few months ago, but hadn’t had the time to properly set it up and design myself a theme.</p>
+<h2 id="haskell" class="notoc">Haskell</h2>
+<p>I’ve done a lot during my absence these past few years. In fact, it’s all a big blur so I don’t know where to begin to talk about it. Most recently, for example, I worked on a <a href="https://github.com/blaenk/pulse-visualizer">music visualizer</a> for Linux’ Pulse Audio in Haskell using OpenGL and FFTW. This was the first program I wrote in Haskell, aside from little programs I would write to learn the language. I learned Haskell primarily using a combination of <a href="http://learnyouahaskell.com/">Learn You a Haskell for Great Good</a> and <a href="http://book.realworldhaskell.org/read/">Real World Haskell</a>. For certain things, such as understanding the concept of laziness in Haskell, I used the <a href="http://en.wikibooks.org/wiki/Haskell/Laziness">Haskell Wikibook</a>. I also had a Professor at school who was familiar with Haskell and DSP as my mentor. Thanks to his previous experience, I was able to learn both things pretty quickly. Whenever I was unsure of my understanding of a given topic, such as Monads, I had him to discuss and refine my understanding with.</p>
+<h2 id="digital-signal-processing" class="notoc">Digital Signal Processing</h2>
+<p>I worked on this project to learn both Haskell and Digital Signal Processing. The book I used for learning Digital Signal Processing is <a href="http://www.dspguide.com/pdfbook.htm">The Scientist and Engineer’s Guide to Digital Signal Processing</a>. For the longest time—probably the same amount of time I’ve been without a blog—I’ve wanted to learn about Digital Signal Processing, but every book I found assumed some prior DSP knowledge, electronics/circuits knowledge, or hardcore mathematical understanding. This book seems to teach DSP from the perspective of a developer, showing code for algorithms discussed throughout, such as the <a href="http://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a>.</p>
+<p>I will probably write a post with more information about the project and what it was like to learn Haskell and DSP, and where I intend to go forward with this. For now I just wanted to push out a real post, unlike the <a href="/posts/test-post/">test post</a> which I use to test the design and markup of this site.</p></div>
+  <div class="meta">
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> December 26, 2012</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/im-back.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/4e11f4d" title="use em dashes correctly">4e11f4d</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/haskell/">Haskell</a>, <a href="/tags/digital-signal-processing/">Digital Signal Processing</a></div>
+    
+  </div>
+</article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+
+    <footer id="footer">
+  <div id="social">
+    <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
+    &middot;
+    <a href="http://stackoverflow.com/users/101090/jorge-israel-pena" title="stackoverflow"><i class="fa fa-stack-overflow"></i></a>
+    &middot;
+    <a href="https://twitter.com/blaenk" title="twitter"><i class="fa fa-twitter"></i></a>
+    &middot;
+    <a href="mailto:jorge.israel.p@gmail.com" title="email"><i class="fa fa-envelope"></i></a>
+    &middot;
+    <a href="/atom.xml" title="feed"><i class="fa fa-rss-square"></i></a>
+  </div>
+  <!-- <div id="credit">
+    Designed by <a href="http://www.blaenkdenum.com">Jorge Israel Peña</a>
+  </div> -->
+</footer>
+
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/im-back/';
+  var disqus_url = 'http://blaenkdenum.com/posts/im-back/';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/posts/im-back/'
+          this.page.url = 'http://blaenkdenum.com/posts/im-back/'
+        }
+      });
+    });
+  });
+</script>
+
+
+<!-- google analytics -->
+<script async="true" type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37339861-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!--MathJax CDN-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: "none"
+  });
+
+  MathJax.Hub.Register.MessageHook('End Process', function() {
+    jQuery('#MathJax_Font_Test').empty();
+    jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+  });
+</script>
+<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+
+  </div>
+</body>
+</html>

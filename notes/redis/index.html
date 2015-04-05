@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redis - Blaenk Denum</title>
+  <meta name="author" content="Jorge Israel Peña">
+  <meta name="description" content="AKA Blaenk Denum">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="/favicon.png" rel="shortcut icon">
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src='/js/blaenk.js' type='text/javascript'></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header id="header">
+  <div id="stamp">
+    <h1 id="name">
+      <a href="/">
+        <span class="emboldened">Jorge</span>.Israel.<span class="emboldened">Peña</span>
+      </a>
+    </h1>
+    <h4 id="pseudonym">
+      AKA <span class="emboldened">Blaenk</span>.Denum
+    </h4>
+  </div>
+  <nav id="main-nav">
+    <ul class="main">
+      <li><a href="/about/">About</a></li>
+      <li><a href="/work/">Work</a></li>
+      <li><a href="/lately/">Lately</a></li>
+      <li><a href="/notes/">Notes</a></li>
+      <li><a id="search_btn">Search</a></li>
+    </ul>
+  </nav>
+  <nav id="mobile-nav">
+    <div class="menu">
+      <a class="button">Menu</a>
+      <div class="container">
+        <ul class="main">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/lately/">Lately</a></li>
+          <li><a href="/notes/">Notes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="search">
+      <a class="button"></a>
+      <div class="container">
+        <form action="http://google.com/search" method="get">
+          <input type="text" name="q" results="0">
+          <input type="hidden" name="q" value="site:blaenkdenum.com">
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<form class="desk_search" action="http://google.com/search" method="get">
+  <input id="search" type="text" name="q" results="0" placeholder="Search" autocomplete="off" spellcheck="false">
+  <input type="hidden" name="q" value="site:blaenkdenum.com">
+</form>
+
+    <article class="post">
+  <h2 class="title"><a href="/notes/redis/"><span>Redis</span></a></h2>
+  <div class="entry-content"><p><a href="http://redis.io">Redis</a> is a data structure server. It can be used to speed up operations that might be too simple for a heavy handed traditional database. It supports strings, lists, ordered and unordered sets, and hashes. This is meant to provide an overview of the data structures and commands available to Redis. The full list of commands is available in the <a href="http://redis.io/commands">documentation</a>.</p>
+<p>There’s also a <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Redis_Tips">guide on MDN</a> with suggestions on how to use Redis.</p>
+<nav id="toc"><h3>Contents</h3><ol><li><a href="#strings">Strings</a></li><li><a href="#lists">Lists</a></li><li><a href="#sets">Sets</a></li><li><a href="#ordered-sets">Ordered Sets</a></li><li><a href="#hashes">Hashes</a></li><li><a href="#publish-subscribe">Publish/Subscribe</a></li><li><a href="#sorting">Sorting</a></li><li><a href="#transactions">Transactions</a></li><li><a href="#key-expiration">Key Expiration</a></li></ol></nav>
+<h1 id="strings">Strings</h1>
+<p>Strings can store values of type byte string, integer (signed platform size), or floating-point (64-bit doubles). Strings support simple key-value store operations such as <code>GET</code>, <code>SET</code>, and <code>DEL</code>. The <code>DEL</code> command returns the number of items that were deleted.</p>
+<p>Values can be incremented/decremented by 1 with <code>INCR</code>/<code>DECR</code> or by an arbitrary amount with <code>INCRBY</code>/<code>DECRBY</code>, or <code>INCRYBYFLOAT</code> for floats. If these are used on a key that doesn’t exist or is an empty string, it’s assumed to have a value of zero.</p>
+<p>Strings also support string operations such as <code>APPEND</code> for concatenation, substring reading and writing with <code>GETRANGE</code> and <code>SETRANGE</code>.</p>
+<p>Strings can also be manipulated as bitstring values with <code>GETBIT</code> and <code>SETBIT</code>, the population count can be retrieved with <code>BITCOUNT</code>, and bitwise operations can be performed with <code>BITOP</code>.</p>
+<h1 id="lists">Lists</h1>
+<p>Linked-lists support left/right push and pop with <code>LPUSH</code>/<code>RPUSH</code> and <code>LPOP</code>/<code>RPOP</code>. Specific elements can be retrieved with <code>LINDEX</code>, where -1 is the last index, and a range with <code>LRANGE</code>. Lists can be trimmed so that they only include the items in the range provided to <code>LTRIM</code>.</p>
+<p>There are also potentially-blocking list manipulation commands that are often used for the development of messaging and task queues.</p>
+<p>The operations <code>BLPOP</code> and <code>BRPOP</code> which pop the left/right-most item from the first non-empty list provided, blocking until one of the source lists is empty, or until the provided timeout in seconds <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<p>The operation <code>RPOPLPUSH</code> pops the right-most item from the source and pushes it onto the left end of the destination, also returning the item to the user. Similarly, <code>BRPOPLPUSH</code> does the same but blocks until the source is not empty, or until the provided timeout in seconds.</p>
+<h1 id="sets">Sets</h1>
+<p>Sets can be added to and removed from with <code>SADD</code> and <code>SREM</code>. The <code>SPOP</code> command removes and returns a random item from the set. The <code>SMOVE</code> command can be used to move items between sets. Membership tests are possible with <code>SISMEMBER</code>. The number of items in a set (its cardinality) can be retrieved with <code>SCARD</code>.</p>
+<p>All of the members from the set can be fetched with <code>SMEMBERS</code>. An arbitrary number of distinct random items can be retrieved with <code>SRANDMEMBER</code>, though if the arbitrary number is negative the items returned may not necessarily be distinct.</p>
+<p>Set operations such as intersection, union, and difference are possible with <code>SINTER</code>, <code>SUNION</code>, and <code>SDIFF</code>. There are also <code>STORE</code>-suffixed variants to these set operations that store their results in a specified key instead of returning them.</p>
+<h1 id="ordered-sets">Ordered Sets</h1>
+<p>Ordered sets hold unique keys called members and associated values called scores that are limited to floating-point numbers (doubles) and are used to store the items in ascending order.</p>
+<p>Members can be added and removed with <code>ZADD</code> and <code>ZREM</code>. The set’s cardinality can be retrieved with <code>ZCARD</code>. More specifically, <code>ZCOUNT</code> can be used to count the number of items whose scores fall within the provided range.</p>
+<p>The <code>ZINCRBY</code> command can be used to increment the score of a member by a specific amount. The <code>ZSCORE</code> command can be used to get an item’s score. The <code>ZRANGEBYSCORE</code> command can be used to get the items whose scores fall within the provided range. It’s also possible to remove items from the set based on whether or not they fall within a provided range of scores or ranks with <code>ZREMRANGEBYSCORE</code> and <code>ZREMRANGEBYRANK</code>.</p>
+<p>The <code>ZRANK</code> command can be used to get the position of an item in the ascending order of the set. The <code>ZRANGE</code> command can be used to retrieve the items whose ranks fall within the provided range, with or without scores.</p>
+<p>Given that the ordering of ordered sets is ascending, many commands have analogues that operate on the set as if it were in <em>descending</em> order, such as <code>ZREVRANK</code> and <code>ZREVRANGE</code>.</p>
+<p>There are set operations <code>ZINTERSTORE</code> and <code>ZUNIONSTORE</code> whose semantics differ from regular set operations due to the added complexity of score-handling. These commands can take as option an operation to perform to aggregate the scores of items with the same keys, the default of which is to add them but can also be to take the min or max. Another option that can be passed are weights that are used to multiply the scores of the corresponding set before passing them to the aggregation operation. If these ordered-set operations are used on a regular set, the scores of the items in that set are interpreted as being 1.</p>
+<h1 id="hashes">Hashes</h1>
+<p>Hashes can be thought of as a separate namespace within Redis. They support setting, getting, and deleting values with <code>HSET</code>, <code>HGET</code>, and <code>HDEL</code>. There are <code>HMSET</code> and <code>HMGET</code> variants that allow for <em>multiple</em> fields to be retrieved or key-value pairs to be set. The <code>HLEN</code> command yields the number of key-value pairs in the hash.</p>
+<p>The <code>HGETALL</code> command can get all of the key-value pairs, though it’s possible to get only one or the other with <code>HKEYS</code> and <code>HVALUES</code>. The existence of a key in a hash can be checked with <code>HEXISTS</code>.</p>
+<p><code>HINCRBY</code>/<code>HINCRBYFLOAT</code> can be used to increment a value by a specific amount.</p>
+<h1 id="publish-subscribe">Publish/Subscribe</h1>
+<p>Redis supports publish/subscribe operations. There are straightforward commands <code>SUBSCRIBE</code>, <code>UNSUBSCRIBE</code>, and <code>PUBLISH</code>. There are also (un)subscribe commands that apply to channels that match a given pattern: <code>PSUBSCRIBE</code> and <code>PUNSUBSCRIBE</code>.</p>
+<p>If a client gets disconnected and a message is sent before it can reconnect, it will never see the message. For this reason, it may be desirable to use a message broker such as <a href="http://www.rabbitmq.com/">RabbitMQ</a>. The <code>client-output-buffer-limit</code> option is used to configure the maximum client buffer size.</p>
+<h1 id="sorting">Sorting</h1>
+<p>Sorting can be performed on lists, sets, and ordered sets—even according to data in other structures.</p>
+<figure class="codeblock"><pre><code class="highlight language-python"><span class="n">conn</span><span class="o">.</span><span class="n">rpush</span><span class="p">(</span><span class="s">&#39;sort-input&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-7&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-15&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-23&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-110&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s">&#39;sort-input&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s">&#39;d-*-&gt;field&#39;</span><span class="p">)</span>
+<span class="c"># [&#39;15&#39;, &#39;110&#39;, &#39;7&#39;, &#39;23&#39;]</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s">&#39;sort-input&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s">&#39;d-*-&gt;field&#39;</span><span class="p">,</span> <span class="n">get</span><span class="o">=</span><span class="s">&#39;d-*-&gt;field&#39;</span><span class="p">)</span>
+<span class="c"># [&#39;1&#39;, &#39;3&#39;, &#39;5&#39;, &#39;9&#39;]</span>
+</code></pre></figure>
+<h1 id="transactions">Transactions</h1>
+<p>Simple transactions are possible in Redis by using the <code>MULTI</code> command to designate that the following commands are to be part of a transaction, followed by the commands themselves and <code>EXEC</code>, which prompts Redis to execute all of the commands sequentially. Transactions also help to reduce round trips between Redis and the client.</p>
+<h1 id="key-expiration">Key Expiration</h1>
+<p>Keys can be deleted automatically by Redis after a certain time or at a specific time by using key expiration. The <code>EXPIRE</code> command can be used to make a key expire in a given number of seconds, while <code>EXPIREAT</code> allows a specific time to be specified. The <code>TTL</code> command gets the amount of time remaining before expiration. The <code>PERSIST</code> command removes the expiration from a key.</p>
+<p>There are <code>P</code>-prefixed variants such as <code>PTTL</code>, <code>PEXPIRE</code>, and <code>PEXPIREAT</code> which operate at the millisecond level.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>This of course reminds me of the <a href="http://man7.org/linux/man-pages/man2/select.2.html"><code>select</code></a> system call used for synchronous I/O multiplexing.<a href="#fnref1">↩</a></p></li>
+</ol>
+</section></div>
+  <div class="meta">
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> April 19, 2014</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/redis.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/c7ebb38" title="flatten headings">c7ebb38</a></span></div>
+    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+  </div>
+</article>
+
+
+    <footer id="footer">
+  <div id="social">
+    <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
+    &middot;
+    <a href="http://stackoverflow.com/users/101090/jorge-israel-pena" title="stackoverflow"><i class="fa fa-stack-overflow"></i></a>
+    &middot;
+    <a href="https://twitter.com/blaenk" title="twitter"><i class="fa fa-twitter"></i></a>
+    &middot;
+    <a href="mailto:jorge.israel.p@gmail.com" title="email"><i class="fa fa-envelope"></i></a>
+    &middot;
+    <a href="/atom.xml" title="feed"><i class="fa fa-rss-square"></i></a>
+  </div>
+  <!-- <div id="credit">
+    Designed by <a href="http://www.blaenkdenum.com">Jorge Israel Peña</a>
+  </div> -->
+</footer>
+
+
+
+
+
+<!-- google analytics -->
+<script async="true" type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37339861-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!--MathJax CDN-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: "none"
+  });
+
+  MathJax.Hub.Register.MessageHook('End Process', function() {
+    jQuery('#MathJax_Font_Test').empty();
+    jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+  });
+</script>
+<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+
+  </div>
+</body>
+</html>
