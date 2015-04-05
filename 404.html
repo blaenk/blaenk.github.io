@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Not Found - Blaenk Denum</title>
+  <meta name="author" content="Jorge Israel Peña">
+  <meta name="description" content="AKA Blaenk Denum">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="/favicon.png" rel="shortcut icon">
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src='/js/blaenk.js' type='text/javascript'></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header id="header">
+  <div id="stamp">
+    <h1 id="name">
+      <a href="/">
+        <span class="emboldened">Jorge</span>.Israel.<span class="emboldened">Peña</span>
+      </a>
+    </h1>
+    <h4 id="pseudonym">
+      AKA <span class="emboldened">Blaenk</span>.Denum
+    </h4>
+  </div>
+  <nav id="main-nav">
+    <ul class="main">
+      <li><a href="/about/">About</a></li>
+      <li><a href="/work/">Work</a></li>
+      <li><a href="/lately/">Lately</a></li>
+      <li><a href="/notes/">Notes</a></li>
+      <li><a id="search_btn">Search</a></li>
+    </ul>
+  </nav>
+  <nav id="mobile-nav">
+    <div class="menu">
+      <a class="button">Menu</a>
+      <div class="container">
+        <ul class="main">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/lately/">Lately</a></li>
+          <li><a href="/notes/">Notes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="search">
+      <a class="button"></a>
+      <div class="container">
+        <form action="http://google.com/search" method="get">
+          <input type="text" name="q" results="0">
+          <input type="hidden" name="q" value="site:blaenkdenum.com">
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<form class="desk_search" action="http://google.com/search" method="get">
+  <input id="search" type="text" name="q" results="0" placeholder="Search" autocomplete="off" spellcheck="false">
+  <input type="hidden" name="q" value="site:blaenkdenum.com">
+</form>
+
+    <h1 class="notfound">404</h1>
+
+<p class="notfound">Not found. Try hitting up 'Search' on the top-right of this page</p>
+
+    <footer id="footer">
+  <div id="social">
+    <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
+    &middot;
+    <a href="http://stackoverflow.com/users/101090/jorge-israel-pena" title="stackoverflow"><i class="fa fa-stack-overflow"></i></a>
+    &middot;
+    <a href="https://twitter.com/blaenk" title="twitter"><i class="fa fa-twitter"></i></a>
+    &middot;
+    <a href="mailto:jorge.israel.p@gmail.com" title="email"><i class="fa fa-envelope"></i></a>
+    &middot;
+    <a href="/atom.xml" title="feed"><i class="fa fa-rss-square"></i></a>
+  </div>
+  <!-- <div id="credit">
+    Designed by <a href="http://www.blaenkdenum.com">Jorge Israel Peña</a>
+  </div> -->
+</footer>
+
+
+
+
+
+<!-- google analytics -->
+<script async="true" type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37339861-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!--MathJax CDN-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: "none"
+  });
+
+  MathJax.Hub.Register.MessageHook('End Process', function() {
+    jQuery('#MathJax_Font_Test').empty();
+    jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+  });
+</script>
+<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+
+  </div>
+</body>
+</html>

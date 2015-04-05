@@ -1,0 +1,1025 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Jorge Israel Peña</title>
+    <link href="http://www.blaenkdenum.com/atom.xml" rel="self" />
+    <link href="http://www.blaenkdenum.com" />
+    <id>http://www.blaenkdenum.com/atom.xml</id>
+    <author>
+        <name>Jorge Israel Peña</name>
+        <email>jorge.israel.p@gmail.com</email>
+    </author>
+    <updated>2014-02-16T00:00:00Z</updated>
+    <entry>
+    <title>Dots</title>
+    <link href="http://www.blaenkdenum.com/posts/dots/" />
+    <id>http://www.blaenkdenum.com/posts/dots/</id>
+    <published>2014-02-16T00:00:00Z</published>
+    <updated>2014-02-16T00:00:00Z</updated>
+    <summary type="html"><![CDATA[
+<p>It’s become a common practice to keep one’s <a href="http://en.wikipedia.org/wiki/Dotfile#Unix_and_Unix-like_environments">dotfiles</a> version controlled, oftentimes mirrored somewhere like Github. A lot of people start their own dotfile collection based (forked) off of someone else’, but that never felt right to me. In my view, dotfiles are personal, sensitive configuration files that are explicitly defined to one’s own taste. It never made sense to me to want to use a giant wad of files with who knows what configuration directives in there. It seemed a lot like <a href="http://en.wikipedia.org/wiki/Cargo_cult_programming">cargo culting</a> to me.</p>
+<p>I do enjoy looking at other peoples’ dotfiles from time to time to see what I can pick out and adapt to my own, but otherwise I like to grow mine organically—that is, only configure what I need, as I need it—to ensure that I really understand my configuration. As a result, I created <a href="https://github.com/blaenk/dots">my own dotfiles</a> from scratch.</p>
+<h2 id="file-structure" class="notoc">File Structure</h2>
+<p>The file structure is pretty simple. There’s a folder for every type of dotfile collection, for example: zsh, git, vim, and so on. Each of these can contain hidden files and folders that can be deployed by the deploy script.</p>
+<h2 id="deployment" class="notoc">Deployment</h2>
+<p>My deploy script is called <code>sprinkle</code>, which is a heavily modified fork of the deploy script from <a href="https://github.com/holman/dotfiles">holman’s dotfiles</a>. I chose this script to start from because I liked that it was a shell script, unlike most other deploy scripts I had seen which were Rakefiles, naturally requiring Ruby to be installed on the system before being able to deploy the dotfiles.</p>
+<p>I also liked that the deploy script had a naming convention such that files and folders with a <code>.symlink</code> suffix were those that were deployed. However, I didn’t like that vim and Github wouldn’t detect the filetype—and therefore wouldn’t highlight—due to the misleading file extension. So I ended up heavily customizing the script.</p>
+<p>Now, instead of the <code>.symlink</code>-suffix naming convention, those files and folders that should be deployed are themselves hidden. This allows vim, Github, and others to detect the file type and provide highlighting. Running the deploy script for the first time yields something like this:</p>
+<p><img class="center" src="/images/posts/dots/deploy.png"></p>
+<p>My zsh files have an alias for the sprinkle script so that it can be run from anywhere, though in this case I was already in my dots directory. Files that haven’t been deployed are immediately deployed (symlinked) unless there’s an existing file in the destination. In that case, there are options to backup, overwrite, or remove (without deploying) the existing file, as well as skip that file altogether.</p>
+<p>These commands are entered when prompted by simply entering the first letter of the action, i.e. <code>o</code> for overwrite. A capitalized letter performs that action for all remaining files as well. This is what the prompt looks like:</p>
+<p><img class="center" src="/images/posts/dots/prompt.png"></p>
+<h2 id="tmux" class="notoc">tmux</h2>
+<p>My tmux configuration is pretty simple I think. I keep the bind at <code>C-b</code> though it kind of interferes with <code>C-f/C-b</code> scrolling, in which case there’s a bit of lag for <code>C-b</code> unless I tap it twice. Instead I’m getting used to scrolling with <code>C-u/C-d</code> though it’s pretty disorienting starting out.</p>
+<p>My window list is pretty subtle I think. Active windows are underlined and the current window name is emboldened.</p>
+<p><img class="center" src="/images/posts/dots/tmux.png"></p>
+<p>I have binds for creating new windows with <code>M-n</code> and renaming a window with <code>M-r</code>:</p>
+<pre><code>bind -n M-r command-prompt &#39;rename-window %%&#39;
+bind -n M-n command-prompt -p &quot;Name of new window:&quot; &quot;new-window -n &#39;%%&#39;&quot;</code></pre>
+<p>I also created simple binds for navigating and moving windows around. <code>M-h/M-l</code> moves to the left and right window respectively, and <code>M-j/M-k</code> moves the current window left and right, respectively.</p>
+<pre><code># switch between windows left/right
+bind -n M-h previous-window
+bind -n M-l next-window
+
+# move windows left/right
+bind -n M-j swap-window -t -1
+bind -n M-k swap-window -t +1</code></pre>
+<h2 id="zsh" class="notoc">zsh</h2>
+<p>My zsh configuration files are created from scratch as well, I don’t use something like oh-my-zsh for the same reasons that I stated in the opening paragraph. I do use <a href="https://github.com/zsh-users/antigen">antigen</a>, which is similar to <a href="https://github.com/gmarik/Vundle.vim">vundle</a> but for zsh, mainly to avoid having to either keep stale snapshots or juggle git submodules of zsh plugins I use. I only use two zsh plugins: <a href="https://github.com/zsh-users/zsh-syntax-highlighting">syntax-highlighting</a> and extra/community <a href="https://github.com/zsh-users/zsh-completions">completions</a>.</p>
+<p>I then have a separate zsh sub-folder that stores zsh files that configure different aspects of zsh, such as aliases, completions, functions, bindings, and so on.</p>
+<h3 id="aliases" class="notoc">Aliases</h3>
+<p>One of my most used aliases is <code>:q</code> which is simply aliased to <code>exit</code>, making it very natural for me to exit shells. If <code>pacman</code> is present on the system, I create many aliases to different kinds of <code>pacman</code> commands, such as <code>pacup</code> for <code>pacman -Syu</code>, <code>pacin</code> for <code>pacman -S</code>, and so on.</p>
+<h3 id="completions" class="notoc">Completions</h3>
+<p>There’s nothing really special about my completions configuration. I do set it up to use my <code>dircolors</code> setup, so that the completion menu uses the correct colors for the different kinds of files. I also set it up for case-insensitive substring completion, so that I can type a bit of text from anywhere in the filename, regardless of case, and have it tab-complete correctly.</p>
+<h3 id="functions" class="notoc">Functions</h3>
+<p>I do have a few functions I find to be very useful. The first is one that opens up a man-page directly to a given flag, i.e. <code>manf ls -l</code> opens the man-page for <code>less</code> directly to the point that describes the <code>-l</code> switch.</p>
+<pre class="bash"><code>function manf() {
+  man -P &quot;less -p \&quot;^ +$2\&quot;&quot; $1
+}</code></pre>
+<p>Another one of note is one I found on stackoverflow which basically prepends a column to <code>ls -lh</code> which contains the permissions of the files in octal/numerical form. I let this take the place of the regular <code>ls</code> command, which can still be run for whatever reason by prepending it with <code>command</code>:</p>
+<pre class="bash"><code>function ls() {
+  command ls -lh --color=always $@ |\
+    awk &#39;{k=0;for(i=0;i&lt;=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)\
+         *2^(8-i));if(k)printf(&quot;%0o &quot;,k);print}&#39;
+}</code></pre>
+<p>Example output:</p>
+<pre><code>total 32K
+755 drwxr-xr-x 2 jorge users 4.0K Feb 15 20:05 git
+644 -rw-r--r-- 1 jorge users    0 Jan 27  2013 README.md
+755 drwxr-xr-x 2 jorge users 4.0K Feb 13 00:54 ruby</code></pre>
+<p>I also created a wrapper around the built-in <code>cd</code> function that accepts parameters of the form <code>b...</code> where the number of dots is arbitrary. If the wrapper detects a parameter of that form, it removes the <code>b</code> prefix and expands each of the dots to <code>../</code>. This makes for very quick navigation up an arbitrary amount of directories. The actual change-directory work is delegated to the original built-in <code>cd</code> function:</p>
+<pre class="bash"><code>function cd() {
+  emulate -LR zsh
+
+  if [[ $1 == &#39;b.&#39;* ]]; then
+    builtin cd ${${1/&quot;b&quot;}//&quot;.&quot;/&quot;../&quot;}
+  else
+    builtin cd $*
+  fi
+}</code></pre>
+<p>Example usage:</p>
+<pre class="bash"><code>some/dir/here $ cd b..
+some/ $ # went up two directories</code></pre>
+<p>I also have a function for listing the pacman orphan packages on my system, i.e. those that aren’t required by any other package. I found a command for doing this but it just dumped a list of every package, so I modified it to also list the description of the package. This requires the <code>expac</code> package, a utility to query the pacman database:</p>
+<pre class="bash"><code>function pacorphans() {
+  expac &quot;%n:%N:%d&quot; -Q $(expac &quot;%n %G&quot; | grep -v &#39; base&#39;) |\
+    awk -F: &#39;$2 == &quot;&quot; {printf &quot;%s: %s\n&quot;, $1, $3}&#39;
+}</code></pre>
+<p>Example output:</p>
+<pre><code>yasm: A rewrite of NASM to allow for multiple syntax supported (NASM, TASM, GAS, etc.)
+zsh: A very advanced and programmable command interpreter (shell) for UNIX</code></pre>
+<p>Finally, another function I recently created that I find very useful is one to fetch my external IP address and both copy it to my clipboard and print it out to the terminal. This is very useful because my IP address does change from time to time, usually if I restart my router. Considering that I host a <a href="http://mumble.sourceforge.net/">mumble</a> and <a href="http://syncplay.pl/">syncplay</a> server, whenever this happens I have to inform my friends of the change, which usually requires me to manually determine my external IP by going to some website that provides the information.</p>
+<p>So I decided to create a command that gets the IP address from <a href="http://ipinfo.io">ipinfo.io</a>, copies the response to my clipboard, and also prints it out to the terminal.</p>
+<p>In the past, one would use a command such as <code>ifconfig</code> to list the computer’s local addresses. Recently there has been a shift to use the new <a href="http://man7.org/linux/man-pages/man8/ip.8.html"><code>ip</code></a> command which houses many sub-commands such as <code>ip addr</code> which is now the preferred method to list addresses.</p>
+<p>So what I did was create a wrapper for this <code>ip</code> command and create a fake sub-command called <code>get</code> which performs this task of retrieving my external IP address. If the sub-command <code>get</code> wasn’t provided, then the wrapper delegates the work to the actual <code>ip</code> command, if it exists.</p>
+<pre class="bash"><code>function ip() {
+  emulate -LR zsh
+
+  if [[ $1 == &#39;get&#39; ]]; then
+    res=$(curl -s ipinfo.io/ip)
+    echo -n $res | xsel --clipboard
+    echo &quot;copied $res to clipboard&quot;
+  else
+    # only run ip if it exists
+    if (( $+commands[ip] )); then
+      command ip $*
+    fi
+  fi
+}</code></pre>
+<p>Example output:</p>
+<pre class="bash"><code>λ ~/some/place
+» ip get
+copied 123.45.678.90 to clipboard</code></pre>
+<h3 id="cursors" class="notoc">Cursors</h3>
+<p>I setup mode-aware cursors in zsh, to better emphasize when I’m in vi mode and not. This is pretty straightforward, simply sending the correct terminal control sequence:</p>
+<pre class="bash"><code>function zle-keymap-select {
+  zle reset-prompt
+
+  if [[ $KEYMAP = &quot;vicmd&quot; ]]; then
+    echo -ne &quot;\033]12;10\007&quot;
+  else
+    echo -ne &quot;\033]12;6\007&quot;
+  fi
+}
+
+function zle-line-finish {
+  echo -ne &quot;\033]12;6\007&quot;
+}
+
+zle -N zle-keymap-select
+zle -N zle-line-finish</code></pre>
+<p>This works perfectly fine in urxvt, but tmux must be configured to allow this because otherwise the setting of the cursor color above by zsh bypasses tmux, applying to tmux as a whole. This means that if one tmux window is in vi mode, the cursor will change, but if one then switches to another tmux window that is in insert mode, the cursor color for that window will remain the same as in the one in vi-mode. That is, the changed cursor color applies to every screen in tmux.</p>
+<p>tmux did implement functionality for it to remember the cursor color on a per-window basis back in 2011, but this is only configured out of the box for xterm, since every terminal’s control sequences may vary.</p>
+<p>The cursor color is inherently global, so what happens is that tmux remembers the cursor color for every window. When switching to another tmux window, tmux checks if that window’s cursor color had been previously changed. If so, tmux sets the global cursor color to that window’s saved cursor color. Otherwise, it means that that window’s cursor color hasn’t been changed, in which case it needs to reset the cursor color to the “default” cursor color, in case the previous window did change the color.</p>
+<p>For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the “default” color.</p>
+<p>The sequence for setting the color is the same in xterm and urxvt: <code>\033]12;color\007</code>. However, there is no sequence I know of—after looking at <code>man 7 urxvt</code>—for resetting the cursor color to the default cursor color. For xterm, it is <code>\033]112\007</code>. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).</p>
+<pre><code>set -g terminal-overrides &#39;,rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007&#39;</code></pre>
+<h3 id="misc" class="notoc">Misc</h3>
+<p>When one runs a command that doesn’t exist, it generally gives an error pointing out that fact. However, the <code>pkgfile</code> package provides a zsh script that, when sourced, provides information about which package such a command may be found in.</p>
+<pre class="bash"><code>[[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] &amp;&amp;\
+  source /usr/share/doc/pkgfile/command-not-found.zsh</code></pre>
+<p>Example output:</p>
+<pre class="bash"><code>λ ~/some/place
+» clojure
+clojure may be found in the following packages:
+  community/clojure 1.5.1-2     /usr/bin/clojure</code></pre>
+<p>I also configured <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh">highlighting</a> for the <code>less</code> pager.</p>
+<p><img class="center" src="/images/posts/dots/less.png"></p>
+<p>My prompt is pretty involved and it’s discussed more in-depth in my <a href="/posts/terminal-customization/#prompt">customization</a> post, though it’s slightly outdated. See my dotfiles for the latest configuration.</p>
+<p>One noteworthy thing however is that I highlight the path separator in a subtle cyan.</p>
+<pre class="bash"><code>SLASH=&quot;%{$fg[cyan]%}/%{$reset_color%}&quot;
+echo &quot;${${PWD/#$HOME/~}//\//$SLASH}&quot;</code></pre>
+<p>My vi-binds are pretty straightforward. One noteworthy thing is that I bound <code>_</code> and <code>g_</code> to go to the beginning and end of line, respectively, to reflect what I use in vim.</p>
+<pre class="bash"><code>bindkey -M vicmd &quot;_&quot; beginning-of-line
+bindkey -M vicmd &quot;g_&quot; end-of-line</code></pre>
+<p>I also created some binds specific to the completion menu. I bound <code>shift-tab</code> to go in the reverse direction of <code>tab</code>. I also changed <code>Enter</code> to accept and enter the command, instead of the default, which only accepts the completion and allows the user to continue typing the command. Instead, I bound <code>C-g</code> to perform the accept-only:</p>
+<pre class="bash"><code>bindkey -M menuselect &quot;^M&quot; .accept-line
+bindkey -M menuselect &quot;^G&quot; accept-line
+bindkey -M menuselect &quot;^[[Z&quot; reverse-menu-complete</code></pre>
+<h2 id="vim" class="notoc">vim</h2>
+<p>My vim configuration is discussed in other posts, such as <a href="/posts/a-simpler-vim-statusline/">this one</a>. Some noteworthy things are my mode-aware cursors which you can see <a href="/posts/a-simpler-vim-statusline/#redesign">here</a>, where my statusline is also discussed. They’re basically color-coded based on the mode. I also made all of the cursors be the block cursor, rather than I-beam for insert mode as is default. I also disabled cursor blinking:</p>
+<pre class="vim"><code>set gcr=a:block
+
+&quot; mode aware cursors
+set gcr+=o:hor50-Cursor
+set gcr+=n:Cursor
+set gcr+=i-ci-sm:InsertCursor
+set gcr+=r-cr:ReplaceCursor-hor20
+set gcr+=c:CommandCursor
+set gcr+=v-ve:VisualCursor
+
+set gcr+=a:blinkon0
+
+hi InsertCursor  ctermfg=15 guifg=#fdf6e3 ctermbg=37  guibg=#2aa198
+hi VisualCursor  ctermfg=15 guifg=#fdf6e3 ctermbg=125 guibg=#d33682
+hi ReplaceCursor ctermfg=15 guifg=#fdf6e3 ctermbg=65  guibg=#dc322f
+hi CommandCursor ctermfg=15 guifg=#fdf6e3 ctermbg=33  guibg=#268bd2</code></pre>
+<p>I also enable the cursorline only on the current window:</p>
+<pre class="vim"><code>augroup cursorline
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
+augroup END</code></pre>
+<p>Instead of letting CtrlP generate the list of files, which can be slow, I delegate this work to <code>find</code> and <code>dir</code> on unix and windows respectively. If we’re within a git repository, then I take advantage of <code>git ls-files</code> to do this instead.</p>
+<pre class="vim"><code>let s:ctrlp_fallback =
+  \ has(&#39;win32&#39;) ?
+    \ &#39;dir %s /-n /b /s /a-d&#39; :
+    \ &#39;find %s -type f&#39;
+
+let g:ctrlp_user_command = [
+  \ &#39;.git&#39;,
+  \ &#39;git --git-dir=%s/.git ls-files -co --exclude-standard&#39;,
+  \ s:ctrlp_fallback
+  \ ]</code></pre>
+<h2 id="conclusion" class="notoc">Conclusion</h2>
+<p>All in all it’s a pretty simple dotfiles system I think. Feel free to take a look through it to see what you may like to adapt to your own configuration.</p>]]></summary>
+</entry>
+<entry>
+    <title>Live Editing with Hakyll</title>
+    <link href="http://www.blaenkdenum.com/posts/live-editing-with-hakyll/" />
+    <id>http://www.blaenkdenum.com/posts/live-editing-with-hakyll/</id>
+    <published>2013-12-20T00:00:00Z</published>
+    <updated>2013-12-20T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>A recent trend in developer-oriented blogging is to use static site generators, perhaps the most popular being Jekyll written in Ruby. The general workflow when writing posts with static site generators is the classic edit, save, reload.</p>
+
+<p>A while back, a friend was telling me about his Jekyll setup and in passing mentioned how indispensable some “LiveReload” tool was. I previously did use Jekyll myself, but I hadn’t heard of this LiveReload tool. For me, reloading didn’t feel like such a hassle, so having a tool that “only” automatically reloaded the page for me didn’t feel entirely beneficial.</p>
+<p>For this reason, I assumed that this was <strong>not</strong> what the LiveReload tool did, and instead I assumed it somehow replaced the content (i.e. post body) in-place. It turns out I was incorrect in my assumption and ended up implementing what I thought LiveReload did in Hakyll, the static site generator I use written in Haskell.</p>
+<h1 id="conception" class="notoc">Conception</h1>
+<p>I had to come up with a way to intercept the post body content when it was altered, and send that to the client, who would then simply replace the content div with the received content. Conceptually, it was a pretty straightforward process.</p>
+<p>I decided that the communication channel between the Hakyll preview server and the client would be a WebSocket, so I looked for websocket packages on Hackage and <a href="http://hackage.haskell.org/package/websockets">found one</a> by the author of Hakyll himself. There are backends for <a href="http://hackage.haskell.org/package/wai-websockets">wai</a> and <a href="http://hackage.haskell.org/package/websockets-snap">snap</a>, but starting up a wai or snap server seemed too heavy for what I was going to do.</p>
+<p>Having written Hakyll and Pandoc compilers before, I knew that the best place to get the changes to a post would be within the Hakyll compiler pipeline, before templates are applied.</p>
+<pre class="haskell"><code>compile $ getResourceBody
+  &gt;&gt;= pandocCompiler (storeDirectory conf)
+  &gt;&gt;= pushToClient
+  &gt;&gt;= loadAndApplyTemplate itemTemplate context
+  &gt;&gt;= loadAndApplyTemplate &quot;templates/layout.html&quot; layoutContext</code></pre>
+<p>Inserting a compiler at this appropriate location would give me access to changes to posts as they were applied, allowing me to then send them to the client via WebSocket.</p>
+<h1 id="server-architecture" class="notoc">Server Architecture</h1>
+<p>The WebSocket server that comes with the websockets package forks separate threads for every client that connects. I fork the WebSocket server itself within the site binary to avoid interrupting the main Hakyll compilation process. Therefore there needs to be a way for the Hakyll compiler to communicate with the WebSocket client threads, specifically to send each client the changes as they’re made to a post.</p>
+<ul>
+<li>main thread
+<ul>
+<li>hakyll</li>
+<li>WebSocket server
+<ul>
+<li>client thread 1</li>
+<li>client thread 2</li>
+<li>client thread N</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="state" class="notoc">State</h2>
+<p>First, however, I had to think about how the WebSocket server would communicate with the clients. I decided that the most straightforward thing to do would be to communicate on a per-route basis. A route in this case refers to a post, such as <code class="path">posts/live-editing-with-hakyll.markdown.</code> The clients use that path to establish the connection, which tells the WebSocket server that they’re interested in data about that particular post. This way, the client doesn’t get updates about posts it doesn’t care about.</p>
+<p>An alternative to this would’ve perhaps been to use a single communication channel, where the server would send data about every post that was changed, and clients decided which applied to them. While this seems simpler, it has the consequence that <em>every</em> post’s data is sent to the client, even posts no one is actually paying attention to. This is inefficient, and to avoid this inefficiency would again require some form of “interest-registration” which is implicit in the aforementioned method.</p>
+<p>For this reason, the server needs a bit of state to keep track of which connections care about which routes, best represented by a <code>Map</code> of routes to connections, something like:</p>
+<pre class="haskell"><code>Map.Map Route Connections</code></pre>
+<h2 id="communication" class="notoc">Communication</h2>
+<p>Haskell provides a variety of concurrency primitives, such as <a href="http://hackage.haskell.org/package/base/docs/Control-Concurrent-MVar.html">MVars</a> and <a href="http://hackage.haskell.org/package/base/docs/Control-Concurrent-Chan.html">Channels</a>. MVars are mutable locations in memory and Channels are simply FIFO channels. It made sense to use a channel between the Hakyll compiler and the WebSocket client threads, so that WebSocket client threads would subscribe/listen to the channel and the Hakyll compiler would publish/write to the channel with the new post data.</p>
+<p>However, we’re actually going to be using the <a href="http://hackage.haskell.org/package/stm">stm</a> package’s variants of these concurrency primitives: <a href="http://hackage.haskell.org/package/stm/docs/Control-Concurrent-STM-TVar.html">TVars</a> and <a href="http://hackage.haskell.org/package/stm/docs/Control-Concurrent-STM-TChan.html">TChans</a>. The <a href="http://en.wikipedia.org/wiki/Software_transactional_memory">Software Transactional Memory</a> package allows us to perform transactional, atomic operations to avoid race conditions. We’re going to use a <code>TVar</code> for the server state, which will allow the Hakyll and WebSocket server to perform transactional read/write operations on the server state without stepping on each others’ toes (i.e. race conditions).</p>
+<p>I chose a <code>TVar</code> and not a <code>TMVar</code> because we won’t have a concept of an “empty state,” which is what the <code>TMVar</code> variant allows. The state will always contain something, even if that’s just an empty <code>Map</code>. So let’s wrap our state up in a <code>TVar</code>:</p>
+<pre class="haskell"><code>type State = TVar (Map.Map Route Connections)</code></pre>
+<p>There’s a slight problem with our idea of using channels, however. Reading a value from a channel “consumes” that value, i.e. it’s no longer available for reading from that channel. This complicates things because it means that I couldn’t easily have a single channel to write every post’s changes to because that would mean that only the first client thread to read the data would receive the data.</p>
+<p>Fortunately, the channel type supports a duplication operation. If you have channel <code>A</code> and you duplicate it, yielding channel <code>B</code>, writing to any one of those channels makes the data available to read from both channels:</p>
+<blockquote>
+<p>Duplicate a Chan: the duplicate channel begins empty, but data written to either channel from then on will be available from both. Hence this creates a kind of broadcast channel, where data written by anyone is seen by everyone else.</p>
+</blockquote>
+<p>Remember that our server state consists of a <code>Map</code> of routes to connections. Instead, we could make this a <code>Map</code> of routes to broadcast channels. When the Hakyll compiler updates a post, it’ll see if there’s a broadcast channel associated with the post’s route and if so, it’ll pipe the data through that broadcast channel. On the WebSocket client thread side, they will duplicate the broadcast channel for that route they’re interested in, or if it doesn’t already exist, create it first.</p>
+<p>One final point is that we would like to avoid writing to a channel if no one is listening, to avoid unnecessary work. A simple way to achieve this is through simple reference counting. When a new client listens in on the broadcast channel, we increment the reference count, and accordingly decrement it when they disconnect, removing the channel from the Map altogether if no one is listening anymore.</p>
+<p>To be precise, we will be creating the broadcast channel with <code>newBroadcastTChan</code>, which is recommended when creating a broadcast channel. This is because creating a broadcast channel with <code>newTChan</code> has the consequence that it’s treated as any other channel that can be read from, so data begins to pile up as it’s written since it’s never read from, only the duplicate channels are read from. Creating one with <code>newBroadcastTChan</code> closes the read stream which allows the garbage collector to dispose of items once they’re read from the duplicate channels.</p>
+<h1 id="implementation" class="notoc">Implementation</h1>
+<p>Now that we’ve planned stuff out we can get to the implementation. As a summary, this is what the WebSocket server will be doing:</p>
+<ol type="1">
+<li>client opens post which initiates connection to WebSocket server for that post</li>
+<li>WebSocket server forks off a thread to handle that client
+<ol type="1">
+<li>client checks server state to see if broadcast channel already exists for the post
+<ul>
+<li>exists
+<ol type="1">
+<li>duplicate the broadcast channel</li>
+<li>increment reference count</li>
+</ol></li>
+<li>doesn’t exist
+<ol type="1">
+<li>create a broadcast channel for this post</li>
+<li>put it in server state with initial reference count of 1</li>
+<li>duplicate it</li>
+</ol></li>
+</ul></li>
+<li>listen in on duplicate channel for changes to the post</li>
+<li>when data is received from the channel, pipe it to WebSocket client</li>
+<li>repeat steps 2-3 forever</li>
+</ol></li>
+</ol>
+<p>And here’s what the Hakyll compiler will be doing:</p>
+<ol type="1">
+<li>retrieves item body</li>
+<li>checks if there’s a broadcast channel available for this item
+<ul>
+<li>yes: pipe the item body through the channel</li>
+<li>no: do nothing</li>
+</ul></li>
+</ol>
+<p>First we have our server state, which consists of a map from routes to pairs of channels and their reference counts. Once again, we’ll store this state in a <code>TVar</code> so that it can be read and written to from Hakyll and the WebSocket server in a transactional manner.</p>
+<pre class="haskell"><code>type Channels = TVar (Map.Map String (TChan String, Integer))</code></pre>
+<h2 id="websocket-server" class="notoc">WebSocket Server</h2>
+<p>The WebSocket server is pretty straightforward. We’ll print a message out and listen in on port 9160, specifying a client connection handler <code>wsHandler</code> that needs access to the server state:</p>
+<pre class="haskell"><code>wsServer :: Channels -&gt; IO ()
+wsServer channels = do
+  putStrLn &quot;WebSocket Server Listening on http://0.0.0.0:9160/&quot;
+  WS.runServer &quot;0.0.0.0&quot; 9160 $ wsHandler channels</code></pre>
+<p>The client handler starts out in a straightforward manner. We begin by getting the request data, from which we yield the path that the client connected to. This path, after all, signifies the post the client is interested in. Then we proceed to accept the client connection:</p>
+<pre class="haskell"><code>wsHandler :: Channels -&gt; WS.ServerApp
+wsHandler channels pending = do
+  let request = WS.pendingRequest pending
+      path    = tail . BC.unpack $ WS.requestPath request
+
+  conn &lt;- WS.acceptRequest pending</code></pre>
+<p>Next we need to get the channel we’ll be listening in on. Notice that this is performed <code>atomically</code> within the <code>STM</code> monad, since we don’t want to have race conditions between the time we read the map and when we update the server state with either an incremented reference count or a new entry.</p>
+<p>We begin by retrieving the server state from the <code>TVar</code>. We then perform a lookup in the Map to determine if a channel already exists for the given path. If a channel <strong>doesn’t</strong> exist, we create a new broadcast channel using <code>newBroadcastTChan</code> and insert it into the server state Map with an initial reference count of 1. Finally we duplicate this broadcast channel using <code>dupTChan</code>, which will be our result. If a broadcast channel already does exist, then we simply increment the reference count and duplicate it.</p>
+<pre class="haskell"><code>  chan &lt;- liftIO $ atomically $ do
+    chans &lt;- readTVar channels
+
+    case Map.lookup path chans of
+      Just (ch, refcount) -&gt; do
+        modifyTVar&#39; channels $ Map.insert path (ch, refcount + 1)
+        dupTChan ch
+      Nothing -&gt; do
+        ch &lt;- newBroadcastTChan
+        modifyTVar&#39; channels $ Map.insert path (ch, 1)
+        dupTChan ch</code></pre>
+<p>Now that we have the correct channel to listen from, we can forever perform the same loop:</p>
+<ol type="1">
+<li>read from the channel; this blocks until there’s something to read</li>
+<li>pipe the data to the WebSocket</li>
+</ol>
+<pre class="haskell"><code>  handle catchDisconnect . forever . liftIO $ do
+    atomically (readTChan chan) &gt;&gt;= WS.sendTextData conn . T.pack</code></pre>
+<p>Finally we need to gracefully handle the case where the client leaves by either decrementing the reference count or outright removing the channel from the Map. This is also an atomic operation since we’re performing a read followed by a write:</p>
+<pre class="haskell"><code>  atomically $ do
+    chans &lt;- readTVar channels
+    case Map.lookup path chans of
+      Just (ch, refcount) -&gt; do
+        if (refcount - 1) == 0
+          then modifyTVar&#39; channels $ Map.delete path
+          else modifyTVar&#39; channels $ Map.insert path (ch, refcount - 1)
+      Nothing -&gt; return ()</code></pre>
+<h2 id="hakyll-compiler" class="notoc">Hakyll Compiler</h2>
+<p>Remember that we also need a Hakyll compiler to insert into the Hakyll compiler pipeline. This compiler will read the server state <code>Map</code> and determine if if there’s a channel to send the item body to, and if there isn’t, does nothing.</p>
+<p>We will need two pieces of data relevant to the <code>Item</code> being compiled: the path to the file responsible for this <code>Item</code> as well as the <code>Item</code>’s body. The path is what we’ll use as the key into the Map, and the body is what we’ll pipe through the channel:</p>
+<pre class="haskell"><code>webSocketPipe :: Channels -&gt; Item String -&gt; Compiler (Item String)
+webSocketPipe channels item =
+  unsafeCompiler $ do
+    let path = toFilePath . itemIdentifier $ item
+        body = itemBody item</code></pre>
+<p>We fork off another thread to atomically retrieve the server state and determine if there’s a channel associated with the path, and if so, pipes the body through the channel:</p>
+<pre class="haskell"><code>    void . forkIO $ atomically $ do
+      chans &lt;- readTVar channels
+
+      case Map.lookup path chans of
+        Just (ch, _) -&gt; writeTChan ch body
+        Nothing -&gt; return ()</code></pre>
+<p>The final and very important thing to do is to return the item as it was passed to us. This in effect makes this Hakyll compiler transparent, just “observing” the data that’s passing through it.</p>
+<pre class="haskell"><code>    return item</code></pre>
+<h2 id="main-thread" class="notoc">Main Thread</h2>
+<p>The main thread should begin by initializing the server state:</p>
+<pre class="haskell"><code>  channels &lt;- atomically $ newTVar Map.empty</code></pre>
+<p>You’ll need a way to determine whether the WebSocket server should run. In my case I have a <code>previewMode</code> variable that’s only true when the Hakyll action is either watch or preview; everything else defaults to deploy-mode.</p>
+<pre class="haskell"><code>  let previewMode = action == &quot;watch&quot; || action == &quot;preview&quot;
+  when previewMode $ void . forkIO $ wsServer channels</code></pre>
+<p>Finally, don’t forget to insert the Hakyll compiler into the pipeline, passing it the server state:</p>
+<pre class="haskell"><code>    compile $ getResourceBody
+      &gt;&gt;= pandocCompiler (storeDirectory conf)
+      &gt;&gt;= webSocketPipe channels
+      &gt;&gt;= loadAndApplyTemplate itemTemplate context
+      &gt;&gt;= loadAndApplyTemplate &quot;templates/layout.html&quot; layoutContext</code></pre>
+<h2 id="client-side" class="notoc">Client Side</h2>
+<p>Now we need to wire stuff up from the client side. First though there’s one last thing we need to do in the back-end. We need to create a Hakyll <code>Context</code> that inserts the client-side JavaScript only if we’re in preview mode, otherwise when you deploy your site every visitor will be attempting to connect to the WebSocket server.</p>
+<p>In my setup I have a <code>postCtx</code> that specifies the <code>Context</code> to use for posts. I’ve changed it to be a function that takes as argument a <code>Bool</code> specifying whether or not the site is in preview mode. This indicator is further passed on to a function called <code>pushJS</code> that will embed the JavaScript if it’s <code>True</code>:</p>
+<pre class="haskell"><code>postCtx :: Bool -&gt; Context String
+postCtx preview = mconcat
+  [ pushJS preview &quot;pushJS&quot;
+  -- ...
+  , defaultCtx ]</code></pre>
+<p>Before we get to <code>pushJS</code>, consider that we might want to disable this feature on a per-post basis. Personally I’d like this functionality to be on by default, but there are some posts I have such as <a href="/notes/machine-learning">this one</a> that are ridiculously long and take a very long time to load, so I’d like to be able to set a metadata <code>push: off</code> option in that particular post to disable it. Let’s define a function that gets the metadata value and assumes its <code>True</code> unless it’s explicitly set to <code>false</code> or <code>off</code>:</p>
+<pre class="haskell"><code>pushOn :: (MonadMetadata m) =&gt; Item a -&gt; m Bool
+pushOn item = do
+  pushMeta &lt;- getMetadataField (itemIdentifier item) &quot;push&quot;
+  return $ case pushMeta of
+             Just &quot;false&quot; -&gt; False
+             Just &quot;off&quot; -&gt; False
+             _ -&gt; True</code></pre>
+<p>Now we can get to the <code>pushJS</code> function. We only generate the JavaScript code if the site is in preview mode and the option isn’t disabled for this particular <code>Item</code>. The way this will work is that it’ll load the contents of the file <code>templates/push-js.html</code> into the <code>key</code> tag, which is <code>&quot;pushJS&quot;</code> in my case as defined above. So in my layout template I’ll have <code>$pushJS$</code>, which will be replaced by the contents of <code>push-js.html</code> or it’ll be an empty string if the requirements for the feature aren’t met. One last thing is that we pass the path of the file responsible for the <code>Item</code> into the <code>push-js.html</code> template as the <code>$path$</code> tag so that the WebSocket knows what path to connect to:</p>
+<pre class="haskell"><code>pushJS :: Bool -&gt; String -&gt; Context String
+pushJS preview key = field key $ \item -&gt; do
+  push &lt;- pushOn item
+  if preview &amp;&amp; push
+    then do
+      path &lt;- fmap toFilePath getUnderlying
+      tmpl &lt;- loadBody &quot;templates/push-js.html&quot;
+      itm &lt;- makeItem &quot;&quot; :: Compiler (Item String)
+      gend &lt;- applyTemplate tmpl (constField &quot;path&quot; path) itm
+      return $ itemBody gend
+    else return &quot;&quot;</code></pre>
+<p>The contents of the file <code>push-js.html</code> are pretty straightforward. We use the <code>$path$</code> that we were passed by <code>pushJS</code> to connect to the WebSocket server. Then we define an <code>onmessage</code> handler. This handler does a couple of things. First it finds the element that contains my post body. Once it has the element, it replaces the contents of this element with the data received through the WebSocket.</p>
+<p>We then have to perform some house cleaning, essentially re-running JavaScript functionality that ran on DOM load, such as creating links out of the headers in the post. I wrapped this stuff up in a global <code>refresh</code> function. This allows me to simply call it again in this handler. The last thing I do in this handler is re-run MathJax <span class="math">$\LaTeX$</span> typesetting on the post body element, since it originally ran on DOM load as well.</p>
+<pre class="html"><code>&lt;!-- preview push --&gt;
+&lt;script async=&quot;true&quot; type=&quot;text/javascript&quot;&gt;
+  jQuery(function (){
+    var ws = new WebSocket(&#39;ws://localhost:9160/$path$&#39;);
+    ws.onmessage = function (e) {
+      var content = jQuery(&#39;article .entry-content&#39;);
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue([&quot;Typeset&quot;, MathJax.Hub, content[0]]);
+    };
+  });
+&lt;/script&gt;</code></pre>
+<h1 id="conclusion" class="notoc">Conclusion</h1>
+<p>So I added this functionality to Hakyll that I thought others had through LiveReload. Of course, I showed it to the friend that told me about LiveReload to begin with and he was amazed, as was I when he told me that all LiveReload did was refresh the page for you.</p>
+<p>Of course, the advantage of LiveReload over this is that it handles any asset, such as style sheets, and reloads the entire page so that you can see those changes, rather than just the post body. But like I mentioned in the beginning of this post, I don’t feel like I need that functionality in particular. Perhaps I’ll implement it later on as well anyways though, for convenience. I have a feeling it’ll be more straightforward than this.</p>]]></summary>
+</entry>
+<entry>
+    <title>A Simpler Vim Statusline</title>
+    <link href="http://www.blaenkdenum.com/posts/a-simpler-vim-statusline/" />
+    <id>http://www.blaenkdenum.com/posts/a-simpler-vim-statusline/</id>
+    <published>2013-12-14T00:00:00Z</published>
+    <updated>2013-12-14T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>Everyone that uses Vim and their grandmothers have apparently adopted the use of statusline plugins like <a href="https://github.com/Lokaltog/vim-powerline">vim-powerline</a> or <a href="https://github.com/bling/vim-airline">vim-airline</a>. The latter, more recent vim-airline has gained popularity due to the fact that vim-powerline was deprecated in favor of a still-in-development <a href="https://github.com/Lokaltog/powerline">rewrite</a> that aims to provide a more general foundation for people to use the same kind of statusline in other areas, such as <a href="https://github.com/erikw/tmux-powerline">tmux</a> and <a href="https://github.com/milkbikis/powerline-shell">shell prompts</a> (cringe). So now everyone can have the same look: <a href="http://ethanschoonover.com/solarized">solarized</a> and some powerline-like status, <em>everywhere</em>.</p>
+<p>There’s of course nothing wrong with using these plugins, but I’ve come to realize that they’re overdone for my particular needs, and I don’t even really care for how they look.</p>
+<h2 id="patched-fonts" class="notoc">Patched Fonts</h2>
+<p>First there was the annoyance of having to use patched fonts to achieve the “powerline look”. This isn’t a huge problem since it’s pretty straightforward to track down, download, and install pre-patched fonts. This has only become somewhat more annoying due to the fact that the new powerline rewrite patches fonts differently, so you have to find the patched font for the version of powerline you use, and different plugins adopt different versions. Now do this for every OS you use, in my case, Windows, Linux, and OS X.</p>
+<p>The point is that in the grand scheme of things, when you take a step back, you realize you’re doing all of this for a mere statusline in a particular application (or two).</p>
+<h2 id="noise" class="notoc">Noise</h2>
+<p>By default, powerline shows the mode you’re currently in, git branch if applicable, file name, file format, file encoding, file type, percentage through file, line number, column number, as well as flags that show whether you’re in paste mode, if the file is modified, or if it’s read-only. The plugins also sport an entirely custom <a href="http://kien.github.io/ctrlp.vim/">CtrlP</a> statusline.</p>
+<p>When I switched over to airline recently I decided to take advantage of the fact that it’s somewhat customizable. At first I only did so to manually define a colorscheme I wanted, since the predefined one I had been using kept being changed around by upstream.</p>
+<p>Then I came to realize that I didn’t need all of that information. This is a similar conclusion I came to when I recently redesigned my <a href="/posts/terminal-customization/#prompt">shell prompt</a>. I started by shortening the Vim mode part of the statusline, e.g. NORMAL became N.</p>
+<p>I rarely ever need to care about the file format, encoding, or type. If I do, I can simply set <code>ff</code>, <code>fenc</code>, or <code>ft</code> respectively to have them printed. The file type in particular I can usually deduce from the file extension or contents, unless I’ve explicitly set it myself.</p>
+<p>Similarly, I don’t need the current line number to be in the statusline since it’s already in the number line on the left which I always have visible due to <code>relativenumber</code>. This has the effect of numbering the current line as line 0. Setting <code>number</code> as well changes this so that the current line is numbered with the actual, absolute line number.</p>
+<p>Finally, I’ve rarely cared to know how far I am in the file, but I admit that sometimes it’s useful to get an idea of how much more of the file there is, usually in something like a configuration file. For the rare occasion in which this is useful, this information is a simple Ctrl-G away.</p>
+<h2 id="signal" class="notoc">Signal</h2>
+<p>After taking all of this away, what remains is the file name, column number, git branch, and status indicators for whether or not the file is modified, read-only, or in paste mode.</p>
+<p>The column number has become indispensable for those language compilers/interpreters that output the column number on which an error was found, such as Haskell’s GHC. In fact, I’m now constantly annoyed by those that don’t do this. Given an error on line 30 column 24, I go to the line number with <code>:30</code> and the column with <code>24|</code> and I’m instantly at the problem location.</p>
+<p>The file name is of course useful, specifically shown relative to the current working directory. The git branch is also useful and provided by the <a href="https://github.com/tpope/vim-fugitive">fugitive</a> plugin.</p>
+<p>Finally, a select few markers are very useful, such as whether or not the file has been modified since the last write, if a file is read-only, and if one is in paste mode.</p>
+<p>After removing what I didn’t need, I ended up with this very customized airline installation, where the number on the right side is the column number:</p>
+<p><img src="/images/posts/a-simpler-vim-statusline/airline.png" class="center"></p>
+<h2 id="redesign" class="notoc">Redesign</h2>
+<p>This statusline was fine, but I couldn’t shake the thought that it felt out of place with those colors and arrows; it felt overdone. I ended up commenting out my airline configuration—which was <a href="https://github.com/blaenk/dots/blob/275b3b40fa0c57f1b48b5ba59b9ecbc00cddf866/vim/vimrc.ln#L80-L202">already pretty long</a>—and attempted to create a statusline from scratch with the goal of simplicity. I ended up with this, where the number on the left under the number line is the column number:</p>
+<p><img src="/images/posts/a-simpler-vim-statusline/regular.png" class="center"></p>
+<p>I completely got rid of any mode designation in the statusline since I realized that I had the <code>showmode</code> option set, which already shows the current mode in the message line under the statusline. Further still, I created <a href="https://github.com/blaenk/dots/blob/9843177fa6155e843eb9e84225f458cd0205c969/vim/vimrc.ln#L49-L64">mode-aware cursors</a> that change color based on the mode using the <code>gcr</code> option. Top-to-bottom: normal, insert, visual, replace, command:</p>
+<p><img src="/images/posts/a-simpler-vim-statusline/gcr-normal.png" class="center"> <img src="/images/posts/a-simpler-vim-statusline/gcr-insert.png" class="center"> <img src="/images/posts/a-simpler-vim-statusline/gcr-visual.png" class="center"> <img src="/images/posts/a-simpler-vim-statusline/gcr-replace.png" class="center"> <img src="/images/posts/a-simpler-vim-statusline/gcr-command.png" class="center"></p>
+<h3 id="inactive-statuslines" class="notoc">Inactive Statuslines</h3>
+<p>One piece of functionality that I wanted to preserve from airline was support for different active and inactive statuslines. In my case, I wanted this to be a subtle difference as you can see in the image below, where some things lose their color and the angle quotes become inverted:</p>
+<p><img src="/images/posts/a-simpler-vim-statusline/regular-inactive.png" class="center"></p>
+<p>This feature isn’t built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refresh every window’s statusline:</p>
+<pre class="vim"><code>function! s:RefreshStatus()
+  for nr in range(1, winnr(&#39;$&#39;))
+    call setwinvar(nr, &#39;&amp;statusline&#39;, &#39;%!Status(&#39; . nr . &#39;)&#39;)
+  endfor
+endfunction
+
+augroup status
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * call &lt;SID&gt;RefreshStatus()
+augroup END</code></pre>
+<p>The function that actually constructs the statusline is called <code>Status</code>. It takes an argument that corresponds to the window for which the statusline is to be constructed. I then detect whether the statusline being constructed is going to be active by checking it against the current/focused window:</p>
+<pre class="vim"><code>let active = a:winnum == winnr()</code></pre>
+<p>I set the statusline using the <code>%!SomeFunc()</code> syntax so that the result of the function is the value that’s interpreted to construct the statusline. One problem is that when done this way, the function is evaluated in the context of the currently focused window and buffer, so if you use the value of <code>&amp;modified</code> in your statusline somehow, and you have various windows but only the currently focused one is modified, all of the other windows will show the same modified marker, because the query as to whether or not they’re modified was done within the context of the focused window.</p>
+<p>The documentation presented the solution to this problem:</p>
+<blockquote>
+<p>Note that the “<code>%!</code>” expression is evaluated in the context of the current window and buffer, while <code>%{}</code> items are evaluated in the context of the window that the statusline belongs to.</p>
+<p><cite><strong>Vim 7.4’s</strong> <a href="http://vimhelp.appspot.com/options.txt.html#%27statusline%27">documentation</a></cite></p>
+</blockquote>
+<p>This means that if we want to perform behavior specific to the window or buffer for which the statusline is being created, we should wrap that in a <code>%{}</code> expression block:</p>
+<pre class="vim"><code>let stat .= &quot;%{&amp;modified ? &#39; +&#39; : &#39;&#39;}&quot;</code></pre>
+<p>Defining a function to construct the statusline isn’t as complicated as it may seem. Once the boilerplate is defined, it’s a very simple way of constructing a statusline, and in my opinion more <a href="https://github.com/blaenk/dots/blob/dfb34f1ad78f5aa25bc486d3c14c9a0ef24094bd/vim/.vimrc#L168">organized and manageable</a> than typical, <a href="http://stackoverflow.com/a/5380230/101090">densely packed</a> statusline declarations. For example, here’s the code for showing the file-modified marker, where <code>Color</code> is a helper function that conditionally colors the passed content based on whether or not the window is active:</p>
+<pre class="vim"><code>let stat .= Color(isactive, 2, &quot;%{&amp;modified ? &#39; +&#39; : &#39;&#39;}&quot;)</code></pre>
+<p>Here’s what the modified, paste mode, and read-only markers look like:</p>
+<p><img src="/images/posts/a-simpler-vim-statusline/regular-modified.png" class="center"> <img src="/images/posts/a-simpler-vim-statusline/regular-paste.png" class="center"> <img src="/images/posts/a-simpler-vim-statusline/regular-readonly.png" class="center"></p>
+<p>I didn’t want the read-only marker to be <code>RO</code>, so instead I got the inspiration from when one does <code>sudo !!</code> to re-do the previous command with <code>sudo</code>. In fact, I have a mapping for this that I found online, <code>w!!</code>:</p>
+<pre class="vim"><code>cmap w!! %!sudo tee &gt; /dev/null %</code></pre>
+<p>I finally had to redo the CtrlP theme from scratch as well, because I had previously customized it through airline’s API. This turned out to be pretty straightforward, since CtrlP itself exposes a function for this. With airline, I had this, which I specifically made to look like how it looked in powerline by default:</p>
+<p><img src="/images/posts/a-simpler-vim-statusline/airline-ctrlp.png" class="center"></p>
+<p>This actually looked pretty nice, in my opinion, but this look doesn’t mesh well with what I’ve created so far. I completely got rid of everything but the current mode and search scope path. Whether regex is turned on and/or if searching by file name is reflected in the CtrlP prompt already:</p>
+<p><img src="/images/posts/a-simpler-vim-statusline/regular-ctrlp.png" class="center"></p>
+<h2 id="conclusion" class="notoc">Conclusion</h2>
+<p>Like I said when I started out this post: there’s nothing wrong with using one of these statusline plugins. They certainly look nice and seem like a step up from the default statusline. It’s just that I took a step back and realized I didn’t need the things they offered, and they didn’t look as great as I had originally thought, back when I compared it to a default statusline.</p>
+<p>For as much as some of these plugins claim to be “light,” it’s generally difficult to be lighter than using no plugin at all <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. It’s not that this extra code will make your Vim unusably slow with today’s hardware, but that it seems pointless to carry around if you’re not even using most of it, especially considering how simple it seems to be to define your own statusline, and—if you care to—personalize your setup.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://github.com/itchyny/lightline.vim">lightline</a> is one statusline plugin I know of—but haven’t used—whose philosophy it is to have the user define as much of the statusline as possible in the hopes of remaining light. I haven’t used it, so I can’t comment on it, but in my case defining my own from scratch was simple enough already. That said, this might be useful for others who find themselves in a similar position but who would rather use something maintained by someone else.<a href="#fnref1">↩</a></p></li>
+</ol>
+</section>]]></summary>
+</entry>
+<entry>
+    <title>Custom XKB Options with Gnome</title>
+    <link href="http://www.blaenkdenum.com/posts/custom-xkb-options-with-gnome/" />
+    <id>http://www.blaenkdenum.com/posts/custom-xkb-options-with-gnome/</id>
+    <published>2013-11-08T00:00:00Z</published>
+    <updated>2013-11-08T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>As I’ve <a href="/posts/xmonad-ignores-bindings/#media-keys">explained before</a>, I use a keyboard without media keys, so I rebind three otherwise-unused keys to act as my media keys. I accomplish this on Gnome by using a custom XKB option that I <a href="/posts/xmonad-ignores-bindings/#workaround">created</a>. I have to do this because the Gnome keyboard settings binder ignores the keys I want to bind for this particular purpose. I used to enable this XKB option by simply running a script at startup that enabled it, but I noticed that it was subject to either a race condition or a precedence issue. I’m more convinced it was the latter, as if the option that I enabled was overridden by Gnome’s own initialization of XKB. This suspicion seems to be confirmed by the Arch wiki page on <a href="https://wiki.archlinux.org/index.php/Keyboard_Configuration_in_Xorg">keyboard configuration</a>:</p>
+<blockquote>
+<p>This article describes low-level configuration using XKB which is effective in most cases, but some desktop environments like GNOME override it with its own settings.</p>
+<p><cite><strong>Arch Wiki</strong></cite></p>
+</blockquote>
+<p>As a result, I decided to look for a way to have my solution work alongside Gnome’s initialization of XKB. There was <em>very</em> little information on Gnome’s interaction with XKB short of reading Gnome’s source, but after searching around for a long time, I found that there is indeed a dconf option hidden away at <code class="path">/org/gnome/desktop/input-sources/xkb-options</code>. Before I could use this though, I had to make my XKB option available system-wide.</p>
+<p>First the symbol file has to be placed in the symbols directory <code class="path">/usr/share/X11/xkb/symbols</code>. This file simply binds the keys I want to use to the XF86 designated media keys. This way the Gnome binder will pick them up without complaining when I bind them to the volume keys, since it otherwise seems to prevent the binding of these very keys as they are. In other words, with this symbol file, RCTRL will be interpreted by the system as if I had pressed XF86AudioRaiseVolume, which is what an actual volume-up media key would yield:</p>
+<pre><code>partial hidden modifier_keys
+xkb_symbols &quot;bottom_right&quot; {
+  key &lt;RCTL&gt; { [ XF86AudioRaiseVolume ] };
+  key &lt;MENU&gt; { [ XF86AudioLowerVolume ] };
+  key &lt;RWIN&gt; { [ XF86AudioMute ] };
+};</code></pre>
+<p>Now an option has to be created for this symbol file and then listed in the system-wide options list for the rule set you’re using, in my case evdev, at <code class="path">/usr/share/X11/xkb/rules/evdev</code>. Here, <code>volume_keys</code> corresponds to the filename of the symbol file, and <code>bottom_right</code> is the name I gave the group:</p>
+<pre><code>volume_keys:bottom_right = +volume_keys(bottom_right)</code></pre>
+<p>Now the option can be referenced system-wide, so it can be entered into the the Gnome XKB options dconf key at <code class="path">/org/gnome/desktop/input-sources/xkb-options</code>. Put it inside the list as <code>'volume_keys:bottom_right'</code>, for example mine is set to:</p>
+<pre><code>[&#39;volume_keys:bottom_right&#39;, &#39;compose:ralt&#39;]</code></pre>
+<p>You can now go ahead and bind the appropriate keys to volume functions inside Gnome Setting’s keyboard section.</p>
+<p>Given that it’s tucked away deep inside dconf, and given Gnome developers’ track record of pruning “cruft” or anything that the lowest common denominator user doesn’t use, the future availability of this option is in question. That said, it currently works perfectly fine.</p>
+<p><strong>Update</strong>: On archlinux, <code>pacman -Qo</code> shows that the <code class="path">evdev</code> file is owned by the <a href="https://www.archlinux.org/packages/extra/any/xkeyboard-config/">xkeyboard-config</a> package. Whenever this package is updated, it overwrites this file, necessitating the change to be added once again. I’ll have to look into a more resilient way to have this setup.</p>]]></summary>
+</entry>
+<entry>
+    <title>Extra Dependencies in Hakyll</title>
+    <link href="http://www.blaenkdenum.com/posts/extra-dependencies-in-hakyll/" />
+    <id>http://www.blaenkdenum.com/posts/extra-dependencies-in-hakyll/</id>
+    <published>2013-06-28T00:00:00Z</published>
+    <updated>2013-06-28T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>I use <a href="http://sass-lang.com/">scss</a> for my site’s stylesheets. scss is a language very similar to <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets">CSS</a> that adds support for variables, nesting, mixins, selector inheritance, and more—while retaining a syntax very similar to CSS itself.</p>
+<h2 id="split-stylesheets" class="notoc">Split Stylesheets</h2>
+<p>A common practice I’ve noticed with the use of scss is to avoid having one monolithic stylesheet and instead opt to split it out into separate semantic files. For example, <code class="path">post.scss</code> would concern styling for posts, <code class="path">syntax.scss</code> would concern styling for Pygments syntax highlighting, etc. These files are then imported into one stylesheet, e.g., <code class="path">screen.scss</code>, using the <code>@import</code> directive. It is this stylesheet that gets compiled by the scss compiler into the monolithic CSS.</p>
+<h2 id="problem" class="notoc">Problem</h2>
+<p>In Hakyll, rules are generally designated by a pattern that matches a resource coupled with a route and a compiler. So this was the rule I originally had for <code class="path">scss/screen.scss</code>:</p>
+<pre class="haskell"><code>match &quot;scss/screen.scss&quot; $ do
+  route $ constRoute &quot;css/screen.css&quot;
+  compile $ sassCompiler</code></pre>
+<p>The rule simply states that Hakyll should:</p>
+<ol type="1">
+<li>find the file <code class="path">scss/screen.scss</code></li>
+<li>route it to <code class="path">css/screen.css</code></li>
+<li>compile it using my custom <code>sassCompiler</code>.</li>
+</ol>
+<p>This worked fine, but it meant that when I built or previewed the site, if I modified one of the split stylesheets, such as <code class="path">post.scss</code>, it wouldn’t regenerate the monolithic stylesheet. It would only do so if <code class="path">scss/screen.scss</code> itself was modified.</p>
+<h2 id="solution" class="notoc">Solution</h2>
+<p>With the help of Hakyll’s creator, Jasper, I learned that the solution involves the use of <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Metadata.html#v:makePatternDependency"><code>makePatternDependency</code></a> to create a <code>Dependency</code> from a given <code>Pattern</code>, and <a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies"><code>rulesExtraDependencies</code></a> to associate the dependencies with a specific <code>Compiler</code>.</p>
+<blockquote>
+<p>Advanced usage: add extra dependencies to compilers. Basically this is needed when you’re doing unsafe tricky stuff in the rules monad, but you still want correct builds.</p>
+<p>A useful utility for this purpose is <code>makePatternDependency</code>.</p>
+<p><cite><strong>Jasper</strong> on <a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies">Hackage</a></cite></p>
+</blockquote>
+<p>Now when I’m previewing my site—or build the site in general—and I modify any scss file, it correctly regenerates the monolithic <code class="path">css/screen.css</code> file. Here’s my new scss compiler rule:</p>
+<pre class="haskell"><code>match &quot;scss/**.scss&quot; $ do
+  compile getResourceBody
+
+scssDependencies &lt;- makePatternDependency &quot;scss/**.scss&quot;
+rulesExtraDependencies [scssDependencies] $ do
+  create [&quot;css/screen.css&quot;] $ do
+    route $ idRoute
+    compile $ sassCompiler</code></pre>]]></summary>
+</entry>
+<entry>
+    <title>Post Feed in Hakyll</title>
+    <link href="http://www.blaenkdenum.com/posts/post-feed-in-hakyll/" />
+    <id>http://www.blaenkdenum.com/posts/post-feed-in-hakyll/</id>
+    <published>2013-06-19T00:00:00Z</published>
+    <updated>2013-06-19T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>When I made my site, specifically when I <a href="/posts/the-switch-to-hakyll">switched to Hakyll</a>, I didn’t bother to include a <a href="http://en.wikipedia.org/wiki/Web_feed">syndication feed</a> because I didn’t expect that anyone would care to want to subscribe to my site. However, someone <a href="https://github.com/blaenk/blaenk.github.io/issues/1">filed an issue</a> concerning this on github. I knew Hakyll exposed a module specifically for this: <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Feed.html">Hakyll.Web.Feed</a>. It was more a matter of implementing it in a straightforward manner with the least duplication of work.</p>
+<blockquote>
+<p>I’d like to subscribe to your blog, but I can’t seem to find an RSS feed (nor the Hakyll code to generate one). Would you consider adding one?</p>
+<p><cite><strong>Nathan</strong> on <a href="https://github.com/blaenk/blaenk.github.io/issues/1">Issue #1</a></cite></p>
+</blockquote>
+<h2 id="considerations" class="notoc">Considerations</h2>
+<p>If I used my custom post compiler, it would include the table of contents and Pygments highlighted code. This was a problem because the table of contents didn’t work correctly in <a href="https://yoleoreader.com/">the feed reader</a> I tested with and so just served to waste space. Worse, code blocks were completely absent from the feed reader. Finally, posts containing math type—which is rendered with <a href="http://www.mathjax.org/">MathJax</a> on this site—did not render at all in the feed reader.</p>
+<p>So it was obvious to me that I had to compile the posts meant for the syndication feed with a more vanilla Pandoc compiler. However, I did want to keep the abbreviation substitution filter as that seemed to work perfectly fine.</p>
+<p>Because I needed to compile the posts with an entirely different Pandoc compiler, I knew that already I was duplicating some effort. Knowing this, I wanted to make sure to save as much work as possible to avoid further duplicate effort.</p>
+<h2 id="drying-up" class="notoc">Drying Up</h2>
+<p>Since I wanted to use the abbreviation substitution filter in both the feed and regular post compiler, I knew that it was a potential location of duplicate effort. Both compilers would start something like this:</p>
+<pre lang="haskell"><code>compile $ getResourceBody
+  &gt;&gt;= withItemBody (abbreviationFilter)
+  &gt;&gt;= pandocCompiler -- or pandocFeedCompiler</code></pre>
+<p>So it would have been preferable if I could save the state of the <code>Item</code> (i.e. post) as it was right after abbreviation substitution. Fortunately, Hakyll has support for this in the form of <em>snapshots</em>.</p>
+<p>The solution was to save a snapshot of the post from the regular compiler for posts after it had been through the abbreviation substitution <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
+<pre lang="haskell"><code>match postsPattern $ do
+  route $ niceRoute &quot;posts/&quot;
+  compile $ getResourceBody
+    &gt;&gt;= withItemBody (abbreviationFilter)
+    &gt;&gt;= saveSnapshot &quot;abbreviated&quot;
+    &gt;&gt;= pandocCompiler
+    -- ...</code></pre>
+<h2 id="implementation" class="notoc">Implementation</h2>
+<p>This meant that I could now refer to the “abbreviated” snapshot of any post. All I had to do now was to define a <code>Rule</code> to compile posts specifically for the syndication feed. Hakyll also has support for this in the form of <em>versions</em>, in which one can compile different versions of the same thing and refer to them later on.</p>
+<p>So what I do in the “feed” version of the post compiler was to get the underlying <code>Identifier</code> for the given post and load the “abbreviated” snapshot of the version of that post that has no name, i.e. the version of the post compiled by the regular post compiler.</p>
+<p>I then pass that snapshot to <code>pandocFeedCompiler</code> which is simply a more vanilla Pandoc compiler that removes the table of contents sentinel value I use, doesn’t generate the table of contents, doesn’t highlight code with Pygments, and uses regular superscripts etc. instead of MathJax:</p>
+<pre lang="haskell"><code>match postsPattern $ version &quot;feed&quot; $
+  compile $ do
+    ident &lt;- getUnderlying
+    loadSnapshot (setVersion Nothing ident) &quot;abbreviated&quot;
+      &gt;&gt;= makeItem . itemBody
+      &gt;&gt;= pandocFeedCompiler</code></pre>
+<p>All that was left to do was to create the <code>atom.xml</code> file. An ephemeral <code>Context</code> is created to denote that the <code>$description$</code> tag should be filled with the body of the post, as the syndication feed rendering functions in Hakyll expect. All “feed” versions of posts are loaded, sorted in reverse chronological order, and the first ten are taken. Finally the function <code>renderAtom</code> actually generates the XML from all of this information:</p>
+<pre lang="haskell"><code>create [&quot;atom.xml&quot;] $ do
+  route idRoute
+  compile $ do
+    let feedCtx = postCtx &lt;&gt; bodyField &quot;description&quot;
+    posts &lt;- fmap (take 10) . recentFirst
+      =&lt;&lt; loadAll (postsPattern .&amp;&amp;. hasVersion &quot;feed&quot;)
+    renderAtom feedConf feedCtx posts</code></pre>
+<h2 id="caveat" class="notoc">Caveat</h2>
+<p>Notice that we are using the “feed” versions of posts to render the syndication feed. This poses a problem, because the <a href="https://github.com/jaspervdj/hakyll/blob/master/data/templates/atom-item.xml">atom feed template</a> requires access to the <code>$url$</code> field, but notice that the “feed” version is <em>not</em> routed.</p>
+<p>This means that a <code>Route</code> is not created for “feed” versions, and as a result the <code>$url$</code> will be an empty string, so the link to individual stories in the feed will just link to the site root!</p>
+<p>This becomes apparent when you look at the implementation of <code>urlField</code>, which is defined in <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html">Hakyll.Web.Template.Context</a>:</p>
+<pre lang="haskell"><code>urlField :: String -&gt; Context a
+urlField key = field key $
+    fmap (maybe empty toUrl) . getRoute . itemIdentifier</code></pre>
+<p>First it gets the <code>Item</code>’s <code>Identifier</code>, and then it gets that <code>Identifier</code>’s <code>Route</code>. The problem is that since we’re using a different version of the post, the <code>Identifier</code> will be different, and there won’t be a <code>Route</code> associated with that <code>Identifier</code>.</p>
+<p>I actually use a slightly different <code>urlField</code>-type function, which I called <a href="https://github.com/blaenk/blaenk.github.io/blob/1379be96c66de626b2623d0b09ce32e065da4f49/src/Site/Fields.hs#L80"><code>niceUrlField</code></a>, it simply returns the URL without the <code>index.html</code> at the end. However, the solution to this problem is the same in both functions.</p>
+<p>The solution is to get the no-name version of the <code>Identifier</code> that is retrieved, that is, the version of the post without an explicit version—the version that was compiled normally. This is done using the <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Identifier.html#v:setVersion"><code>setVersion</code></a> function. The function can be changed to this:</p>
+<pre lang="haskell"><code>urlField&#39; :: String -&gt; Context a
+urlField&#39; key = field key $
+    fmap (maybe empty toUrl) . getRoute . setVersion Nothing . itemIdentifier</code></pre>
+<p>This successfully retrieves the correct URL of the post, just make sure you <code>mappend</code> this alternate function in your feed’s <code>Context</code>.</p>
+<h2 id="conclusion" class="notoc">Conclusion</h2>
+<p>It’s a shame that some duplicate work seems necessary when it comes to compiling the post. That is, I have to compile every post using my special Pandoc compiler, and then again using the more vanilla feed compiler I made. I tried to balance this by saving effort at the very least with the abbreviation substitution filter, so that it only runs once on every post.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>If you’re wondering what <code>postsPattern</code> is, refer to my <a href="/posts/drafts-in-hakyll">Drafts in Hakyll</a> post, in which this value is used to determine from where to pull posts in, in order to facilitate a draft preview system.<a href="#fnref1">↩</a></p></li>
+</ol>
+</section>]]></summary>
+</entry>
+<entry>
+    <title>Drafts in Hakyll</title>
+    <link href="http://www.blaenkdenum.com/posts/drafts-in-hakyll/" />
+    <id>http://www.blaenkdenum.com/posts/drafts-in-hakyll/</id>
+    <published>2013-06-05T00:00:00Z</published>
+    <updated>2013-06-05T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>In the post about my <a href="/posts/the-switch-to-hakyll">switch to Hakyll</a> I talked about the various features I implemented in my Hakyll blog. One feature that was sorely missing was support for drafts: posts which aren’t supposed to be published when the site is deployed.</p>
+<p>I usually take my time writing posts. Sometimes it can take me days, during which I might want to deploy other minor changes to the site, or perhaps even a shorter, quicker post. Without a draft system, I’m forced to manually move the draft post out of the provider directory so that it doesn’t get generated and subsequently deployed.</p>
+<p>A draft system is able to clearly distinguish draft posts from regular posts. This way, when it comes to deploying the site, draft posts aren’t deployed along with it.</p>
+<h2 id="considerations" class="notoc">Considerations</h2>
+<p>I believe that the fundamental problem with draft systems in static site generators is that drafts, like regular posts, come to permeate the entire site. They accomplish this by showing up on index pages, tag pages, and any other place you might expect regular posts to show up in. This is something to keep in mind when creating a draft system because it means that simply deleting the compiled page won’t suffice, as there will still be traces in other pages.</p>
+<p>One approach to this problem is to quarantine the draft posts such that they don’t show up on any of these things and instead only show them when you visit them directly. This is not an option for me because when I preview drafts I want to see how they will affect the entire site. I don’t preview drafts simply to check how my post is formatted.</p>
+<h2 id="examples" class="notoc">Examples</h2>
+<p>The following two draft system implementations exemplify the two approaches I can think of for a draft system. These are approaches taken by static site generators. There are other ad hoc solutions, such as creating a separate <code>drafts</code> branch in git.</p>
+<p><a href="http://octopress.org/">Octopress</a> had support for drafts hacked onto Jekyll by way of a plugin that allowed a metadata field <code>published</code> to be set that, if set to <strong>false</strong>, would establish an environment variable that would be detected on site generation in order to regenerate the site without the draft posts. This consequently meant that draft posts were stored in the same directory as regular posts.</p>
+<p><a href="http://jekyllrb.com">Jekyll</a> implemented support for this in its 1.0 version by allowing a new directory, <code class="path">_drafts/</code>, to store draft posts which could be previewed by specifying the <code>--drafts</code> flag to most operations. However, it was right after Jekyll 1.0 was released that I decided to switch to Hakyll.</p>
+<p>Octopress’ draft system was pretty straightforward in my opinion, despite being a pretty hack-ish implementation. I would create drafts in the same directory as all of the other posts, and would simply set metadata <code>published: false</code>. This would allow the draft to show up when I previewed the site, but not when it was ultimately deployed. This was accomplished by regenerating the site on deploy, this time without the preview posts.</p>
+<p>The other solution I could think of consisted of detecting when the site was being previewed, and if that were the case, establish a different output directory and a different posts pattern which would include the posts in a separate <code class="path">drafts/</code> directory. When the site <em>wasn’t</em> being previewed, the regular output directory would be used.</p>
+<h2 id="implementation" class="notoc">Implementation</h2>
+<p>Both approaches amount to hacks on top of Hakyll, but after some consideration, it seems to me that the second option is a lot less messy.</p>
+<p>My solution consists of some code that runs before the Hakyll driver. The code extracts the first argument from the program arguments, which by convention is the action to perform, e.g. build, clean, preview, and checks to see if it’s the <strong>preview</strong> action.</p>
+<pre class="haskell"><code>main = do
+  (action:_) &lt;- getArgs</code></pre>
+<p>If the <strong>preview</strong> action is being run, the Hakyll configuration data structure’s <code>destinationDirectory</code> field, i.e. the output directory, is changed to a separate one for previewing purposes. This implies that the field is set to the deployable output directory by default. This is important because it means that all actions other than <strong>preview</strong> will <em>ignore</em> drafts.</p>
+<p>Furthermore, if we are previewing, the pattern used to fetch posts is changed to also include the posts in the <code class="path">drafts/</code> directory. This is achieved by using the <a href="http://hackage.haskell.org/packages/archive/hakyll/4.2.2.0/doc/html/Hakyll-Core-Identifier-Pattern.html#v:.-38--38-."><code>.||.</code></a> function to compose two <code>Pattern</code> types.</p>
+<pre lang="haskell"><code>  let previewMode  = action == &quot;preview&quot;
+      hakyllConf   = if previewMode
+                     then myHakyllConf { destinationDirectory = &quot;generated/preview&quot; }
+                     else myHakyllConf
+      postsPattern = if previewMode
+                     then &quot;posts/*&quot; .||. &quot;drafts/*&quot;
+                     else &quot;posts/*&quot;</code></pre>
+<p>Finally, we need to make one modification to an existing action. The <strong>clean</strong> action removes the provider, cache, and destination (output) directories. However, we now have two separate destination directories and by default every other action only knows of the deployable destination directory, i.e. the one without drafts. For this reason, we have to detect if the action being run is <strong>clean</strong>, and if so, remove the preview output directory.</p>
+<p>Note that this depends on <a href="http://hackage.haskell.org/packages/archive/directory/latest/doc/html/System-Directory.html"><code>System.Directory</code></a>.</p>
+<pre lang="haskell"><code>  when (action == &quot;clean&quot;) $ do
+    putStrLn &quot;Removing generated/preview...&quot;
+    removeDirectoryRecursive &quot;generated/preview&quot;</code></pre>
+<p>Now that this is done, you simply have to be sure to use the <code>hakyllConf</code> that was created above, as well as <code>postsPattern</code> wherever you would have simply put <code>&quot;posts/*&quot;</code> before. Two places that come to mind are tag generation and posts compilation:</p>
+<pre lang="haskell"><code>  hakyllWith hakyllConf $ do
+    tags &lt;- buildTags postsPattern (fromCapture &quot;tags/*.html&quot;)
+
+    match postsPattern $ do
+      -- etc.</code></pre>
+<h2 id="usage" class="notoc">Usage</h2>
+<p>This drafts system is pretty straightforward. When you run <code>./site preview</code> it’ll serve the site with drafts as well. Deployment carries on as usual, i.e. you shouldn’t have to modify your deployment routine. With this system, you’ll never accidentally deploy drafts because they won’t ever show up in that output directory to begin with.</p>]]></summary>
+</entry>
+<entry>
+    <title>The Switch to Hakyll</title>
+    <link href="http://www.blaenkdenum.com/posts/the-switch-to-hakyll/" />
+    <id>http://www.blaenkdenum.com/posts/the-switch-to-hakyll/</id>
+    <published>2013-05-14T00:00:00Z</published>
+    <updated>2013-05-14T00:00:00Z</updated>
+    <summary type="html"><![CDATA[
+<p>This site was originally built with <a href="http://jekyllrb.com/">Jekyll</a>. Technically I began with the pre-packaged distribution known as <a href="http://octopress.org/">Octopress</a> which offered a Rakefile for common tasks as well as an out-of-the-box directory structure. I didn’t use many of these features, however, so I had been wanting to shed traces of Octopress, partly motivated by the pursuit of increased speed in site generation. I found the opportunity to do this when Jekyll 1.0 was released recently.</p>
+<p>To cut away the unnecessary components of Octopress, I decided to go through every file and keep only what I absolutely needed. This is evident in commits after <a href="https://github.com/blaenk/blaenk.github.com.jekyll/commit/712168ec33004b693cc8cfb553a6a861da6a8708"><code>712168ec</code></a>.</p>
+<p>I was well on my way to making the site’s source a lot leaner when I remembered that I had been wanting to try <a href="http://jaspervdj.be/hakyll/">Hakyll</a>, a static site generator written in Haskell that I had heard about on Hacker News. Given that I was more or less starting the site from scratch, I figured it was the perfect opportunity to try it.</p>
+<p>Ultimately, this site is now compiled with Hakyll. It took me about a week to implement every feature I wanted in Hakyll and Pandoc. The net effect is that the difference in speed and flexibility is highly appreciable.</p>
+<h2 id="file-structure" class="notoc">File Structure</h2>
+<p>Oftentimes when new to a system, learning its directory structure can help one to get oriented. Unlike some other static site generators, Hakyll does not enforce any particular directory structure or convention. The one I have adopted for my <a href="https://github.com/blaenk/blaenk.github.io">repository</a> looks like this:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Entry</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">provider/</td>
+<td style="text-align: left;">compilable content</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">src/</td>
+<td style="text-align: left;">Hakyll, Pandoc customizations</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Setup.hs</td>
+<td style="text-align: left;">build type</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">blaenk.cabal</td>
+<td style="text-align: left;">dependency management</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">readme.markdown</td>
+<td style="text-align: left;">repository information</td>
+</tr>
+</tbody>
+</table>
+<p>I build the site binary with <code>cabal build</code> which results in a new top-level directory <code class="path">dist/</code>, which stores the object files generated by GHC. The <code>site</code> binary, stored at the top level, is the actual binary which is used for generating and manipulating the site. This binary has a variety of options, the ones I commonly use are:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Option</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">build</td>
+<td style="text-align: left;">Generate the entire site</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">preview</td>
+<td style="text-align: left;">Generate changes on-the-fly and serve them on a preview server</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">deploy</td>
+<td style="text-align: left;">Deploy the site using a custom deploy procedure</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Build</strong> creates a top-level directory <code class="path">generated/</code> with two sub-directories: a directory <code class="path">cache/</code> for cached content and a directory <code class="path">site/</code> where the compiled site is stored.</p>
+<p><strong>Deploy</strong> puts the compiled site into top-level directory <code class="path">deploy/</code> which is git-controlled and force pushes the content to the master branch, effectively deploying (on GitHub).</p>
+<h2 id="hakyll" class="notoc">Hakyll</h2>
+<p>As I mentioned earlier, Hakyll is a static site generator written in Haskell. Hakyll sites are fleshed out using a Haskell <a href="http://www.haskell.org/haskellwiki/EDSL">Embedded Domain Specific Language</a> (EDSL). This EDSL is used to declare rules for different patterns which should be searched for within the provider directory and what should be done with them.</p>
+<p>For example, in the following Hakyll program:</p>
+<pre class="haskell"><code>main :: IO ()
+main = hakyll $ do
+  match &quot;images/*&quot; $ do
+      route   idRoute
+      compile copyFileCompiler</code></pre>
+<p><code>match &quot;images/*&quot;</code> is a <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Rules.html"><code>Rule</code></a> that states that the provider directory should match all files matching the glob <code>images/*</code>, <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Routes.html"><code>Route</code></a> them using the <code>idRoute</code>, and compile them using the <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Compiler.html"><code>Compiler</code></a> <code>copyFileCompiler</code>.</p>
+<p>Routing a file in the context of a static site generator like Hakyll refers to the mapping between the file as it sits in the provider directory and its name/path in the compiled directory; in this case, <code>idRoute</code> keeps the same name/path in the compiled directory.</p>
+<p>Compiling a file in this context refers to the operations that should be performed on the contents of the file, for example processing through Pandoc for Markdown to HTML generation, or in this case, simply copying the file from the provider directory to the compiled directory.</p>
+<p><code>Compiler</code> is a <a href="https://en.wikipedia.org/wiki/Monad_%28functional_programming%29">Monad</a>, which allows for seamless chaining of operations that should be performed on any given file. For example, here is my <code>Rule</code> for regular posts:</p>
+<pre class="haskell"><code>match &quot;posts/*&quot; $ do
+  route $ nicePostRoute
+  compile $ getResourceBody
+    &gt;&gt;= withItemBody (abbreviationFilter)
+    &gt;&gt;= pandocCompiler
+    &gt;&gt;= loadAndApplyTemplate &quot;templates/post.html&quot; (tagsCtx tags &lt;&gt; postCtx)
+    &gt;&gt;= loadAndApplyTemplate &quot;templates/layout.html&quot; postCtx</code></pre>
+<p>This states that the compilation process for any given post is as follows:</p>
+<ol type="1">
+<li>the post body (i.e. excluding post metadata) is read</li>
+<li>the result is passed to an abbreviation substitution filter</li>
+<li>the result is passed to my custom Pandoc compiler</li>
+<li>the result is embedded into a post template with a so called “post context”</li>
+<li>the result is embedded into the page layout</li>
+</ol>
+<p>A post is routed using the <code>nicePostRoute</code> function which is largely borrowed from <a href="http://yannesposito.com/Scratch/en/blog/Hakyll-setup/">Yann Esposito</a>. It simply routes a <code class="path">posts/this-post.markdown</code> to <code class="path">posts/this-post/index.html</code> so that the post can be viewed at <code class="path">posts/this-post/.</code></p>
+<p>An interesting thing to note is that when templates are applied, they are supplied a <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html"><code>Context</code></a>. A <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html"><code>Context</code></a> is simply a <a href="http://en.wikipedia.org/wiki/Monoid">Monoid</a> that encapsulates a key (i.e. <code>String</code> identifier for the field) and an <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Item.html"><code>Item</code></a>. During application of the template, if a field of the form <code>$key$</code> is encountered, the supplied <code>Context</code> is searched for an appropriate handler (i.e. one with the same key). If one is found, the item is passed to that <code>Context</code>’s handler and the result is substituted into the template.</p>
+<p>In the above <code>Rule</code> for posts, I pass a pre-crafted post <code>Context</code>, <code>postCtx</code>, and <a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/Data-Monoid.html#v:mappend"><code>mappend</code></a> to it a special tags context, <code>tagsCtx</code> which encapsulates tags information for that post.</p>
+<h3 id="scss" class="notoc">SCSS</h3>
+<p>The first customization I made was to allow support for <a href="http://sass-lang.com/">SCSS</a>. This is usually possible with a simple line:</p>
+<pre class="haskell"><code>getResourceString &gt;&gt;= withItemBody (unixFilter &quot;sass&quot; [&quot;-s&quot;, &quot;--scss&quot;])</code></pre>
+<p>This works fine in POSIX environments, of which Linux is my primary environment for development. However, it’s very useful to me to have Windows support as well. The problem is that on Windows, ruby gem binaries—such as <code>scss</code>—are implemented using batch file stubs. The underlying function used for creating the process in <code>unixFilter</code> is <a href="http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html">System.Process</a>’ <a href="http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html#v:createProcess"><code>createProcess</code></a>, specifically with the <code>proc</code> type. On Windows, this uses the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms682425.aspx"><code>CreateProcess</code></a> function. Using this function, batch files are not run unless they are run explicitly with <code>cmd.exe /c batchfile</code>. The problem is that there is no simple way to find the file path of the batch file stub for <code>scss</code>.</p>
+<p>The solution to this is to use the <code>shell</code> type with <code>createProcess</code> instead of <code>proc</code>. This has the effect of a <code>system</code> call, where the parameter is interpreted by the shell, in Windows’ case, <code>cmd.exe</code>. As a result, the program can simply be called as <code>scss</code>, leaving the shell to automatically run the appropriate batch file stub.</p>
+<p>To accomplish this, I had to implement what was essentially a mirror copy of <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-UnixFilter.html">Hakyll.Core.UnixFilter</a> with <code>proc</code> switched out with <code>shell</code>. I’ll be suggesting a pull request upstream soon which gives the user the option and removes the duplicate code. Now I can implement an SCSS compiler like the following, though I additionally pass it a few extra parameters in my actual implementation:</p>
+<pre class="haskell"><code>getResourceString &gt;&gt;= withItemBody (shellFilter &quot;sass -s --scss&quot;)</code></pre>
+<h3 id="abbreviations" class="notoc">Abbreviations</h3>
+<p>One feature I missed from <a href="http://kramdown.rubyforge.org/">kramdown</a> that wasn’t available in my new markdown processor, <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>, was abbreviation substitution. It consists of writing abbreviation definitions which are then used to turn every occurrence of the abbreviation into a proper <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr"><code>abbr</code></a> HTML tag with an accompanying tooltip consisting of the definition.</p>
+<p>I had hardly used regular expressions in Haskell before, so the method of using it was pretty confusing to me at first. There’s a base regex package called <a href="http://hackage.haskell.org/package/regex-base">regex-base</a> which exposes a common interface API, and then there are a variety of backend implementations. Hakyll happens to use <a href="http://hackage.haskell.org/package/regex-tdfa">regex-tdfa</a>, a fast and popular backend, so I decided to use that one instead of introducing additional dependencies.</p>
+<p>One way of using regular expressions in Haskell is through type inference, as is described in the <a href="http://hackage.haskell.org/packages/archive/regex-base/latest/doc/html/Text-Regex-Base-Context.html">Text.Regex.Base.Context</a> documentation:</p>
+<blockquote>
+<p>This module name is Context because they [sic] operators are context dependent: use them in a context that expects an Int and you get a count of matches, use them in a Bool context and get True if there is a match, etc.</p>
+</blockquote>
+<p>Keeping this in mind, I explicitly annotated the <code>[[String]]</code> type since I wanted every match and sub-match. I created a function <code>abbreviationReplace</code> that takes a <code>String</code>, removes the abbreviation definitions, and then creates <code>abbr</code> tags out of every occurrence of the abbreviation using the parsed definitions.</p>
+<p>The <code>abbreviationReplace</code> function begins like this:</p>
+<pre class="haskell"><code>abbreviationReplace :: String -&gt; String
+abbreviationReplace body =
+  let pat = &quot;^\\*\\[(.+)\\]: (.+)$&quot; :: String
+      found = body =~ pat :: [[String]]</code></pre>
+<h3 id="git-tag" class="notoc">Git Tag</h3>
+<p>In a <a href="/posts/commit-tag-for-jekyll/">previous post</a> I talked about a liquid tag I created for Jekyll which inserts the SHA of the commit on which the site was last generated. I have come to like this small feature of my site. It’s not some tacky “Powered by blah” footer. It’s pretty unobtrusive. It seems unimportant to people who wouldn’t understand what it’s about, and those who would understand it might immediately recognize its purpose.</p>
+<p><strong>Update</strong>: I have stopped including the git commit in the footer of every page. The problem with doing this was that, in order to have every page reflect the new commit, I had to regenerate every page before deploy. This obviously doesn’t scale well once more and more pages are added to the site. Instead I have adopted a per-post commit and history link which I believe is a lot more meaningful and meshes perfectly well with generation of pages, i.e. if a post is modified, there’ll be a commit made for it and since it was modified it will have to be regenerated anyways. Now I simply include social links in the footer.</p>
+<p>One thing I forgot to update the previous post about was that I ended up switching from using the Rugged git-bindings for Ruby to just using straight up commands and reading their output. The reason for doing this was that, while everything worked perfectly fine on Linux, Rugged had problems building on Windows. It turned out that taking this approach ended up being simpler and had the added benefit of decreasing my dependencies.</p>
+<p>The equivalent of a liquid tag in Jekyll would be a field, expressed as a <code>Context</code>. For this reason I created the <code>gitTag</code> function that takes a desired key, such as <code>git</code>, which would be used as <code>$git$</code> in templates, and returns a <code>Context</code> which returns the <code>String</code> of formatted HTML. One problem was that to do this I had to use <code>IO</code>, so I needed some way to escape the <code>Compiler</code> Monad. It turned out that Hakyll already had a function for something like this called <code>unsafeCompiler</code>, which it uses for <code>UnixFilter</code> for example.</p>
+<p>Here’s what <code>gitTag</code> looks like:</p>
+<pre class="haskell"><code>gitTag :: String -&gt; Context String
+gitTag key = field key $ \_ -&gt; do
+  unsafeCompiler $ do
+    sha &lt;- readProcess &quot;git&quot; [&quot;log&quot;, &quot;-1&quot;, &quot;HEAD&quot;, &quot;--pretty=format:%H&quot;] []
+    message &lt;- readProcess &quot;git&quot; [&quot;log&quot;, &quot;-1&quot;, &quot;HEAD&quot;, &quot;--pretty=format:%s&quot;] []
+    return (&quot;&lt;a href=\&quot;https://github.com/blaenk/blaenk.github.io/commit/&quot; ++ sha ++
+           &quot;\&quot; title=\&quot;&quot; ++ message ++ &quot;\&quot;&gt;&quot; ++ (take 8 sha) ++ &quot;&lt;/a&gt;&quot;)</code></pre>
+<h2 id="pandoc" class="notoc">Pandoc</h2>
+<p>Hakyll configuration is fairly straightforward. What took longer was the process of re-implementing some features that I had in <a href="http://kramdown.rubyforge.org/">kramdown</a> when I used Jekyll that weren’t available in my new document processor, <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>.</p>
+<p>Pandoc is a very interesting project that basically works by parsing input documents into a common intermediate form represented as an abstract syntax tree (AST). This AST can then be used to generate an output document in a variety of formats. In this spirit, I feel it’s a lot like the <a href="http://llvm.org/">LLVM</a> project. It seems to me that it has been gaining popularity especially from an end-user perspective (i.e. using the <code>pandoc</code> binary), commonly used to do things such as write manual pages in markdown or generate ebooks.</p>
+<p>The very nature of how Pandoc transforms input documents into an AST lends itself to straight-forward AST transformations. I have created two such transformations so far: one for Pygments syntax-highlighting and another for fancy table of contents generation.</p>
+<p>One of the things I needed to implement, however, was the abbreviation substitution described above. I would have implemented it as a Pandoc customization, but Pandoc has no representation for abbreviations in its abstract syntax tree. This was why I implemented it as a Hakyll compiler instead, using simple regular expressions.</p>
+<p>There is actually work towards implementing abbreviation substitution according to the <a href="http://johnmacfarlane.net/pandoc/README.html">readme</a> under the section “Extension: abbrevations” [sic] but it says:</p>
+<blockquote>
+<p>Note that the pandoc document model does not support abbreviations, so if this extension is enabled, abbreviation keys are simply skipped (as opposed to being parsed as paragraphs).</p>
+</blockquote>
+<h3 id="pygments" class="notoc">Pygments</h3>
+<p><strong>Update</strong>: This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I’ve created a pygments server that the site opens alongside it at launch, and this Pandoc AST transformer communicates with it through its stdout/stdin handles. It works perfectly and the site compiles a lot quicker. It also fully supports UTF-8:</p>
+<pre><code>¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹</code></pre>
+<p>One of the first things I wanted to implement right away was syntax highlighting with <a href="http://pygments.org/">Pygments</a>. There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for <a href="http://johnmacfarlane.net/highlighting-kate/">kate</a>: a Haskell package for syntax highlighting written by the author of Pandoc. However, I don’t find it to be on par with Pygments. In the past, I simply posted code to <a href="https://gist.github.com/">gist</a> and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.</p>
+<p>Eventually I realized that github just uses Pygments underneath, so I implemented a Pandoc AST transformer that finds every <a href="http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Definition.html#t:Block"><code>CodeBlock</code></a>, extracts the code within it, passes it to Pygments, and replaces that <code>CodeBlock</code> with a <code>RawBlock</code> containing the raw HTML output by Pygments. I also implemented a way to specify an optional caption which is shown under the code block. I use <a href="http://jaspervdj.be/blaze/">blaze-html</a> for the parts where I need to hand-craft HTML.</p>
+<p>Ultimately, this all means that I can write code blocks like this in markdown:</p>
+<pre><code>~~~ {lang=&quot;haskell&quot;}
+testFunction :: String -&gt; Integer
+~~~</code></pre>
+<p>Or, with a caption:</p>
+<pre><code>~~~ {lang=&quot;ruby&quot; text=&quot;some caption&quot;}
+args.map! {|arg| arg.upcase}
+~~~</code></pre>
+<p>One thing I had to do was invoke <a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/System-IO-Unsafe.html#v:unsafePerformIO"><code>unsafePerformIO</code></a> in the function I created which runs the code through <code>pygmentize</code>, an end-user binary for the Pygments library. I’m not sure if there’s a better way to do this, but my justification for using it is that Pygments should return the same output for any given input. If it doesn’t, then there are probably larger problems.</p>
+<pre class="haskell"><code>pygmentize :: String -&gt; String -&gt; String
+pygmentize lang contents = unsafePerformIO $ do</code></pre>
+<p>I don’t feel particularly worried about it, given my justification. It’s a similar justification used by Real World Haskell when <a href="http://book.realworldhaskell.org/read/interfacing-with-c-the-ffi.html#id655783">creating bindings</a> for <a href="http://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions">PCRE</a> with the foreign function interface:</p>
+<blockquote>
+<p>It lets us say to the compiler, “I know what I’m doing - this code really is pure”. For regular expression compilation, we know this to be the case: given the same pattern, we should get the same regular expression matcher every time. However, proving that to the compiler is beyond the Haskell type system, so we’re forced to assert that this code is pure.</p>
+</blockquote>
+<p>This is what the AST transformer I wrote looks like:</p>
+<pre class="haskell" text="Pandoc AST transformer for Pygments syntax highlighting"><code>pygments :: Block -&gt; Block
+pygments (CodeBlock (_, _, namevals) contents) =
+  let lang = fromMaybe &quot;text&quot; $ lookup &quot;lang&quot; namevals
+      text = fromMaybe &quot;&quot; $ lookup &quot;text&quot; namevals
+      colored = renderHtml $ H.div ! A.class_ &quot;code-container&quot; $ do
+                  preEscapedToHtml $ pygmentize lang contents
+      caption = if text /= &quot;&quot; 
+                then renderHtml $ H.figcaption $ H.span $ H.toHtml text
+                else &quot;&quot;
+      composed = renderHtml $ H.figure ! A.class_ &quot;code&quot; $ do
+                   preEscapedToHtml $ colored ++ caption
+  in RawBlock &quot;html&quot; composed
+pygments x = x</code></pre>
+<h3 id="table-of-contents" class="notoc">Table of Contents</h3>
+<p>The more sophisticated and complex of the AST transformers I wrote for Pandoc is table of contents generation. This is something that kramdown had out of the box, though not as fancy. Paired with automatic id generation for headers, this meant that simply placing <code>{:toc}</code> in my page would replace that with automatically generated table of contents based on the headers used in the page.</p>
+<h4 id="alternatives" class="notoc">Alternatives</h4>
+<p>Pandoc actually does have support for table of contents generation using the <code>--toc</code> flag. In fact, <a href="http://julien.jhome.fr/posts/2013-05-14-adding-toc-to-posts.html">Julien Tanguy</a> recently devised a way to generate a separate version of every post which only included the table of contents, then re-introduced the table of contents as a <code>Context</code> field <code>$toc$</code>.</p>
+<p>I actually tried this approach, along with a metadata field that decided if the table of contents should be included in a given post or page. However, I ended up deciding against using it. One advantage would be that it took less code on my end, and possibly I would avoid re-inventing the wheel. One reason I didn’t keep it was because there was a tiny increase in compilation time which I fear might accumulate in the future as the number of posts grow. The reason for this is that the table of contents is generated for every post/page, instead of only the ones that should display it.</p>
+<p>Another reason was that it would require me to implement the fancy section numbering in JavaScript, which I don’t think would be too difficult since in this case the table of contents already exists and I simply need to insert my numbering. The main reason I decided against it, along with the previous two reasons, is that there would be a noticeable delay between the time when the table of contents are shown plainly and when they are transformed into my custom table of contents.</p>
+<h4 id="implementation" class="notoc">Implementation</h4>
+<p>Implementing this involved many steps. In general terms, I had to make a pass through the document to collect all of the headers, then I had to make another pass to find a special sentinel marker I would manually place in the document to replace it with the generated table of contents. This effectively makes table of contents generation a two-pass transformer.</p>
+<p>Gathering all of the headers and their accompanying information, i.e. HTML <code>id</code>, text, level, proved to be a pretty straight-forward task using <a href="http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Generic.html#v:queryWith"><code>queryWith</code></a> from the <a href="http://hackage.haskell.org/package/pandoc-types">pandoc-types</a> package:</p>
+<pre class="haskell"><code>queryWith :: (Data a, Monoid b, Data c) =&gt; (a -&gt; b) -&gt; c -&gt; b
+-- Runs a query on matching a elements in a c.
+-- The results of the queries are combined using mappend.</code></pre>
+<p>Once I collect all of the <code>Header</code> items’ information, I normalize them by finding the smallest header <em>level</em> (i.e. big header) and normalizing all headers based on that level. That is, if smallest header level is 3 (i.e. <code>h3</code>), every header gets its level subtracted by 2 so that all headers are level 1 and above. Note that I’m not actually modifying the headers in the document, just the information about them that I’ve collected.</p>
+<p>Next, a <a href="http://hackage.haskell.org/packages/archive/containers/latest/doc/html/Data-Tree.html"><code>Data.Tree</code></a> is constructed out of the headers which automatically encodes the nesting of the headers. This is done by exploiting <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/Data-List.html#v:groupBy"><code>groupBy</code></a> by passing it <code>&lt;</code> as an equivalence predicate:</p>
+<pre class="haskell"><code>tocTree :: [TocItem] -&gt; Forest TocItem
+tocTree = map (\(x:xs) -&gt; Node x (tocTree xs)) . groupBy (comp)
+  where comp (TocItem a _ _) (TocItem b _ _) = a &lt; b</code></pre>
+<p>This <code>Tree</code> is finally passed to a recursive function that folds every level of the <code>Tree</code>—known as a <code>Forest</code>—into a numbered, unordered list. While that may sound like an oxymoron, the point is that I wanted to have nested numbering in my table of contents. For this reason, I create an unordered list with a <code>span</code> containing the section number concatenated to the parent’s section number. This function generates the HTML.</p>
+<p>The final problem was finding a way to insert the table of contents on-demand, in a location of my choosing. In kramdown, this is achieved by writing <code>{:toc}</code>, which gets substituted with the table of contents. Pandoc has no such thing, however. For this reason, I chose a list with a single item, “toc,” as the place holder for the table of contents. This means that I write the following wherever I want the table of contents to show up:</p>
+<pre><code>* toc</code></pre>
+<p>You can take a look at the beginning of this post to see what the generated table of contents looks like, especially the nested numbering I was referring to.</p>
+<h2 id="deploying" class="notoc">Deploying</h2>
+<p>I host my site using GitHub Pages. Such sites are deployed by pushing the site to the master branch of the repository. I wrote a quick shell script that accomplishes this in a pretty straightforward manner. It creates a git ignored directory, <code class="path">deploy/,</code> which itself is under git control, associated with the same repository, but its master branch instead.</p>
+<p>When I deploy the site with <code>./site deploy</code>, the contents of <code class="path">deploy/</code> are removed—except for the <code class="path">.git/</code> directory—and then all of the new generated files are copied into it. A commit is then generated for the deployment, tagged with the SHA identifier of the commit from which the site was generated, to make it easy for me to track things down sometimes. An eight character, truncated SHA is used as follows:</p>
+<pre class="bash"><code>COMMIT=$(git log -1 HEAD --pretty=format:%H)
+SHA=${COMMIT:0:8}
+git commit -m &quot;generated from $SHA&quot; -q</code></pre>
+<p>Finally, the commit is force pushed to the repository, replacing everything already there, effectively deploying the site.</p>
+<h2 id="conclusion" class="notoc">Conclusion</h2>
+<p>Preliminary migration to Hakyll was pretty quick. This included porting all of my posts, pages, and other assets to the Hakyll and Pandoc Markdown formats. The rest of the week was spent implementing the various features, some outlined above, and refining the code base.</p>
+<p>At first I was a little rusty with my Haskell and found myself at odds with the seemingly capricious compiler, trying to find one way or another to appease it. I quickly remembered that patience prevailed when concerning Haskell, and eventually came to really enjoy reasoning out the problems and solving them with Haskell.</p>
+<p>The site binary which is in charge of generation, previewing, etc. is compiled. Once you have configured Hakyll to your liking, you have a very fast binary, especially compared to other site generators which are known not to scale well with the amount of posts. The <code>Compiler</code> Monad in Hakyll takes care of dependency tracking, allowing re-generation of only those items which are affected by those which were changed, instead of the whole site.</p>
+<p>But perhaps my favorite aspect of Hakyll is that it’s more like a library for static site generation which you use as you see fit, and as a result, your site is entirely customizable.</p>]]></summary>
+</entry>
+<entry>
+    <title>xmonad Ignores Bindings</title>
+    <link href="http://www.blaenkdenum.com/posts/xmonad-ignores-bindings/" />
+    <id>http://www.blaenkdenum.com/posts/xmonad-ignores-bindings/</id>
+    <published>2013-02-24T00:00:00Z</published>
+    <updated>2013-02-24T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>In my <a href="/posts/terminal-customization/">previous post</a> I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up <a href="http://xmonad.org">xmonad</a>. I’ve finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.</p>
+<p><strong>Update</strong>: Shortly after posting in the <a href="https://code.google.com/p/xmonad/issues/detail?id=273">issue tracker entry</a> for this issue relating my experience and affirming that the proposed patch fixed the problem, the gracious developers merged the patch into the main tree. This problem should no longer affect anyone!</p>
+<h2 id="media-keys" class="notoc">Media Keys</h2>
+<p>I have a regular keyboard layout, <a href="http://www.daskeyboard.com/model-s-ultimate/">Das Keyboard Model S Ultimate</a>, which lacks media keys (i.e. volume up, down, etc). This wasn’t too much of a problem when I used headsets because most of them have dedicated volume controls. However, I got tired of headsets being rendered useless when any little thing messed up (e.g. microphone, a speaker, etc).</p>
+<p>As a result I ended up buying a <a href="http://amzn.com/B00029MTMQ">cheap standalone mic</a> and now use my iPhone’s <a href="http://amzn.com/B004PNZFZ8">Shure SE215-K</a> earbuds for sound on my computer. This is very easy to do given my computer case’ front panel audio connector. Of course, the problem now is that there aren’t any dedicated media keys and having to use a GUI to change the volume is cumbersome.</p>
+<p>My solution to this problem in Windows and Mac is to bind the bottom right keys to media keys as follows:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Key</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Right Control</td>
+<td style="text-align: left;">Volume Up</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Menu</td>
+<td style="text-align: left;">Volume Down</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Right Windows</td>
+<td style="text-align: left;">Volume Mute</td>
+</tr>
+</tbody>
+</table>
+<h2 id="binding" class="notoc">Binding</h2>
+<p>Creating these binds is possible on Windows via a registry hack, facilitated using a program such as <a href="http://www.randyrants.com/sharpkeys/">SharpKeys</a>.</p>
+<p>On Linux I initially did this using <code>xmodmap</code>:</p>
+<pre lang="text"><code>remove Control = Control_R
+keycode 105 = XF86AudioRaiseVolume
+add Control = Control_R
+
+keycode 135 = XF86AudioLowerVolume
+
+remove mod4 = Super_R
+keycode 134 = XF86AudioMute
+add mod4 = Super_R</code></pre>
+<p>Binding to these <code>XF86Audio*</code> keys automatically adds support for these keys in different applications like <a href="http://www.mplayer2.org/">mplayer2</a>, but I wanted system-wide volume support. This is typically accomplished by wiring them up in your given Desktop Environment or Window Manager. So I went ahead and did so in <code>xmonad.hs</code>:</p>
+<pre lang="haskell"><code>((0, xF86XK_AudioMute), spawn &quot;amixer -q set Master,0 toggle&quot;),
+((0, xF86XK_AudioLowerVolume), spawn &quot;amixer -q set Master,0 5%- unmute&quot;),
+((0, xF86XK_AudioRaiseVolume), spawn &quot;amixer -q set Master,0 5%+ unmute&quot;)</code></pre>
+<h2 id="the-problem" class="notoc">The Problem</h2>
+<p>The problem was that xmonad would only react to the Right Control key (Volume Up). However, <code>xev</code> correctly interpreted the keys as having been bound to the <code>XF86Audio*</code> keys. I was really confused as to why the binds apparently did work at the system level but only one of them worked at the window manager level.</p>
+<p>To rule out that it wasn’t something with the system-level (xmodmap) binds, I decided to check if it worked in <a href="http://awesome.naquadah.org/">Awesome</a>:</p>
+<pre lang="lua"><code>awful.key({}, &quot;XF86AudioLowerVolume&quot;, function () awful.util.spawn(&quot;amixer -q set Master,0 5%- unmute&quot;, false) end),
+awful.key({}, &quot;XF86AudioRaiseVolume&quot;, function () awful.util.spawn(&quot;amixer -q set Master,0 5%+ unmute&quot;, false) end),
+awful.key({}, &quot;XF86AudioMute&quot;, function () awful.util.spawn(&quot;amixer set Master,0 toggle&quot;, false) end),</code></pre>
+<p>Indeed it worked perfectly. So now I had narrowed down the problem to xmonad.</p>
+<h2 id="bug-hunting" class="notoc">Bug Hunting</h2>
+<p>Eventually I decided to stop by <code>#xmonad</code> on freenode. There I found Paul Fertser who spent the next ~6 hours helping me track down what he figured to be a bug in xmonad. I told him that the system-level binds did work, but not in xmonad. I showed him my binds using <code>xmodmap -pke</code>.</p>
+<p>He noticed that the <code>XF86Audio*</code> keys were bound twice: once by default by XKB (<code>xmodmap</code>’s more modern replacement) bound to the keycodes I would have if my keyboard had media keys, and bound again to the keys I chose (the bottom right keys). He then hypothesized that xmonad wasn’t grabbing the keys at all due to Xlib limitations. Specifically, the <code>XKeysymToKeycode</code> function only returns one keycode per key, biased towards lower keycodes, presumably due to an increasing iterative search of the keycodes for a match.</p>
+<p>This theory accounted for why the Right Control (Volume Up) bind did work and not the others. What happened was that Right Control’s keycode was lower than the duplicate bind’s keycode. As a result, when xmonad used <code>XKeysymToKeycode</code> it retrieved the correct keycode. The other two binds, however, have higher keycodes than the default-bound ones, and so <code>XKeysymToKeycode</code> returned the first (lower) keycode it found and as a result xmonad never even knew of the other binds’ existence.</p>
+<p>To test this theory, Paul had me run <a href="http://en.wikipedia.org/wiki/Ltrace"><code>ltrace</code></a> on xmonad to see which keys xmonad grabbed. The output of this clearly showed that xmonad only grabbed the keys with the lower keycodes.</p>
+<h2 id="workaround" class="notoc">Workaround</h2>
+<p>Now that we were pretty sure of the cause of this, the workaround was to remove the other keycodes (for keys I didn’t even have on my keyboard). At this time I decided I might as well switch over to XKB. The first order of business was to <a href="http://unix.stackexchange.com/a/65600/10163">dump my XKB map</a>:</p>
+<pre lang="bash"><code>$ setxkbmap -print &gt; ~/.xkb/keymap/mymap</code></pre>
+<p>Then I created a <code>~/.xkb/symbols/volume_keys</code> file to store my media key binds. It took me a long while to figure out how to remove/unbind the default-bound keys. One problem was that XKB sets different aliases for keys. For example, <code>&lt;I0D&gt;</code> (I guess that’s a media key) was aliased to <code>&lt;MUTE&gt;</code>. I looked around in <code>/usr/share/X11/xkb/rules/evdev</code> to see what was aliased and made sure to unbind those too. As for unbinding, at first Paul suggested to bind the keys to <code>NoSymbol</code> but that apparently had no effect. Eventually I found out it was possible with <a href="http://madduck.net/docs/extending-xkb/#attaching_symbols_to_keys"><code>VoidSymbol</code></a>.</p>
+<pre lang="text"><code>partial modifier_keys
+xkb_symbols &quot;volume_keys&quot; {
+  // mute
+  replace key &lt;MUTE&gt; { [ VoidSymbol ] };
+  replace key &lt;I0D&gt; { [ VoidSymbol ] };
+
+  // lower volume
+  replace key &lt;VOL-&gt; { [ VoidSymbol ] };
+  replace key &lt;I0E&gt; { [ VoidSymbol ] };
+
+  // raise volume
+  replace key &lt;VOL+&gt; { [ VoidSymbol ] };
+  replace key &lt;I0F&gt; { [ VoidSymbol ] };
+
+  replace key &lt;RCTL&gt; { [ XF86AudioRaiseVolume ] };
+  replace key &lt;MENU&gt; { [ XF86AudioLowerVolume ] };
+  replace key &lt;RWIN&gt; { [ XF86AudioMute ] };
+  replace key &lt;RALT&gt; { [ Multi_key ] };
+};</code></pre>
+<p>Now I loaded my XKB map in <code>~/.xinitrc</code>:</p>
+<pre lang="bash"><code>$ xkbcomp -I$HOME/.xkb ~/.xkb/keymap/mymap $DISPLAY</code></pre>
+<p>I restarted xmonad with <code>Mod-Shift-Q</code> (so that <code>~/.xinitrc</code> is rerun) and everything now worked perfectly.</p>
+<h2 id="bug-report" class="notoc">Bug Report</h2>
+<p>Over the course of my transition to XKB, Paul found that there was already <a href="https://code.google.com/p/xmonad/issues/detail?id=273">an issue</a> opened back in 2009 concerning this. The issue report has a patch attached that fixes this, but the patch has yet to be applied to xmonad. Paul suggested I try the patch myself and communicate my results back to the issue report. So I went ahead and got xmonad and xmonadContrib from the darcs repository, ran a simple <code>darcs apply keycode.dpatch</code>, and installed each with a <code>--prefix</code> to prevent clashing with the ones already installed with pacman. Indeed, the patch worked perfectly.</p>]]></summary>
+</entry>
+<entry>
+    <title>Terminal Customization</title>
+    <link href="http://www.blaenkdenum.com/posts/terminal-customization/" />
+    <id>http://www.blaenkdenum.com/posts/terminal-customization/</id>
+    <published>2013-02-12T00:00:00Z</published>
+    <updated>2013-02-12T00:00:00Z</updated>
+    <summary type="html"><![CDATA[
+<p>A while back I switched over to <a href="http://en.wikipedia.org/wiki/Z_shell">zsh</a> as my shell and used <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> to get up and running quickly. I barely used any of the features it provided, so I recently decided to do away with it and get zsh setup from scratch. At the same time I decided it’d be a good idea to do the same for <a href="http://en.wikipedia.org/wiki/Rxvt-unicode">urxvt</a>. These initiatives had the consequence that I ended up completely redoing the way I maintained my dotfiles which had the effect of greatly improving my overall setup.</p>
+<p>Before I go any further I’d like to point out that all of the things that I’ll talk about in this post are available in my <a href="https://github.com/blaenk/dots">dotfiles</a> repository. I’ll make an effort to link to the relevant individual files from the repository for each topic I cover.</p>
+<p>Here is the end result:</p>
+<p><img src="/images/posts/terminal-customization/urxvt.png" class="center"></p>
+<h2 id="dotfiles" class="notoc">dotfiles</h2>
+<p>I previously had a simple Rakefile that symlinked all of the files in the dotfiles directory into my home directory, except for some in an exception list. However, this had the consequence that I had to have ruby installed beforehand, and I didn’t like to install ruby through means other than something like <a href="https://github.com/sstephenson/rbenv/">rbenv</a>. I preferred instead to be able to get my dotfiles up and running as soon as possible on a new system. As a result I opted to use a shell script to deploy my dotfiles.</p>
+<p>After looking around in dotfile repositories I found <a href="https://github.com/holman/dotfiles/blob/master/script/bootstrap">hoffman’s bootstrap script</a>. The simple script uses <code>find</code> to find files and directories whose names end in “.ln” and symlinks them into the home directory. I modified it a bit to use the “.ln” suffix instead of “.symlink”—purely cosmetic of course—as well as some other slight changes. I think I’ll change it later so that it can gracefully handle operating system-dependent dotfiles.</p>
+<h2 id="urxvt" class="notoc">urxvt</h2>
+<p>My first goal was to get urxvt configured properly. I really didn’t like the way stock urxvt looked and operated (e.g. clipboard use), so I set out to learn its configuration format. I ended up defining my own color scheme as well as improving its clipboard support.</p>
+<h3 id="colors" class="notoc">Colors</h3>
+<p>I initially attempted to replicate the color scheme I used in the OS X terminal, however I found that the very same colors didn’t look quite the same in the terminals I tried on Linux (GNOME’s or urxvt). I have an IPS monitor which I think has made me pretty sensitive to color. As a result I decided to tweak it a little, and I feel that I’ve come up with an even better color scheme than before by taking some of the colors from my <a href="https://github.com/blaenk/dots/blob/master/vim/vim.ln/colors/blaenk.vim">vim theme</a>.</p>
+<p>I’ve come to recognize recently that it’s pretty easy to go overboard with the amount of colors used in anything, and that oftentimes things tend to look better with a more restricted color palette. My terminal uses more color than your common terminal or prompt, but I think it’s all in good taste and for semantic purposes. In fact, I’ve come to really like the <a href="https://github.com/blaenk/dots/blob/master/X11/Xresources.ln#L40">color scheme I chose</a>, it somehow reminds me of SNES game color palettes.</p>
+<h3 id="clipboard" class="notoc">Clipboard</h3>
+<p>Stock urxvt uses the <a href="http://en.wikipedia.org/wiki/X_Window_selection">X Window Selection</a> copy and paste mechanism. Paste can be done by middle clicking, and copying is on-select. I found a <a href="https://github.com/muennich/urxvt-perls">set of scripts</a> that take the copy and paste system from barebones to awesome.</p>
+<p>The <code>clipboard</code> script allows me to copy and paste using the Alt-keys, as in OS X where one can use the Cmd-keys to copy and paste. These are some nice binds to use without interfering with the terminal by sending signals to the current program.</p>
+<p>The <code>keyboard-select</code> script allows me to go into “visual mode” on the terminal and use vi-bindings to do my copying. This lets me copy text from the terminal without having to leave the keyboard. This paired with my zsh vi-bindings means I never have to leave the home row.</p>
+<h2 id="zsh" class="notoc">zsh</h2>
+<p>This was the bulk of the work, but I quickly realized that it wasn’t all that difficult. I didn’t want to have one huge zshrc file. Instead I wanted to have specific files for different parts of the configuration, for example <code>prompt.zsh</code> would contain configuration for the prompt. I had seen such systems in oh-my-zsh as well as certain peoples’ dotfile repositories. I took inspiration from <a href="https://github.com/sunaku/home">sunaku’s dotfiles</a> in which he has a zsh file that sources all of the zsh files in a directory.</p>
+<h3 id="prompt" class="notoc">Prompt</h3>
+<p>My zsh prompt is actually pretty simple. I played around with multiline prompts but I really disliked the feel of them. The zsh file dedicated to <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/prompt.zsh">defining the prompt</a> is very clean in my opinion, which is something I strived for throughout its development.</p>
+<h4 id="basic" class="notoc">Basic</h4>
+<p>The basic prompt consists of a lambda followed by the path—which <a href="http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/#current-directory">auto-collapses</a> <code>$HOME</code> to <code>~</code>—with <a href="http://superuser.com/questions/49092/how-to-format-the-path-in-a-zsh-prompt">highlighted path separators</a> followed by a right arrow. Pretty simple and easy on the colors in my opinion, aside from the unconventional highlighting of the path separators, which was something I had long wanted and took me a while to get right.</p>
+<p>My prompt is inspired by the Haskell <a href="http://www.haskell.org/haskellwiki/Lambda_abstraction">lambda syntax</a> so that it looks like every line is a lambda operating on the current directory whose code is the command you type:</p>
+<pre lang="haskell"><code>\dir -&gt; command_in(dir)</code></pre>
+<p>Here’s what the actual prompt looks like:</p>
+<p><img src="/images/posts/terminal-customization/basic-prompt.png" class="center"></p>
+<p>Here it is in text:</p>
+<pre lang="text"><code>λ ~/code/haskell ➜</code></pre>
+<p><strong>Update</strong>: I have changed my prompt to be multiline. All that has changed is that the ➜ is on its own line.</p>
+<h4 id="git" class="notoc">git</h4>
+<p>Like any self-respecting modern prompt, mine <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/vcsinfo.zsh">incorporates git information</a> when within a git repository. It shows the current branch, whether there are any untracked files (denoted by <code>.</code>), modified files (denoted by <code>#</code>), or staged files (denoted by <code>+</code>). Another nice little thing I added was a marker for how far ahead and/or behind we are from the remote branch. This is appended to the aforementioned information and only shows up when we <em>are</em> ahead or behind.</p>
+<p>All of these features were done using zsh’s <a href="http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information">vcsinfo</a> with the help of <a href="http://arjanvandergaag.nl/blog/customize-zsh-prompt-with-vcs-info.html">Arjan van der Gaag</a> and, once again, <a href="https://github.com/sunaku/home/blob/master/.zsh/config/prompt.zsh">sunaku</a>. Here’s what it looks like <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
+<p><img src="/images/posts/terminal-customization/git-prompt.png" class="center"></p>
+<p>Again in text:</p>
+<pre lang="text"><code>λ ~/.dots (master . # +){+1} ➜ </code></pre>
+<p>The branch is <code>master</code> and apparently there’s unstaged files, modifed files, and staged files. Furthermore, the <code>{+1}</code> shows that my branch is one commit ahead of the remote branch. It would also show the number of commits we are behind, in red, if that were the case—which in my opinion can be very handy so that you can avoid conflicts by rebasing or merging before you push. This segment only shows up if either of those conditions is met.</p>
+<h4 id="ssh" class="notoc">SSH</h4>
+<p>The prompt also detects if it’s being viewed through SSH. I don’t like viewing hostname in my prompt on machines I’m on locally as I feel it’s pointless. However, when I’m connected to a remote server via SSH, it’s often handy to have the hostname around to differentiate between your computer and the remote host. For this reason my prompt only shows the hostname when it detects that it’s being viewed through an SSH connection. Here’s what it looks like:</p>
+<p><img src="/images/posts/terminal-customization/ssh-prompt.png" class="center"></p>
+<p>Once again in text:</p>
+<pre lang="text"><code>[someserver] λ ~/.dots (master) ➜ </code></pre>
+<p><strong>Update: October 28, 2013</strong></p>
+<p>I’ve actually done away with this component of the prompt. I didn’t like how the lambda no longer aligned with the arrow symbol. I’ve instead decided to add a pretty simple green <code>R</code> at the end of the current working path, to signify that I am on a “remote” machine, so it reads something like “currently on x path remotely.”</p>
+<pre><code>λ ~/.dots R (master)
+➜</code></pre>
+<h3 id="vi-binds" class="notoc">vi-Binds</h3>
+<p>One thing that I can’t live without now when using vi-bindings is binding <code>jj</code> to vi-mode. The default key for this is Escape, but Escape is <a href="http://unix.stackexchange.com/questions/23138/esc-key-causes-a-small-delay-in-terminal-due-to-its-alt-behavior">used for other hotkeys</a> that the terminal (or shell?) intercepts. For this reason, a single keypress of Escape introduces a bit of lag, which I imagine is required to differentiate a hotkey (i.e. <code>Esc-C</code>) from a simple Escape keypress.</p>
+<p>Binding to <code>jj</code> has the consequence of being more accessible. In fact, this is a common bind that people tend to use in vim for this very reason. Before coming to this realization I mainly used Emacs-binds because they didn’t introduce lag. However, with this new bind I’m able to jump into vi-mode and edit commands very quickly and more intuitively (for a vim user like myself).</p>
+<h3 id="highlighting" class="notoc">Highlighting</h3>
+<p>If you’ve been wondering how it is that my commands are highlighted, it’s made possible by <a href="https://github.com/zsh-users/zsh-syntax-highlighting">this highlighting script</a>. Simply sourcing that script into your zsh environment suddenly colors your commands. In my opinion it makes the terminal look much better without going overboard with the colors. I did have to <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh">tweak some settings</a> though because I felt that the default configuration did go a bit overboard on the styling, such as underlining program names.</p>
+<h2 id="conclusion" class="notoc">Conclusion</h2>
+<p>I have to say that I love the way my terminal looks and operates now. This has all been in preparation for setting up <a href="http://en.wikipedia.org/wiki/xmonad">xmonad</a>, which I intend to take a shot at soon. For the curious, I’m doing all of this on <a href="http://www.archlinux.org/">arch linux</a>, but I didn’t say it earlier because nothing in this post depends on this. In fact, none of the content in this post is all that specific to Linux itself even. I’ll try to update this post whenever my setup changes, but I think I’m quite comfortable with the way it is, and will be for the foreseeable future.</p>
+<p>In my opinion, the benefit of using such tried and proven, mature tools is that once you take the time to configure them to your liking you can use them without modification for a long time. Barring some imminent, majorly disruptive paradigm shift in software development, I can see myself using many of these tools throughout my career as a software developer.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Ignore the <code>echo</code> command. I used it to give the current line some padding to make taking a screenshot a little bit easier.<a href="#fnref1">↩</a></p></li>
+</ol>
+</section>]]></summary>
+</entry>
+
+</feed>
