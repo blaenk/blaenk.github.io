@@ -9,6 +9,47 @@ This is an aggregation of the different work I've done in terms of open source c
 
 ## Contributions
 
+##### Hoedown: Extension feature combination fixes {#libhoedown .collapse}
+
+<div class="collapsible">
+
+Over the course of writing [bindings](#hoedown) to Hoedown for Rust, I discovered a couple of bugs in the C library which only manifested given certain combinations of different extension features.
+
+[GDB]: /notes/gdb
+
+After debugging with [GDB] I [noticed first] that footnotes and footnote references would not be processed if images and links were not being processed. Similarly, I noticed that [underlines would not be processed] if emphasis, double_emphasis, or triple_emphasis were not being processed.
+
+[noticed first]: https://github.com/hoedown/hoedown/pull/150
+[underlines would not be processed]: https://github.com/hoedown/hoedown/pull/149
+
+</div>
+
+##### Rust: Add missing trait implementation {#rust-hash .collapse}
+
+<div class="collapsible">
+
+I submitted a _very_ [minor fix] to Rust which added a `Hash` implementation to the `Path` type, the absence of which incurred both a performance and ergonomic cost when working with data structures that contained `PathBuf` values. The implementation was accidentally missing as a result of the fallout resulting from a complete rewrite of the `std::path` module.
+
+[minor fix]: https://github.com/rust-lang/rust/pull/22351
+
+</div>
+
+##### Glob: Recursive wildcards and better error reporting {#glob .collapse}
+
+<div class="collapsible">
+
+The official [glob] package, used in Cargo as well as many other libraries, is used for globbing operations: enumerating a set of files based on a given pattern.
+
+[glob]: https://github.com/rust-lang/glob
+
+I implemented support for recursive wildcards, e.g. `posts/**/*.md` would match any file ending in an `.md` extension in any directory under `posts/`. I also implemented syntax error handling and reporting for patterns to help the user determine exactly how a pattern may be malformed.
+
+Going further, I enabled I/O error propagation during the globbing operation, for exampl in case a directory cannot be read. Finally I made a modification to allow returning relative file paths if a relative pattern was used.
+
+See the [pull requests](https://github.com/rust-lang/glob/pulls?q=is%3Apr+is%3Aclosed+author%3Ablaenk).
+
+</div>
+
 ##### Aura: Allow Number Parameter for Truncation {#aura-truncate-number .collapse}
 
 <div class="collapsible">
@@ -293,6 +334,19 @@ Finally, I added support for basic HTTP authentication.
 </div>
 
 ## Projects
+
+##### Hoedown: Idiomatic Rust bindings for Hoedown {#hoedown .collapse}
+
+<div class="collapsible">
+
+I needed Markdown processing functionality for a static site generator infrastructure library I'm developing, so I decided to write idiomatic [bindings] for [Hoedown], a C library for processing Markdown.
+
+[bindings]: https://github.com/blaenk/hoedown
+[Hoedown]: https://github.com/hoedown/hoedown
+
+The bindings aim to be as idiomatic as possible, going so far as to bridge the gap so that Rust closures can be used where C callbacks are expected.
+
+</div>
 
 ##### Levee: Web Interface for rtorrent {#levee .collapse}
 

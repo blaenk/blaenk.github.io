@@ -231,15 +231,413 @@ Granular caching could be achieved by having the `Generator` maintain an `AnyMap
 
 [`TypeMap`]: https://github.com/reem/rust-typemap
 
-## Unanswered Questions
+### Approach
+
+The problem with the aforementioned ideas is that other compilers have to care about other compilers' cache. I think the simplest approach here is to ignore caching altogether. Each compiler will instead have the option/choice of caching things if they should want to do so in some unique directory (?) in some standard cache directory.
+
+Perhaps provide some sort of uniform API for hooking into caching functionality. It would cache things in a binary encoded manner? Or would it cache as simple as JSON? JSON would be portable, but binary encoded might be faster. Portability is probably not a huge concern with something as ephemeral as the cache. This API would also not have to worry about what directory to write things in? Though the directory will be available should a particular compiler want it.
+
+Look into [serde](https://github.com/erickt/rust-serde).
+
+There should also be a way to handle in-memory caching? For use with the `live` command. Should probably have a way of pruning cruft when, e.g., a file is removed and its cached data is no longer needed.
+
+## Error Handling
+
+There should be some facility for handling errors in compilers. Presumably each compiler should return a `Result`. Errors should probably consist of `Box<Error>` since I can't think of any particular error that diecast might throw, instead it would be some underlying error, such as an `io::Error`.
+
+Possible success return values would probably be `Continue` and `Pause`.
+
+``` rust
+fn some_compiler(_item: &mut Item) {
+  // some work
+  Ok(Continue)
+}
+```
+
+But what would it mean for a compiler to choose to pause? Should it be interpreted as a `Barrier`? So that all items being compiled with that compiler are put on a barrier?
+
+``` rust
+fn barrier(_item: &mut Item) {
+  Ok(Pause)
+}
+```
+
+The problem with implementing `Compile` for `Compiler`, and also a problem with allowing any compiler to `Pause`, is that the compiler needs to store its position to know where to resume from later.
+
+The first problem is that the `compile` method has an immutable `self`. This can probably be circumvented by storing the position in a `Cell`.
+
+The second problem could perhaps be solved by only giving a `Pause` significance within the context of a `Compiler`. That is, the compiler would run a compiler and if it returns `paused` it would itself return paused.
+
+``` rust
+pub fn compile(&self, item: &mut Item) -> Result<Status, Box<Error>> {
+  let position = self.position.get();
+
+  for compiler in &self.chain[position ..] {
+    self.position.set(self.position.get() + 1);
+
+    match compiler.compile(item) {
+      Ok(Continue) => (),
+      Ok(Paused) => return Ok(Paused),
+      Err(e) => return Err(e),
+    }
+  }
+
+  Ok(Done)
+}
+```
+
+What then should be returned when a compile chain is finished? It doesn't make sense to allow `Done` because then any compiler could return `Done` to short-circuit evaluation?
+
+Maybe we can get rid of a `Compiler` and only keep `Chain`.
+
+``` rust
+Chain::new()
+  .link(inject_with)
+  .link(read)
+  .link(render_markdown)
+  .link(write)
+  .build();
+```
+
+This would allow us to pass compilers directly to `Rule` constructors:
+
+``` rust
+Rule::matching(
+  "pages",
+  glob::Pattern::new("pages/*.md"),
+  |item: &mut Item| -> Result<Status, Box<Error>> {
+    // some work
+    Ok(Continue)
+  });
+```
+
+This would change the definition of `Rule` to be parameterized over the compiler.
+
+``` rust
+pub struct Rule<C> where C: Compile {
+    pub name: &'static str,
+    pub kind: Kind,
+    pub compiler: C,
+    pub dependencies: Vec<&'static str>,
+}
+```
+
+This would necessitate creating a `Chain` for a sequence of compilers. The `Chain` would handle behavior with respect to keeping track of the position of the sequence and propagating pauses and errors.
+
+One consequence of this is that it would be possible to nest `Chain`s, allowing for the pattern of packaging up common sequences of compilers into chains, such as Ring's [`wrap-defaults`{.path}](https://github.com/ring-clojure/ring-defaults#basic-usage).
+
+``` rust
+fn setup() -> Chain {
+  Chain::new()
+    .link(read)
+    .link(parse_metadata)
+    .link(parse_toml)
+    .build();
+}
+
+Rule::matching(
+  "pages",
+  glob::Pattern::new("pages/*.md"),
+  Chain::new()
+    .link(setup())
+    .link(my_own_stuff)
+    .link(here)
+    .build());
+```
+
+Note that this would be different from a function that contains calls to each compiler in succession, unless the return value of each compiler is properly handled:
+
+``` rust
+fn setup(item: &mut Item) -> Result<Status, Box<Error>> {
+  // return values are discarded!
+  read(item);
+  parse_metadata(item);
+  parse_toml(item);
+}
+```
+
+A macro like `try!` should probably be created that early-returns on `Ok(Paused)` and `Ok(Done)`, or should we co-opt `Error` to do this? So that we have some `Error` enum that contains variants for `Paused` and `Done`, and one for `Other` which contains a `Box<Error>`.
+
+Then it should be possible to rewrite the `Compile` implementation for `Chain` as:
+
+``` rust
+pub fn compile(&self, item: &mut Item) -> Result<Status, Box<Error>> {
+  let position = self.position.get();
+
+  for compiler in &self.chain[position ..] {
+    self.position.set(self.position.get() + 1);
+    compile!(compiler.compile(item));
+  }
+
+  Ok(Done)
+}
+```
+
+However, the use of such a macro alone would not enable manual, sequential chaining of compilers in a function. If the `parse_metadata` compiler yielded `Ok(Pause)` it would correctly early-return from `setup`, but it would have no way of knowing where to resume.
+
+If `setup` was called within a `Chain`, the chain would correctly resume compilation at the `setup` function, but the `setup` function would have no way of knowing where to resume compilation and so would re-run each of the functions.
+
+``` rust
+fn setup(item: &mut Item) -> Result<Status, Box<Error>> {
+  // pause position discarded!
+  compile!(read(item));
+  compile!(parse_metadata(item));
+  compile!(parse_toml(item));
+}
+```
+
+Honestly I don't like allowing compilers to return `Paused` and `Done`. It doesn't make much sense. Instead this should be contained within a `Chain`. In this case the return value should just be `Result<(), Box<Error>>`, since I can't really think of what other values should be possible. It's always awkward to type `Ok(())` though, maybe type alias to `Continue`?
+
+The problem is that `Job` needs to know what the return status of compilation is so it can know whether to re-enqueue the job or if it's done. If we contain those return values to `Chain` only, then it requires a `Chain` to be used no matter what. I guess those are the two options:
+
+1. any compiler can use `Pause` and `Continue` so that `Chain` isn't mandatory
+2. `Chain` is mandatory
+
+Should we be wrapping compilers in an `Arc`? If not then `Compile` would need a `Clone` bound. Better yet, why not wrap them in an `Arc` within the evaluator, to then be sent off to the thread pool? This would relax the requirements on individual compilers and would remove the need for the `Compiler` + `Chain` split.
+
+**EDIT**: This makes it difficult for `Chain` to track internal state. This seems to break at the seams of the special casing of `Chain`.
+
+Perhaps the position paused at should be encoded in the `Pause` variant as a stack with which to retrace the steps:
+
+``` rust
+pub fn compile(&self, item: &mut Item) -> Result<Status, Box<Error>> {
+  // would need some way to resume from position
+
+  for (position, compiler)
+  in self.chain[position ..].iter().enumerate() {
+    match compiler.compile(item) {
+      Ok(Continue) => (),
+      Ok(Pause(mut stack)) => {
+        stack.push(position);
+        return Ok(Pause(stack));
+      },
+      Err(e) => return Err(e),
+    }
+  }
+
+  Ok(Continue)
+}
+```
+
+It makes pausing from a "leaf" position slightly less ergonomic, such as from a `barrier` function:
+
+``` rust
+fn barrier(_item: &mut Item) {
+  Ok(Pause(Vec::new()))
+}
+```
+
+Alternatively, a `Pause` variant can be used at leaf positions, and they're converted to `Paused(stack)` variants by `Chain`?
+
+**Updated**: Compilers now return `Result<(), Box<Error>>`. Actual error handling is still not implemented because a thread pool that handles errors needs to be implemented.
+
+## Barrier Reform
+
+Barriers currently require all items in the binding to pass through the barrier. This presents a problem in conditional compilation. The barrier will deadlock because it'll be waiting for all items in the binding to reach the barrier, even though the barrier is only performed for items that satisfied the condition.
+
+``` rust
+Chain::new()
+  .link(compiler::read)
+  .link(
+    compiler::only_if(
+      publishable,
+      Chain::new()
+        .link(compiler::print)
+        .barrier() // <-- deadlock!
+        .link(compiler::write)));
+```
+
+The most preferable solution would be one that completely removes the concept of pausing from the `Site` type as it currently presents a special casing/handling of the `Chain` compiler, which is contrary to the impression it gives, that it's something that anyone can implement.
+
+There needs to be a way to narrow the scope, perhaps a way of defining "sub-bindings." One example would be for `only_if` to perform a barrier at its beginning in order to ensure registration of each item that satisfied the condition. Subsequent barriers would then be based on the immediate parent binding.
+
+The problem with this approach is that currently the `Site` is what does the book-keeping for barriers. However, these book-keeping structures only refer to the binding, so theoretically they can be stored some place else? But where? It wouldn't make sense to store them on an `Item` itself, unless it were a reference to the structure that's actually stored some place else (the `Site`?).
+
+**UPDATE**: This is wrong. The book-keeping structure actually stores the `Item` itself, which would need to be revised since we can't move out of a `&mut Item`. Perhaps store the `Job.id` instead?
+
+``` rust
+paused: BTreeMap<&'static str, Vec<Job>>,
+```
+
+Perhaps a `barriers` structure would be kept in the `Site` and a reference to it would be stored on each `Item`? Or could it be created once and cloned into each `Item`? It would be created by the `Chain` itself and would be stored as a stack, as with `ChainPosition`.
+
+``` rust
+struct Chain {
+  chain: Vec<Link>,
+
+  // clone this into each `Item` in its compile fn,
+  // if the compiler doesn't already contain it
+  barriers: Arc<Mutex<BTreeMap<&'static str, Vec<JobId>>>>,
+}
+```
+
+The `Item` would contain a stack of barriers. Each `Chain` compile fn would push the latest barriers layer and would not pop it until the `Chain` finished?
+
+``` rust
+// insert the barriers key if it doesn't already exist
+let barriers = item.data.entry::<Barriers>().get()
+  .unwrap_or_else(|v| {
+    let barriers: Vec<Arc<Mutex<BTreeMap<&'static str, Vec<JobId>>>>> =
+      Vec::new(Arc::new(Mutex::new(BTreeMap::new())));
+    v.insert(barriers);
+  });
+
+// insert one if there isn't one already for this level
+let barrier = if barriers.is_empty() {
+  let bar = Arc::new(Mutex::new(BTreeMap::new()));
+  barriers.push(bar.clone());
+  bar
+// if there is, get it
+} else {
+  barriers.pop().unwrap();
+};
+```
+
+An alternative, easier approach would be to maintain a concept of a "target barrier count." Since by definition only one barrier could be active at any one moment, we will maintain a count of the amount of triggers required. By default this target count would be the total length of the binding, which would also be stored in a `BindCount` anymap entry, to facilitate resetting. When an `only_if` is triggered, it would perform a barrier to count the number of items that satisfy the condition, then after the barrier use that count to update the target barrier count. This way, subsequent barriers would _only_ perform on this subset of items.
+
+_Side note_: Instead of maintaining a blind count, should we maintain a set of `Job` ids? This would facilitate the handling of errors in the rare event that a job slips through that shouldn't have?
+
+One implementation possibility would be to maintain a stack of target barrier counts, so that a nested chain would pop the count off when it has finished, thereby reinstating the previous chain's target barrier count. This would facilitate the nesting of `only_if`, for example.
+
+The `Site` type would then consult the top of this target barrier count (using teh `last` method)? This seems to be complicated because a barrier itself is required to perform this change:
+
+1. chain (could be inside an `only_if`)
+2. item adds its jobid to the new target barrier count
+3. barrier
+    1. as an item reaches this preliminary barrier, it would be checking the previous target barrier count (TBC)
+4. swap target barrier counts. much like a double buffer in graphics rendering, swap the target barrier count with the new one if it hasn't been done already (if `!=`)
+
+Some double-buffering like this would be required to avoid corrupting the target barrier count as the barrier itself is being performed to update the target barrier count.
+
+## Resolve From
+
+The dependency graph is able to resolve from a particular node, which fits perfectly with the concept of updating a single binding/item, which saves time when a single file is modified.
+
+However, this feature cannot be leveraged while barriers exist in their current form. Consider a binding `posts` that contains a compiler chain with a barrier and a single `posts` item is modified. It would not be possible to _only_ rebuild the single `posts` item and the dependency chain sourced at the `posts` node in the dependency graph because the presence of the barrier(s) means that every other `posts` item depended on each other at different states. For example, given:
+
+``` rust
+Chain::new()
+  .link(something)
+  .link(other)
+  .barrier()
+  .link(depends_on_first_barrier)
+  // ^--- this compiler may need access to each item
+  //      at this exact state
+  .link(blah)
+  .barrier()
+  .link(depends_on_second_barrier);
+  // ^--- same here
+```
+
+If we would _only_ rebuild the single `posts` item that changed, it would not have access to the first and second barrier states of every other item.
+
+One possible solution to this would be to save each individual barrier state.
+
+An alternative solution which would resolve many problems would be to allow compilers to add items to bindings.
+
+``` rust
+Chain::new()
+    .link(compiler::read)
+    .link(compiler::parse_metadata)
+    .link(compiler::render_markdown)
+    .link(router::set_extension("html"))
+    .link(compiler::render_template("article", article_handler))
+    .link(compiler::only_if(publishable, move_to("publishable posts")));
+    // can continue to work on item even though we shouldn't
+    .link(something_to_moved_item)
+```
+
+I think it's easier to just use the current approach right now. However, to enable resolve-from we could have to maintain a tree of item states and then traverse them in-order when we encounter a barrier. This is too tedious and very special-cased for barriers/pausing.
+
+## Unresolved Questions
 
 * Maybe make it possible to set the sorting to use for `Item`s in a `Binding`. Consider the scenario of adding next and previous post links. To get the next and previous posts, the entire posts would need to be sorted in chronological order. If the `Item`s aren't already sorted in chronological order, then this sorting would occur for every single `Item` being compiled in the `Binding`.
 
     Alternatively, if it were possible to store `Binding`-level data, then a separate `Compiler` directly following the `Barrier` could sort the `Item`s in chronological order once, then construct a map of `Item`s to tuples of previous and next `Item`s. Subsequent `Compiler`s could then refer to this `Binding`-level data. (This doesn't really make sense, since this `Compiler` would run for every `Item`. There would then need to be some way to preprocess a `Binding`, i.e. a `Binding` `Compiler`.)
+
 * Should it be possible to store `Binding`-level data? Would this require an `RWLock` of the `Binding`? It would also have to be passed to every `Compiler`?
+
+    * this seems to be possible with `compiler::inject_with`
+
 * How will drafts be handled?
+    * conditional compilation
+
+    ``` rust
+    compiler::only_if(publishable, some_compiler)
+    ```
+
 * How will tags work?
-* How will pagination work?
+    1. rule that depends on all items that contribute to the tags
+    1. groups all items by tag
+    1. injects some sort of tag info structure
+    1. rule that builds tag index based on tag info structure (or merge this step into previous compiler?)
+
+## Pagination
+
+This would only require the index page to depend on `posts` and then split up the `posts` into `chunks(n)`, then output a separate file for each page such as `/posts/n`.
+
+Is it a problem that such a rule would create separate files? Does this mean that the `rule::Kind::Create` is unnecessary? Well it's only really necessary to side-step the matching mechanism.
+
+Hakyll is [able to do this](http://jaspervdj.be/hakyll/reference/src/Hakyll-Web-Paginate.html#buildPaginateWith) by querying the matches of the binding being paginated and then splitting that.
+
+``` haskell
+buildPaginateWith
+    :: MonadMetadata m
+    => ([Identifier] -> m [[Identifier]])  -- ^ Group items into pages
+    -> Pattern                             -- ^ Select items to paginate
+    -> (PageNumber -> Identifier)          -- ^ Identifiers for the pages
+    -> m Paginate
+buildPaginateWith grouper pattern makeId = do
+    -- get the identifiers of the stuff being paginated
+    ids      <- getMatches pattern
+    -- group them using the provided grouper
+    idGroups <- grouper ids
+    -- create a set of the identifiers for dependency purposes
+    let idsSet = S.fromList ids
+    return Paginate
+        -- map of page number -> identifiers in that page
+        { paginateMap        = M.fromList (zip [1 ..] idGroups)
+        , paginateMakeId     = makeId
+        , paginateDependency = PatternDependency pattern idsSet
+        }
+
+paginateRules :: Paginate -> (PageNumber -> Pattern -> Rules ()) -> Rules ()
+paginateRules paginator rules =
+    -- create a new rule for each page
+    forM_ (M.toList $ paginateMap paginator) $ \(idx, identifiers) ->
+        -- this page's rule depends on the entire identifiers
+        -- examples of why this is necessary: 
+        --   * changed identifier metadata title, need to re-render
+        --     the page the identifier is on
+        --     this explains dependency on just the group of
+        --     identifiers in this page
+        --   * add or remove an identifier from the set
+        --     this may change the number of pages and which
+        --     identifiers end up in which pages
+        rulesExtraDependencies [paginateDependency paginator] $
+            -- create a new rule for the page
+            -- the identifier of this rule is determined
+            -- using the passed-in identifier-generating
+            -- function
+            create [paginateMakeId paginator idx] $
+                -- create the rule for this page
+                -- with the provided rule generating
+                -- function `rules`
+                rules idx $ fromList identifiers
+```
+
+For this to work, we need to have access to the matches of a previous rule. The matches could not be the `Item`s themselves, however, because.
+
+## Current Blockers
+
+* create rules from matches of other rules. e.g. for pagination
+* conditional compilation
+
+    It's very hacky how `only_if` is implemented. It requires multiple barriers and mutexes and atomic ints.
+
+    In my opinion, a compiler should apply to the _complete_ binding, but this probably won't stop people from attempting to run barriers conditionally. This is part of my motivation for getting rid of barriers entirely, but what would be an alternative?
+
+    The motivation for barriers was to give an item access to all other items at a certain point in time. In particular, it was to facilitate the next/previous links on each item. This could probably be restructured as a binding to process each item, then have another binding that depends on the first binding 
 
 ## Rust Gripes
 
