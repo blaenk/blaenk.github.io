@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,82 +72,125 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/posts/post-feed-in-hakyll/"><span>Post Feed in Hakyll</span></a></h2>
-  <div class="entry-content"><p>When I made my site, specifically when I <a href="/posts/the-switch-to-hakyll">switched to Hakyll</a>, I didn’t bother to include a <a href="http://en.wikipedia.org/wiki/Web_feed">syndication feed</a> because I didn’t expect that anyone would care to want to subscribe to my site. However, someone <a href="https://github.com/blaenk/blaenk.github.io/issues/1">filed an issue</a> concerning this on github. I knew Hakyll exposed a module specifically for this: <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Feed.html">Hakyll.Web.Feed</a>. It was more a matter of implementing it in a straightforward manner with the least duplication of work.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/posts/post-feed-in-hakyll"><span>Post Feed in Hakyll</span></a></h2>
+  <div class="entry-content"><p>When I made my site, specifically when I <a href="/posts/the-switch-to-hakyll">switched to Hakyll</a>, I didn&rsquo;t bother to include a <a href="http://en.wikipedia.org/wiki/Web_feed">syndication feed</a> because I didn&rsquo;t expect that anyone would care to want to subscribe to my site. However, someone <a href="https://github.com/blaenk/blaenk.github.io/issues/1">filed an issue</a> concerning this on github. I knew Hakyll exposed a module specifically for this: <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Feed.html">Hakyll.Web.Feed</a>. It was more a matter of implementing it in a straightforward manner with the least duplication of work.</p>
+
 <blockquote>
-<p>I’d like to subscribe to your blog, but I can’t seem to find an RSS feed (nor the Hakyll code to generate one). Would you consider adding one?</p>
+<p>I&rsquo;d like to subscribe to your blog, but I can&rsquo;t seem to find an RSS feed (nor the Hakyll code to generate one). Would you consider adding one?</p>
+
 <p><cite><strong>Nathan</strong> on <a href="https://github.com/blaenk/blaenk.github.io/issues/1">Issue #1</a></cite></p>
 </blockquote>
-<h2 id="considerations" class="notoc">Considerations</h2>
-<p>If I used my custom post compiler, it would include the table of contents and Pygments highlighted code. This was a problem because the table of contents didn’t work correctly in <a href="https://yoleoreader.com/">the feed reader</a> I tested with and so just served to waste space. Worse, code blocks were completely absent from the feed reader. Finally, posts containing math type—which is rendered with <a href="http://www.mathjax.org/">MathJax</a> on this site—did not render at all in the feed reader.</p>
+<h2 id="considerations">
+<span class="hash">#</span>
+<a href="#considerations" class="header-link">Considerations</a>
+</h2>
+<p>If I used my custom post compiler, it would include the table of contents and Pygments highlighted code. This was a problem because the table of contents didn&rsquo;t work correctly in <a href="https://yoleoreader.com/">the feed reader</a> I tested with and so just served to waste space. Worse, code blocks were completely absent from the feed reader. Finally, posts containing math type&mdash;which is rendered with <a href="http://www.mathjax.org/">MathJax</a> on this site&mdash;did not render at all in the feed reader.</p>
+
 <p>So it was obvious to me that I had to compile the posts meant for the syndication feed with a more vanilla Pandoc compiler. However, I did want to keep the abbreviation substitution filter as that seemed to work perfectly fine.</p>
+
 <p>Because I needed to compile the posts with an entirely different Pandoc compiler, I knew that already I was duplicating some effort. Knowing this, I wanted to make sure to save as much work as possible to avoid further duplicate effort.</p>
-<h2 id="drying-up" class="notoc">Drying Up</h2>
+<h2 id="drying-up">
+<span class="hash">#</span>
+<a href="#drying-up" class="header-link">Drying Up</a>
+</h2>
 <p>Since I wanted to use the abbreviation substitution filter in both the feed and regular post compiler, I knew that it was a potential location of duplicate effort. Both compilers would start something like this:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
   <span class="o">&gt;&gt;=</span> <span class="n">withItemBody</span> <span class="p">(</span><span class="n">abbreviationFilter</span><span class="p">)</span>
   <span class="o">&gt;&gt;=</span> <span class="n">pandocCompiler</span> <span class="c1">-- or pandocFeedCompiler</span>
 </code></pre></figure>
-<p>So it would have been preferable if I could save the state of the <code>Item</code> (i.e. post) as it was right after abbreviation substitution. Fortunately, Hakyll has support for this in the form of <em>snapshots</em>.</p>
-<p>The solution was to save a snapshot of the post from the regular compiler for posts after it had been through the abbreviation substitution <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">match</span> <span class="n">postsPattern</span> <span class="o">$</span> <span class="kr">do</span>
+<p>So it would have been preferable if I could save the state of the <code>Item</code> (i.e. post) as it was right after abbreviation substitution. Fortunately, Hakyll has support for this in the form of <em>snapshots</em>.</p>
+
+<p>The solution was to save a snapshot of the post from the regular compiler for posts after it had been through the abbreviation substitution <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">match</span> <span class="n">postsPattern</span> <span class="o">$</span> <span class="kr">do</span>
   <span class="n">route</span> <span class="o">$</span> <span class="n">niceRoute</span> <span class="s">&quot;posts/&quot;</span>
   <span class="n">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
     <span class="o">&gt;&gt;=</span> <span class="n">withItemBody</span> <span class="p">(</span><span class="n">abbreviationFilter</span><span class="p">)</span>
     <span class="o">&gt;&gt;=</span> <span class="n">saveSnapshot</span> <span class="s">&quot;abbreviated&quot;</span>
     <span class="o">&gt;&gt;=</span> <span class="n">pandocCompiler</span>
     <span class="c1">-- ...</span>
-</code></pre></figure>
-<h2 id="implementation" class="notoc">Implementation</h2>
-<p>This meant that I could now refer to the “abbreviated” snapshot of any post. All I had to do now was to define a <code>Rule</code> to compile posts specifically for the syndication feed. Hakyll also has support for this in the form of <em>versions</em>, in which one can compile different versions of the same thing and refer to them later on.</p>
-<p>So what I do in the “feed” version of the post compiler was to get the underlying <code>Identifier</code> for the given post and load the “abbreviated” snapshot of the version of that post that has no name, i.e. the version of the post compiled by the regular post compiler.</p>
-<p>I then pass that snapshot to <code>pandocFeedCompiler</code> which is simply a more vanilla Pandoc compiler that removes the table of contents sentinel value I use, doesn’t generate the table of contents, doesn’t highlight code with Pygments, and uses regular superscripts etc. instead of MathJax:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">match</span> <span class="n">postsPattern</span> <span class="o">$</span> <span class="n">version</span> <span class="s">&quot;feed&quot;</span> <span class="o">$</span>
+</code></pre></figure><h2 id="implementation">
+<span class="hash">#</span>
+<a href="#implementation" class="header-link">Implementation</a>
+</h2>
+<p>This meant that I could now refer to the &ldquo;abbreviated&rdquo; snapshot of any post. All I had to do now was to define a <code>Rule</code> to compile posts specifically for the syndication feed. Hakyll also has support for this in the form of <em>versions</em>, in which one can compile different versions of the same thing and refer to them later on.</p>
+
+<p>So what I do in the &ldquo;feed&rdquo; version of the post compiler was to get the underlying <code>Identifier</code> for the given post and load the &ldquo;abbreviated&rdquo; snapshot of the version of that post that has no name, i.e. the version of the post compiled by the regular post compiler.</p>
+
+<p>I then pass that snapshot to <code>pandocFeedCompiler</code> which is simply a more vanilla Pandoc compiler that removes the table of contents sentinel value I use, doesn&rsquo;t generate the table of contents, doesn&rsquo;t highlight code with Pygments, and uses regular superscripts etc. instead of MathJax:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">match</span> <span class="n">postsPattern</span> <span class="o">$</span> <span class="n">version</span> <span class="s">&quot;feed&quot;</span> <span class="o">$</span>
   <span class="n">compile</span> <span class="o">$</span> <span class="kr">do</span>
     <span class="n">ident</span> <span class="ow">&lt;-</span> <span class="n">getUnderlying</span>
     <span class="n">loadSnapshot</span> <span class="p">(</span><span class="n">setVersion</span> <span class="kt">Nothing</span> <span class="n">ident</span><span class="p">)</span> <span class="s">&quot;abbreviated&quot;</span>
       <span class="o">&gt;&gt;=</span> <span class="n">makeItem</span> <span class="o">.</span> <span class="n">itemBody</span>
       <span class="o">&gt;&gt;=</span> <span class="n">pandocFeedCompiler</span>
 </code></pre></figure>
-<p>All that was left to do was to create the <code>atom​.xml</code> file. An ephemeral <code>Context</code> is created to denote that the <code>$description$</code> tag should be filled with the body of the post, as the syndication feed rendering functions in Hakyll expect. All “feed” versions of posts are loaded, sorted in reverse chronological order, and the first ten are taken. Finally the function <code>renderAtom</code> actually generates the XML from all of this information:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">create</span> <span class="p">[</span><span class="s">&quot;atom.xml&quot;</span><span class="p">]</span> <span class="o">$</span> <span class="kr">do</span>
+<p>All that was left to do was to create the <code>atom.xml</code> file. An ephemeral <code>Context</code> is created to denote that the <code>$description$</code> tag should be filled with the body of the post, as the syndication feed rendering functions in Hakyll expect. All &ldquo;feed&rdquo; versions of posts are loaded, sorted in reverse chronological order, and the first ten are taken. Finally the function <code>renderAtom</code> actually generates the XML from all of this information:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">create</span> <span class="p">[</span><span class="s">&quot;atom.xml&quot;</span><span class="p">]</span> <span class="o">$</span> <span class="kr">do</span>
   <span class="n">route</span> <span class="n">idRoute</span>
   <span class="n">compile</span> <span class="o">$</span> <span class="kr">do</span>
     <span class="kr">let</span> <span class="n">feedCtx</span> <span class="ow">=</span> <span class="n">postCtx</span> <span class="o">&lt;&gt;</span> <span class="n">bodyField</span> <span class="s">&quot;description&quot;</span>
     <span class="n">posts</span> <span class="ow">&lt;-</span> <span class="n">fmap</span> <span class="p">(</span><span class="n">take</span> <span class="mi">10</span><span class="p">)</span> <span class="o">.</span> <span class="n">recentFirst</span>
       <span class="o">=&lt;&lt;</span> <span class="n">loadAll</span> <span class="p">(</span><span class="n">postsPattern</span> <span class="o">.&amp;&amp;.</span> <span class="n">hasVersion</span> <span class="s">&quot;feed&quot;</span><span class="p">)</span>
     <span class="n">renderAtom</span> <span class="n">feedConf</span> <span class="n">feedCtx</span> <span class="n">posts</span>
-</code></pre></figure>
-<h2 id="caveat" class="notoc">Caveat</h2>
-<p>Notice that we are using the “feed” versions of posts to render the syndication feed. This poses a problem, because the <a href="https://github.com/jaspervdj/hakyll/blob/master/data/templates/atom-item.xml">atom feed template</a> requires access to the <code>$url$</code> field, but notice that the “feed” version is <em>not</em> routed.</p>
-<p>This means that a <code>Route</code> is not created for “feed” versions, and as a result the <code>$url$</code> will be an empty string, so the link to individual stories in the feed will just link to the site root!</p>
+</code></pre></figure><h2 id="caveat">
+<span class="hash">#</span>
+<a href="#caveat" class="header-link">Caveat</a>
+</h2>
+<p>Notice that we are using the &ldquo;feed&rdquo; versions of posts to render the syndication feed. This poses a problem, because the <a href="https://github.com/jaspervdj/hakyll/blob/master/data/templates/atom-item.xml">atom feed template</a> requires access to the <code>$url$</code> field, but notice that the &ldquo;feed&rdquo; version is <em>not</em> routed.</p>
+
+<p>This means that a <code>Route</code> is not created for &ldquo;feed&rdquo; versions, and as a result the <code>$url$</code> will be an empty string, so the link to individual stories in the feed will just link to the site root!</p>
+
 <p>This becomes apparent when you look at the implementation of <code>urlField</code>, which is defined in <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html">Hakyll.Web.Template.Context</a>:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">urlField</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="n">a</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">urlField</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="n">a</span>
 <span class="nf">urlField</span> <span class="n">key</span> <span class="ow">=</span> <span class="n">field</span> <span class="n">key</span> <span class="o">$</span>
     <span class="n">fmap</span> <span class="p">(</span><span class="n">maybe</span> <span class="n">empty</span> <span class="n">toUrl</span><span class="p">)</span> <span class="o">.</span> <span class="n">getRoute</span> <span class="o">.</span> <span class="n">itemIdentifier</span>
 </code></pre></figure>
-<p>First it gets the <code>Item</code>’s <code>Identifier</code>, and then it gets that <code>Identifier</code>’s <code>Route</code>. The problem is that since we’re using a different version of the post, the <code>Identifier</code> will be different, and there won’t be a <code>Route</code> associated with that <code>Identifier</code>.</p>
-<p>I actually use a slightly different <code>urlField</code>-type function, which I called <a href="https://github.com/blaenk/blaenk.github.io/blob/1379be96c66de626b2623d0b09ce32e065da4f49/src/Site/Fields.hs#L80"><code>niceUrlField</code></a>, it simply returns the URL without the <code>index​.html</code> at the end. However, the solution to this problem is the same in both functions.</p>
-<p>The solution is to get the no-name version of the <code>Identifier</code> that is retrieved, that is, the version of the post without an explicit version—the version that was compiled normally. This is done using the <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Identifier.html#v:setVersion"><code>setVersion</code></a> function. The function can be changed to this:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">urlField&#39;</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="n">a</span>
+<p>First it gets the <code>Item</code>&rsquo;s <code>Identifier</code>, and then it gets that <code>Identifier</code>&rsquo;s <code>Route</code>. The problem is that since we&rsquo;re using a different version of the post, the <code>Identifier</code> will be different, and there won&rsquo;t be a <code>Route</code> associated with that <code>Identifier</code>.</p>
+
+<p>I actually use a slightly different <code>urlField</code>-type function, which I called <a href="https://github.com/blaenk/blaenk.github.io/blob/1379be96c66de626b2623d0b09ce32e065da4f49/src/Site/Fields.hs#L80"><code>niceUrlField</code></a>, it simply returns the URL without the <code>index.html</code> at the end. However, the solution to this problem is the same in both functions.</p>
+
+<p>The solution is to get the no-name version of the <code>Identifier</code> that is retrieved, that is, the version of the post without an explicit version&mdash;the version that was compiled normally. This is done using the <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Identifier.html#v:setVersion"><code>setVersion</code></a> function. The function can be changed to this:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">urlField&#39;</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="n">a</span>
 <span class="nf">urlField&#39;</span> <span class="n">key</span> <span class="ow">=</span> <span class="n">field</span> <span class="n">key</span> <span class="o">$</span>
     <span class="n">fmap</span> <span class="p">(</span><span class="n">maybe</span> <span class="n">empty</span> <span class="n">toUrl</span><span class="p">)</span> <span class="o">.</span> <span class="n">getRoute</span> <span class="o">.</span> <span class="n">setVersion</span> <span class="kt">Nothing</span> <span class="o">.</span> <span class="n">itemIdentifier</span>
 </code></pre></figure>
-<p>This successfully retrieves the correct URL of the post, just make sure you <code>mappend</code> this alternate function in your feed’s <code>Context</code>.</p>
-<h2 id="conclusion" class="notoc">Conclusion</h2>
-<p>It’s a shame that some duplicate work seems necessary when it comes to compiling the post. That is, I have to compile every post using my special Pandoc compiler, and then again using the more vanilla feed compiler I made. I tried to balance this by saving effort at the very least with the abbreviation substitution filter, so that it only runs once on every post.</p>
-<section class="footnotes">
-<hr />
+<p>This successfully retrieves the correct URL of the post, just make sure you <code>mappend</code> this alternate function in your feed&rsquo;s <code>Context</code>.</p>
+<h2 id="conclusion">
+<span class="hash">#</span>
+<a href="#conclusion" class="header-link">Conclusion</a>
+</h2>
+<p>It&rsquo;s a shame that some duplicate work seems necessary when it comes to compiling the post. That is, I have to compile every post using my special Pandoc compiler, and then again using the more vanilla feed compiler I made. I tried to balance this by saving effort at the very least with the abbreviation substitution filter, so that it only runs once on every post.</p>
+
+<div class="footnotes">
+<hr>
 <ol>
-<li id="fn1"><p>If you’re wondering what <code>postsPattern</code> is, refer to my <a href="/posts/drafts-in-hakyll">Drafts in Hakyll</a> post, in which this value is used to determine from where to pull posts in, in order to facilitate a draft preview system.<a href="#fnref1">↩</a></p></li>
+
+<li id="fn1">
+<p>If you&rsquo;re wondering what <code>postsPattern</code> is, refer to my <a href="/posts/drafts-in-hakyll">Drafts in Hakyll</a> post, in which this value is used to determine from where to pull posts in, in order to facilitate a draft preview system.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
 </ol>
-</section></div>
+</div>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June 19, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/post-feed-in-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/5fedf3b" title="prefer italic over bold">5fedf3b</a></span></div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll/">Hakyll</a>, <a href="/tags/haskell/">Haskell</a></div>
-    
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/post-feed-in-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/5ebdb1f" title="init
+">5ebdb1f</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll">Hakyll</a>, <a href="/tags/haskell">Haskell</a></div>
   </div>
 </article>
 <section id="comment">
@@ -158,6 +201,7 @@
 
 
 
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -176,12 +220,30 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/posts/post-feed-in-hakyll.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
 
 <!-- disqus -->
 <script async="true" type="text/javascript">
   var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/posts/post-feed-in-hakyll/';
-  var disqus_url = 'http://blaenkdenum.com/posts/post-feed-in-hakyll/';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/post-feed-in-hakyll';
+  var disqus_url = 'http://blaenkdenum.com/posts/post-feed-in-hakyll';
   var disqus_script = 'embed.js';
 
   (function () {
@@ -195,8 +257,8 @@
       DISQUS.reset({
         reload: true,
         config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/posts/post-feed-in-hakyll/'
-          this.page.url = 'http://blaenkdenum.com/posts/post-feed-in-hakyll/'
+          this.page.identifier = 'http://blaenkdenum.com/posts/post-feed-in-hakyll'
+          this.page.url = 'http://blaenkdenum.com/posts/post-feed-in-hakyll'
         }
       });
     });

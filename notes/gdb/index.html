@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,154 +72,343 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/gdb/"><span>GDB</span></a></h2>
-  <div class="entry-content"><p>It seems that using a debugger like the <a href="http://en.wikipedia.org/wiki/GNU_Debugger">GNU Debugger</a> (<abbr title="GNU Debugger">GDB</abbr>) has become something of a lost art for the generation of developers whom are more involved with higher-level languages. Instead, it seems many people resort to so-called <code>printf</code>-debugging, where one places print statements all over the place to sort of trace the state of the program’s execution at any given moment. Of course, this is very tedious, and can be done more naturally and efficiently with a dedicated debugger.</p>
-<p>This notes page covers <abbr title="GNU Debugger">GDB</abbr>’s native interface in particular, although there are a couple of interfaces such as <a href="http://cgdb.github.io/">cgdb</a>, a lightweight interface with vim binds, as well as <a href="https://www.gnu.org/software/ddd/">DDD</a>, which is a more general-purpose debugging interface.</p>
-<p>Aside from <abbr title="GNU Debugger">GDB</abbr> there’s also <a href="http://lldb.llvm.org/">LLDB</a> to keep an eye on, which is the LLVM project’s very own debugger. A <a href="http://lldb.llvm.org/tutorial.html">tutorial</a> is available, as well as a table listing the <a href="http://lldb.llvm.org/lldb-gdb.html">LLDB equivalents</a> for various <abbr title="GNU Debugger">GDB</abbr> commands.</p>
-<p>Remember that, when debugging, it’s best if a program is built with a symbol table—the list of memory addresses corresponding to the program’s variables and lines of code—by passing the <code>-g</code> parameter to gcc or clang.</p>
-<p>For an additional resource, <abbr title="Richard M. Stallman">RMS</abbr>’ own <a href="http://www.unknownroad.com/rtfm/gdbtut/">tutorial</a> on <abbr title="GNU Debugger">GDB</abbr> is available, as well as this <a href="http://rsquared.sdf.org/gdb/">very good guide</a>.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/gdb"><span>GDB</span></a></h2>
+  <div class="entry-content"><p>It seems that using a debugger like the <a href="GDB">GNU Debugger</a> has become something of a lost art for the generation of developers whom are more involved with higher-level languages. Instead, it seems many people resort to so-called <code>printf</code>-debugging, where one places print statements all over the place to sort of trace the state of the program&rsquo;s execution at any given moment. Of course, this is very tedious, and can be done more naturally and efficiently with a dedicated debugger.</p>
+
+<p>This notes page covers <abbr title="GNU Debugger">GDB</abbr>&rsquo;s native interface in particular, although there are a couple of interfaces such as <a href="http://cgdb.github.io/">cgdb</a>, a lightweight interface with vim binds, as well as <a href="https://www.gnu.org/software/ddd/">DDD</a>, which is a more general-purpose debugging interface.</p>
+
+<p>Aside from <abbr title="GNU Debugger">GDB</abbr> there&rsquo;s also <a href="http://lldb.llvm.org/">LLDB</a> to keep an eye on, which is the LLVM project&rsquo;s very own debugger. A <a href="http://lldb.llvm.org/tutorial.html">tutorial</a> is available, as well as a table listing the <a href="http://lldb.llvm.org/lldb-gdb.html">LLDB equivalents</a> for various <abbr title="GNU Debugger">GDB</abbr> commands.</p>
+
+<p>Remember that, when debugging, it&rsquo;s best if a program is built with a symbol table&mdash;the list of memory addresses corresponding to the program&rsquo;s variables and lines of code&mdash;by passing the <code>-g</code> parameter to gcc or clang.</p>
+
+<p>For an additional resource, <abbr title="Richard M. Stallman">RMS</abbr>&lsquo; own <a href="http://www.unknownroad.com/rtfm/gdbtut/">tutorial</a> on <abbr title="GNU Debugger">GDB</abbr> is available, as well as this <a href="http://rsquared.sdf.org/gdb/">very good guide</a>.</p>
+
 <p>The <abbr title="GNU Debugger">GDB</abbr> session samples provided in this page are highlighted with a basic <abbr title="GNU Debugger">GDB</abbr> <a href="https://github.com/snarez/gdb_lexer">Pygments lexer</a> I found on github from user snarez, which I then customized a bit.</p>
-<nav id="toc"><h3>Contents</h3><ol><li><a href="#workflow">Workflow</a><ol><li><a href="#session">Session</a></li></ol></li><li><a href="#breakpoints">Breakpoints</a><ol><li><a href="#deleting">Deleting</a></li><li><a href="#disabling">Disabling</a></li><li><a href="#conditionals">Conditionals</a></li><li><a href="#command-lists">Command Lists</a></li><li><a href="#watchpoints">Watchpoints</a></li><li><a href="#signals">Signals</a></li><li><a href="#information">Information</a></li></ol></li><li><a href="#executing">Executing</a><ol><li><a href="#stepping">Stepping</a></li><li><a href="#resuming">Resuming</a></li></ol></li><li><a href="#inspecting">Inspecting</a><ol><li><a href="#source">Source</a></li><li><a href="#printing">Printing</a></li><li><a href="#call-stack-navigation">Call Stack Navigation</a></li><li><a href="#setting">Setting</a></li></ol></li><li><a href="#core-files">Core Files</a></li><li><a href="#threads">Threads</a></li><li><a href="#abbreviations">Abbreviations</a></li><li><a href="#valgrind">Valgrind</a></li></ol></nav>
-<h1 id="workflow">Workflow</h1>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#workflow">Workflow</a>
+<ol>
+<li>
+<a href="#session">Session</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#breakpoints">Breakpoints</a>
+<ol>
+<li>
+<a href="#deleting">Deleting</a>
+</li>
+<li>
+<a href="#disabling">Disabling</a>
+</li>
+<li>
+<a href="#conditionals">Conditionals</a>
+</li>
+<li>
+<a href="#command-lists">Command Lists</a>
+</li>
+<li>
+<a href="#watchpoints">Watchpoints</a>
+</li>
+<li>
+<a href="#signals">Signals</a>
+</li>
+<li>
+<a href="#information">Information</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#executing">Executing</a>
+<ol>
+<li>
+<a href="#stepping">Stepping</a>
+</li>
+<li>
+<a href="#resuming">Resuming</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#inspecting">Inspecting</a>
+<ol>
+<li>
+<a href="#source">Source</a>
+</li>
+<li>
+<a href="#printing">Printing</a>
+</li>
+<li>
+<a href="#call-stack-navigation">Call Stack Navigation</a>
+</li>
+<li>
+<a href="#setting">Setting</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#core-files">Core Files</a>
+</li>
+<li>
+<a href="#threads">Threads</a>
+</li>
+<li>
+<a href="#abbreviations">Abbreviations</a>
+</li>
+<li>
+<a href="#valgrind">Valgrind</a>
+</li>
+</ol>
+</nav>
+<h1 id="workflow">
+<span class="hash">#</span>
+<a href="#workflow" class="header-link">Workflow</a>
+</h1>
 <p><abbr title="GNU Debugger">GDB</abbr> is usually started by passing it the name of the program we want to debug:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>gdb program_to_debug
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>gdb program_to_debug
 </code></pre></figure>
 <p>Processes with curses-like interfaces can be debugged by running them in a separate terminal and then attaching to them with the <code>-p</code> switch (or using the <code>attach</code> command):</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>gdb -p PID
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>gdb -p PID
 <span class="c"># or</span>
 <span class="nv">$ </span>gdb programname PID
 </code></pre></figure>
-<p>Another thing that can be done is to run <abbr title="GNU Debugger">GDB</abbr> and tell it that the program should be run on a different terminal. This is accomplished with the <code>tty</code> command. For example, assuming the program should be on <code>/dev​/pts​/8</code>—perhaps because we have another window paired with that pseudoterminal—we would run the following:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">tty</span> /dev/pts/<span class="mh">8</span>
+<p>Another thing that can be done is to run <abbr title="GNU Debugger">GDB</abbr> and tell it that the program should be run on a different terminal. This is accomplished with the <code>tty</code> command. For example, assuming the program should be on <code>/dev/pts/8</code>&mdash;perhaps because we have another window paired with that pseudoterminal&mdash;we would run the following:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">tty</span> /dev/pts/<span class="mh">8</span>
 </code></pre></figure>
 <p>Then the following should be entered so that the keyboard input to the window will go to the program rather than to the shell, by making the shell go to sleep:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>sleep 100000
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>sleep 100000
 </code></pre></figure>
 <p>Entering nothing at this prompt re-runs the previous command, which is very useful when stepping with <code>next</code>.</p>
-<p>It’s common to then place a temporary breakpoint on <code>main</code> as an entrypoint into the debugging session with <code>tbreak main</code>.</p>
-<p>The program is then run with the <code>run</code> command, passing it the appropriate program arguments. The program’s execution will be paused at each breakpoint:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">run</span> arg<span class="mh">1</span> arg<span class="mh">2</span>
+
+<p>It&rsquo;s common to then place a temporary breakpoint on <code>main</code> as an entrypoint into the debugging session with <code>tbreak main</code>.</p>
+
+<p>The program is then run with the <code>run</code> command, passing it the appropriate program arguments. The program&rsquo;s execution will be paused at each breakpoint:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">run</span> arg<span class="mh">1</span> arg<span class="mh">2</span>
 Starting program: /path/to/program_to_debug arg<span class="mh">1</span> arg<span class="mh">2</span>
 
 Breakpoint <span class="mh">1</span>, function_containing_breakpoint(ac<span class="o">=</span><span class="mh">4</span>, av<span class="o">=</span><span class="mh">0xbffff094</span>) at src.c:<span class="mh">16</span>
 </code></pre></figure>
 <p>If the program was previously run, the arguments passed to the previous <code>run</code> can be reused by simply entering <code>run</code> on its own. If the program is already running, <abbr title="GNU Debugger">GDB</abbr> will ask if it should restart the program.</p>
+
 <p><abbr title="GNU Debugger">GDB</abbr> is focused on one file at any given moment, which is the file that will be looked for when given parameters without specifying the file name, such as breaking by line number or function name. The first focused file is the one with the <code>main</code> entry point, but the file focus is changed whenever the <code>list</code> command is run, when one steps into code residing on a different file, or when hitting a breakpoint from a separate source file.</p>
-<h2 id="session">Session</h2>
-<p>It’s normal to keep a <abbr title="GNU Debugger">GDB</abbr> session to open during the debugging session. As bugs are fixed and the program is recompiled, <abbr title="GNU Debugger">GDB</abbr> will detect the changes and load them in. Breakpoints and other information specified in ways not dependent on line numbers should continue to work.</p>
+<h2 id="session">
+<span class="hash">#</span>
+<a href="#session" class="header-link">Session</a>
+</h2>
+<p>It&rsquo;s normal to keep a <abbr title="GNU Debugger">GDB</abbr> session to open during the debugging session. As bugs are fixed and the program is recompiled, <abbr title="GNU Debugger">GDB</abbr> will detect the changes and load them in. Breakpoints and other information specified in ways not dependent on line numbers should continue to work.</p>
+
 <p>However, if exiting is necessary, the commands entered can be saved to a <abbr title="GNU Debugger">GDB</abbr> startup file of name <code>.gdbinit</code>. This can then be loaded when <abbr title="GNU Debugger">GDB</abbr> loads with:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>gdb -command<span class="o">=</span>.gdbinit program
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>gdb -command<span class="o">=</span>.gdbinit program
 </code></pre></figure>
 <p>Breakpoints can be saved to a file with:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">save</span> breakpoints filename
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">save</span> breakpoints filename
 <span class="kt">(gdb)</span> <span class="nb">source</span> filename
 </code></pre></figure>
-<p>History can be saved by putting this in <code>~/​.gdbinit</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">set history filename ~/.gdb_history
-set history save</code></pre></figure>
-<h1 id="breakpoints">Breakpoints</h1>
+<p>History can be saved by putting this in <code>~/.gdbinit</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">set history filename ~/.gdb_history
+set history save
+</code></pre></figure><h1 id="breakpoints">
+<span class="hash">#</span>
+<a href="#breakpoints" class="header-link">Breakpoints</a>
+</h1>
 <p>Breakpoints, set with the <code>break</code> command, pause execution of the program just before that line of code executes.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> function
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> function
 <span class="kt">(gdb)</span> <span class="nb">break</span> line
 <span class="kt">(gdb)</span> <span class="nb">break</span> file:line
 <span class="kt">(gdb)</span> <span class="nb">break</span> file:function
 </code></pre></figure>
-<p>It’s also possible to set a breakpoint relative to the currently executing line of course code in the currently selected stack frame:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> +offset
+<p>It&rsquo;s also possible to set a breakpoint relative to the currently executing line of course code in the currently selected stack frame:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> +offset
 <span class="kt">(gdb)</span> <span class="nb">break</span> -offset
 </code></pre></figure>
-<p>It’s also possible to set a breakpoint at a specific virtual memory address, which is useful when there are no debugging symbols:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> *address
+<p>It&rsquo;s also possible to set a breakpoint at a specific virtual memory address, which is useful when there are no debugging symbols:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> *address
 </code></pre></figure>
-<p>If breaking based on the function name, a breakpoint is applied for every function with that name, which can be troublesome in C++ which allows function overloading. It’d be necessary to disambiguate by line number or file path.</p>
+<p>If breaking based on the function name, a breakpoint is applied for every function with that name, which can be troublesome in C++ which allows function overloading. It&rsquo;d be necessary to disambiguate by line number or file path.</p>
+
 <p>A temporary breakpoint, set with the <code>tbreak</code> command, is one that operates just like a regular breakpoint but it clears itself after the first time it is reached.</p>
+
 <p>Catchpoints are similar to breakpoints and are triggered by things such as thrown and caught exceptions, signals, calls to <code>fork()</code>, loading and unloading of libraries, and other events.</p>
-<h2 id="deleting">Deleting</h2>
+<h2 id="deleting">
+<span class="hash">#</span>
+<a href="#deleting" class="header-link">Deleting</a>
+</h2>
 <p>Breakpoints can be either deleted in two ways, using the <code>delete</code> or <code>clear</code> commands. The <code>delete</code> command accepts breakpoint identifiers or if none are given, deletes all breakpoints:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">delete</span> breakpoint_list
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">delete</span> breakpoint_list
 <span class="kt">(gdb)</span> <span class="nb">delete</span> <span class="c"># deletes all breakpoints</span>
 </code></pre></figure>
 <p>The <code>clear</code> command accepts arguments similar to the <code>break</code> command. If no argument is given, it deletes the breakpoint at the next instruction that <abbr title="GNU Debugger">GDB</abbr> will execute, which is useful for deleting the breakpoint that <abbr title="GNU Debugger">GDB</abbr> just reached:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">clear</span> <span class="c"># delete breakpoint that was just reached</span>
-</code></pre></figure>
-<h2 id="disabling">Disabling</h2>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">clear</span> <span class="c"># delete breakpoint that was just reached</span>
+</code></pre></figure><h2 id="disabling">
+<span class="hash">#</span>
+<a href="#disabling" class="header-link">Disabling</a>
+</h2>
 <p>The <code>disable</code> command is like the <code>delete</code> command in its arguments, but it simply disables breakpoints instead of removing them. Like the <code>delete</code> command, if no argument is provided, it disables all breakpoints.</p>
-<p>The <code>enable</code> command is the opposite of the <code>disable</code> command. The <code>enable</code> command can provide <code>tbreak</code>-like functionality with <code>enable once</code>, which enables a list of breakpoints and then disables them once they’re reached.</p>
-<h2 id="conditionals">Conditionals</h2>
+
+<p>The <code>enable</code> command is the opposite of the <code>disable</code> command. The <code>enable</code> command can provide <code>tbreak</code>-like functionality with <code>enable once</code>, which enables a list of breakpoints and then disables them once they&rsquo;re reached.</p>
+<h2 id="conditionals">
+<span class="hash">#</span>
+<a href="#conditionals" class="header-link">Conditionals</a>
+</h2>
 <p>A condition can be associated with a breakpoint, using the <code>contidion</code> command, so that execution only pauses at it if it satisfies the condition. The condition can refer to variables local to the scope of the breakpoint. For example, the following places a condition on breakpoint #1 so that it only breaks if <code>num_y</code> is <code>1</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">condition</span> <span class="mh">3</span> i <span class="o">==</span> <span class="mh">10</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">condition</span> <span class="mh">3</span> i <span class="o">==</span> <span class="mh">10</span>
 </code></pre></figure>
 <p>This condition also could have been provided to the <code>break</code> command itself as follows:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> <span class="mh">3</span> <span class="nb">if</span> i <span class="o">==</span> <span class="mh">10</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> <span class="mh">3</span> <span class="nb">if</span> i <span class="o">==</span> <span class="mh">10</span>
 </code></pre></figure>
 <p>A condition can be removed from an existing breakpoint as well:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">cond</span> <span class="mh">3</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">cond</span> <span class="mh">3</span>
 </code></pre></figure>
 <p>Pretty much any valid C conditional statement can be used, where true is non-zero and false is zero. This includes equality, logical, and inequality operators, bitwise and shift operators, arithmetic operators, and functions that are linked into the program.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> <span class="mh">180</span> <span class="nb">if</span> string <span class="o">==</span> NULL &amp;&amp; i &lt; <span class="mh">0</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> <span class="mh">180</span> <span class="nb">if</span> string <span class="o">==</span> NULL &amp;&amp; i &lt; <span class="mh">0</span>
 <span class="kt">(gdb)</span> <span class="nb">break</span> test.c:<span class="mh">34</span> <span class="nb">if</span> (x &amp; y) <span class="o">==</span> <span class="mh">1</span>
 <span class="kt">(gdb)</span> <span class="nb">break</span> myfunc <span class="nb">if</span> i % (j + <span class="mh">3</span>) !<span class="o">=</span> <span class="mh">0</span>
 <span class="kt">(gdb)</span> <span class="nb">break</span> test.c:myfunc <span class="nb">if</span> !check_variable_sanity(i)
 <span class="kt">(gdb)</span> <span class="nb">break</span> <span class="mh">44</span> <span class="nb">if</span> strlen(mystring) <span class="o">==</span> <span class="mh">0</span>
 </code></pre></figure>
 <p><strong>Note</strong> that when using a library function or other externally-linked function that provides no debugging symbols, the result of the function will be interpreted as an integer. This can lead to misinterpretations, such as:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">print</span> cos(<span class="mh">0</span>.<span class="mh">0</span>)
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">print</span> cos(<span class="mh">0</span>.<span class="mh">0</span>)
 <span class="nv">$1</span> <span class="o">=</span> <span class="mh">14368</span>
 </code></pre></figure>
 <p>This can be alleviated if necessary by defining a <abbr title="GNU Debugger">GDB</abbr> convenience variable with the necessary type information for the function in question:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> <span class="nv">$p</span> <span class="o">=</span> (double (*) (double))cos
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> <span class="nv">$p</span> <span class="o">=</span> (double (*) (double))cos
 <span class="kt">(gdb)</span> <span class="nb">ptype</span> <span class="nv">$p</span>
 type <span class="o">=</span> double (*)()
 <span class="kt">(gdb)</span> <span class="nb">p</span> cos(<span class="mh">3</span>.<span class="mh">14159265</span>)
 <span class="nv">$2</span> <span class="o">=</span> <span class="mh">14368</span>
 <span class="kt">(gdb)</span> <span class="nb">p</span> <span class="nv">$p</span>(<span class="mh">3</span>.<span class="mh">14159265</span>)
 <span class="nv">$4</span> <span class="o">=</span> -<span class="mh">1</span>
-</code></pre></figure>
-<h2 id="command-lists">Command Lists</h2>
-<p>It’s possible to define a list of commands to be run as soon as a particular breakpoint is triggered using the <code>commands</code> command which takes the following form. If the first command in the list is the <code>silent</code> command, it’ll suppress information about the breakpoint whenever it’s triggered.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">commands</span> breakpoint-identifier
+</code></pre></figure><h2 id="command-lists">
+<span class="hash">#</span>
+<a href="#command-lists" class="header-link">Command Lists</a>
+</h2>
+<p>It&rsquo;s possible to define a list of commands to be run as soon as a particular breakpoint is triggered using the <code>commands</code> command which takes the following form. If the first command in the list is the <code>silent</code> command, it&rsquo;ll suppress information about the breakpoint whenever it&rsquo;s triggered.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">commands</span> breakpoint-identifier
 <span class="kt">&gt;</span> <span class="nb">command</span>
 <span class="kt">&gt;</span> <span class="nb">end</span>
 </code></pre></figure>
 <p>Commands can be removed from a breakpoint by redefining an empty command list.</p>
-<p>It’s possible to define macros—sets of commands—with the <code>define</code> command. Its form is similar to <code>commands</code>’ but its first argument is the name of the macro. The arguments are accessible as <code>$argn</code> where <code>n</code> is anywhere from <code>0</code> to <code>9</code>. Macro arguments aren’t comma separated. Useful macros can be placed in the startup file and referenced within <abbr title="GNU Debugger">GDB</abbr>. The command <code>show user</code> can be used to list all macros.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">define</span> print_and_go
+
+<p>It&rsquo;s possible to define macros&mdash;sets of commands&mdash;with the <code>define</code> command. Its form is similar to <code>commands</code>&lsquo; but its first argument is the name of the macro. The arguments are accessible as <code>$argn</code> where <code>n</code> is anywhere from <code>0</code> to <code>9</code>. Macro arguments aren&rsquo;t comma separated. Useful macros can be placed in the startup file and referenced within <abbr title="GNU Debugger">GDB</abbr>. The command <code>show user</code> can be used to list all macros.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">define</span> print_and_go
 <span class="kt">&gt;</span> <span class="nb">printf</span> <span class="nv">$arg0</span>, <span class="nv">$arg1</span>
 <span class="kt">&gt;</span> <span class="nb">continue</span>
 <span class="kt">&gt;</span> <span class="nb">end</span>
 </code></pre></figure>
 <p>Commands can also include if conditions.</p>
-<h2 id="watchpoints">Watchpoints</h2>
+<h2 id="watchpoints">
+<span class="hash">#</span>
+<a href="#watchpoints" class="header-link">Watchpoints</a>
+</h2>
 <p>A <em>watchpoint</em>, set with <code>watch</code>, can be thought of as being attached to an expression, such that it gets triggered when the result of that expression changes. Setting a watchpoint on a variable causes the debugger to pause execution at the point when the memory location of that variable changes. For example, to watch the <code>z</code> variable:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">watch</span> z
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">watch</span> z
 </code></pre></figure>
 <p>More powerful watchpoints can be established that are based on conditions related to the variable in question. For example, to watch for when <code>z</code> becomes greater than <code>28</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">watch</span> (z &gt; <span class="mh">28</span>)
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">watch</span> (z &gt; <span class="mh">28</span>)
 </code></pre></figure>
 <p>There is also <code>rwatch</code> which triggers when a variable is read, and <code>awatch</code> which triggers when a variable is read <em>or</em> written.</p>
+
 <p>Watchpoints are deleted as soon as any variable in the expression goes out of scope, requiring one to re-establish them the next time that function is called, if necessary. This can be automated by a command on a breakpoint in the relevant scope that establishes the watchpoint.</p>
-<h2 id="signals">Signals</h2>
-<p>It’s possible to avoid the pausing of execution or printing a warning when signals are received by having <abbr title="GNU Debugger">GDB</abbr> handle them with the <code>handle</code> command. For example, to avoid stopping and printing a warning when <code>SIGUSR</code> is received:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">handle</span> SIGUSR<span class="mh">1</span> nostop noprint
-</code></pre></figure>
-<h2 id="information">Information</h2>
-<p>The <code>info breakpoints</code> command can provide a summary of the various breakpoints that have been established and their properties. The breakpoint’s <em>disposition</em> refers to what will happen to it the next time it’s reached.</p>
-<h1 id="executing">Executing</h1>
+<h2 id="signals">
+<span class="hash">#</span>
+<a href="#signals" class="header-link">Signals</a>
+</h2>
+<p>It&rsquo;s possible to avoid the pausing of execution or printing a warning when signals are received by having <abbr title="GNU Debugger">GDB</abbr> handle them with the <code>handle</code> command. For example, to avoid stopping and printing a warning when <code>SIGUSR</code> is received:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">handle</span> SIGUSR<span class="mh">1</span> nostop noprint
+</code></pre></figure><h2 id="information">
+<span class="hash">#</span>
+<a href="#information" class="header-link">Information</a>
+</h2>
+<p>The <code>info breakpoints</code> command can provide a summary of the various breakpoints that have been established and their properties. The breakpoint&rsquo;s <em>disposition</em> refers to what will happen to it the next time it&rsquo;s reached.</p>
+<h1 id="executing">
+<span class="hash">#</span>
+<a href="#executing" class="header-link">Executing</a>
+</h1>
 <p>A key thing to remember is that whatever line <abbr title="GNU Debugger">GDB</abbr> is currently at has <em>not</em> been executed yet.</p>
-<h2 id="stepping">Stepping</h2>
-<p>Single-stepping is possible with the <code>next</code> command, where a execution proceeds one original-source-code-line (e.g. 1 C++ line) at a time. The <code>step</code> command is similar, but if the line is on a function call, it will enter that function’s body if there are debugging symbols available for it, whereas <code>next</code> would step over it.</p>
+<h2 id="stepping">
+<span class="hash">#</span>
+<a href="#stepping" class="header-link">Stepping</a>
+</h2>
+<p>Single-stepping is possible with the <code>next</code> command, where a execution proceeds one original-source-code-line (e.g. 1 C++ line) at a time. The <code>step</code> command is similar, but if the line is on a function call, it will enter that function&rsquo;s body if there are debugging symbols available for it, whereas <code>next</code> would step over it.</p>
+
 <p>Both <code>step</code> and <code>next</code> accept optional arguments specifying how far to step.</p>
-<h2 id="resuming">Resuming</h2>
+<h2 id="resuming">
+<span class="hash">#</span>
+<a href="#resuming" class="header-link">Resuming</a>
+</h2>
 <p>Execution can be resumed until the next breakpoint with the <code>continue</code> command. It accepts an optional argument <code>n</code> telling it to ignore the next <code>n</code> breakpoints.</p>
-<p>The <code>finish</code> command instructs <abbr title="GNU Debugger">GDB</abbr> to resume execution until just after the current stack frame finishes, i.e. until just after the current function call finishes. However, if there are any intervening breakpoints, <abbr title="GNU Debugger">GDB</abbr> <em>will</em> pause at them.</p>
+
+<p>The <code>finish</code> command instructs <abbr title="GNU Debugger">GDB</abbr> to resume execution until just after the current stack frame finishes, i.e. until just after the current function call finishes. However, if there are any intervening breakpoints, <abbr title="GNU Debugger">GDB</abbr> <em>will</em> pause at them.</p>
+
 <p>The <code>until</code> command resumes execution until <abbr title="GNU Debugger">GDB</abbr> reaches a machine instruction that has a higher memory address than the current one. Like <code>finish</code>, it pauses at intervening breakpoints. The <code>until</code> command is usually useful when used on loops. It also accepts arguments similar to <code>break</code>, which causes execution to continue until that location is reached.</p>
+
 <p>The <code>advance</code> command continues to a specific location which is specified in the same form that <code>break</code> accepts. This essentially has the effect of continuing to a temporary breakpoint denoted by the location.</p>
-<h1 id="inspecting">Inspecting</h1>
-<p>Inspecting the program’s state at any point in its execution is usually the primary motivation for debugging and setting breakpoints, so I consider it one of the most important parts to learn.</p>
-<h2 id="source">Source</h2>
-<p>Source code can be shown by using the <code>list</code> command, which itself changes the file currently in focus by <abbr title="GNU Debugger">GDB</abbr>, used for setting breakpoints and other things. When it’s first run, <code>list</code> shows the 10 source lines centered around <code>main</code>. Subsequence <code>list</code> commands show the next 10 lines, stopping when the end is reached. The reverse, showing the previous 10 lines, can be done with <code>list -</code>. If <code>list</code> is given a number, it shows 10 source lines centered on that line number. This command can also accept a range of lines to print, where one of the endpoints can optionally be omitted.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">list</span>
+<h1 id="inspecting">
+<span class="hash">#</span>
+<a href="#inspecting" class="header-link">Inspecting</a>
+</h1>
+<p>Inspecting the program&rsquo;s state at any point in its execution is usually the primary motivation for debugging and setting breakpoints, so I consider it one of the most important parts to learn.</p>
+<h2 id="source">
+<span class="hash">#</span>
+<a href="#source" class="header-link">Source</a>
+</h2>
+<p>Source code can be shown by using the <code>list</code> command, which itself changes the file currently in focus by <abbr title="GNU Debugger">GDB</abbr>, used for setting breakpoints and other things. When it&rsquo;s first run, <code>list</code> shows the 10 source lines centered around <code>main</code>. Subsequence <code>list</code> commands show the next 10 lines, stopping when the end is reached. The reverse, showing the previous 10 lines, can be done with <code>list -</code>. If <code>list</code> is given a number, it shows 10 source lines centered on that line number. This command can also accept a range of lines to print, where one of the endpoints can optionally be omitted.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">list</span>
 <span class="kt">(gdb)</span> <span class="nb">list</span> -
 <span class="kt">(gdb)</span> <span class="nb">list</span> <span class="mh">5</span>
 <span class="kt">(gdb)</span> <span class="nb">list</span> ,<span class="mh">28</span>
@@ -230,76 +419,91 @@ type <span class="o">=</span> double (*)()
 <span class="kt">(gdb)</span> <span class="nb">list</span> file.c:funcname
 </code></pre></figure>
 <p>The number of lines output by <abbr title="GNU Debugger">GDB</abbr> when using <code>list</code> is by default 10, but this can be changed:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> listsize <span class="mh">5</span>
-</code></pre></figure>
-<h2 id="printing">Printing</h2>
-<p>Basic variables such as integers can be printed with the <code>print</code> command. More complicated types will be covered later on. It’s also possible to print out individual array elements with regular index syntax.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">print</span> y[<span class="mh">0</span>]
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> listsize <span class="mh">5</span>
+</code></pre></figure><h2 id="printing">
+<span class="hash">#</span>
+<a href="#printing" class="header-link">Printing</a>
+</h2>
+<p>Basic variables such as integers can be printed with the <code>print</code> command. More complicated types will be covered later on. It&rsquo;s also possible to print out individual array elements with regular index syntax.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">print</span> y[<span class="mh">0</span>]
 <span class="nv">$1</span> <span class="o">=</span> <span class="mh">12</span>
 </code></pre></figure>
 <p>The <code>print</code> command has support for printing in a variety of different format, which is done with <code>p/fmt var</code> where <code>fmt</code> is any one of:</p>
+
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: left;">Format</th>
-<th style="text-align: center;">Code</th>
+<tr>
+<th style="text-align: left">Format</th>
+<th style="text-align: left">Code</th>
 </tr>
 </thead>
+
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">address</td>
-<td style="text-align: center;">a</td>
+<tr>
+<td style="text-align: left">address</td>
+<td style="text-align: left">a</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">binary</td>
-<td style="text-align: center;">t</td>
+<tr>
+<td style="text-align: left">binary</td>
+<td style="text-align: left">t</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">char</td>
-<td style="text-align: center;">c</td>
+<tr>
+<td style="text-align: left">char</td>
+<td style="text-align: left">c</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">decimal</td>
-<td style="text-align: center;">d</td>
+<tr>
+<td style="text-align: left">decimal</td>
+<td style="text-align: left">d</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">float</td>
-<td style="text-align: center;">f</td>
+<tr>
+<td style="text-align: left">float</td>
+<td style="text-align: left">f</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">hex</td>
-<td style="text-align: center;">x</td>
+<tr>
+<td style="text-align: left">hex</td>
+<td style="text-align: left">x</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">hex (left zero padded)</td>
-<td style="text-align: center;">z</td>
+<tr>
+<td style="text-align: left">hex (left zero padded)</td>
+<td style="text-align: left">z</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">instruction</td>
-<td style="text-align: center;">i</td>
+<tr>
+<td style="text-align: left">instruction</td>
+<td style="text-align: left">i</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">octal</td>
-<td style="text-align: center;">o</td>
+<tr>
+<td style="text-align: left">octal</td>
+<td style="text-align: left">o</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">unsigned decimal</td>
-<td style="text-align: center;">u</td>
+<tr>
+<td style="text-align: left">unsigned decimal</td>
+<td style="text-align: left">u</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">string</td>
-<td style="text-align: center;">s</td>
+<tr>
+<td style="text-align: left">string</td>
+<td style="text-align: left">s</td>
 </tr>
 </tbody>
 </table>
+
 <p>There is also a <code>printf</code> function which behaves the same way as the function of the same name in C, but like <code>print</code> in <abbr title="GNU Debugger">GDB</abbr>, the parentheses are optional.</p>
+
 <p>This makes <abbr title="GNU Debugger">GDB</abbr> much more preferable to actual <code>printf</code>-debugging which modifies the source code and is itself susceptible to bugs, or can even have unforeseen consequences.</p>
+
 <p>Structures can be printed outright and their constituent data members will be displayed.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> *structptr
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> *structptr
 <span class="nv">$1</span> = {<span class="nv">val</span> = <span class="mh">12</span>, <span class="nv">left</span> = <span class="mh">0x8049698</span>, <span class="nv">right</span> = <span class="mh">0x0</span>}
 </code></pre></figure>
-<p>All of this information on one line can become difficult to read, in which case an alternative “pretty printing” scheme may be used which uses one struct member per-line:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> print pretty
+<p>All of this information on one line can become difficult to read, in which case an alternative &ldquo;pretty printing&rdquo; scheme may be used which uses one struct member per-line:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> print pretty
 <span class="kt">(gdb)</span> <span class="nb">p</span> *structptr
 <span class="nv">$1</span> = {
   <span class="nv">val</span> = <span class="mh">12</span>,
@@ -308,170 +512,250 @@ type <span class="o">=</span> double (*)()
 }
 </code></pre></figure>
 <p>Specific members can be printed individually by accessing the same way as one would in C/C++, both <code>-&gt;</code> and <code>.</code> can be used on pointers:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> structptr<span class="na">-&gt;val</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> structptr<span class="na">-&gt;val</span>
 <span class="kt">(gdb)</span> <span class="nb">p</span> structptr.val
 </code></pre></figure>
 <p>The <code>display</code> command registers a variable for printing every time execution pauses. If no argument is passed, it lists all auto-displayed variables. Display directives can be disabled or enabled with the corresponding commands. To remove a display directive altogether, use the <code>undisplay</code> command:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">disable</span> display <span class="mh">1</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">disable</span> display <span class="mh">1</span>
 <span class="kt">(gdb)</span> <span class="nb">enable</span> display <span class="mh">1</span>
 <span class="kt">(gdb)</span> <span class="nb">undisplay</span> <span class="mh">1</span>
 </code></pre></figure>
 <p>The <code>call</code> command can also be used to call a particular function when a breakpoint is triggered, which can be used for printing some state out using a function defined in the program, specialized for that task.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">commands</span> <span class="mh">2</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">commands</span> <span class="mh">2</span>
 <span class="kt">&gt;</span> <span class="nb">printf</span> <span class="s">&quot;current tree is&quot;</span>
 <span class="kt">&gt;</span> <span class="nb">call</span> printtree(root)
 <span class="kt">&gt;</span> <span class="nb">end</span>
 </code></pre></figure>
-<p>The <code>x</code> command, for “examine,” can be used to examing memory at a given address.</p>
+<p>The <code>x</code> command, for &ldquo;examine,&rdquo; can be used to examing memory at a given address.</p>
+
 <p>A summary of information about the current frame can be obtained with the <code>info frame</code> command. More specifically, the <code>info args</code> command can show the values of the arguments passed to the current function, and the <code>info locals</code> command can show all of the variables local to the current stack frame.</p>
+
 <p>The <code>ptype</code> command can be used to determine the type of a variable. When the type is a structure or a class, it can show the layout/definition.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">ptype</span> argc
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">ptype</span> argc
 type <span class="o">=</span> int
 </code></pre></figure>
 <p>A static array can be printed regularly with the <code>print</code> command:</p>
-<figure class="codeblock"><pre><code class="highlight language-c"><span class="kt">int</span> <span class="n">x</span><span class="p">[</span><span class="mi">25</span><span class="p">];</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-c"><span class="kt">int</span> <span class="n">x</span><span class="p">[</span><span class="mi">25</span><span class="p">];</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> x
 </code></pre></figure>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> x
-</code></pre></figure>
-<p>It’s also possible to print sub-ranges of an array, for example 5 elements starting at element 3:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> x[<span class="mh">3</span>]@<span class="mh">5</span>
+<p>It&rsquo;s also possible to print sub-ranges of an array, for example 5 elements starting at element 3:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> x[<span class="mh">3</span>]@<span class="mh">5</span>
 </code></pre></figure>
 <p>Dynamically allocated arrays have to be dereferenced and <abbr title="GNU Debugger">GDB</abbr> has to be instructed on how large they are. This takes the form <code>*ptr@size</code>.</p>
-<figure class="codeblock"><pre><code class="highlight language-cpp"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
 <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
-</code></pre></figure>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> *x@<span class="mh">6</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> *x@<span class="mh">6</span>
 <span class="nv">$1</span> = {<span class="mh">0</span>, <span class="mh">0</span>, <span class="mh">0</span>, <span class="mh">12</span>, <span class="mh">0</span>, <span class="mh">0</span>}
-</code></pre></figure>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> <span class="kt">(int </span>[<span class="mh">6</span>]) *x
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> <span class="kt">(int </span>[<span class="mh">6</span>]) *x
 <span class="nv">$1</span> = {<span class="mh">0</span>, <span class="mh">0</span>, <span class="mh">0</span>, <span class="mh">12</span>, <span class="mh">0</span>, <span class="mh">0</span>}
-</code></pre></figure>
-<h2 id="call-stack-navigation">Call Stack Navigation</h2>
-<p>The runtime information immediately available to <abbr title="GNU Debugger">GDB</abbr> is whatever is located on the current stack frame, determined by the current function call. Consider functions <code>A</code>, <code>B</code>, and <code>C</code>, where each one calls the next. If execution is paused within <code>C</code>, you can print values local to <code>C</code>’s stack frame with typical commands like <code>print</code>. That is, if function <code>C</code> has local variable <code>j</code>, it can be printed with <code>print j</code>.</p>
-<p>However, it’s also possible to traverse the call stack as it is at any given moment, in order to bring a different frame into <abbr title="GNU Debugger">GDB</abbr>’s focus and therefore inspect that frame’s state. The <code>frame</code> command allows traversal relative to the current function call’s frame, which is referred to as frame <code>0</code>. For example, to go to the grand-parent’s frame:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">frame</span> <span class="mh">2</span>
+</code></pre></figure><h2 id="call-stack-navigation">
+<span class="hash">#</span>
+<a href="#call-stack-navigation" class="header-link">Call Stack Navigation</a>
+</h2>
+<p>The runtime information immediately available to <abbr title="GNU Debugger">GDB</abbr> is whatever is located on the current stack frame, determined by the current function call. Consider functions <code>A</code>, <code>B</code>, and <code>C</code>, where each one calls the next. If execution is paused within <code>C</code>, you can print values local to <code>C</code>&rsquo;s stack frame with typical commands like <code>print</code>. That is, if function <code>C</code> has local variable <code>j</code>, it can be printed with <code>print j</code>.</p>
+
+<p>However, it&rsquo;s also possible to traverse the call stack as it is at any given moment, in order to bring a different frame into <abbr title="GNU Debugger">GDB</abbr>&rsquo;s focus and therefore inspect that frame&rsquo;s state. The <code>frame</code> command allows traversal relative to the current function call&rsquo;s frame, which is referred to as frame <code>0</code>. For example, to go to the grand-parent&rsquo;s frame:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">frame</span> <span class="mh">2</span>
 </code></pre></figure>
 <p><abbr title="GNU Debugger">GDB</abbr> also provides simpler commands <code>up</code> and <code>down</code> for traversing relative to the currently focused stack frame.</p>
+
 <p>The <code>backtrace</code> command shows the entire stack.</p>
+
 <p>The command <code>where</code> can be used to determine where one is at any given moment.</p>
-<h2 id="setting">Setting</h2>
-<p>It’s possible to set the value of variables mid-execution using the <code>set</code> command, which provides no output from <abbr title="GNU Debugger">GDB</abbr>. Variables can also be set using the print command, which follows the setting of the variable with printing out its new value:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> variable x <span class="o">=</span> <span class="mh">12</span>
+<h2 id="setting">
+<span class="hash">#</span>
+<a href="#setting" class="header-link">Setting</a>
+</h2>
+<p>It&rsquo;s possible to set the value of variables mid-execution using the <code>set</code> command, which provides no output from <abbr title="GNU Debugger">GDB</abbr>. Variables can also be set using the print command, which follows the setting of the variable with printing out its new value:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> variable x <span class="o">=</span> <span class="mh">12</span>
 <span class="kt">(gdb)</span> <span class="nb">print</span> x <span class="o">=</span> <span class="mh">12</span>
 </code></pre></figure>
-<p>There are also variables specific to <abbr title="GNU Debugger">GDB</abbr> that can be created and used. For example, <abbr title="GNU Debugger">GDB</abbr> has a <em>value history</em> which simply assigns the result of an entered command to an increasing variable name. This is similar to Scala’s interpreter which assigns the expression result values to <code>res​#</code>. These variables can be referenced in future commands. The <code>$</code> variable always refers to the previous result.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> tmp<span class="na">-&gt;left</span>
+<p>There are also variables specific to <abbr title="GNU Debugger">GDB</abbr> that can be created and used. For example, <abbr title="GNU Debugger">GDB</abbr> has a <em>value history</em> which simply assigns the result of an entered command to an increasing variable name. This is similar to Scala&rsquo;s interpreter which assigns the expression result values to <code>res#</code>. These variables can be referenced in future commands. The <code>$</code> variable always refers to the previous result.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">p</span> tmp<span class="na">-&gt;left</span>
 <span class="nv">$1</span> <span class="o">=</span> (<span class="kt">struct node *</span>) <span class="mh">0x80496a8</span>
 <span class="kt">(gdb)</span> <span class="nb">p</span> *$
 <span class="nv">$2</span> = {<span class="nv">val</span> = <span class="mh">5</span>, <span class="nv">left</span> = <span class="mh">0x0</span>, <span class="nv">right</span> = <span class="mh">0x0</span>}
 </code></pre></figure>
-<p>It’s also possible to set environment variables within <abbr title="GNU Debugger">GDB</abbr>:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> environment ENVVAR <span class="o">=</span> <span class="mh">3</span>
+<p>It&rsquo;s also possible to set environment variables within <abbr title="GNU Debugger">GDB</abbr>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> environment ENVVAR <span class="o">=</span> <span class="mh">3</span>
 </code></pre></figure>
-<p>Convenience variables can change values according to C rules. For example, given an array <code>w</code>, its elements can be iterated in <abbr title="GNU Debugger">GDB</abbr> by creating a convenience variable that represents the iterations’ current index.</p>
-<figure class="codeblock"><pre><code class="highlight language-c"><span class="kt">int</span> <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">88</span><span class="p">};</span>
-</code></pre></figure>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mh">0</span>
+<p>Convenience variables can change values according to C rules. For example, given an array <code>w</code>, its elements can be iterated in <abbr title="GNU Debugger">GDB</abbr> by creating a convenience variable that represents the iterations' current index.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-c"><span class="kt">int</span> <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">88</span><span class="p">};</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">set</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mh">0</span>
 <span class="kt">(gdb)</span> <span class="nb">p</span> w[<span class="nv">$i</span>++]
 <span class="nv">$1</span> <span class="o">=</span> <span class="mh">12</span>
 (gdb)
 <span class="nv">$2</span> <span class="o">=</span> <span class="mh">5</span>
 (gdb)
 <span class="nv">$3</span> <span class="o">=</span> <span class="mh">88</span>
+</code></pre></figure><h1 id="core-files">
+<span class="hash">#</span>
+<a href="#core-files" class="header-link">Core Files</a>
+</h1>
+<p>A core file contains a detailed description of the program&rsquo;s state when it crashed, such as the contents of the stack(s), CPU&rsquo;s registers, and values of statically allocated variables.</p>
+
+<p>Usually when a core dump file is generated, it&rsquo;s placed in the current directory named <code>core</code> or some variation of it. It may be necessary to increase the shell&rsquo;s core dump resource limit with the command:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span><span class="nb">ulimit</span> -c unlimited
 </code></pre></figure>
-<h1 id="core-files">Core Files</h1>
-<p>A core file contains a detailed description of the program’s state when it crashed, such as the contents of the stack(s), CPU’s registers, and values of statically allocated variables.</p>
-<p>Usually when a core dump file is generated, it’s placed in the current directory named <code>core</code> or some variation of it. It may be necessary to increase the shell’s core dump resource limit with the command:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span><span class="nb">ulimit</span> -c unlimited
-</code></pre></figure>
-<p>On systems that use <a href="http://en.wikipedia.org/wiki/Systemd">systemd</a>, such as mine, these files are instead managed by systemd’s journal; they won’t show up in the current directory regardless of the resource limit. The helper program <code>systemd-coredumpctl</code> can be used to extract the core dumps from the journal into individual files:</p>
+<p>On systems that use <a href="http://en.wikipedia.org/wiki/Systemd">systemd</a>, such as mine, these files are instead managed by systemd&rsquo;s journal; they won&rsquo;t show up in the current directory regardless of the resource limit. The helper program <code>systemd-coredumpctl</code> can be used to extract the core dumps from the journal into individual files:</p>
+
 <p><strong>June 23rd, 2014</strong>: It seems this may no longer be the case as of arch package <a href="https://projects.archlinux.org/svntogit/packages.git/commit/trunk?h=packages/systemd&amp;id=20f65088398622522bb33e6f53dfde83d31a2208">systemd-214-2</a>.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="c"># based on PID</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="c"># based on PID</span>
 <span class="nv">$ </span>systemd-coredumpctl dump PID -o outname
 
 <span class="c"># based on binary name</span>
 <span class="nv">$ </span>systemd-coredumpctl dump urxvt -o outname
 </code></pre></figure>
 <p>Core files are useful from a debugging perspective because they provide a starting point for dissecting the program to determine the cause of the crash. They are more useful than simply re-running the program within <abbr title="GNU Debugger">GDB</abbr> because it would be that the bug that caused the crash occurs rarely and randomly.</p>
+
 <p>Core files can be loaded into <abbr title="GNU Debugger">GDB</abbr> by supplying them as a second argument, after the name of the program that generated the core file:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>gdb crasher corefile
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>gdb crasher corefile
 </code></pre></figure>
-<p>Once loaded, we can run a <code>backtrace</code> to determine the point at which the program crashed. The <code>frame</code> command can be used to navigate the call stack, and typical inspecting commands can be used to analyze the program’s state as it was when it crashed. Breakpoints and similar tools can be established, then the program can be run normally.</p>
-<h1 id="threads">Threads</h1>
+<p>Once loaded, we can run a <code>backtrace</code> to determine the point at which the program crashed. The <code>frame</code> command can be used to navigate the call stack, and typical inspecting commands can be used to analyze the program&rsquo;s state as it was when it crashed. Breakpoints and similar tools can be established, then the program can be run normally.</p>
+<h1 id="threads">
+<span class="hash">#</span>
+<a href="#threads" class="header-link">Threads</a>
+</h1>
 <p><abbr title="GNU Debugger">GDB</abbr> announces whenever new threads are created. The <code>info threads</code> command can provide summary information about what each of the threads are doing. An asterisk denotes the currently focused thread. Note that some threads may be internal to the threading implementation, such as a Pthreads manager thread.</p>
-<p>It’s possible to switch <abbr title="GNU Debugger">GDB</abbr>’s focus to a different thread with the <code>thread</code> command, which takes as argument the thread identifier denoted in <code>info threads</code>.</p>
-<p>It’s also possible to provide thread disambiguators to the <code>break</code> command, to pause execution when a specific thread reaches a breakpoint:</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> linenr thread threadid <span class="nb">if</span> condition
-</code></pre></figure>
-<h1 id="abbreviations">Abbreviations</h1>
+
+<p>It&rsquo;s possible to switch <abbr title="GNU Debugger">GDB</abbr>&rsquo;s focus to a different thread with the <code>thread</code> command, which takes as argument the thread identifier denoted in <code>info threads</code>.</p>
+
+<p>It&rsquo;s also possible to provide thread disambiguators to the <code>break</code> command, to pause execution when a specific thread reaches a breakpoint:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">break</span> linenr thread threadid <span class="nb">if</span> condition
+</code></pre></figure><h1 id="abbreviations">
+<span class="hash">#</span>
+<a href="#abbreviations" class="header-link">Abbreviations</a>
+</h1>
 <p>Many commands have abbreviations which are simpler to enter:</p>
+
 <table>
-<thead>
-<figure class="codeblock"><pre><code class="highlight language-text">&lt;tr class=&quot;header&quot;&gt;
-  &lt;th&gt;Command&lt;/th&gt;
-&lt;/tr&gt;</code></pre></figure>
-</thead>
-<tbody>
-<figure class="codeblock"><pre><code class="highlight language-text">&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**b**ack**t**race&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**b**reak&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**cond**ition&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**c**ontinue&lt;/td&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**dis**able&lt;/td&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**disp**lay&lt;/td&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**ena**ble&lt;/td&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**fin**ish&lt;/td&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**i**nfo&lt;/td&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**n**ext&lt;/td&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**p**rint&lt;/td&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**pt**ype&lt;/td&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**q**uit&lt;/td&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**r**un&lt;/td&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**s**tep&lt;/td&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**tb**reak&lt;/td&gt;
-&lt;tr class=&quot;odd&quot;&gt;
-  &lt;td&gt;**undisp**lay&lt;/td&gt;
-&lt;tr class=&quot;even&quot;&gt;
-  &lt;td&gt;**u**ntil&lt;/td&gt;</code></pre></figure>
-</tbody>
+  <thead>
+    <tr class="header">
+      <th>Command</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="odd">
+      <td><strong>b</strong>ack<strong>t</strong>race</td>
+    </tr>
+    <tr class="even">
+      <td><strong>b</strong>reak</td>
+    </tr>
+    <tr class="odd">
+      <td><strong>cond</strong>ition</td>
+    </tr>
+    <tr class="even">
+      <td><strong>c</strong>ontinue</td>
+    <tr class="odd">
+      <td><strong>dis</strong>able</td>
+    <tr class="even">
+      <td><strong>disp</strong>lay</td>
+    <tr class="odd">
+      <td><strong>ena</strong>ble</td>
+    <tr class="even">
+      <td><strong>fin</strong>ish</td>
+    <tr class="odd">
+      <td><strong>i</strong>nfo</td>
+    <tr class="even">
+      <td><strong>n</strong>ext</td>
+    <tr class="odd">
+      <td><strong>p</strong>rint</td>
+    <tr class="even">
+      <td><strong>pt</strong>ype</td>
+    <tr class="odd">
+      <td><strong>q</strong>uit</td>
+    <tr class="even">
+      <td><strong>r</strong>un</td>
+    <tr class="odd">
+      <td><strong>s</strong>tep</td>
+    <tr class="even">
+      <td><strong>tb</strong>reak</td>
+    <tr class="odd">
+      <td><strong>undisp</strong>lay</td>
+    <tr class="even">
+      <td><strong>u</strong>ntil</td>
+  </tbody>
 </table>
-<h1 id="valgrind">Valgrind</h1>
-<p>It’s <a href="http://billiob.net/blog/20140330_vgdb.html">possible</a> to load a <abbr title="GNU Debugger">GDB</abbr> session inside of a valgrind session.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>valgrind --vgdb<span class="o">=</span>yes --vgdb-error<span class="o">=</span><span class="m">0</span> ./prog
+<h1 id="valgrind">
+<span class="hash">#</span>
+<a href="#valgrind" class="header-link">Valgrind</a>
+</h1>
+<p>It&rsquo;s <a href="http://billiob.net/blog/20140330_vgdb.html">possible</a> to load a <abbr title="GNU Debugger">GDB</abbr> session inside of a valgrind session.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>valgrind --vgdb<span class="o">=</span>yes --vgdb-error<span class="o">=</span><span class="m">0</span> ./prog
 <span class="nv">$ </span>gdb ./prog
 <span class="o">(</span>gdb<span class="o">)</span> target remote <span class="p">|</span> vgdb
 </code></pre></figure>
-<p>It’s possible to then send commands to valgrind from within <abbr title="GNU Debugger">GDB</abbr> using the <code>monitor</code> command. The <code>leak_check</code> valgrind command for example can be used when paused at a <abbr title="GNU Debugger">GDB</abbr> breakpoint to manually perform a memory leak check. Other useful valgrind commands are <code>block_list</code> and <code>who_points_at</code>.</p>
-<figure class="codeblock"><pre><code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">monitor</span> help
+<p>It&rsquo;s possible to then send commands to valgrind from within <abbr title="GNU Debugger">GDB</abbr> using the <code>monitor</code> command. The <code>leak_check</code> valgrind command for example can be used when paused at a <abbr title="GNU Debugger">GDB</abbr> breakpoint to manually perform a memory leak check. Other useful valgrind commands are <code>block_list</code> and <code>who_points_at</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-gdb"><span class="kt">(gdb)</span> <span class="nb">monitor</span> help
 <span class="kt">(gdb)</span> <span class="nb">breakpoint</span> <span class="mh">6</span>
 <span class="kt">(gdb)</span> <span class="nb">monitor</span> leak_check
 </code></pre></figure></div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 18, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/gdb.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/0920631" title="some more commands">0920631</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/gdb.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -490,7 +774,50 @@ type <span class="o">=</span> int
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/gdb.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/gdb';
+  var disqus_url = 'http://blaenkdenum.com/notes/gdb';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/gdb'
+          this.page.url = 'http://blaenkdenum.com/notes/gdb'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

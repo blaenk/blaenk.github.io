@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,63 +72,149 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/posts/dots/"><span>Dots</span></a></h2>
-  <div class="entry-content"><nav id="toc" class="right-toc"><h3>Contents</h3><ol><li><a href="#file-structure">File Structure</a></li><li><a href="#deployment">Deployment</a></li><li><a href="#tmux">tmux</a></li><li><a href="#zsh">zsh</a><ol><li><a href="#aliases">Aliases</a></li><li><a href="#completions">Completions</a></li><li><a href="#functions">Functions</a></li><li><a href="#cursors">Cursors</a></li><li><a href="#misc">Misc</a></li></ol></li><li><a href="#vim">vim</a></li><li><a href="#conclusion">Conclusion</a></li></ol></nav>
-<p>It’s become a common practice to keep one’s <a href="http://en.wikipedia.org/wiki/Dotfile#Unix_and_Unix-like_environments">dotfiles</a> version controlled, oftentimes mirrored somewhere like Github. A lot of people start their own dotfile collection based (forked) off of someone else’, but that never felt right to me. In my view, dotfiles are personal, sensitive configuration files that are explicitly defined to one’s own taste. It never made sense to me to want to use a giant wad of files with who knows what configuration directives in there. It seemed a lot like <a href="http://en.wikipedia.org/wiki/Cargo_cult_programming">cargo culting</a> to me.</p>
-<p>I do enjoy looking at other peoples’ dotfiles from time to time to see what I can pick out and adapt to my own, but otherwise I like to grow mine organically—that is, only configure what I need, as I need it—to ensure that I really understand my configuration. As a result, I created <a href="https://github.com/blaenk/dots">my own dotfiles</a> from scratch.</p>
-<h2 id="file-structure">File Structure</h2>
-<p>The file structure is pretty simple. There’s a folder for every type of dotfile collection, for example: zsh, git, vim, and so on. Each of these can contain hidden files and folders that can be deployed by the deploy script.</p>
-<h2 id="deployment">Deployment</h2>
-<p>My deploy script is called <code>sprinkle</code>, which is a heavily modified fork of the deploy script from <a href="https://github.com/holman/dotfiles">holman’s dotfiles</a>. I chose this script to start from because I liked that it was a shell script, unlike most other deploy scripts I had seen which were Rakefiles, naturally requiring Ruby to be installed on the system before being able to deploy the dotfiles.</p>
-<p>I also liked that the deploy script had a naming convention such that files and folders with a <code>.symlink</code> suffix were those that were deployed. However, I didn’t like that vim and Github wouldn’t detect the filetype—and therefore wouldn’t highlight—due to the misleading file extension. So I ended up heavily customizing the script.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/posts/dots"><span>Dots</span></a></h2>
+  <div class="entry-content"><nav id="toc"class="right-toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#file-structure">File Structure</a>
+</li>
+<li>
+<a href="#deployment">Deployment</a>
+</li>
+<li>
+<a href="#tmux">tmux</a>
+</li>
+<li>
+<a href="#zsh">zsh</a>
+<ol>
+<li>
+<a href="#aliases">Aliases</a>
+</li>
+<li>
+<a href="#completions">Completions</a>
+</li>
+<li>
+<a href="#functions">Functions</a>
+</li>
+<li>
+<a href="#cursors">Cursors</a>
+</li>
+<li>
+<a href="#misc">Misc</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#vim">vim</a>
+</li>
+<li>
+<a href="#conclusion">Conclusion</a>
+</li>
+</ol>
+</nav>
+
+<p>It&rsquo;s become a common practice to keep one&rsquo;s <a href="http://en.wikipedia.org/wiki/Dotfile#Unix_and_Unix-like_environments">dotfiles</a> version controlled, oftentimes mirrored somewhere like Github. A lot of people start their own dotfile collection based (forked) off of someone else', but that never felt right to me. In my view, dotfiles are personal, sensitive configuration files that are explicitly defined to one&rsquo;s own taste. It never made sense to me to want to use a giant wad of files with who knows what configuration directives in there. It seemed a lot like <a href="http://en.wikipedia.org/wiki/Cargo_cult_programming">cargo culting</a> to me.</p>
+
+<p>I do enjoy looking at other peoples' dotfiles from time to time to see what I can pick out and adapt to my own, but otherwise I like to grow mine organically&mdash;that is, only configure what I need, as I need it&mdash;to ensure that I really understand my configuration. As a result, I created <a href="https://github.com/blaenk/dots">my own dotfiles</a> from scratch.</p>
+<h2 id="file-structure">
+<span class="hash">#</span>
+<a href="#file-structure" class="header-link">File Structure</a>
+</h2>
+<p>The file structure is pretty simple. There&rsquo;s a folder for every type of dotfile collection, for example: zsh, git, vim, and so on. Each of these can contain hidden files and folders that can be deployed by the deploy script.</p>
+<h2 id="deployment">
+<span class="hash">#</span>
+<a href="#deployment" class="header-link">Deployment</a>
+</h2>
+<p>My deploy script is called <code>sprinkle</code>, which is a heavily modified fork of the deploy script from <a href="https://github.com/holman/dotfiles">holman&rsquo;s dotfiles</a>. I chose this script to start from because I liked that it was a shell script, unlike most other deploy scripts I had seen which were Rakefiles, naturally requiring Ruby to be installed on the system before being able to deploy the dotfiles.</p>
+
+<p>I also liked that the deploy script had a naming convention such that files and folders with a <code>.symlink</code> suffix were those that were deployed. However, I didn&rsquo;t like that vim and Github wouldn&rsquo;t detect the filetype&mdash;and therefore wouldn&rsquo;t highlight&mdash;due to the misleading file extension. So I ended up heavily customizing the script.</p>
+
 <p>Now, instead of the <code>.symlink</code>-suffix naming convention, those files and folders that should be deployed are themselves hidden. This allows vim, Github, and others to detect the file type and provide highlighting. Running the deploy script for the first time yields something like this:</p>
+
 <p><img class="center" src="/images/posts/dots/deploy.png"></p>
-<p>My zsh files have an alias for the sprinkle script so that it can be run from anywhere, though in this case I was already in my dots directory. Files that haven’t been deployed are immediately deployed (symlinked) unless there’s an existing file in the destination. In that case, there are options to backup, overwrite, or remove (without deploying) the existing file, as well as skip that file altogether.</p>
+
+<p>My zsh files have an alias for the sprinkle script so that it can be run from anywhere, though in this case I was already in my dots directory. Files that haven&rsquo;t been deployed are immediately deployed (symlinked) unless there&rsquo;s an existing file in the destination. In that case, there are options to backup, overwrite, or remove (without deploying) the existing file, as well as skip that file altogether.</p>
+
 <p>These commands are entered when prompted by simply entering the first letter of the action, i.e. <code>o</code> for overwrite. A capitalized letter performs that action for all remaining files as well. This is what the prompt looks like:</p>
+
 <p><img class="center" src="/images/posts/dots/prompt.png"></p>
-<h2 id="tmux">tmux</h2>
-<p>My tmux configuration is pretty simple I think. I keep the bind at <code>C-b</code> though it kind of interferes with <code>C-f​/C-b</code> scrolling, in which case there’s a bit of lag for <code>C-b</code> unless I tap it twice. Instead I’m getting used to scrolling with <code>C-u​/C-d</code> though it’s pretty disorienting starting out.</p>
+<h2 id="tmux">
+<span class="hash">#</span>
+<a href="#tmux" class="header-link">tmux</a>
+</h2>
+<p>My tmux configuration is pretty simple I think. I keep the bind at <code>C-b</code> though it kind of interferes with <code>C-f/C-b</code> scrolling, in which case there&rsquo;s a bit of lag for <code>C-b</code> unless I tap it twice. Instead I&rsquo;m getting used to scrolling with <code>C-u/C-d</code> though it&rsquo;s pretty disorienting starting out.</p>
+
 <p>My window list is pretty subtle I think. Active windows are underlined and the current window name is emboldened.</p>
+
 <p><img class="center" src="/images/posts/dots/tmux.png"></p>
+
 <p>I have binds for creating new windows with <code>M-n</code> and renaming a window with <code>M-r</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">bind -n M-r command-prompt &#39;rename-window %%&#39;
-bind -n M-n command-prompt -p &quot;Name of new window:&quot; &quot;new-window -n &#39;%%&#39;&quot;</code></pre></figure>
-<p>I also created simple binds for navigating and moving windows around. <code>M-h​/M-l</code> moves to the left and right window respectively, and <code>M-j​/M-k</code> moves the current window left and right, respectively.</p>
-<figure class="codeblock"><pre><code class="highlight language-text"># switch between windows left/right
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">bind -n M-r command-prompt 'rename-window %%'
+bind -n M-n command-prompt -p "Name of new window:" "new-window -n '%%'"
+</code></pre></figure>
+<p>I also created simple binds for navigating and moving windows around. <code>M-h/M-l</code> moves to the left and right window respectively, and <code>M-j/M-k</code> moves the current window left and right, respectively.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text"># switch between windows left/right
 bind -n M-h previous-window
 bind -n M-l next-window
 
 # move windows left/right
 bind -n M-j swap-window -t -1
-bind -n M-k swap-window -t +1</code></pre></figure>
-<h2 id="zsh">zsh</h2>
-<p>My zsh configuration files are created from scratch as well, I don’t use something like oh-my-zsh for the same reasons that I stated in the opening paragraph. I do use <a href="https://github.com/zsh-users/antigen">antigen</a>, which is similar to <a href="https://github.com/gmarik/Vundle.vim">vundle</a> but for zsh, mainly to avoid having to either keep stale snapshots or juggle git submodules of zsh plugins I use. I only use two zsh plugins: <a href="https://github.com/zsh-users/zsh-syntax-highlighting">syntax-highlighting</a> and extra/community <a href="https://github.com/zsh-users/zsh-completions">completions</a>.</p>
+bind -n M-k swap-window -t +1
+</code></pre></figure><h2 id="zsh">
+<span class="hash">#</span>
+<a href="#zsh" class="header-link">zsh</a>
+</h2>
+<p>My zsh configuration files are created from scratch as well, I don&rsquo;t use something like oh-my-zsh for the same reasons that I stated in the opening paragraph. I do use <a href="https://github.com/zsh-users/antigen">antigen</a>, which is similar to <a href="https://github.com/gmarik/Vundle.vim">vundle</a> but for zsh, mainly to avoid having to either keep stale snapshots or juggle git submodules of zsh plugins I use. I only use two zsh plugins: <a href="https://github.com/zsh-users/zsh-syntax-highlighting">syntax-highlighting</a> and extra/community <a href="https://github.com/zsh-users/zsh-completions">completions</a>.</p>
+
 <p>I then have a separate zsh sub-folder that stores zsh files that configure different aspects of zsh, such as aliases, completions, functions, bindings, and so on.</p>
-<h3 id="aliases">Aliases</h3>
+<h3 id="aliases">
+<span class="hash">#</span>
+<a href="#aliases" class="header-link">Aliases</a>
+</h3>
 <p>One of my most used aliases is <code>:q</code> which is simply aliased to <code>exit</code>, making it very natural for me to exit shells. If <code>pacman</code> is present on the system, I create many aliases to different kinds of <code>pacman</code> commands, such as <code>pacup</code> for <code>pacman -Syu</code>, <code>pacin</code> for <code>pacman -S</code>, and so on.</p>
-<h3 id="completions">Completions</h3>
-<p>There’s nothing really special about my completions configuration. I do set it up to use my <code>dircolors</code> setup, so that the completion menu uses the correct colors for the different kinds of files. I also set it up for case-insensitive substring completion, so that I can type a bit of text from anywhere in the filename, regardless of case, and have it tab-complete correctly.</p>
-<h3 id="functions">Functions</h3>
+<h3 id="completions">
+<span class="hash">#</span>
+<a href="#completions" class="header-link">Completions</a>
+</h3>
+<p>There&rsquo;s nothing really special about my completions configuration. I do set it up to use my <code>dircolors</code> setup, so that the completion menu uses the correct colors for the different kinds of files. I also set it up for case-insensitive substring completion, so that I can type a bit of text from anywhere in the filename, regardless of case, and have it tab-complete correctly.</p>
+<h3 id="functions">
+<span class="hash">#</span>
+<a href="#functions" class="header-link">Functions</a>
+</h3>
 <p>I do have a few functions I find to be very useful. The first is one that opens up a man-page directly to a given flag, i.e. <code>manf ls -l</code> opens the man-page for <code>less</code> directly to the point that describes the <code>-l</code> switch.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="k">function</span> manf<span class="o">()</span> <span class="o">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="k">function</span> manf<span class="o">()</span> <span class="o">{</span>
   man -P <span class="s2">&quot;less -p \&quot;^ +</span><span class="nv">$2</span><span class="s2">\&quot;&quot;</span> <span class="nv">$1</span>
 <span class="o">}</span>
 </code></pre></figure>
 <p>Another one of note is one I found on stackoverflow which basically prepends a column to <code>ls -lh</code> which contains the permissions of the files in octal/numerical form. I let this take the place of the regular <code>ls</code> command, which can still be run for whatever reason by prepending it with <code>command</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="k">function</span> ls<span class="o">()</span> <span class="o">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="k">function</span> ls<span class="o">()</span> <span class="o">{</span>
   <span class="nb">command </span>ls -lh --color<span class="o">=</span>always <span class="nv">$@</span> <span class="p">|</span><span class="se">\</span>
     awk <span class="s1">&#39;{k=0;for(i=0;i&lt;=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)\</span>
 <span class="s1">         *2^(8-i));if(k)printf(&quot;%0o &quot;,k);print}&#39;</span>
 <span class="o">}</span>
 </code></pre></figure>
 <p>Example output:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">total 32K
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">total 32K
 755 drwxr-xr-x 2 jorge users 4.0K Feb 15 20:05 git
 644 -rw-r--r-- 1 jorge users    0 Jan 27  2013 README.md
-755 drwxr-xr-x 2 jorge users 4.0K Feb 13 00:54 ruby</code></pre></figure>
-<p>I also created a wrapper around the built-in <code>cd</code> function that accepts parameters of the form <code>b.​.​.</code> where the number of dots is arbitrary. If the wrapper detects a parameter of that form, it removes the <code>b</code> prefix and expands each of the dots to <code>..​/</code>. This makes for very quick navigation up an arbitrary amount of directories. The actual change-directory work is delegated to the original built-in <code>cd</code> function:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="k">function</span> <span class="nb">cd</span><span class="o">()</span> <span class="o">{</span>
+755 drwxr-xr-x 2 jorge users 4.0K Feb 13 00:54 ruby
+</code></pre></figure>
+<p>I also created a wrapper around the built-in <code>cd</code> function that accepts parameters of the form <code>b...</code> where the number of dots is arbitrary. If the wrapper detects a parameter of that form, it removes the <code>b</code> prefix and expands each of the dots to <code>../</code>. This makes for very quick navigation up an arbitrary amount of directories. The actual change-directory work is delegated to the original built-in <code>cd</code> function:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="k">function</span> <span class="nb">cd</span><span class="o">()</span> <span class="o">{</span>
   emulate -LR zsh
 
   <span class="k">if</span> <span class="o">[[</span> <span class="nv">$1</span> <span class="o">==</span> <span class="s1">&#39;b.&#39;</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
@@ -139,23 +225,35 @@ bind -n M-k swap-window -t +1</code></pre></figure>
 <span class="o">}</span>
 </code></pre></figure>
 <p>Example usage:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash">some/dir/here <span class="nv">$ </span><span class="nb">cd </span>b..
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash">some/dir/here <span class="nv">$ </span><span class="nb">cd </span>b..
 some/ <span class="nv">$ </span><span class="c"># went up two directories</span>
 </code></pre></figure>
-<p>I also have a function for listing the pacman orphan packages on my system, i.e. those that aren’t required by any other package. I found a command for doing this but it just dumped a list of every package, so I modified it to also list the description of the package. This requires the <code>expac</code> package, a utility to query the pacman database:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="k">function</span> pacorphans<span class="o">()</span> <span class="o">{</span>
+<p>I also have a function for listing the pacman orphan packages on my system, i.e. those that aren&rsquo;t required by any other package. I found a command for doing this but it just dumped a list of every package, so I modified it to also list the description of the package. This requires the <code>expac</code> package, a utility to query the pacman database:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="k">function</span> pacorphans<span class="o">()</span> <span class="o">{</span>
   expac <span class="s2">&quot;%n:%N:%d&quot;</span> -Q <span class="k">$(</span>expac <span class="s2">&quot;%n %G&quot;</span> <span class="p">|</span> grep -v <span class="s1">&#39; base&#39;</span><span class="k">)</span> <span class="p">|</span><span class="se">\</span>
     awk -F: <span class="s1">&#39;$2 == &quot;&quot; {printf &quot;%s: %s\n&quot;, $1, $3}&#39;</span>
 <span class="o">}</span>
 </code></pre></figure>
 <p>Example output:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">yasm: A rewrite of NASM to allow for multiple syntax supported (NASM, TASM, GAS, etc.)
-zsh: A very advanced and programmable command interpreter (shell) for UNIX</code></pre></figure>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">yasm: A rewrite of NASM to allow for multiple syntax supported (NASM, TASM, GAS, etc.)
+zsh: A very advanced and programmable command interpreter (shell) for UNIX
+</code></pre></figure>
 <p>Finally, another function I recently created that I find very useful is one to fetch my external IP address and both copy it to my clipboard and print it out to the terminal. This is very useful because my IP address does change from time to time, usually if I restart my router. Considering that I host a <a href="http://mumble.sourceforge.net/">mumble</a> and <a href="http://syncplay.pl/">syncplay</a> server, whenever this happens I have to inform my friends of the change, which usually requires me to manually determine my external IP by going to some website that provides the information.</p>
+
 <p>So I decided to create a command that gets the IP address from <a href="http://ipinfo.io">ipinfo.io</a>, copies the response to my clipboard, and also prints it out to the terminal.</p>
-<p>In the past, one would use a command such as <code>ifconfig</code> to list the computer’s local addresses. Recently there has been a shift to use the new <a href="http://man7.org/linux/man-pages/man8/ip.8.html"><code>ip</code></a> command which houses many sub-commands such as <code>ip addr</code> which is now the preferred method to list addresses.</p>
-<p>So what I did was create a wrapper for this <code>ip</code> command and create a fake sub-command called <code>get</code> which performs this task of retrieving my external IP address. If the sub-command <code>get</code> wasn’t provided, then the wrapper delegates the work to the actual <code>ip</code> command, if it exists.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="k">function</span> ip<span class="o">()</span> <span class="o">{</span>
+
+<p>In the past, one would use a command such as <code>ifconfig</code> to list the computer&rsquo;s local addresses. Recently there has been a shift to use the new <a href="http://man7.org/linux/man-pages/man8/ip.8.html"><code>ip</code></a> command which houses many sub-commands such as <code>ip addr</code> which is now the preferred method to list addresses.</p>
+
+<p>So what I did was create a wrapper for this <code>ip</code> command and create a fake sub-command called <code>get</code> which performs this task of retrieving my external IP address. If the sub-command <code>get</code> wasn&rsquo;t provided, then the wrapper delegates the work to the actual <code>ip</code> command, if it exists.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="k">function</span> ip<span class="o">()</span> <span class="o">{</span>
   emulate -LR zsh
 
   <span class="k">if</span> <span class="o">[[</span> <span class="nv">$1</span> <span class="o">==</span> <span class="s1">&#39;get&#39;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
@@ -171,13 +269,19 @@ zsh: A very advanced and programmable command interpreter (shell) for UNIX</code
 <span class="o">}</span>
 </code></pre></figure>
 <p>Example output:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash">λ ~/some/place
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash">λ ~/some/place
 » ip get
 copied 123.45.678.90 to clipboard
-</code></pre></figure>
-<h3 id="cursors">Cursors</h3>
-<p>I setup mode-aware cursors in zsh, to better emphasize when I’m in vi mode and not. This is pretty straightforward, simply sending the correct terminal control sequence:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="k">function</span> zle-keymap-select <span class="o">{</span>
+</code></pre></figure><h3 id="cursors">
+<span class="hash">#</span>
+<a href="#cursors" class="header-link">Cursors</a>
+</h3>
+<p>I setup mode-aware cursors in zsh, to better emphasize when I&rsquo;m in vi mode and not. This is pretty straightforward, simply sending the correct terminal control sequence:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="k">function</span> zle-keymap-select <span class="o">{</span>
   zle reset-prompt
 
   <span class="k">if</span> <span class="o">[[</span> <span class="nv">$KEYMAP</span> <span class="o">=</span> <span class="s2">&quot;vicmd&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
@@ -195,41 +299,67 @@ zle -N zle-keymap-select
 zle -N zle-line-finish
 </code></pre></figure>
 <p>This works perfectly fine in urxvt, but tmux must be configured to allow this because otherwise the setting of the cursor color above by zsh bypasses tmux, applying to tmux as a whole. This means that if one tmux window is in vi mode, the cursor will change, but if one then switches to another tmux window that is in insert mode, the cursor color for that window will remain the same as in the one in vi-mode. That is, the changed cursor color applies to every screen in tmux.</p>
-<p>tmux did implement functionality for it to remember the cursor color on a per-window basis back in 2011, but this is only configured out of the box for xterm, since every terminal’s control sequences may vary.</p>
-<p>The cursor color is inherently global, so what happens is that tmux remembers the cursor color for every window. When switching to another tmux window, tmux checks if that window’s cursor color had been previously changed. If so, tmux sets the global cursor color to that window’s saved cursor color. Otherwise, it means that that window’s cursor color hasn’t been changed, in which case it needs to reset the cursor color to the “default” cursor color, in case the previous window did change the color.</p>
-<p>For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the “default” color.</p>
-<p>The sequence for setting the color is the same in xterm and urxvt: <code>\033]12;color\007</code>. However, there is no sequence I know of—after looking at <code>man 7 urxvt</code>—for resetting the cursor color to the default cursor color. For xterm, it is <code>\033]112\007</code>. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).</p>
-<figure class="codeblock"><pre><code class="highlight language-text">set -g terminal-overrides &#39;,rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007&#39;</code></pre></figure>
-<h3 id="misc">Misc</h3>
-<p>When one runs a command that doesn’t exist, it generally gives an error pointing out that fact. However, the <code>pkgfile</code> package provides a zsh script that, when sourced, provides information about which package such a command may be found in.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="o">[[</span> -e /usr/share/doc/pkgfile/command-not-found.zsh <span class="o">]]</span> <span class="o">&amp;&amp;</span><span class="se">\</span>
+
+<p>tmux did implement functionality for it to remember the cursor color on a per-window basis back in 2011, but this is only configured out of the box for xterm, since every terminal&rsquo;s control sequences may vary.</p>
+
+<p>The cursor color is inherently global, so what happens is that tmux remembers the cursor color for every window. When switching to another tmux window, tmux checks if that window&rsquo;s cursor color had been previously changed. If so, tmux sets the global cursor color to that window&rsquo;s saved cursor color. Otherwise, it means that that window&rsquo;s cursor color hasn&rsquo;t been changed, in which case it needs to reset the cursor color to the &ldquo;default&rdquo; cursor color, in case the previous window did change the color.</p>
+
+<p>For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the &ldquo;default&rdquo; color.</p>
+
+<p>The sequence for setting the color is the same in xterm and urxvt: <code>\033]12;color\007</code>. However, there is no sequence I know of&mdash;after looking at <code>man 7 urxvt</code>&mdash;for resetting the cursor color to the default cursor color. For xterm, it is <code>\033]112\007</code>. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">set -g terminal-overrides ',rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007'
+</code></pre></figure><h3 id="misc">
+<span class="hash">#</span>
+<a href="#misc" class="header-link">Misc</a>
+</h3>
+<p>When one runs a command that doesn&rsquo;t exist, it generally gives an error pointing out that fact. However, the <code>pkgfile</code> package provides a zsh script that, when sourced, provides information about which package such a command may be found in.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="o">[[</span> -e /usr/share/doc/pkgfile/command-not-found.zsh <span class="o">]]</span> <span class="o">&amp;&amp;</span><span class="se">\</span>
   <span class="nb">source</span> /usr/share/doc/pkgfile/command-not-found.zsh
 </code></pre></figure>
 <p>Example output:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash">λ ~/some/place
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash">λ ~/some/place
 » clojure
 clojure may be found in the following packages:
   community/clojure 1.5.1-2     /usr/bin/clojure
 </code></pre></figure>
 <p>I also configured <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh">highlighting</a> for the <code>less</code> pager.</p>
+
 <p><img class="center" src="/images/posts/dots/less.png"></p>
-<p>My prompt is pretty involved and it’s discussed more in-depth in my <a href="/posts/terminal-customization/#prompt">customization</a> post, though it’s slightly outdated. See my dotfiles for the latest configuration.</p>
+
+<p>My prompt is pretty involved and it&rsquo;s discussed more in-depth in my <a href="/posts/terminal-customization/#prompt">customization</a> post, though it&rsquo;s slightly outdated. See my dotfiles for the latest configuration.</p>
+
 <p>One noteworthy thing however is that I highlight the path separator in a subtle cyan.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">SLASH</span><span class="o">=</span><span class="s2">&quot;%{</span><span class="nv">$fg</span><span class="s2">[cyan]%}/%{</span><span class="nv">$reset_color</span><span class="s2">%}&quot;</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">SLASH</span><span class="o">=</span><span class="s2">&quot;%{</span><span class="nv">$fg</span><span class="s2">[cyan]%}/%{</span><span class="nv">$reset_color</span><span class="s2">%}&quot;</span>
 <span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${${</span><span class="nv">PWD</span><span class="p">/#</span><span class="nv">$HOME</span><span class="p">/~</span><span class="si">}</span><span class="p">//</span><span class="se">\/</span><span class="p">/</span><span class="nv">$SLASH</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></figure>
 <p>My vi-binds are pretty straightforward. One noteworthy thing is that I bound <code>_</code> and <code>g_</code> to go to the beginning and end of line, respectively, to reflect what I use in vim.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash">bindkey -M vicmd <span class="s2">&quot;_&quot;</span> beginning-of-line
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash">bindkey -M vicmd <span class="s2">&quot;_&quot;</span> beginning-of-line
 bindkey -M vicmd <span class="s2">&quot;g_&quot;</span> end-of-line
 </code></pre></figure>
 <p>I also created some binds specific to the completion menu. I bound <code>shift-tab</code> to go in the reverse direction of <code>tab</code>. I also changed <code>Enter</code> to accept and enter the command, instead of the default, which only accepts the completion and allows the user to continue typing the command. Instead, I bound <code>C-g</code> to perform the accept-only:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash">bindkey -M menuselect <span class="s2">&quot;^M&quot;</span> .accept-line
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash">bindkey -M menuselect <span class="s2">&quot;^M&quot;</span> .accept-line
 bindkey -M menuselect <span class="s2">&quot;^G&quot;</span> accept-line
 bindkey -M menuselect <span class="s2">&quot;^[[Z&quot;</span> reverse-menu-complete
-</code></pre></figure>
-<h2 id="vim">vim</h2>
-<p>My vim configuration is discussed in other posts, such as <a href="/posts/a-simpler-vim-statusline/">this one</a>. Some noteworthy things are my mode-aware cursors which you can see <a href="/posts/a-simpler-vim-statusline/#redesign">here</a>, where my statusline is also discussed. They’re basically color-coded based on the mode. I also made all of the cursors be the block cursor, rather than I-beam for insert mode as is default. I also disabled cursor blinking:</p>
-<figure class="codeblock"><pre><code class="highlight language-vim"><span class="k">set</span> <span class="nb">gcr</span><span class="p">=</span><span class="k">a</span>:block
+</code></pre></figure><h2 id="vim">
+<span class="hash">#</span>
+<a href="#vim" class="header-link">vim</a>
+</h2>
+<p>My vim configuration is discussed in other posts, such as <a href="/posts/a-simpler-vim-statusline/">this one</a>. Some noteworthy things are my mode-aware cursors which you can see <a href="/posts/a-simpler-vim-statusline/#redesign">here</a>, where my statusline is also discussed. They&rsquo;re basically color-coded based on the mode. I also made all of the cursors be the block cursor, rather than I-beam for insert mode as is default. I also disabled cursor blinking:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-vim"><span class="k">set</span> <span class="nb">gcr</span><span class="p">=</span><span class="k">a</span>:block
 
 <span class="c">&quot; mode aware cursors</span>
 <span class="k">set</span> <span class="nb">gcr</span><span class="p">+=</span><span class="k">o</span>:hor50<span class="p">-</span>Cursor
@@ -247,14 +377,18 @@ bindkey -M menuselect <span class="s2">&quot;^[[Z&quot;</span> reverse-menu-comp
 <span class="k">hi</span> CommandCursor ctermfg<span class="p">=</span><span class="m">15</span> guifg<span class="p">=</span><span class="mh">#fdf6e3</span> ctermbg<span class="p">=</span><span class="m">33</span>  guibg<span class="p">=</span><span class="mh">#268bd2</span>
 </code></pre></figure>
 <p>I also enable the cursorline only on the current window:</p>
-<figure class="codeblock"><pre><code class="highlight language-vim">augroup <span class="nb">cursorline</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-vim">augroup <span class="nb">cursorline</span>
   autocmd<span class="p">!</span>
   autocmd <span class="nb">VimEnter</span><span class="p">,</span><span class="nb">WinEnter</span><span class="p">,</span><span class="nb">BufWinEnter</span> * <span class="k">setlocal</span> <span class="nb">cursorline</span>
   autocmd <span class="nb">WinLeave</span> * <span class="k">setlocal</span> <span class="nb">nocursorline</span>
 augroup END
 </code></pre></figure>
-<p>Instead of letting CtrlP generate the list of files, which can be slow, I delegate this work to <code>find</code> and <code>dir</code> on unix and windows respectively. If we’re within a git repository, then I take advantage of <code>git ls-files</code> to do this instead.</p>
-<figure class="codeblock"><pre><code class="highlight language-vim"><span class="k">let</span> s:ctrlp_fallback <span class="p">=</span>
+<p>Instead of letting CtrlP generate the list of files, which can be slow, I delegate this work to <code>find</code> and <code>dir</code> on unix and windows respectively. If we&rsquo;re within a git repository, then I take advantage of <code>git ls-files</code> to do this instead.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-vim"><span class="k">let</span> s:ctrlp_fallback <span class="p">=</span>
   \ has<span class="p">(</span><span class="s1">&#39;win32&#39;</span><span class="p">)</span> ?
     \ <span class="s1">&#39;dir %s /-n /b /s /a-d&#39;</span> :
     \ <span class="s1">&#39;find %s -type f&#39;</span>
@@ -264,14 +398,23 @@ augroup END
   \ <span class="s1">&#39;git --git-dir=%s/.git ls-files -co --exclude-standard&#39;</span><span class="p">,</span>
   \ s:ctrlp_fallback
   \ ]
-</code></pre></figure>
-<h2 id="conclusion">Conclusion</h2>
-<p>All in all it’s a pretty simple dotfiles system I think. Feel free to take a look through it to see what you may like to adapt to your own configuration.</p></div>
+</code></pre></figure><h2 id="conclusion">
+<span class="hash">#</span>
+<a href="#conclusion" class="header-link">Conclusion</a>
+</h2>
+<p>All in all it&rsquo;s a pretty simple dotfiles system I think. Feel free to take a look through it to see what you may like to adapt to your own configuration.</p>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 16, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/dots.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/4e11f4d" title="use em dashes correctly">4e11f4d</a></span></div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/linux/">Linux</a></div>
-    
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/dots.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/linux">Linux</a></div>
   </div>
 </article>
 <section id="comment">
@@ -282,6 +425,7 @@ augroup END
 
 
 
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -300,12 +444,30 @@ augroup END
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/posts/dots.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
 
 <!-- disqus -->
 <script async="true" type="text/javascript">
   var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/posts/dots/';
-  var disqus_url = 'http://blaenkdenum.com/posts/dots/';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/dots';
+  var disqus_url = 'http://blaenkdenum.com/posts/dots';
   var disqus_script = 'embed.js';
 
   (function () {
@@ -319,8 +481,8 @@ augroup END
       DISQUS.reset({
         reload: true,
         config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/posts/dots/'
-          this.page.url = 'http://blaenkdenum.com/posts/dots/'
+          this.page.identifier = 'http://blaenkdenum.com/posts/dots'
+          this.page.url = 'http://blaenkdenum.com/posts/dots'
         }
       });
     });

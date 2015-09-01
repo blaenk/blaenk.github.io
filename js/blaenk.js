@@ -48,17 +48,6 @@ $(function() {
   toggleForm($('#search_btn'), $('.desk_search'));
 
   window.refresh = function () {
-    // header links
-    $('.entry-content').children('h1, h2, h3, h4, h5').each(function() {
-      var $id = $(this).attr('id');
-      var $text = $(this).text();
-
-      $(this)
-        .html('')
-        .prepend('<span class="hash">#</span>')
-        .append('<a href="#' + $id + '" class="header-link">' + $text + '</a>');
-    });
-
     $('.collapse').not(function() {
       return "#" + $(this).attr('id') == window.location.hash;
     }).next('.collapsible').hide();

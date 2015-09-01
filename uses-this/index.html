@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,40 +72,89 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="page">
-  <div class="entry-content"><nav id="toc" class="right-toc"><h3>Contents</h3><ol><li><a href="#site">Site</a></li><li><a href="#operating-system">Operating System</a><ol><li><a href="#windows">Windows</a></li><li><a href="#linux">Linux</a></li><li><a href="#mac-os-x">Mac OS X</a></li></ol></li><li><a href="#editor">Editor</a><ol><li><a href="#looks">Looks</a></li><li><a href="#plugins">Plugins</a></li></ol></li><li><a href="#development-tools">Development Tools</a></li><li><a href="#miscellaneous">Miscellaneous</a></li><li><a href="#hardware">Hardware</a><ol><li><a href="#core">Core</a></li><li><a href="#peripherals">Peripherals</a></li></ol></li></ol></nav>
+    
+        <article class="post">
+  <h2 class="title"><a href="/uses-this"><span>Uses This</span></a></h2>
+  <div class="entry-content"><ul>
+<li>toc</li>
+</ul>
+
 <p>This page is setup in the spirit of the website <a href="http://usesthis.com/">of the same name</a>. This page is here to list the specific tools I use at any given moment.</p>
-<h2 id="site">Site</h2>
+<h2 id="site">
+<span class="hash">#</span>
+<a href="#site" class="header-link">Site</a>
+</h2>
 <p>This site is built with <a href="http://jaspervdj.be/hakyll/">Hakyll</a>, the static site generator written in Haskell. The site and its source code are hosted <a href="https://github.com/blaenk/blaenk.github.io">on Github</a>. The site utilizes <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> for converting Markdown (and any of the various other formats Pandoc supports), <a href="http://sass-lang.com/">SCSS</a> for processing stylesheets, <a href="http://pygments.org/">Pygments</a> for syntax highlighting, and <a href="http://www.mathjax.org/">MathJax</a> for math notation.</p>
-<p>It is <a href="/tags/hakyll/">heavily modified</a> from plain Hakyll, although that’s more or less the point. Hakyll is more of a library for static site generation which one employs how they see fit, rather than a framework that is worked under. I created various Pandoc <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax tree</a> (<abbr title="Abstract Syntax Tree">AST</abbr>) transformers to implement features such as table of contents generation and pygments syntax highlighting integration. I also implemented a Haskell compiler for automatic abbreviation substitution. Perhaps best of all, I also <a href="/posts/live-editing-with-hakyll/">implemented live editing</a>, where my changes show up instantly in my browser as soon as I save the file—which has completely changed the way I write content for this site. This is accomplished via Haskell STM Channels piped to HTML5 WebSockets.</p>
+
+<p>It is <a href="/tags/hakyll/">heavily modified</a> from plain Hakyll, although that&rsquo;s more or less the point. Hakyll is more of a library for static site generation which one employs how they see fit, rather than a framework that is worked under. I created various Pandoc <a href="AST">abstract syntax tree</a> transformers to implement features such as table of contents generation and pygments syntax highlighting integration. I also implemented a Haskell compiler for automatic abbreviation substitution. Perhaps best of all, I also <a href="/posts/live-editing-with-hakyll/">implemented live editing</a>, where my changes show up instantly in my browser as soon as I save the file&mdash;which has completely changed the way I write content for this site. This is accomplished via Haskell STM Channels piped to HTML5 WebSockets.</p>
+
 <p>I originally started this site with <a href="http://jekyllrb.com/">Jekyll</a>, but I had been wanting to switch to Hakyll so that I could keep my knowledge of Haskell fresh. This seemed like the perfect project to use it for. I feel that Haskell maps to the problem very appropriately, especially with amazing tools like Pandoc and Hakyll. The fact that Haskell is compiled also makes for a very appreciable difference in speed.</p>
+
 <p>I publish a lot of my <a href="/notes/">notes</a> to this site.</p>
-<h2 id="operating-system">Operating System</h2>
-<p>Exemplifying my belief of non-fanaticism, I have Windows 8, Arch Linux, and Mac OS X 10.8 Mountain Lion installed on my computer. This <a href="http://i.imgur.com/Xa5suXo.jpg">picture</a> shows the custom boot screen I designed which I’m greeted with upon booting. This is not just for show; I actually use each one regularly for different things.</p>
+<h2 id="operating-system">
+<span class="hash">#</span>
+<a href="#operating-system" class="header-link">Operating System</a>
+</h2>
+<p>Exemplifying my belief of non-fanaticism, I have Windows 8, Arch Linux, and Mac OS X 10.8 Mountain Lion installed on my computer. This <a href="http://i.imgur.com/Xa5suXo.jpg">picture</a> shows the custom boot screen I designed which I&rsquo;m greeted with upon booting. This is not just for show; I actually use each one regularly for different things.</p>
+
 <p>The setup consists of SSDs for the OSes and regular HDDs for media. Windows is on a 120 GB SSD and Mac and Linux are on separate 60 GB SSDs. Aside from this I have two 1 TB and one 1.5 TB HDDs for media storage.</p>
-<h3 id="windows">Windows</h3>
+<h3 id="windows">
+<span class="hash">#</span>
+<a href="#windows" class="header-link">Windows</a>
+</h3>
 <p>I go into Windows when friends want to play Windows-only games. I also use it to sync my iPhone with iTunes.</p>
-<h3 id="linux">Linux</h3>
-<p>This is my primary OS. The distribution I have installed is <a href="http://www.archlinux.org/">arch linux</a>, which is my favorite distribution out of the many I’ve used over the years. It offers a compromise between <a href="http://www.linuxfromscratch.org/index.html">LFS</a>/<a href="http://www.gentoo.org/">Gentoo</a> level of flexibility and leanness with very good package management consisting of bleeding-edge packages.</p>
-<p>My preferred desktop environment is <a href="http://en.wikipedia.org/wiki/GNOME">gnome</a>; I don’t feel the need to posture with obscure tiling managers—though I genuinely do enjoy using <a href="http://xmonad.org/">xmonad</a>—I prefer the experience that Gnome provides. I use <a href="https://github.com/fosskers/aura">aura</a> as my <a href="https://wiki.archlinux.org/index.php/Pacman">pacman</a> wrapper for seamless integration with the <a href="https://wiki.archlinux.org/index.php/Arch_User_Repository">AUR</a>. I am very interested in and regularly read about the POSIX standard (<a href="http://en.wikipedia.org/wiki/Single_UNIX_Specification">SUS</a>) and the Linux Userspace Interface.</p>
+<h3 id="linux">
+<span class="hash">#</span>
+<a href="#linux" class="header-link">Linux</a>
+</h3>
+<p>This is my primary OS. The distribution I have installed is <a href="http://www.archlinux.org/">arch linux</a>, which is my favorite distribution out of the many I&rsquo;ve used over the years. It offers a compromise between <a href="http://www.linuxfromscratch.org/index.html">LFS</a>/<a href="http://www.gentoo.org/">Gentoo</a> level of flexibility and leanness with very good package management consisting of bleeding-edge packages.</p>
+
+<p>My preferred desktop environment is <a href="http://en.wikipedia.org/wiki/GNOME">gnome</a>; I don&rsquo;t feel the need to posture with obscure tiling managers&mdash;though I genuinely do enjoy using <a href="http://xmonad.org/">xmonad</a>&mdash;I prefer the experience that Gnome provides. I use <a href="https://github.com/fosskers/aura">aura</a> as my <a href="https://wiki.archlinux.org/index.php/Pacman">pacman</a> wrapper for seamless integration with the <a href="https://wiki.archlinux.org/index.php/Arch_User_Repository">AUR</a>. I am very interested in and regularly read about the POSIX standard (<a href="http://en.wikipedia.org/wiki/Single_UNIX_Specification">SUS</a>) and the Linux Userspace Interface.</p>
+
 <p>I use <a href="http://en.wikipedia.org/wiki/Z_shell">zsh</a> as my shell and <a href="http://en.wikipedia.org/wiki/Rxvt-unicode">urxvt</a> as my terminal. More information on my configuration is available in my <a href="/posts/terminal-customization/">terminal customization</a> post.</p>
-<h3 id="mac-os-x">Mac OS X</h3>
-<p>Mac OS X used to be my general development OS because I really liked OS X’s font rendering, monospace fonts, and UI aesthetic, but that position has been ceded to Linux for its flexibility and for the various applications becoming available on Linux, mainly Netflix, Air Video Server, myihome, Steam, and Spotify. Now OS X mainly stays around in case I’d like to do some iOS development and to make sure my programs and websites work fine on OS X.</p>
-<h2 id="editor">Editor</h2>
-<p>I used to believe that people who boasted about using <a href="http://en.wikipedia.org/wiki/Vim_(text_editor)">vim</a> were just posturing, claiming to work with a seemingly archaic terminal-based editor. However, a friend who first showed me his use of vim through an ssh connection many years ago—when I was barely starting out with software development—managed to show me the level of fluent mastery of text editing that could be achieved with the editor. A few years ago I dedicated time to really learning its vocabulary and customization. The result is that I feel to be in complete control over the text that I’m manipulating. That said, I don’t engage in petty text editor wars nor do I attempt to push it on others. I simply use vim to my benefit.</p>
-<h3 id="looks">Looks</h3>
-<p>The truth is that the default configuration of vim is pretty ugly, and so are most of the themes it comes with. This shouldn’t really matter, as its benefits greatly outweigh anything cosmetic, but it does matter to me. I use a customized version of <a href="http://ethanschoonover.com/solarized">solarized</a> light; I really dislike the dark version. I primarily use gui versions of vim such as gvim or <a href="https://code.google.com/p/macvim/">MacVim</a> for their added benefits (e.g. wider range of bindable keys, more colors, etc.). My configuration files <a href="https://github.com/blaenk/dots/blob/master/vim/gvimrc.ln#L2-L4">hide the menus and toolbars</a>, making for pretty compact windows.</p>
-<h3 id="plugins">Plugins</h3>
-<p>I use <a href="https://github.com/blaenk/dots/blob/master/vim/vim.ln/conf/bundles.vim">many plugins</a>. I believe the most noteworthy are <a href="https://github.com/gmarik/vundle">vundle</a> for plugin management, <a href="http://kien.github.io/ctrlp.vim/">ctrlp</a> for fuzzy file opening/switching, <a href="https://github.com/tpope/vim-surround">surround</a> to easily manipulate text’s surrounding delimiters, <a href="https://github.com/vim-pandoc/vim-pandoc-syntax">vim-pandoc-syntax</a> for Pandoc-flavored markdown highlighting and manipulation, and <a href="http://valloric.github.io/YouCompleteMe/">YouCompleteMe</a> for clang-powered auto-complete.</p>
-<h2 id="development-tools">Development Tools</h2>
+<h3 id="mac-os-x">
+<span class="hash">#</span>
+<a href="#mac-os-x" class="header-link">Mac OS X</a>
+</h3>
+<p>Mac OS X used to be my general development OS because I really liked OS X&rsquo;s font rendering, monospace fonts, and UI aesthetic, but that position has been ceded to Linux for its flexibility and for the various applications becoming available on Linux, mainly Netflix, Air Video Server, myihome, Steam, and Spotify. Now OS X mainly stays around in case I&rsquo;d like to do some iOS development and to make sure my programs and websites work fine on OS X.</p>
+<h2 id="editor">
+<span class="hash">#</span>
+<a href="#editor" class="header-link">Editor</a>
+</h2>
+<p>I used to believe that people who boasted about using <a href="http://en.wikipedia.org/wiki/Vim_(text_editor)">vim</a> were just posturing, claiming to work with a seemingly archaic terminal-based editor. However, a friend who first showed me his use of vim through an ssh connection many years ago&mdash;when I was barely starting out with software development&mdash;managed to show me the level of fluent mastery of text editing that could be achieved with the editor. A few years ago I dedicated time to really learning its vocabulary and customization. The result is that I feel to be in complete control over the text that I&rsquo;m manipulating. That said, I don&rsquo;t engage in petty text editor wars nor do I attempt to push it on others. I simply use vim to my benefit.</p>
+<h3 id="looks">
+<span class="hash">#</span>
+<a href="#looks" class="header-link">Looks</a>
+</h3>
+<p>The truth is that the default configuration of vim is pretty ugly, and so are most of the themes it comes with. This shouldn&rsquo;t really matter, as its benefits greatly outweigh anything cosmetic, but it does matter to me. I use a customized version of <a href="http://ethanschoonover.com/solarized">solarized</a> light; I really dislike the dark version. I primarily use gui versions of vim such as gvim or <a href="https://code.google.com/p/macvim/">MacVim</a> for their added benefits (e.g. wider range of bindable keys, more colors, etc.). My configuration files <a href="https://github.com/blaenk/dots/blob/master/vim/gvimrc.ln#L2-L4">hide the menus and toolbars</a>, making for pretty compact windows.</p>
+<h3 id="plugins">
+<span class="hash">#</span>
+<a href="#plugins" class="header-link">Plugins</a>
+</h3>
+<p>I use <a href="https://github.com/blaenk/dots/blob/master/vim/vim.ln/conf/bundles.vim">many plugins</a>. I believe the most noteworthy are <a href="https://github.com/gmarik/vundle">vundle</a> for plugin management, <a href="http://kien.github.io/ctrlp.vim/">ctrlp</a> for fuzzy file opening/switching, <a href="https://github.com/tpope/vim-surround">surround</a> to easily manipulate text&rsquo;s surrounding delimiters, <a href="https://github.com/vim-pandoc/vim-pandoc-syntax">vim-pandoc-syntax</a> for Pandoc-flavored markdown highlighting and manipulation, and <a href="http://valloric.github.io/YouCompleteMe/">YouCompleteMe</a> for clang-powered auto-complete.</p>
+<h2 id="development-tools">
+<span class="hash">#</span>
+<a href="#development-tools" class="header-link">Development Tools</a>
+</h2>
 <p>My favorite source control system so far is <a href="http://git-scm.com/">git</a>. I regularly spend time learning about its internals. I use <a href="https://github.com/ggreer/the_silver_searcher">ag</a> for searching my files, as an alternative to grep. My compiler of choice is <a href="http://clang.llvm.org/">clang</a> paired with <a href="http://www.gnu.org/software/gdb/">GDB</a>. My <a href="https://github.com/blaenk/dots">dot files</a> are up on Github.</p>
-<h2 id="miscellaneous">Miscellaneous</h2>
+<h2 id="miscellaneous">
+<span class="hash">#</span>
+<a href="#miscellaneous" class="header-link">Miscellaneous</a>
+</h2>
 <p><a href="http://amzn.com/B00AWH595M">Kindle</a> for reading books. At first I only used it to read novels and other casual material, but eventually I began using it for more and more technical books, starting with C++ Primer 5th Ed. (and the GDB book and TLPI). I actually used to explicitly prefer physical books, now I consistently find that I can read a lot quicker and have more fun doing it on a kindle. I use <a href="http://calibre-ebook.com/">Calibre</a> to manage my vast ebook library.</p>
+
 <p><a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a> is my primary browser (Chromium on Linux).</p>
+
 <p>I use <a href="http://syncplay.pl/">Syncplay</a> regularly to watch movies with friends, in sync. I use <a href="http://mpc-hc.org/">MPC-HC</a> on Windows and <a href="http://www.mpv.io/">mpv</a> on Linux, both of which work with Syncplay. My friends and I use <a href="http://mumble.info/">mumble</a> during Syncplay sessions and for any other time we want to communicate.</p>
-<h2 id="hardware">Hardware</h2>
-<p>Most of my life I’ve had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.</p>
-<h3 id="core">Core</h3>
+<h2 id="hardware">
+<span class="hash">#</span>
+<a href="#hardware" class="header-link">Hardware</a>
+</h2>
+<p>Most of my life I&rsquo;ve had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.</p>
+<h3 id="core">
+<span class="hash">#</span>
+<a href="#core" class="header-link">Core</a>
+</h3>
 <ul>
 <li>Intel Core i7 2600k @ 4.2 GHz with Cooler Master Hyper 212 Plus</li>
 <li>Asus P8Z68-V Pro</li>
@@ -114,18 +163,34 @@
 <li>3 SSDs (120 GB Windows, 60 GB Mac OS X, 60 GB Arch Linux)</li>
 <li>3 HDDs (2 x 1 TB, 1.5 TB)</li>
 </ul>
-<h3 id="peripherals">Peripherals</h3>
+<h3 id="peripherals">
+<span class="hash">#</span>
+<a href="#peripherals" class="header-link">Peripherals</a>
+</h3>
 <ul>
 <li>Dell UltraSharp 23&quot; 1080p IPS</li>
-<li><a href="http://www.daskeyboard.com/model-s-ultimate/">Das Keyboard Model S Ultimate</a> (Mechanical)</li>
+<li><a href="Mechanical">Das Keyboard Model S Ultimate</a></li>
 <li>Logitech G500 Laser Mouse</li>
 <li>Cooler Master CM 690 II Advanced</li>
 <li><a href="http://amzn.com/B00029MTMQ">Zalman Zm-Mic1 Microphone</a></li>
 <li><a href="http://amzn.com/B004PNZFZ8">Shure SE215-K</a></li>
-</ul></div>
+</ul>
+</div>
+  <div class="meta">
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> null</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> null</div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
+  </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -144,7 +209,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/pages/uses-this.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/uses-this';
+  var disqus_url = 'http://blaenkdenum.com/uses-this';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/uses-this'
+          this.page.url = 'http://blaenkdenum.com/uses-this'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,94 +72,151 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/cmake/"><span>CMake</span></a></h2>
-  <div class="entry-content"><p><a href="http://www.cmake.org/">CMake</a> seems to me like the best available cross-platform build tool. It can generate Visual Studio solutions on Windows and Make files on POSIX systems. While it’s widely used and there exists thorough reference documentation for it, I feel like there aren’t many resources for getting started. As a result, I’ve written up some notes from what I’ve been able to infer from a variety of project’s CMake configurations as well as the scant introductory information I was able to find.</p>
-<h1 id="general-usage" class="notoc">General Usage</h1>
-<p>CMake directives are stored in files named <code class="path">CMakeLists​.txt</code>, and there is usually one such file present for each sub-directory in the source tree, each one conventionally containing directives pertinent to the files in that directory. These separate CMake files are then “merged together” using the <code>add_subdirectory</code> directive, which immediately makes the CMake interpreter load and evaluate the CMake file in the provided directory.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/cmake"><span>CMake</span></a></h2>
+  <div class="entry-content"><p><a href="http://www.cmake.org/">CMake</a> seems to me like the best available cross-platform build tool. It can generate Visual Studio solutions on Windows and Make files on POSIX systems. While it&rsquo;s widely used and there exists thorough reference documentation for it, I feel like there aren&rsquo;t many resources for getting started. As a result, I&rsquo;ve written up some notes from what I&rsquo;ve been able to infer from a variety of project&rsquo;s CMake configurations as well as the scant introductory information I was able to find.</p>
+<h1 id="general-usage">
+<span class="hash">#</span>
+<a href="#general-usage" class="header-link">General Usage</a>
+</h1>
+<p>CMake directives are stored in files named <span class="path">CMakeLists.txt</span>, and there is usually one such file present for each sub-directory in the source tree, each one conventionally containing directives pertinent to the files in that directory. These separate CMake files are then &ldquo;merged together&rdquo; using the <code>add_subdirectory</code> directive, which immediately makes the CMake interpreter load and evaluate the CMake file in the provided directory.</p>
+
 <p>Variables can be set using the <code>set</code> directive in the following format:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">TEST</span> <span class="s2">&quot;something&quot;</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">TEST</span> <span class="s2">&quot;something&quot;</span><span class="p">)</span>
 </code></pre></figure>
 <p>There are certain built-in CMake variables that can affect the project. A commonly set one is <code>CMAKE_MODULE_PATH</code> which defines where CMake modules should be looked for.</p>
+
 <p>Similarly, user-modifiable options can be created with the <code>option</code> directive which takes a variable to associate the value with, a description string, and a default value (<code>OFF</code> is the default):</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">option</span> <span class="p">(</span><span class="s">USE_FFTW</span> <span class="s2">&quot;use the fftw library&quot;</span> <span class="s">OFF</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">option</span> <span class="p">(</span><span class="s">USE_FFTW</span> <span class="s2">&quot;use the fftw library&quot;</span> <span class="s">OFF</span><span class="p">)</span>
 </code></pre></figure>
-<p>Dependencies are generally found using the <code>find_package</code> directive. These are backed by CMake modules—either built-in or found in the <code>CMAKE_MODULE_PATH</code>—and handle the logic of searching for the libraries and headers of the particular package in various common locations.</p>
+<p>Dependencies are generally found using the <code>find_package</code> directive. These are backed by CMake modules&mdash;either built-in or found in the <code>CMAKE_MODULE_PATH</code>&mdash;and handle the logic of searching for the libraries and headers of the particular package in various common locations.</p>
+
 <p>If the search was successful, these modules typically set a variable of the form <code>PACKAGENAME_FOUND</code> which can be tested. Further, they also set variables such as <code>PACKAGENAME_LIBRARIES</code> and <code>PACKAGENAME_INCLUDE_DIRS</code>, which are sometimes singular and sometimes plural.</p>
+
 <p>In pertinent CMake files, these variables set by the <code>find_package</code> module are then used to resolve any dependencies in the code. For example, required headers can be added to the set of directories searched by the compiler using the <code>include_directories</code> directive:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">include_directories</span> <span class="p">(</span><span class="o">${</span><span class="nv">PACKAGENAME_INCLUDE_DIR</span><span class="o">}</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">include_directories</span> <span class="p">(</span><span class="o">${</span><span class="nv">PACKAGENAME_INCLUDE_DIR</span><span class="o">}</span><span class="p">)</span>
 </code></pre></figure>
 <p>Similarly, a target can be linked with a library with the <code>target_link_libraries</code> directive:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">target_link_libraries</span> <span class="p">(</span><span class="s">sometarget</span> <span class="o">${</span><span class="nv">PACKAGENAME_LIBRARIES</span><span class="o">}</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">target_link_libraries</span> <span class="p">(</span><span class="s">sometarget</span> <span class="o">${</span><span class="nv">PACKAGENAME_LIBRARIES</span><span class="o">}</span><span class="p">)</span>
 </code></pre></figure>
 <p>Targets are essentially products of the build process: oftentimes this is either an executable or a library, static or shared. An executable can be created using the <code>add_executable</code> directive:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">add_executable</span> <span class="p">(</span><span class="s">sometarget</span> <span class="s">file.cpp</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">add_executable</span> <span class="p">(</span><span class="s">sometarget</span> <span class="s">file.cpp</span><span class="p">)</span>
 </code></pre></figure>
-<p>In the above, <code class="path">file​.cpp</code> refers to the file containing the <code>main</code> entry point. Likewise, a library can be created using the <code>add_library</code> directive:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">add_library</span> <span class="p">(</span><span class="s">sometarget</span> <span class="s">STATIC</span> <span class="o">${</span><span class="nv">SRC</span><span class="o">}</span><span class="p">)</span>
+<p>In the above, <span class="path">file.cpp</span> refers to the file containing the <code>main</code> entry point. Likewise, a library can be created using the <code>add_library</code> directive:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">add_library</span> <span class="p">(</span><span class="s">sometarget</span> <span class="s">STATIC</span> <span class="o">${</span><span class="nv">SRC</span><span class="o">}</span><span class="p">)</span>
 </code></pre></figure>
 <p>In the above, <code>${SRC}</code> refers to the set of files whose resultant code would constitute the library. These variables are simply created using the <code>set</code> directive:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">SRC</span> <span class="s">somefile.cpp</span> <span class="s">anotherfile.cpp</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">SRC</span> <span class="s">somefile.cpp</span> <span class="s">anotherfile.cpp</span><span class="p">)</span>
 </code></pre></figure>
-<p>Notice that the header files aren’t necessary in the set since the C++ files already <code>#include</code> them. However, when using the Visual Studio generator on Windows, this means that the header files will be absent from the project. This can be resolved by adding a conditional for Windows and adding them in:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">if</span> <span class="p">(</span><span class="s">WIN32</span><span class="p">)</span>
+<p>Notice that the header files aren&rsquo;t necessary in the set since the C++ files already <code>#include</code> them. However, when using the Visual Studio generator on Windows, this means that the header files will be absent from the project. This can be resolved by adding a conditional for Windows and adding them in:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">if</span> <span class="p">(</span><span class="s">WIN32</span><span class="p">)</span>
   <span class="nb">set</span> <span class="p">(</span><span class="s">SRC</span> <span class="s">somefile.h</span> <span class="s">anotherfile.h</span><span class="p">)</span>
 <span class="nb">endif</span> <span class="p">(</span><span class="s">WIN32</span><span class="p">)</span>
 </code></pre></figure>
 <p>Alternatively, the header files can be added in to the set unconditionally.</p>
+
 <p>Furthermore, on Windows, the <code>source_group</code> directive can help organize source files into separate projects in the Visual Studio solution:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">source_group</span> <span class="p">(</span><span class="s">sometarget</span> <span class="s">FILES</span> <span class="o">${</span><span class="nv">SRC</span><span class="o">}</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">source_group</span> <span class="p">(</span><span class="s">sometarget</span> <span class="s">FILES</span> <span class="o">${</span><span class="nv">SRC</span><span class="o">}</span><span class="p">)</span>
 </code></pre></figure>
-<p>Libraries built in project are automatically found, there’s no need for <code>include_directories</code> or <code>find_library</code>. Try to avoid <code>link_directories</code>.</p>
-<p>It’s possible to wire-up what would happen upon invoking <code>make install</code> by using the <code>install</code> directive:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">install</span> <span class="p">(</span><span class="s">TARGET</span> <span class="s">sometarget</span>
+<p>Libraries built in project are automatically found, there&rsquo;s no need for <code>include_directories</code> or <code>find_library</code>. Try to avoid <code>link_directories</code>.</p>
+
+<p>It&rsquo;s possible to wire-up what would happen upon invoking <code>make install</code> by using the <code>install</code> directive:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">install</span> <span class="p">(</span><span class="s">TARGET</span> <span class="s">sometarget</span>
          <span class="s">RUNTIME</span> <span class="s">DESTINATION</span> <span class="s">bin</span>
          <span class="s">LIBRARY</span> <span class="s">DESTINATION</span> <span class="s">lib</span><span class="p">)</span>
 </code></pre></figure>
-<p>This would install to <code class="path">/usr​/local​/bin</code> and <code class="path">/usr​/local​/lib</code> on POSIX.</p>
+<p>This would install to <span class="path">/usr/local/bin</span> and <span class="path">/usr/local/lib</span> on POSIX.</p>
+
 <p>A configuration include file can be created using <code>configure_file</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">configure_file</span> <span class="p">(</span><span class="s2">&quot;Config.h.in&quot;</span> <span class="s2">&quot;Config.h&quot;</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">configure_file</span> <span class="p">(</span><span class="s2">&quot;Config.h.in&quot;</span> <span class="s2">&quot;Config.h&quot;</span><span class="p">)</span>
 </code></pre></figure>
 <p>In this configuration file, variables can be interpolated based on their values in the CMake build system:</p>
-<figure class="codeblock"><pre><code class="highlight language-cpp"><span class="cp">#cmakedefine VAR </span><span class="c1">// becomes #define VAR if VAR is true</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="cp">#cmakedefine VAR </span><span class="c1">// becomes #define VAR if VAR is true</span>
 <span class="cp">#define @VAR@    </span><span class="c1">// replaced with value of VAR</span>
 </code></pre></figure>
 <p>The <code>add_custom_target</code> directive creates a custom target that is always rebuilt. Similarly, <code>add_custom_command</code> runs a command before or after a build, or before a link.</p>
+
 <p>pkg-config is discouraged.</p>
-<h1 id="rpath" class="notoc">rpath</h1>
-<p>One problem is that on POSIX systems, libraries are usually exported as <code>libsomething​.so</code> and are searched for in <a href="http://man7.org/linux/man-pages/man8/ld.so.8.html#DESCRIPTION">specified locations</a>. However, it probably makes no sense to install a library used only by a single program to the system’s library path. This can be circumvented by loading the file by path, including the SO’s full name.</p>
-<p>An alternative is to modify the executable’s rpath using the <code>$ORIGIN</code> linker variable, which allows the executable to search relative to <em>its</em> directory, i.e. the <code>$ORIGIN</code>, for shared libraries by name. There are a variety of different ways to accomplish this.</p>
-<p>The simplest way to accomplish this is to use the <code>CMAKE_EXE_LINKER_FLAGS</code> variable to specify the linker flag. Clang will complain if these are defined in <code>CMAKE_CXX_FLAGS</code> because those flags are passed to it even when it’s merely compiling <code>-c</code> source files, to which linker flags obviously don’t apply.</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags&quot;</span><span class="p">)</span>
+<h1 id="rpath">
+<span class="hash">#</span>
+<a href="#rpath" class="header-link">rpath</a>
+</h1>
+<p>One problem is that on POSIX systems, libraries are usually exported as <code>libsomething.so</code> and are searched for in <a href="http://man7.org/linux/man-pages/man8/ld.so.8.html#DESCRIPTION">specified locations</a>. However, it probably makes no sense to install a library used only by a single program to the system&rsquo;s library path. This can be circumvented by loading the file by path, including the SO&rsquo;s full name.</p>
+
+<p>An alternative is to modify the executable&rsquo;s rpath using the <code>$ORIGIN</code> linker variable, which allows the executable to search relative to <em>its</em> directory, i.e. the <code>$ORIGIN</code>, for shared libraries by name. There are a variety of different ways to accomplish this.</p>
+
+<p>The simplest way to accomplish this is to use the <code>CMAKE_EXE_LINKER_FLAGS</code> variable to specify the linker flag. Clang will complain if these are defined in <code>CMAKE_CXX_FLAGS</code> because those flags are passed to it even when it&rsquo;s merely compiling <code>-c</code> source files, to which linker flags obviously don&rsquo;t apply.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags&quot;</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,&#39;$ORIGIN&#39;&quot;</span><span class="p">)</span>
 </code></pre></figure>
-<p>There’s also a “built-in” way to accomplish this using CMake. By default, this method only applies to installed files, which means it won’t apply until the project’s installation procedure is run. This is easily changed so that it applies during regular builds:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags&quot;</span><span class="p">)</span>
+<p>There&rsquo;s also a &ldquo;built-in&rdquo; way to accomplish this using CMake. By default, this method only applies to installed files, which means it won&rsquo;t apply until the project&rsquo;s installation procedure is run. This is easily changed so that it applies during regular builds:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags&quot;</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_BUILD_WITH_INSTALL_RPATH</span> <span class="s">TRUE</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_INSTALL_RPATH</span> <span class="s2">&quot;$ORIGIN&quot;</span><span class="p">)</span>
 </code></pre></figure>
-<p>It’s important to note that the rpath corresponds to an ELF dynamic section attribute. Historically the attribute has been <code>DT_RPATH</code>, but recently it has fallen out of favor for a more flexible <code>DT_RUNPATH</code> which honors <code>LD_LIBRARY_PATH</code>, allowing for greater user flexibility.</p>
-<p>The thing with <code>DT_RUNPATH</code> is that it’s <a href="https://sourceware.org/bugzilla/show_bug.cgi?id=13945">not transitive</a>, meaning, if your binary with a specified <code>DT_RUNPATH</code> links with a library that itself loads another library via <code>dlopen()</code>, that library load won’t honor the <code>DT_RUNPATH</code>, by design.</p>
-<p>In my case, the reason I wanted to set the rpath was specifically for this use case. The shared object I have exposes a game engine through a C API which is then loaded by LuaJIT’s FFI system. This of course performs a <code>dlopen()</code> to load the shared object, so the rpath won’t apply. This apparently bit other people as well, including <a href="https://bugzilla.gnome.org/show_bug.cgi?id=670477#c20">gnome</a>.</p>
-<p>A quick fix for this is to revert to using the <code>DT_RPATH</code> attribute, which can be done by explicitly setting the <code>--disable-new-dtags</code> linker flag. Alternative solutions would include hard coding the library name—which would introduce system dependent naming conventions—or wrapping the binary in a script that sets <code>LD_LIBRARY_PATH</code>.</p>
-<p>The solution gnome went with was to link with the shared object that’s loaded after the fact, so that its <code>dlopen()</code> is considered to be done by the binary itself, in which case the <code>DT_RUNPATH</code> is honored.</p>
-<p>It’s simple to verify that the produced binary contains the attributes by running:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>readelf -d thebinary
+<p>It&rsquo;s important to note that the rpath corresponds to an ELF dynamic section attribute. Historically the attribute has been <code>DT_RPATH</code>, but recently it has fallen out of favor for a more flexible <code>DT_RUNPATH</code> which honors <code>LD_LIBRARY_PATH</code>, allowing for greater user flexibility.</p>
+
+<p>The thing with <code>DT_RUNPATH</code> is that it&rsquo;s <a href="https://sourceware.org/bugzilla/show_bug.cgi?id=13945">not transitive</a>, meaning, if your binary with a specified <code>DT_RUNPATH</code> links with a library that itself loads another library via <code>dlopen()</code>, that library load won&rsquo;t honor the <code>DT_RUNPATH</code>, by design.</p>
+
+<p>In my case, the reason I wanted to set the rpath was specifically for this use case. The shared object I have exposes a game engine through a C API which is then loaded by LuaJIT&rsquo;s FFI system. This of course performs a <code>dlopen()</code> to load the shared object, so the rpath won&rsquo;t apply. This apparently bit other people as well, including <a href="https://bugzilla.gnome.org/show_bug.cgi?id=670477#c20">gnome</a>.</p>
+
+<p>A quick fix for this is to revert to using the <code>DT_RPATH</code> attribute, which can be done by explicitly setting the <code>--disable-new-dtags</code> linker flag. Alternative solutions would include hard coding the library name&mdash;which would introduce system dependent naming conventions&mdash;or wrapping the binary in a script that sets <code>LD_LIBRARY_PATH</code>.</p>
+
+<p>The solution gnome went with was to link with the shared object that&rsquo;s loaded after the fact, so that its <code>dlopen()</code> is considered to be done by the binary itself, in which case the <code>DT_RUNPATH</code> is honored.</p>
+
+<p>It&rsquo;s simple to verify that the produced binary contains the attributes by running:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>readelf -d thebinary
 </code></pre></figure>
 <ul>
-<li><a href="http://www.cygwin.com/ml/libc-alpha/2004-06/msg00116.html" class="uri">http://www.cygwin.com/ml/libc-alpha/2004-06/msg00116.html</a></li>
-<li><a href="http://cygwin.com/ml/libc-help/2012-11/msg00000.html" class="uri">http://cygwin.com/ml/libc-help/2012-11/msg00000.html</a></li>
-<li><a href="http://www.cygwin.com/ml/libc-alpha/2004-06/msg00120.html" class="uri">http://www.cygwin.com/ml/libc-alpha/2004-06/msg00120.html</a></li>
-<li><a href="https://sourceware.org/ml/libc-hacker/2002-11/msg00011.html" class="uri">https://sourceware.org/ml/libc-hacker/2002-11/msg00011.html</a></li>
-<li><a href="http://blog.qt.digia.com/blog/2011/10/28/rpath-and-runpath/" class="uri">http://blog.qt.digia.com/blog/2011/10/28/rpath-and-runpath/</a></li>
-<li><a href="https://bugs.launchpad.net/ubuntu/+source/eglibc/+bug/1253638" class="uri">https://bugs.launchpad.net/ubuntu/+source/eglibc/+bug/1253638</a></li>
-<li><a href="http://blog.tremily.us/posts/rpath/" class="uri">http://blog.tremily.us/posts/rpath/</a></li>
-<li><a href="http://stackoverflow.com/questions/6324131/rpath-origin-not-having-desired-effect" class="uri">http://stackoverflow.com/questions/6324131/rpath-origin-not-having-desired-effect</a></li>
-<li><a href="http://en.wikipedia.org/wiki/Rpath" class="uri">http://en.wikipedia.org/wiki/Rpath</a></li>
+<li><a href="http://www.cygwin.com/ml/libc-alpha/2004-06/msg00116.html">http://www.cygwin.com/ml/libc-alpha/2004-06/msg00116.html</a></li>
+<li><a href="http://cygwin.com/ml/libc-help/2012-11/msg00000.html">http://cygwin.com/ml/libc-help/2012-11/msg00000.html</a></li>
+<li><a href="http://www.cygwin.com/ml/libc-alpha/2004-06/msg00120.html">http://www.cygwin.com/ml/libc-alpha/2004-06/msg00120.html</a></li>
+<li><a href="https://sourceware.org/ml/libc-hacker/2002-11/msg00011.html">https://sourceware.org/ml/libc-hacker/2002-11/msg00011.html</a></li>
+<li><a href="http://blog.qt.digia.com/blog/2011/10/28/rpath-and-runpath/">http://blog.qt.digia.com/blog/2011/10/28/rpath-and-runpath/</a></li>
+<li><a href="https://bugs.launchpad.net/ubuntu/+source/eglibc/+bug/1253638">https://bugs.launchpad.net/ubuntu/+source/eglibc/+bug/1253638</a></li>
+<li><a href="http://blog.tremily.us/posts/rpath/">http://blog.tremily.us/posts/rpath/</a></li>
+<li><a href="http://stackoverflow.com/questions/6324131/rpath-origin-not-having-desired-effect">http://stackoverflow.com/questions/6324131/rpath-origin-not-having-desired-effect</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Rpath">http://en.wikipedia.org/wiki/Rpath</a></li>
 </ul>
-<h1 id="swig-bindings" class="notoc">SWIG Bindings</h1>
-<p>It’s possible to automatically generate <a href="http://www.swig.org/">SWIG</a> bindings using built-in CMake modules. The following creates a a dynamic library which a Lua script can subsequently <code>require</code>.</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">find_package</span> <span class="p">(</span><span class="s">SWIG</span><span class="p">)</span>
+<h1 id="swig-bindings">
+<span class="hash">#</span>
+<a href="#swig-bindings" class="header-link">SWIG Bindings</a>
+</h1>
+<p>It&rsquo;s possible to automatically generate <a href="http://www.swig.org/">SWIG</a> bindings using built-in CMake modules. The following creates a a dynamic library which a Lua script can subsequently <code>require</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">find_package</span> <span class="p">(</span><span class="s">SWIG</span><span class="p">)</span>
 <span class="nb">include</span> <span class="p">(</span><span class="s">UseSWIG</span><span class="p">)</span>
 
 <span class="nb">include_directories</span> <span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span> <span class="o">${</span><span class="nv">LUAJIT_INCLUDE_DIR</span><span class="o">}</span><span class="p">)</span>
@@ -168,7 +225,9 @@
 <span class="nb">swig_link_libraries</span> <span class="p">(</span><span class="s">script</span> <span class="o">${</span><span class="nv">LUAJIT_LIBRARIES</span><span class="o">}</span><span class="p">)</span>
 </code></pre></figure>
 <p>If instead it is desired to statically link the bindings to an existing target, one can create a custom target:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">add_custom_command</span> <span class="p">(</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">add_custom_command</span> <span class="p">(</span>
   <span class="s">OUTPUT</span> <span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/swig.cpp</span>
   <span class="s">COMMAND</span> <span class="o">${</span><span class="nv">SWIG_EXECUTABLE</span><span class="o">}</span> <span class="s">-lua</span> <span class="s">-c++</span>
           <span class="s">-o</span> <span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/swig.cpp</span>
@@ -182,28 +241,46 @@
 <span class="nb">target_link_libraries</span> <span class="p">(</span><span class="s">script</span> <span class="o">${</span><span class="nv">LUAJIT_LIBRARIES</span><span class="o">}</span><span class="p">)</span>
 </code></pre></figure>
 <p>Then the target that wants to link with it just needs to <code>add_dependencies</code>. Then the library should be opened using the generated <code>luaopen_script</code> function which the program should of course declare as <code>extern</code>.</p>
+
 <p>It is common to place generated files in the <code>${CMAKE_BINARY_DIR}</code> directory to avoid clobbering the source directory.</p>
-<h1 id="visual-studio" class="notoc">Visual Studio</h1>
-<p>CMake works fine with Visual Studio but there are a few things to consider. The property for the working directory in the Debugging section should most likely be set to <code>$(OutDir)</code>. Likewise, the start-up project must be set manually as it’s set to ALL_BUILD by default. ALL_BUILD is a project that builds all projects and correctly triggers any scripts. ZERO_CHECK is a project that runs and, if any CMake files have been changed, asks to reload Visual Studio.</p>
-<p>Furthermore, if you’re making a Windows application, you should add the WIN32 parameter to <code>add_executable</code> to instruct the compiler to use the <code>WinMain</code> <a href="http://msdn.microsoft.com/en-us/library/f9t8842e.aspx">entry-point</a> and WINDOWS <a href="http://msdn.microsoft.com/en-us/library/fcc1zstk%28v=vs.110%29.aspx">subsystem</a>:</p>
-<figure class="codeblock"><pre><code class="highlight language-cmake"><span class="nb">add_executable</span> <span class="p">(</span><span class="s">target</span> <span class="s">WIN32</span> <span class="o">${</span><span class="nv">SOURCES</span><span class="o">}</span><span class="p">)</span>
-</code></pre></figure>
-<h1 id="resources" class="notoc">Resources</h1>
+<h1 id="visual-studio">
+<span class="hash">#</span>
+<a href="#visual-studio" class="header-link">Visual Studio</a>
+</h1>
+<p>CMake works fine with Visual Studio but there are a few things to consider. The property for the working directory in the Debugging section should most likely be set to <code>$(OutDir)</code>. Likewise, the start-up project must be set manually as it&rsquo;s set to ALL<em>BUILD by default. ALL</em>BUILD is a project that builds all projects and correctly triggers any scripts. ZERO_CHECK is a project that runs and, if any CMake files have been changed, asks to reload Visual Studio.</p>
+
+<p>Furthermore, if you&rsquo;re making a Windows application, you should add the WIN32 parameter to <code>add_executable</code> to instruct the compiler to use the <code>WinMain</code> <a href="http://msdn.microsoft.com/en-us/library/f9t8842e.aspx">entry-point</a> and WINDOWS <a href="http://msdn.microsoft.com/en-us/library/fcc1zstk%28v=vs.110%29.aspx">subsystem</a>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cmake"><span class="nb">add_executable</span> <span class="p">(</span><span class="s">target</span> <span class="s">WIN32</span> <span class="o">${</span><span class="nv">SOURCES</span><span class="o">}</span><span class="p">)</span>
+</code></pre></figure><h1 id="resources">
+<span class="hash">#</span>
+<a href="#resources" class="header-link">Resources</a>
+</h1>
 <ul>
 <li><a href="http://www.elpauer.org/stuff/learning_cmake.pdf">Learning CMake</a></li>
-<li><a href="http://web.cs.swarthmore.edu/~adanner/tips/cmake.php">CMake Tips</a></li>
+<li><a href="http://web.cs.swarthmore.edu/%7Eadanner/tips/cmake.php">CMake Tips</a></li>
 <li><a href="http://www.cmake.org/cmake/help/cmake_tutorial.html">CMake Tutorial</a></li>
 <li><a href="http://www.vtk.org/Wiki/CMake:How_To_Find_Libraries">Writing Find Modules</a></li>
 <li><a href="http://www.cmake.org/Wiki/CMake_FAQ">CMake FAQ</a></li>
-</ul></div>
+</ul>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September  1, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/cmake.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/5fedf3b" title="prefer italic over bold">5fedf3b</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cmake.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/17cad29" title="path styling changes
+">17cad29</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -222,7 +299,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/cmake.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/cmake';
+  var disqus_url = 'http://blaenkdenum.com/notes/cmake';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/cmake'
+          this.page.url = 'http://blaenkdenum.com/notes/cmake'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,84 +72,155 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/posts/the-switch-to-hakyll/"><span>The Switch to Hakyll</span></a></h2>
-  <div class="entry-content"><nav id="toc" class="right-toc"><h3>Contents</h3><ol><li><a href="#file-structure">File Structure</a></li><li><a href="#hakyll">Hakyll</a><ol><li><a href="#scss">SCSS</a></li><li><a href="#abbreviations">Abbreviations</a></li><li><a href="#git-tag">Git Tag</a></li></ol></li><li><a href="#pandoc">Pandoc</a><ol><li><a href="#pygments">Pygments</a></li><li><a href="#table-of-contents">Table of Contents</a><ol><li><a href="#alternatives">Alternatives</a></li><li><a href="#implementation">Implementation</a></li></ol></li></ol></li><li><a href="#deploying">Deploying</a></li><li><a href="#conclusion">Conclusion</a></li></ol></nav>
-<p>This site was originally built with <a href="http://jekyllrb.com/">Jekyll</a>. Technically I began with the pre-packaged distribution known as <a href="http://octopress.org/">Octopress</a> which offered a Rakefile for common tasks as well as an out-of-the-box directory structure. I didn’t use many of these features, however, so I had been wanting to shed traces of Octopress, partly motivated by the pursuit of increased speed in site generation. I found the opportunity to do this when Jekyll 1.0 was released recently.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/posts/the-switch-to-hakyll"><span>The Switch to Hakyll</span></a></h2>
+  <div class="entry-content"><p>This site was originally built with <a href="http://jekyllrb.com/">Jekyll</a>. Technically I began with the pre-packaged distribution known as <a href="http://octopress.org/">Octopress</a> which offered a Rakefile for common tasks as well as an out-of-the-box directory structure. I didn&rsquo;t use many of these features, however, so I had been wanting to shed traces of Octopress, partly motivated by the pursuit of increased speed in site generation. I found the opportunity to do this when Jekyll 1.0 was released recently.</p>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#file-structure">File Structure</a>
+</li>
+<li>
+<a href="#hakyll">Hakyll</a>
+<ol>
+<li>
+<a href="#scss">SCSS</a>
+</li>
+<li>
+<a href="#abbreviations">Abbreviations</a>
+</li>
+<li>
+<a href="#git-tag">Git Tag</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#pandoc">Pandoc</a>
+<ol>
+<li>
+<a href="#pygments">Pygments</a>
+</li>
+<li>
+<a href="#table-of-contents">Table of Contents</a>
+<ol>
+<li>
+<a href="#alternatives">Alternatives</a>
+</li>
+<li>
+<a href="#implementation">Implementation</a>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<a href="#deploying">Deploying</a>
+</li>
+<li>
+<a href="#conclusion">Conclusion</a>
+</li>
+</ol>
+</nav>
+
 <p>To cut away the unnecessary components of Octopress, I decided to go through every file and keep only what I absolutely needed. This is evident in commits after <a href="https://github.com/blaenk/blaenk.github.com.jekyll/commit/712168ec33004b693cc8cfb553a6a861da6a8708"><code>712168ec</code></a>.</p>
-<p>I was well on my way to making the site’s source a lot leaner when I remembered that I had been wanting to try <a href="http://jaspervdj.be/hakyll/">Hakyll</a>, a static site generator written in Haskell that I had heard about on Hacker News. Given that I was more or less starting the site from scratch, I figured it was the perfect opportunity to try it.</p>
+
+<p>I was well on my way to making the site&rsquo;s source a lot leaner when I remembered that I had been wanting to try <a href="http://jaspervdj.be/hakyll/">Hakyll</a>, a static site generator written in Haskell that I had heard about on Hacker News. Given that I was more or less starting the site from scratch, I figured it was the perfect opportunity to try it.</p>
+
 <p>Ultimately, this site is now compiled with Hakyll. It took me about a week to implement every feature I wanted in Hakyll and Pandoc. The net effect is that the difference in speed and flexibility is highly appreciable.</p>
-<h2 id="file-structure">File Structure</h2>
+<h2 id="file-structure">
+<span class="hash">#</span>
+<a href="#file-structure" class="header-link">File Structure</a>
+</h2>
 <p>Oftentimes when new to a system, learning its directory structure can help one to get oriented. Unlike some other static site generators, Hakyll does not enforce any particular directory structure or convention. The one I have adopted for my <a href="https://github.com/blaenk/blaenk.github.io">repository</a> looks like this:</p>
+
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: left;">Entry</th>
-<th style="text-align: left;">Purpose</th>
+<tr>
+<th style="text-align: left">Entry</th>
+<th style="text-align: left">Purpose</th>
 </tr>
 </thead>
+
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">provider/</td>
-<td style="text-align: left;">compilable content</td>
+<tr>
+<td style="text-align: left">provider/</td>
+<td style="text-align: left">compilable content</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">src/</td>
-<td style="text-align: left;">Hakyll, Pandoc customizations</td>
+<tr>
+<td style="text-align: left">src/</td>
+<td style="text-align: left">Hakyll, Pandoc customizations</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">Setup.hs</td>
-<td style="text-align: left;">build type</td>
+<tr>
+<td style="text-align: left">Setup.hs</td>
+<td style="text-align: left">build type</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">blaenk.cabal</td>
-<td style="text-align: left;">dependency management</td>
+<tr>
+<td style="text-align: left">blaenk.cabal</td>
+<td style="text-align: left">dependency management</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">readme.markdown</td>
-<td style="text-align: left;">repository information</td>
+<tr>
+<td style="text-align: left">readme.markdown</td>
+<td style="text-align: left">repository information</td>
 </tr>
 </tbody>
 </table>
-<p>I build the site binary with <code>cabal build</code> which results in a new top-level directory <code class="path">dist​/</code>, which stores the object files generated by <abbr title="Glasgow Haskell Compiler">GHC</abbr>. The <code>site</code> binary, stored at the top level, is the actual binary which is used for generating and manipulating the site. This binary has a variety of options, the ones I commonly use are:</p>
+
+<p>I build the site binary with <code>cabal build</code> which results in a new top-level directory <span class="path">dist/</span>, which stores the object files generated by <abbr title="Glasgow Haskell Compiler">GHC</abbr>. The <code>site</code> binary, stored at the top level, is the actual binary which is used for generating and manipulating the site. This binary has a variety of options, the ones I commonly use are:</p>
+
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: left;">Option</th>
-<th style="text-align: left;">Purpose</th>
+<tr>
+<th style="text-align: left">Option</th>
+<th style="text-align: left">Purpose</th>
 </tr>
 </thead>
+
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">build</td>
-<td style="text-align: left;">Generate the entire site</td>
+<tr>
+<td style="text-align: left">build</td>
+<td style="text-align: left">Generate the entire site</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">preview</td>
-<td style="text-align: left;">Generate changes on-the-fly and serve them on a preview server</td>
+<tr>
+<td style="text-align: left">preview</td>
+<td style="text-align: left">Generate changes on-the-fly and serve them on a preview server</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">deploy</td>
-<td style="text-align: left;">Deploy the site using a custom deploy procedure</td>
+<tr>
+<td style="text-align: left">deploy</td>
+<td style="text-align: left">Deploy the site using a custom deploy procedure</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Build</strong> creates a top-level directory <code class="path">generated​/</code> with two sub-directories: a directory <code class="path">cache​/</code> for cached content and a directory <code class="path">site​/</code> where the compiled site is stored.</p>
-<p><strong>Deploy</strong> puts the compiled site into top-level directory <code class="path">deploy​/</code> which is git-controlled and force pushes the content to the master branch, effectively deploying (on GitHub).</p>
-<h2 id="hakyll">Hakyll</h2>
+
+<p><strong>Build</strong> creates a top-level directory <span class="path">generated/</span> with two sub-directories: a directory <span class="path">cache/</span> for cached content and a directory <span class="path">site/</span> where the compiled site is stored.</p>
+
+<p><strong>Deploy</strong> puts the compiled site into top-level directory <span class="path">deploy/</span> which is git-controlled and force pushes the content to the master branch, effectively deploying (on GitHub).</p>
+<h2 id="hakyll">
+<span class="hash">#</span>
+<a href="#hakyll" class="header-link">Hakyll</a>
+</h2>
 <p>As I mentioned earlier, Hakyll is a static site generator written in Haskell. Hakyll sites are fleshed out using a Haskell <a href="http://www.haskell.org/haskellwiki/EDSL">Embedded Domain Specific Language</a> (<abbr title="Embedded Domain Specific Language">EDSL</abbr>). This <abbr title="Embedded Domain Specific Language">EDSL</abbr> is used to declare rules for different patterns which should be searched for within the provider directory and what should be done with them.</p>
+
 <p>For example, in the following Hakyll program:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">main</span> <span class="ow">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">main</span> <span class="ow">::</span> <span class="kt">IO</span> <span class="nb">()</span>
 <span class="nf">main</span> <span class="ow">=</span> <span class="n">hakyll</span> <span class="o">$</span> <span class="kr">do</span>
   <span class="n">match</span> <span class="s">&quot;images/*&quot;</span> <span class="o">$</span> <span class="kr">do</span>
       <span class="n">route</span>   <span class="n">idRoute</span>
       <span class="n">compile</span> <span class="n">copyFileCompiler</span>
 </code></pre></figure>
-<p><code>match &quot;images​/*&quot;</code> is a <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Rules.html"><code>Rule</code></a> that states that the provider directory should match all files matching the glob <code>images​/*</code>, <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Routes.html"><code>Route</code></a> them using the <code>idRoute</code>, and compile them using the <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Compiler.html"><code>Compiler</code></a> <code>copyFileCompiler</code>.</p>
+<p><code>match &quot;images/*&quot;</code> is a <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Rules.html"><code>Rule</code></a> that states that the provider directory should match all files matching the glob <code>images/*</code>, <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Routes.html"><code>Route</code></a> them using the <code>idRoute</code>, and compile them using the <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Compiler.html"><code>Compiler</code></a> <code>copyFileCompiler</code>.</p>
+
 <p>Routing a file in the context of a static site generator like Hakyll refers to the mapping between the file as it sits in the provider directory and its name/path in the compiled directory; in this case, <code>idRoute</code> keeps the same name/path in the compiled directory.</p>
+
 <p>Compiling a file in this context refers to the operations that should be performed on the contents of the file, for example processing through Pandoc for Markdown to HTML generation, or in this case, simply copying the file from the provider directory to the compiled directory.</p>
+
 <p><code>Compiler</code> is a <a href="https://en.wikipedia.org/wiki/Monad_%28functional_programming%29">Monad</a>, which allows for seamless chaining of operations that should be performed on any given file. For example, here is my <code>Rule</code> for regular posts:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">match</span> <span class="s">&quot;posts/*&quot;</span> <span class="o">$</span> <span class="kr">do</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">match</span> <span class="s">&quot;posts/*&quot;</span> <span class="o">$</span> <span class="kr">do</span>
   <span class="n">route</span> <span class="o">$</span> <span class="n">nicePostRoute</span>
   <span class="n">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
     <span class="o">&gt;&gt;=</span> <span class="n">withItemBody</span> <span class="p">(</span><span class="n">abbreviationFilter</span><span class="p">)</span>
@@ -158,139 +229,235 @@
     <span class="o">&gt;&gt;=</span> <span class="n">loadAndApplyTemplate</span> <span class="s">&quot;templates/layout.html&quot;</span> <span class="n">postCtx</span>
 </code></pre></figure>
 <p>This states that the compilation process for any given post is as follows:</p>
-<ol type="1">
-<li>the post body (i.e. excluding post metadata) is read</li>
+
+<ol>
+<li>the post body (i.e. excluding post metadata) is read</li>
 <li>the result is passed to an abbreviation substitution filter</li>
 <li>the result is passed to my custom Pandoc compiler</li>
-<li>the result is embedded into a post template with a so called “post context”</li>
+<li>the result is embedded into a post template with a so called &ldquo;post context&quot;</li>
 <li>the result is embedded into the page layout</li>
 </ol>
-<p>A post is routed using the <code>nicePostRoute</code> function which is largely borrowed from <a href="http://yannesposito.com/Scratch/en/blog/Hakyll-setup/">Yann Esposito</a>. It simply routes a <code class="path">posts​/this-post​.markdown</code> to <code class="path">posts​/this-post​/index​.html</code> so that the post can be viewed at <code class="path">posts​/this-post​/​.</code></p>
-<p>An interesting thing to note is that when templates are applied, they are supplied a <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html"><code>Context</code></a>. A <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html"><code>Context</code></a> is simply a <a href="http://en.wikipedia.org/wiki/Monoid">Monoid</a> that encapsulates a key (i.e. <code>String</code> identifier for the field) and an <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Item.html"><code>Item</code></a>. During application of the template, if a field of the form <code>$key$</code> is encountered, the supplied <code>Context</code> is searched for an appropriate handler (i.e. one with the same key). If one is found, the item is passed to that <code>Context</code>’s handler and the result is substituted into the template.</p>
+
+<p>A post is routed using the <code>nicePostRoute</code> function which is largely borrowed from <a href="http://yannesposito.com/Scratch/en/blog/Hakyll-setup/">Yann Esposito</a>. It simply routes a <span class="path">posts/this-post.markdown</span> to <span class="path">posts/this-post/index.html</span> so that the post can be viewed at <span class="path">posts/this-post/</span>.</p>
+
+<p>An interesting thing to note is that when templates are applied, they are supplied a <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html"><code>Context</code></a>. A <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Web-Template-Context.html"><code>Context</code></a> is simply a <a href="http://en.wikipedia.org/wiki/Monoid">Monoid</a> that encapsulates a key (i.e. <code>String</code> identifier for the field) and an <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Item.html"><code>Item</code></a>. During application of the template, if a field of the form <code>$key$</code> is encountered, the supplied <code>Context</code> is searched for an appropriate handler (i.e. one with the same key). If one is found, the item is passed to that <code>Context</code>&rsquo;s handler and the result is substituted into the template.</p>
+
 <p>In the above <code>Rule</code> for posts, I pass a pre-crafted post <code>Context</code>, <code>postCtx</code>, and <a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/Data-Monoid.html#v:mappend"><code>mappend</code></a> to it a special tags context, <code>tagsCtx</code> which encapsulates tags information for that post.</p>
-<h3 id="scss">SCSS</h3>
+<h3 id="scss">
+<span class="hash">#</span>
+<a href="#scss" class="header-link">SCSS</a>
+</h3>
 <p>The first customization I made was to allow support for <a href="http://sass-lang.com/">SCSS</a>. This is usually possible with a simple line:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">getResourceString</span> <span class="o">&gt;&gt;=</span> <span class="n">withItemBody</span> <span class="p">(</span><span class="n">unixFilter</span> <span class="s">&quot;sass&quot;</span> <span class="p">[</span><span class="s">&quot;-s&quot;</span><span class="p">,</span> <span class="s">&quot;--scss&quot;</span><span class="p">])</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">getResourceString</span> <span class="o">&gt;&gt;=</span> <span class="n">withItemBody</span> <span class="p">(</span><span class="n">unixFilter</span> <span class="s">&quot;sass&quot;</span> <span class="p">[</span><span class="s">&quot;-s&quot;</span><span class="p">,</span> <span class="s">&quot;--scss&quot;</span><span class="p">])</span>
 </code></pre></figure>
-<p>This works fine in POSIX environments, of which Linux is my primary environment for development. However, it’s very useful to me to have Windows support as well. The problem is that on Windows, ruby gem binaries—such as <code>scss</code>—are implemented using batch file stubs. The underlying function used for creating the process in <code>unixFilter</code> is <a href="http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html">System.Process</a>’ <a href="http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html#v:createProcess"><code>createProcess</code></a>, specifically with the <code>proc</code> type. On Windows, this uses the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms682425.aspx"><code>CreateProcess</code></a> function. Using this function, batch files are not run unless they are run explicitly with <code>cmd​.exe ​/c batchfile</code>. The problem is that there is no simple way to find the file path of the batch file stub for <code>scss</code>.</p>
-<p>The solution to this is to use the <code>shell</code> type with <code>createProcess</code> instead of <code>proc</code>. This has the effect of a <code>system</code> call, where the parameter is interpreted by the shell, in Windows’ case, <code>cmd​.exe</code>. As a result, the program can simply be called as <code>scss</code>, leaving the shell to automatically run the appropriate batch file stub.</p>
-<p>To accomplish this, I had to implement what was essentially a mirror copy of <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-UnixFilter.html">Hakyll.Core.UnixFilter</a> with <code>proc</code> switched out with <code>shell</code>. I’ll be suggesting a pull request upstream soon which gives the user the option and removes the duplicate code. Now I can implement an SCSS compiler like the following, though I additionally pass it a few extra parameters in my actual implementation:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">getResourceString</span> <span class="o">&gt;&gt;=</span> <span class="n">withItemBody</span> <span class="p">(</span><span class="n">shellFilter</span> <span class="s">&quot;sass -s --scss&quot;</span><span class="p">)</span>
-</code></pre></figure>
-<h3 id="abbreviations">Abbreviations</h3>
-<p>One feature I missed from <a href="http://kramdown.rubyforge.org/">kramdown</a> that wasn’t available in my new markdown processor, <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>, was abbreviation substitution. It consists of writing abbreviation definitions which are then used to turn every occurrence of the abbreviation into a proper <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr"><code>abbr</code></a> HTML tag with an accompanying tooltip consisting of the definition.</p>
-<p>I had hardly used regular expressions in Haskell before, so the method of using it was pretty confusing to me at first. There’s a base regex package called <a href="http://hackage.haskell.org/package/regex-base">regex-base</a> which exposes a common interface API, and then there are a variety of backend implementations. Hakyll happens to use <a href="http://hackage.haskell.org/package/regex-tdfa">regex-tdfa</a>, a fast and popular backend, so I decided to use that one instead of introducing additional dependencies.</p>
+<p>This works fine in POSIX environments, of which Linux is my primary environment for development. However, it&rsquo;s very useful to me to have Windows support as well. The problem is that on Windows, ruby gem binaries&mdash;such as <code>scss</code>&mdash;are implemented using batch file stubs. The underlying function used for creating the process in <code>unixFilter</code> is <a href="http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html">System.Process</a>&lsquo; <a href="http://hackage.haskell.org/packages/archive/process/latest/doc/html/System-Process.html#v:createProcess"><code>createProcess</code></a>, specifically with the <code>proc</code> type. On Windows, this uses the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms682425.aspx"><code>CreateProcess</code></a> function. Using this function, batch files are not run unless they are run explicitly with <code>cmd.exe /c batchfile</code>. The problem is that there is no simple way to find the file path of the batch file stub for <code>scss</code>.</p>
+
+<p>The solution to this is to use the <code>shell</code> type with <code>createProcess</code> instead of <code>proc</code>. This has the effect of a <code>system</code> call, where the parameter is interpreted by the shell, in Windows' case, <code>cmd.exe</code>. As a result, the program can simply be called as <code>scss</code>, leaving the shell to automatically run the appropriate batch file stub.</p>
+
+<p>To accomplish this, I had to implement what was essentially a mirror copy of <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-UnixFilter.html">Hakyll.Core.UnixFilter</a> with <code>proc</code> switched out with <code>shell</code>. I&rsquo;ll be suggesting a pull request upstream soon which gives the user the option and removes the duplicate code. Now I can implement an SCSS compiler like the following, though I additionally pass it a few extra parameters in my actual implementation:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">getResourceString</span> <span class="o">&gt;&gt;=</span> <span class="n">withItemBody</span> <span class="p">(</span><span class="n">shellFilter</span> <span class="s">&quot;sass -s --scss&quot;</span><span class="p">)</span>
+</code></pre></figure><h3 id="abbreviations">
+<span class="hash">#</span>
+<a href="#abbreviations" class="header-link">Abbreviations</a>
+</h3>
+<p>One feature I missed from <a href="http://kramdown.rubyforge.org/">kramdown</a> that wasn&rsquo;t available in my new markdown processor, <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>, was abbreviation substitution. It consists of writing abbreviation definitions which are then used to turn every occurrence of the abbreviation into a proper <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr"><code>abbr</code></a> HTML tag with an accompanying tooltip consisting of the definition.</p>
+
+<p>I had hardly used regular expressions in Haskell before, so the method of using it was pretty confusing to me at first. There&rsquo;s a base regex package called <a href="http://hackage.haskell.org/package/regex-base">regex-base</a> which exposes a common interface API, and then there are a variety of backend implementations. Hakyll happens to use <a href="http://hackage.haskell.org/package/regex-tdfa">regex-tdfa</a>, a fast and popular backend, so I decided to use that one instead of introducing additional dependencies.</p>
+
 <p>One way of using regular expressions in Haskell is through type inference, as is described in the <a href="http://hackage.haskell.org/packages/archive/regex-base/latest/doc/html/Text-Regex-Base-Context.html">Text.Regex.Base.Context</a> documentation:</p>
+
 <blockquote>
-<p>This module name is Context because they [sic] operators are context dependent: use them in a context that expects an Int and you get a count of matches, use them in a Bool context and get True if there is a match, etc.</p>
+<p>This module name is Context because they [sic] operators are context dependent: use them in a context that expects an Int and you get a count of matches, use them in a Bool context and get True if there is a match, etc. </p>
 </blockquote>
+
 <p>Keeping this in mind, I explicitly annotated the <code>[[String]]</code> type since I wanted every match and sub-match. I created a function <code>abbreviationReplace</code> that takes a <code>String</code>, removes the abbreviation definitions, and then creates <code>abbr</code> tags out of every occurrence of the abbreviation using the parsed definitions.</p>
+
 <p>The <code>abbreviationReplace</code> function begins like this:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">abbreviationReplace</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">abbreviationReplace</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
 <span class="nf">abbreviationReplace</span> <span class="n">body</span> <span class="ow">=</span>
   <span class="kr">let</span> <span class="n">pat</span> <span class="ow">=</span> <span class="s">&quot;^</span><span class="se">\\</span><span class="s">*</span><span class="se">\\</span><span class="s">[(.+)</span><span class="se">\\</span><span class="s">]: (.+)$&quot;</span> <span class="ow">::</span> <span class="kt">String</span>
       <span class="n">found</span> <span class="ow">=</span> <span class="n">body</span> <span class="o">=~</span> <span class="n">pat</span> <span class="ow">::</span> <span class="p">[[</span><span class="kt">String</span><span class="p">]]</span>
-</code></pre></figure>
-<h3 id="git-tag">Git Tag</h3>
-<p>In a <a href="/posts/commit-tag-for-jekyll/">previous post</a> I talked about a liquid tag I created for Jekyll which inserts the SHA of the commit on which the site was last generated. I have come to like this small feature of my site. It’s not some tacky “Powered by blah” footer. It’s pretty unobtrusive. It seems unimportant to people who wouldn’t understand what it’s about, and those who would understand it might immediately recognize its purpose.</p>
-<p><strong>Update</strong>: I have stopped including the git commit in the footer of every page. The problem with doing this was that, in order to have every page reflect the new commit, I had to regenerate every page before deploy. This obviously doesn’t scale well once more and more pages are added to the site. Instead I have adopted a per-post commit and history link which I believe is a lot more meaningful and meshes perfectly well with generation of pages, i.e. if a post is modified, there’ll be a commit made for it and since it was modified it will have to be regenerated anyways. Now I simply include social links in the footer.</p>
+</code></pre></figure><h3 id="git-tag">
+<span class="hash">#</span>
+<a href="#git-tag" class="header-link">Git Tag</a>
+</h3>
+<p>In a <a href="/posts/commit-tag-for-jekyll/">previous post</a> I talked about a liquid tag I created for Jekyll which inserts the SHA of the commit on which the site was last generated. I have come to like this small feature of my site. It&rsquo;s not some tacky &ldquo;Powered by blah&quot; footer. It&rsquo;s pretty unobtrusive. It seems unimportant to people who wouldn&rsquo;t understand what it&rsquo;s about, and those who would understand it might immediately recognize its purpose.</p>
+
+<p><strong>Update</strong>: I have stopped including the git commit in the footer of every page. The problem with doing this was that, in order to have every page reflect the new commit, I had to regenerate every page before deploy. This obviously doesn&rsquo;t scale well once more and more pages are added to the site. Instead I have adopted a per-post commit and history link which I believe is a lot more meaningful and meshes perfectly well with generation of pages, i.e. if a post is modified, there&rsquo;ll be a commit made for it and since it was modified it will have to be regenerated anyways. Now I simply include social links in the footer.</p>
+
 <p>One thing I forgot to update the previous post about was that I ended up switching from using the Rugged git-bindings for Ruby to just using straight up commands and reading their output. The reason for doing this was that, while everything worked perfectly fine on Linux, Rugged had problems building on Windows. It turned out that taking this approach ended up being simpler and had the added benefit of decreasing my dependencies.</p>
+
 <p>The equivalent of a liquid tag in Jekyll would be a field, expressed as a <code>Context</code>. For this reason I created the <code>gitTag</code> function that takes a desired key, such as <code>git</code>, which would be used as <code>$git$</code> in templates, and returns a <code>Context</code> which returns the <code>String</code> of formatted HTML. One problem was that to do this I had to use <code>IO</code>, so I needed some way to escape the <code>Compiler</code> Monad. It turned out that Hakyll already had a function for something like this called <code>unsafeCompiler</code>, which it uses for <code>UnixFilter</code> for example.</p>
-<p>Here’s what <code>gitTag</code> looks like:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">gitTag</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="kt">String</span>
+
+<p>Here&rsquo;s what <code>gitTag</code> looks like:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">gitTag</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="kt">String</span>
 <span class="nf">gitTag</span> <span class="n">key</span> <span class="ow">=</span> <span class="n">field</span> <span class="n">key</span> <span class="o">$</span> <span class="nf">\</span><span class="kr">_</span> <span class="ow">-&gt;</span> <span class="kr">do</span>
   <span class="n">unsafeCompiler</span> <span class="o">$</span> <span class="kr">do</span>
     <span class="n">sha</span> <span class="ow">&lt;-</span> <span class="n">readProcess</span> <span class="s">&quot;git&quot;</span> <span class="p">[</span><span class="s">&quot;log&quot;</span><span class="p">,</span> <span class="s">&quot;-1&quot;</span><span class="p">,</span> <span class="s">&quot;HEAD&quot;</span><span class="p">,</span> <span class="s">&quot;--pretty=format:%H&quot;</span><span class="p">]</span> <span class="kt">[]</span>
     <span class="n">message</span> <span class="ow">&lt;-</span> <span class="n">readProcess</span> <span class="s">&quot;git&quot;</span> <span class="p">[</span><span class="s">&quot;log&quot;</span><span class="p">,</span> <span class="s">&quot;-1&quot;</span><span class="p">,</span> <span class="s">&quot;HEAD&quot;</span><span class="p">,</span> <span class="s">&quot;--pretty=format:%s&quot;</span><span class="p">]</span> <span class="kt">[]</span>
     <span class="n">return</span> <span class="p">(</span><span class="s">&quot;&lt;a href=</span><span class="se">\&quot;</span><span class="s">https://github.com/blaenk/blaenk.github.io/commit/&quot;</span> <span class="o">++</span> <span class="n">sha</span> <span class="o">++</span>
            <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s"> title=</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">++</span> <span class="n">message</span> <span class="o">++</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&gt;&quot;</span> <span class="o">++</span> <span class="p">(</span><span class="n">take</span> <span class="mi">8</span> <span class="n">sha</span><span class="p">)</span> <span class="o">++</span> <span class="s">&quot;&lt;/a&gt;&quot;</span><span class="p">)</span>
-</code></pre></figure>
-<h2 id="pandoc">Pandoc</h2>
-<p>Hakyll configuration is fairly straightforward. What took longer was the process of re-implementing some features that I had in <a href="http://kramdown.rubyforge.org/">kramdown</a> when I used Jekyll that weren’t available in my new document processor, <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>.</p>
-<p>Pandoc is a very interesting project that basically works by parsing input documents into a common intermediate form represented as an abstract syntax tree (<abbr title="Abstract Syntax Tree">AST</abbr>). This <abbr title="Abstract Syntax Tree">AST</abbr> can then be used to generate an output document in a variety of formats. In this spirit, I feel it’s a lot like the <a href="http://llvm.org/">LLVM</a> project. It seems to me that it has been gaining popularity especially from an end-user perspective (i.e. using the <code>pandoc</code> binary), commonly used to do things such as write manual pages in markdown or generate ebooks.</p>
+</code></pre></figure><h2 id="pandoc">
+<span class="hash">#</span>
+<a href="#pandoc" class="header-link">Pandoc</a>
+</h2>
+<p>Hakyll configuration is fairly straightforward. What took longer was the process of re-implementing some features that I had in <a href="http://kramdown.rubyforge.org/">kramdown</a> when I used Jekyll that weren&rsquo;t available in my new document processor, <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>.</p>
+
+<p>Pandoc is a very interesting project that basically works by parsing input documents into a common intermediate form represented as an abstract syntax tree (<abbr title="Abstract Syntax Tree">AST</abbr>). This <abbr title="Abstract Syntax Tree">AST</abbr> can then be used to generate an output document in a variety of formats. In this spirit, I feel it&rsquo;s a lot like the <a href="http://llvm.org/">LLVM</a> project. It seems to me that it has been gaining popularity especially from an end-user perspective (i.e. using the <code>pandoc</code> binary), commonly used to do things such as write manual pages in markdown or generate ebooks.</p>
+
 <p>The very nature of how Pandoc transforms input documents into an <abbr title="Abstract Syntax Tree">AST</abbr> lends itself to straight-forward <abbr title="Abstract Syntax Tree">AST</abbr> transformations. I have created two such transformations so far: one for Pygments syntax-highlighting and another for fancy table of contents generation.</p>
+
 <p>One of the things I needed to implement, however, was the abbreviation substitution described above. I would have implemented it as a Pandoc customization, but Pandoc has no representation for abbreviations in its abstract syntax tree. This was why I implemented it as a Hakyll compiler instead, using simple regular expressions.</p>
-<p>There is actually work towards implementing abbreviation substitution according to the <a href="http://johnmacfarlane.net/pandoc/README.html">readme</a> under the section “Extension: abbrevations” [sic] but it says:</p>
+
+<p>There is actually work towards implementing abbreviation substitution according to the <a href="http://johnmacfarlane.net/pandoc/README.html">readme</a> under the section &ldquo;Extension: abbrevations&quot; [sic] but it says:</p>
+
 <blockquote>
 <p>Note that the pandoc document model does not support abbreviations, so if this extension is enabled, abbreviation keys are simply skipped (as opposed to being parsed as paragraphs).</p>
 </blockquote>
-<h3 id="pygments">Pygments</h3>
-<p><strong>Update</strong>: This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I’ve created a pygments server that the site opens alongside it at launch, and this Pandoc <abbr title="Abstract Syntax Tree">AST</abbr> transformer communicates with it through its stdout/stdin handles. It works perfectly and the site compiles a lot quicker. It also fully supports UTF-8:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹</code></pre></figure>
-<p>One of the first things I wanted to implement right away was syntax highlighting with <a href="http://pygments.org/">Pygments</a>. There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for <a href="http://johnmacfarlane.net/highlighting-kate/">kate</a>: a Haskell package for syntax highlighting written by the author of Pandoc. However, I don’t find it to be on par with Pygments. In the past, I simply posted code to <a href="https://gist.github.com/">gist</a> and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.</p>
+<h3 id="pygments">
+<span class="hash">#</span>
+<a href="#pygments" class="header-link">Pygments</a>
+</h3>
+<p><strong>Update</strong>: This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I&rsquo;ve created a pygments server that the site opens alongside it at launch, and this Pandoc <abbr title="Abstract Syntax Tree">AST</abbr> transformer communicates with it through its stdout/stdin handles. It works perfectly and the site compiles a lot quicker. It also fully supports UTF-8:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹
+</code></pre></figure>
+<p>One of the first things I wanted to implement right away was syntax highlighting with <a href="http://pygments.org/">Pygments</a>. There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for <a href="http://johnmacfarlane.net/highlighting-kate/">kate</a>: a Haskell package for syntax highlighting written by the author of Pandoc. However, I don&rsquo;t find it to be on par with Pygments. In the past, I simply posted code to <a href="https://gist.github.com/">gist</a> and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.</p>
+
 <p>Eventually I realized that github just uses Pygments underneath, so I implemented a Pandoc <abbr title="Abstract Syntax Tree">AST</abbr> transformer that finds every <a href="http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Definition.html#t:Block"><code>CodeBlock</code></a>, extracts the code within it, passes it to Pygments, and replaces that <code>CodeBlock</code> with a <code>RawBlock</code> containing the raw HTML output by Pygments. I also implemented a way to specify an optional caption which is shown under the code block. I use <a href="http://jaspervdj.be/blaze/">blaze-html</a> for the parts where I need to hand-craft HTML.</p>
+
 <p>Ultimately, this all means that I can write code blocks like this in markdown:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">~~~ {lang=&quot;haskell&quot;}
-testFunction :: String -&gt; Integer
-~~~</code></pre></figure>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">``` haskell
+testFunction :: String -> Integer
+```
+</code></pre></figure>
 <p>Or, with a caption:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">~~~ {lang=&quot;ruby&quot; text=&quot;some caption&quot;}
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">``` ruby: some caption
 args.map! {|arg| arg.upcase}
-~~~</code></pre></figure>
-<p>One thing I had to do was invoke <a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/System-IO-Unsafe.html#v:unsafePerformIO"><code>unsafePerformIO</code></a> in the function I created which runs the code through <code>pygmentize</code>, an end-user binary for the Pygments library. I’m not sure if there’s a better way to do this, but my justification for using it is that Pygments should return the same output for any given input. If it doesn’t, then there are probably larger problems.</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">pygmentize</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
+```
+</code></pre></figure>
+<p>One thing I had to do was invoke <a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/System-IO-Unsafe.html#v:unsafePerformIO"><code>unsafePerformIO</code></a> in the function I created which runs the code through <code>pygmentize</code>, an end-user binary for the Pygments library. I&rsquo;m not sure if there&rsquo;s a better way to do this, but my justification for using it is that Pygments should return the same output for any given input. If it doesn&rsquo;t, then there are probably larger problems.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">pygmentize</span> <span class="ow">::</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
 <span class="nf">pygmentize</span> <span class="n">lang</span> <span class="n">contents</span> <span class="ow">=</span> <span class="n">unsafePerformIO</span> <span class="o">$</span> <span class="kr">do</span>
 </code></pre></figure>
-<p>I don’t feel particularly worried about it, given my justification. It’s a similar justification used by Real World Haskell when <a href="http://book.realworldhaskell.org/read/interfacing-with-c-the-ffi.html#id655783">creating bindings</a> for <a href="http://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions">PCRE</a> with the foreign function interface:</p>
+<p>I don&rsquo;t feel particularly worried about it, given my justification. It&rsquo;s a similar justification used by Real World Haskell when <a href="http://book.realworldhaskell.org/read/interfacing-with-c-the-ffi.html#id655783">creating bindings</a> for <a href="http://en.wikipedia.org/wiki/Perl_Compatible_Regular_Expressions">PCRE</a> with the foreign function interface:</p>
+
 <blockquote>
-<p>It lets us say to the compiler, “I know what I’m doing - this code really is pure”. For regular expression compilation, we know this to be the case: given the same pattern, we should get the same regular expression matcher every time. However, proving that to the compiler is beyond the Haskell type system, so we’re forced to assert that this code is pure.</p>
+<p>It lets us say to the compiler, &ldquo;I know what I&rsquo;m doing - this code really is pure&quot;. For regular expression compilation, we know this to be the case: given the same pattern, we should get the same regular expression matcher every time. However, proving that to the compiler is beyond the Haskell type system, so we&rsquo;re forced to assert that this code is pure.</p>
 </blockquote>
+
 <p>This is what the <abbr title="Abstract Syntax Tree">AST</abbr> transformer I wrote looks like:</p>
-<figure class="codeblock"><figcaption><span>Pandoc AST transformer for Pygments syntax highlighting</span></figcaption><pre><code class="highlight language-haskell"><span class="nf">pygments</span> <span class="ow">::</span> <span class="kt">Block</span> <span class="ow">-&gt;</span> <span class="kt">Block</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">pygments</span> <span class="ow">::</span> <span class="kt">Block</span> <span class="ow">-&gt;</span> <span class="kt">Block</span>
 <span class="nf">pygments</span> <span class="p">(</span><span class="kt">CodeBlock</span> <span class="p">(</span><span class="kr">_</span><span class="p">,</span> <span class="kr">_</span><span class="p">,</span> <span class="n">namevals</span><span class="p">)</span> <span class="n">contents</span><span class="p">)</span> <span class="ow">=</span>
   <span class="kr">let</span> <span class="n">lang</span> <span class="ow">=</span> <span class="n">fromMaybe</span> <span class="s">&quot;text&quot;</span> <span class="o">$</span> <span class="n">lookup</span> <span class="s">&quot;lang&quot;</span> <span class="n">namevals</span>
       <span class="n">text</span> <span class="ow">=</span> <span class="n">fromMaybe</span> <span class="s">&quot;&quot;</span> <span class="o">$</span> <span class="n">lookup</span> <span class="s">&quot;text&quot;</span> <span class="n">namevals</span>
       <span class="n">colored</span> <span class="ow">=</span> <span class="n">renderHtml</span> <span class="o">$</span> <span class="kt">H</span><span class="o">.</span><span class="n">div</span> <span class="o">!</span> <span class="kt">A</span><span class="o">.</span><span class="n">class_</span> <span class="s">&quot;code-container&quot;</span> <span class="o">$</span> <span class="kr">do</span>
                   <span class="n">preEscapedToHtml</span> <span class="o">$</span> <span class="n">pygmentize</span> <span class="n">lang</span> <span class="n">contents</span>
-      <span class="n">caption</span> <span class="ow">=</span> <span class="kr">if</span> <span class="n">text</span> <span class="o">/=</span> <span class="s">&quot;&quot;</span> 
+      <span class="n">caption</span> <span class="ow">=</span> <span class="kr">if</span> <span class="n">text</span> <span class="o">/=</span> <span class="s">&quot;&quot;</span>
                 <span class="kr">then</span> <span class="n">renderHtml</span> <span class="o">$</span> <span class="kt">H</span><span class="o">.</span><span class="n">figcaption</span> <span class="o">$</span> <span class="kt">H</span><span class="o">.</span><span class="n">span</span> <span class="o">$</span> <span class="kt">H</span><span class="o">.</span><span class="n">toHtml</span> <span class="n">text</span>
                 <span class="kr">else</span> <span class="s">&quot;&quot;</span>
       <span class="n">composed</span> <span class="ow">=</span> <span class="n">renderHtml</span> <span class="o">$</span> <span class="kt">H</span><span class="o">.</span><span class="n">figure</span> <span class="o">!</span> <span class="kt">A</span><span class="o">.</span><span class="n">class_</span> <span class="s">&quot;code&quot;</span> <span class="o">$</span> <span class="kr">do</span>
                    <span class="n">preEscapedToHtml</span> <span class="o">$</span> <span class="n">colored</span> <span class="o">++</span> <span class="n">caption</span>
   <span class="kr">in</span> <span class="kt">RawBlock</span> <span class="s">&quot;html&quot;</span> <span class="n">composed</span>
 <span class="nf">pygments</span> <span class="n">x</span> <span class="ow">=</span> <span class="n">x</span>
-</code></pre></figure>
-<h3 id="table-of-contents">Table of Contents</h3>
+</code></pre></figure><h3 id="table-of-contents">
+<span class="hash">#</span>
+<a href="#table-of-contents" class="header-link">Table of Contents</a>
+</h3>
 <p>The more sophisticated and complex of the <abbr title="Abstract Syntax Tree">AST</abbr> transformers I wrote for Pandoc is table of contents generation. This is something that kramdown had out of the box, though not as fancy. Paired with automatic id generation for headers, this meant that simply placing <code>{:toc}</code> in my page would replace that with automatically generated table of contents based on the headers used in the page.</p>
-<h4 id="alternatives">Alternatives</h4>
+<h4 id="alternatives">
+<span class="hash">#</span>
+<a href="#alternatives" class="header-link">Alternatives</a>
+</h4>
 <p>Pandoc actually does have support for table of contents generation using the <code>--toc</code> flag. In fact, <a href="http://julien.jhome.fr/posts/2013-05-14-adding-toc-to-posts.html">Julien Tanguy</a> recently devised a way to generate a separate version of every post which only included the table of contents, then re-introduced the table of contents as a <code>Context</code> field <code>$toc$</code>.</p>
-<p>I actually tried this approach, along with a metadata field that decided if the table of contents should be included in a given post or page. However, I ended up deciding against using it. One advantage would be that it took less code on my end, and possibly I would avoid re-inventing the wheel. One reason I didn’t keep it was because there was a tiny increase in compilation time which I fear might accumulate in the future as the number of posts grow. The reason for this is that the table of contents is generated for every post/page, instead of only the ones that should display it.</p>
-<p>Another reason was that it would require me to implement the fancy section numbering in JavaScript, which I don’t think would be too difficult since in this case the table of contents already exists and I simply need to insert my numbering. The main reason I decided against it, along with the previous two reasons, is that there would be a noticeable delay between the time when the table of contents are shown plainly and when they are transformed into my custom table of contents.</p>
-<h4 id="implementation">Implementation</h4>
+
+<p>I actually tried this approach, along with a metadata field that decided if the table of contents should be included in a given post or page. However, I ended up deciding against using it. One advantage would be that it took less code on my end, and possibly I would avoid re-inventing the wheel. One reason I didn&rsquo;t keep it was because there was a tiny increase in compilation time which I fear might accumulate in the future as the number of posts grow. The reason for this is that the table of contents is generated for every post/page, instead of only the ones that should display it.</p>
+
+<p>Another reason was that it would require me to implement the fancy section numbering in JavaScript, which I don&rsquo;t think would be too difficult since in this case the table of contents already exists and I simply need to insert my numbering. The main reason I decided against it, along with the previous two reasons, is that there would be a noticeable delay between the time when the table of contents are shown plainly and when they are transformed into my custom table of contents.</p>
+<h4 id="implementation">
+<span class="hash">#</span>
+<a href="#implementation" class="header-link">Implementation</a>
+</h4>
 <p>Implementing this involved many steps. In general terms, I had to make a pass through the document to collect all of the headers, then I had to make another pass to find a special sentinel marker I would manually place in the document to replace it with the generated table of contents. This effectively makes table of contents generation a two-pass transformer.</p>
-<p>Gathering all of the headers and their accompanying information, i.e. HTML <code>id</code>, text, level, proved to be a pretty straight-forward task using <a href="http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Generic.html#v:queryWith"><code>queryWith</code></a> from the <a href="http://hackage.haskell.org/package/pandoc-types">pandoc-types</a> package:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">queryWith</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Data</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Monoid</span> <span class="n">b</span><span class="p">,</span> <span class="kt">Data</span> <span class="n">c</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">c</span> <span class="ow">-&gt;</span> <span class="n">b</span>
+
+<p>Gathering all of the headers and their accompanying information, i.e. HTML <code>id</code>, text, level, proved to be a pretty straight-forward task using <a href="http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Generic.html#v:queryWith"><code>queryWith</code></a> from the <a href="http://hackage.haskell.org/package/pandoc-types">pandoc-types</a> package:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">queryWith</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Data</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Monoid</span> <span class="n">b</span><span class="p">,</span> <span class="kt">Data</span> <span class="n">c</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">c</span> <span class="ow">-&gt;</span> <span class="n">b</span>
 <span class="c1">-- Runs a query on matching a elements in a c.</span>
 <span class="c1">-- The results of the queries are combined using mappend.</span>
 </code></pre></figure>
-<p>Once I collect all of the <code>Header</code> items’ information, I normalize them by finding the smallest header <em>level</em> (i.e. big header) and normalizing all headers based on that level. That is, if smallest header level is 3 (i.e. <code>h3</code>), every header gets its level subtracted by 2 so that all headers are level 1 and above. Note that I’m not actually modifying the headers in the document, just the information about them that I’ve collected.</p>
-<p>Next, a <a href="http://hackage.haskell.org/packages/archive/containers/latest/doc/html/Data-Tree.html"><code>Data​.Tree</code></a> is constructed out of the headers which automatically encodes the nesting of the headers. This is done by exploiting <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/Data-List.html#v:groupBy"><code>groupBy</code></a> by passing it <code>&lt;</code> as an equivalence predicate:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">tocTree</span> <span class="ow">::</span> <span class="p">[</span><span class="kt">TocItem</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">Forest</span> <span class="kt">TocItem</span>
+<p>Once I collect all of the <code>Header</code> items' information, I normalize them by finding the smallest header <em>level</em> (i.e. big header) and normalizing all headers based on that level. That is, if smallest header level is 3 (i.e. <code>h3</code>), every header gets its level subtracted by 2 so that all headers are level 1 and above. Note that I&rsquo;m not actually modifying the headers in the document, just the information about them that I&rsquo;ve collected.</p>
+
+<p>Next, a <a href="http://hackage.haskell.org/packages/archive/containers/latest/doc/html/Data-Tree.html"><code>Data.Tree</code></a> is constructed out of the headers which automatically encodes the nesting of the headers. This is done by exploiting <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/Data-List.html#v:groupBy"><code>groupBy</code></a> by passing it <code>&lt;</code> as an equivalence predicate:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">tocTree</span> <span class="ow">::</span> <span class="p">[</span><span class="kt">TocItem</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="kt">Forest</span> <span class="kt">TocItem</span>
 <span class="nf">tocTree</span> <span class="ow">=</span> <span class="n">map</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="kt">Node</span> <span class="n">x</span> <span class="p">(</span><span class="n">tocTree</span> <span class="n">xs</span><span class="p">))</span> <span class="o">.</span> <span class="n">groupBy</span> <span class="p">(</span><span class="n">comp</span><span class="p">)</span>
   <span class="kr">where</span> <span class="n">comp</span> <span class="p">(</span><span class="kt">TocItem</span> <span class="n">a</span> <span class="kr">_</span> <span class="kr">_</span><span class="p">)</span> <span class="p">(</span><span class="kt">TocItem</span> <span class="n">b</span> <span class="kr">_</span> <span class="kr">_</span><span class="p">)</span> <span class="ow">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
 </code></pre></figure>
-<p>This <code>Tree</code> is finally passed to a recursive function that folds every level of the <code>Tree</code>—known as a <code>Forest</code>—into a numbered, unordered list. While that may sound like an oxymoron, the point is that I wanted to have nested numbering in my table of contents. For this reason, I create an unordered list with a <code>span</code> containing the section number concatenated to the parent’s section number. This function generates the HTML.</p>
-<p>The final problem was finding a way to insert the table of contents on-demand, in a location of my choosing. In kramdown, this is achieved by writing <code>{:toc}</code>, which gets substituted with the table of contents. Pandoc has no such thing, however. For this reason, I chose a list with a single item, “toc,” as the place holder for the table of contents. This means that I write the following wherever I want the table of contents to show up:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">* toc</code></pre></figure>
+<p>This <code>Tree</code> is finally passed to a recursive function that folds every level of the <code>Tree</code>&mdash;known as a <code>Forest</code>&mdash;into a numbered, unordered list. While that may sound like an oxymoron, the point is that I wanted to have nested numbering in my table of contents. For this reason, I create an unordered list with a <code>span</code> containing the section number concatenated to the parent&rsquo;s section number. This function generates the HTML.</p>
+
+<p>The final problem was finding a way to insert the table of contents on-demand, in a location of my choosing. In kramdown, this is achieved by writing <code>{:toc}</code>, which gets substituted with the table of contents. Pandoc has no such thing, however. For this reason, I chose a list with a single item, &ldquo;toc,&rdquo; as the place holder for the table of contents. This means that I write the following wherever I want the table of contents to show up:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">* toc
+</code></pre></figure>
 <p>You can take a look at the beginning of this post to see what the generated table of contents looks like, especially the nested numbering I was referring to.</p>
-<h2 id="deploying">Deploying</h2>
-<p>I host my site using GitHub Pages. Such sites are deployed by pushing the site to the master branch of the repository. I wrote a quick shell script that accomplishes this in a pretty straightforward manner. It creates a git ignored directory, <code class="path">deploy​/​,</code> which itself is under git control, associated with the same repository, but its master branch instead.</p>
-<p>When I deploy the site with <code>./site deploy</code>, the contents of <code class="path">deploy​/</code> are removed—except for the <code class="path">.git​/</code> directory—and then all of the new generated files are copied into it. A commit is then generated for the deployment, tagged with the SHA identifier of the commit from which the site was generated, to make it easy for me to track things down sometimes. An eight character, truncated SHA is used as follows:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">COMMIT</span><span class="o">=</span><span class="k">$(</span>git log -1 HEAD --pretty<span class="o">=</span>format:%H<span class="k">)</span>
+<h2 id="deploying">
+<span class="hash">#</span>
+<a href="#deploying" class="header-link">Deploying</a>
+</h2>
+<p>I host my site using GitHub Pages. Such sites are deployed by pushing the site to the master branch of the repository. I wrote a quick shell script that accomplishes this in a pretty straightforward manner. It creates a git ignored directory, <span class="path">deploy/</span>, which itself is under git control, associated with the same repository, but its master branch instead.</p>
+
+<p>When I deploy the site with <code>./site deploy</code>, the contents of <span class="path">deploy/</span> are removed&mdash;except for the <span class="path">.git/</span> directory&mdash;and then all of the new generated files are copied into it. A commit is then generated for the deployment, tagged with the SHA identifier of the commit from which the site was generated, to make it easy for me to track things down sometimes. An eight character, truncated SHA is used as follows:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">COMMIT</span><span class="o">=</span><span class="k">$(</span>git log -1 HEAD --pretty<span class="o">=</span>format:%H<span class="k">)</span>
 <span class="nv">SHA</span><span class="o">=</span><span class="si">${</span><span class="nv">COMMIT</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">8</span><span class="si">}</span>
 git commit -m <span class="s2">&quot;generated from </span><span class="nv">$SHA</span><span class="s2">&quot;</span> -q
 </code></pre></figure>
 <p>Finally, the commit is force pushed to the repository, replacing everything already there, effectively deploying the site.</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion">
+<span class="hash">#</span>
+<a href="#conclusion" class="header-link">Conclusion</a>
+</h2>
 <p>Preliminary migration to Hakyll was pretty quick. This included porting all of my posts, pages, and other assets to the Hakyll and Pandoc Markdown formats. The rest of the week was spent implementing the various features, some outlined above, and refining the code base.</p>
+
 <p>At first I was a little rusty with my Haskell and found myself at odds with the seemingly capricious compiler, trying to find one way or another to appease it. I quickly remembered that patience prevailed when concerning Haskell, and eventually came to really enjoy reasoning out the problems and solving them with Haskell.</p>
+
 <p>The site binary which is in charge of generation, previewing, etc. is compiled. Once you have configured Hakyll to your liking, you have a very fast binary, especially compared to other site generators which are known not to scale well with the amount of posts. The <code>Compiler</code> Monad in Hakyll takes care of dependency tracking, allowing re-generation of only those items which are affected by those which were changed, instead of the whole site.</p>
-<p>But perhaps my favorite aspect of Hakyll is that it’s more like a library for static site generation which you use as you see fit, and as a result, your site is entirely customizable.</p></div>
+
+<p>But perhaps my favorite aspect of Hakyll is that it&rsquo;s more like a library for static site generation which you use as you see fit, and as a result, your site is entirely customizable.</p>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> May 14, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/the-switch-to-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/8c3304b" title="remove callout styling">8c3304b</a></span></div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll/">Hakyll</a>, <a href="/tags/haskell/">Haskell</a>, <a href="/tags/pandoc/">Pandoc</a></div>
-    
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/the-switch-to-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll">Hakyll</a>, <a href="/tags/haskell">Haskell</a>, <a href="/tags/pandoc">Pandoc</a></div>
   </div>
 </article>
 <section id="comment">
@@ -301,6 +468,7 @@ git commit -m <span class="s2">&quot;generated from </span><span class="nv">$SHA
 
 
 
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -319,12 +487,30 @@ git commit -m <span class="s2">&quot;generated from </span><span class="nv">$SHA
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/posts/the-switch-to-hakyll.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
 
 <!-- disqus -->
 <script async="true" type="text/javascript">
   var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/posts/the-switch-to-hakyll/';
-  var disqus_url = 'http://blaenkdenum.com/posts/the-switch-to-hakyll/';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/the-switch-to-hakyll';
+  var disqus_url = 'http://blaenkdenum.com/posts/the-switch-to-hakyll';
   var disqus_script = 'embed.js';
 
   (function () {
@@ -338,8 +524,8 @@ git commit -m <span class="s2">&quot;generated from </span><span class="nv">$SHA
       DISQUS.reset({
         reload: true,
         config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/posts/the-switch-to-hakyll/'
-          this.page.url = 'http://blaenkdenum.com/posts/the-switch-to-hakyll/'
+          this.page.identifier = 'http://blaenkdenum.com/posts/the-switch-to-hakyll'
+          this.page.url = 'http://blaenkdenum.com/posts/the-switch-to-hakyll'
         }
       });
     });

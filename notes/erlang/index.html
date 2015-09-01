@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,27 +72,56 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/erlang/"><span>Erlang and the OTP</span></a></h2>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/erlang"><span>Erlang and the OTP</span></a></h2>
   <div class="entry-content"><p>Erlang was the first functional programming language I took a shot at learning. I started with the Manning book <em>Erlang in Action</em> which also explained the OTP. The problem was that I was combining learning functional programming with the pretty fringe environment that is Erlang. So instead I took a break from that and decided to learn Haskell, and loved it.</p>
-<p>Now I’m back and would like to pick up Erlang and its OTP library. Even if I don’t end up using it, I think it’ll teach me many interesting concepts that lend themselves to this new age of massively concurrent programs. <a href="/notes/scala/">Scala</a>, for example, uses actor-based concurrency much like Erlang’s, as well as supervision trees.</p>
-<nav id="toc"><h3>Contents</h3><ol><li><a href="#modules">Modules</a><ol><li><a href="#module-example">Example</a></li></ol></li><li><a href="#processes">Processes</a></li><li><a href="#values">Values</a><ol><li><a href="#lists">Lists</a></li></ol></li></ol></nav>
-<h1 id="modules">Modules</h1>
+
+<p>Now I&rsquo;m back and would like to pick up Erlang and its OTP library. Even if I don&rsquo;t end up using it, I think it&rsquo;ll teach me many interesting concepts that lend themselves to this new age of massively concurrent programs. <a href="/notes/scala/">Scala</a>, for example, uses actor-based concurrency much like Erlang&rsquo;s, as well as supervision trees.</p>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#modules">Modules</a>
+</li>
+<li>
+<a href="#processes">Processes</a>
+</li>
+<li>
+<a href="#values">Values</a>
+<ol>
+<li>
+<a href="#lists">Lists</a>
+</li>
+</ol>
+</li>
+</ol>
+</nav>
+<h1 id="modules">
+<span class="hash">#</span>
+<a href="#modules" class="header-link">Modules</a>
+</h1>
 <p>Modules generally take the following form. The first line contains the module directive, known as the <em>export declaration</em>, as in Haskell. This lists the functions and their arity.</p>
-<figure class="codeblock"><pre><code class="highlight language-erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">hello</span><span class="p">).</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">hello</span><span class="p">).</span>
 <span class="nf">export</span><span class="p">([</span><span class="n">start</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
 
 <span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span>
   <span class="nn">io</span><span class="p">:</span><span class="nf">format</span><span class="p">(</span><span class="s">&quot;Hello world</span><span class="si">~n</span><span class="s">&quot;</span><span class="p">).</span>
 </code></pre></figure>
-<p>This can be compiled from the shell with the <code>c(modulename)</code> command. However, it’s more likely to be compiled with the Erlang compiler <code>erlc</code>, which produces a <code>beam</code> file. It’s possible to then run the program can then be run on the Erlang virtual machine with the <code>erl</code> command, which uses <code>-s</code> to specify the functions to evaluate, in order.</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>erlc hello.erl
+<p>This can be compiled from the shell with the <code>c(modulename)</code> command. However, it&rsquo;s more likely to be compiled with the Erlang compiler <code>erlc</code>, which produces a <code>beam</code> file. It&rsquo;s possible to then run the program can then be run on the Erlang virtual machine with the <code>erl</code> command, which uses <code>-s</code> to specify the functions to evaluate, in order.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>erlc hello.erl
 <span class="nv">$ </span>erl -noshell -s hello start -s init stop
 </code></pre></figure>
-<h2 id="module-example">Example</h2>
-<p>The following describes a file server. It defines a convenience function <code>start</code> which spawns a process that forever performs the <code>loop</code> function inside a particular directory, which simply waits for a message to be received and processes it. Notice that <code>loop</code> performs a tail-recursive call; Erlang has tail-call optimization, so there’s no need to worry about overflowing the stack.</p>
+<p>The following describes a file server. It defines a convenience function <code>start</code> which spawns a process that forever performs the <code>loop</code> function inside a particular directory, which simply waits for a message to be received and processes it. Notice that <code>loop</code> performs a tail-recursive call; Erlang has tail-call optimization, so there&rsquo;s no need to worry about overflowing the stack.</p>
+
 <p>This server simply responds to two simple messages: one which requests a file listing and another which request file contents. Notice that the messages are distinguished by pattern matching, which works on atoms as well, such as <code>list_dir</code>.</p>
-<figure class="codeblock"><figcaption><span>server</span></figcaption><pre><code class="highlight language-erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">afile_server</span><span class="p">).</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">afile_server</span><span class="p">).</span>
 <span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">start</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="n">loop</span><span class="o">/</span><span class="mi">1</span><span class="p">]).</span>
 
 <span class="nf">start</span><span class="p">(</span><span class="nv">Dir</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">spawn</span><span class="p">(</span><span class="n">afile_server</span><span class="p">,</span> <span class="n">loop</span><span class="p">,</span> <span class="p">[</span><span class="nv">Dir</span><span class="p">]).</span>
@@ -107,8 +136,10 @@
   <span class="k">end</span><span class="p">,</span>
   <span class="n">loop</span><span class="p">(</span><span class="nv">Dir</span><span class="p">).</span>
 </code></pre></figure>
-<p>The client simply serves to provide client-facing functions that abstract away the server protocol, i.e. the exact messages sent. These simply send the appropriate message and wait for the response.</p>
-<figure class="codeblock"><figcaption><span>client</span></figcaption><pre><code class="highlight language-erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">afile_client</span><span class="p">).</span>
+<p>The client simply serves to provide client-facing functions that abstract away the server protocol, i.e. the exact messages sent. These simply send the appropriate message and wait for the response.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-erlang"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">afile_client</span><span class="p">).</span>
 <span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">ls</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="n">get_file</span><span class="o">/</span><span class="mi">2</span><span class="p">]).</span>
 
 <span class="nf">ls</span><span class="p">(</span><span class="nv">Server</span><span class="p">)</span> <span class="o">-&gt;</span>
@@ -124,10 +155,14 @@
     <span class="p">{</span><span class="nv">Server</span><span class="p">,</span> <span class="nv">Content</span><span class="p">}</span> <span class="o">-&gt;</span>
       <span class="nv">Content</span>
   <span class="k">end</span><span class="p">.</span>
-</code></pre></figure>
-<h1 id="processes">Processes</h1>
+</code></pre></figure><h1 id="processes">
+<span class="hash">#</span>
+<a href="#processes" class="header-link">Processes</a>
+</h1>
 <p><code>spawn</code> is an Erlang primitive that initiates a concurrent process and returns its identifier.</p>
-<figure class="codeblock"><pre><code class="highlight language-erlang"><span class="nb">spawn</span><span class="p">(</span><span class="nv">ModuleName</span><span class="p">,</span> <span class="nv">FuncName</span><span class="p">,</span> <span class="p">[</span><span class="nv">Arg1</span><span class="p">,</span> <span class="nv">Arg2</span><span class="p">,</span> <span class="p">...,</span> <span class="nv">ArgN</span><span class="p">])</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-erlang"><span class="nb">spawn</span><span class="p">(</span><span class="nv">ModuleName</span><span class="p">,</span> <span class="nv">FuncName</span><span class="p">,</span> <span class="p">[</span><span class="nv">Arg1</span><span class="p">,</span> <span class="nv">Arg2</span><span class="p">,</span> <span class="p">...,</span> <span class="nv">ArgN</span><span class="p">])</span>
 
 <span class="c">% to spawn a process running the `init` function</span>
 <span class="c">% from the `person` module, i.e. `person:init`</span>
@@ -135,38 +170,68 @@
 <span class="nb">spawn</span><span class="p">(</span><span class="n">person</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;Joe&quot;</span><span class="p">])</span>
 </code></pre></figure>
 <p>The way in which processes can interact is through sending messages, which is done using the <code>!</code> primitive.</p>
-<figure class="codeblock"><pre><code class="highlight language-erlang"><span class="nv">RecipientPid</span> <span class="o">!</span> <span class="nv">Msg</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-erlang"><span class="nv">RecipientPid</span> <span class="o">!</span> <span class="nv">Msg</span>
 
 <span class="c">% self() refers to the current process id</span>
 
 <span class="nv">OtherProcess</span> <span class="o">!</span> <span class="p">{</span><span class="n">self</span><span class="p">(),</span> <span class="s">&quot;Hey there&quot;</span><span class="p">}</span>
 </code></pre></figure>
 <p>Processes are received in a <code>receive</code> block by pattern matching on the messages.</p>
-<figure class="codeblock"><pre><code class="highlight language-erlang"><span class="k">receive</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-erlang"><span class="k">receive</span>
   <span class="p">{</span><span class="nv">From</span><span class="p">,</span> <span class="nv">Message</span><span class="p">}</span> <span class="o">-&gt;</span>
     <span class="p">...</span>
 <span class="k">end</span>
-</code></pre></figure>
-<h1 id="values">Values</h1>
-<p>Values are bound with the <code>=</code> operator, like <code>let</code> in Haskell. It’s also possible to pattern match on the value. Value names start with capital letters. Names beginning with lowercase letters are symbolic constants called <em>atoms</em> <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
-<figure class="codeblock"><pre><code class="highlight language-erlang"><span class="nv">X</span> <span class="o">=</span> <span class="mi">123</span><span class="p">.</span>
-</code></pre></figure>
-<h2 id="lists">Lists</h2>
+</code></pre></figure><h1 id="values">
+<span class="hash">#</span>
+<a href="#values" class="header-link">Values</a>
+</h1>
+<p>Values are bound with the <code>=</code> operator, like <code>let</code> in Haskell. It&rsquo;s also possible to pattern match on the value. Value names start with capital letters. Names beginning with lowercase letters are symbolic constants called <em>atoms</em> <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-erlang"><span class="nv">X</span> <span class="o">=</span> <span class="mi">123</span><span class="p">.</span>
+</code></pre></figure><h2 id="lists">
+<span class="hash">#</span>
+<a href="#lists" class="header-link">Lists</a>
+</h2>
 <p>Lists can be heterogeneous in Erlang.</p>
-<section class="footnotes">
-<hr />
+
+<div class="footnotes">
+<hr>
 <ol>
-<li id="fn1"><p>Like Ruby <code>:symbols</code> and Scala <code>'symbols</code>.<a href="#fnref1">↩</a></p></li>
+
+<li id="fn1">
+<p>Like Ruby <code>:symbols</code> and Scala <code>&#39;symbols</code>.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
 </ol>
-</section></div>
+</div>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 26, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/erlang.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/4e11f4d" title="use em dashes correctly">4e11f4d</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/erlang.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -185,7 +250,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/erlang.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/erlang';
+  var disqus_url = 'http://blaenkdenum.com/notes/erlang';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/erlang'
+          this.page.url = 'http://blaenkdenum.com/notes/erlang'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

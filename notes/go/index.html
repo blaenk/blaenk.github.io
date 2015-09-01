@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,51 +72,114 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/go/"><span>Go</span></a></h2>
-  <div class="entry-content"><p>I’ve been meaning to learn Go for a while now. I’ve recently come to renew an interest in simple, no non-sense languages like Python, and what I imagine Go to be. The resources I’ll be using are the <a href="http://golang.org/ref/spec">go specification</a>, <a href="http://tour.golang.org">go tour</a>, and <a href="http://golang.org/doc/effective_go.html">effective go</a>. A lot of this is straight from these sources, with my commentary of how I come to understand it.</p>
-<nav id="toc"><h3>Contents</h3><ol><li><a href="#packages">Packages</a></li><li><a href="#functions">Functions</a></li><li><a href="#variables">Variables</a></li><li><a href="#control-structures">Control Structures</a></li><li><a href="#structures">Structures</a></li><li><a href="#pointers">Pointers</a></li><li><a href="#arrays-and-slices">Arrays and Slices</a></li><li><a href="#maps">Maps</a></li><li><a href="#methods">Methods</a></li><li><a href="#interfaces">Interfaces</a></li><li><a href="#errors">Errors</a></li><li><a href="#concurrency">Concurrency</a></li></ol></nav>
-<h1 id="packages">Packages</h1>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/go"><span>Go</span></a></h2>
+  <div class="entry-content"><p>I&rsquo;ve been meaning to learn Go for a while now. I&rsquo;ve recently come to renew an interest in simple, no non-sense languages like Python, and what I imagine Go to be. The resources I&rsquo;ll be using are the <a href="http://golang.org/ref/spec">go specification</a>, <a href="http://tour.golang.org">go tour</a>, and <a href="http://golang.org/doc/effective_go.html">effective go</a>. A lot of this is straight from these sources, with my commentary of how I come to understand it.</p>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#packages">Packages</a>
+</li>
+<li>
+<a href="#functions">Functions</a>
+</li>
+<li>
+<a href="#variables">Variables</a>
+</li>
+<li>
+<a href="#control-structures">Control Structures</a>
+</li>
+<li>
+<a href="#structures">Structures</a>
+</li>
+<li>
+<a href="#pointers">Pointers</a>
+</li>
+<li>
+<a href="#arrays-and-slices">Arrays and Slices</a>
+</li>
+<li>
+<a href="#maps">Maps</a>
+</li>
+<li>
+<a href="#methods">Methods</a>
+</li>
+<li>
+<a href="#interfaces">Interfaces</a>
+</li>
+<li>
+<a href="#errors">Errors</a>
+</li>
+<li>
+<a href="#concurrency">Concurrency</a>
+</li>
+</ol>
+</nav>
+<h1 id="packages">
+<span class="hash">#</span>
+<a href="#packages" class="header-link">Packages</a>
+</h1>
 <p>Packages can be imported with the <code>import</code> statement. They can also be grouped inside parentheses. The containing package can be specified with the <code>package</code> statement. Names that begin with capitalized letters are exported by the package:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kn">package</span> <span class="nx">somepkg</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kn">package</span> <span class="nx">somepkg</span>
 
 <span class="kn">import</span> <span class="p">(</span>
   <span class="s">&quot;fmt&quot;</span>
   <span class="s">&quot;math/rand&quot;</span>
 <span class="p">)</span>
-</code></pre></figure>
-<h1 id="functions">Functions</h1>
+</code></pre></figure><h1 id="functions">
+<span class="hash">#</span>
+<a href="#functions" class="header-link">Functions</a>
+</h1>
 <p>When there are consecutive named function parameters of the same type, we can omit the type of all but the last:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">func</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">func</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>Functions can return multiple values:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">func</span> <span class="nx">swap</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">func</span> <span class="nx">swap</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">x</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>Result values can be named and set within the function, in which case <code>return</code> returns them as they are:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">func</span> <span class="nx">split</span><span class="p">(</span><span class="nx">sum</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">func</span> <span class="nx">split</span><span class="p">(</span><span class="nx">sum</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">x</span> <span class="p">=</span> <span class="nx">sum</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">9</span><span class="p">;</span>
   <span class="nx">y</span> <span class="p">=</span> <span class="nx">sum</span> <span class="o">-</span> <span class="nx">x</span>
   <span class="k">return</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>Functions are also values, and can be used to create closures:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="nx">hypot</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">float64</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="nx">hypot</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">float64</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nx">Sqrt</span><span class="p">(</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">*</span> <span class="nx">y</span><span class="p">)</span>
 <span class="p">}</span>
-</code></pre></figure>
-<h1 id="variables">Variables</h1>
+</code></pre></figure><h1 id="variables">
+<span class="hash">#</span>
+<a href="#variables" class="header-link">Variables</a>
+</h1>
 <p>Variables are declared with <code>var</code>. Multiple variables can be initialized in a tuple-assignment fashion, in which case the type can be omitted as it will be inferred from the initializers. Inside functions, <code>:=</code> can be used in place of a var declaration with inferred type. Variables can be declared constant with <code>const</code> but not using the <code>:=</code> syntax:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">var</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="p">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">var</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="p">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
 <span class="nx">k</span> <span class="o">:=</span> <span class="mi">3</span>
 <span class="kd">const</span> <span class="nx">World</span> <span class="p">=</span> <span class="s">&quot;hello&quot;</span>
 </code></pre></figure>
-<p>Numeric constants have arbitrary precision and don’t overflow.</p>
+<p>Numeric constants have arbitrary precision and don&rsquo;t overflow.</p>
+
 <p>The following are the available types in Go. Type conversions are possible through <code>T(v)</code>.</p>
-<figure class="codeblock"><pre><code class="highlight language-text">bool
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">bool
 
 string
 
@@ -129,28 +192,40 @@ rune // alias for int32, represents a Unicode code point
 
 float32 float64
 
-complex64 complex128</code></pre></figure>
-<h1 id="control-structures">Control Structures</h1>
-<p>There’s only one looping construct and that’s the <code>for</code> loop. The <code>for</code> loop in Go doesn’t use parentheses around the parameters, but the braces around the code to loop are mandatory.</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+complex64 complex128
+</code></pre></figure><h1 id="control-structures">
+<span class="hash">#</span>
+<a href="#control-structures" class="header-link">Control Structures</a>
+</h1>
+<p>There&rsquo;s only one looping construct and that&rsquo;s the <code>for</code> loop. The <code>for</code> loop in Go doesn&rsquo;t use parentheses around the parameters, but the braces around the code to loop are mandatory.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
   <span class="nx">sum</span> <span class="o">+=</span> <span class="nx">i</span>
 <span class="p">}</span>
 </code></pre></figure>
-<p>As in C, pre and/or post conditions can be omitted. If both are omitted, it’s just like a while loop:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="k">for</span> <span class="nx">sum</span> <span class="p">&lt;</span> <span class="mi">1000</span> <span class="p">{</span>
+<p>As in C, pre and/or post conditions can be omitted. If both are omitted, it&rsquo;s just like a while loop:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="k">for</span> <span class="nx">sum</span> <span class="p">&lt;</span> <span class="mi">1000</span> <span class="p">{</span>
   <span class="nx">sum</span> <span class="o">+=</span> <span class="nx">sum</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>Further still, the condition can be omitted to achieve a forever-loop.</p>
-<p><code>if</code> conditions can take a statement to run before the condition, scoped until the end of the <code>if</code> block (i.e. including <code>else</code> blocks):</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="k">if</span> <span class="nx">v</span><span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">Pow</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">n</span><span class="p">);</span> <span class="nx">v</span> <span class="p">&lt;</span> <span class="nx">lim</span> <span class="p">{</span>
+
+<p><code>if</code> conditions can take a statement to run before the condition, scoped until the end of the <code>if</code> block (i.e. including <code>else</code> blocks):</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="k">if</span> <span class="nx">v</span><span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">Pow</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">n</span><span class="p">);</span> <span class="nx">v</span> <span class="p">&lt;</span> <span class="nx">lim</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">v</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
   <span class="nx">fm</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%g &gt;= %g\n&quot;</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">lim</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>The <code>switch</code> statement case bodies break by default, unless they end in a <code>fallthrough</code> statement:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="k">switch</span> <span class="nx">os</span> <span class="o">:=</span> <span class="nx">runtime</span><span class="p">.</span><span class="nx">GOOS</span><span class="p">;</span> <span class="nx">os</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="k">switch</span> <span class="nx">os</span> <span class="o">:=</span> <span class="nx">runtime</span><span class="p">.</span><span class="nx">GOOS</span><span class="p">;</span> <span class="nx">os</span> <span class="p">{</span>
 <span class="k">case</span> <span class="s">&quot;darwin&quot;</span><span class="p">:</span>
   <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;OS X&quot;</span><span class="p">)</span>
 <span class="k">case</span> <span class="s">&quot;linux&quot;</span><span class="p">:</span>
@@ -160,9 +235,14 @@ complex64 complex128</code></pre></figure>
 <span class="p">}</span>
 </code></pre></figure>
 <p>The condition on the switch statement can be omitted, in which case it acts like a long if-then-else chain.</p>
-<h1 id="structures">Structures</h1>
-<p>Structures can be defined with the <code>struct</code> keyword and given a name with <code>type</code>. Fields are accessed using a dot as in other languages. When creating a struct, any non-initialized field takes on that type’s default value:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">type</span> <span class="nx">Vertex</span> <span class="kd">struct</span> <span class="p">{</span>
+<h1 id="structures">
+<span class="hash">#</span>
+<a href="#structures" class="header-link">Structures</a>
+</h1>
+<p>Structures can be defined with the <code>struct</code> keyword and given a name with <code>type</code>. Fields are accessed using a dot as in other languages. When creating a struct, any non-initialized field takes on that type&rsquo;s default value:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">type</span> <span class="nx">Vertex</span> <span class="kd">struct</span> <span class="p">{</span>
   <span class="nx">X</span> <span class="kt">int</span>
   <span class="nx">Y</span> <span class="kt">int</span>
 <span class="p">}</span>
@@ -179,20 +259,30 @@ complex64 complex128</code></pre></figure>
   <span class="c1">// new(T) == &amp;T{}</span>
   <span class="kd">var</span> <span class="nx">q</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Vertex</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span> <span class="c1">// type *Vertex</span>
 <span class="p">}</span>
-</code></pre></figure>
-<h1 id="pointers">Pointers</h1>
+</code></pre></figure><h1 id="pointers">
+<span class="hash">#</span>
+<a href="#pointers" class="header-link">Pointers</a>
+</h1>
 <p>There are pointers but no pointer arithmetic. Indirection through pointers is transparent:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="nx">p</span> <span class="o">:=</span> <span class="nx">Vertex</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="nx">p</span> <span class="o">:=</span> <span class="nx">Vertex</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>
 <span class="nx">q</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">p</span>
 <span class="nx">q</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="mf">1e9</span>
 </code></pre></figure>
 <p>A value of type <code>T</code> can be allocated with the <code>new</code> function:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">var</span> <span class="nx">t</span> <span class="o">*</span><span class="nx">T</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">T</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">var</span> <span class="nx">t</span> <span class="o">*</span><span class="nx">T</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">T</span><span class="p">)</span>
 <span class="nx">t</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">T</span><span class="p">)</span>
-</code></pre></figure>
-<h1 id="arrays-and-slices">Arrays and Slices</h1>
-<p>An array of <code>n</code> type <code>T</code> elements is created with the <code>[n]T</code> syntax. A slice points to an array and includes a length and capacity. Slices can be re-sliced with the syntax <code>s[lo​:hi]</code> as in Python slices, which essentially points to a region of the same array. Slices can be created with <code>make</code> which takes the type of array, the length and optional capacity. The <code>range</code> function can be used to iterate over a slice or map, yielding an <code>index​, value</code> per iteration, or if the <code>value</code> isn’t needed simply omit it:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">var</span> <span class="nx">a</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="kt">int</span>
+</code></pre></figure><h1 id="arrays-and-slices">
+<span class="hash">#</span>
+<a href="#arrays-and-slices" class="header-link">Arrays and Slices</a>
+</h1>
+<p>An array of <code>n</code> type <code>T</code> elements is created with the <code>[n]T</code> syntax. A slice points to an array and includes a length and capacity. Slices can be re-sliced with the syntax <code>s[lo:hi]</code> as in Python slices, which essentially points to a region of the same array. Slices can be created with <code>make</code> which takes the type of array, the length and optional capacity. The <code>range</code> function can be used to iterate over a slice or map, yielding an <code>index, value</code> per iteration, or if the <code>value</code> isn&rsquo;t needed simply omit it:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">var</span> <span class="nx">a</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="kt">int</span>
 <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">1</span>
 
 <span class="nx">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -216,10 +306,14 @@ complex64 complex128</code></pre></figure>
 <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p</span> <span class="p">{</span>
   <span class="c1">// something</span>
 <span class="p">}</span>
-</code></pre></figure>
-<h1 id="maps">Maps</h1>
-<p>Maps take the form <code>map​[key]value</code>. A <code>nil</code> map is empty and can’t be assigned to. Map literals accept a trailing comma. When reading a map element, if the key doesn’t exist in the map, the value returned is the default value for the map value type:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">type</span> <span class="nx">Vertex</span> <span class="kd">struct</span> <span class="p">{</span>
+</code></pre></figure><h1 id="maps">
+<span class="hash">#</span>
+<a href="#maps" class="header-link">Maps</a>
+</h1>
+<p>Maps take the form <code>map[key]value</code>. A <code>nil</code> map is empty and can&rsquo;t be assigned to. Map literals accept a trailing comma. When reading a map element, if the key doesn&rsquo;t exist in the map, the value returned is the default value for the map value type:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">type</span> <span class="nx">Vertex</span> <span class="kd">struct</span> <span class="p">{</span>
   <span class="nx">Lat</span><span class="p">,</span> <span class="nx">Long</span> <span class="kt">float64</span>
 <span class="p">}</span>
 
@@ -246,10 +340,14 @@ complex64 complex128</code></pre></figure>
   <span class="c1">// else val is default value for map val type</span>
   <span class="nx">val</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="s">&quot;Bell Labs&quot;</span><span class="p">]</span>
 <span class="p">}</span>
-</code></pre></figure>
-<h1 id="methods">Methods</h1>
-<p>While Go doesn’t have classes, it has a syntax for defining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with <code>type</code>, but <em>not</em> on types from other packages or basic types. A pointer receiver can be modified and doesn’t have to copy the entire structure on the method call, just like in C/C++:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><span class="nx">Vertex</span><span class="p">)</span> <span class="nx">Abs</span><span class="p">()</span> <span class="kt">float64</span> <span class="p">{</span>
+</code></pre></figure><h1 id="methods">
+<span class="hash">#</span>
+<a href="#methods" class="header-link">Methods</a>
+</h1>
+<p>While Go doesn&rsquo;t have classes, it has a syntax for defining methods on structures. In the function declaration, the method receiver appears before the function name. This can also be done on any type we create, such as with <code>type</code>, but <em>not</em> on types from other packages or basic types. A pointer receiver can be modified and doesn&rsquo;t have to copy the entire structure on the method call, just like in C/C++:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">func</span> <span class="p">(</span><span class="nx">v</span> <span class="o">*</span><span class="nx">Vertex</span><span class="p">)</span> <span class="nx">Abs</span><span class="p">()</span> <span class="kt">float64</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nx">Sqrt</span><span class="p">(</span><span class="nx">v</span><span class="p">.</span><span class="nx">X</span> <span class="o">*</span> <span class="nx">v</span><span class="p">.</span><span class="nx">X</span> <span class="o">+</span> <span class="nx">v</span><span class="p">.</span><span class="nx">Y</span> <span class="o">*</span> <span class="nx">v</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
 <span class="p">}</span>
 
@@ -267,10 +365,14 @@ complex64 complex128</code></pre></figure>
 
 <span class="nx">f</span> <span class="o">:=</span> <span class="nx">MyFloat</span><span class="p">(</span><span class="o">-</span><span class="nx">math</span><span class="p">.</span><span class="nx">Sqrt2</span><span class="p">)</span>
 <span class="nx">f</span><span class="p">.</span><span class="nx">Abs</span><span class="p">()</span>
-</code></pre></figure>
-<h1 id="interfaces">Interfaces</h1>
-<p>Interfaces types are defined by a set of methods. A value of interface type can hold any value that implements those methods. It’s important to note that types implement interfaces implicitly, there’s no explicit declaration of intent as with Haskell typeclasses (<code>class T where</code>) or traditional Java interfaces (<code>class A implements B</code>):</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">type</span> <span class="nx">Abser</span> <span class="kd">interface</span> <span class="p">{</span>
+</code></pre></figure><h1 id="interfaces">
+<span class="hash">#</span>
+<a href="#interfaces" class="header-link">Interfaces</a>
+</h1>
+<p>Interfaces types are defined by a set of methods. A value of interface type can hold any value that implements those methods. It&rsquo;s important to note that types implement interfaces implicitly, there&rsquo;s no explicit declaration of intent as with Haskell typeclasses (<code>class T where</code>) or traditional Java interfaces (<code>class A implements B</code>):</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">type</span> <span class="nx">Abser</span> <span class="kd">interface</span> <span class="p">{</span>
   <span class="nx">Abs</span><span class="p">()</span> <span class="kt">float64</span>
 <span class="p">}</span>
 
@@ -280,7 +382,9 @@ complex64 complex128</code></pre></figure>
 <span class="nx">a</span> <span class="p">=</span> <span class="nx">v</span> <span class="c1">// error: Vertex doesn&#39;t implement Abser, *Vertex does</span>
 </code></pre></figure>
 <p>Interfaces can also be composed of other interfaces:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">type</span> <span class="nx">Reader</span> <span class="kd">interface</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">type</span> <span class="nx">Reader</span> <span class="kd">interface</span> <span class="p">{</span>
   <span class="nx">Read</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
 <span class="p">}</span>
 
@@ -292,10 +396,14 @@ complex64 complex128</code></pre></figure>
   <span class="nx">Reader</span>
   <span class="nx">Writer</span>
 <span class="p">}</span>
-</code></pre></figure>
-<h1 id="errors">Errors</h1>
+</code></pre></figure><h1 id="errors">
+<span class="hash">#</span>
+<a href="#errors" class="header-link">Errors</a>
+</h1>
 <p>In Go, an error is anything that can be described as a string. Interface type <code>error</code> defines a single method <code>Error</code> that returns a string:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
   <span class="nx">Error</span><span class="p">()</span> <span class="kt">string</span>
 <span class="p">}</span>
 
@@ -320,10 +428,14 @@ complex64 complex128</code></pre></figure>
     <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></figure>
-<h1 id="concurrency">Concurrency</h1>
+</code></pre></figure><h1 id="concurrency">
+<span class="hash">#</span>
+<a href="#concurrency" class="header-link">Concurrency</a>
+</h1>
 <p>A goroutine is a lightweight thread managed by the Go runtime. The evaluation of the function and its arguments occurs in the current goroutine but execution of the function occurs in a new goroutine:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="kd">func</span> <span class="nx">say</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="kd">func</span> <span class="nx">say</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
     <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">)</span>
     <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
@@ -342,22 +454,30 @@ complex64 complex128</code></pre></figure>
 <span class="p">}</span>
 </code></pre></figure>
 <p>Channels are typed conduits through which data of that type can be sent, a lot like Haskell channels. The <code>&lt;-</code> operator is used to send and receive values, where the data travels in the direction of the arrow. Sending and receiving blocks until the other side is ready, allowing simple synchronization of the different goroutines:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">T</span><span class="p">)</span> <span class="c1">// create channel of type T</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">T</span><span class="p">)</span> <span class="c1">// create channel of type T</span>
 <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">v</span>            <span class="c1">// send v to channel ch</span>
 <span class="nx">v</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>          <span class="c1">// receive from channel ch into v</span>
 </code></pre></figure>
-<p>There are also bounded, buffered channels, in which case the buffer doesn’t block on send as long as the buffer isn’t full, nor on receive as long as the buffer isn’t empty:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="nx">buffered</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">T</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<p>There are also bounded, buffered channels, in which case the buffer doesn&rsquo;t block on send as long as the buffer isn&rsquo;t full, nor on receive as long as the buffer isn&rsquo;t empty:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="nx">buffered</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">T</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 </code></pre></figure>
 <p>Channels can be closed with the <code>close</code> function. Receivers can test if the channel is closed by accepting the second return value. Alternatively, looping with a <code>range</code> on the channel will read values until the channel is closed:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="nx">v</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="nx">v</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
 
 <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ch</span> <span class="p">{</span>
   <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></figure>
-<p>The <code>select</code> statement lets a goroutine wait on multiple communication operations, a lot like the POSIX <code>select()</code> system call. It’ll block until one of its cases can run, randomly choosing if multiple are ready. A <code>default</code> case can be specified for when no other case is ready, particularly useful when the <code>select</code> is used within a forever loop, as is usually the case. The <code>default</code> case is usually used to try a send or receive without blocking:</p>
-<figure class="codeblock"><pre><code class="highlight language-go"><span class="k">for</span> <span class="p">{</span>
+<p>The <code>select</code> statement lets a goroutine wait on multiple communication operations, a lot like the POSIX <code>select()</code> system call. It&rsquo;ll block until one of its cases can run, randomly choosing if multiple are ready. A <code>default</code> case can be specified for when no other case is ready, particularly useful when the <code>select</code> is used within a forever loop, as is usually the case. The <code>default</code> case is usually used to try a send or receive without blocking:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-go"><span class="k">for</span> <span class="p">{</span>
   <span class="k">select</span> <span class="p">{</span>
   <span class="k">case</span> <span class="nx">c</span> <span class="o">&lt;-</span> <span class="nx">x</span><span class="p">:</span>
     <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="p">=</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
@@ -371,12 +491,26 @@ complex64 complex128</code></pre></figure>
 </code></pre></figure></div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> December 20, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/go.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/6246222" title="typo">6246222</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/go.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -395,7 +529,50 @@ complex64 complex128</code></pre></figure>
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/go.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/go';
+  var disqus_url = 'http://blaenkdenum.com/notes/go';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/go'
+          this.page.url = 'http://blaenkdenum.com/notes/go'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

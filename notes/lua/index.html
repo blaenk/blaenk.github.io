@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,28 +72,40 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/lua/"><span>Lua</span></a></h2>
-  <div class="entry-content"><p>LuaJIT has an FFI which allows code to be JIT compiled, whereas regular C API calls aren’t <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/lua"><span>Lua</span></a></h2>
+  <div class="entry-content"><p>LuaJIT has an FFI which allows code to be JIT compiled, whereas regular C API calls aren&rsquo;t <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>:</p>
+
 <p><strong>Pros</strong>:</p>
+
 <ul>
 <li>Speed</li>
 <li>Easier bindings done from the Lua side, given a simple C ABI of whatever needs binding. No unexpected code being generated that may present edge-case bugs which might be difficult to detect.</li>
 </ul>
+
 <p><strong>Cons</strong>:</p>
+
 <ul>
 <li>Safety. Third-party scripting can easily crash the application</li>
-<li>Bindings seem to be simpler from a C-language perspective. To this end, C++ programs would presumably have to write C ABI functions to be picked up/wrapped on Lua’s end via the FFI <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. This contrasts with automatically generated SWIG bindings from C++ to Lua’s C API. However, I think a benefit is that it ends up being cleaner and more precise/predictable than generated code.</li>
+<li>Bindings seem to be simpler from a C-language perspective. To this end, C++ programs would presumably have to write C ABI functions to be picked up/wrapped on Lua&rsquo;s end via the FFI <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>. This contrasts with automatically generated SWIG bindings from C++ to Lua&rsquo;s C API. However, I think a benefit is that it ends up being cleaner and more precise/predictable than generated code.</li>
 </ul>
-<h1 id="using-ffi" class="notoc">Using FFI</h1>
+<h1 id="using-ffi">
+<span class="hash">#</span>
+<a href="#using-ffi" class="header-link">Using FFI</a>
+</h1>
 <p>Using the FFI in LuaJIT is pretty straightforward. A shared library has to be created that exposes the C functions:</p>
-<figure class="codeblock"><pre><code class="highlight language-cpp"><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
   <span class="n">DLLEXPORT</span> <span class="kt">void</span> <span class="n">some_function</span><span class="p">();</span>
   <span class="n">DLLEXPORT</span> <span class="kt">int</span> <span class="nf">get_count</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>Where <code>DLLEXPORT</code> is <code>__declspec(dllexport)</code> on Windows. This can then be loaded by a Lua script:</p>
-<figure class="codeblock"><pre><code class="highlight language-lua"><span class="kd">local</span> <span class="n">ffi</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s1">&#39;</span><span class="s">ffi&#39;</span><span class="p">)</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-lua"><span class="kd">local</span> <span class="n">ffi</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s1">&#39;</span><span class="s">ffi&#39;</span><span class="p">)</span>
 
 <span class="n">ffi</span><span class="p">.</span><span class="n">cdef</span><span class="s">[[</span>
 <span class="s">void some_function();</span>
@@ -105,36 +117,54 @@
 <span class="kd">local</span> <span class="n">count</span> <span class="o">=</span> <span class="n">api</span><span class="p">.</span><span class="n">get_count</span><span class="p">();</span>
 </code></pre></figure>
 <p>Official FFI Resources</p>
+
 <ul>
 <li><a href="http://luajit.org/ext_ffi_tutorial.html">Tutorial</a></li>
 <li><a href="http://luajit.org/ext_ffi.html">Library</a></li>
 <li><a href="http://luajit.org/ext_ffi_api.html">API</a></li>
 <li><a href="http://luajit.org/ext_ffi_semantics.html">Semantics</a></li>
 </ul>
+
 <p>C wrapper development resources:</p>
+
 <ul>
 <li><a href="http://lucumr.pocoo.org/2013/8/18/beautiful-native-libraries/">Beautiful Native Libraries</a></li>
 </ul>
-<h1 id="callbacks" class="notoc">Callbacks</h1>
+<h1 id="callbacks">
+<span class="hash">#</span>
+<a href="#callbacks" class="header-link">Callbacks</a>
+</h1>
 <p>There is a <a href="http://luajit.org/ext_ffi_semantics.html#callback_performance">heavy overhead</a> with C-to-Lua calls, generally found in the form of callbacks in which a C FFI function is provided a callback function written in Lua. The overhead is seemingly similar to the C API calls.</p>
+
 <blockquote>
-<p>Do not use callbacks for performance-sensitive work: e.g. consider a numerical integration routine which takes a user-defined function to integrate over. It’s a bad idea to call a user-defined Lua function from C code millions of times. The callback overhead will be absolutely detrimental for performance.</p>
-<p>It’s considerably faster to write the numerical integration routine itself in Lua — the JIT compiler will be able to inline the user-defined function and optimize it together with its calling context, with very competitive performance.</p>
+<p>Do not use callbacks for performance-sensitive work: e.g. consider a numerical integration routine which takes a user-defined function to integrate over. It&rsquo;s a bad idea to call a user-defined Lua function from C code millions of times. The callback overhead will be absolutely detrimental for performance.</p>
+
+<p>It&rsquo;s considerably faster to write the numerical integration routine itself in Lua — the JIT compiler will be able to inline the user-defined function and optimize it together with its calling context, with very competitive performance.</p>
 </blockquote>
+
 <p>Instead of passing a callback to a C function that applies that function to a sequence, a C function should be created that generates/yields the sequence an element at a time, with the processing done in Lua:</p>
+
 <blockquote>
 <p>For new designs avoid push-style APIs: a C function repeatedly calling a callback for each result. Instead use pull-style APIs: call a C function repeatedly to get a new result. Calls from Lua to C via the FFI are much faster than the other way round. Most well-designed libraries already use pull-style APIs (read/write, get/put).</p>
 </blockquote>
+
 <p>Here is a <a href="http://stackoverflow.com/a/12435278/101090">benchmark</a> of the forms of callbacks.</p>
-<h1 id="resources" class="notoc">Resources</h1>
+<h1 id="resources">
+<span class="hash">#</span>
+<a href="#resources" class="header-link">Resources</a>
+</h1>
 <p>Resources about the language:</p>
+
 <ul>
 <li><a href="http://cellux.github.io/articles/introduction-to-luajit-part-1/">Introduction to LuaJIT</a></li>
 <li><a href="http://tylerneylon.com/a/learn-lua/">Learn Lua in 15 Minutes</a></li>
 </ul>
+
 <p>Resources on LuaJIT:</p>
+
 <ul>
 <li><a href="http://stackoverflow.com/questions/18376966/scripting-with-luajit-and-selectively-sandboxing-the-ffi">Scripting with LuaJIT and selectively sandboxing the FFI</a>
+
 <ul>
 <li><a href="http://lua-users.org/wiki/SandBoxes">SandBoxes</a></li>
 <li><a href="http://luajit.org/ext_ffi_semantics.html#policy">FFI Untrusted Code</a></li>
@@ -142,26 +172,45 @@
 <li><a href="https://speakerdeck.com/igdshare/introduction-to-luajit-how-to-bind-cpp-code-base-using-luajit-ffi">FFI Embedding Talk #1</a></li>
 <li><a href="http://vadimg.github.io/luajit-talk/">FFI Embedding Talk #2</a></li>
 </ul>
+
 <p>Projects using LuaJIT FFI:</p>
+
 <ul>
 <li><a href="https://github.com/godfat/cubeat">CuBeat</a></li>
-<li><a href="https://github.com/malkia/ufo" class="uri">https://github.com/malkia/ufo</a></li>
+<li><a href="https://github.com/malkia/ufo">https://github.com/malkia/ufo</a></li>
 </ul>
-<section class="footnotes">
-<hr />
+
+<div class="footnotes">
+<hr>
 <ol>
-<li id="fn1"><p><a href="http://stackoverflow.com/questions/16131793/when-using-luajit-is-it-better-to-use-ffi-or-normal-lua-bindings">When using Luajit, is it better to use FFI or normal lua bindings?</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>In <a href="http://lua-users.org/lists/lua-l/2011-07/msg00492.html">LuaJIT FFI/C++ binding, best approach?</a>, someone decided to use clang to parse each method and generate C wrappers. Others do it manually.<a href="#fnref2">↩</a></p></li>
+
+<li id="fn1">
+<p><a href="http://stackoverflow.com/questions/16131793/when-using-luajit-is-it-better-to-use-ffi-or-normal-lua-bindings">When using Luajit, is it better to use FFI or normal lua bindings?</a>&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn2">
+<p>In <a href="http://lua-users.org/lists/lua-l/2011-07/msg00492.html">LuaJIT FFI/C++ binding, best approach?</a>, someone decided to use clang to parse each method and generate C wrappers. Others do it manually.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
+</li>
+
 </ol>
-</section></div>
+</div>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September  1, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/lua.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/4e11f4d" title="use em dashes correctly">4e11f4d</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/lua.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/34f2452" title="migrate from old codeblock fencing syntax
+">34f2452</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -180,7 +229,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/lua.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/lua';
+  var disqus_url = 'http://blaenkdenum.com/notes/lua';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/lua'
+          this.page.url = 'http://blaenkdenum.com/notes/lua'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

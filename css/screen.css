@@ -405,18 +405,21 @@ article {
         padding: 2px 10px; }
       article .entry-content table tr:nth-of-type(2n) {
         background: #D0E9FF; }
+    article .entry-content aside.table-caption {
+      text-align: center; }
     article .entry-content abbr {
       cursor: default;
       border-bottom: 1px solid #ccc; }
-    article .entry-content a[id^="fnref"] {
-      color: #990000; }
-      article .entry-content a[id^="fnref"] sup {
-        vertical-align: baseline;
-        font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace;
-        font-size: inherit; }
-        article .entry-content a[id^="fnref"] sup:before {
+    article .entry-content sup[id^="fnref"] {
+      color: #990000;
+      vertical-align: baseline;
+      font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace;
+      font-size: inherit; }
+      article .entry-content sup[id^="fnref"] a {
+        color: #990000; }
+        article .entry-content sup[id^="fnref"] a:before {
           content: "[#"; }
-        article .entry-content a[id^="fnref"] sup:after {
+        article .entry-content sup[id^="fnref"] a:after {
           content: "]"; }
     article .entry-content .footnotes {
       font-size: 0.8em;
@@ -506,7 +509,7 @@ article {
           article .entry-content #toc li {
             line-height: 1.69; } }
         article .entry-content #toc li:before {
-          content: counters(item,".") ". ";
+          content: counters(item, ".") ". ";
           counter-increment: item; }
       article .entry-content #toc:after {
         clear: both; }
@@ -518,6 +521,9 @@ article {
         article .entry-content h1:hover .hash, article .entry-content h2:hover .hash, article .entry-content h3:hover .hash, article .entry-content h4:hover .hash, article .entry-content h5:hover .hash {
           color: #ccc;
           display: block; } }
+  @media screen and (max-width: 600px) and (max-width: 766px), screen and (max-width: 766px) and (max-width: 766px) {
+    article .entry-content h1:hover .hash, article .entry-content h2:hover .hash, article .entry-content h3:hover .hash, article .entry-content h4:hover .hash, article .entry-content h5:hover .hash {
+      display: none; } }
       article .entry-content h1 .hash, article .entry-content h2 .hash, article .entry-content h3 .hash, article .entry-content h4 .hash, article .entry-content h5 .hash {
         color: #ddd;
         transition: color 0.3s;
@@ -660,6 +666,7 @@ article.page h1.title {
 
 .archive li:last-child {
   margin-bottom: 15px; }
+
 .archive > li {
   margin-bottom: 2px;
   margin-left: 20px;
@@ -724,8 +731,14 @@ article.page h1.title {
     #footer #social a[title="email"]:hover {
       color: #f66; }
 
+.path,
+.entry-content code,
+.entry-content pre {
+  font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace; }
+
 .language-javascript .kd {
   color: #3E999F; }
+
 .language-javascript .nx {
   color: inherit; }
 
@@ -737,54 +750,67 @@ article.page h1.title {
 
 .language-clojure .ss {
   color: #8959A8; }
+
 .language-clojure .nv {
   color: inherit; }
+
 .language-clojure .nb, .language-clojure .nf {
   color: #4271AE; }
 
 .language-haskell .nn {
   color: #d33682; }
+
 .language-haskell .nb {
   color: #a47c00; }
+
 .language-haskell .cm {
   color: #555555; }
 
 .language-scala .nc {
   color: #C82829; }
+
 .language-scala .nn {
   color: #3E999F; }
 
 .language-gdb .kt {
   color: #3E999F; }
+
 .language-gdb .nv {
   color: #718C00; }
 
 .language-rust .nl {
   color: #cb4b16; }
+
 .language-rust .s-Raw {
   color: #cb4b16; }
 
 .language-html .nt {
   color: #3E999F; }
+
 .language-html .na {
   color: #8959A8; }
 
 .language-python .kn {
   color: #8959A8; }
+
 .language-python .nn {
   color: #3E999F; }
 
 .language-java .nc {
   color: #C82829; }
+
 .language-java .nn {
   color: #8959A8; }
+
 .language-java .kc {
   color: #3E999F; }
 
 .language-cmake .nb {
   color: #4271AE; }
+
 .language-cmake .nv {
   color: #718C00; }
+
 .language-cmake .s {
   color: inherit; }
 
@@ -792,148 +818,216 @@ code {
   background-color: #EEE;
   padding: 1px 5px; }
 
-code.path {
+.path {
   background-color: inherit;
   padding: 0; }
 
 code .bp {
   color: #4271AE; }
+
 code .c {
   color: #93a1a1; }
+
 code .c1 {
   color: #93a1a1; }
+
 code .cm {
   color: #93a1a1; }
+
 code .cp {
   color: #555555; }
+
 code .cs {
   color: #718C00; }
+
 code .err {
   color: #93a1a1; }
+
 code .g {
   color: #93a1a1; }
+
 code .gd {
   color: #3E999F; }
+
 code .ge {
   color: #93a1a1;
   font-style: italic; }
+
 code .gh {
   color: #cb4b16; }
+
 code .gi {
   color: #718C00; }
+
 code .go {
   color: #93a1a1; }
+
 code .gp {
   color: #93a1a1; }
+
 code .gr {
   color: #C82829; }
+
 code .gs {
   color: #93a1a1;
   font-weight: bold; }
+
 code .gt {
   color: #93a1a1; }
+
 code .gu {
   color: #cb4b16; }
+
 code .il {
   color: #3E999F; }
+
 code .k {
   color: #718C00; }
+
 code .kc {
   color: #cb4b16; }
+
 code .kd {
   color: #718C00; }
+
 code .kn {
   color: #718C00; }
+
 code .kp {
   color: #718C00; }
+
 code .kr {
   color: #718C00; }
+
 code .kt {
   color: #a47c00; }
+
 code .l {
   color: #93a1a1; }
+
 code .ld {
   color: #93a1a1; }
+
 code .m {
   color: #cb4b16; }
+
 code .mf {
   color: #cb4b16; }
+
 code .mh {
   color: #cb4b16; }
+
 code .mi {
   color: #cb4b16; }
+
 code .mo {
   color: #cb4b16; }
+
 code .n {
   color: #555555; }
+
 code .na {
   color: #4271AE; }
+
 code .nb {
   color: #C82829; }
+
 code .nbp {
   color: #C82829; }
+
 code .nc {
   color: #4271AE; }
+
 code .nd {
   color: #4271AE; }
+
 code .ne {
   color: #cb4b16; }
+
 code .nf {
   color: #4271AE; }
+
 code .ni {
   color: #cb4b16; }
+
 code .nl {
   color: inherit; }
+
 code .nn {
   color: #93a1a1; }
+
 code .no {
   color: #718C00; }
+
 code .nt {
   color: #4271AE; }
+
 code .nv {
   color: #4271AE; }
+
 code .nx {
   color: inherit; }
+
 code .o {
   color: #93a1a1; }
+
 code .ow {
   color: #3E999F; }
+
 code .p {
   color: #93a1a1; }
+
 code .py {
   color: #93a1a1; }
+
 code .s {
   color: #3E999F; }
+
 code .s1 {
   color: #3E999F; }
+
 code .s2 {
   color: #3E999F; }
+
 code .sb {
   color: #3E999F; }
+
 code .sc {
   color: #3E999F; }
+
 code .sd {
   color: #93a1a1; }
+
 code .se {
   color: #cb4b16; }
+
 code .sh {
   color: #93a1a1; }
+
 code .si {
   color: #3E999F; }
+
 code .sr {
   color: #C82829; }
+
 code .ss {
   color: #3E999F; }
+
 code .sx {
   color: #3E999F; }
+
 code .vc {
   color: #4271AE; }
+
 code .vg {
   color: #4271AE; }
+
 code .vi {
   color: #4271AE; }
+
 code .w {
   color: #93a1a1; }
+
 code .x {
   color: #cb4b16; }
 
@@ -983,7 +1077,3 @@ figure.codeblock {
     figure.codeblock pre .highlight {
       padding: 0;
       background-color: transparent; }
-
-.entry-content code,
-.entry-content pre {
-  font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace; }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Tagged: Vim - Blaenk Denum</title>
+  <title>Posts tagged: Vim</title>
   <meta name="author" content="Jorge Israel Peña">
   <meta name="description" content="AKA Blaenk Denum">
 
@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,21 +72,19 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <h2 id="tag"><span style="color: #999">#</span>Vim</h2>
+    
+        <h2 id="tag"><span style="color: #999">#</span>Vim</h2>
+<!-- <h2 class="archive-year">null</h2> -->
+<ul class="archive">
 
-  <h2 class="archive-year">2013</h2>
-  <ul class="archive">
-  
-    <li class="archive-item">
-      <a class="item-link" href="/posts/a-simpler-vim-statusline/" title="Tired of overdone statuslines">
-        A Simpler Vim Statusline
-      </a>
-    </li>
-  
-  </ul>
+  <li class="archive-item">
+    <a class="item-link" href="/posts/a-simpler-vim-statusline">A Simpler Vim Statusline</a>
+  </li>
+
+</ul>
 
 
-
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -105,7 +103,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/null');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/null';
+  var disqus_url = 'http://blaenkdenum.com/null';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/null'
+          this.page.url = 'http://blaenkdenum.com/null'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

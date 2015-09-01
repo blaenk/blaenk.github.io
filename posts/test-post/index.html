@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,64 +72,100 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/posts/test-post/"><span>Test Post</span></a></h2>
-  <div class="entry-content"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dolor nisi, feugiat sit amet egestas sit amet, mattis sit amet velit. Proin quis metus id mi vulputate adipiscing eget et <strong>sapien</strong>. Sed iaculis auctor sem ac convallis <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. Cras nisi libero, dignissim quis facilisis et, bibendum eget enim. Vivamus est leo, tristique ut adipiscing vitae, malesuada adipiscing tellus. Integer nec aliquam justo. Nam ac lacus erat. In <strong><em>hac habitasse platea</em></strong> dictumst. Donec pharetra, lectus sit amet ultrices fringilla, metus mi auctor ligula, in hendrerit dui arcu eu leo.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/posts/test-post"><span>Test Post</span></a></h2>
+  <div class="entry-content"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dolor nisi, feugiat sit amet egestas sit amet, mattis sit amet velit. Proin quis metus id mi vulputate adipiscing eget et <strong>sapien</strong>. Sed iaculis auctor sem ac convallis <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. Cras nisi libero, dignissim quis facilisis et, bibendum eget enim. Vivamus est leo, tristique ut adipiscing vitae, malesuada adipiscing tellus. Integer nec aliquam justo. Nam ac lacus erat. In <strong><em>hac habitasse platea</em></strong> dictumst. Donec pharetra, lectus sit amet ultrices fringilla, metus mi auctor ligula, in hendrerit dui arcu eu leo.</p>
+
 <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla facilisi. Vestibulum consectetur nulla eget erat <em>fermentum malesuada</em>. Nullam ultricies nulla ut eros vulputate sed cursus tortor faucibus. Cras ac risus mauris. Suspendisse molestie elementum luctus. Vestibulum <a href="http://www.google.com">venenatis blandit</a> velit ac pretium. Press <kbd>CTRL</kbd> + <kbd>X</kbd>.</p>
-<p><span class="math">\[ i\hbar\frac{\partial \psi}{\partial t}
+
+<p>\[ i\hbar\frac{\partial \psi}{\partial t}
   = \frac{-\hbar^2}{2m} \left(
     \frac{\partial^2}{\partial x^2}
     + \frac{\partial^2}{\partial y^2}
     + \frac{\partial^2}{\partial z^2}
-  \right) \psi + V \psi \]</span></p>
+  \right) \psi + V \psi \]</p>
+
 <p>Nulla facilisi. Cras lectus velit, rhoncus et mollis eget, ultricies quis ligula. Integer ornare nibh in est molestie tempus. Praesent bibendum placerat diam id gravida. Fusce et velit eget dui laoreet interdum eget id arcu. Ut et massa nibh, ut mollis augue. In hac habitasse platea dictumst. Sed massa orci, <strong>venenatis</strong> vitae dapibus sit amet, varius ut nibh. Ut vel enim leo, at posuere nisi. In elementum sem vel nibh malesuada sagittis.</p>
-<p><span class="math">\[R_{ab} - {\textstyle 1 \over 2}R\,g_{ab} + \Lambda\ g_{ab} = \kappa\, T_{ab}\]</span></p>
+
+<p>\[R_{ab} - {\textstyle 1 \over 2}R\,g_{ab} + \Lambda\ g_{ab} = \kappa\, T_{ab}\]</p>
+
 <p>Nulla facilisi. Cras lectus velit, rhoncus et mollis eget, ultricies quis ligula. Integer ornare nibh in est molestie tempus. Praesent bibendum placerat diam id gravida. Fusce et velit eget dui laoreet interdum eget id arcu. Ut et massa nibh, ut mollis augue. In hac habitasse platea dictumst. Sed massa orci, venenatis vitae dapibus sit amet, varius ut nibh. Ut vel enim leo, at posuere nisi. In elementum sem vel nibh malesuada sagittis.</p>
-<figure class="codeblock"><figcaption><span>an example of base64 decoding in ruby</span></figcaption><pre><code class="highlight language-ruby"><span class="nb">require</span> <span class="s1">&#39;base64&#39;</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-ruby"><span class="nb">require</span> <span class="s1">&#39;base64&#39;</span>
 
 <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;favicon.png&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
   <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="no">Base64</span><span class="o">.</span><span class="n">decode64</span><span class="p">(</span><span class="n">base64</span><span class="p">))</span>
 <span class="k">end</span>
 </code></pre></figure>
-<p>Donec vitae turpis non augue pulvinar imperdiet eu non erat. Integer mollis diam ac quam lobortis luctus. Suspendisse scelerisque sodales massa sit amet pharetra. <span class="math">\(\Delta S = \pi\)</span> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> Donec cursus, velit in mollis dapibus, nunc elit pharetra erat, et dictum sem sapien pretium ligula. Cras nibh elit, mollis eu eleifend sed, faucibus in velit. Aliquam gravida tristique molestie. Donec gravida, diam ac auctor auctor, nulla enim varius sem, non auctor urna mi vitae enim. Cras aliquam semper nibh, quis viverra urna ultrices et. Nunc rhoncus fringilla dapibus.</p>
+<p>Donec vitae turpis non augue pulvinar imperdiet eu non erat. Integer mollis diam ac quam lobortis luctus. Suspendisse scelerisque sodales massa sit amet pharetra. \(\Delta S = \pi\) <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup> Donec cursus, velit in mollis dapibus, nunc elit pharetra erat, et dictum sem sapien pretium ligula. Cras nibh elit, mollis eu eleifend sed, faucibus in velit. Aliquam gravida tristique molestie. Donec gravida, diam ac auctor auctor, nulla enim varius sem, non auctor urna mi vitae enim. Cras aliquam semper nibh, quis viverra urna ultrices et. Nunc rhoncus fringilla dapibus.</p>
+
 <p><img src="http://placekitten.com/720/250" class="center"></p>
-<h1 id="immortal-words" class="notoc">Immortal Words</h1>
+<h1 id="immortal-words">
+<span class="hash">#</span>
+<a href="#immortal-words" class="header-link">Immortal Words</a>
+</h1>
 <p>As you can see, there’s lots of work to do! Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi. Cras lectus velit, rhoncus et mollis eget, ultricies quis ligula. Integer ornare nibh in est molestie tempus. Praesent bibendum placerat diam id gravida. Fusce et velit eget dui laoreet interdum eget id arcu.</p>
+
 <blockquote>
 <p>Too many people have opinions on things they know nothing about. And the more ignorant they are, the more opinions they have.</p>
+
 <p><cite><strong>Thomas Hildern</strong> on <a href="http://fallout.wikia.com/wiki/Thomas_Hildern">Fallout Wiki</a></cite></p>
 </blockquote>
+
 <p>Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi.</p>
-<h2 id="the-meaning-of-life" class="notoc">The Meaning of Life</h2>
+<h2 id="the-meaning-of-life">
+<span class="hash">#</span>
+<a href="#the-meaning-of-life" class="header-link">The Meaning of Life</a>
+</h2>
 <p><img src="http://placekitten.com/150/100" class="right" title="Place Kitten #3"></p>
+
 <p>Aenean tristique, magna a semper venenatis, orci odio tempor lorem, ac molestie ligula enim ac urna. Fusce egestas nisl id massa porta vitae pretium tellus aliquet. Morbi tempor arcu sit amet felis hendrerit aliquam. Nulla facilisi. Suspendisse diam tortor, pharetra ac porta eu, ullamcorper nec lectus. Sed nulla turpis, blandit et tincidunt vel, <code>condimentum</code> et sapien. Aliquam dignissim blandit pharetra. Mauris ornare accumsan libero at bibendum. Morbi dui nisl, aliquet sit amet gravida sit amet, mollis commodo nulla. Quisque eu felis purus.</p>
-<p><span class="math">\[ \forall x, y : \mathbb{Z}, x &gt; 3 \land y &lt; 2 \Rightarrow x^2 - 2y &gt; 5\]</span></p>
+
+<p>\[ \forall x, y : \mathbb{Z}, x &gt; 3 \land y &lt; 2 \Rightarrow x^2 - 2y &gt; 5\]</p>
+
 <p>Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi. In lectus nisl, semper ac imperdiet eu, ultricies luctus erat. Sed ultrices lectus in <code>massa tincidunt</code> fringilla. Aenean lectus tortor, tempus a sagittis vitae, hendrerit eget lacus.</p>
-<h3 id="things-to-do" class="notoc">Things to do</h3>
+<h3 id="things-to-do">
+<span class="hash">#</span>
+<a href="#things-to-do" class="header-link">Things to do</a>
+</h3>
 <ul>
 <li>first do this</li>
 <li>then do this other thing</li>
-<li>then maybe, if you’re not tired, do this last thing</li>
+<li>then maybe, if you&rsquo;re not tired, do this last thing</li>
 </ul>
+
 <p>Here it is numbered for you:</p>
-<ol type="1">
+
+<ol>
 <li>first do this</li>
 <li>then do this other thing</li>
-<li>then maybe, if you’re not tired, do this last thing</li>
+<li>then maybe, if you&rsquo;re not tired, do this last thing</li>
 </ol>
-<p>As you can see, there’s lots of work to do! Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi. In lectus nisl, semper ac imperdiet eu, ultricies luctus erat. Sed ultrices lectus in <code>massa tincidunt</code> fringilla. Aenean lectus tortor, tempus a sagittis vitae, hendrerit eget lacus.</p>
-<section class="footnotes">
-<hr />
+
+<p>As you can see, there&rsquo;s lots of work to do! Aenean mauris augue, faucibus vel sagittis nec, viverra sit amet sapien. Etiam neque nisi, molestie vel lacinia a, scelerisque eget justo. Suspendisse imperdiet lectus eu metus malesuada vel vehicula libero rutrum. Nulla facilisi. In lectus nisl, semper ac imperdiet eu, ultricies luctus erat. Sed ultrices lectus in <code>massa tincidunt</code> fringilla. Aenean lectus tortor, tempus a sagittis vitae, hendrerit eget lacus.</p>
+
+<div class="footnotes">
+<hr>
 <ol>
-<li id="fn1"><p>Cras nibh elit, mollis eu eleifend sed, faucibus in velit.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>This is the awesome constant<a href="#fnref2">↩</a></p></li>
+
+<li id="fn1">
+<p>Cras nibh elit, mollis eu eleifend sed, faucibus in velit. &nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn2">
+<p>This is the awesome constant &nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
+</li>
+
 </ol>
-</section></div>
+</div>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September 19, 2012</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/test-post.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/6c94670" title="simpler blockquote style, citation change">6c94670</a></span></div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/pandoc/">Pandoc</a></div>
-    
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/test-post.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/5ebdb1f" title="init
+">5ebdb1f</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/pandoc">Pandoc</a></div>
   </div>
 </article>
 <section id="comment">
@@ -140,6 +176,7 @@
 
 
 
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -158,12 +195,30 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/posts/test-post.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
 
 <!-- disqus -->
 <script async="true" type="text/javascript">
   var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/posts/test-post/';
-  var disqus_url = 'http://blaenkdenum.com/posts/test-post/';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/test-post';
+  var disqus_url = 'http://blaenkdenum.com/posts/test-post';
   var disqus_script = 'embed.js';
 
   (function () {
@@ -177,8 +232,8 @@
       DISQUS.reset({
         reload: true,
         config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/posts/test-post/'
-          this.page.url = 'http://blaenkdenum.com/posts/test-post/'
+          this.page.identifier = 'http://blaenkdenum.com/posts/test-post'
+          this.page.url = 'http://blaenkdenum.com/posts/test-post'
         }
       });
     });

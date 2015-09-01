@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,33 +72,53 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/posts/extra-dependencies-in-hakyll/"><span>Extra Dependencies in Hakyll</span></a></h2>
-  <div class="entry-content"><p>I use <a href="http://sass-lang.com/">scss</a> for my site’s stylesheets. scss is a language very similar to <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets">CSS</a> that adds support for variables, nesting, mixins, selector inheritance, and more—while retaining a syntax very similar to CSS itself.</p>
-<h2 id="split-stylesheets" class="notoc">Split Stylesheets</h2>
-<p>A common practice I’ve noticed with the use of scss is to avoid having one monolithic stylesheet and instead opt to split it out into separate semantic files. For example, <code class="path">post​.scss</code> would concern styling for posts, <code class="path">syntax​.scss</code> would concern styling for Pygments syntax highlighting, etc. These files are then imported into one stylesheet, e.g., <code class="path">screen​.scss</code>, using the <code>@import</code> directive. It is this stylesheet that gets compiled by the scss compiler into the monolithic CSS.</p>
-<h2 id="problem" class="notoc">Problem</h2>
-<p>In Hakyll, rules are generally designated by a pattern that matches a resource coupled with a route and a compiler. So this was the rule I originally had for <code class="path">scss​/screen​.scss</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">match</span> <span class="s">&quot;scss/screen.scss&quot;</span> <span class="o">$</span> <span class="kr">do</span>
+    
+        <article class="post">
+  <h2 class="title"><a href="/posts/extra-dependencies-in-hakyll"><span>Extra Dependencies in Hakyll</span></a></h2>
+  <div class="entry-content"><p>I use <a href="http://sass-lang.com/">scss</a> for my site&rsquo;s stylesheets. scss is a language very similar to <a href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets">CSS</a> that adds support for variables, nesting, mixins, selector inheritance, and more&mdash;while retaining a syntax very similar to CSS itself.</p>
+<h2 id="split-stylesheets">
+<span class="hash">#</span>
+<a href="#split-stylesheets" class="header-link">Split Stylesheets</a>
+</h2>
+<p>A common practice I&rsquo;ve noticed with the use of scss is to avoid having one monolithic stylesheet and instead opt to split it out into separate semantic files. For example, <span class="path">post.scss</span> would concern styling for posts, <span class="path">syntax.scss</span> would concern styling for Pygments syntax highlighting, etc. These files are then imported into one stylesheet, e.g., <span class="path">screen.scss</span>, using the <code>@import</code> directive. It is this stylesheet that gets compiled by the scss compiler into the monolithic CSS.</p>
+<h2 id="problem">
+<span class="hash">#</span>
+<a href="#problem" class="header-link">Problem</a>
+</h2>
+<p>In Hakyll, rules are generally designated by a pattern that matches a resource coupled with a route and a compiler. So this was the rule I originally had for <span class="path">scss/screen.scss</span>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">match</span> <span class="s">&quot;scss/screen.scss&quot;</span> <span class="o">$</span> <span class="kr">do</span>
   <span class="n">route</span> <span class="o">$</span> <span class="n">constRoute</span> <span class="s">&quot;css/screen.css&quot;</span>
   <span class="n">compile</span> <span class="o">$</span> <span class="n">sassCompiler</span>
 </code></pre></figure>
 <p>The rule simply states that Hakyll should:</p>
-<ol type="1">
-<li>find the file <code class="path">scss​/screen​.scss</code></li>
-<li>route it to <code class="path">css​/screen​.css</code></li>
+
+<ol>
+<li>find the file <span class="path">scss/screen.scss</span></li>
+<li>route it to <span class="path">css/screen.css</span></li>
 <li>compile it using my custom <code>sassCompiler</code>.</li>
 </ol>
-<p>This worked fine, but it meant that when I built or previewed the site, if I modified one of the split stylesheets, such as <code class="path">post​.scss</code>, it wouldn’t regenerate the monolithic stylesheet. It would only do so if <code class="path">scss​/screen​.scss</code> itself was modified.</p>
-<h2 id="solution" class="notoc">Solution</h2>
-<p>With the help of Hakyll’s creator, Jasper, I learned that the solution involves the use of <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Metadata.html#v:makePatternDependency"><code>makePatternDependency</code></a> to create a <code>Dependency</code> from a given <code>Pattern</code>, and <a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies"><code>rulesExtraDependencies</code></a> to associate the dependencies with a specific <code>Compiler</code>.</p>
+
+<p>This worked fine, but it meant that when I built or previewed the site, if I modified one of the split stylesheets, such as <span class="path">post.scss</span>, it wouldn&rsquo;t regenerate the monolithic stylesheet. It would only do so if <span class="path">scss/screen.scss</span> itself was modified.</p>
+<h2 id="solution">
+<span class="hash">#</span>
+<a href="#solution" class="header-link">Solution</a>
+</h2>
+<p>With the help of Hakyll&rsquo;s creator, Jasper, I learned that the solution involves the use of <a href="http://hackage.haskell.org/packages/archive/hakyll/latest/doc/html/Hakyll-Core-Metadata.html#v:makePatternDependency"><code>makePatternDependency</code></a> to create a <code>Dependency</code> from a given <code>Pattern</code>, and <a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies"><code>rulesExtraDependencies</code></a> to associate the dependencies with a specific <code>Compiler</code>.</p>
+
 <blockquote>
-<p>Advanced usage: add extra dependencies to compilers. Basically this is needed when you’re doing unsafe tricky stuff in the rules monad, but you still want correct builds.</p>
+<p>Advanced usage: add extra dependencies to compilers. Basically this is needed when you&rsquo;re doing unsafe tricky stuff in the rules monad, but you still want correct builds.</p>
+
 <p>A useful utility for this purpose is <code>makePatternDependency</code>.</p>
+
 <p><cite><strong>Jasper</strong> on <a href="http://hackage.haskell.org/packages/archive/hakyll/4.3.1.0/doc/html/Hakyll-Core-Rules.html#v:rulesExtraDependencies">Hackage</a></cite></p>
 </blockquote>
-<p>Now when I’m previewing my site—or build the site in general—and I modify any scss file, it correctly regenerates the monolithic <code class="path">css​/screen​.css</code> file. Here’s my new scss compiler rule:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">match</span> <span class="s">&quot;scss/**.scss&quot;</span> <span class="o">$</span> <span class="kr">do</span>
+
+<p>Now when I&rsquo;m previewing my site&mdash;or build the site in general&mdash;and I modify any scss file, it correctly regenerates the monolithic <span class="path">css/screen.css</span> file. Here&rsquo;s my new scss compiler rule:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">match</span> <span class="s">&quot;scss/**.scss&quot;</span> <span class="o">$</span> <span class="kr">do</span>
   <span class="n">compile</span> <span class="n">getResourceBody</span>
 
 <span class="nf">scssDependencies</span> <span class="ow">&lt;-</span> <span class="n">makePatternDependency</span> <span class="s">&quot;scss/**.scss&quot;</span>
@@ -109,9 +129,9 @@
 </code></pre></figure></div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June 28, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/extra-dependencies-in-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/5fedf3b" title="prefer italic over bold">5fedf3b</a></span></div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll/">Hakyll</a>, <a href="/tags/haskell/">Haskell</a></div>
-    
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/extra-dependencies-in-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/17cad29" title="path styling changes
+">17cad29</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll">Hakyll</a>, <a href="/tags/haskell">Haskell</a></div>
   </div>
 </article>
 <section id="comment">
@@ -122,6 +142,7 @@
 
 
 
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -140,12 +161,30 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/posts/extra-dependencies-in-hakyll.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
 
 <!-- disqus -->
 <script async="true" type="text/javascript">
   var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll/';
-  var disqus_url = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll/';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll';
+  var disqus_url = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll';
   var disqus_script = 'embed.js';
 
   (function () {
@@ -159,8 +198,8 @@
       DISQUS.reset({
         reload: true,
         config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll/'
-          this.page.url = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll/'
+          this.page.identifier = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll'
+          this.page.url = 'http://blaenkdenum.com/posts/extra-dependencies-in-hakyll'
         }
       });
     });

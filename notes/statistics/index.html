@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,81 +72,154 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/statistics/"><span>Statistics</span></a></h2>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/statistics"><span>Statistics</span></a></h2>
   <div class="entry-content"><p>I want to freshen up on statistics and probabilities, which are very important for machine learning. The primary source material comes from the UC Berkeley Stat 2.1, 2.2, and 2.3 classes on edX which concern descriptive statistics, probabilities, and inference respectively. Supplementary material at times from Khan Academy.</p>
-<nav id="toc"><h3>Contents</h3><ol><li><a href="#descriptive-statistics">Descriptive Statistics</a></li><li><a href="#probability">Probability</a><ol><li><a href="#addition-rule">Addition Rule</a></li><li><a href="#conditional-probability">Conditional Probability</a></li><li><a href="#multiplication-rule">Multiplication Rule</a></li><li><a href="#problem-solving-techniques">Problem Solving Techniques</a></li></ol></li><li><a href="#inference">Inference</a></li></ol></nav>
-<h1 id="descriptive-statistics">Descriptive Statistics</h1>
-<h1 id="probability">Probability</h1>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#descriptive-statistics">Descriptive Statistics</a>
+</li>
+<li>
+<a href="#probability">Probability</a>
+<ol>
+<li>
+<a href="#addition-rule">Addition Rule</a>
+</li>
+<li>
+<a href="#conditional-probability">Conditional Probability</a>
+</li>
+<li>
+<a href="#multiplication-rule">Multiplication Rule</a>
+</li>
+<li>
+<a href="#problem-solving-techniques">Problem Solving Techniques</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#inference">Inference</a>
+</li>
+</ol>
+</nav>
+<h1 id="descriptive-statistics">
+<span class="hash">#</span>
+<a href="#descriptive-statistics" class="header-link">Descriptive Statistics</a>
+</h1><h1 id="probability">
+<span class="hash">#</span>
+<a href="#probability" class="header-link">Probability</a>
+</h1>
 <p>The probability of an event is the fraction of times it occurs out of the total possible outcomes:</p>
-<p><span class="math">\[ P(E) = \frac {\text {# of events}} {\text {# total outcomes}} \]</span></p>
-<p>The probability is bound in the range of <span class="math">\([0, 1]\)</span>. Therefore, the probability of an event not happening—referred to as the probability of the event’s complement—is simply defined as:</p>
-<p><span class="math">\[ P(E^c) = 1 - P(E) \]</span></p>
-<h2 id="addition-rule">Addition Rule</h2>
+
+<p>\[ P(E) = \frac {\text {# of events}} {\text {# total outcomes}} \]</p>
+
+<p>The probability is bound in the range of \([0, 1]\). Therefore, the probability of an event not happening&mdash;referred to as the probability of the event&rsquo;s complement&mdash;is simply defined as:</p>
+
+<p>\[ P(E^c) = 1 - P(E) \]</p>
+<h2 id="addition-rule">
+<span class="hash">#</span>
+<a href="#addition-rule" class="header-link">Addition Rule</a>
+</h2>
 <p>The probability of the union of multiple <em>mutually exclusive</em> events can be determined by simply adding the probabilities of the individual events:</p>
-<p><span class="math">\[
+
+<p>\[
 P(E_1 \cup E_2) = P(E_1) + P(E_2) = \sum_{i=1}^{N} P(E_i)
-\]</span></p>
+\]</p>
+
 <p>However, if the events are <em>not mutually exclusive</em>, then the concept of <em>inclusion-exclusion</em> must be practiced in order to avoid <em>double counting</em>, where portions of the probabilities represent the same event:</p>
-<p><span class="math">\[ P(E_1 \cup E_2) = P(E_1) + P(E_2) - P(E_1 \cap E_2) \]</span></p>
-<h2 id="conditional-probability">Conditional Probability</h2>
-<p>The <em>conditional probability</em> of an event <span class="math">\(B\)</span> is the probability that the event <span class="math">\(B\)</span> happens given that another event <span class="math">\(A\)</span> occurred, and is written as:</p>
-<p><span class="math">\[ P(B \mid A) \]</span></p>
-<p>This is inferred from the problem. For example, in “draw without replacement” problems, the probability of <span class="math">\(B\)</span> occurring changes from the mere fact that <span class="math">\(A\)</span> occurred, because the total number of outcomes—the denominator of the probability—has decreased by one, since the item from event <span class="math">\(A\)</span> was not returned. The numerator also could have decreased by one if it corresponds to the same group as <span class="math">\(B\)</span>’s. On the other hand, in problems that “draw with replacement,” the fact that <span class="math">\(A\)</span> has already occurred has no effect on any subsequent events because all items are still present.</p>
-<h2 id="multiplication-rule">Multiplication Rule</h2>
+
+<p>\[ P(E_1 \cup E_2) = P(E_1) + P(E_2) - P(E_1 \cap E_2) \]</p>
+<h2 id="conditional-probability">
+<span class="hash">#</span>
+<a href="#conditional-probability" class="header-link">Conditional Probability</a>
+</h2>
+<p>The <em>conditional probability</em> of an event \(B\) is the probability that the event \(B\) happens given that another event \(A\) occurred, and is written as:</p>
+
+<p>\[ P(B \mid A) \]</p>
+
+<p>This is inferred from the problem. For example, in &ldquo;draw without replacement&quot; problems, the probability of \(B\) occurring changes from the mere fact that \(A\) occurred, because the total number of outcomes&mdash;the denominator of the probability&mdash;has decreased by one, since the item from event \(A\) was not returned. The numerator also could have decreased by one if it corresponds to the same group as \(B\)&rsquo;s. On the other hand, in problems that &ldquo;draw with replacement,&ldquo; the fact that \(A\) has already occurred has no effect on any subsequent events because all items are still present.</p>
+<h2 id="multiplication-rule">
+<span class="hash">#</span>
+<a href="#multiplication-rule" class="header-link">Multiplication Rule</a>
+</h2>
 <p>Conditional probability allows us to compute the probability of one event occurring followed by another. This is solved using the <em>multiplication rule</em>:</p>
-<p><span class="math">\[
+
+<p>\[
 \begin{align}
 P(A \cap B) &amp;= P(A) \times P(B \mid A) \\
             &amp;= P(B) \times P(A \mid B)
 \end{align}
-\]</span></p>
-<p>This is simply read as the probability of <span class="math">\(A\)</span> occurring followed by <span class="math">\(B\)</span> is the simply the fraction <span class="math">\(P(B \mid A)\)</span> of the probability <span class="math">\(P(A)\)</span> occurring.</p>
-<h2 id="problem-solving-techniques">Problem Solving Techniques</h2>
+\]</p>
+
+<p>This is simply read as the probability of \(A\) occurring followed by \(B\) is the simply the fraction \(P(B \mid A)\) of the probability \(P(A)\) occurring.</p>
+<h2 id="problem-solving-techniques">
+<span class="hash">#</span>
+<a href="#problem-solving-techniques" class="header-link">Problem Solving Techniques</a>
+</h2>
 <p>Count the number of <strong>trials</strong>. For example, when drawing cards from a box, every draw is a trial. Given a list of all possible outcomes, count how many outcomes satisfy the conditions of the event.</p>
-<dl>
-<dt>Example 1</dt>
-<dd>A random number generator picks at random from the ten digits 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9. Find the chance that the digit it picks is prime and greater than 5.
-</dd>
-</dl>
-<p>There is only one <strong>trial</strong> consisting of picking a single digit. The <strong>conditions</strong> of the event are that it is prime and it is greater than 5. Therefore, only one digit satisfies the conditions, 7, so the answer is <span class="math">\(1/10\)</span>.</p>
-<dl>
-<dt>Example 2</dt>
-<dd>In a class, 15% of the students have read <em>Hamlet</em> and 40% have read <em>The Merchant of Venice</em>; 5% of the students have read both. What is the chance that a student picked at random has read one of the plays but not the other?
-</dd>
-</dl>
-<p>There is only one <strong>trial</strong> consisting of picking a single student at random. The <strong>condition</strong> is simply that the student has read one of the plays but not the other. This can be visualized by drawing a Venn Diagram, with one circle being 15% in size and the other being 40% in size, with an overlap of 5%. Then the areas of interest are either those that don’t include the overlap. This can be described as:</p>
-<p><span class="math">\[
+
+<p>Example 1
+  ~ A random number generator picks at random from the ten digits 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9. Find the chance that the digit it picks is prime and greater than 5.</p>
+
+<p>There is only one <strong>trial</strong> consisting of picking a single digit. The <strong>conditions</strong> of the event are that it is prime and it is greater than 5. Therefore, only one digit satisfies the conditions, 7, so the answer is \(1/10\).</p>
+
+<p>Example 2
+  ~ In a class, 15% of the students have read <em>Hamlet</em> and 40% have read <em>The Merchant of Venice</em>; 5% of the students have read both. What is the chance that a student picked at random has read one of the plays but not the other?</p>
+
+<p>There is only one <strong>trial</strong> consisting of picking a single student at random. The <strong>condition</strong> is simply that the student has read one of the plays but not the other. This can be visualized by drawing a Venn Diagram, with one circle being 15% in size and the other being 40% in size, with an overlap of 5%. Then the areas of interest are either those that don&rsquo;t include the overlap. This can be described as:</p>
+
+<p>\[
 \text {A: Hamlet but not The Merchant of Venice:}\ 15\% - 5\% = 10\% \\
 \text {B: The Merchant of Venice but not Hamlet:}\ 40\% - 5\% = 35\%
-\]</span></p>
-<p>We are interested in both outcomes occurring—the event <span class="math">\(A\)</span> <em>or</em> the event <span class="math">\(B\)</span>—and since they are mutually exclusive, the addition rule can be used to arrive at the answer:</p>
-<p><span class="math">\[
+\]</p>
+
+<p>We are interested in both outcomes occurring&mdash;the event \(A\) <em>or</em> the event \(B\)&mdash;and since they are mutually exclusive, the addition rule can be used to arrive at the answer:</p>
+
+<p>\[
 \begin{alignat*}{3}
 P(A \cup B)\ &amp; = P(A) &amp;&amp; {} + P(B)\ &amp;&amp; {} \\
 P(A \cup B)\ &amp; = 10\% &amp;&amp; {} + 35\%\ &amp;&amp; = 45\%
 \end{alignat*}
-\]</span></p>
-<dl>
-<dt>Example 3</dt>
-<dd>In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins at random (without replacement), what is the chance that I pull out more than 15 cents?
-</dd>
-</dl>
-<h1 id="inference">Inference</h1>
+\]</p>
+
+<p>Example 3
+  ~ In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins at random (without replacement), what is the chance that I pull out more than 15 cents?</p>
+<h1 id="inference">
+<span class="hash">#</span>
+<a href="#inference" class="header-link">Inference</a>
+</h1>
 <p>Resources:</p>
+
 <ul>
 <li>UC Berkeley <a href="https://www.edx.org/course/uc-berkeley/stat2-1x/introduction-statistics/594">Stat 2.1x: Descriptive Statistics</a></li>
 <li>UC Berkeley <a href="https://www.edx.org/course/uc-berkeley/stat2-2x/introduction-statistics/685">Stat 2.2x: Probability</a></li>
 <li>UC Berkeley <a href="https://www.edx.org/course/uc-berkeley/stat2-3x/introduction-statistics/825">Stat 2.3x: Inference</a></li>
-</ul></div>
+</ul>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September 15, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/statistics.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/5fedf3b" title="prefer italic over bold">5fedf3b</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/statistics.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -165,7 +238,50 @@ P(A \cup B)\ &amp; = 10\% &amp;&amp; {} + 35\%\ &amp;&amp; = 45\%
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/statistics.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/statistics';
+  var disqus_url = 'http://blaenkdenum.com/notes/statistics';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/statistics'
+          this.page.url = 'http://blaenkdenum.com/notes/statistics'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

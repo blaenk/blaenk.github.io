@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,20 +72,53 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/angular/"><span>Angular.js</span></a></h2>
-  <div class="entry-content"><p>I’ve been meaning to learn Google’s <a href="http://angularjs.org">Angular.js</a> framework for a while now. I of course have experience with straight up jQuery, but that inevitably becomes a mishmash of code. I do have some experience with <a href="http://backbonejs.org/">Backbone.js</a>, which has been <a href="http://backbonejs.org/#examples">battle tested</a> on many of websites such as Pandora, but something about angular seems a bit cleaner.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/angular"><span>Angular.js</span></a></h2>
+  <div class="entry-content"><p>I&rsquo;ve been meaning to learn Google&rsquo;s <a href="http://angularjs.org">Angular.js</a> framework for a while now. I of course have experience with straight up jQuery, but that inevitably becomes a mishmash of code. I do have some experience with <a href="http://backbonejs.org/">Backbone.js</a>, which has been <a href="http://backbonejs.org/#examples">battle tested</a> on many of websites such as Pandora, but something about angular seems a bit cleaner.</p>
+
 <p>At the time of writing I am working on a web project in Go. I intend to make the Go backend serve an API which an Angular app will consume.</p>
-<p>My main resources include the <a href="http://docs.angularjs.org/tutorial/step_00">tutorial</a> and a variety of other resources such as <a href="https://egghead.io/lessons">egghead</a>’s videos.</p>
-<nav id="toc"><h3>Contents</h3><ol><li><a href="#bootstrapping">Bootstrapping</a></li><li><a href="#general-architecture">General Architecture</a><ol><li><a href="#scopes">Scopes</a></li></ol></li><li><a href="#services">Services</a></li></ol></nav>
-<h1 id="bootstrapping">Bootstrapping</h1>
+
+<p>My main resources include the <a href="http://docs.angularjs.org/tutorial/step_00">tutorial</a> and a variety of other resources such as <a href="https://egghead.io/lessons">egghead</a>&rsquo;s videos.</p>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#bootstrapping">Bootstrapping</a>
+</li>
+<li>
+<a href="#general-architecture">General Architecture</a>
+<ol>
+<li>
+<a href="#scopes">Scopes</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#services">Services</a>
+</li>
+</ol>
+</nav>
+<h1 id="bootstrapping">
+<span class="hash">#</span>
+<a href="#bootstrapping" class="header-link">Bootstrapping</a>
+</h1>
 <p>Application bootstrapping involves creating an injector used for dependency injection, the injector then creates a root scope to become the context of the application, and then angular compiles the <abbr title="Document Object Model">DOM</abbr> rooted at the <code>ngApp</code> root element, which processes directives and bindings.</p>
-<h1 id="general-architecture">General Architecture</h1>
+<h1 id="general-architecture">
+<span class="hash">#</span>
+<a href="#general-architecture" class="header-link">General Architecture</a>
+</h1>
 <p>The <code>$scope</code> object allows explicit control over what models or parts of models are exposed to the view. The object is initialized in a controller, which is responsible for providing initial model values and defining functions. Models themselves can be any object.</p>
-<h2 id="scopes">Scopes</h2>
-<p>Scopes inherit prototypically from each other. A variable defined in a higher-level scope is accessible to child-scopes. Writing to a variable in a child-scope doesn’t propagate up the inheritance chain. Parent scopes can be directly referenced using the <code>$parent</code> property, but it’s use is generally discouraged because it embeds an assumption about the overall <abbr title="Document Object Model">DOM</abbr> structure.</p>
-<p>Because of the asymmetric behavior in reading/writing scope properties at different scopes, it’s generally encouraged to bind to object properties, not scope properties. This has the effect of <a href="https://github.com/angular/angular.js/wiki/Understanding-Scopes#javascript-prototypal-inheritance">always consulting the prototype chain</a>, since it first looks up the object, which it finds in its ancestor up the prototype chain, then it changes/sets the value on that object. Whereas <em>setting</em> a single primitive (i.e. non-object) does <em>not</em> consult the prototype chain and simply creates a new value in the child scope that shadows the parent value.</p>
-<figure class="codeblock"><pre><code class="highlight language-html"><span class="nt">&lt;body</span> <span class="na">ng-app</span> <span class="na">ng-init=</span><span class="s">&quot;thing = {name: &#39;World&#39;}&quot;</span><span class="nt">&gt;</span>
+<h2 id="scopes">
+<span class="hash">#</span>
+<a href="#scopes" class="header-link">Scopes</a>
+</h2>
+<p>Scopes inherit prototypically from each other. A variable defined in a higher-level scope is accessible to child-scopes. Writing to a variable in a child-scope doesn&rsquo;t propagate up the inheritance chain. Parent scopes can be directly referenced using the <code>$parent</code> property, but it&rsquo;s use is generally discouraged because it embeds an assumption about the overall <abbr title="Document Object Model">DOM</abbr> structure.</p>
+
+<p>Because of the asymmetric behavior in reading/writing scope properties at different scopes, it&rsquo;s generally encouraged to bind to object properties, not scope properties. This has the effect of <a href="https://github.com/angular/angular.js/wiki/Understanding-Scopes#javascript-prototypal-inheritance">always consulting the prototype chain</a>, since it first looks up the object, which it finds in its ancestor up the prototype chain, then it changes/sets the value on that object. Whereas <em>setting</em> a single primitive (i.e. non-object) does <em>not</em> consult the prototype chain and simply creates a new value in the child scope that shadows the parent value.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-html"><span class="nt">&lt;body</span> <span class="na">ng-app</span> <span class="na">ng-init=</span><span class="s">&quot;thing = {name: &#39;World&#39;}&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;h1&gt;</span>Hello, {{thing.name}}<span class="nt">&lt;/h1&gt;</span>
 <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;Ctrl&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;thing.name&quot;</span><span class="nt">&gt;</span>
@@ -93,23 +126,34 @@
 <span class="nt">&lt;/div&gt;</span>
 <span class="nt">&lt;/body&gt;</span>
 </code></pre></figure>
-<p>Scopes form a tree rooted at the <code>$rootScope</code>, and events can be propagated through the hierarchy. Events are sent up the tree with <code>$emit</code> and down the tree with <code>$broadcast</code>. Scope event handlers are registered with <code>$on</code>, and as with <abbr title="Document Object Model">DOM</abbr> events, we can <code>preventDefault</code> and <code>stopPropagation</code>. It’s advised to use scope events sparingly, instead opting for two-way data binding.</p>
-<p>Scopes pose memory considerations, and are generally destroyed when they’re no longer needed. This can be controlled explicitly with <code>$new</code> and <code>$destroy</code>.</p>
-<h1 id="services">Services</h1>
-<p>It’s possible to register object-creating recipes that are interpreted by the <code>$injector</code> to provide wired-up instances. Objects created by the <code>$injector</code> are called <em>services</em>, and these are singletons. Only one instance of any given service is created.</p>
-<p>There are ways to control how objects are created. The first and simplest way is to register a pre-defined instance with <code>value</code>. Objects registered with <code>value</code> can’t express dependencies.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">mod</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;mod&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+<p>Scopes form a tree rooted at the <code>$rootScope</code>, and events can be propagated through the hierarchy. Events are sent up the tree with <code>$emit</code> and down the tree with <code>$broadcast</code>. Scope event handlers are registered with <code>$on</code>, and as with <abbr title="Document Object Model">DOM</abbr> events, we can <code>preventDefault</code> and <code>stopPropagation</code>. It&rsquo;s advised to use scope events sparingly, instead opting for two-way data binding.</p>
+
+<p>Scopes pose memory considerations, and are generally destroyed when they&rsquo;re no longer needed. This can be controlled explicitly with <code>$new</code> and <code>$destroy</code>.</p>
+<h1 id="services">
+<span class="hash">#</span>
+<a href="#services" class="header-link">Services</a>
+</h1>
+<p>It&rsquo;s possible to register object-creating recipes that are interpreted by the <code>$injector</code> to provide wired-up instances. Objects created by the <code>$injector</code> are called <em>services</em>, and these are singletons. Only one instance of any given service is created.</p>
+
+<p>There are ways to control how objects are created. The first and simplest way is to register a pre-defined instance with <code>value</code>. Objects registered with <code>value</code> can&rsquo;t express dependencies.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">mod</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;mod&#39;</span><span class="p">,</span> <span class="p">[]);</span>
 <span class="nx">mod</span><span class="p">.</span><span class="nx">value</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">SomeService</span><span class="p">());</span>
 </code></pre></figure>
 <p>The simplest way to register object recipes that can express dependencies is by registering the constructor function with <code>service</code>. This is generally useful for registering pre-existing constructor functions.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">SomeService</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">someDependency</span><span class="p">)</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">SomeService</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">someDependency</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">someVar</span> <span class="o">=</span> <span class="nx">someDependency</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="nx">mod</span><span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="nx">SomeService</span><span class="p">);</span>
 </code></pre></figure>
-<p>The <code>factory</code> method is more flexible than the previous two, since it can be used to register any arbitrary object-creating function. As a result of this flexibility, it’s the most common way to register objects into the dependency injection system.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">someDependency</span><span class="p">)</span> <span class="p">{</span>
+<p>The <code>factory</code> method is more flexible than the previous two, since it can be used to register any arbitrary object-creating function. As a result of this flexibility, it&rsquo;s the most common way to register objects into the dependency injection system.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">someDependency</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">someVar</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
   <span class="k">return</span> <span class="p">{</span>
@@ -120,14 +164,18 @@
 <span class="p">});</span>
 </code></pre></figure>
 <p>Constants can be registered in order to be used by services. The problem with constants is that they have to be supplied as soon as a service expresses a dependency on it:</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">someDependency</span><span class="p">,</span> <span class="nx">SOME_CONSTANT</span><span class="p">)</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">someDependency</span><span class="p">,</span> <span class="nx">SOME_CONSTANT</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// ...</span>
 <span class="p">};)</span>
 
 <span class="nx">mod</span><span class="p">.</span><span class="nx">constant</span><span class="p">(</span><span class="s1">&#39;SOME_CONSTANT&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
 </code></pre></figure>
 <p>Providers is the generic way of registering services. A provider must return an object containing a <code>$get</code> property which is a factory function returning a instance of the service. Provider functions can have additional methods and properties, which is useful for configuration of the service.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">provider</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">provider</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span><span class="nx">someConfig</span><span class="o">:</span> <span class="mi">10</span><span class="p">};</span>
   <span class="kd">var</span> <span class="nx">someVar</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
@@ -145,25 +193,44 @@
   <span class="p">};</span>
 <span class="p">});</span>
 </code></pre></figure>
-<p>Providers can be configured before they produce any object instances. To facilitate this, module lifecycles consist of a <em>configuration phase</em> where recipes are collected and configured, and a <em>run phase</em> where it’s possible to execute any post-instantiation logic.</p>
+<p>Providers can be configured before they produce any object instances. To facilitate this, module lifecycles consist of a <em>configuration phase</em> where recipes are collected and configured, and a <em>run phase</em> where it&rsquo;s possible to execute any post-instantiation logic.</p>
+
 <p>The configuration phase allows providers to be configured as follows:</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">someServiceProvider</span><span class="p">)</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">someServiceProvider</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">someServiceProvider</span><span class="p">.</span><span class="nx">setConfigVar</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></figure>
 <p>The run phase allows work to be done upon the application bootstrap, similar to the <code>main</code> entry function in programs, although Angular supports multiple run blocks.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">appStarted</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
 <span class="p">});</span>
 </code></pre></figure></div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> January  1, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/angular.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/5fedf3b" title="prefer italic over bold">5fedf3b</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/angular.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -182,7 +249,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/angular.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/angular';
+  var disqus_url = 'http://blaenkdenum.com/notes/angular';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/angular'
+          this.page.url = 'http://blaenkdenum.com/notes/angular'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

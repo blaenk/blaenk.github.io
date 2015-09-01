@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,40 +72,55 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/posts/xmonad-ignores-bindings/"><span>xmonad Ignores Bindings</span></a></h2>
-  <div class="entry-content"><p>In my <a href="/posts/terminal-customization/">previous post</a> I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up <a href="http://xmonad.org">xmonad</a>. I’ve finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/posts/xmonad-ignores-bindings"><span>xmonad Ignores Bindings</span></a></h2>
+  <div class="entry-content"><p>In my <a href="/posts/terminal-customization/">previous post</a> I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up <a href="http://xmonad.org">xmonad</a>. I&rsquo;ve finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.</p>
+
 <p><strong>Update</strong>: Shortly after posting in the <a href="https://code.google.com/p/xmonad/issues/detail?id=273">issue tracker entry</a> for this issue relating my experience and affirming that the proposed patch fixed the problem, the gracious developers merged the patch into the main tree. This problem should no longer affect anyone!</p>
-<h2 id="media-keys" class="notoc">Media Keys</h2>
-<p>I have a regular keyboard layout, <a href="http://www.daskeyboard.com/model-s-ultimate/">Das Keyboard Model S Ultimate</a>, which lacks media keys (i.e. volume up, down, etc). This wasn’t too much of a problem when I used headsets because most of them have dedicated volume controls. However, I got tired of headsets being rendered useless when any little thing messed up (e.g. microphone, a speaker, etc).</p>
-<p>As a result I ended up buying a <a href="http://amzn.com/B00029MTMQ">cheap standalone mic</a> and now use my iPhone’s <a href="http://amzn.com/B004PNZFZ8">Shure SE215-K</a> earbuds for sound on my computer. This is very easy to do given my computer case’ front panel audio connector. Of course, the problem now is that there aren’t any dedicated media keys and having to use a GUI to change the volume is cumbersome.</p>
+<h2 id="media-keys">
+<span class="hash">#</span>
+<a href="#media-keys" class="header-link">Media Keys</a>
+</h2>
+<p>I have a regular keyboard layout, <a href="http://www.daskeyboard.com/model-s-ultimate/">Das Keyboard Model S Ultimate</a>, which lacks media keys (i.e. volume up, down, etc). This wasn&rsquo;t too much of a problem when I used headsets because most of them have dedicated volume controls. However, I got tired of headsets being rendered useless when any little thing messed up (e.g. microphone, a speaker, etc).</p>
+
+<p>As a result I ended up buying a <a href="http://amzn.com/B00029MTMQ">cheap standalone mic</a> and now use my iPhone&rsquo;s <a href="http://amzn.com/B004PNZFZ8">Shure SE215-K</a> earbuds for sound on my computer. This is very easy to do given my computer case' front panel audio connector. Of course, the problem now is that there aren&rsquo;t any dedicated media keys and having to use a GUI to change the volume is cumbersome.</p>
+
 <p>My solution to this problem in Windows and Mac is to bind the bottom right keys to media keys as follows:</p>
+
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: left;">Key</th>
-<th style="text-align: left;">Purpose</th>
+<tr>
+<th style="text-align: left">Key</th>
+<th style="text-align: left">Purpose</th>
 </tr>
 </thead>
+
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">Right Control</td>
-<td style="text-align: left;">Volume Up</td>
+<tr>
+<td style="text-align: left">Right Control</td>
+<td style="text-align: left">Volume Up</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">Menu</td>
-<td style="text-align: left;">Volume Down</td>
+<tr>
+<td style="text-align: left">Menu</td>
+<td style="text-align: left">Volume Down</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">Right Windows</td>
-<td style="text-align: left;">Volume Mute</td>
+<tr>
+<td style="text-align: left">Right Windows</td>
+<td style="text-align: left">Volume Mute</td>
 </tr>
 </tbody>
 </table>
-<h2 id="binding" class="notoc">Binding</h2>
+<h2 id="binding">
+<span class="hash">#</span>
+<a href="#binding" class="header-link">Binding</a>
+</h2>
 <p>Creating these binds is possible on Windows via a registry hack, facilitated using a program such as <a href="http://www.randyrants.com/sharpkeys/">SharpKeys</a>.</p>
+
 <p>On Linux I initially did this using <code>xmodmap</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-text">remove Control = Control_R
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">remove Control = Control_R
 keycode 105 = XF86AudioRaiseVolume
 add Control = Control_R
 
@@ -113,60 +128,88 @@ keycode 135 = XF86AudioLowerVolume
 
 remove mod4 = Super_R
 keycode 134 = XF86AudioMute
-add mod4 = Super_R</code></pre></figure>
-<p>Binding to these <code>XF86Audio*</code> keys automatically adds support for these keys in different applications like <a href="http://www.mplayer2.org/">mplayer2</a>, but I wanted system-wide volume support. This is typically accomplished by wiring them up in your given Desktop Environment or Window Manager. So I went ahead and did so in <code>xmonad​.hs</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">xF86XK_AudioMute</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">&quot;amixer -q set Master,0 toggle&quot;</span><span class="p">),</span>
+add mod4 = Super_R
+</code></pre></figure>
+<p>Binding to these <code>XF86Audio*</code> keys automatically adds support for these keys in different applications like <a href="http://www.mplayer2.org/">mplayer2</a>, but I wanted system-wide volume support. This is typically accomplished by wiring them up in your given Desktop Environment or Window Manager. So I went ahead and did so in <code>xmonad.hs</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">xF86XK_AudioMute</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">&quot;amixer -q set Master,0 toggle&quot;</span><span class="p">),</span>
 <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">xF86XK_AudioLowerVolume</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">&quot;amixer -q set Master,0 5%- unmute&quot;</span><span class="p">),</span>
 <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">xF86XK_AudioRaiseVolume</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">&quot;amixer -q set Master,0 5%+ unmute&quot;</span><span class="p">)</span>
-</code></pre></figure>
-<h2 id="the-problem" class="notoc">The Problem</h2>
+</code></pre></figure><h2 id="the-problem">
+<span class="hash">#</span>
+<a href="#the-problem" class="header-link">The Problem</a>
+</h2>
 <p>The problem was that xmonad would only react to the Right Control key (Volume Up). However, <code>xev</code> correctly interpreted the keys as having been bound to the <code>XF86Audio*</code> keys. I was really confused as to why the binds apparently did work at the system level but only one of them worked at the window manager level.</p>
-<p>To rule out that it wasn’t something with the system-level (xmodmap) binds, I decided to check if it worked in <a href="http://awesome.naquadah.org/">Awesome</a>:</p>
-<figure class="codeblock"><pre><code class="highlight language-lua"><span class="n">awful</span><span class="p">.</span><span class="n">key</span><span class="p">({},</span> <span class="s2">&quot;</span><span class="s">XF86AudioLowerVolume&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="n">awful</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">amixer -q set Master,0 5%- unmute&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="k">end</span><span class="p">),</span>
+
+<p>To rule out that it wasn&rsquo;t something with the system-level (xmodmap) binds, I decided to check if it worked in <a href="http://awesome.naquadah.org/">Awesome</a>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-lua"><span class="n">awful</span><span class="p">.</span><span class="n">key</span><span class="p">({},</span> <span class="s2">&quot;</span><span class="s">XF86AudioLowerVolume&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="n">awful</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">amixer -q set Master,0 5%- unmute&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="k">end</span><span class="p">),</span>
 <span class="n">awful</span><span class="p">.</span><span class="n">key</span><span class="p">({},</span> <span class="s2">&quot;</span><span class="s">XF86AudioRaiseVolume&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="n">awful</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">amixer -q set Master,0 5%+ unmute&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="k">end</span><span class="p">),</span>
 <span class="n">awful</span><span class="p">.</span><span class="n">key</span><span class="p">({},</span> <span class="s2">&quot;</span><span class="s">XF86AudioMute&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="n">awful</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">amixer set Master,0 toggle&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="k">end</span><span class="p">),</span>
 </code></pre></figure>
 <p>Indeed it worked perfectly. So now I had narrowed down the problem to xmonad.</p>
-<h2 id="bug-hunting" class="notoc">Bug Hunting</h2>
+<h2 id="bug-hunting">
+<span class="hash">#</span>
+<a href="#bug-hunting" class="header-link">Bug Hunting</a>
+</h2>
 <p>Eventually I decided to stop by <code>#xmonad</code> on freenode. There I found Paul Fertser who spent the next ~6 hours helping me track down what he figured to be a bug in xmonad. I told him that the system-level binds did work, but not in xmonad. I showed him my binds using <code>xmodmap -pke</code>.</p>
-<p>He noticed that the <code>XF86Audio*</code> keys were bound twice: once by default by XKB (<code>xmodmap</code>’s more modern replacement) bound to the keycodes I would have if my keyboard had media keys, and bound again to the keys I chose (the bottom right keys). He then hypothesized that xmonad wasn’t grabbing the keys at all due to Xlib limitations. Specifically, the <code>XKeysymToKeycode</code> function only returns one keycode per key, biased towards lower keycodes, presumably due to an increasing iterative search of the keycodes for a match.</p>
-<p>This theory accounted for why the Right Control (Volume Up) bind did work and not the others. What happened was that Right Control’s keycode was lower than the duplicate bind’s keycode. As a result, when xmonad used <code>XKeysymToKeycode</code> it retrieved the correct keycode. The other two binds, however, have higher keycodes than the default-bound ones, and so <code>XKeysymToKeycode</code> returned the first (lower) keycode it found and as a result xmonad never even knew of the other binds’ existence.</p>
+
+<p>He noticed that the <code>XF86Audio*</code> keys were bound twice: once by default by XKB (<code>xmodmap</code>&rsquo;s more modern replacement) bound to the keycodes I would have if my keyboard had media keys, and bound again to the keys I chose (the bottom right keys). He then hypothesized that xmonad wasn&rsquo;t grabbing the keys at all due to Xlib limitations. Specifically, the <code>XKeysymToKeycode</code> function only returns one keycode per key, biased towards lower keycodes, presumably due to an increasing iterative search of the keycodes for a match.</p>
+
+<p>This theory accounted for why the Right Control (Volume Up) bind did work and not the others. What happened was that Right Control&rsquo;s keycode was lower than the duplicate bind&rsquo;s keycode. As a result, when xmonad used <code>XKeysymToKeycode</code> it retrieved the correct keycode. The other two binds, however, have higher keycodes than the default-bound ones, and so <code>XKeysymToKeycode</code> returned the first (lower) keycode it found and as a result xmonad never even knew of the other binds' existence.</p>
+
 <p>To test this theory, Paul had me run <a href="http://en.wikipedia.org/wiki/Ltrace"><code>ltrace</code></a> on xmonad to see which keys xmonad grabbed. The output of this clearly showed that xmonad only grabbed the keys with the lower keycodes.</p>
-<h2 id="workaround" class="notoc">Workaround</h2>
-<p>Now that we were pretty sure of the cause of this, the workaround was to remove the other keycodes (for keys I didn’t even have on my keyboard). At this time I decided I might as well switch over to XKB. The first order of business was to <a href="http://unix.stackexchange.com/a/65600/10163">dump my XKB map</a>:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>setxkbmap -print &gt; ~/.xkb/keymap/mymap
+<h2 id="workaround">
+<span class="hash">#</span>
+<a href="#workaround" class="header-link">Workaround</a>
+</h2>
+<p>Now that we were pretty sure of the cause of this, the workaround was to remove the other keycodes (for keys I didn&rsquo;t even have on my keyboard). At this time I decided I might as well switch over to XKB. The first order of business was to <a href="http://unix.stackexchange.com/a/65600/10163">dump my XKB map</a>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>setxkbmap -print &gt; ~/.xkb/keymap/mymap
 </code></pre></figure>
-<p>Then I created a <code>~/​.xkb​/symbols​/volume_keys</code> file to store my media key binds. It took me a long while to figure out how to remove/unbind the default-bound keys. One problem was that XKB sets different aliases for keys. For example, <code>&lt;I0D&gt;</code> (I guess that’s a media key) was aliased to <code>&lt;MUTE&gt;</code>. I looked around in <code>/usr​/share​/X11​/xkb​/rules​/evdev</code> to see what was aliased and made sure to unbind those too. As for unbinding, at first Paul suggested to bind the keys to <code>NoSymbol</code> but that apparently had no effect. Eventually I found out it was possible with <a href="http://madduck.net/docs/extending-xkb/#attaching_symbols_to_keys"><code>VoidSymbol</code></a>.</p>
-<figure class="codeblock"><pre><code class="highlight language-text">partial modifier_keys
-xkb_symbols &quot;volume_keys&quot; {
+<p>Then I created a <code>~/.xkb/symbols/volume_keys</code> file to store my media key binds. It took me a long while to figure out how to remove/unbind the default-bound keys. One problem was that XKB sets different aliases for keys. For example, <code>&lt;I0D&gt;</code> (I guess that&rsquo;s a media key) was aliased to <code>&lt;MUTE&gt;</code>. I looked around in <code>/usr/share/X11/xkb/rules/evdev</code> to see what was aliased and made sure to unbind those too. As for unbinding, at first Paul suggested to bind the keys to <code>NoSymbol</code> but that apparently had no effect. Eventually I found out it was possible with <a href="http://madduck.net/docs/extending-xkb/#attaching_symbols_to_keys"><code>VoidSymbol</code></a>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-text">partial modifier_keys
+xkb_symbols "volume_keys" {
   // mute
-  replace key &lt;MUTE&gt; { [ VoidSymbol ] };
-  replace key &lt;I0D&gt; { [ VoidSymbol ] };
+  replace key <MUTE> { [ VoidSymbol ] };
+  replace key <I0D> { [ VoidSymbol ] };
 
   // lower volume
-  replace key &lt;VOL-&gt; { [ VoidSymbol ] };
-  replace key &lt;I0E&gt; { [ VoidSymbol ] };
+  replace key <VOL-> { [ VoidSymbol ] };
+  replace key <I0E> { [ VoidSymbol ] };
 
   // raise volume
-  replace key &lt;VOL+&gt; { [ VoidSymbol ] };
-  replace key &lt;I0F&gt; { [ VoidSymbol ] };
+  replace key <VOL+> { [ VoidSymbol ] };
+  replace key <I0F> { [ VoidSymbol ] };
 
-  replace key &lt;RCTL&gt; { [ XF86AudioRaiseVolume ] };
-  replace key &lt;MENU&gt; { [ XF86AudioLowerVolume ] };
-  replace key &lt;RWIN&gt; { [ XF86AudioMute ] };
-  replace key &lt;RALT&gt; { [ Multi_key ] };
-};</code></pre></figure>
-<p>Now I loaded my XKB map in <code>~/​.xinitrc</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-bash"><span class="nv">$ </span>xkbcomp -I<span class="nv">$HOME</span>/.xkb ~/.xkb/keymap/mymap <span class="nv">$DISPLAY</span>
+  replace key <RCTL> { [ XF86AudioRaiseVolume ] };
+  replace key <MENU> { [ XF86AudioLowerVolume ] };
+  replace key <RWIN> { [ XF86AudioMute ] };
+  replace key <RALT> { [ Multi_key ] };
+};
 </code></pre></figure>
-<p>I restarted xmonad with <code>Mod-Shift-Q</code> (so that <code>~/​.xinitrc</code> is rerun) and everything now worked perfectly.</p>
-<h2 id="bug-report" class="notoc">Bug Report</h2>
-<p>Over the course of my transition to XKB, Paul found that there was already <a href="https://code.google.com/p/xmonad/issues/detail?id=273">an issue</a> opened back in 2009 concerning this. The issue report has a patch attached that fixes this, but the patch has yet to be applied to xmonad. Paul suggested I try the patch myself and communicate my results back to the issue report. So I went ahead and got xmonad and xmonadContrib from the darcs repository, ran a simple <code>darcs apply keycode​.dpatch</code>, and installed each with a <code>--prefix</code> to prevent clashing with the ones already installed with pacman. Indeed, the patch worked perfectly.</p></div>
+<p>Now I loaded my XKB map in <code>~/.xinitrc</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-bash"><span class="nv">$ </span>xkbcomp -I<span class="nv">$HOME</span>/.xkb ~/.xkb/keymap/mymap <span class="nv">$DISPLAY</span>
+</code></pre></figure>
+<p>I restarted xmonad with <code>Mod-Shift-Q</code> (so that <code>~/.xinitrc</code> is rerun) and everything now worked perfectly.</p>
+<h2 id="bug-report">
+<span class="hash">#</span>
+<a href="#bug-report" class="header-link">Bug Report</a>
+</h2>
+<p>Over the course of my transition to XKB, Paul found that there was already <a href="https://code.google.com/p/xmonad/issues/detail?id=273">an issue</a> opened back in 2009 concerning this. The issue report has a patch attached that fixes this, but the patch has yet to be applied to xmonad. Paul suggested I try the patch myself and communicate my results back to the issue report. So I went ahead and got xmonad and xmonadContrib from the darcs repository, ran a simple <code>darcs apply keycode.dpatch</code>, and installed each with a <code>--prefix</code> to prevent clashing with the ones already installed with pacman. Indeed, the patch worked perfectly.</p>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 24, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/xmonad-ignores-bindings.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/8c3304b" title="remove callout styling">8c3304b</a></span></div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/linux/">Linux</a></div>
-    
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/xmonad-ignores-bindings.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/fefc743" title="fix table syntax
+">fefc743</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/linux">Linux</a></div>
   </div>
 </article>
 <section id="comment">
@@ -177,6 +220,7 @@ xkb_symbols &quot;volume_keys&quot; {
 
 
 
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -195,12 +239,30 @@ xkb_symbols &quot;volume_keys&quot; {
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/posts/xmonad-ignores-bindings.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
 
 <!-- disqus -->
 <script async="true" type="text/javascript">
   var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings/';
-  var disqus_url = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings/';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings';
+  var disqus_url = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings';
   var disqus_script = 'embed.js';
 
   (function () {
@@ -214,8 +276,8 @@ xkb_symbols &quot;volume_keys&quot; {
       DISQUS.reset({
         reload: true,
         config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings/'
-          this.page.url = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings/'
+          this.page.identifier = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings'
+          this.page.url = 'http://blaenkdenum.com/posts/xmonad-ignores-bindings'
         }
       });
     });

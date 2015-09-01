@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,30 +72,84 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/posts/live-editing-with-hakyll/"><span>Live Editing with Hakyll</span></a></h2>
+    
+        <article class="post">
+  <h2 class="title"><a href="/posts/live-editing-with-hakyll"><span>Live Editing with Hakyll</span></a></h2>
   <div class="entry-content"><p>A recent trend in developer-oriented blogging is to use static site generators, perhaps the most popular being Jekyll written in Ruby. The general workflow when writing posts with static site generators is the classic edit, save, reload.</p>
-<nav id="toc" class="right-toc"><h3>Contents</h3><ol><li><a href="#conception">Conception</a></li><li><a href="#server-architecture">Server Architecture</a><ol><li><a href="#state">State</a></li><li><a href="#communication">Communication</a></li></ol></li><li><a href="#implementation">Implementation</a><ol><li><a href="#websocket-server">WebSocket Server</a></li><li><a href="#hakyll-compiler">Hakyll Compiler</a></li><li><a href="#main-thread">Main Thread</a></li><li><a href="#client-side">Client Side</a></li></ol></li><li><a href="#conclusion">Conclusion</a></li></ol></nav>
-<p>A while back, a friend was telling me about his Jekyll setup and in passing mentioned how indispensable some “LiveReload” tool was. I previously did use Jekyll myself, but I hadn’t heard of this LiveReload tool. For me, reloading didn’t feel like such a hassle, so having a tool that “only” automatically reloaded the page for me didn’t feel entirely beneficial.</p>
-<p>For this reason, I assumed that this was <strong>not</strong> what the LiveReload tool did, and instead I assumed it somehow replaced the content (i.e. post body) in-place. It turns out I was incorrect in my assumption and ended up implementing what I thought LiveReload did in Hakyll, the static site generator I use written in Haskell.</p>
-<h1 id="conception">Conception</h1>
+
+<nav id="toc"class="right-toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#conception">Conception</a>
+</li>
+<li>
+<a href="#server-architecture">Server Architecture</a>
+<ol>
+<li>
+<a href="#state">State</a>
+</li>
+<li>
+<a href="#communication">Communication</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#implementation">Implementation</a>
+<ol>
+<li>
+<a href="#websocket-server">WebSocket Server</a>
+</li>
+<li>
+<a href="#hakyll-compiler">Hakyll Compiler</a>
+</li>
+<li>
+<a href="#main-thread">Main Thread</a>
+</li>
+<li>
+<a href="#client-side">Client Side</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#conclusion">Conclusion</a>
+</li>
+</ol>
+</nav>
+
+<p>A while back, a friend was telling me about his Jekyll setup and in passing mentioned how indispensable some &ldquo;LiveReload&rdquo; tool was. I previously did use Jekyll myself, but I hadn&rsquo;t heard of this LiveReload tool. For me, reloading didn&rsquo;t feel like such a hassle, so having a tool that &ldquo;only&rdquo; automatically reloaded the page for me didn&rsquo;t feel entirely beneficial.</p>
+
+<p>For this reason, I assumed that this was <strong>not</strong> what the LiveReload tool did, and instead I assumed it somehow replaced the content (i.e. post body) in-place. It turns out I was incorrect in my assumption and ended up implementing what I thought LiveReload did in Hakyll, the static site generator I use written in Haskell.</p>
+<h1 id="conception">
+<span class="hash">#</span>
+<a href="#conception" class="header-link">Conception</a>
+</h1>
 <p>I had to come up with a way to intercept the post body content when it was altered, and send that to the client, who would then simply replace the content div with the received content. Conceptually, it was a pretty straightforward process.</p>
+
 <p>I decided that the communication channel between the Hakyll preview server and the client would be a WebSocket, so I looked for websocket packages on Hackage and <a href="http://hackage.haskell.org/package/websockets">found one</a> by the author of Hakyll himself. There are backends for <a href="http://hackage.haskell.org/package/wai-websockets">wai</a> and <a href="http://hackage.haskell.org/package/websockets-snap">snap</a>, but starting up a wai or snap server seemed too heavy for what I was going to do.</p>
+
 <p>Having written Hakyll and Pandoc compilers before, I knew that the best place to get the changes to a post would be within the Hakyll compiler pipeline, before templates are applied.</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
   <span class="o">&gt;&gt;=</span> <span class="n">pandocCompiler</span> <span class="p">(</span><span class="n">storeDirectory</span> <span class="n">conf</span><span class="p">)</span>
   <span class="o">&gt;&gt;=</span> <span class="n">pushToClient</span>
   <span class="o">&gt;&gt;=</span> <span class="n">loadAndApplyTemplate</span> <span class="n">itemTemplate</span> <span class="n">context</span>
   <span class="o">&gt;&gt;=</span> <span class="n">loadAndApplyTemplate</span> <span class="s">&quot;templates/layout.html&quot;</span> <span class="n">layoutContext</span>
 </code></pre></figure>
 <p>Inserting a compiler at this appropriate location would give me access to changes to posts as they were applied, allowing me to then send them to the client via WebSocket.</p>
-<h1 id="server-architecture">Server Architecture</h1>
-<p>The WebSocket server that comes with the websockets package forks separate threads for every client that connects. I fork the WebSocket server itself within the site binary to avoid interrupting the main Hakyll compilation process. Therefore there needs to be a way for the Hakyll compiler to communicate with the WebSocket client threads, specifically to send each client the changes as they’re made to a post.</p>
+<h1 id="server-architecture">
+<span class="hash">#</span>
+<a href="#server-architecture" class="header-link">Server Architecture</a>
+</h1>
+<p>The WebSocket server that comes with the websockets package forks separate threads for every client that connects. I fork the WebSocket server itself within the site binary to avoid interrupting the main Hakyll compilation process. Therefore there needs to be a way for the Hakyll compiler to communicate with the WebSocket client threads, specifically to send each client the changes as they&rsquo;re made to a post.</p>
+
 <ul>
 <li>main thread
+
 <ul>
 <li>hakyll</li>
 <li>WebSocket server
+
 <ul>
 <li>client thread 1</li>
 <li>client thread 2</li>
@@ -103,41 +157,67 @@
 </ul></li>
 </ul></li>
 </ul>
-<h2 id="state">State</h2>
-<p>First, however, I had to think about how the WebSocket server would communicate with the clients. I decided that the most straightforward thing to do would be to communicate on a per-route basis. A route in this case refers to a post, such as <code class="path">posts​/live-editing-with-hakyll​.markdown​.</code> The clients use that path to establish the connection, which tells the WebSocket server that they’re interested in data about that particular post. This way, the client doesn’t get updates about posts it doesn’t care about.</p>
-<p>An alternative to this would’ve perhaps been to use a single communication channel, where the server would send data about every post that was changed, and clients decided which applied to them. While this seems simpler, it has the consequence that <em>every</em> post’s data is sent to the client, even posts no one is actually paying attention to. This is inefficient, and to avoid this inefficiency would again require some form of “interest-registration” which is implicit in the aforementioned method.</p>
+<h2 id="state">
+<span class="hash">#</span>
+<a href="#state" class="header-link">State</a>
+</h2>
+<p>First, however, I had to think about how the WebSocket server would communicate with the clients. I decided that the most straightforward thing to do would be to communicate on a per-route basis. A route in this case refers to a post, such as <span class="path">posts/live-editing-with-hakyll.markdown</span>. The clients use that path to establish the connection, which tells the WebSocket server that they&rsquo;re interested in data about that particular post. This way, the client doesn&rsquo;t get updates about posts it doesn&rsquo;t care about.</p>
+
+<p>An alternative to this would&rsquo;ve perhaps been to use a single communication channel, where the server would send data about every post that was changed, and clients decided which applied to them. While this seems simpler, it has the consequence that <em>every</em> post&rsquo;s data is sent to the client, even posts no one is actually paying attention to. This is inefficient, and to avoid this inefficiency would again require some form of &ldquo;interest-registration&rdquo; which is implicit in the aforementioned method.</p>
+
 <p>For this reason, the server needs a bit of state to keep track of which connections care about which routes, best represented by a <code>Map</code> of routes to connections, something like:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="kt">Map</span><span class="o">.</span><span class="kt">Map</span> <span class="kt">Route</span> <span class="kt">Connections</span>
-</code></pre></figure>
-<h2 id="communication">Communication</h2>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="kt">Map</span><span class="o">.</span><span class="kt">Map</span> <span class="kt">Route</span> <span class="kt">Connections</span>
+</code></pre></figure><h2 id="communication">
+<span class="hash">#</span>
+<a href="#communication" class="header-link">Communication</a>
+</h2>
 <p>Haskell provides a variety of concurrency primitives, such as <a href="http://hackage.haskell.org/package/base/docs/Control-Concurrent-MVar.html">MVars</a> and <a href="http://hackage.haskell.org/package/base/docs/Control-Concurrent-Chan.html">Channels</a>. MVars are mutable locations in memory and Channels are simply FIFO channels. It made sense to use a channel between the Hakyll compiler and the WebSocket client threads, so that WebSocket client threads would subscribe/listen to the channel and the Hakyll compiler would publish/write to the channel with the new post data.</p>
-<p>However, we’re actually going to be using the <a href="http://hackage.haskell.org/package/stm">stm</a> package’s variants of these concurrency primitives: <a href="http://hackage.haskell.org/package/stm/docs/Control-Concurrent-STM-TVar.html">TVars</a> and <a href="http://hackage.haskell.org/package/stm/docs/Control-Concurrent-STM-TChan.html">TChans</a>. The <a href="http://en.wikipedia.org/wiki/Software_transactional_memory">Software Transactional Memory</a> package allows us to perform transactional, atomic operations to avoid race conditions. We’re going to use a <code>TVar</code> for the server state, which will allow the Hakyll and WebSocket server to perform transactional read/write operations on the server state without stepping on each others’ toes (i.e. race conditions).</p>
-<p>I chose a <code>TVar</code> and not a <code>TMVar</code> because we won’t have a concept of an “empty state,” which is what the <code>TMVar</code> variant allows. The state will always contain something, even if that’s just an empty <code>Map</code>. So let’s wrap our state up in a <code>TVar</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="kr">type</span> <span class="kt">State</span> <span class="ow">=</span> <span class="kt">TVar</span> <span class="p">(</span><span class="kt">Map</span><span class="o">.</span><span class="kt">Map</span> <span class="kt">Route</span> <span class="kt">Connections</span><span class="p">)</span>
+
+<p>However, we&rsquo;re actually going to be using the <a href="http://hackage.haskell.org/package/stm">stm</a> package&rsquo;s variants of these concurrency primitives: <a href="http://hackage.haskell.org/package/stm/docs/Control-Concurrent-STM-TVar.html">TVars</a> and <a href="http://hackage.haskell.org/package/stm/docs/Control-Concurrent-STM-TChan.html">TChans</a>. The <a href="http://en.wikipedia.org/wiki/Software_transactional_memory">Software Transactional Memory</a> package allows us to perform transactional, atomic operations to avoid race conditions. We&rsquo;re going to use a <code>TVar</code> for the server state, which will allow the Hakyll and WebSocket server to perform transactional read/write operations on the server state without stepping on each others' toes (i.e. race conditions).</p>
+
+<p>I chose a <code>TVar</code> and not a <code>TMVar</code> because we won&rsquo;t have a concept of an &ldquo;empty state,&rdquo; which is what the <code>TMVar</code> variant allows. The state will always contain something, even if that&rsquo;s just an empty <code>Map</code>. So let&rsquo;s wrap our state up in a <code>TVar</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="kr">type</span> <span class="kt">State</span> <span class="ow">=</span> <span class="kt">TVar</span> <span class="p">(</span><span class="kt">Map</span><span class="o">.</span><span class="kt">Map</span> <span class="kt">Route</span> <span class="kt">Connections</span><span class="p">)</span>
 </code></pre></figure>
-<p>There’s a slight problem with our idea of using channels, however. Reading a value from a channel “consumes” that value, i.e. it’s no longer available for reading from that channel. This complicates things because it means that I couldn’t easily have a single channel to write every post’s changes to because that would mean that only the first client thread to read the data would receive the data.</p>
+<p>There&rsquo;s a slight problem with our idea of using channels, however. Reading a value from a channel &ldquo;consumes&rdquo; that value, i.e. it&rsquo;s no longer available for reading from that channel. This complicates things because it means that I couldn&rsquo;t easily have a single channel to write every post&rsquo;s changes to because that would mean that only the first client thread to read the data would receive the data.</p>
+
 <p>Fortunately, the channel type supports a duplication operation. If you have channel <code>A</code> and you duplicate it, yielding channel <code>B</code>, writing to any one of those channels makes the data available to read from both channels:</p>
+
 <blockquote>
 <p>Duplicate a Chan: the duplicate channel begins empty, but data written to either channel from then on will be available from both. Hence this creates a kind of broadcast channel, where data written by anyone is seen by everyone else.</p>
 </blockquote>
-<p>Remember that our server state consists of a <code>Map</code> of routes to connections. Instead, we could make this a <code>Map</code> of routes to broadcast channels. When the Hakyll compiler updates a post, it’ll see if there’s a broadcast channel associated with the post’s route and if so, it’ll pipe the data through that broadcast channel. On the WebSocket client thread side, they will duplicate the broadcast channel for that route they’re interested in, or if it doesn’t already exist, create it first.</p>
-<p>One final point is that we would like to avoid writing to a channel if no one is listening, to avoid unnecessary work. A simple way to achieve this is through simple reference counting. When a new client listens in on the broadcast channel, we increment the reference count, and accordingly decrement it when they disconnect, removing the channel from the Map altogether if no one is listening anymore.</p>
-<p>To be precise, we will be creating the broadcast channel with <code>newBroadcastTChan</code>, which is recommended when creating a broadcast channel. This is because creating a broadcast channel with <code>newTChan</code> has the consequence that it’s treated as any other channel that can be read from, so data begins to pile up as it’s written since it’s never read from, only the duplicate channels are read from. Creating one with <code>newBroadcastTChan</code> closes the read stream which allows the garbage collector to dispose of items once they’re read from the duplicate channels.</p>
-<h1 id="implementation">Implementation</h1>
-<p>Now that we’ve planned stuff out we can get to the implementation. As a summary, this is what the WebSocket server will be doing:</p>
-<ol type="1">
+
+<p>Remember that our server state consists of a <code>Map</code> of routes to connections. Instead, we could make this a <code>Map</code> of routes to broadcast channels. When the Hakyll compiler updates a post, it&rsquo;ll see if there&rsquo;s a broadcast channel associated with the post&rsquo;s route and if so, it&rsquo;ll pipe the data through that broadcast channel. On the WebSocket client thread side, they will duplicate the broadcast channel for that route they&rsquo;re interested in, or if it doesn&rsquo;t already exist, create it first.</p>
+
+<p>One final point is that we would like to avoid writing to a channel if no one is listening,  to avoid unnecessary work. A simple way to achieve this is through simple reference counting. When a new client listens in on the broadcast channel, we increment the reference count, and accordingly decrement it when they disconnect, removing the channel from the Map altogether if no one is listening anymore.</p>
+
+<p>To be precise, we will be creating the broadcast channel with <code>newBroadcastTChan</code>, which is recommended when creating a broadcast channel. This is because creating a broadcast channel with <code>newTChan</code> has the consequence that it&rsquo;s treated as any other channel that can be read from, so data begins to pile up as it&rsquo;s written since it&rsquo;s never read from, only the duplicate channels are read from. Creating one with <code>newBroadcastTChan</code> closes the read stream which allows the garbage collector to dispose of items once they&rsquo;re read from the duplicate channels.</p>
+<h1 id="implementation">
+<span class="hash">#</span>
+<a href="#implementation" class="header-link">Implementation</a>
+</h1>
+<p>Now that we&rsquo;ve planned stuff out we can get to the implementation. As a summary, this is what the WebSocket server will be doing:</p>
+
+<ol>
 <li>client opens post which initiates connection to WebSocket server for that post</li>
 <li>WebSocket server forks off a thread to handle that client
-<ol type="1">
+
+<ol>
 <li>client checks server state to see if broadcast channel already exists for the post
+
 <ul>
 <li>exists
-<ol type="1">
+
+<ol>
 <li>duplicate the broadcast channel</li>
 <li>increment reference count</li>
 </ol></li>
-<li>doesn’t exist
-<ol type="1">
+<li>doesn&rsquo;t exist
+
+<ol>
 <li>create a broadcast channel for this post</li>
 <li>put it in server state with initial reference count of 1</li>
 <li>duplicate it</li>
@@ -148,36 +228,51 @@
 <li>repeat steps 2-3 forever</li>
 </ol></li>
 </ol>
-<p>And here’s what the Hakyll compiler will be doing:</p>
-<ol type="1">
+
+<p>And here&rsquo;s what the Hakyll compiler will be doing:</p>
+
+<ol>
 <li>retrieves item body</li>
-<li>checks if there’s a broadcast channel available for this item
+<li>checks if there&rsquo;s a broadcast channel available for this item
+
 <ul>
 <li>yes: pipe the item body through the channel</li>
 <li>no: do nothing</li>
 </ul></li>
 </ol>
-<p>First we have our server state, which consists of a map from routes to pairs of channels and their reference counts. Once again, we’ll store this state in a <code>TVar</code> so that it can be read and written to from Hakyll and the WebSocket server in a transactional manner.</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="kr">type</span> <span class="kt">Channels</span> <span class="ow">=</span> <span class="kt">TVar</span> <span class="p">(</span><span class="kt">Map</span><span class="o">.</span><span class="kt">Map</span> <span class="kt">String</span> <span class="p">(</span><span class="kt">TChan</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">Integer</span><span class="p">))</span>
-</code></pre></figure>
-<h2 id="websocket-server">WebSocket Server</h2>
-<p>The WebSocket server is pretty straightforward. We’ll print a message out and listen in on port 9160, specifying a client connection handler <code>wsHandler</code> that needs access to the server state:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">wsServer</span> <span class="ow">::</span> <span class="kt">Channels</span> <span class="ow">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
+
+<p>First we have our server state, which consists of a map from routes to pairs of channels and their reference counts. Once again, we&rsquo;ll store this state in a <code>TVar</code> so that it can be read and written to from Hakyll and the WebSocket server in a transactional manner.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="kr">type</span> <span class="kt">Channels</span> <span class="ow">=</span> <span class="kt">TVar</span> <span class="p">(</span><span class="kt">Map</span><span class="o">.</span><span class="kt">Map</span> <span class="kt">String</span> <span class="p">(</span><span class="kt">TChan</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">Integer</span><span class="p">))</span>
+</code></pre></figure><h2 id="websocket-server">
+<span class="hash">#</span>
+<a href="#websocket-server" class="header-link">WebSocket Server</a>
+</h2>
+<p>The WebSocket server is pretty straightforward. We&rsquo;ll print a message out and listen in on port 9160, specifying a client connection handler <code>wsHandler</code> that needs access to the server state:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">wsServer</span> <span class="ow">::</span> <span class="kt">Channels</span> <span class="ow">-&gt;</span> <span class="kt">IO</span> <span class="nb">()</span>
 <span class="nf">wsServer</span> <span class="n">channels</span> <span class="ow">=</span> <span class="kr">do</span>
   <span class="n">putStrLn</span> <span class="s">&quot;WebSocket Server Listening on http://0.0.0.0:9160/&quot;</span>
   <span class="kt">WS</span><span class="o">.</span><span class="n">runServer</span> <span class="s">&quot;0.0.0.0&quot;</span> <span class="mi">9160</span> <span class="o">$</span> <span class="n">wsHandler</span> <span class="n">channels</span>
 </code></pre></figure>
 <p>The client handler starts out in a straightforward manner. We begin by getting the request data, from which we yield the path that the client connected to. This path, after all, signifies the post the client is interested in. Then we proceed to accept the client connection:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">wsHandler</span> <span class="ow">::</span> <span class="kt">Channels</span> <span class="ow">-&gt;</span> <span class="kt">WS</span><span class="o">.</span><span class="kt">ServerApp</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">wsHandler</span> <span class="ow">::</span> <span class="kt">Channels</span> <span class="ow">-&gt;</span> <span class="kt">WS</span><span class="o">.</span><span class="kt">ServerApp</span>
 <span class="nf">wsHandler</span> <span class="n">channels</span> <span class="n">pending</span> <span class="ow">=</span> <span class="kr">do</span>
   <span class="kr">let</span> <span class="n">request</span> <span class="ow">=</span> <span class="kt">WS</span><span class="o">.</span><span class="n">pendingRequest</span> <span class="n">pending</span>
       <span class="n">path</span>    <span class="ow">=</span> <span class="n">tail</span> <span class="o">.</span> <span class="kt">BC</span><span class="o">.</span><span class="n">unpack</span> <span class="o">$</span> <span class="kt">WS</span><span class="o">.</span><span class="n">requestPath</span> <span class="n">request</span>
 
   <span class="n">conn</span> <span class="ow">&lt;-</span> <span class="kt">WS</span><span class="o">.</span><span class="n">acceptRequest</span> <span class="n">pending</span>
 </code></pre></figure>
-<p>Next we need to get the channel we’ll be listening in on. Notice that this is performed <code>atomically</code> within the <code>STM</code> monad, since we don’t want to have race conditions between the time we read the map and when we update the server state with either an incremented reference count or a new entry.</p>
-<p>We begin by retrieving the server state from the <code>TVar</code>. We then perform a lookup in the Map to determine if a channel already exists for the given path. If a channel <strong>doesn’t</strong> exist, we create a new broadcast channel using <code>newBroadcastTChan</code> and insert it into the server state Map with an initial reference count of 1. Finally we duplicate this broadcast channel using <code>dupTChan</code>, which will be our result. If a broadcast channel already does exist, then we simply increment the reference count and duplicate it.</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell">  <span class="n">chan</span> <span class="ow">&lt;-</span> <span class="n">liftIO</span> <span class="o">$</span> <span class="n">atomically</span> <span class="o">$</span> <span class="kr">do</span>
+<p>Next we need to get the channel we&rsquo;ll be listening in on. Notice that this is performed <code>atomically</code> within the <code>STM</code> monad, since we don&rsquo;t want to have race conditions between the time we read the map and when we update the server state with either an incremented reference count or a new entry.</p>
+
+<p>We begin by retrieving the server state from the <code>TVar</code>. We then perform a lookup in the Map to determine if a channel already exists for the given path. If a channel <strong>doesn&rsquo;t</strong> exist, we create a new broadcast channel using <code>newBroadcastTChan</code> and insert it into the server state Map with an initial reference count of 1. Finally we duplicate this broadcast channel using <code>dupTChan</code>, which will be our result. If a broadcast channel already does exist, then we simply increment the reference count and duplicate it.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">  <span class="n">chan</span> <span class="ow">&lt;-</span> <span class="n">liftIO</span> <span class="o">$</span> <span class="n">atomically</span> <span class="o">$</span> <span class="kr">do</span>
     <span class="n">chans</span> <span class="ow">&lt;-</span> <span class="n">readTVar</span> <span class="n">channels</span>
 
     <span class="kr">case</span> <span class="kt">Map</span><span class="o">.</span><span class="n">lookup</span> <span class="n">path</span> <span class="n">chans</span> <span class="kr">of</span>
@@ -190,15 +285,20 @@
         <span class="n">dupTChan</span> <span class="n">ch</span>
 </code></pre></figure>
 <p>Now that we have the correct channel to listen from, we can forever perform the same loop:</p>
-<ol type="1">
-<li>read from the channel; this blocks until there’s something to read</li>
+
+<ol>
+<li>read from the channel; this blocks until there&rsquo;s something to read</li>
 <li>pipe the data to the WebSocket</li>
 </ol>
-<figure class="codeblock"><pre><code class="highlight language-haskell">  <span class="n">handle</span> <span class="n">catchDisconnect</span> <span class="o">.</span> <span class="n">forever</span> <span class="o">.</span> <span class="n">liftIO</span> <span class="o">$</span> <span class="kr">do</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">  <span class="n">handle</span> <span class="n">catchDisconnect</span> <span class="o">.</span> <span class="n">forever</span> <span class="o">.</span> <span class="n">liftIO</span> <span class="o">$</span> <span class="kr">do</span>
     <span class="n">atomically</span> <span class="p">(</span><span class="n">readTChan</span> <span class="n">chan</span><span class="p">)</span> <span class="o">&gt;&gt;=</span> <span class="kt">WS</span><span class="o">.</span><span class="n">sendTextData</span> <span class="n">conn</span> <span class="o">.</span> <span class="kt">T</span><span class="o">.</span><span class="n">pack</span>
 </code></pre></figure>
-<p>Finally we need to gracefully handle the case where the client leaves by either decrementing the reference count or outright removing the channel from the Map. This is also an atomic operation since we’re performing a read followed by a write:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell">  <span class="n">atomically</span> <span class="o">$</span> <span class="kr">do</span>
+<p>Finally we need to gracefully handle the case where the client leaves by either decrementing the reference count or outright removing the channel from the Map. This is also an atomic operation since we&rsquo;re performing a read followed by a write:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">  <span class="n">atomically</span> <span class="o">$</span> <span class="kr">do</span>
     <span class="n">chans</span> <span class="ow">&lt;-</span> <span class="n">readTVar</span> <span class="n">channels</span>
     <span class="kr">case</span> <span class="kt">Map</span><span class="o">.</span><span class="n">lookup</span> <span class="n">path</span> <span class="n">chans</span> <span class="kr">of</span>
       <span class="kt">Just</span> <span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">refcount</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="kr">do</span>
@@ -206,53 +306,77 @@
           <span class="kr">then</span> <span class="n">modifyTVar&#39;</span> <span class="n">channels</span> <span class="o">$</span> <span class="kt">Map</span><span class="o">.</span><span class="n">delete</span> <span class="n">path</span>
           <span class="kr">else</span> <span class="n">modifyTVar&#39;</span> <span class="n">channels</span> <span class="o">$</span> <span class="kt">Map</span><span class="o">.</span><span class="n">insert</span> <span class="n">path</span> <span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">refcount</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
       <span class="kt">Nothing</span> <span class="ow">-&gt;</span> <span class="n">return</span> <span class="nb">()</span>
-</code></pre></figure>
-<h2 id="hakyll-compiler">Hakyll Compiler</h2>
-<p>Remember that we also need a Hakyll compiler to insert into the Hakyll compiler pipeline. This compiler will read the server state <code>Map</code> and determine if if there’s a channel to send the item body to, and if there isn’t, does nothing.</p>
-<p>We will need two pieces of data relevant to the <code>Item</code> being compiled: the path to the file responsible for this <code>Item</code> as well as the <code>Item</code>’s body. The path is what we’ll use as the key into the Map, and the body is what we’ll pipe through the channel:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">webSocketPipe</span> <span class="ow">::</span> <span class="kt">Channels</span> <span class="ow">-&gt;</span> <span class="kt">Item</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Compiler</span> <span class="p">(</span><span class="kt">Item</span> <span class="kt">String</span><span class="p">)</span>
+</code></pre></figure><h2 id="hakyll-compiler">
+<span class="hash">#</span>
+<a href="#hakyll-compiler" class="header-link">Hakyll Compiler</a>
+</h2>
+<p>Remember that we also need a Hakyll compiler to insert into the Hakyll compiler pipeline. This compiler will read the server state <code>Map</code> and determine if if there&rsquo;s a channel to send the item body to, and if there isn&rsquo;t, does nothing.</p>
+
+<p>We will need two pieces of data relevant to the <code>Item</code> being compiled: the path to the file responsible for this <code>Item</code> as well as the <code>Item</code>&rsquo;s body. The path is what we&rsquo;ll use as the key into the Map, and the body is what we&rsquo;ll pipe through the channel:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">webSocketPipe</span> <span class="ow">::</span> <span class="kt">Channels</span> <span class="ow">-&gt;</span> <span class="kt">Item</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Compiler</span> <span class="p">(</span><span class="kt">Item</span> <span class="kt">String</span><span class="p">)</span>
 <span class="nf">webSocketPipe</span> <span class="n">channels</span> <span class="n">item</span> <span class="ow">=</span>
   <span class="n">unsafeCompiler</span> <span class="o">$</span> <span class="kr">do</span>
     <span class="kr">let</span> <span class="n">path</span> <span class="ow">=</span> <span class="n">toFilePath</span> <span class="o">.</span> <span class="n">itemIdentifier</span> <span class="o">$</span> <span class="n">item</span>
         <span class="n">body</span> <span class="ow">=</span> <span class="n">itemBody</span> <span class="n">item</span>
 </code></pre></figure>
-<p>We fork off another thread to atomically retrieve the server state and determine if there’s a channel associated with the path, and if so, pipes the body through the channel:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell">    <span class="n">void</span> <span class="o">.</span> <span class="n">forkIO</span> <span class="o">$</span> <span class="n">atomically</span> <span class="o">$</span> <span class="kr">do</span>
+<p>We fork off another thread to atomically retrieve the server state and determine if there&rsquo;s a channel associated with the path, and if so, pipes the body through the channel:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">    <span class="n">void</span> <span class="o">.</span> <span class="n">forkIO</span> <span class="o">$</span> <span class="n">atomically</span> <span class="o">$</span> <span class="kr">do</span>
       <span class="n">chans</span> <span class="ow">&lt;-</span> <span class="n">readTVar</span> <span class="n">channels</span>
 
       <span class="kr">case</span> <span class="kt">Map</span><span class="o">.</span><span class="n">lookup</span> <span class="n">path</span> <span class="n">chans</span> <span class="kr">of</span>
         <span class="kt">Just</span> <span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="kr">_</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">writeTChan</span> <span class="n">ch</span> <span class="n">body</span>
         <span class="kt">Nothing</span> <span class="ow">-&gt;</span> <span class="n">return</span> <span class="nb">()</span>
 </code></pre></figure>
-<p>The final and very important thing to do is to return the item as it was passed to us. This in effect makes this Hakyll compiler transparent, just “observing” the data that’s passing through it.</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell">    <span class="n">return</span> <span class="n">item</span>
-</code></pre></figure>
-<h2 id="main-thread">Main Thread</h2>
+<p>The final and very important thing to do is to return the item as it was passed to us. This in effect makes this Hakyll compiler transparent, just &ldquo;observing&rdquo; the data that&rsquo;s passing through it.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">    <span class="n">return</span> <span class="n">item</span>
+</code></pre></figure><h2 id="main-thread">
+<span class="hash">#</span>
+<a href="#main-thread" class="header-link">Main Thread</a>
+</h2>
 <p>The main thread should begin by initializing the server state:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell">  <span class="n">channels</span> <span class="ow">&lt;-</span> <span class="n">atomically</span> <span class="o">$</span> <span class="n">newTVar</span> <span class="kt">Map</span><span class="o">.</span><span class="n">empty</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">  <span class="n">channels</span> <span class="ow">&lt;-</span> <span class="n">atomically</span> <span class="o">$</span> <span class="n">newTVar</span> <span class="kt">Map</span><span class="o">.</span><span class="n">empty</span>
 </code></pre></figure>
-<p>You’ll need a way to determine whether the WebSocket server should run. In my case I have a <code>previewMode</code> variable that’s only true when the Hakyll action is either watch or preview; everything else defaults to deploy-mode.</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell">  <span class="kr">let</span> <span class="n">previewMode</span> <span class="ow">=</span> <span class="n">action</span> <span class="o">==</span> <span class="s">&quot;watch&quot;</span> <span class="o">||</span> <span class="n">action</span> <span class="o">==</span> <span class="s">&quot;preview&quot;</span>
+<p>You&rsquo;ll need a way to determine whether the WebSocket server should run. In my case I have a <code>previewMode</code> variable that&rsquo;s only true when the Hakyll action is either watch or preview; everything else defaults to deploy-mode.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">  <span class="kr">let</span> <span class="n">previewMode</span> <span class="ow">=</span> <span class="n">action</span> <span class="o">==</span> <span class="s">&quot;watch&quot;</span> <span class="o">||</span> <span class="n">action</span> <span class="o">==</span> <span class="s">&quot;preview&quot;</span>
   <span class="n">when</span> <span class="n">previewMode</span> <span class="o">$</span> <span class="n">void</span> <span class="o">.</span> <span class="n">forkIO</span> <span class="o">$</span> <span class="n">wsServer</span> <span class="n">channels</span>
 </code></pre></figure>
-<p>Finally, don’t forget to insert the Hakyll compiler into the pipeline, passing it the server state:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell">    <span class="n">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
+<p>Finally, don&rsquo;t forget to insert the Hakyll compiler into the pipeline, passing it the server state:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell">    <span class="n">compile</span> <span class="o">$</span> <span class="n">getResourceBody</span>
       <span class="o">&gt;&gt;=</span> <span class="n">pandocCompiler</span> <span class="p">(</span><span class="n">storeDirectory</span> <span class="n">conf</span><span class="p">)</span>
       <span class="o">&gt;&gt;=</span> <span class="n">webSocketPipe</span> <span class="n">channels</span>
       <span class="o">&gt;&gt;=</span> <span class="n">loadAndApplyTemplate</span> <span class="n">itemTemplate</span> <span class="n">context</span>
       <span class="o">&gt;&gt;=</span> <span class="n">loadAndApplyTemplate</span> <span class="s">&quot;templates/layout.html&quot;</span> <span class="n">layoutContext</span>
-</code></pre></figure>
-<h2 id="client-side">Client Side</h2>
-<p>Now we need to wire stuff up from the client side. First though there’s one last thing we need to do in the back-end. We need to create a Hakyll <code>Context</code> that inserts the client-side JavaScript only if we’re in preview mode, otherwise when you deploy your site every visitor will be attempting to connect to the WebSocket server.</p>
-<p>In my setup I have a <code>postCtx</code> that specifies the <code>Context</code> to use for posts. I’ve changed it to be a function that takes as argument a <code>Bool</code> specifying whether or not the site is in preview mode. This indicator is further passed on to a function called <code>pushJS</code> that will embed the JavaScript if it’s <code>True</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">postCtx</span> <span class="ow">::</span> <span class="kt">Bool</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="kt">String</span>
+</code></pre></figure><h2 id="client-side">
+<span class="hash">#</span>
+<a href="#client-side" class="header-link">Client Side</a>
+</h2>
+<p>Now we need to wire stuff up from the client side. First though there&rsquo;s one last thing we need to do in the back-end. We need to create a Hakyll <code>Context</code> that inserts the client-side JavaScript only if we&rsquo;re in preview mode, otherwise when you deploy your site every visitor will be attempting to connect to the WebSocket server.</p>
+
+<p>In my setup I have a <code>postCtx</code> that specifies the <code>Context</code> to use for posts. I&rsquo;ve changed it to be a function that takes as argument a <code>Bool</code> specifying whether or not the site is in preview mode. This indicator is further passed on to a function called <code>pushJS</code> that will embed the JavaScript if it&rsquo;s <code>True</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">postCtx</span> <span class="ow">::</span> <span class="kt">Bool</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="kt">String</span>
 <span class="nf">postCtx</span> <span class="n">preview</span> <span class="ow">=</span> <span class="n">mconcat</span>
   <span class="p">[</span> <span class="n">pushJS</span> <span class="n">preview</span> <span class="s">&quot;pushJS&quot;</span>
   <span class="c1">-- ...</span>
   <span class="p">,</span> <span class="n">defaultCtx</span> <span class="p">]</span>
 </code></pre></figure>
-<p>Before we get to <code>pushJS</code>, consider that we might want to disable this feature on a per-post basis. Personally I’d like this functionality to be on by default, but there are some posts I have such as <a href="/notes/machine-learning">this one</a> that are ridiculously long and take a very long time to load, so I’d like to be able to set a metadata <code>push​: off</code> option in that particular post to disable it. Let’s define a function that gets the metadata value and assumes its <code>True</code> unless it’s explicitly set to <code>false</code> or <code>off</code>:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">pushOn</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">MonadMetadata</span> <span class="n">m</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="kt">Item</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">m</span> <span class="kt">Bool</span>
+<p>Before we get to <code>pushJS</code>, consider that we might want to disable this feature on a per-post basis. Personally I&rsquo;d like this functionality to be on by default, but there are some posts I have such as <a href="/notes/machine-learning">this one</a> that are ridiculously long and take a very long time to load, so I&rsquo;d like to be able to set a metadata <code>push: off</code> option in that particular post to disable it. Let&rsquo;s define a function that gets the metadata value and assumes its <code>True</code> unless it&rsquo;s explicitly set to <code>false</code> or <code>off</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">pushOn</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">MonadMetadata</span> <span class="n">m</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="kt">Item</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">m</span> <span class="kt">Bool</span>
 <span class="nf">pushOn</span> <span class="n">item</span> <span class="ow">=</span> <span class="kr">do</span>
   <span class="n">pushMeta</span> <span class="ow">&lt;-</span> <span class="n">getMetadataField</span> <span class="p">(</span><span class="n">itemIdentifier</span> <span class="n">item</span><span class="p">)</span> <span class="s">&quot;push&quot;</span>
   <span class="n">return</span> <span class="o">$</span> <span class="kr">case</span> <span class="n">pushMeta</span> <span class="kr">of</span>
@@ -260,8 +384,10 @@
              <span class="kt">Just</span> <span class="s">&quot;off&quot;</span> <span class="ow">-&gt;</span> <span class="kt">False</span>
              <span class="kr">_</span> <span class="ow">-&gt;</span> <span class="kt">True</span>
 </code></pre></figure>
-<p>Now we can get to the <code>pushJS</code> function. We only generate the JavaScript code if the site is in preview mode and the option isn’t disabled for this particular <code>Item</code>. The way this will work is that it’ll load the contents of the file <code>templates​/push-js​.html</code> into the <code>key</code> tag, which is <code>&quot;pushJS&quot;</code> in my case as defined above. So in my layout template I’ll have <code>$pushJS$</code>, which will be replaced by the contents of <code>push-js​.html</code> or it’ll be an empty string if the requirements for the feature aren’t met. One last thing is that we pass the path of the file responsible for the <code>Item</code> into the <code>push-js​.html</code> template as the <code>$path$</code> tag so that the WebSocket knows what path to connect to:</p>
-<figure class="codeblock"><pre><code class="highlight language-haskell"><span class="nf">pushJS</span> <span class="ow">::</span> <span class="kt">Bool</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="kt">String</span>
+<p>Now we can get to the <code>pushJS</code> function. We only generate the JavaScript code if the site is in preview mode and the option isn&rsquo;t disabled for this particular <code>Item</code>. The way this will work is that it&rsquo;ll load the contents of the file <code>templates/push-js.html</code> into the <code>key</code> tag, which is <code>&quot;pushJS&quot;</code> in my case as defined above. So in my layout template I&rsquo;ll have <code>$pushJS$</code>, which will be replaced by the contents of <code>push-js.html</code> or it&rsquo;ll be an empty string if the requirements for the feature aren&rsquo;t met. One last thing is that we pass the path of the file responsible for the <code>Item</code> into the <code>push-js.html</code> template as the <code>$path$</code> tag so that the WebSocket knows what path to connect to:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-haskell"><span class="nf">pushJS</span> <span class="ow">::</span> <span class="kt">Bool</span> <span class="ow">-&gt;</span> <span class="kt">String</span> <span class="ow">-&gt;</span> <span class="kt">Context</span> <span class="kt">String</span>
 <span class="nf">pushJS</span> <span class="n">preview</span> <span class="n">key</span> <span class="ow">=</span> <span class="n">field</span> <span class="n">key</span> <span class="o">$</span> <span class="nf">\</span><span class="n">item</span> <span class="ow">-&gt;</span> <span class="kr">do</span>
   <span class="n">push</span> <span class="ow">&lt;-</span> <span class="n">pushOn</span> <span class="n">item</span>
   <span class="kr">if</span> <span class="n">preview</span> <span class="o">&amp;&amp;</span> <span class="n">push</span>
@@ -273,9 +399,12 @@
       <span class="n">return</span> <span class="o">$</span> <span class="n">itemBody</span> <span class="n">gend</span>
     <span class="kr">else</span> <span class="n">return</span> <span class="s">&quot;&quot;</span>
 </code></pre></figure>
-<p>The contents of the file <code>push-js​.html</code> are pretty straightforward. We use the <code>$path$</code> that we were passed by <code>pushJS</code> to connect to the WebSocket server. Then we define an <code>onmessage</code> handler. This handler does a couple of things. First it finds the element that contains my post body. Once it has the element, it replaces the contents of this element with the data received through the WebSocket.</p>
-<p>We then have to perform some house cleaning, essentially re-running JavaScript functionality that ran on DOM load, such as creating links out of the headers in the post. I wrapped this stuff up in a global <code>refresh</code> function. This allows me to simply call it again in this handler. The last thing I do in this handler is re-run MathJax <span class="math">\(\LaTeX\)</span> typesetting on the post body element, since it originally ran on DOM load as well.</p>
-<figure class="codeblock"><pre><code class="highlight language-html"><span class="c">&lt;!-- preview push --&gt;</span>
+<p>The contents of the file <code>push-js.html</code> are pretty straightforward. We use the <code>$path$</code> that we were passed by <code>pushJS</code> to connect to the WebSocket server. Then we define an <code>onmessage</code> handler. This handler does a couple of things. First it finds the element that contains my post body. Once it has the element, it replaces the contents of this element with the data received through the WebSocket.</p>
+
+<p>We then have to perform some house cleaning, essentially re-running JavaScript functionality that ran on DOM load, such as creating links out of the headers in the post. I wrapped this stuff up in a global <code>refresh</code> function. This allows me to simply call it again in this handler. The last thing I do in this handler is re-run MathJax \(\LaTeX\) typesetting on the post body element, since it originally ran on DOM load as well.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-html"><span class="c">&lt;!-- preview push --&gt;</span>
 <span class="nt">&lt;script </span><span class="na">async=</span><span class="s">&quot;true&quot;</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
   <span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span> <span class="p">(){</span>
     <span class="kd">var</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://localhost:9160/$path$&#39;</span><span class="p">);</span>
@@ -289,15 +418,25 @@
     <span class="p">};</span>
   <span class="p">});</span>
 <span class="nt">&lt;/script&gt;</span>
-</code></pre></figure>
-<h1 id="conclusion">Conclusion</h1>
+</code></pre></figure><h1 id="conclusion">
+<span class="hash">#</span>
+<a href="#conclusion" class="header-link">Conclusion</a>
+</h1>
 <p>So I added this functionality to Hakyll that I thought others had through LiveReload. Of course, I showed it to the friend that told me about LiveReload to begin with and he was amazed, as was I when he told me that all LiveReload did was refresh the page for you.</p>
-<p>Of course, the advantage of LiveReload over this is that it handles any asset, such as style sheets, and reloads the entire page so that you can see those changes, rather than just the post body. But like I mentioned in the beginning of this post, I don’t feel like I need that functionality in particular. Perhaps I’ll implement it later on as well anyways though, for convenience. I have a feeling it’ll be more straightforward than this.</p></div>
+
+<p>Of course, the advantage of LiveReload over this is that it handles any asset, such as style sheets, and reloads the entire page so that you can see those changes, rather than just the post body. But like I mentioned in the beginning of this post, I don&rsquo;t feel like I need that functionality in particular. Perhaps I&rsquo;ll implement it later on as well anyways though, for convenience. I have a feeling it&rsquo;ll be more straightforward than this.</p>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> December 20, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/posts/live-editing-with-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/5fedf3b" title="prefer italic over bold">5fedf3b</a></span></div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll/">Hakyll</a>, <a href="/tags/haskell/">Haskell</a></div>
-    
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/live-editing-with-hakyll.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/hakyll">Hakyll</a>, <a href="/tags/haskell">Haskell</a></div>
   </div>
 </article>
 <section id="comment">
@@ -308,6 +447,7 @@
 
 
 
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -326,12 +466,30 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/posts/live-editing-with-hakyll.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
 
 <!-- disqus -->
 <script async="true" type="text/javascript">
   var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/posts/live-editing-with-hakyll/';
-  var disqus_url = 'http://blaenkdenum.com/posts/live-editing-with-hakyll/';
+  var disqus_identifier = 'http://blaenkdenum.com/posts/live-editing-with-hakyll';
+  var disqus_url = 'http://blaenkdenum.com/posts/live-editing-with-hakyll';
   var disqus_script = 'embed.js';
 
   (function () {
@@ -345,8 +503,8 @@
       DISQUS.reset({
         reload: true,
         config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/posts/live-editing-with-hakyll/'
-          this.page.url = 'http://blaenkdenum.com/posts/live-editing-with-hakyll/'
+          this.page.identifier = 'http://blaenkdenum.com/posts/live-editing-with-hakyll'
+          this.page.url = 'http://blaenkdenum.com/posts/live-editing-with-hakyll'
         }
       });
     });

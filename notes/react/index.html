@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,13 +72,71 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/react/"><span>React</span></a></h2>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/react"><span>React</span></a></h2>
   <div class="entry-content"><p><a href="http://facebook.github.io/react/">React</a> is a library for building user interface out of individual, composable components.</p>
-<nav id="toc"><h3>Contents</h3><ol><li><a href="#components">Components</a><ol><li><a href="#mixins">Mixins</a></li><li><a href="#lifecycle">Lifecycle</a><ol><li><a href="#mounting">Mounting</a></li><li><a href="#updating">Updating</a></li><li><a href="#unmounting">Unmounting</a></li></ol></li><li><a href="#event-handling">Event Handling</a></li></ol></li><li><a href="#dom">DOM</a></li><li><a href="#forms">Forms</a></li><li><a href="#jsx">JSX</a></li><li><a href="#flux">Flux</a><ol><li><a href="#dispatcher">Dispatcher</a></li><li><a href="#stores">Stores</a></li><li><a href="#views-and-controller-views">Views and Controller-Views</a></li></ol></li></ol></nav>
-<h1 id="components">Components</h1>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#components">Components</a>
+<ol>
+<li>
+<a href="#mixins">Mixins</a>
+</li>
+<li>
+<a href="#lifecycle">Lifecycle</a>
+<ol>
+<li>
+<a href="#mounting">Mounting</a>
+</li>
+<li>
+<a href="#updating">Updating</a>
+</li>
+<li>
+<a href="#unmounting">Unmounting</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#event-handling">Event Handling</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#dom">DOM</a>
+</li>
+<li>
+<a href="#forms">Forms</a>
+</li>
+<li>
+<a href="#jsx">JSX</a>
+</li>
+<li>
+<a href="#flux">Flux</a>
+<ol>
+<li>
+<a href="#dispatcher">Dispatcher</a>
+</li>
+<li>
+<a href="#stores">Stores</a>
+</li>
+<li>
+<a href="#views-and-controller-views">Views and Controller-Views</a>
+</li>
+</ol>
+</li>
+</ol>
+</nav>
+<h1 id="components">
+<span class="hash">#</span>
+<a href="#components" class="header-link">Components</a>
+</h1>
 <p>Components are the unit for composing user interfaces in React and are essentially state machines. They can be viewed as functions that take in <code>props</code> and <code>state</code> and render HTML. Components can only render a single root node, so that multiple nodes must be wrapped in a single root node to be returned. The <code>renderComponent</code> function is used to render a React component into the DOM within the given container, known as <em>mounting</em> in React. The <code>render</code> method should be pure.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">HelloMessage</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">HelloMessage</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
   <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Hello</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
   <span class="p">}</span>
@@ -89,13 +147,20 @@
   <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;container&#39;</span><span class="p">)</span>
 <span class="p">);</span>
 </code></pre></figure>
-<p>State can be modified using the <code>setState(data​, callback)</code> function which merges the <code>data</code> into the component’s <code>state</code> and re-renders the component, calling the optional <code>callback</code> when it is finished rendering.</p>
-<p>It’s idiomatic to keep as many components stateless as possible. A common pattern is to create several stateless components under a stateful component which passes state to them via <code>props</code> so that the stateless sub-components can be rendered in a declarative manner.</p>
-<p>State that may be contained in components should be the most primitive, absolutely required data that may be changed by event handlers to trigger a UI update. The <code>render</code> method can be used to compute more sophisticated data from this state automatically as required. State therefore shouldn’t consist of computed data, other components (which should be constructed within <code>render</code>), or duplicate data from <code>props</code>.</p>
-<p><em>Reconciliation</em> refers to the process by which React updates the DOM with each new render pass. Children are reconciled according to the order in which they’re rendered, so that if a child node is removed, its contents are replaced with its sibling’s contents and the sibling is destroyed. This may cause problems with stateful components, in which case it may be preferable to hide components instead of destroying them.</p>
-<p>Components can be given a key that identifies them so that their state is kept with them across render passes by assigning the <code>key</code> property. Numerical identities should be preceded by a string to avoid being ordered separately from other properties. It’s also possible to assign components to an object where each component is keyed by what will be its key.</p>
-<p>Default properties can be defined with the <code>getDefaultProps</code> method so that if the parent component doesn’t specify them they take on the default value.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">ComponentWithDefaultProps</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
+<p>State can be modified using the <code>setState(data, callback)</code> function which merges the <code>data</code> into the component&rsquo;s <code>state</code> and re-renders the component, calling the optional <code>callback</code> when it is finished rendering.</p>
+
+<p>It&rsquo;s idiomatic to keep as many components stateless as possible. A common pattern is to create several stateless components under a stateful component which passes state to them via <code>props</code> so that the stateless sub-components can be rendered in a declarative manner.</p>
+
+<p>State that may be contained in components should be the most primitive, absolutely required data that may be changed by event handlers to trigger a UI update. The <code>render</code> method can be used to compute more sophisticated data from this state automatically as required. State therefore shouldn&rsquo;t consist of computed data, other components (which should be constructed within <code>render</code>), or duplicate data from <code>props</code>.</p>
+
+<p><em>Reconciliation</em> refers to the process by which React updates the DOM with each new render pass. Children are reconciled according to the order in which they&rsquo;re rendered, so that if a child node is removed, its contents are replaced with its sibling&rsquo;s contents and the sibling is destroyed. This may cause problems with stateful components, in which case it may be preferable to hide components instead of destroying them.</p>
+
+<p>Components can be given a key that identifies them so that their state is kept with them across render passes by assigning the <code>key</code> property. Numerical identities should be preceded by a string to avoid being ordered separately from other properties. It&rsquo;s also possible to assign components to an object where each component is keyed by what will be its key.</p>
+
+<p>Default properties can be defined with the <code>getDefaultProps</code> method so that if the parent component doesn&rsquo;t specify them they take on the default value.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">ComponentWithDefaultProps</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
   <span class="nx">getDefaultProps</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">{</span>
       <span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;default value&#39;</span>
@@ -104,7 +169,9 @@
 <span class="p">})</span>
 </code></pre></figure>
 <p>A React component that extends a basic HTML element can pass on its properties to the extended HTML element with <code>transferPropsTo</code>.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">Avatar</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">Avatar</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
   <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">transferPropsTo</span><span class="p">(</span>
       <span class="o">&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;/avatars/&quot;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">userId</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">}</span> <span class="nx">userId</span><span class="o">=</span><span class="p">{</span><span class="kc">null</span><span class="p">}</span> <span class="o">/&gt;</span>
@@ -114,8 +181,10 @@
 
 <span class="c1">// &lt;Avatar userId={17} width={200} height={200} /&gt;</span>
 </code></pre></figure>
-<p>It’s possible to specify validations for properties using <code>React​.PropTypes</code>. For example, <code>React​.PropTypes​.component​.isRequired</code> can be used to enforce that only one child is passed to a component as children.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">MyComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
+<p>It&rsquo;s possible to specify validations for properties using <code>React.PropTypes</code>. For example, <code>React.PropTypes.component.isRequired</code> can be used to enforce that only one child is passed to a component as children.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">MyComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
   <span class="nx">propTypes</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">children</span><span class="o">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">PropTypes</span><span class="p">.</span><span class="nx">component</span><span class="p">.</span><span class="nx">isRequired</span>
   <span class="p">},</span>
@@ -123,10 +192,14 @@
     <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">children</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
   <span class="p">}</span>
 <span class="p">})</span>
-</code></pre></figure>
-<h2 id="mixins">Mixins</h2>
+</code></pre></figure><h2 id="mixins">
+<span class="hash">#</span>
+<a href="#mixins" class="header-link">Mixins</a>
+</h2>
 <p>Mixins can be used to share common functionality between components. If multiple mixins define the same lifecycle method, each one is guaranteed to be called.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">IntervalMixin</span> <span class="o">=</span> <span class="p">{</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">IntervalMixin</span> <span class="o">=</span> <span class="p">{</span>
   <span class="nx">componentWillMount</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">intervals</span> <span class="o">=</span> <span class="p">[];</span> <span class="p">},</span>
   <span class="nx">setInterval</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">intervals</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">setInterval</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">));</span>
@@ -144,40 +217,70 @@
   <span class="nx">tick</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="nx">seconds</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">seconds</span> <span class="o">+</span> <span class="mi">1</span><span class="p">});</span> <span class="p">},</span>
   <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Running</span> <span class="k">for</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">seconds</span><span class="p">}</span> <span class="nx">seconds</span><span class="o">&lt;</span><span class="err">/p&gt;; }</span>
 <span class="p">});</span>
-</code></pre></figure>
-<h2 id="lifecycle">Lifecycle</h2>
+</code></pre></figure><h2 id="lifecycle">
+<span class="hash">#</span>
+<a href="#lifecycle" class="header-link">Lifecycle</a>
+</h2>
 <p>Components have three main stages in their lifecycle.</p>
-<ol type="1">
+
+<ol>
 <li><strong>Mounting</strong>: insertion into the DOM</li>
 <li><strong>Updating</strong>: re-render to determine if DOM should be updated</li>
 <li><strong>Unmounting</strong>: removal from the DOM</li>
 </ol>
+
 <p>There are three methods that can be implemented to hook into these stages before and after they occur.</p>
-<h3 id="mounting">Mounting</h3>
+<h3 id="mounting">
+<span class="hash">#</span>
+<a href="#mounting" class="header-link">Mounting</a>
+</h3>
 <p>The <code>getInitialState</code> method is invoked before a component is mounted to determine the initial state data. The <code>componentWillMount</code> method is invoked right before mounting. The <code>componentDidMount</code> method is invoked right after mounting, and should contain initialization that requires DOM nodes.</p>
-<p>Once mounted, composite components support the <code>getDOMNode</code> method to obtain a reference to the DOM node, as well as the <code>forceUpdate</code> method to force an update when it’s known that a deeper aspect of the state has changed without using <code>setState</code>.</p>
-<h3 id="updating">Updating</h3>
+
+<p>Once mounted, composite components support the <code>getDOMNode</code> method to obtain a reference to the DOM node, as well as the <code>forceUpdate</code> method to force an update when it&rsquo;s known that a deeper aspect of the state has changed without using <code>setState</code>.</p>
+<h3 id="updating">
+<span class="hash">#</span>
+<a href="#updating" class="header-link">Updating</a>
+</h3>
 <p>The <code>componentWillReceiveProps</code> method is called whenever a mounted component receives a new props object (passed through this method), and should be used to compare the existing props with the new props to perform any potential state transitions using <code>setState</code>.</p>
-<p>The <code>shouldComponentUpdate</code> method is used to determine if any changes to the component warrant an update to the DOM. This should be used to compare the current and new state and props and return false to tell React that it doesn’t need to update. This method receives the new set of props and state.</p>
+
+<p>The <code>shouldComponentUpdate</code> method is used to determine if any changes to the component warrant an update to the DOM. This should be used to compare the current and new state and props and return false to tell React that it doesn&rsquo;t need to update. This method receives the new set of props and state.</p>
+
 <p>The <code>componentWillUpdate</code> method is called right before updating occurs and receives the new set of props and state, while the <code>componentDidUpdate</code> method is called right after updating completes and receives the old set of props and state.</p>
-<h3 id="unmounting">Unmounting</h3>
+<h3 id="unmounting">
+<span class="hash">#</span>
+<a href="#unmounting" class="header-link">Unmounting</a>
+</h3>
 <p>The <code>componentWillUnmount</code> method is called right before a component is unmounted and destroyed, so that cleanup may be handled.</p>
-<h2 id="event-handling">Event Handling</h2>
+<h2 id="event-handling">
+<span class="hash">#</span>
+<a href="#event-handling" class="header-link">Event Handling</a>
+</h2>
 <p>Event handlers can be established by using the HTML property in camel-case, such as <code>onClick</code>. All methods are automatically bound to their component instance.</p>
-<p>Event handlers aren’t attached to individual nodes. Instead, React establishes a top-level event listener that catches all events. When components are mounted or unmounted, an internal mapping is updated to reflect this.</p>
-<h1 id="dom">DOM</h1>
+
+<p>Event handlers aren&rsquo;t attached to individual nodes. Instead, React establishes a top-level event listener that catches all events. When components are mounted or unmounted, an internal mapping is updated to reflect this.</p>
+<h1 id="dom">
+<span class="hash">#</span>
+<a href="#dom" class="header-link">DOM</a>
+</h1>
 <p>React maintains a fast in-memory DOM representation known as the virtual DOM. The <code>render</code> method returns a description of the DOM which can then be diffed with the virtual DOM to compute the fastest way to update the browser DOM to reflect any changes.</p>
-<p>Sometimes it may be necessary to interact directly with the DOM, either to interoperate with third-party libraries or to perform non-reactive changes such as setting focus, which can’t easily be inferred via React’s data flow (props and state).</p>
-<p>To interact with the actual browser DOM, a reference to a DOM node reference must be retrieved using the <code>getDOMNode</code> component method, which only works on mounted components. However, to be able to call this method on the component, it must be possible to get a reference to the component’s backing instance.</p>
-<p>Since what’s returned by <code>render</code> are <em>not</em> the rendered, <em>backing</em> instances and instead are descriptions of the component’s sub-hierarchy, it’s not possible to obtain references to components in the following manner:</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+<p>Sometimes it may be necessary to interact directly with the DOM, either to interoperate with third-party libraries or to perform non-reactive changes such as setting focus, which can&rsquo;t easily be inferred via React&rsquo;s data flow (props and state).</p>
+
+<p>To interact with the actual browser DOM, a reference to a DOM node reference must be retrieved using the <code>getDOMNode</code> component method, which only works on mounted components. However, to be able to call this method on the component, it must be possible to get a reference to the component&rsquo;s backing instance.</p>
+
+<p>Since what&rsquo;s returned by <code>render</code> are <em>not</em> the rendered, <em>backing</em> instances and instead are descriptions of the component&rsquo;s sub-hierarchy, it&rsquo;s not possible to obtain references to components in the following manner:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">input</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">input</span> <span class="o">/&gt;</span><span class="p">;</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">savedRef</span> <span class="o">=</span> <span class="nx">input</span><span class="p">;</span>
   <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">input</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/div&gt;;</span>
 <span class="p">}</span>
 </code></pre></figure>
-<p>Instead, components can be referenced by giving them a <code>ref</code> property which makes the component’s backing instance accessible via <code>this​.refs</code>. Once a reference to the component is attained, a DOM node reference can be retrieved with the <code>getDOMNode</code> method.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">MyComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
+<p>Instead, components can be referenced by giving them a <code>ref</code> property which makes the component&rsquo;s backing instance accessible via <code>this.refs</code>. Once a reference to the component is attained, a DOM node reference can be retrieved with the <code>getDOMNode</code> method.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">MyComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span>
   <span class="nx">handleClick</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">refs</span><span class="p">.</span><span class="nx">textInput</span><span class="p">.</span><span class="nx">getDOMNode</span><span class="p">().</span><span class="nx">focus</span><span class="p">();</span>
   <span class="p">},</span>
@@ -191,80 +294,112 @@
   <span class="p">}</span>
 <span class="p">})</span>
 </code></pre></figure>
-<p>As a disclaimer, never access refs within any component’s <code>render</code> method or while any component’s <code>render</code> method is running anywhere in the call stack.</p>
-<h1 id="forms">Forms</h1>
+<p>As a disclaimer, never access refs within any component&rsquo;s <code>render</code> method or while any component&rsquo;s <code>render</code> method is running anywhere in the call stack.</p>
+<h1 id="forms">
+<span class="hash">#</span>
+<a href="#forms" class="header-link">Forms</a>
+</h1>
 <p>Form components differ from native components because they can be mutated by user interactions. Specifically, they support props that are affected by user actions.</p>
+
 <table>
 <thead>
-<tr class="header">
-<th style="text-align: left;">Prop</th>
-<th style="text-align: left;">Components</th>
+<tr>
+<th style="text-align: left">Prop</th>
+<th style="text-align: left">Components</th>
 </tr>
 </thead>
+
 <tbody>
-<tr class="odd">
-<td style="text-align: left;"><code>value</code></td>
-<td style="text-align: left;"><code>input</code> and <code>textarea</code></td>
+<tr>
+<td style="text-align: left"><code>value</code></td>
+<td style="text-align: left"><code>input</code> and <code>textarea</code></td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"><code>checked</code></td>
-<td style="text-align: left;"><code>checkbox</code> and <code>radio</code></td>
+<tr>
+<td style="text-align: left"><code>checked</code></td>
+<td style="text-align: left"><code>checkbox</code> and <code>radio</code></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"><code>selected</code></td>
-<td style="text-align: left;"><code>option</code></td>
+<tr>
+<td style="text-align: left"><code>selected</code></td>
+<td style="text-align: left"><code>option</code></td>
 </tr>
 </tbody>
 </table>
+
 <p>Although in HTML the value of <code>textarea</code> is set via children, it should be set via <code>value</code> in React. The <code>onChange</code> prop can be listened to for when these properties change in response to user interactions.</p>
+
 <p>If an <code>input</code> component has a <code>value</code> property set, then it is considered a <em>controlled component</em>, so that the rendered component <em>always</em> reflects the <code>value</code> property; user input has no effect. In order for a controlled component to reflect user input, it should explicitly set the value in response to the change.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">getInitialState</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="p">{</span><span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;Hello1&#39;</span><span class="p">}</span> <span class="p">},</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">getInitialState</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="p">{</span><span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;Hello1&#39;</span><span class="p">}</span> <span class="p">},</span>
 <span class="nx">handleChange</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="nx">value</span><span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">})</span> <span class="p">},</span>
 <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
   <span class="k">return</span> <span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span> <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">value</span><span class="p">}</span> <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleChange</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></figure>
-<p>If an <code>input</code> component doesn’t supply a <code>value</code> property, then it’s <em>uncontrolled</em> and so the rendered element reflects user input. A default value can be provided without making the component controlled by setting the <code>defaultValue</code> prop. There’s also a <code>defaultChecked</code> that can be used with checkboxes.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<p>If an <code>input</code> component doesn&rsquo;t supply a <code>value</code> property, then it&rsquo;s <em>uncontrolled</em> and so the rendered element reflects user input. A default value can be provided without making the component controlled by setting the <code>defaultValue</code> prop. There&rsquo;s also a <code>defaultChecked</code> that can be used with checkboxes.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span> <span class="nx">defaultValue</span><span class="o">=</span><span class="s2">&quot;Hello!&quot;</span> <span class="o">/&gt;</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></figure>
-<h1 id="jsx">JSX</h1>
+</code></pre></figure><h1 id="jsx">
+<span class="hash">#</span>
+<a href="#jsx" class="header-link">JSX</a>
+</h1>
 <p>JSX is an optional HTML-like syntax that can be used for function calls that generate markup. A special comment header pragma is required to denote that the file should be processed by the JSX transformer.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="cm">/** @jsx React.DOM */</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="cm">/** @jsx React.DOM */</span>
 </code></pre></figure>
-<p>JSX can be used to construct instances of React DOM components and composite components created with <code>createClass</code>. It’s important to realize that JSX has no notion of the DOM, and instead transforms elements into function calls.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">Nav</span> <span class="nx">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="o">&gt;&lt;</span><span class="nx">Profile</span><span class="o">&gt;</span><span class="nx">click</span><span class="o">&lt;</span><span class="err">/Profile&gt;&lt;/Nav&gt;;</span>
+<p>JSX can be used to construct instances of React DOM components and composite components created with <code>createClass</code>. It&rsquo;s important to realize that JSX has no notion of the DOM, and instead transforms elements into function calls.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">Nav</span> <span class="nx">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="o">&gt;&lt;</span><span class="nx">Profile</span><span class="o">&gt;</span><span class="nx">click</span><span class="o">&lt;</span><span class="err">/Profile&gt;&lt;/Nav&gt;;</span>
 <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">Nav</span><span class="p">({</span><span class="nx">color</span><span class="o">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span> <span class="nx">Profile</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;click&quot;</span><span class="p">));</span>
 
 <span class="kd">var</span> <span class="nx">MyComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span><span class="cm">/* ... */</span><span class="p">});</span>
 <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">MyComponent</span> <span class="nx">someProperty</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">;</span>
 </code></pre></figure>
-<p>JavaScript expressions—both attribute and child—can be embedded into JSX with curly braces <code>{}</code>. Comments should also be contained within expressions.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">Person</span> <span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nb">window</span><span class="p">.</span><span class="nx">isLoggedIn</span> <span class="o">?</span> <span class="nb">window</span><span class="p">.</span><span class="nx">name</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">;</span>
+<p>JavaScript expressions&mdash;both attribute and child&mdash;can be embedded into JSX with curly braces <code>{}</code>. Comments should also be contained within expressions.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">Person</span> <span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nb">window</span><span class="p">.</span><span class="nx">isLoggedIn</span> <span class="o">?</span> <span class="nb">window</span><span class="p">.</span><span class="nx">name</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">;</span>
 <span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="nx">Person</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="nb">window</span><span class="p">.</span><span class="nx">isLoggedIn</span> <span class="o">?</span> <span class="nb">window</span><span class="p">.</span><span class="nx">name</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">});</span>
 
 <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">Container</span><span class="o">&gt;</span><span class="p">{</span><span class="nb">window</span><span class="p">.</span><span class="nx">isLoggedIn</span> <span class="o">?</span> <span class="o">&lt;</span><span class="nx">Nav</span> <span class="o">/&gt;</span> <span class="o">:</span> <span class="o">&lt;</span><span class="nx">Login</span> <span class="o">/&gt;</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/Container&gt;;</span>
 <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">Container</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">isLoggedIn</span> <span class="o">?</span> <span class="nx">Nav</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span> <span class="o">:</span> <span class="nx">Login</span><span class="p">(</span><span class="kc">null</span><span class="p">));</span>
 </code></pre></figure>
 <p>Raw HTML can be inserted with a specific API.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">dangerouslySetInnerHTML</span><span class="o">=</span><span class="p">{{</span><span class="nx">__html</span><span class="o">:</span> <span class="s1">&#39;First &amp;middot; Second&#39;</span><span class="p">}}</span> <span class="o">/&gt;</span>
-</code></pre></figure>
-<h1 id="flux">Flux</h1>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">dangerouslySetInnerHTML</span><span class="o">=</span><span class="p">{{</span><span class="nx">__html</span><span class="o">:</span> <span class="s1">&#39;First &amp;middot; Second&#39;</span><span class="p">}}</span> <span class="o">/&gt;</span>
+</code></pre></figure><h1 id="flux">
+<span class="hash">#</span>
+<a href="#flux" class="header-link">Flux</a>
+</h1>
 <p><a href="http://facebook.github.io/flux/">Flux</a> is an architecture for apps where data flows in a unidirectional cycle. It consists of a dispatcher, stores, and views.</p>
-<ol type="1">
-<li><strong>Views</strong>: perform actions—usually due to user interactions—which calls into the dispatcher with a data payload</li>
-<li><strong>Dispatcher</strong>: invoke callbacks registered by stores, sending action’s data payload to interested stores</li>
-<li><strong>Stores</strong>: respond to actions they’re interested in, receiving data payload, and emit “change” event</li>
-<li><strong>Views</strong>: listen to “change” events and re-render accordingly either implicitly or explicitly; <strong>back to #1</strong></li>
+
+<ol>
+<li><strong>Views</strong>: perform actions&mdash;usually due to user interactions&mdash;which calls into the dispatcher with a data payload</li>
+<li><strong>Dispatcher</strong>: invoke callbacks registered by stores, sending action&rsquo;s data payload to interested stores</li>
+<li><strong>Stores</strong>: respond to actions they&rsquo;re interested in, receiving data payload, and emit &ldquo;change&rdquo; event</li>
+<li><strong>Views</strong>: listen to &ldquo;change&rdquo; events and re-render accordingly either implicitly or explicitly; <strong>back to #1</strong></li>
 </ol>
-<p>All data flows through the dispatcher which acts as a central hub. Actions are calls into the dispatcher and usually originate from user interactions with views. The dispatcher then invokes callbacks that the stores registered with it, thereby dispatching the data payloads contained within the actions to all stores. Within the registered callbacks, stores respond to the actions they’re interested in and then emit a “change” event to alert controller-views to the fact that the data layer has been modified. The Controller-views listen to the change events and retrieve data from stores in an event handler, then call their own <code>rende</code> method via <code>setState</code> or <code>forceUpdate</code> to update themselves and all of their children.</p>
-<h2 id="dispatcher">Dispatcher</h2>
+
+<p>All data flows through the dispatcher which acts as a central hub. Actions are calls into the dispatcher and usually originate from user interactions with views. The dispatcher then invokes callbacks that the stores registered with it, thereby dispatching the data payloads contained within the actions to all stores. Within the registered callbacks, stores respond to the actions they&rsquo;re interested in and then emit a &ldquo;change&rdquo; event to alert controller-views to the fact that the data layer has been modified. The Controller-views listen to the change events and retrieve data from stores in an event handler, then call their own <code>rende</code> method via <code>setState</code> or <code>forceUpdate</code> to update themselves and all of their children.</p>
+<h2 id="dispatcher">
+<span class="hash">#</span>
+<a href="#dispatcher" class="header-link">Dispatcher</a>
+</h2>
 <p>The dispatcher is the central hub through which all data flows, acting as a registry of callbacks into the stores, such that each store registers itself and provides a callback. Stores can declaratively wait for other stores to finish updating and then update themselves accordingly.</p>
+
 <p>The dispatcher exposes a method that allows a view to trigger a dispatch to the stores, with a data payload included.</p>
+
 <p>The dispatcher can manage the dependencies between stores using the <code>waitFor</code> method which specifies a list of dispatcher registry indexes and a final callback to call after the callbacks at the given indexes have completed.</p>
-<figure class="codeblock"><pre><code class="highlight language-javascript"><span class="k">case</span> <span class="s1">&#39;TODO_CREATE&#39;</span><span class="o">:</span>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-javascript"><span class="k">case</span> <span class="s1">&#39;TODO_CREATE&#39;</span><span class="o">:</span>
   <span class="nx">Dispatcher</span><span class="p">.</span><span class="nx">waitFor</span><span class="p">([</span>
     <span class="nx">PrependedTextStore</span><span class="p">.</span><span class="nx">dispatcherIndex</span><span class="p">,</span>
     <span class="nx">YetAnotherStore</span><span class="p">.</span><span class="nx">dispatcherIndex</span>
@@ -273,20 +408,41 @@
     <span class="nx">TodoStore</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;change&#39;</span><span class="p">);</span>
   <span class="p">});</span>
   <span class="k">break</span><span class="p">;</span>
-</code></pre></figure>
-<h2 id="stores">Stores</h2>
-<p>Stores contain the application state and logic, and are similar to models in <abbr title="Model-View-Controller">MVC</abbr>s. They receive the action’s data payload as a parameter, which contains a type attribute identifying the action’s type, so that a switch statement may be used to interpret the payload and provide proper hooks into the store’s internal methods.</p>
-<h2 id="views-and-controller-views">Views and Controller-Views</h2>
+</code></pre></figure><h2 id="stores">
+<span class="hash">#</span>
+<a href="#stores" class="header-link">Stores</a>
+</h2>
+<p>Stores contain the application state and logic, and are similar to models in <abbr title="Model-View-Controller">MVC</abbr>s. They receive the action&rsquo;s data payload as a parameter, which contains a type attribute identifying the action&rsquo;s type, so that a switch statement may be used to interpret the payload and provide proper hooks into the store&rsquo;s internal methods.</p>
+<h2 id="views-and-controller-views">
+<span class="hash">#</span>
+<a href="#views-and-controller-views" class="header-link">Views and Controller-Views</a>
+</h2>
 <p>Near the top of the nested view hierarchy there is a special kind of view that listens for events broadcast by the stores that it depends on. This can be called a controller-view since it provides the glue code to get the data from the stores and pass it down the chain of its descendants.</p>
-<p>When the controller-view receives the event from the store, it requests the data it needs via the store’s public getter methods, then calls its own <code>setState</code> and <code>forceUpdate</code> to re-render itself and its descendants. It’s common to pass the entire state of the store down the chain of views so that each descendant can use what it needs.</p></div>
+
+<p>When the controller-view receives the event from the store, it requests the data it needs via the store&rsquo;s public getter methods, then calls its own <code>setState</code> and <code>forceUpdate</code> to re-render itself and its descendants. It&rsquo;s common to pass the entire state of the store down the chain of views so that each descendant can use what it needs.</p>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> July 25, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/react.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/d89eab6" title="react notes">d89eab6</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/react.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+
+This means there's no need to separate the toc marker from its
+configuration, i.e. alignment. This never should've been necessary.
+
+This has the nice side-effect of naturally invalidating the cache when
+the toc marker is moved around or its alignment is changed.
+">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -305,7 +461,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/react.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/react';
+  var disqus_url = 'http://blaenkdenum.com/notes/react';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/react'
+          this.page.url = 'http://blaenkdenum.com/notes/react'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->

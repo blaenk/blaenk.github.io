@@ -38,9 +38,9 @@
   <nav id="main-nav">
     <ul class="main">
       <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
       <li><a href="/work/">Work</a></li>
       <li><a href="/lately/">Lately</a></li>
-      <li><a href="/notes/">Notes</a></li>
       <li><a id="search_btn">Search</a></li>
     </ul>
   </nav>
@@ -50,9 +50,9 @@
       <div class="container">
         <ul class="main">
           <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
           <li><a href="/work/">Work</a></li>
           <li><a href="/lately/">Lately</a></li>
-          <li><a href="/notes/">Notes</a></li>
         </ul>
       </div>
     </div>
@@ -72,15 +72,21 @@
   <input type="hidden" name="q" value="site:blaenkdenum.com">
 </form>
 
-    <article class="post">
-  <h2 class="title"><a href="/notes/ffmpeg/"><span>ffmpeg</span></a></h2>
-  <div class="entry-content"><p>I’ve been trying to understand some of the <a href="http://www.ffmpeg.org/">ffmpeg</a> libraries enough to use for decoding audio in a personal application I’m working on. Documentation and resources to learn it are a bit low and inconsistent or usually outdated. Here I try to maintain a list of resources and information I’ve learned about the library.</p>
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/ffmpeg"><span>ffmpeg</span></a></h2>
+  <div class="entry-content"><p>I&rsquo;ve been trying to understand some of the <a href="http://www.ffmpeg.org/">ffmpeg</a> libraries enough to use for decoding audio in a personal application I&rsquo;m working on. Documentation and resources to learn it are a bit low and inconsistent or usually outdated. Here I try to maintain a list of resources and information I&rsquo;ve learned about the library.</p>
+
 <p>These notes will be updated as I learn more about ffmpeg.</p>
-<h2 id="resources" class="notoc">Resources</h2>
-<p>A problem I’ve encountered with ffmpeg is that many articles posted about it or open source found online is already outdated. Many modern applications like <a href="http://mpc-hc.org/">MPC-HC</a> and <a href="http://www.chromium.org/Home">Chromium</a> do seem to use the latest version of the APIs. I also quickly learned that most learning is done through looking at the examples in ffmpeg as well as the ffplay source.</p>
+<h2 id="resources">
+<span class="hash">#</span>
+<a href="#resources" class="header-link">Resources</a>
+</h2>
+<p>A problem I&rsquo;ve encountered with ffmpeg is that many articles posted about it or open source found online is already outdated. Many modern applications like <a href="http://mpc-hc.org/">MPC-HC</a> and <a href="http://www.chromium.org/Home">Chromium</a> do seem to use the latest version of the APIs. I also quickly learned that most learning is done through looking at the examples in ffmpeg as well as the ffplay source.</p>
+
 <ul>
 <li>the updated version of the <a href="http://dranger.com/ffmpeg/">ffmpeg tutorial</a> hosted <a href="https://github.com/chelyaev/ffmpeg-tutorial/blob/master/tutorial03.c#L114">here</a></li>
-<li>the <a href="https://github.com/FFmpeg/FFmpeg/blob/master/ffplay.c#L2133"><code>ffplay​.c</code></a> source</li>
+<li>the <a href="https://github.com/FFmpeg/FFmpeg/blob/master/ffplay.c#L2133"><code>ffplay.c</code></a> source</li>
 <li>the ffmpeg <a href="https://github.com/FFmpeg/FFmpeg/tree/master/doc/examples">examples</a></li>
 <li>a <a href="http://www.gamedev.net/topic/624876-how-to-read-an-audio-file-with-ffmpeg-in-c/#entry4940299">post</a> on gamedev</li>
 <li>the <a href="https://github.com/mpc-hc/mpc-hc/blob/master/src/filters/transform/MpaDecFilter/FFAudioDecoder.cpp#L295">mpc-hc</a> source</li>
@@ -88,20 +94,31 @@
 <li>C++11 <a href="http://blog.tomaka17.com/2012/03/libavcodeclibavformat-tutorial/">example</a> by tomaka17</li>
 <li>ffmpeg + libao <a href="http://umanga.wordpress.com/2012/03/22/decode-an-audio-stream-using-libavcodec-and-play-through-libao/">example</a></li>
 </ul>
+
 <p>One particular thing about decoding audio is that it is generally decoded to a format that was used during the encoding process. This could be PCM Float Planar format for example, where each sample is a float and each channel is stored in a separate buffer. However, when you want to use the audio or play it through speakers, sometimes the format required can differ from the format decoded to. Fortunately ffmpeg has <a href="http://ffmpeg.org/libswresample.html">libswresample</a> which can make these conversions easy. There also exists an abstraction of this using <a href="http://ffmpeg.org/libavfilter.html">libavfilter</a>.</p>
+
 <ul>
 <li>commit <a href="https://github.com/FFmpeg/FFmpeg/commit/e96175ad7b576ad57b83d399193ef10b2bb016ae"><code>e96175ad</code></a> that adds avfilter support to ffplay</li>
-<li>libswresample’s <a href="https://github.com/FFmpeg/FFmpeg/blob/master/doc/examples/resampling_audio.c">resampling audio</a> example</li>
-<li>libav’s <a href="http://libav.org/doxygen/master/group__lavr.html#_details">libavresample</a></li>
-</ul></div>
+<li>libswresample&rsquo;s <a href="https://github.com/FFmpeg/FFmpeg/blob/master/doc/examples/resampling_audio.c">resampling audio</a> example</li>
+<li>libav&rsquo;s <a href="http://libav.org/doxygen/master/group__lavr.html#_details">libavresample</a></li>
+</ul>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> March 17, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/blaenk.github.io/commits/source/provider/notes/ffmpeg.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/blaenk.github.io/commit/0af3b3b" title="no comments on notes">0af3b3b</a></span></div>
-    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/ffmpeg.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/5ebdb1f" title="init
+">5ebdb1f</a></span></div>
+    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
+<section id="comment">
+  <div id="disqus_thread" aria-live="polite">
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 
 
+
+    
     <footer id="footer">
   <div id="social">
     <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
@@ -120,7 +137,50 @@
 </footer>
 
 
+<!-- this should instead be something like connectWS("{{{path}}}") -->
 
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/ffmpeg.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+    };
+  });
+</script>
+
+
+<!-- disqus -->
+<script async="true" type="text/javascript">
+  var disqus_shortname = 'blaenkdenum';
+  var disqus_identifier = 'http://blaenkdenum.com/notes/ffmpeg';
+  var disqus_url = 'http://blaenkdenum.com/notes/ffmpeg';
+  var disqus_script = 'embed.js';
+
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+
+  jQuery(function (){
+    jQuery(window).bind('orientationchange', function() {
+      DISQUS.reset({
+        reload: true,
+        config: function() {
+          this.page.identifier = 'http://blaenkdenum.com/notes/ffmpeg'
+          this.page.url = 'http://blaenkdenum.com/notes/ffmpeg'
+        }
+      });
+    });
+  });
+</script>
 
 
 <!-- google analytics -->
