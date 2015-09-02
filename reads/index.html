@@ -73,8 +73,7 @@
 </form>
 
     
-        <article class="post">
-  <h2 class="title"><a href="/reads"><span>Reads</span></a></h2>
+        <article class="page">
   <div class="entry-content"><p>This is a list of books I&rsquo;ve finished reading recently, in reverse chronological order. You can also see a list of books 
 I&rsquo;m <a href="/lately/#reading">currently reading</a>.</p>
 
@@ -290,17 +289,7 @@ I&rsquo;m <a href="/lately/#reading">currently reading</a>.</p>
 
 <p>This book covers the details on how the language really lends itself to metaprogramming through mechanisms such as <code>method_missing()</code>, <code>instance_eval()</code>, and <code>define_method()</code> that allow one to dynamically add methods and functionality to classes at run-time. Perhaps most important is its coverage of the Ruby object model (hierarchy) complete with Eigenclasses, and how method calls are resolved in this grand context.</p>
 </div>
-  <div class="meta">
-    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> null</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> null</div>
-    <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
-  </div>
 </article>
-<section id="comment">
-  <div id="disqus_thread" aria-live="polite">
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
-</section>
 
 
 
@@ -342,31 +331,6 @@ I&rsquo;m <a href="/lately/#reading">currently reading</a>.</p>
 </script>
 
 
-<!-- disqus -->
-<script async="true" type="text/javascript">
-  var disqus_shortname = 'blaenkdenum';
-  var disqus_identifier = 'http://blaenkdenum.com/reads';
-  var disqus_url = 'http://blaenkdenum.com/reads';
-  var disqus_script = 'embed.js';
-
-  (function () {
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  }());
-
-  jQuery(function (){
-    jQuery(window).bind('orientationchange', function() {
-      DISQUS.reset({
-        reload: true,
-        config: function() {
-          this.page.identifier = 'http://blaenkdenum.com/reads'
-          this.page.url = 'http://blaenkdenum.com/reads'
-        }
-      });
-    });
-  });
-</script>
 
 
 <!-- google analytics -->
