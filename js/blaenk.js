@@ -64,7 +64,7 @@ $(function() {
     $('.footnoteRef')
       .attr('title', 'read footnote')
       .click(function() {
-        $footnotes.stop(true, true)
+        $footnotes.stop(true, true);
 
         var note = $(this).attr('href');
         $footnotes.not(note)

@@ -159,7 +159,7 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mobile-math');
   });
 </script>
 <script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">

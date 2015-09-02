@@ -160,13 +160,13 @@ P(A \cap B) &amp;= P(A) \times P(B \mid A) \\
 </h2>
 <p>Count the number of <strong>trials</strong>. For example, when drawing cards from a box, every draw is a trial. Given a list of all possible outcomes, count how many outcomes satisfy the conditions of the event.</p>
 
-<p>Example 1
-  ~ A random number generator picks at random from the ten digits 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9. Find the chance that the digit it picks is prime and greater than 5.</p>
+<p>Example 1<br>
+A random number generator picks at random from the ten digits 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9. Find the chance that the digit it picks is prime and greater than 5.</p>
 
 <p>There is only one <strong>trial</strong> consisting of picking a single digit. The <strong>conditions</strong> of the event are that it is prime and it is greater than 5. Therefore, only one digit satisfies the conditions, 7, so the answer is \(1/10\).</p>
 
-<p>Example 2
-  ~ In a class, 15% of the students have read <em>Hamlet</em> and 40% have read <em>The Merchant of Venice</em>; 5% of the students have read both. What is the chance that a student picked at random has read one of the plays but not the other?</p>
+<p>Example 2<br>
+In a class, 15% of the students have read <em>Hamlet</em> and 40% have read <em>The Merchant of Venice</em>; 5% of the students have read both. What is the chance that a student picked at random has read one of the plays but not the other?</p>
 
 <p>There is only one <strong>trial</strong> consisting of picking a single student at random. The <strong>condition</strong> is simply that the student has read one of the plays but not the other. This can be visualized by drawing a Venn Diagram, with one circle being 15% in size and the other being 40% in size, with an overlap of 5%. Then the areas of interest are either those that don&rsquo;t include the overlap. This can be described as:</p>
 
@@ -184,8 +184,8 @@ P(A \cup B)\ &amp; = 10\% &amp;&amp; {} + 35\%\ &amp;&amp; = 45\%
 \end{alignat*}
 \]</p>
 
-<p>Example 3
-  ~ In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins at random (without replacement), what is the chance that I pull out more than 15 cents?</p>
+<p>Example 3<br>
+In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins at random (without replacement), what is the chance that I pull out more than 15 cents?</p>
 <h1 id="inference">
 <span class="hash">#</span>
 <a href="#inference" class="header-link">Inference</a>
@@ -200,14 +200,8 @@ P(A \cup B)\ &amp; = 10\% &amp;&amp; {} + 35\%\ &amp;&amp; = 45\%
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September 15, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/statistics.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
-
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/statistics.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/b7ab538" title="fix mathjax on mobile; fix newlines in paragraphs
+">b7ab538</a></span></div>
     <div class="meta-component"><i class="fa fa-tags fa-fw"></i> null</div>
   </div>
 </article>
@@ -275,7 +269,7 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent('.math').addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mobile-math');
   });
 </script>
 <script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
