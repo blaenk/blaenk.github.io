@@ -48,20 +48,16 @@ $(function() {
   toggleForm($('#search_btn'), $('.desk_search'));
 
   window.refresh = function () {
-    $('.collapse').not(function() {
-      return "#" + $(this).attr('id') == window.location.hash;
-    }).next('.collapsible').hide();
+    $("article").html(typogr.smartypants($("article").html()));
 
-    $('.collapse').click(function(e) {
-      e.preventDefault();
-      $(this)
-        .next('.collapsible')
-        .slideToggle('fast');
-    });
+    if (!window.mathjax_initialized) {
+      MathJax.Hub.Configured();
+      window.mathjax_initialized = true;
+    }
 
     var $footnotes = $('.footnotes > ol > li');
 
-    $('.footnoteRef')
+    $('a[rel=footnote]')
       .attr('title', 'read footnote')
       .click(function() {
         $footnotes.stop(true, true);
@@ -78,7 +74,6 @@ $(function() {
       .click(function() {
         $footnotes.stop(true, true);
       });
-
   };
 
   window.refresh();

@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -77,7 +79,7 @@
   <h2 class="title"><a href="/notes/erlang"><span>Erlang and the OTP</span></a></h2>
   <div class="entry-content"><p>Erlang was the first functional programming language I took a shot at learning. I started with the Manning book <em>Erlang in Action</em> which also explained the OTP. The problem was that I was combining learning functional programming with the pretty fringe environment that is Erlang. So instead I took a break from that and decided to learn Haskell, and loved it.</p>
 
-<p>Now I&rsquo;m back and would like to pick up Erlang and its OTP library. Even if I don&rsquo;t end up using it, I think it&rsquo;ll teach me many interesting concepts that lend themselves to this new age of massively concurrent programs. <a href="/notes/scala/">Scala</a>, for example, uses actor-based concurrency much like Erlang&rsquo;s, as well as supervision trees.</p>
+<p>Now I&#39;m back and would like to pick up Erlang and its OTP library. Even if I don&#39;t end up using it, I think it&#39;ll teach me many interesting concepts that lend themselves to this new age of massively concurrent programs. <a href="/notes/scala/">Scala</a>, for example, uses actor-based concurrency much like Erlang&#39;s, as well as supervision trees.</p>
 
 <nav id="toc">
 <h3>Contents</h3><ol>
@@ -110,13 +112,13 @@
 <span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span>
   <span class="nn">io</span><span class="p">:</span><span class="nf">format</span><span class="p">(</span><span class="s">&quot;Hello world</span><span class="si">~n</span><span class="s">&quot;</span><span class="p">).</span>
 </code></pre></figure>
-<p>This can be compiled from the shell with the <code>c(modulename)</code> command. However, it&rsquo;s more likely to be compiled with the Erlang compiler <code>erlc</code>, which produces a <code>beam</code> file. It&rsquo;s possible to then run the program can then be run on the Erlang virtual machine with the <code>erl</code> command, which uses <code>-s</code> to specify the functions to evaluate, in order.</p>
+<p>This can be compiled from the shell with the <code>c(modulename)</code> command. However, it&#39;s more likely to be compiled with the Erlang compiler <code>erlc</code>, which produces a <code>beam</code> file. It&#39;s possible to then run the program can then be run on the Erlang virtual machine with the <code>erl</code> command, which uses <code>-s</code> to specify the functions to evaluate, in order.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="nv">$ </span>erlc hello.erl
 <span class="nv">$ </span>erl -noshell -s hello start -s init stop
 </code></pre></figure>
-<p>The following describes a file server. It defines a convenience function <code>start</code> which spawns a process that forever performs the <code>loop</code> function inside a particular directory, which simply waits for a message to be received and processes it. Notice that <code>loop</code> performs a tail-recursive call; Erlang has tail-call optimization, so there&rsquo;s no need to worry about overflowing the stack.</p>
+<p>The following describes a file server. It defines a convenience function <code>start</code> which spawns a process that forever performs the <code>loop</code> function inside a particular directory, which simply waits for a message to be received and processes it. Notice that <code>loop</code> performs a tail-recursive call; Erlang has tail-call optimization, so there&#39;s no need to worry about overflowing the stack.</p>
 
 <p>This server simply responds to two simple messages: one which requests a file listing and another which request file contents. Notice that the messages are distinguished by pattern matching, which works on atoms as well, such as <code>list_dir</code>.</p>
 <figure class="codeblock">
@@ -189,7 +191,7 @@
 <span class="hash">#</span>
 <a href="#values" class="header-link">Values</a>
 </h1>
-<p>Values are bound with the <code>=</code> operator, like <code>let</code> in Haskell. It&rsquo;s also possible to pattern match on the value. Value names start with capital letters. Names beginning with lowercase letters are symbolic constants called <em>atoms</em> <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.</p>
+<p>Values are bound with the <code>=</code> operator, like <code>let</code> in Haskell. It&#39;s also possible to pattern match on the value. Value names start with capital letters. Names beginning with lowercase letters are symbolic constants called <em>atoms</em> <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-erlang"><span class="nv">X</span> <span class="o">=</span> <span class="mi">123</span><span class="p">.</span>
@@ -258,7 +260,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -287,10 +289,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

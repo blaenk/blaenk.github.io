@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -87,14 +89,14 @@
 <span class="hash">#</span>
 <a href="#hard-links" class="header-link">Hard Links</a>
 </h2>
-<p>Hard links are also referred to simply as &lsquo;links&rsquo;. It is soft links which require additional qualification. Links can be created using the <code>ln</code> command which is often used to instead create soft (symbolic) links (<code>ln -s</code>). Creating a hard link to a file doesn&rsquo;t copy (<code>cp</code>) the file itself, instead it creates a different filename pointing to the same i-node number and also increases the &lsquo;link count&rsquo; of the file. This can be verified by running <code>ls -li</code> to see each file&rsquo;s corresponding i-node number and link count.</p>
+<p>Hard links are also referred to simply as &#39;links&#39;. It is soft links which require additional qualification. Links can be created using the <code>ln</code> command which is often used to instead create soft (symbolic) links (<code>ln -s</code>). Creating a hard link to a file doesn&#39;t copy (<code>cp</code>) the file itself, instead it creates a different filename pointing to the same i-node number and also increases the &#39;link count&#39; of the file. This can be verified by running <code>ls -li</code> to see each file&#39;s corresponding i-node number and link count.</p>
 
-<p>Hard links can&rsquo;t be made to directories, thereby preventing circular links. The book recounts how early UNIX implementations did allow this in order to facilitate directory creation. <a href="http://man7.org/linux/man-pages/man2/mkdir.2.html"><code>mkdir</code></a> didn&rsquo;t exist, so directories were created with <a href="http://man7.org/linux/man-pages/man2/mknod.2.html"><code>mknod</code></a> and then links were made for <code>.</code> and <code>..</code> to facilitate directory traversal. It also reminds the reader that &lsquo;links to directories&rsquo; are more or less possible with bind mounts.</p>
+<p>Hard links can&#39;t be made to directories, thereby preventing circular links. The book recounts how early UNIX implementations did allow this in order to facilitate directory creation. <a href="http://man7.org/linux/man-pages/man2/mkdir.2.html"><code>mkdir</code></a> didn&#39;t exist, so directories were created with <a href="http://man7.org/linux/man-pages/man2/mknod.2.html"><code>mknod</code></a> and then links were made for <code>.</code> and <code>..</code> to facilitate directory traversal. It also reminds the reader that &#39;links to directories&#39; are more or less possible with bind mounts.</p>
 <h3 id="shared-pointers">
 <span class="hash">#</span>
 <a href="#shared-pointers" class="header-link">Shared Pointers</a>
 </h3>
-<p>Hard links remind me of <a href="http://en.cppreference.com/w/cpp/memory/shared_ptr"><code>shared_ptr</code></a> in C++11. I can imagine a scenario in which different processes need access to a common file but the common file needs to be deleted when all processes are finished with it. They can create a link to the file and use that to do their work, since it will be the same file as the original. When they are finished with the file, they can <a href="http://man7.org/linux/man-pages/man2/unlink.2.html"><code>unlink</code></a> (i.e. remove the link) to the file. The file system will automatically delete the file itself when the number of links has reached zero. I don&rsquo;t know if this is common&mdash;or even a correct&mdash;practice, nevertheless I immediately thought of this when I came across links.</p>
+<p>Hard links remind me of <a href="http://en.cppreference.com/w/cpp/memory/shared_ptr"><code>shared_ptr</code></a> in C++11. I can imagine a scenario in which different processes need access to a common file but the common file needs to be deleted when all processes are finished with it. They can create a link to the file and use that to do their work, since it will be the same file as the original. When they are finished with the file, they can <a href="http://man7.org/linux/man-pages/man2/unlink.2.html"><code>unlink</code></a> (i.e. remove the link) to the file. The file system will automatically delete the file itself when the number of links has reached zero. I don&#39;t know if this is common---or even a correct---practice, nevertheless I immediately thought of this when I came across links.</p>
 <h3 id="temporary-files">
 <span class="hash">#</span>
 <a href="#temporary-files" class="header-link">Temporary Files</a>
@@ -120,14 +122,14 @@
 </h2>
 <p>The working directory (<a href="http://man7.org/linux/man-pages/man3/getcwd.3.html"><code>getcwd</code></a>) of a process determines the reference point from which to resolve relative pathnames within the process. For example if the working directory is <code>/home/user</code> then a a file path of <code>../user2</code> will refer to <code>/home/user2</code>. Simple stuff. The working directory can be changed with <a href="http://man7.org/linux/man-pages/man2/chdir.2.html"><code>chdir</code></a> and <code>fchdir</code>.</p>
 
-<p>Aside from this, Linux (> 2.6.16) provides various <code>*at()</code> calls, such as <a href="http://man7.org/linux/man-pages/man2/openat.2.html"><code>openat</code></a>, which operate relative to a directory file descriptor. These calls (now part of SuSv4) help avoid certain race conditions and help facilitate an idea of &ldquo;virtual working directories&quot; which is particularly useful in multithreaded applications since every thread shares the working directory attribute of the process.</p>
+<p>Aside from this, Linux (&gt; 2.6.16) provides various <code>*at()</code> calls, such as <a href="http://man7.org/linux/man-pages/man2/openat.2.html"><code>openat</code></a>, which operate relative to a directory file descriptor. These calls (now part of SuSv4) help avoid certain race conditions and help facilitate an idea of &quot;virtual working directories&quot; which is particularly useful in multithreaded applications since every thread shares the working directory attribute of the process.</p>
 <h2 id="root-directories">
 <span class="hash">#</span>
 <a href="#root-directories" class="header-link">Root Directories</a>
 </h2>
-<p>Every process also has a root directory which serves as the reference point from which to resolve <em>absolute</em> pathnames (as opposed to relative pathnames with working directories). This is usually <code>/</code>, but can be changed with <a href="http://man7.org/linux/man-pages/man2/chroot.2.html"><code>chroot</code></a>, which is often used to create so called &ldquo;chroot jails&rdquo;, something FTP servers might do to limit a user&rsquo;s filesystem exposure to their home directory.  One thing to remember to do is to change the working directory to the chrooted path, in effect &ldquo;stepping into the jail.&rdquo; Otherwise the user is able to continue roaming around outside the jail.</p>
+<p>Every process also has a root directory which serves as the reference point from which to resolve <em>absolute</em> pathnames (as opposed to relative pathnames with working directories). This is usually <code>/</code>, but can be changed with <a href="http://man7.org/linux/man-pages/man2/chroot.2.html"><code>chroot</code></a>, which is often used to create so called &quot;chroot jails&quot;, something FTP servers might do to limit a user&#39;s filesystem exposure to their home directory.  One thing to remember to do is to change the working directory to the chrooted path, in effect &quot;stepping into the jail.&quot; Otherwise the user is able to continue roaming around outside the jail.</p>
 
-<p>chroot jails aren&rsquo;t a silver bullet. Some BSD derivatives provide a systemcall, <a href="http://www.freebsd.org/cgi/man.cgi?query=jail&amp;apropos=0&amp;sektion=2&amp;manpath=FreeBSD+9.1-RELEASE&amp;arch=default&amp;format=html"><code>jail</code></a>, that handles various edge cases.</p>
+<p>chroot jails aren&#39;t a silver bullet. Some BSD derivatives provide a systemcall, <a href="http://www.freebsd.org/cgi/man.cgi?query=jail&amp;apropos=0&amp;sektion=2&amp;manpath=FreeBSD+9.1-RELEASE&amp;arch=default&amp;format=html"><code>jail</code></a>, that handles various edge cases.</p>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> March  6, 2013</div>
@@ -171,7 +173,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -200,10 +202,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

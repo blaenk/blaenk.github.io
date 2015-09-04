@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -79,7 +81,7 @@
 <span class="hash">#</span>
 <a href="#binary" class="header-link">Binary</a>
 </h3>
-<p>Binary is a base 2 numbering system that computers use. When we do something in the computer, for example, if we press the letter N, it will receive the binary equivalent, in ASCII most likely (<em>This is not entirely true, but for the sake of simplicity&hellip;</em>). I will try to teach you binary as well as I possibly can.</p>
+<p>Binary is a base 2 numbering system that computers use. When we do something in the computer, for example, if we press the letter N, it will receive the binary equivalent, in ASCII most likely (<em>This is not entirely true, but for the sake of simplicity...</em>). I will try to teach you binary as well as I possibly can.</p>
 
 <p>First of all, you know base 10, the numbering system we use, it goes from 0-9. With the numbers 0-9 we can write any number, right? Also remember this?</p>
 <figure class="codeblock">
@@ -99,9 +101,9 @@
 </code></pre></figure>
 <p>(<strong>NOTE</strong>: When we write in binary, please write in 4 bits separation, which gives a more organized look.)</p>
 
-<p>Let me explain, I put 1s under the numbers we used, and 0s for the ones we didn&rsquo;t (remember, 1 = true, 0 = false). So to make the number 24, we don&rsquo;t need a 128, so put a 0, we don&rsquo;t either need a 64, put another 0, we don&rsquo;t need a 32&hellip;but ah! We do need 16! So we put a 1 under it, and we also put a 1 under 8, 16 + 8 = 24. So we put 0s under the rest.</p>
+<p>Let me explain, I put 1s under the numbers we used, and 0s for the ones we didn&#39;t (remember, 1 = true, 0 = false). So to make the number 24, we don&#39;t need a 128, so put a 0, we don&#39;t either need a 64, put another 0, we don&#39;t need a 32...but ah! We do need 16! So we put a 1 under it, and we also put a 1 under 8, 16 + 8 = 24. So we put 0s under the rest.</p>
 
-<p>I&rsquo;ll show you a tip that will make your decimal to binary conversions much easier. Lets say you want to write the number 224 in binary. You would subtract 224 by the biggest power of two that fits in there, in this case, 128 (256 is the next, and that doesn&rsquo;t fit in 224). And you would then subtract by the power of two before the power of two you just used. Keep this going until you were left with 0, watch:</p>
+<p>I&#39;ll show you a tip that will make your decimal to binary conversions much easier. Lets say you want to write the number 224 in binary. You would subtract 224 by the biggest power of two that fits in there, in this case, 128 (256 is the next, and that doesn&#39;t fit in 224). And you would then subtract by the power of two before the power of two you just used. Keep this going until you were left with 0, watch:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">  224
@@ -115,13 +117,13 @@
  ----
   0
 </code></pre></figure>
-<p>Okay, so we used a 128, 64, and 32. Now, it&rsquo;s so easy to put this into binary, watch:</p>
+<p>Okay, so we used a 128, 64, and 32. Now, it&#39;s so easy to put this into binary, watch:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
  1     1    1    0   0   0   0   0 = 1110 0000
 </code></pre></figure>
-<p>That seemed easy, but what if the next power of 2 doesn&rsquo;t fit in the number? Watch, lets write 165 in binary:</p>
+<p>That seemed easy, but what if the next power of 2 doesn&#39;t fit in the number? Watch, lets write 165 in binary:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">  165
@@ -142,12 +144,12 @@
 <code class="highlight language-text">128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
   1    0    1    0   0   1   0   1 = 1010 0101
 </code></pre></figure>
-<p>When I mean the next power of two, I mean as in a power of two going down, I&rsquo;m sorry for sounding confusing, for example, the next power of two after 128 would be 64, in our example, at least. Since we are subtracting the &lsquo;next power of two' from the result.</p>
+<p>When I mean the next power of two, I mean as in a power of two going down, I&#39;m sorry for sounding confusing, for example, the next power of two after 128 would be 64, in our example, at least. Since we are subtracting the &#39;next power of two&#39; from the result.</p>
 <h3 id="hexadecimal">
 <span class="hash">#</span>
 <a href="#hexadecimal" class="header-link">Hexadecimal</a>
 </h3>
-<p>I hope you read the binary section, I expect you did, if you don&rsquo;t understand something, read the binary section.</p>
+<p>I hope you read the binary section, I expect you did, if you don&#39;t understand something, read the binary section.</p>
 
 <p>Hexadecimal is a base 16 numbering system, it uses numbers (and letters) 0-F, 0 being 0 and F being 15. Read the table and memorize it:</p>
 <figure class="codeblock">
@@ -169,13 +171,13 @@ D = 13
 E = 14
 F = 15
 </code></pre></figure>
-<p>First of all, you must understand a common convention in hexadecimal notation. You&rsquo;ll typically see hexadecimal numbers preceded by <strong>0x</strong>, it just means that the number is hexadecimal, but the actual <strong>0x</strong> is irrelevant to the number. So <strong>0x42FE</strong> means that <strong>42FE</strong> is a hexadecimal number, we know that because of the <strong>0x</strong>, but again, ignore the <strong>0x</strong> when you&rsquo;re actually working with the number.</p>
+<p>First of all, you must understand a common convention in hexadecimal notation. You&#39;ll typically see hexadecimal numbers preceded by <strong>0x</strong>, it just means that the number is hexadecimal, but the actual <strong>0x</strong> is irrelevant to the number. So <strong>0x42FE</strong> means that <strong>42FE</strong> is a hexadecimal number, we know that because of the <strong>0x</strong>, but again, ignore the <strong>0x</strong> when you&#39;re actually working with the number.</p>
 
 <p>To convert from binary to hexadecimal is very easy, you first separate the binary number into nibble (4 bits). For example, the number 24, which is 00011000 in binary, you would set it up as 0001 1000. Then, what you do, is you convert each nibble into decimal, for example, for the first nibble, 0001, since it equals one in decimal, you would then convert the decimal into hexadecimal, and since in hex 1 is 1, you would write 1. Now, for the second nibble, 1000, in decimal is 8, and in hex its 8, so 0001 1000 in hexadecimal is 0x18.</p>
 
 <p>Lets do another one, the number 224 which is 11100000 in binary, would be 1110 0000. The first nibble, 1110, in decimal is 14. So you would see what 14 is in hexadecimal, 14 in hex is E. Now the second nibble is 0000, so in decimal its 0, and in hex its 0. The final number in hex would be 0xE0.</p>
 
-<p>To convert from hexadecimal to binary, all you do is get the number, for example, 0xE0, that we did in the last example. We then read from left to right, or right to left, it doesn&rsquo;t matter, as long as we maintain the order. So let&rsquo;s do it from right to left, since I know most of you would say that, okay, the first digit is 0, and in binary 0 is 0000. Note that each digit in hexadecimal is 4 bits, so even though we can express 0 in 000000, and also 0, we have to fill up 4 bits, so it would be 0000. The next digit, which is E, in decimal is 14, so in binary it would be:</p>
+<p>To convert from hexadecimal to binary, all you do is get the number, for example, 0xE0, that we did in the last example. We then read from left to right, or right to left, it doesn&#39;t matter, as long as we maintain the order. So let&#39;s do it from right to left, since I know most of you would say that, okay, the first digit is 0, and in binary 0 is 0000. Note that each digit in hexadecimal is 4 bits, so even though we can express 0 in 000000, and also 0, we have to fill up 4 bits, so it would be 0000. The next digit, which is E, in decimal is 14, so in binary it would be:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text"> 14
@@ -199,15 +201,15 @@ F = 15
 
 <p>So 0xE0 in binary is 1110 0000. Note that we converted the hex number from right to left, so we write it the same way, right to left. We found out the 0000 first, so we put it on the right, and we work our way to the left, in this case, 1110, which is 14. So again, the answer is 1110 0000.</p>
 
-<p>To convert from hexadecimal to decimal, don&rsquo;t be tempted to just do the following:</p>
+<p>To convert from hexadecimal to decimal, don&#39;t be tempted to just do the following:</p>
 
-<p>Considering 0xE0, you would say, okay, from right to left. 0 in decimal is 0. And E in decimal in 14, so you&rsquo;d think the answer is 140. WRONG! Please remember the right way to do it. First, you convert it to binary, and from the last example, we found out its 1110 0000. okay, now you set up the columns, unless you&rsquo;re a master at binary:</p>
+<p>Considering 0xE0, you would say, okay, from right to left. 0 in decimal is 0. And E in decimal in 14, so you&#39;d think the answer is 140. WRONG! Please remember the right way to do it. First, you convert it to binary, and from the last example, we found out its 1110 0000. okay, now you set up the columns, unless you&#39;re a master at binary:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
   1    1    1    0   0   0   0   0
 </code></pre></figure>
-<p>So it&rsquo;s 128 plus 64 plus 32, in other words, it&rsquo;s the hexadecimal number in binary, to decimal. Lol. Which is 224 !</p>
+<p>So it&#39;s 128 plus 64 plus 32, in other words, it&#39;s the hexadecimal number in binary, to decimal. Lol. Which is 224 !</p>
 <h3 id="tips">
 <span class="hash">#</span>
 <a href="#tips" class="header-link">Tips</a>
@@ -215,11 +217,11 @@ F = 15
 <span class="hash">#</span>
 <a href="#faster-hexadecimal-to-decimal-conversion" class="header-link">Faster Hexadecimal to Decimal Conversion</a>
 </h4>
-<p>You know that in decimal each place is a power of 10, including the first which is 10 to the power of 0. The same thing with hexadecimal: Each position/place is a power of 16. So <strong>2CD</strong> would be <strong>(2 * 16<sup>2<sup>)</sup></sup> + (C * 16<sup>1<sup>)</sup></sup> + (D * 16<sup>0<sup>)</sup></sup></strong> . First we have <strong>(2 * 16<sup>2<sup>)</sup></sup></strong> This is the third place, the 256s place. So we&rsquo;re going to do 2 <em>times</em> 256, I showed it as 16<sup>2^</sup> for illustration purposes. Next we have the second place, the 16s place. So we are going to do <strong>(C * 16<sup>1<sup>)</sup></sup></strong>. To do this, we must realize that C is 12 in hexadecimal. So that means we are going to do 12 <em>times</em> 16. Next we have the first place, the 1s place. We know that D is 13 in hexadecimal, so <strong>(D * 16<sup>0<sup>)</sup></sup></strong> is really just 13 times 16 to the power of 0, which we know is just one. So in reality it is just 13 times 1. This all comes down to be <strong>512 + 192 + 13</strong>, which equals <strong>717</strong>.</p>
+<p>You know that in decimal each place is a power of 10, including the first which is 10 to the power of 0. The same thing with hexadecimal: Each position/place is a power of 16. So <strong>2CD</strong> would be <strong>(2 * 16<sup>2<sup>)</sup></sup> + (C * 16<sup>1<sup>)</sup></sup> + (D * 16<sup>0<sup>)</sup></sup></strong> . First we have <strong>(2 * 16<sup>2<sup>)</sup></sup></strong> This is the third place, the 256s place. So we&#39;re going to do 2 <em>times</em> 256, I showed it as 16<sup>2^</sup> for illustration purposes. Next we have the second place, the 16s place. So we are going to do <strong>(C * 16<sup>1<sup>)</sup></sup></strong>. To do this, we must realize that C is 12 in hexadecimal. So that means we are going to do 12 <em>times</em> 16. Next we have the first place, the 1s place. We know that D is 13 in hexadecimal, so <strong>(D * 16<sup>0<sup>)</sup></sup></strong> is really just 13 times 16 to the power of 0, which we know is just one. So in reality it is just 13 times 1. This all comes down to be <strong>512 + 192 + 13</strong>, which equals <strong>717</strong>.</p>
 
-<p>If you don&rsquo;t understand that, think about it this way. Remember for example that in the number 1337 (<em>Decimal</em>), you have 1 in the thousands place, that means you&rsquo;re using 1 thousand, 3 in the hundreds place, that means you&rsquo;re using 3 hundreds, 3 in the tens place, meaning you&rsquo;ll be using 3 10s, and 7 in the one&rsquo;s place meaning you&rsquo;ll be using 7 ones. This is what helped you understand binary. Now, just look at it this way. Every place in this number is a power of 10, since we are using the decimal number system. So we have the thousands place which is 10<sup>3<sup>,</sup></sup> the hundreds place which is 10<sup>2<sup>,</sup></sup> the tens place which is 10<sup>1<sup>,</sup></sup> and the one&rsquo;s place which is 10<sup>0<sup>.</sup></sup> Now, we could rewrite 1337 as <strong>(1 * 10<sup>3<sup>)</sup></sup> + (3 * 10<sup>2<sup>)</sup></sup> + (3 * 10<sup>1<sup>)</sup></sup> + (7 * 10<sup>0<sup>)</sup></sup></strong>, right? This will come out to be <strong>1000 + 300 + 30 + 7</strong>, which equals <strong>1337</strong>. This is the exact same process as the one I&rsquo;m using above.</p>
+<p>If you don&#39;t understand that, think about it this way. Remember for example that in the number 1337 (<em>Decimal</em>), you have 1 in the thousands place, that means you&#39;re using 1 thousand, 3 in the hundreds place, that means you&#39;re using 3 hundreds, 3 in the tens place, meaning you&#39;ll be using 3 10s, and 7 in the one&#39;s place meaning you&#39;ll be using 7 ones. This is what helped you understand binary. Now, just look at it this way. Every place in this number is a power of 10, since we are using the decimal number system. So we have the thousands place which is 10<sup>3<sup>,</sup></sup> the hundreds place which is 10<sup>2<sup>,</sup></sup> the tens place which is 10<sup>1<sup>,</sup></sup> and the one&#39;s place which is 10<sup>0<sup>.</sup></sup> Now, we could rewrite 1337 as <strong>(1 * 10<sup>3<sup>)</sup></sup> + (3 * 10<sup>2<sup>)</sup></sup> + (3 * 10<sup>1<sup>)</sup></sup> + (7 * 10<sup>0<sup>)</sup></sup></strong>, right? This will come out to be <strong>1000 + 300 + 30 + 7</strong>, which equals <strong>1337</strong>. This is the exact same process as the one I&#39;m using above.</p>
 
-<p>If you still don&rsquo;t get it, give it another read, and if you still don&rsquo;t get it (<em>Don&rsquo;t rush through it, picture the example I&rsquo;m giving</em>), come back later and re-read it, you&rsquo;re bound to understand it sooner or later and how simple the concept works.</p>
+<p>If you still don&#39;t get it, give it another read, and if you still don&#39;t get it (<em>Don&#39;t rush through it, picture the example I&#39;m giving</em>), come back later and re-read it, you&#39;re bound to understand it sooner or later and how simple the concept works.</p>
 <h4 id="binary-notation">
 <span class="hash">#</span>
 <a href="#binary-notation" class="header-link">Binary Notation</a>
@@ -239,19 +241,19 @@ F = 15
 
 <p>Another way to express hexadecimal is by appending an <strong>h</strong>. Example: 2CDh</p>
 
-<p>URLs also escape characters using character codes in hexadecimal, preceded by a <strong>%</strong>. For example, if you have a URL that contains a space, you won&rsquo;t see it, instead you will see the ASCII/Unicode representation of a space, the hexadecimal number 20. So you will see something like <strong><a href="http://somesite.com/This%20URL%20Contains%20Spaces">http://somesite.com/This%20URL%20Contains%20Spaces</a></strong>. Other characters are escaped as well. For more information, read &ldquo;<a href="http://www.blooberry.com/indexdot/html/topics/urlencoding.htm">URL Encoding</a>&ldquo;.</p>
+<p>URLs also escape characters using character codes in hexadecimal, preceded by a <strong>%</strong>. For example, if you have a URL that contains a space, you won&#39;t see it, instead you will see the ASCII/Unicode representation of a space, the hexadecimal number 20. So you will see something like <strong><a href="http://somesite.com/This%20URL%20Contains%20Spaces">http://somesite.com/This%20URL%20Contains%20Spaces</a></strong>. Other characters are escaped as well. For more information, read &quot;<a href="http://www.blooberry.com/indexdot/html/topics/urlencoding.htm">URL Encoding</a>&quot;.</p>
 <h3 id="ascii">
 <span class="hash">#</span>
 <a href="#ascii" class="header-link">ASCII</a>
 </h3>
-<p>This section teaches you how to read ASCII in binary. ASCII stands for American Standard Code for Information Interchange. Each character in ASCII has a binary value, which is usually written in hex, for easier human readability. 65 is the beginning decimal value for a capital letter &lsquo;A&rsquo;. Then 66 is B, and so on. Notice that this is the decimal value, you have to convert it to binary or hexadecimal according to your situation. A table of the ASCII values can be found at <a href="http://www.klcconsulting.net/ascii.htm">http://www.klcconsulting.net/ascii.htm</a>. For example, blank in all caps in hex (which is what it&rsquo;s usually taken as) would be 0x42 0x4C 0x41 0x4E 0x4B. The computer would look at it in binary, though. So all that converted to binary would be what the computer would see when you type &lsquo;BLANK&rsquo;. Interesting to know.</p>
+<p>This section teaches you how to read ASCII in binary. ASCII stands for American Standard Code for Information Interchange. Each character in ASCII has a binary value, which is usually written in hex, for easier human readability. 65 is the beginning decimal value for a capital letter &#39;A&#39;. Then 66 is B, and so on. Notice that this is the decimal value, you have to convert it to binary or hexadecimal according to your situation. A table of the ASCII values can be found at <a href="http://www.klcconsulting.net/ascii.htm">http://www.klcconsulting.net/ascii.htm</a>. For example, blank in all caps in hex (which is what it&#39;s usually taken as) would be 0x42 0x4C 0x41 0x4E 0x4B. The computer would look at it in binary, though. So all that converted to binary would be what the computer would see when you type &#39;BLANK&#39;. Interesting to know.</p>
 
 <p>I hope you learned something new today, or sharpened your skills in this area. I hope I have taught all of you new people to this area, and hope it helps. If there is something wrong with my information, please email me. Also, if you found this helpful, please email me and saying thanks or something, so that I know to keep writing tutorials.</p>
 <h3 id="what-to-do-with-binaryhexadecimal">
 <span class="hash">#</span>
 <a href="#what-to-do-with-binaryhexadecimal" class="header-link">What to do with Binary/Hexadecimal</a>
 </h3>
-<p>Okay, so you learned binary and hexadecimal now, what can you do? Well, nowadays you can&rsquo;t do much, but wait, don&rsquo;t lose your hope. These number systems are still crucial to many things in computers, and give you an edge when you know them. They help you better understand things like subnets. These number systems also help in encryption, low-level programming, and other hardcore practices like hex editing.</p>
+<p>Okay, so you learned binary and hexadecimal now, what can you do? Well, nowadays you can&#39;t do much, but wait, don&#39;t lose your hope. These number systems are still crucial to many things in computers, and give you an edge when you know them. They help you better understand things like subnets. These number systems also help in encryption, low-level programming, and other hardcore practices like hex editing.</p>
 
 <p>Hope you had a great time learning. If anything seemed confusing, hard, or if any information is wrong, please email me or comment on this post.</p>
 </div>
@@ -298,7 +300,7 @@ F = 15
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -354,10 +356,8 @@ F = 15
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

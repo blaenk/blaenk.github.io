@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,15 +77,15 @@
     
         <article class="post">
   <h2 class="title"><a href="/notes/cpp"><span>C++</span></a></h2>
-  <div class="entry-content"><p>A lot of people really dislike C++ because it&rsquo;s a very complex language that often catches one by surprise. Despite this, C++ is undisputed when it comes to striking a balance between abstraction and speed. Those that need to use it for these reasons generally take one of two approaches, while the rest completely dismiss it as an option to begin with.</p>
+  <div class="entry-content"><p>A lot of people really dislike C++ because it&#39;s a very complex language that often catches one by surprise. Despite this, C++ is undisputed when it comes to striking a balance between abstraction and speed. Those that need to use it for these reasons generally take one of two approaches, while the rest completely dismiss it as an option to begin with.</p>
 
 <p>The first consists of restricting its usage to a specific subset of the language specification; for example, exceptions are generally avoided.</p>
 
-<p>The other approach, perhaps an extreme, is for people to become &ldquo;language lawyers,&ldquo; poring over the language specification for every minute detail.</p>
+<p>The other approach, perhaps an extreme, is for people to become &quot;language lawyers,&quot; poring over the language specification for every minute detail.</p>
 
-<p>I try to take a pragmatic approach. I do appreciate C++&rsquo;s advantage in striking a balance between speed and abstraction, I do limit my use of it to a certain subset of the language, and I do try to learn as much about the language short of actually reading the specification to lower the probability that the language may catch me off guard.</p>
+<p>I try to take a pragmatic approach. I do appreciate C++&#39;s advantage in striking a balance between speed and abstraction, I do limit my use of it to a certain subset of the language, and I do try to learn as much about the language short of actually reading the specification to lower the probability that the language may catch me off guard.</p>
 
-<p>To that end, these are non-exhaustive notes about C++&mdash;particularly the trickier bits&mdash;including C++11 and C++14 changes.</p>
+<p>To that end, these are non-exhaustive notes about C++---particularly the trickier bits---including C++11 and C++14 changes.</p>
 
 <p>For C++11 in particular, some compilers are faster than others at adopting the new feature set. <a href="http://msdn.microsoft.com/en-us/library/vstudio/hh567368%28v=vs.120%29.aspx">Visual Studio</a> is particularly behind the rest, while <a href="http://clang.llvm.org/cxx_status.html">Clang</a> and <a href="http://gcc.gnu.org/projects/cxx0x.html">GCC</a> seem to be very quick on adopting the new features.</p>
 
@@ -239,22 +241,22 @@
 </h2>
 <p>When a signed value is assigned to an unsigned variable, the underlying bit representation <strong>is not altered</strong>. Instead, the signed value is simply treated literally as if it were an unsigned value.</p>
 
-<p>If the signed value is negative, then it is likely represented at the bit-level in <a href="http://en.wikipedia.org/wiki/Two%27s_complement">Two&rsquo;s Complement</a>. For example, given:</p>
+<p>If the signed value is negative, then it is likely represented at the bit-level in <a href="http://en.wikipedia.org/wiki/Two%27s_complement">Two&#39;s Complement</a>. For example, given:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="kt">uint8_t</span> <span class="n">var</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 </code></pre></figure>
 <p>The value <code>-1</code> is encoded by first representing it as a positive number:</p>
 
-<p>\[ 0000\ 0001 \]</p>
+<p><script type="math/tex; mode=display"> 0000\ 0001 </script></p>
 
 <p>The digits are then flipped, so that 1s become 0s and vice versa:</p>
 
-<p>\[ 1111\ 1110 \]</p>
+<p><script type="math/tex; mode=display"> 1111\ 1110 </script></p>
 
-<p>Finally, the value is incremented by 1 to arrive at the Two&rsquo;s Complement representation of <code>-1</code>:</p>
+<p>Finally, the value is incremented by 1 to arrive at the Two&#39;s Complement representation of <code>-1</code>:</p>
 
-<p>\[ 1111\ 1111 \]</p>
+<p><script type="math/tex; mode=display"> 1111\ 1111 </script></p>
 
 <p>When this value is assigned to an unsigned integer, the value is simply interpreted as if it were unsigned to begin with. Therefore, this value is interpreted as being <code>255</code>.</p>
 <h2 id="implicit-conversions">
@@ -274,7 +276,7 @@
 <span class="hash">#</span>
 <a href="#integer-promotion" class="header-link">Integer Promotion</a>
 </h3>
-<p>In general, operands are converted to the same type of the widest operand type in the expression. Loss of precision is avoided, so this also means that when integral and floating-point values are mixed, they&rsquo;re all converted to floating-point values.</p>
+<p>In general, operands are converted to the same type of the widest operand type in the expression. Loss of precision is avoided, so this also means that when integral and floating-point values are mixed, they&#39;re all converted to floating-point values.</p>
 
 <p><strong>Integer promotion</strong> concerns converting small integral types to larger integral types.</p>
 
@@ -285,42 +287,42 @@
 <span class="hash">#</span>
 <a href="#mixing-unsigned-types" class="header-link">Mixing Unsigned Types</a>
 </h3>
-<p>If the types still don&rsquo;t match but the signs match, then the type of the smaller value is promoted to the type of the larger value.</p>
+<p>If the types still don&#39;t match but the signs match, then the type of the smaller value is promoted to the type of the larger value.</p>
 
-<p>If the signs don&rsquo;t match and the type of the unsigned operand is the same as or larger than that of the signed operand, then the signed operand is converted to unsigned as described in <a href="#signed-to-unsigned">Signed-to-Unsigned</a>, which most likely yields unexpected behavior.</p>
+<p>If the signs don&#39;t match and the type of the unsigned operand is the same as or larger than that of the signed operand, then the signed operand is converted to unsigned as described in <a href="#signed-to-unsigned">Signed-to-Unsigned</a>, which most likely yields unexpected behavior.</p>
 
-<p>If the signs don&rsquo;t match and the type of the unsigned operand is smaller than that of the signed operand, the <strong>result is machine-dependent</strong>. If all values in the unsigned type fit in the larger signed type, it&rsquo;s converted to the larger signed type. Otherwise, the signed operand is converted to the unsigned type as described in <a href="#signed-to-unsigned">Signed-to-Unsigned</a>, which most likely yields unexpected behavior.</p>
+<p>If the signs don&#39;t match and the type of the unsigned operand is smaller than that of the signed operand, the <strong>result is machine-dependent</strong>. If all values in the unsigned type fit in the larger signed type, it&#39;s converted to the larger signed type. Otherwise, the signed operand is converted to the unsigned type as described in <a href="#signed-to-unsigned">Signed-to-Unsigned</a>, which most likely yields unexpected behavior.</p>
 <h2 id="negative-modulus">
 <span class="hash">#</span>
 <a href="#negative-modulus" class="header-link">Negative Modulus</a>
 </h2>
-<p>The modulus operation <code>%</code> simply calculates the remainder of the left expression divided by the right expression. There is confusion when it comes to modulus operations with negative operands, which as far as I know isn&rsquo;t clearly defined mathematically. For example, the operation <code>-1 % 256</code>.</p>
+<p>The modulus operation <code>%</code> simply calculates the remainder of the left expression divided by the right expression. There is confusion when it comes to modulus operations with negative operands, which as far as I know isn&#39;t clearly defined mathematically. For example, the operation <code>-1 % 256</code>.</p>
 
 <p>The equation generally used to calculate the modulus is:</p>
 
-<p>\[ \text{mod}(a, n) = a - \lfloor a / n \rfloor * n \]</p>
+<p><script type="math/tex; mode=display"> \text{mod}(a, n) = a - \lfloor a / n \rfloor * n </script></p>
 
 <p>The operation <code>-1 % 256</code> yields the result <code>255</code> with this implementation. This is the result yielded in languages such as Python and Ruby.</p>
 
 <p>C and C++ uses the same equation as the above, <strong>but</strong> the division operation has an additional restriction when used with negative operands:</p>
 
-<p>\[ \text{div}(-a, n) = \text{div}(a, -n) = -(a/n) \]</p>
+<p><script type="math/tex; mode=display"> \text{div}(-a, n) = \text{div}(a, -n) = -(a/n) </script></p>
 
 <p>With these definitions, the division of <code>-1 / 256</code> in the above equation becomes <code>-(1 / 256)</code>. The result of <code>1 / 256</code> is zero due to truncation. The negation of this result is still zero, so the result of the modulus operation is simply <code>-1</code>, which is <strong>very different</strong> from the result of <code>256</code> yielded above without these restrictions.</p>
 
 <p>Given the above restriction on the division operation with negative operands, the definition of the modulus operation with negative operands can be simplified to:</p>
 
-<p>\[
+<p><script type="math/tex; mode=display">
 \begin{align}
-  \text{mod}(\phantom {-} a, -n) &amp;= \phantom {-} \text{mod}(a, n) \\
-  \text{mod}(-a, \phantom {-} n) &amp;= -\text{mod}(a, n)
+  \text{mod}(\phantom {-} a, -n) &= \phantom {-} \text{mod}(a, n) \\
+  \text{mod}(-a, \phantom {-} n) &= -\text{mod}(a, n)
 \end{align}
-\]</p>
+</script></p>
 <h1 id="classes">
 <span class="hash">#</span>
 <a href="#classes" class="header-link">Classes</a>
 </h1>
-<p>It&rsquo;s a good thing to remember that the <em>only</em> distinction between a <code>class</code> type and a <code>struct</code> type is that <code>struct</code> has by default public visibility and <code>class</code> has default private visibility. That&rsquo;s all!</p>
+<p>It&#39;s a good thing to remember that the <em>only</em> distinction between a <code>class</code> type and a <code>struct</code> type is that <code>struct</code> has by default public visibility and <code>class</code> has default private visibility. That&#39;s all!</p>
 <h2 id="rule-of-five">
 <span class="hash">#</span>
 <a href="#rule-of-five" class="header-link">Rule of Five</a>
@@ -335,7 +337,7 @@
 <span class="hash">#</span>
 <a href="#rule-of-zero" class="header-link">Rule of Zero</a>
 </h2>
-<p>This <a href="http://flamingdangerzone.com/cxx11/2012/08/15/rule-of-zero.html">recent rule</a> is unlike the <a href="http://en.cppreference.com/w/cpp/language/rule_of_three">other two</a> in that it instead says that classes that contain custom destructors, copy/move constructors, or copy/move assignment operators should deal <em>exclusively</em> with ownership, i.e. encapsulating a so called <em>ownership policy</em> which handles the allocation and deallocation of a particular resource (via <abbr title="Resource Allocation Is Initialization">RAII</abbr>). All other classes should <strong>not have</strong> custom destructors, copy/move constructors, or copy/move assignment operators.</p>
+<p>This <a href="http://flamingdangerzone.com/cxx11/2012/08/15/rule-of-zero.html">recent rule</a> is unlike the <a href="http://en.cppreference.com/w/cpp/language/rule_of_three">other two</a> in that it instead says that classes that contain custom destructors, copy/move constructors, or copy/move assignment operators should deal <em>exclusively</em> with ownership, i.e. encapsulating a so called <em>ownership policy</em> which handles the allocation and deallocation of a particular resource (via RAII). All other classes should <strong>not have</strong> custom destructors, copy/move constructors, or copy/move assignment operators.</p>
 
 <p>This rule is enforceable out-of-the-box in C++11 through the use of smart pointers such as <code>shared_ptr</code> and <code>unique_ptr</code> along with custom deleters when necessary.</p>
 <h2 id="member-initialization">
@@ -396,7 +398,7 @@
 <span class="hash">#</span>
 <a href="#destructors" class="header-link">Destructors</a>
 </h2>
-<p>Destructors do whatever work must be done to free resources used by an object, e.g. file handles. While in constructors the members are initialized before the constructor body runs, a destructor body&rsquo;s body executes first and then the members are destroyed afterward, in the reverse order of declaration in the class definition.</p>
+<p>Destructors do whatever work must be done to free resources used by an object, e.g. file handles. While in constructors the members are initialized before the constructor body runs, a destructor body&#39;s body executes first and then the members are destroyed afterward, in the reverse order of declaration in the class definition.</p>
 <h2 id="copy-constructors">
 <span class="hash">#</span>
 <a href="#copy-constructors" class="header-link">Copy Constructors</a>
@@ -408,7 +410,7 @@
   <span class="n">A</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&amp;</span><span class="p">);</span>
 <span class="p">};</span>
 </code></pre></figure>
-<p>Copy constructors are <em>synthesized</em> if none are defined. Synthesized copy constructors perform member-wise copies of the argument. Members of class type are copied using their respective copy constructors and members of built-in type&mdash;including arrays&mdash;are copied directly.</p>
+<p>Copy constructors are <em>synthesized</em> if none are defined. Synthesized copy constructors perform member-wise copies of the argument. Members of class type are copied using their respective copy constructors and members of built-in type---including arrays---are copied directly.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="n">A</span><span class="o">::</span><span class="n">A</span><span class="p">(</span><span class="k">const</span> <span class="n">A</span><span class="o">&amp;</span> <span class="n">toCopy</span><span class="p">)</span> <span class="o">:</span>
@@ -448,7 +450,7 @@
 <span class="hash">#</span>
 <a href="#conversion-constructors" class="header-link">Conversion Constructors</a>
 </h2>
-<p>Conversion constructors allow for the implicit conversion <strong>from</strong> other types to the class type. Only one such implicit conversion is possible; it isn&rsquo;t possible to chain multiple such conversions.</p>
+<p>Conversion constructors allow for the implicit conversion <strong>from</strong> other types to the class type. Only one such implicit conversion is possible; it isn&#39;t possible to chain multiple such conversions.</p>
 
 <p>Such conversion constructors can be suppressed using the <code>explicit</code> keyword, which effectively only allows the direct form of initialization:</p>
 <figure class="codeblock">
@@ -478,9 +480,9 @@
 <code class="highlight language-cpp"><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
 <span class="n">cin</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span>
 </code></pre></figure>
-<p>The above code is legal even though <code>&lt;&lt;</code> isn&rsquo;t defined for <code>cin</code> which is of type <code>istream</code>. The reason it&rsquo;s legal is that <code>cin</code> gets converted to <code>bool</code>, which then gets promoted to an <code>int</code>, after which the operation becomes a simple left-shift operation.</p>
+<p>The above code is legal even though <code>&lt;&lt;</code> isn&#39;t defined for <code>cin</code> which is of type <code>istream</code>. The reason it&#39;s legal is that <code>cin</code> gets converted to <code>bool</code>, which then gets promoted to an <code>int</code>, after which the operation becomes a simple left-shift operation.</p>
 
-<p>For this reason, conversion operators can be defined as explicit. A conversion operator that is defined as explicit won&rsquo;t be performed implicitly and instead it must be performed explicitly through the use of <code>static_cast</code>. The only exception to this is when the expression would be used for boolean logic.</p>
+<p>For this reason, conversion operators can be defined as explicit. A conversion operator that is defined as explicit won&#39;t be performed implicitly and instead it must be performed explicitly through the use of <code>static_cast</code>. The only exception to this is when the expression would be used for boolean logic.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
@@ -490,21 +492,21 @@
 <span class="hash">#</span>
 <a href="#conversion-ambiguity" class="header-link">Conversion Ambiguity</a>
 </h2>
-<p>It&rsquo;s pretty easy to get into a situation where it becomes ambiguous as to how a type is being converted.</p>
+<p>It&#39;s pretty easy to get into a situation where it becomes ambiguous as to how a type is being converted.</p>
 
 <p>In general:</p>
 
 <ul>
-<li>don&rsquo;t define mutually converting classes</li>
+<li>don&#39;t define mutually converting classes</li>
 <li>avoid conversions to built-in arithmetic types. If this is necessary, then:
 
 <ul>
-<li>don&rsquo;t define overloaded versions of operators that take arithmetic types since the conversion will handle it</li>
-<li>don&rsquo;t define a conversion for more than one arithmetic type</li>
+<li>don&#39;t define overloaded versions of operators that take arithmetic types since the conversion will handle it</li>
+<li>don&#39;t define a conversion for more than one arithmetic type</li>
 </ul></li>
 </ul>
 
-<p>However, it&rsquo;s probably best to try to completely avoid conversion functions with the exception of explicit conversions to <code>bool</code> and others that are very obvious.</p>
+<p>However, it&#39;s probably best to try to completely avoid conversion functions with the exception of explicit conversions to <code>bool</code> and others that are very obvious.</p>
 <h3 id="mutual-conversions">
 <span class="hash">#</span>
 <a href="#mutual-conversions" class="header-link">Mutual Conversions</a>
@@ -606,7 +608,7 @@
   <span class="n">swap</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">B</span><span class="p">,</span> <span class="n">rhs</span><span class="p">.</span><span class="n">B</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></figure>
-<p>It&rsquo;s <em>very</em> important to recognize that the <code>swap</code> function used isn&rsquo;t explicitly qualified to be from the <code>std</code> namespace. Instead, the <code>swap</code> function from the <code>std</code> namespace is brought into the scope for purposes of name resolution.</p>
+<p>It&#39;s <em>very</em> important to recognize that the <code>swap</code> function used isn&#39;t explicitly qualified to be from the <code>std</code> namespace. Instead, the <code>swap</code> function from the <code>std</code> namespace is brought into the scope for purposes of name resolution.</p>
 
 <p><strong>Not</strong> explicitly qualifying the function allows a type-specific <code>swap</code> function to be used in the event that one is defined, which would be much more efficient than using the <code>std</code> function which simply creates a temporary swap value.</p>
 
@@ -618,7 +620,7 @@
   <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></figure>
-<p>It&rsquo;s important to note that this implementation passes the right-hand side by value and not by reference. This is done so that after the type internals are swapped, the right-hand side&rsquo;s copy&rsquo;s destructor is run and the resources are freed. This handles self-assignment gracefully.</p>
+<p>It&#39;s important to note that this implementation passes the right-hand side by value and not by reference. This is done so that after the type internals are swapped, the right-hand side&#39;s copy&#39;s destructor is run and the resources are freed. This handles self-assignment gracefully.</p>
 <h2 id="inheritance">
 <span class="hash">#</span>
 <a href="#inheritance" class="header-link">Inheritance</a>
@@ -631,13 +633,13 @@
 
 <ol>
 <li>determine the static type of <code>p</code></li>
-<li>look for <code>mem</code> in the class that corresponds to the static type of <code>p</code>. If it&rsquo;s not found, continue the lookup up the inheritance hierarchy. Error if not found.</li>
+<li>look for <code>mem</code> in the class that corresponds to the static type of <code>p</code>. If it&#39;s not found, continue the lookup up the inheritance hierarchy. Error if not found.</li>
 <li>perform normal type checking ( 6.1 p. 203) to see if the call is legal</li>
-<li>if it&rsquo;s legal, generate code depending on whether the call is virtual:
+<li>if it&#39;s legal, generate code depending on whether the call is virtual:
 
 <ol>
 <li><strong>virtual</strong>: if the call is made through a reference or pointer, then generate code to determine at run-time which version to run based on the dynamic type of <code>p</code></li>
-<li><strong>otherwise</strong>: if the call isn&rsquo;t virtual or made through a reference or pointer, then generate a normal function call</li>
+<li><strong>otherwise</strong>: if the call isn&#39;t virtual or made through a reference or pointer, then generate a normal function call</li>
 </ol></li>
 </ol>
 
@@ -656,7 +658,7 @@
 <span class="hash">#</span>
 <a href="#constructors" class="header-link">Constructors</a>
 </h3>
-<p>Constructors of derived classes can&rsquo;t directly initialize base-class members. Instead, initialization is delegated to the base-class constructor:</p>
+<p>Constructors of derived classes can&#39;t directly initialize base-class members. Instead, initialization is delegated to the base-class constructor:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="n">B</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">num</span><span class="p">,</span> <span class="kt">char</span> <span class="n">ltr</span><span class="p">)</span> <span class="o">:</span>
@@ -667,21 +669,21 @@
 <span class="hash">#</span>
 <a href="#inherited-constructors" class="header-link">Inherited Constructors</a>
 </h3>
-<p>It&rsquo;s possible to &ldquo;inherit&rdquo; constructors from the base class:</p>
+<p>It&#39;s possible to &quot;inherit&quot; constructors from the base class:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="k">struct</span> <span class="nl">B</span> <span class="p">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
   <span class="k">using</span> <span class="n">A</span><span class="o">::</span><span class="n">A</span><span class="p">;</span>
 <span class="p">};</span>
 </code></pre></figure>
-<p>The <code>using</code> directive causes <code>B</code> to &ldquo;inherit&rdquo; <em>each</em> of the constructors from <code>A</code> except:</p>
+<p>The <code>using</code> directive causes <code>B</code> to &quot;inherit&quot; <em>each</em> of the constructors from <code>A</code> except:</p>
 
 <ol>
 <li>the default, copy, and move constructors</li>
 <li>those which have the same parameter lists as one of the constructors already defined in the derived class</li>
 </ol>
 
-<p>Despite the first exception above, the inherited constructors aren&rsquo;t considered to be &ldquo;user defined&rdquo; and so the compiler can still synthesize the default, copy, and move constructors if allowed.</p>
+<p>Despite the first exception above, the inherited constructors aren&#39;t considered to be &quot;user defined&quot; and so the compiler can still synthesize the default, copy, and move constructors if allowed.</p>
 
 <p>The inherited constructors have the exact same properties as defined in the base class, including accessibility, <code>explicit</code>, and <code>constexpr</code>.</p>
 <h3 id="copy-and-move-operations">
@@ -707,21 +709,21 @@
 </h3>
 <p>Base classes that intend to be derived from should define their constructors as <code>virtual</code>, so that correct destructor is run through dynamic dispatch based on the dynamic type of the object being destroyed, instead of the static type.</p>
 
-<p>This has an implication with move semantics. If a destructor is defined, even as <code>default</code>, then no move operations are synthesized for that class. This issue percolates throughout the inheritance hierarchy, since classes don&rsquo;t synthesize operations that the base class doesn&rsquo;t define.</p>
+<p>This has an implication with move semantics. If a destructor is defined, even as <code>default</code>, then no move operations are synthesized for that class. This issue percolates throughout the inheritance hierarchy, since classes don&#39;t synthesize operations that the base class doesn&#39;t define.</p>
 
-<p>For this reason, the base class usually explicitly defines&mdash;even if as <code>default</code>&mdash;all of the operations it requires. First the virtual destructor for the aforementioned reasons, then move operations for the aforementioned reasons, and then the copy operations since they would otherwise not be synthesized since the move operations are explicitly defined.</p>
+<p>For this reason, the base class usually explicitly defines---even if as <code>default</code>---all of the operations it requires. First the virtual destructor for the aforementioned reasons, then move operations for the aforementioned reasons, and then the copy operations since they would otherwise not be synthesized since the move operations are explicitly defined.</p>
 <h1 id="move-semantics">
 <span class="hash">#</span>
 <a href="#move-semantics" class="header-link">Move Semantics</a>
 </h1>
-<p>C++11 introduced <em>move semantics</em> which simply refers to recognizing the notion of moving objects instead of only being able to copy them. With this introduction came <em>rvalue-references</em> which designate an object as being &ldquo;moveable,&rdquo; usually because it&rsquo;s about to be destroyed anyways.</p>
+<p>C++11 introduced <em>move semantics</em> which simply refers to recognizing the notion of moving objects instead of only being able to copy them. With this introduction came <em>rvalue-references</em> which designate an object as being &quot;moveable,&quot; usually because it&#39;s about to be destroyed anyways.</p>
 
-<p>A simple explanation for the act of &ldquo;moving&rdquo; is that of a string class with an underlying <code>char</code> array. If there is an instance <strong>A</strong> that needs to be replicated into instance <strong>B</strong>, it can be done by copying <strong>A</strong> into <strong>B</strong> using a copy constructor which would make a copy of the underlying array. However, if <strong>A</strong> was going to be destroyed shortly after, then the copy would have been unnecessary. Instead of copying the array from <strong>A</strong>, it could simply <em>steal</em> its pointer.</p>
+<p>A simple explanation for the act of &quot;moving&quot; is that of a string class with an underlying <code>char</code> array. If there is an instance <strong>A</strong> that needs to be replicated into instance <strong>B</strong>, it can be done by copying <strong>A</strong> into <strong>B</strong> using a copy constructor which would make a copy of the underlying array. However, if <strong>A</strong> was going to be destroyed shortly after, then the copy would have been unnecessary. Instead of copying the array from <strong>A</strong>, it could simply <em>steal</em> its pointer.</p>
 <h2 id="rvalue-references">
 <span class="hash">#</span>
 <a href="#rvalue-references" class="header-link">rvalue-references</a>
 </h2>
-<p><em>rvalue-references</em> are simply references that can <em>only</em> be bound to rvalues. rvalues are either temporary objects or literals, both of which are ephemeral over the course of evaluating an expression. It then follows naturally that an object bound to an rvalue-reference has no &ldquo;owner&quot;, and more importantly that the object is <em>about to be destroyed</em>, <strong>so code is free to steal its contents</strong>. rvalue-references are simply a way of &ldquo;tagging&rdquo; such objects, to be able to write functions that apply specifically to objects that are about to be destroyed, i.e. a move constructor.</p>
+<p><em>rvalue-references</em> are simply references that can <em>only</em> be bound to rvalues. rvalues are either temporary objects or literals, both of which are ephemeral over the course of evaluating an expression. It then follows naturally that an object bound to an rvalue-reference has no &quot;owner&quot;, and more importantly that the object is <em>about to be destroyed</em>, <strong>so code is free to steal its contents</strong>. rvalue-references are simply a way of &quot;tagging&quot; such objects, to be able to write functions that apply specifically to objects that are about to be destroyed, i.e. a move constructor.</p>
 
 <p>Aside from binding rvalue-references to rvalues, it is possible to derive an rvalue-reference from an lvalue through the use of <code>static_cast</code>. Such a cast has been implemented as the function <code>std::move</code> in order to be more semantic:</p>
 <figure class="codeblock">
@@ -738,7 +740,7 @@
 <pre>
 <code class="highlight language-cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">func</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span><span class="p">);</span>
 </code></pre></figure>
-<p>If an lvalue <code>int</code> is passed to the function, a language rule states that the template parameter <code>T</code> will be deduced as being an lvalue-refernece, <code>int&amp;</code>. This poses a problem, since the function parameter&rsquo;s type ends up being an lvalue-reference to an rvalue-reference, <code>int&amp; &amp;&amp;</code>. A reference to a reference, of any type, can&rsquo;t usually be created but an <strong>exception</strong> is made for template parameters.</p>
+<p>If an lvalue <code>int</code> is passed to the function, a language rule states that the template parameter <code>T</code> will be deduced as being an lvalue-refernece, <code>int&amp;</code>. This poses a problem, since the function parameter&#39;s type ends up being an lvalue-reference to an rvalue-reference, <code>int&amp; &amp;&amp;</code>. A reference to a reference, of any type, can&#39;t usually be created but an <strong>exception</strong> is made for template parameters.</p>
 
 <p>Template parameters that are deduced as being references to references undergo a process that is referred to as <em>reference collapsing</em>, the rules of which are as follows:</p>
 
@@ -784,7 +786,7 @@
 <span class="hash">#</span>
 <a href="#reference-qualifiers" class="header-link">Reference Qualifiers</a>
 </h3>
-<p>It&rsquo;s usually the case that member functions can be called on objects regardless of whether they&rsquo;re lvalues or rvalues. However, this can lead to unexpected usage of objects such as the following:</p>
+<p>It&#39;s usually the case that member functions can be called on objects regardless of whether they&#39;re lvalues or rvalues. However, this can lead to unexpected usage of objects such as the following:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="n">s1</span> <span class="o">+</span> <span class="n">s2</span> <span class="o">=</span> <span class="s">&quot;wow!&quot;</span><span class="p">;</span>
@@ -812,7 +814,7 @@
 <span class="hash">#</span>
 <a href="#move-constructors" class="header-link">Move Constructors</a>
 </h2>
-<p>Because rvalue-references serve as a sort of &ldquo;tag&rdquo; on an object that&rsquo;s about to be destroyed, functions can overload implementations specifically for such objects. An example of this would be a move constructor:</p>
+<p>Because rvalue-references serve as a sort of &quot;tag&quot; on an object that&#39;s about to be destroyed, functions can overload implementations specifically for such objects. An example of this would be a move constructor:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="n">A</span><span class="o">::</span><span class="n">A</span><span class="p">(</span><span class="n">A</span> <span class="o">&amp;&amp;</span><span class="n">moveFrom</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">:</span>
@@ -821,7 +823,7 @@
   <span class="n">moveFrom</span><span class="p">.</span><span class="n">firstMember</span> <span class="o">=</span> <span class="n">moveFrom</span><span class="p">.</span><span class="n">secondMember</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
   <span class="p">}</span>
 </code></pre></figure>
-<p>It&rsquo;s important to leave the moved-from object in a destructible state.</p>
+<p>It&#39;s important to leave the moved-from object in a destructible state.</p>
 <h2 id="move-assignment-operator">
 <span class="hash">#</span>
 <a href="#move-assignment-operator" class="header-link">Move-Assignment Operator</a>
@@ -855,14 +857,14 @@
 <span class="hash">#</span>
 <a href="#synthesis" class="header-link">Synthesis</a>
 </h2>
-<p>Unlike the copy operations that are <em>always</em> synthesized if they&rsquo;re not otherwise defined or deleted, the compiler <em>only</em> synthesizes move operations if the class doesn&rsquo;t define any copy operations and if every non-static data member is moveable. Moveable members include built-in types and those that define a move operation.</p>
+<p>Unlike the copy operations that are <em>always</em> synthesized if they&#39;re not otherwise defined or deleted, the compiler <em>only</em> synthesizes move operations if the class doesn&#39;t define any copy operations and if every non-static data member is moveable. Moveable members include built-in types and those that define a move operation.</p>
 
 <p>If a class defines move operations, the respective copy operation will be defined as deleted and must be defined explicitly.</p>
 
-<p>If a default implementation is explicitly requested with the <code>default</code> directive, but the compiler can&rsquo;t define one due to the following reasons, then it will be defined as <code>deleted</code>:</p>
+<p>If a default implementation is explicitly requested with the <code>default</code> directive, but the compiler can&#39;t define one due to the following reasons, then it will be defined as <code>deleted</code>:</p>
 
 <ul>
-<li>the class has a member that defines its own copy constructor but not a move constructor <em>or</em> if the class has a member that doesn&rsquo;t define its own copy operations <em>and</em> for which the compiler is unable to synthesize a move constructor. The same applies for move-assignment.</li>
+<li>the class has a member that defines its own copy constructor but not a move constructor <em>or</em> if the class has a member that doesn&#39;t define its own copy operations <em>and</em> for which the compiler is unable to synthesize a move constructor. The same applies for move-assignment.</li>
 <li>the class has a member whose respective move operation is deleted or inaccessible</li>
 <li>the destructor is deleted or inaccessible</li>
 <li>the class has a <code>const</code> or reference member</li>
@@ -873,7 +875,7 @@
 </h2>
 <p>Some classes make guarantees about what occurs in the event that exceptions are thrown. For example, <code>std::vector</code> guarantees that if an exception occurs during <code>push_back</code>, the original <code>vector</code> would be left unchanged. In the event that the <code>push_back</code> would have had to reallocate space, if the <code>vector</code> decided to use the move constructor to move the objects to the new space and an exception were thrown at some point, the original <code>vector</code> would be left in an inconsistent state, with some of its elements having been moved to the new allocation of memory.</p>
 
-<p>For this reason, such classes use copy constructors unless they are guaranteed that a type&rsquo;s move constructor doesn&rsquo;t throw exceptions. This guarantee is specified using the <code>noexcept</code> declaration on a function definition as shown above.</p>
+<p>For this reason, such classes use copy constructors unless they are guaranteed that a type&#39;s move constructor doesn&#39;t throw exceptions. This guarantee is specified using the <code>noexcept</code> declaration on a function definition as shown above.</p>
 <h1 id="miscellaneous">
 <span class="hash">#</span>
 <a href="#miscellaneous" class="header-link">Miscellaneous</a>
@@ -890,7 +892,7 @@
 <li>iterators and other long type names</li>
 </ul>
 
-<p>The <code>decltype</code> operator can deduce and &ldquo;return&rdquo; the type of the argument to be used to declare something else such as a variable of a function. The rules for what gets returned depends on the expression:</p>
+<p>The <code>decltype</code> operator can deduce and &quot;return&quot; the type of the argument to be used to declare something else such as a variable of a function. The rules for what gets returned depends on the expression:</p>
 
 <ul>
 <li><strong>identifier</strong> (name of object or function) or <strong>class member access</strong>, <em>yieds</em> type of identifier or class member access</li>
@@ -900,7 +902,7 @@
 <li><strong>lvalue</strong>, <em>yields</em> lvalue reference to type of expression</li>
 </ul>
 
-<p>The suffix-return syntax is useful when the return type is deduced from information&mdash;such as the function arguments&mdash;and has to appear after the function argument list so that the arguments are &ldquo;in scope&quot;:</p>
+<p>The suffix-return syntax is useful when the return type is deduced from information---such as the function arguments---and has to appear after the function argument list so that the arguments are &quot;in scope&quot;:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span> <span class="nc">U</span><span class="o">&gt;</span>
@@ -921,12 +923,12 @@
 <pre>
 <code class="highlight language-cpp"><span class="n">LL</span><span class="o">::</span><span class="n">Link</span> <span class="o">*</span><span class="n">LL</span><span class="o">::</span><span class="n">erase</span><span class="p">(</span><span class="n">Link</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="p">{};</span>
 </code></pre></figure>
-<p>Using suffix-return syntax, after the compiler reads <code>LL::erase</code> it enters the class scope of <code>LL</code>, making it unnecessary to fully qualify the <code>Link</code> type that&rsquo;s nested within <code>LL</code>:</p>
+<p>Using suffix-return syntax, after the compiler reads <code>LL::erase</code> it enters the class scope of <code>LL</code>, making it unnecessary to fully qualify the <code>Link</code> type that&#39;s nested within <code>LL</code>:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="k">auto</span> <span class="n">LL</span><span class="o">::</span><span class="n">erase</span><span class="p">(</span><span class="n">Link</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Link</span> <span class="o">*</span> <span class="p">{};</span>
 </code></pre></figure>
-<p>The <code>std::function</code> type is a generalized type that &ldquo;matches&rdquo; any kind of function-like type, such as an actual function pointer, lambdas, function objects, etc.</p>
+<p>The <code>std::function</code> type is a generalized type that &quot;matches&quot; any kind of function-like type, such as an actual function pointer, lambdas, function objects, etc.</p>
 <h2 id="user-defined-literals">
 <span class="hash">#</span>
 <a href="#user-defined-literals" class="header-link">User-Defined Literals</a>
@@ -942,7 +944,7 @@
 <span class="hash">#</span>
 <a href="#enumerations" class="header-link">Enumerations</a>
 </h2>
-<p><em>Scoped enumerations</em> can be created to avoid symbol clashing and enumerations' underlying type can be specified explicitly:</p>
+<p><em>Scoped enumerations</em> can be created to avoid symbol clashing and enumerations&#39; underlying type can be specified explicitly:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="k">enum</span> <span class="k">class</span> <span class="nc">EventType</span> <span class="o">:</span> <span class="kt">uint8_t</span> <span class="p">{</span> <span class="n">STATUS</span><span class="p">,</span> <span class="n">LOG</span><span class="p">,</span> <span class="n">ERROR</span> <span class="p">};</span>
@@ -952,7 +954,7 @@
 <span class="hash">#</span>
 <a href="#tuples" class="header-link">Tuples</a>
 </h2>
-<p>The <code>std::tuple</code> type is similar to tuples in other languages. <code>get&lt;index&gt;(tuple)</code> retrieves the value at a given index. Tuples can easily be created with the <code>make_tuple</code> function. As in other languages, tuples can be &ldquo;unpacked&rdquo; into multiple values using the <code>tie</code> function:</p>
+<p>The <code>std::tuple</code> type is similar to tuples in other languages. <code>get&lt;index&gt;(tuple)</code> retrieves the value at a given index. Tuples can easily be created with the <code>make_tuple</code> function. As in other languages, tuples can be &quot;unpacked&quot; into multiple values using the <code>tie</code> function:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="n">tie</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">ignore</span><span class="p">,</span> <span class="n">letter</span><span class="p">)</span> <span class="o">=</span> <span class="n">make_tuple</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">4.23</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
@@ -1014,7 +1016,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -1043,10 +1045,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

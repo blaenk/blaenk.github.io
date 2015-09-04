@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -125,13 +127,13 @@
 </h2>
 <p>For the longest time, my favorite competitive game was a particular kind of instagib mod for the <a href="http://en.wikipedia.org/wiki/Star_Wars_Jedi_Knight_II:_Jedi_Outcast">Jedi Outcast</a> (JO) and <a href="http://en.wikipedia.org/wiki/Star_Wars_Jedi_Knight:_Jedi_Academy">Jedi Academy</a> (JA, the sequel) games called <a href="http://archives.thejediacademy.net/index.php/Disruption">disruption instagib</a>. I mainly played this on Jedi Outcast which was the older one of the two, because the server I preferred to play on in Jedi Academy shut down but one still existed in Jedi Outcast (somehow). Given that this was a pretty niche mod in a pretty old game (considering Jedi Academy had already been released), I wished to somehow make it available to more people.</p>
 
-<p>Both of these games used the Quake 3 engine (<a href="http://en.wikipedia.org/wiki/Id_Tech_3">id Tech 3</a>), so when the Quake 3 source code was released under the GPL and the source was cleaned up and optimized by the <a href="http://ioquake3.org">ioquake3</a> project, I decided to try to port the mod and the feel of JO/JA into a standalone mod. The reason for wanting to make it into a standalone game was because although instagib mods have been around for a very long time for pretty much any game, they tend to be relegated to just that: mods. As a result, you have a variety of different flavors of instagib, who&rsquo;s play-style is determined by the game for which it is a mod. This is fine, but it has the effect of fragmenting the instagib community. As a result, there are usually few servers available.</p>
+<p>Both of these games used the Quake 3 engine (<a href="http://en.wikipedia.org/wiki/Id_Tech_3">id Tech 3</a>), so when the Quake 3 source code was released under the GPL and the source was cleaned up and optimized by the <a href="http://ioquake3.org">ioquake3</a> project, I decided to try to port the mod and the feel of JO/JA into a standalone mod. The reason for wanting to make it into a standalone game was because although instagib mods have been around for a very long time for pretty much any game, they tend to be relegated to just that: mods. As a result, you have a variety of different flavors of instagib, who&#39;s play-style is determined by the game for which it is a mod. This is fine, but it has the effect of fragmenting the instagib community. As a result, there are usually few servers available.</p>
 
 <p>So in 2006-2007 I decided to develop a standalone Instagib game. The game used art assets from the OpenArena project with custom UI and other assets designed by two of my friends. The game had team-colored rail shots and rail jumping was implemented, aside from traditional instagib mechanics. I had written a custom <a href="http://nsis.sourceforge.net/Main_Page">NSIS</a> installer script to generate an installer binary for Windows. I also had Linux tarballs and Mac OS X application bundles. Aside from this, I had developed a build and deployment system with Python, which allowed people to have the latest versions of binaries and art assets.</p>
 
 <p>I ultimately abandoned the project as I became distracted by other projects. The source used to be on a self-hosted subversion server back when it was actively developed. I intend to push the source to github in the near future.</p>
 
-<p>Recently, however&mdash;as a result of Disney <a href="http://en.wikipedia.org/wiki/LucasArts#Acquisition_by_Disney_and_closure_of_the_development_arm">shutting down</a> LucasArts&mdash;<a href="http://en.wikipedia.org/wiki/Raven_Software">Raven Software</a>, the creators of Jedi Outcast and Jedi Academy, decided to release the source code to both games under the GPL. I look forward to developing a canonical disruption instagib mod again.</p>
+<p>Recently, however---as a result of Disney <a href="http://en.wikipedia.org/wiki/LucasArts#Acquisition_by_Disney_and_closure_of_the_development_arm">shutting down</a> LucasArts---<a href="http://en.wikipedia.org/wiki/Raven_Software">Raven Software</a>, the creators of Jedi Outcast and Jedi Academy, decided to release the source code to both games under the GPL. I look forward to developing a canonical disruption instagib mod again.</p>
 <h1 id="contributions">
 <span class="hash">#</span>
 <a href="#contributions" class="header-link">Contributions</a>
@@ -142,7 +144,7 @@
 <span class="hash">#</span>
 <a href="#fix-io-multiplexing-error-on-solaris" class="header-link">Fix I/O Multiplexing Error on Solaris</a>
 </h3>
-<p><a href="https://github.com/rakshasa/libtorrent">libtorrent</a> is the Bit Torrent library used in rtorrent, developed by the same person. After fixing the <a href="#rtorrent">signal disposition establishment bug</a> in hopes of fixing <a href="https://github.com/rakshasa/rtorrent/issues/51">rtorrent issue #51</a> which rendered rtorrent unusable on Solaris derivatives, three months later someone confirmed that it had fixed one of their problems. However, rtorrent was now crashing with the message &ldquo;Listener port received error event.&rdquo; I tracked this message down to libtorrent. The problem was that on Solaris, libtorrent employs <code>select()</code> for I/O multiplexing instead of the platform-specific API such as <code>/dev/poll</code> and event ports, and the signature of <code>select()</code> was seemingly misinterpreted&mdash;which is a common occurrence given documentation discrepancies.</p>
+<p><a href="https://github.com/rakshasa/libtorrent">libtorrent</a> is the Bit Torrent library used in rtorrent, developed by the same person. After fixing the <a href="#rtorrent">signal disposition establishment bug</a> in hopes of fixing <a href="https://github.com/rakshasa/rtorrent/issues/51">rtorrent issue #51</a> which rendered rtorrent unusable on Solaris derivatives, three months later someone confirmed that it had fixed one of their problems. However, rtorrent was now crashing with the message &quot;Listener port received error event.&quot; I tracked this message down to libtorrent. The problem was that on Solaris, libtorrent employs <code>select()</code> for I/O multiplexing instead of the platform-specific API such as <code>/dev/poll</code> and event ports, and the signature of <code>select()</code> was seemingly misinterpreted---which is a common occurrence given documentation discrepancies.</p>
 
 <p>For example, in the Linux man pages, <code>select()</code> is <a href="http://man7.org/linux/man-pages/man2/select.2.html">prototyped as</a>:</p>
 <figure class="codeblock">
@@ -150,16 +152,16 @@
 <code class="highlight language-cpp"><span class="kt">int</span> <span class="nf">select</span><span class="p">(</span><span class="kt">int</span> <span class="n">nfds</span><span class="p">,</span> <span class="n">fd_set</span> <span class="o">*</span><span class="n">readfds</span><span class="p">,</span> <span class="n">fd_set</span> <span class="o">*</span><span class="n">writefds</span><span class="p">,</span>
            <span class="n">fd_set</span> <span class="o">*</span><span class="n">exceptfds</span><span class="p">,</span> <span class="k">struct</span> <span class="n">timeval</span> <span class="o">*</span><span class="n">timeout</span><span class="p">);</span>
 </code></pre></figure>
-<p>However, in the Solaris man pages it&rsquo;s <a href="docs.oracle.com/cd/E26502_01/html/E29034/select-3c.html">prototyped as</a>:</p>
+<p>However, in the Solaris man pages it&#39;s <a href="docs.oracle.com/cd/E26502_01/html/E29034/select-3c.html">prototyped as</a>:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="kt">int</span> <span class="nf">select</span><span class="p">(</span><span class="kt">int</span> <span class="n">nfds</span><span class="p">,</span> <span class="n">fd_set</span> <span class="o">*</span><span class="n">readfds</span><span class="p">,</span> <span class="n">fd_set</span> <span class="o">*</span><span class="n">writefds</span><span class="p">,</span>
            <span class="n">fd_set</span> <span class="o">*</span><span class="n">errorfds</span><span class="p">,</span> <span class="k">struct</span> <span class="n">timeval</span> <span class="o">*</span><span class="n">timeout</span><span class="p">);</span>
 </code></pre></figure>
-<p>The key difference is that on Linux, the fourth argument is named <code>exceptfds</code> whereas on Solaris it&rsquo;s named <code>errorfds</code>. This innocent-looking difference mistakenly gives the impression that file descriptors present in that set indicate that an I/O error has occurred on that file descriptor. However, this is not necessarily the case, as is outlined in <a href="http://man7.org/linux/man-pages/man2/select_tut.2.html"><code>select_tut(2)</code></a>:</p>
+<p>The key difference is that on Linux, the fourth argument is named <code>exceptfds</code> whereas on Solaris it&#39;s named <code>errorfds</code>. This innocent-looking difference mistakenly gives the impression that file descriptors present in that set indicate that an I/O error has occurred on that file descriptor. However, this is not necessarily the case, as is outlined in <a href="http://man7.org/linux/man-pages/man2/select_tut.2.html"><code>select_tut(2)</code></a>:</p>
 
 <blockquote>
-<p>This set is watched for &ldquo;exceptional conditions&rdquo;. In practice, only one such exceptional condition is common: the availability of out-of-band (OOB) data for reading from a TCP socket. See <code>recv(2)</code>, <code>send(2)</code>, and <code>tcp(7)</code> for more details about OOB data. (One other less common case where <code>select(2)</code> indicates an exceptional condition occurs with pseudoterminals in packet mode; see <code>tty_ioctl(4)</code>.) After <code>select()</code> has returned, <code>exceptfds</code> will be cleared of all file descriptors except for those for which an exceptional condition has occurred.</p>
+<p>This set is watched for &quot;exceptional conditions&quot;. In practice, only one such exceptional condition is common: the availability of out-of-band (OOB) data for reading from a TCP socket. See <code>recv(2)</code>, <code>send(2)</code>, and <code>tcp(7)</code> for more details about OOB data. (One other less common case where <code>select(2)</code> indicates an exceptional condition occurs with pseudoterminals in packet mode; see <code>tty_ioctl(4)</code>.) After <code>select()</code> has returned, <code>exceptfds</code> will be cleared of all file descriptors except for those for which an exceptional condition has occurred.</p>
 </blockquote>
 
 <p>Furthermore, the Solaris man page says:</p>
@@ -167,12 +169,12 @@
 <blockquote>
 <p>If a socket has a pending error, it is considered to have an exceptional condition pending. Otherwise, what constitutes an exceptional condition is file type-specific. For a file descriptor for use with a socket, it is protocol-specific except as noted below. For other file types, if the operation is meaningless for a particular file type, <code>select()</code> or <code>pselect()</code> indicates that the descriptor is ready for read or write operations and indicates that the descriptor has no exceptional condition pending.</p>
 
-<p>&hellip;</p>
+<p>...</p>
 
 <p>A socket is considered to have an exceptional condition pending if a receive operation with <code>O_NONBLOCK</code> clear for the open file description and with the <code>MSG_OOB</code> flag set would return out-of-band data without blocking. (It is protocol-specific whether the <code>MSG_OOB</code> flag would be used to read out-of-band data.) A socket will also be considered to have an exceptional condition pending if an out-of-band data mark is present in the receive queue.</p>
 </blockquote>
 
-<p>rtorrent didn&rsquo;t use out-of-band data or pseudoterminals as far as I was aware, and after searching the Solaris man pages for a while I couldn&rsquo;t find more information on what else it could&rsquo;ve been. Considering that this was only observable on Solaris derivatives, I decided that it must have been something platform-specific, perhaps Solaris was more relaxed on its criteria for what it considered to be an &ldquo;exceptional condition.&rdquo;</p>
+<p>rtorrent didn&#39;t use out-of-band data or pseudoterminals as far as I was aware, and after searching the Solaris man pages for a while I couldn&#39;t find more information on what else it could&#39;ve been. Considering that this was only observable on Solaris derivatives, I decided that it must have been something platform-specific, perhaps Solaris was more relaxed on its criteria for what it considered to be an &quot;exceptional condition.&quot;</p>
 
 <p>The <a href="https://github.com/rakshasa/libtorrent/pull/40">fix I came up with</a> involved invoking <a href="http://man7.org/linux/man-pages/man2/getsockopt.2.html"><code>getsockopt()</code></a> to retrieve the socket error associated with that file descriptor, and if there was indeed an error, follow through with throwing the exception, albeit with more descriptive information as to what the error was. If, on the other hand, there was no error, then simply do nothing.</p>
 <h2 id="rtorrent">
@@ -184,15 +186,15 @@
 </h3>
 <p>The <a href="http://libtorrent.rakshasa.no/">rtorrent</a> project makes use of signals for certain kinds of inter-thread communication. Certain users on <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">Solaris</a> reported that <a href="https://github.com/rakshasa/rtorrent/issues/51">rtorrent crashed</a> as soon as signal <code>SIGUSR1</code> was delivered. Being an avid reader of the POSIX standards I was curious and felt that I might know what was wrong, figuring that correctly identifying and solving the problem would be a huge testament to the POSIX standards considering I had never used Solaris.</p>
 
-<p>Some people in the issue figured that it must be a non-POSIX compliant implementation of <code>pthread_kill()</code> which was preventing the application from sending signals to specific threads. I didn&rsquo;t think this was the case, as Solaris' <a href="http://docs.oracle.com/cd/E26502_01/html/E29034/pthread-kill-3c.html">manual page</a> for <code>pthread_kill()</code> claims that it&rsquo;s implemented as is intended. If it was indeed a non-compliant implementation, I figured someone else would&rsquo;ve already encountered the issue and there would be some sort of note in the man page. In fact, Solaris is <a href="http://en.wikipedia.org/wiki/POSIX#Fully_POSIX-compliant">fully POSIX-compliant</a> which is more than can be said of Linux, and yet Linux didn&rsquo;t exhibit this behavior.</p>
+<p>Some people in the issue figured that it must be a non-POSIX compliant implementation of <code>pthread_kill()</code> which was preventing the application from sending signals to specific threads. I didn&#39;t think this was the case, as Solaris&#39; <a href="http://docs.oracle.com/cd/E26502_01/html/E29034/pthread-kill-3c.html">manual page</a> for <code>pthread_kill()</code> claims that it&#39;s implemented as is intended. If it was indeed a non-compliant implementation, I figured someone else would&#39;ve already encountered the issue and there would be some sort of note in the man page. In fact, Solaris is <a href="http://en.wikipedia.org/wiki/POSIX#Fully_POSIX-compliant">fully POSIX-compliant</a> which is more than can be said of Linux, and yet Linux didn&#39;t exhibit this behavior.</p>
 
 <p>Instead my suspicion was something else entirely. As soon as I recognized that clearly something signal-related was causing crashes on certain platforms in particular, I thought of the one glaring, well-known to be unportable system call: <code>signal()</code>. In fact, the Linux <a href="http://man7.org/linux/man-pages/man2/signal.2.html">man page</a> for <code>signal()</code> says:</p>
 
 <blockquote>
-<p>The only portable use of <code>signal()</code> is to set a signal&rsquo;s disposition to <code>SIG_DFL</code> or <code>SIG_IGN</code>. The semantics when using <code>signal()</code> to establish a signal handler vary across systems (and POSIX.1 explicitly permits this variation); <strong>do not use it for this purpose.</strong></p>
+<p>The only portable use of <code>signal()</code> is to set a signal&#39;s disposition to <code>SIG_DFL</code> or <code>SIG_IGN</code>. The semantics when using <code>signal()</code> to establish a signal handler vary across systems (and POSIX.1 explicitly permits this variation); <strong>do not use it for this purpose.</strong></p>
 </blockquote>
 
-<p>The emphasis is theirs and goes to show how unpredictable the use of <code>signal()</code> could be. To complicate matters, the first line in the man page&rsquo;s notes section says:</p>
+<p>The emphasis is theirs and goes to show how unpredictable the use of <code>signal()</code> could be. To complicate matters, the first line in the man page&#39;s notes section says:</p>
 
 <blockquote>
 <p>The effects of <code>signal()</code> in a multithreaded process are unspecified.</p>
@@ -201,10 +203,10 @@
 <p>However, I believed that the problem lay in the possibility that Solaris provided different semantics for <code>signal()</code> from the semantics that Linux provided:</p>
 
 <blockquote>
-<p>In the original UNIX systems, when a handler that was established using <code>signal()</code> was invoked by the delivery of a signal, the disposition of the signal would be reset to <code>SIG_DFL</code>, and the system did not block delivery of further instances of the signal. [&hellip;] This was bad because the signal might be delivered again before the handler had a chance to reestablish itself.  Furthermore, rapid deliveries of the same signal could result in recursive invocations of the handler.</p>
+<p>In the original UNIX systems, when a handler that was established using <code>signal()</code> was invoked by the delivery of a signal, the disposition of the signal would be reset to <code>SIG_DFL</code>, and the system did not block delivery of further instances of the signal. [...] This was bad because the signal might be delivered again before the handler had a chance to reestablish itself.  Furthermore, rapid deliveries of the same signal could result in recursive invocations of the handler.</p>
 </blockquote>
 
-<p>This behavior is known as <a href="http://en.wikipedia.org/wiki/UNIX_System_V">System V</a> semantics. In other words, when a signal handler is established and then subsequently triggered, the signal disposition is reset to its default disposition, whatever that may be for the signal in question. If the handler isn&rsquo;t re-established, then a subsequent triggering of that signal will be handled based on the default disposition for that signal.</p>
+<p>This behavior is known as <a href="http://en.wikipedia.org/wiki/UNIX_System_V">System V</a> semantics. In other words, when a signal handler is established and then subsequently triggered, the signal disposition is reset to its default disposition, whatever that may be for the signal in question. If the handler isn&#39;t re-established, then a subsequent triggering of that signal will be handled based on the default disposition for that signal.</p>
 
 <p>There is another behavior which is referred to as <a href="http://en.wikipedia.org/wiki/Berkeley_Software_Distribution">BSD</a> semantics in which:</p>
 
@@ -212,19 +214,19 @@
 <p>the signal disposition is not reset, and further instances of the signal are blocked from being delivered while the handler is executing.  Furthermore, certain blocking system calls are automatically restarted if interrupted by a signal handler.</p>
 </blockquote>
 
-<p>The situation on Linux is such that the kernel&rsquo;s <code>signal()</code> system call provides System V semantics. However, glibc 2 and later expose a wrapper function for <code>signal()</code> which instead delegates its work to the preferred&mdash;for portability and flexiblity reasons&mdash;system call <a href="http://man7.org/linux/man-pages/man2/sigaction.2.html"><code>sigaction()</code></a>, called in such a way as to provide BSD semantics. This wrapper function is exposed if the <code>_BSD_SOURCE</code> <a href="http://man7.org/linux/man-pages/man7/feature_test_macros.7.html">feature test macro</a> is defined, which it is by default.</p>
+<p>The situation on Linux is such that the kernel&#39;s <code>signal()</code> system call provides System V semantics. However, glibc 2 and later expose a wrapper function for <code>signal()</code> which instead delegates its work to the preferred---for portability and flexiblity reasons---system call <a href="http://man7.org/linux/man-pages/man2/sigaction.2.html"><code>sigaction()</code></a>, called in such a way as to provide BSD semantics. This wrapper function is exposed if the <code>_BSD_SOURCE</code> <a href="http://man7.org/linux/man-pages/man7/feature_test_macros.7.html">feature test macro</a> is defined, which it is by default.</p>
 
-<p>Solaris doesn&rsquo;t have such a wrapper for <code>signal()</code>, instead exposing its bare, System V semantics system call with <a href="http://docs.oracle.com/cd/E26502_01/html/E29034/signal-3c.html"><code>signal()</code></a>:</p>
+<p>Solaris doesn&#39;t have such a wrapper for <code>signal()</code>, instead exposing its bare, System V semantics system call with <a href="http://docs.oracle.com/cd/E26502_01/html/E29034/signal-3c.html"><code>signal()</code></a>:</p>
 
 <blockquote>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-c"><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">signal</span><span class="p">(</span><span class="kt">int</span> <span class="n">sig</span><span class="p">,</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">disp</span><span class="p">)(</span><span class="kt">int</span><span class="p">)))(</span><span class="kt">int</span><span class="p">);</span>
 </code></pre></figure>
-<p>If <code>signal()</code> is used, <code>disp</code> is the address of a signal handler, and <code>sig</code> is not <code>SIGILL</code>, <code>SIGTRAP</code>, or <code>SIGPWR</code>, the system first sets the signal&rsquo;s disposition to <code>SIG_DFL</code> before executing the signal handler.</p>
+<p>If <code>signal()</code> is used, <code>disp</code> is the address of a signal handler, and <code>sig</code> is not <code>SIGILL</code>, <code>SIGTRAP</code>, or <code>SIGPWR</code>, the system first sets the signal&#39;s disposition to <code>SIG_DFL</code> before executing the signal handler.</p>
 </blockquote>
 
-<p>This clearly states that the signal disposition is reset to its default disposition before executing the signal handler. Taking a look at the <a href="http://docs.oracle.com/cd/E26502_01/html/E29033/signal.h-3head.html">default signal disposition table</a> for Solaris, we can see that <code>SIGUSR1</code>&rsquo;s default disposition is to exit the application. Presumably, Solaris users were crashing upon the second delivery of <code>SIGUSR1</code> or any other signal established with <code>signal()</code> who&rsquo;s default disposition was to exit or abort (core dump).</p>
+<p>This clearly states that the signal disposition is reset to its default disposition before executing the signal handler. Taking a look at the <a href="http://docs.oracle.com/cd/E26502_01/html/E29033/signal.h-3head.html">default signal disposition table</a> for Solaris, we can see that <code>SIGUSR1</code>&#39;s default disposition is to exit the application. Presumably, Solaris users were crashing upon the second delivery of <code>SIGUSR1</code> or any other signal established with <code>signal()</code> who&#39;s default disposition was to exit or abort (core dump).</p>
 
 <p>My <a href="https://github.com/rakshasa/rtorrent/pull/127">patch</a> simply consisted of switching out calls to <code>signal()</code> for purposes of establishing signal handlers with calls to <code>sigaction()</code>.</p>
 <h2 id="mpc-hc">
@@ -234,9 +236,9 @@
 <span class="hash">#</span>
 <a href="#fix-web-ui-seeking" class="header-link">Fix Web UI Seeking</a>
 </h3>
-<p>I was interested in modifying <a href="http://mpc-hc.org/">MPC-HC</a> to allow people to watch things in sync with each other, i.e. pause when someone pauses, seek when someone seeks, etc. I pulled the source from github and began looking for a good way to implement this functionality. I found the source for the web UI component of MPC-HC, which essentially provides an interface for which a web UI can be developed to control MPC-HC. I figured I could make use of this and began testing it when a friend noticed that the seeking in the existing web UI didn&rsquo;t work. After finding the relevant code in the MPC-HC source I found that it was a simple problem of failing to URL decode the seek parameter sent from the web UI. I submitted a <a href="https://github.com/mpc-hc/mpc-hc/pull/38">patch</a> which was ultimately merged in and pushed out in <a href="https://trac.mpc-hc.org/wiki/Changelog/1.6.6">version 1.6.6</a>.</p>
+<p>I was interested in modifying <a href="http://mpc-hc.org/">MPC-HC</a> to allow people to watch things in sync with each other, i.e. pause when someone pauses, seek when someone seeks, etc. I pulled the source from github and began looking for a good way to implement this functionality. I found the source for the web UI component of MPC-HC, which essentially provides an interface for which a web UI can be developed to control MPC-HC. I figured I could make use of this and began testing it when a friend noticed that the seeking in the existing web UI didn&#39;t work. After finding the relevant code in the MPC-HC source I found that it was a simple problem of failing to URL decode the seek parameter sent from the web UI. I submitted a <a href="https://github.com/mpc-hc/mpc-hc/pull/38">patch</a> which was ultimately merged in and pushed out in <a href="https://trac.mpc-hc.org/wiki/Changelog/1.6.6">version 1.6.6</a>.</p>
 
-<p>As for the original intent of implementing the functionality for synced playback, the MPC-HC developers told me about <a href="http://syncplay.pl/">Syncplay</a> which I have used for months now to much success. The added benefit is that it isn&rsquo;t specific to any particular media player and is cross-platform.</p>
+<p>As for the original intent of implementing the functionality for synced playback, the MPC-HC developers told me about <a href="http://syncplay.pl/">Syncplay</a> which I have used for months now to much success. The added benefit is that it isn&#39;t specific to any particular media player and is cross-platform.</p>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> August 27, 2015</div>
@@ -280,7 +282,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -309,10 +311,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -77,49 +79,49 @@
   <h2 class="title"><a href="/posts/a-simpler-vim-statusline"><span>A Simpler Vim Statusline</span></a></h2>
   <div class="entry-content"><p>Everyone that uses Vim and their grandmothers have apparently adopted the use of statusline plugins like <a href="https://github.com/Lokaltog/vim-powerline">vim-powerline</a> or <a href="https://github.com/bling/vim-airline">vim-airline</a>. The latter, more recent vim-airline has gained popularity due to the fact that vim-powerline was deprecated in favor of a still-in-development <a href="https://github.com/Lokaltog/powerline">rewrite</a> that aims to provide a more general foundation for people to use the same kind of statusline in other areas, such as <a href="https://github.com/erikw/tmux-powerline">tmux</a> and <a href="cringe">shell prompts</a>. So now everyone can have the same look: <a href="http://ethanschoonover.com/solarized">solarized</a> and some powerline-like status, <em>everywhere</em>.</p>
 
-<p>There&rsquo;s of course nothing wrong with using these plugins, but I&rsquo;ve come to realize that they&rsquo;re overdone for my particular needs, and I don&rsquo;t even really care for how they look.</p>
+<p>There&#39;s of course nothing wrong with using these plugins, but I&#39;ve come to realize that they&#39;re overdone for my particular needs, and I don&#39;t even really care for how they look.</p>
 <h2 id="patched-fonts">
 <span class="hash">#</span>
 <a href="#patched-fonts" class="header-link">Patched Fonts</a>
 </h2>
-<p>First there was the annoyance of having to use patched fonts to achieve the &ldquo;powerline look&quot;. This isn&rsquo;t a huge problem since it&rsquo;s pretty straightforward to track down, download, and install pre-patched fonts. This has only become somewhat more annoying due to the fact that the new powerline rewrite patches fonts differently, so you have to find the patched font for the version of powerline you use, and different plugins adopt different versions. Now do this for every OS you use, in my case, Windows, Linux, and OSX.</p>
+<p>First there was the annoyance of having to use patched fonts to achieve the &quot;powerline look&quot;. This isn&#39;t a huge problem since it&#39;s pretty straightforward to track down, download, and install pre-patched fonts. This has only become somewhat more annoying due to the fact that the new powerline rewrite patches fonts differently, so you have to find the patched font for the version of powerline you use, and different plugins adopt different versions. Now do this for every OS you use, in my case, Windows, Linux, and OSX.</p>
 
-<p>The point is that in the grand scheme of things, when you take a step back, you realize you&rsquo;re doing all of this for a mere statusline in a particular application (or two).</p>
+<p>The point is that in the grand scheme of things, when you take a step back, you realize you&#39;re doing all of this for a mere statusline in a particular application (or two).</p>
 <h2 id="noise">
 <span class="hash">#</span>
 <a href="#noise" class="header-link">Noise</a>
 </h2>
-<p>By default, powerline shows the mode you&rsquo;re currently in, git branch if applicable, file name, file format, file encoding, file type, percentage through file, line number, column number, as well as flags that show whether you&rsquo;re in paste mode, if the file is modified, or if it&rsquo;s read-only. The plugins also sport an entirely custom <a href="http://kien.github.io/ctrlp.vim/">CtrlP</a> statusline.</p>
+<p>By default, powerline shows the mode you&#39;re currently in, git branch if applicable, file name, file format, file encoding, file type, percentage through file, line number, column number, as well as flags that show whether you&#39;re in paste mode, if the file is modified, or if it&#39;s read-only. The plugins also sport an entirely custom <a href="http://kien.github.io/ctrlp.vim/">CtrlP</a> statusline.</p>
 
-<p>When I switched over to airline recently I decided to take advantage of the fact that it&rsquo;s somewhat customizable. At first I only did so to manually define a colorscheme I wanted, since the predefined one I had been using kept being changed around by upstream.</p>
+<p>When I switched over to airline recently I decided to take advantage of the fact that it&#39;s somewhat customizable. At first I only did so to manually define a colorscheme I wanted, since the predefined one I had been using kept being changed around by upstream.</p>
 
-<p>Then I came to realize that I didn&rsquo;t need all of that information. This is a similar conclusion I came to when I recently redesigned my <a href="/posts/terminal-customization/#prompt">shell prompt</a>. I started by shortening the Vim mode part of the statusline, e.g. NORMAL became N.</p>
+<p>Then I came to realize that I didn&#39;t need all of that information. This is a similar conclusion I came to when I recently redesigned my <a href="/posts/terminal-customization/#prompt">shell prompt</a>. I started by shortening the Vim mode part of the statusline, e.g. NORMAL became N.</p>
 
-<p>I rarely ever need to care about the file format, encoding, or type. If I do, I can simply set <code>ff</code>, <code>fenc</code>, or <code>ft</code> respectively to have them printed. The file type in particular I can usually deduce from the file extension or contents, unless I&rsquo;ve explicitly set it myself.</p>
+<p>I rarely ever need to care about the file format, encoding, or type. If I do, I can simply set <code>ff</code>, <code>fenc</code>, or <code>ft</code> respectively to have them printed. The file type in particular I can usually deduce from the file extension or contents, unless I&#39;ve explicitly set it myself.</p>
 
-<p>Similarly, I don&rsquo;t need the current line number to be in the statusline since it&rsquo;s already in the number line on the left which I always have visible due to <code>relativenumber</code>. This has the effect of numbering the current line as line 0. Setting <code>number</code> as well changes this so that the current line is numbered with the actual, absolute line number.</p>
+<p>Similarly, I don&#39;t need the current line number to be in the statusline since it&#39;s already in the number line on the left which I always have visible due to <code>relativenumber</code>. This has the effect of numbering the current line as line 0. Setting <code>number</code> as well changes this so that the current line is numbered with the actual, absolute line number.</p>
 
-<p>Finally, I&rsquo;ve rarely cared to know how far I am in the file, but I admit that sometimes it&rsquo;s useful to get an idea of how much more of the file there is, usually in something like a configuration file. For the rare occasion in which this is useful, this information is a simple Ctrl-G away.</p>
+<p>Finally, I&#39;ve rarely cared to know how far I am in the file, but I admit that sometimes it&#39;s useful to get an idea of how much more of the file there is, usually in something like a configuration file. For the rare occasion in which this is useful, this information is a simple Ctrl-G away.</p>
 <h2 id="signal">
 <span class="hash">#</span>
 <a href="#signal" class="header-link">Signal</a>
 </h2>
 <p>After taking all of this away, what remains is the file name, column number, git branch, and status indicators for whether or not the file is modified, read-only, or in paste mode.</p>
 
-<p>The column number has become indispensable for those language compilers/interpreters that output the column number on which an error was found, such as Haskell&rsquo;s GHC. In fact, I&rsquo;m now constantly annoyed by those that don&rsquo;t do this. Given an error on line 30 column 24, I go to the line number with <code>:30</code> and the column with <code>24|</code> and I&rsquo;m instantly at the problem location.</p>
+<p>The column number has become indispensable for those language compilers/interpreters that output the column number on which an error was found, such as Haskell&#39;s GHC. In fact, I&#39;m now constantly annoyed by those that don&#39;t do this. Given an error on line 30 column 24, I go to the line number with <code>:30</code> and the column with <code>24|</code> and I&#39;m instantly at the problem location.</p>
 
 <p>The file name is of course useful, specifically shown relative to the current working directory. The git branch is also useful and provided by the <a href="https://github.com/tpope/vim-fugitive">fugitive</a> plugin.</p>
 
 <p>Finally, a select few markers are very useful, such as whether or not the file has been modified since the last write, if a file is read-only, and if one is in paste mode.</p>
 
-<p>After removing what I didn&rsquo;t need, I ended up with this very customized airline installation, where the number on the right side is the column number:</p>
+<p>After removing what I didn&#39;t need, I ended up with this very customized airline installation, where the number on the right side is the column number:</p>
 
 <p><img src="/images/posts/a-simpler-vim-statusline/airline.png" class="center"></p>
 <h2 id="redesign">
 <span class="hash">#</span>
 <a href="#redesign" class="header-link">Redesign</a>
 </h2>
-<p>This statusline was fine, but I couldn&rsquo;t shake the thought that it felt out of place with those colors and arrows; it felt overdone. I ended up commenting out my airline configuration&mdash;which was <a href="https://github.com/blaenk/dots/blob/275b3b40fa0c57f1b48b5ba59b9ecbc00cddf866/vim/vimrc.ln#L80-L202">already pretty long</a>&mdash;and attempted to create a statusline from scratch with the goal of simplicity. I ended up with this, where the number on the left under the number line is the column number:</p>
+<p>This statusline was fine, but I couldn&#39;t shake the thought that it felt out of place with those colors and arrows; it felt overdone. I ended up commenting out my airline configuration---which was <a href="https://github.com/blaenk/dots/blob/275b3b40fa0c57f1b48b5ba59b9ecbc00cddf866/vim/vimrc.ln#L80-L202">already pretty long</a>---and attempted to create a statusline from scratch with the goal of simplicity. I ended up with this, where the number on the left under the number line is the column number:</p>
 
 <p><img src="/images/posts/a-simpler-vim-statusline/regular.png" class="center"></p>
 
@@ -138,7 +140,7 @@
 
 <p><img src="/images/posts/a-simpler-vim-statusline/regular-inactive.png" class="center"></p>
 
-<p>This feature isn&rsquo;t built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refresh every window&rsquo;s statusline:</p>
+<p>This feature isn&#39;t built into Vim, but it can be emulated by defining Vim auto commands on window focus events which refresh every window&#39;s statusline:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-vim"><span class="k">function</span><span class="p">!</span> s:RefreshStatus<span class="p">()</span>
@@ -157,14 +159,14 @@ augroup END
 <pre>
 <code class="highlight language-vim"><span class="k">let</span> active <span class="p">=</span> <span class="k">a</span>:winnum <span class="p">==</span> winnr<span class="p">()</span>
 </code></pre></figure>
-<p>I set the statusline using the <code>%!SomeFunc()</code> syntax so that the result of the function is the value that&rsquo;s interpreted to construct the statusline. One problem is that when done this way, the function is evaluated in the context of the currently focused window and buffer, so if you use the value of <code>&amp;modified</code> in your statusline somehow, and you have various windows but only the currently focused one is modified, all of the other windows will show the same modified marker, because the query as to whether or not they&rsquo;re modified was done within the context of the focused window.</p>
+<p>I set the statusline using the <code>%!SomeFunc()</code> syntax so that the result of the function is the value that&#39;s interpreted to construct the statusline. One problem is that when done this way, the function is evaluated in the context of the currently focused window and buffer, so if you use the value of <code>&amp;modified</code> in your statusline somehow, and you have various windows but only the currently focused one is modified, all of the other windows will show the same modified marker, because the query as to whether or not they&#39;re modified was done within the context of the focused window.</p>
 
 <p>The documentation presented the solution to this problem:</p>
 
 <blockquote>
-<p>Note that the &ldquo;<code>%!</code>&ldquo; expression is evaluated in the context of the current window and buffer, while <code>%{}</code> items are evaluated in the context of the window that the statusline belongs to.</p>
+<p>Note that the &quot;<code>%!</code>&quot; expression is evaluated in the context of the current window and buffer, while <code>%{}</code> items are evaluated in the context of the window that the statusline belongs to.</p>
 
-<p><cite><strong>Vim 7.4&rsquo;s</strong> <a href="http://vimhelp.appspot.com/options.txt.html#%27statusline%27">documentation</a></cite></p>
+<p><cite><strong>Vim 7.4&#39;s</strong> <a href="http://vimhelp.appspot.com/options.txt.html#%27statusline%27">documentation</a></cite></p>
 </blockquote>
 
 <p>This means that if we want to perform behavior specific to the window or buffer for which the statusline is being created, we should wrap that in a <code>%{}</code> expression block:</p>
@@ -172,43 +174,43 @@ augroup END
 <pre>
 <code class="highlight language-vim"><span class="k">let</span> stat .<span class="p">=</span> <span class="s2">&quot;%{&amp;modified ? &#39; +&#39; : &#39;&#39;}&quot;</span>
 </code></pre></figure>
-<p>Defining a function to construct the statusline isn&rsquo;t as complicated as it may seem. Once the boilerplate is defined, it&rsquo;s a very simple way of constructing a statusline, and in my opinion more <a href="https://github.com/blaenk/dots/blob/dfb34f1ad78f5aa25bc486d3c14c9a0ef24094bd/vim/.vimrc#L168">organized and manageable</a> than typical, <a href="http://stackoverflow.com/a/5380230/101090">densely packed</a> statusline declarations. For example, here&rsquo;s the code for showing the file-modified marker, where <code>Color</code> is a helper function that conditionally colors the passed content based on whether or not the window is active:</p>
+<p>Defining a function to construct the statusline isn&#39;t as complicated as it may seem. Once the boilerplate is defined, it&#39;s a very simple way of constructing a statusline, and in my opinion more <a href="https://github.com/blaenk/dots/blob/dfb34f1ad78f5aa25bc486d3c14c9a0ef24094bd/vim/.vimrc#L168">organized and manageable</a> than typical, <a href="http://stackoverflow.com/a/5380230/101090">densely packed</a> statusline declarations. For example, here&#39;s the code for showing the file-modified marker, where <code>Color</code> is a helper function that conditionally colors the passed content based on whether or not the window is active:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-vim"><span class="k">let</span> stat .<span class="p">=</span> Color<span class="p">(</span>isactive<span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="s2">&quot;%{&amp;modified ? &#39; +&#39; : &#39;&#39;}&quot;</span><span class="p">)</span>
 </code></pre></figure>
-<p>Here&rsquo;s what the modified, paste mode, and read-only markers look like:</p>
+<p>Here&#39;s what the modified, paste mode, and read-only markers look like:</p>
 
 <p><img src="/images/posts/a-simpler-vim-statusline/regular-modified.png" class="center">
 <img src="/images/posts/a-simpler-vim-statusline/regular-paste.png" class="center">
 <img src="/images/posts/a-simpler-vim-statusline/regular-readonly.png" class="center"></p>
 
-<p>I didn&rsquo;t want the read-only marker to be <code>RO</code>, so instead I got the inspiration from when one does <code>sudo !!</code> to re-do the previous command with <code>sudo</code>. In fact, I have a mapping for this that I found online, <code>w!!</code>:</p>
+<p>I didn&#39;t want the read-only marker to be <code>RO</code>, so instead I got the inspiration from when one does <code>sudo !!</code> to re-do the previous command with <code>sudo</code>. In fact, I have a mapping for this that I found online, <code>w!!</code>:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-vim">cmap <span class="k">w</span><span class="p">!!</span> %<span class="p">!</span>sudo tee <span class="p">&gt;</span> <span class="sr">/dev/</span>null %
 </code></pre></figure>
-<p>I finally had to redo the CtrlP theme from scratch as well, because I had previously customized it through airline&rsquo;s API. This turned out to be pretty straightforward, since CtrlP itself exposes a function for this. With airline, I had this, which I specifically made to look like how it looked in powerline by default:</p>
+<p>I finally had to redo the CtrlP theme from scratch as well, because I had previously customized it through airline&#39;s API. This turned out to be pretty straightforward, since CtrlP itself exposes a function for this. With airline, I had this, which I specifically made to look like how it looked in powerline by default:</p>
 
 <p><img src="/images/posts/a-simpler-vim-statusline/airline-ctrlp.png" class="center"></p>
 
-<p>This actually looked pretty nice, in my opinion, but this look doesn&rsquo;t mesh well with what I&rsquo;ve created so far. I completely got rid of everything but the current mode and search scope path. Whether regex is turned on and/or if searching by file name is reflected in the CtrlP prompt already:</p>
+<p>This actually looked pretty nice, in my opinion, but this look doesn&#39;t mesh well with what I&#39;ve created so far. I completely got rid of everything but the current mode and search scope path. Whether regex is turned on and/or if searching by file name is reflected in the CtrlP prompt already:</p>
 
 <p><img src="/images/posts/a-simpler-vim-statusline/regular-ctrlp.png" class="center"></p>
 <h2 id="conclusion">
 <span class="hash">#</span>
 <a href="#conclusion" class="header-link">Conclusion</a>
 </h2>
-<p>Like I said when I started out this post: there&rsquo;s nothing wrong with using one of these statusline plugins. They certainly look nice and seem like a step up from the default statusline. It&rsquo;s just that I took a step back and realized I didn&rsquo;t need the things they offered, and they didn&rsquo;t look as great as I had originally thought, back when I compared it to a default statusline.</p>
+<p>Like I said when I started out this post: there&#39;s nothing wrong with using one of these statusline plugins. They certainly look nice and seem like a step up from the default statusline. It&#39;s just that I took a step back and realized I didn&#39;t need the things they offered, and they didn&#39;t look as great as I had originally thought, back when I compared it to a default statusline.</p>
 
-<p>For as much as some of these plugins claim to be &ldquo;light,&rdquo; it&rsquo;s generally difficult to be lighter than using no plugin at all <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. It&rsquo;s not that this extra code will make your Vim unusably slow with today&rsquo;s hardware, but that it seems pointless to carry around if you&rsquo;re not even using most of it, especially considering how simple it seems to be to define your own statusline, and&mdash;if you care to&mdash;personalize your setup.</p>
+<p>For as much as some of these plugins claim to be &quot;light,&quot; it&#39;s generally difficult to be lighter than using no plugin at all <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. It&#39;s not that this extra code will make your Vim unusably slow with today&#39;s hardware, but that it seems pointless to carry around if you&#39;re not even using most of it, especially considering how simple it seems to be to define your own statusline, and---if you care to---personalize your setup.</p>
 
 <div class="footnotes">
 <hr>
 <ol>
 
 <li id="fn1">
-<p><a href="https://github.com/itchyny/lightline.vim">lightline</a> is one statusline plugin I know of&mdash;but haven&rsquo;t used&mdash;whose philosophy it is to have the user define as much of the statusline as possible in the hopes of remaining light. I haven&rsquo;t used it, so I can&rsquo;t comment on it, but in my case defining my own from scratch was simple enough already. That said, this might be useful for others who find themselves in a similar position but who would rather use something maintained by someone else.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+<p><a href="https://github.com/itchyny/lightline.vim">lightline</a> is one statusline plugin I know of---but haven&#39;t used---whose philosophy it is to have the user define as much of the statusline as possible in the hopes of remaining light. I haven&#39;t used it, so I can&#39;t comment on it, but in my case defining my own from scratch was simple enough already. That said, this might be useful for others who find themselves in a similar position but who would rather use something maintained by someone else.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
 </li>
 
 </ol>
@@ -269,7 +271,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -325,10 +327,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -79,9 +81,9 @@
 <span class="hash">#</span>
 <a href="#syncplay" class="header-link">Syncplay</a>
 </h3>
-<p>One of my most used programs is a little program called <a href="http://syncplay.pl">syncplay</a> which works with different media players&mdash;I use <a href="http://mpc-hc.org">MPC-HC</a> on Windows and <a href="http://mpv.io">mpv</a> on Linux&mdash;and makes it easy to watch movies and shows with others, automatically synchronized, so that regardless of whether someone pauses, seeks, etc., everyone else&rsquo;s position will be synchronized. This allows me to watch movies and shows regularly with distant friends and family.</p>
+<p>One of my most used programs is a little program called <a href="http://syncplay.pl">syncplay</a> which works with different media players---I use <a href="http://mpc-hc.org">MPC-HC</a> on Windows and <a href="http://mpv.io">mpv</a> on Linux---and makes it easy to watch movies and shows with others, automatically synchronized, so that regardless of whether someone pauses, seeks, etc., everyone else&#39;s position will be synchronized. This allows me to watch movies and shows regularly with distant friends and family.</p>
 
-<p>There exist user friendly installers for Windows, but Linux' side of things consist of a typical Makefile, so I created archlinux packages for the release and <a href="https://aur.archlinux.org/packages/syncplay-git/">git</a> versions of syncplay. This required some <a href="https://github.com/Uriziel/syncplay/pull/30">modifications</a> to syncplay which were merged upstream. Furthermore, archlinux uses Python 3 by default, which syncplay can&rsquo;t use because of its dependency on twisted, which as far as I know is still not Python 3 compatible. So the package required some automated replacing of the shebang from <code>python</code> to <code>python2</code>.</p>
+<p>There exist user friendly installers for Windows, but Linux&#39; side of things consist of a typical Makefile, so I created archlinux packages for the release and <a href="https://aur.archlinux.org/packages/syncplay-git/">git</a> versions of syncplay. This required some <a href="https://github.com/Uriziel/syncplay/pull/30">modifications</a> to syncplay which were merged upstream. Furthermore, archlinux uses Python 3 by default, which syncplay can&#39;t use because of its dependency on twisted, which as far as I know is still not Python 3 compatible. So the package required some automated replacing of the shebang from <code>python</code> to <code>python2</code>.</p>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> August 27, 2015</div>
@@ -125,7 +127,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -154,10 +156,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

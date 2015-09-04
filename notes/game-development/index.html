@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -148,9 +150,9 @@
 </ol>
 </nav>
 
-<p>I&rsquo;ve been wanting to create a very specific kind of game for a few years now. Game Development was <em>one</em> of the reasons why I initially became interested in software development, but I quickly lost interest in it relative to other areas that piqued my interests. Still, I was always interested in Game Development, particularly with how it seemed to me like a tour de force in software development, requiring expertise in a variety of areas in order to produce a working game.</p>
+<p>I&#39;ve been wanting to create a very specific kind of game for a few years now. Game Development was <em>one</em> of the reasons why I initially became interested in software development, but I quickly lost interest in it relative to other areas that piqued my interests. Still, I was always interested in Game Development, particularly with how it seemed to me like a tour de force in software development, requiring expertise in a variety of areas in order to produce a working game.</p>
 
-<p>Over the years I&rsquo;ve tried to learn about various different areas of software development, as orthogonal as possible, to gain as much perspective and become more well rounded. These new things I&rsquo;ve learned have provided me with insight and a &ldquo;bigger picture&rdquo; with regards to game development, to the point where I feel more strongly than before that I should at least attempt to create the game I&rsquo;ve had in mind. For preparation, last year I read a book on <a href="/reads/#3dmath">3D Math</a> that solely concerned itself with the math, and one on <a href="/reads/#d3d11">Direct3D 11</a>.</p>
+<p>Over the years I&#39;ve tried to learn about various different areas of software development, as orthogonal as possible, to gain as much perspective and become more well rounded. These new things I&#39;ve learned have provided me with insight and a &quot;bigger picture&quot; with regards to game development, to the point where I feel more strongly than before that I should at least attempt to create the game I&#39;ve had in mind. For preparation, last year I read a book on <a href="/reads/#3dmath">3D Math</a> that solely concerned itself with the math, and one on <a href="/reads/#d3d11">Direct3D 11</a>.</p>
 <h1 id="architecture">
 <span class="hash">#</span>
 <a href="#architecture" class="header-link">Architecture</a>
@@ -158,15 +160,15 @@
 <span class="hash">#</span>
 <a href="#new-approach" class="header-link">New Approach</a>
 </h2>
-<p>I&rsquo;m taking a step back from the overly general architecture discussed in the following sections, consisting of &ldquo;components everywhere&quot; and a very loose, omnipresent event system that sacrificed the type system. I originally chose to create my engine from scratch because I wanted to use this as a learning experience, but also to have absolute control over what I want to create. However, I&rsquo;m well aware of the countless games that roll their own engine only to still be working on the engine for years with no game to show for it. I don&rsquo;t want that to happen here.</p>
+<p>I&#39;m taking a step back from the overly general architecture discussed in the following sections, consisting of &quot;components everywhere&quot; and a very loose, omnipresent event system that sacrificed the type system. I originally chose to create my engine from scratch because I wanted to use this as a learning experience, but also to have absolute control over what I want to create. However, I&#39;m well aware of the countless games that roll their own engine only to still be working on the engine for years with no game to show for it. I don&#39;t want that to happen here.</p>
 
-<p>My opinion is that this tends to happen because people want to make their engine be everything: fully cross-platform and fully general so that it can scale from a mobile F2P game to a next-gen racing game and further still to an FPS. I&rsquo;m reminded of the days of the Quake 3 engine, which&mdash;despite <a href="/work/#the-instagib-project">my limited experience with it</a>&mdash;didn&rsquo;t seem to strive to be everything for everyone, and yet many people adapted it to accommodate all manner of different game types.</p>
+<p>My opinion is that this tends to happen because people want to make their engine be everything: fully cross-platform and fully general so that it can scale from a mobile F2P game to a next-gen racing game and further still to an FPS. I&#39;m reminded of the days of the Quake 3 engine, which---despite <a href="/work/#the-instagib-project">my limited experience with it</a>---didn&#39;t seem to strive to be everything for everyone, and yet many people adapted it to accommodate all manner of different game types.</p>
 
-<p>There is clearly a balance between creating a game and creating a general engine. The end goal is the game, but it&rsquo;s not necessary to completely sacrifice good software architecture practices, specifically those associated with game engine design (e.g. components, event systems, etc.).</p>
+<p>There is clearly a balance between creating a game and creating a general engine. The end goal is the game, but it&#39;s not necessary to completely sacrifice good software architecture practices, specifically those associated with game engine design (e.g. components, event systems, etc.).</p>
 
-<p>The approach I&rsquo;m going to try now is to focus on creating a game, leaning towards a game-specific engine, while being sensitive to potential refactorings. These potential refactorings will be a lot clearer to me than to write them from the beginning, since I will have a concrete example of exactly where and why they might be useful.</p>
+<p>The approach I&#39;m going to try now is to focus on creating a game, leaning towards a game-specific engine, while being sensitive to potential refactorings. These potential refactorings will be a lot clearer to me than to write them from the beginning, since I will have a concrete example of exactly where and why they might be useful.</p>
 
-<p>Anyone who has ever tried to learn anything about game engine design is familiar with the ever-present author disclaimer that goes something like &ldquo;keep in mind this works in our particular engine, but circumstances in your engine may differ.&ldquo; Being new to game engine design, the task of designing a well architected, flexible engine from the start seems too open-ended. That&rsquo;s why I&rsquo;m taking this approach, in order to help guide the process.</p>
+<p>Anyone who has ever tried to learn anything about game engine design is familiar with the ever-present author disclaimer that goes something like &quot;keep in mind this works in our particular engine, but circumstances in your engine may differ.&quot; Being new to game engine design, the task of designing a well architected, flexible engine from the start seems too open-ended. That&#39;s why I&#39;m taking this approach, in order to help guide the process.</p>
 <h2 id="components">
 <span class="hash">#</span>
 <a href="#components" class="header-link">Components</a>
@@ -191,11 +193,11 @@
 
 <p>The <code>scope</code> consists of the system the event is meant for. For example, a <code>Component</code> event would be <code>Component</code>, whereas an event meant for the renderer would be <code>Renderer</code>. This allows fast forwarding of events through the chain of responsibility.</p>
 
-<p>The <code>subject</code> itself is the event&rsquo;s identifier, for example, &ldquo;player died.&rdquo; A particular derived <code>Event</code> would have appropriate data for this event which might be necessary for its handling.</p>
+<p>The <code>subject</code> itself is the event&#39;s identifier, for example, &quot;player died.&quot; A particular derived <code>Event</code> would have appropriate data for this event which might be necessary for its handling.</p>
 
 <p>To forgo Run-Time Type Information (RTTI) and its associated performance cost, some sort of lookup table is used to determine the type of message to then <code>static_cast</code> it to the appropriate event, in order to allow simply having an <code>OnEvent</code>-type function with a base <code>Event</code> parameter.</p>
 
-<p>For example (tentative), when a <code>MeshComponent</code> is added to an <code>Actor</code>, it&rsquo;ll want to register itself with the <code>Renderer</code> by sending a <code>MeshAdded</code> event which contains a <code>shared_ptr</code> to the <code>MeshComponent</code>. The <code>MeshAdded</code> event might look something like this:</p>
+<p>For example (tentative), when a <code>MeshComponent</code> is added to an <code>Actor</code>, it&#39;ll want to register itself with the <code>Renderer</code> by sending a <code>MeshAdded</code> event which contains a <code>shared_ptr</code> to the <code>MeshComponent</code>. The <code>MeshAdded</code> event might look something like this:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="k">class</span> <span class="nc">MeshAdded</span> <span class="o">:</span> <span class="k">public</span> <span class="n">RendererEvent</span> <span class="p">{</span>
@@ -210,7 +212,7 @@
 </code></pre></figure>
 <p>When a <code>MeshComponent</code> is added to an <code>Actor</code>, it sends this <code>MeshAdded</code> event to the <code>Actor</code> because it is the nearest possible handler in the chain of responsibility. The <code>Actor</code> recognizes that it is out of its scope, so it passes it up the chain of responsibility to the <code>Game</code>, which does the same. When the event reaches the <code>Engine</code>, it forwards the event to the <code>Renderer</code> component which finally handles it appropriately. The <code>Renderer</code> handles it by adding the mesh to its list of meshes to be rendered on the next frame. When the <code>MeshComponent</code> is removed from the <code>Actor</code>, it sends an event so that the mesh is removed from the list.</p>
 
-<p>The per-event <code>scope</code> allows the chain of responsibility to fast-forward events which are out of the current handler system&rsquo;s scope. For example, in the example above, as soon as the <code>Actor</code> and <code>Game</code> systems noticed the event of scope <code>Renderer</code>, it didn&rsquo;t bother to see if any of its registered handlers could handle the event and instead forwarded it up the chain as soon as possible.</p>
+<p>The per-event <code>scope</code> allows the chain of responsibility to fast-forward events which are out of the current handler system&#39;s scope. For example, in the example above, as soon as the <code>Actor</code> and <code>Game</code> systems noticed the event of scope <code>Renderer</code>, it didn&#39;t bother to see if any of its registered handlers could handle the event and instead forwarded it up the chain as soon as possible.</p>
 
 <p>Similarly, it could be beneficial for each system to allow components to register interest in events. With such a system, if there are 100 <code>Actors</code> but only 2 of them are interested in a particular event, only those 2 interested <code>Actors</code> would be sent the event instead sending the event to all 100 <code>Actors</code> to determine which are capable of handling it. This can be accomplished by a map from event subject to a list of interested handlers:</p>
 <figure class="codeblock">
@@ -248,7 +250,7 @@
 <span class="hash">#</span>
 <a href="#optimizations" class="header-link">Optimizations</a>
 </h2>
-<p><em>Object state caching</em> entails an object keeping a &ldquo;double buffer&rdquo; of its state: one for the previously calculated state, and another for the to-be calculated state. This helps, but doesn&rsquo;t completely solve, the problem of one-frame-off lag. It also allows for easy interpolation between two states for easy feeding into an interpolating render function. This only guarantees that the previous frame&rsquo;s state is fully consistent, but not the current state.</p>
+<p><em>Object state caching</em> entails an object keeping a &quot;double buffer&quot; of its state: one for the previously calculated state, and another for the to-be calculated state. This helps, but doesn&#39;t completely solve, the problem of one-frame-off lag. It also allows for easy interpolation between two states for easy feeding into an interpolating render function. This only guarantees that the previous frame&#39;s state is fully consistent, but not the current state.</p>
 
 <ul>
 <li><a href="http://stackoverflow.com/questions/17044296/quaternion-rotation-without-euler-angles/17047931#17047931">quaternion rotation without euler angles</a></li>
@@ -277,12 +279,12 @@
 <span class="hash">#</span>
 <a href="#game-loop" class="header-link">Game Loop</a>
 </h1>
-<p>The game loop isn&rsquo;t as cut and dry as I used to think. There are a variety of considerations:</p>
+<p>The game loop isn&#39;t as cut and dry as I used to think. There are a variety of considerations:</p>
 
 <ul>
 <li><a href="http://gameprogrammingpatterns.com/game-loop.html">Game Loop</a></li>
 <li><a href="http://gafferongames.com/game-physics/fix-your-timestep/">Fix your timestep</a></li>
-<li><a href="http://www.koonsolo.com/news/dewitters-gameloop/">deWitter&rsquo;s game loop</a></li>
+<li><a href="http://www.koonsolo.com/news/dewitters-gameloop/">deWitter&#39;s game loop</a></li>
 <li><a href="http://gamedev.stackexchange.com/questions/1589/fixed-time-step-vs-variable-time-step">Fixed time step vs variable time step</a></li>
 <li><a href="http://gamesfromwithin.com/casey-and-the-clearly-deterministic-contraptions">Casey and the clearly deterministic contraptions</a></li>
 </ul>
@@ -302,7 +304,7 @@
 
 <p>The rendering phase can then be divided into visibility determination and actual rendering. The octree is traversed to collect visible objects. These objects are added to specific buckets pertaining to their shader type, and during rendering these buckets are rendered sequentially to avoid unnecessary/duplicate state changes.</p>
 
-<p>The engine I&rsquo;m creating so far consists of actors that are component-based. I feel that perhaps it would be possible to define a mesh component, for example, that contains relevant information. The actors can use the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">visitor pattern</a> so that, on traversal of the scene graph, the renderer calls the actor&rsquo;s render method which fetches any renderable components and delegates the rendering back to the renderer. <strong>TODO</strong>: Is that a good idea? What would constitute a &ldquo;renderable&rdquo; component? Enforcing this in static code would seemingly do away with the benefits of run-time composition?</p>
+<p>The engine I&#39;m creating so far consists of actors that are component-based. I feel that perhaps it would be possible to define a mesh component, for example, that contains relevant information. The actors can use the <a href="http://en.wikipedia.org/wiki/Visitor_pattern">visitor pattern</a> so that, on traversal of the scene graph, the renderer calls the actor&#39;s render method which fetches any renderable components and delegates the rendering back to the renderer. <strong>TODO</strong>: Is that a good idea? What would constitute a &quot;renderable&quot; component? Enforcing this in static code would seemingly do away with the benefits of run-time composition?</p>
 <h2 id="major-notation">
 <span class="hash">#</span>
 <a href="#major-notation" class="header-link">Major Notation</a>
@@ -312,30 +314,30 @@
 <span class="hash">#</span>
 <a href="#handedness" class="header-link">Handedness</a>
 </h3>
-<p>The handedness of a system has an effect on the directions of the positive \(z\)-axis, positive rotation, and the cross-product. These can easily be determined by using the <a href="http://en.wikipedia.org/wiki/Right-hand_rule">right-hand rule</a> or left-hand rule. It&rsquo;s important to realize that this has <em>nothing</em> to do with row or column-major notation.</p>
+<p>The handedness of a system has an effect on the directions of the positive <script type="math/tex">z</script>-axis, positive rotation, and the cross-product. These can easily be determined by using the <a href="http://en.wikipedia.org/wiki/Right-hand_rule">right-hand rule</a> or left-hand rule. It&#39;s important to realize that this has <em>nothing</em> to do with row or column-major notation.</p>
 <h3 id="representation">
 <span class="hash">#</span>
 <a href="#representation" class="header-link">Representation</a>
 </h3>
-<p>Row-major notation means that when indexing or denoting a matrix' size, the row is written first, and vice versa with column-major notation. Given a row-major matrix \(R\), the column-major matrix \(C\) is derived by deriving the transpose \(R^{T}\):</p>
+<p>Row-major notation means that when indexing or denoting a matrix&#39; size, the row is written first, and vice versa with column-major notation. Given a row-major matrix <script type="math/tex">R</script>, the column-major matrix <script type="math/tex">C</script> is derived by deriving the transpose <script type="math/tex">R^{T}</script>:</p>
 
-<p>\[
+<p><script type="math/tex; mode=display">
 \begin{align}
-R &amp;=
+R &=
 \begin{bmatrix}
-  1 &amp; 2 &amp; 3 \\
-  4 &amp; 5 &amp; 6
+  1 & 2 & 3 \\
+  4 & 5 & 6
 \end{bmatrix}
 \\
 \\
-C = R^T &amp;=
+C = R^T &=
 \begin{bmatrix}
-  1 &amp; 4 \\
-  2 &amp; 5 \\
-  3 &amp; 6
+  1 & 4 \\
+  2 & 5 \\
+  3 & 6
 \end{bmatrix}
 \end{align}
-\]</p>
+</script></p>
 <h3 id="storage">
 <span class="hash">#</span>
 <a href="#storage" class="header-link">Storage</a>
@@ -347,18 +349,18 @@ C = R^T &amp;=
 </h3>
 <p>When multiplying vectors with matrices, row-major notation requires pre-multiplication; the vector must appear to the left of the matrix. Column-major notation requires post-multiplication. This has the effect that the row-major, pre-multiplication transformation:</p>
 
-<p>\[ vMVP \]</p>
+<p><script type="math/tex; mode=display"> vMVP </script></p>
 
 <p>Must be expressed as follows in column-major notation:</p>
 
-<p>\[ M^T V^T P^T v^T \]</p>
+<p><script type="math/tex; mode=display"> M^T V^T P^T v^T </script></p>
 
 <p>However, row-major and column-major matrices are already transposes of each other, and as a result they are <a href="#storage">stored</a> the same way in memory. This means that no actual transposing has to take place!</p>
 <h1 id="voxel-engine">
 <span class="hash">#</span>
 <a href="#voxel-engine" class="header-link">Voxel Engine</a>
 </h1>
-<p>I&rsquo;d like to have voxel-based terrain (no, it&rsquo;s not a minecraft clone) so it&rsquo;s important to keep in mind that there are a variety of efficiency questions involved in creating a robust engine for this kind of world.</p>
+<p>I&#39;d like to have voxel-based terrain (no, it&#39;s not a minecraft clone) so it&#39;s important to keep in mind that there are a variety of efficiency questions involved in creating a robust engine for this kind of world.</p>
 <h2 id="chunks">
 <span class="hash">#</span>
 <a href="#chunks" class="header-link">Chunks</a>
@@ -367,24 +369,24 @@ C = R^T &amp;=
 
 <p>A chunk may be represented by a volumetric grid such as a 3D array, optimized into a flat slab of memory indexed with the formula:</p>
 
-<p>\[ \text {chunk}[x + (y * \text {size}_x) + (z * \text {size}_x * \text {size}_y)] \]</p>
+<p><script type="math/tex; mode=display"> \text {chunk}[x + (y * \text {size}_x) + (z * \text {size}_x * \text {size}_y)] </script></p>
 
-<p>The problem with this is that a lot of space is wasted for empty cells. A 16x16x16 chunk size where every cell conveys its information within one byte of data yields 4096 bytes, or 4 kilobytes. If every single cell in the chunk is empty except for one, then 4095 bytes are being wasted. That&rsquo;s 99.9% of the space allocated for the chunk.</p>
+<p>The problem with this is that a lot of space is wasted for empty cells. A 16x16x16 chunk size where every cell conveys its information within one byte of data yields 4096 bytes, or 4 kilobytes. If every single cell in the chunk is empty except for one, then 4095 bytes are being wasted. That&#39;s 99.9% of the space allocated for the chunk.</p>
 
 <p>One solution to this is to use something similar to a <a href="http://en.wikipedia.org/wiki/Sparse_matrix">sparse matrix</a>. Specifically, the chunk can be represented by a hash table keyed by tuples corresponding to the coordinates within the chunk. This way all cells are implicitly empty cells unless present in the hash table. During the mesh construction phase, the hash table can be iterated for every non-empty cell. Similarly, the hash table can provide amortized constant access to specific cells in the chunk.</p>
 
-<p>Another common solution to this is to use <a href="http://en.wikipedia.org/wiki/Run-length_encoding">Run-Length Encoding</a> compression on the volumetric grid. However, this probably doesn&rsquo;t have the same near-constant access benefit as hash tables.</p>
+<p>Another common solution to this is to use <a href="http://en.wikipedia.org/wiki/Run-length_encoding">Run-Length Encoding</a> compression on the volumetric grid. However, this probably doesn&#39;t have the same near-constant access benefit as hash tables.</p>
 <h2 id="overdraw">
 <span class="hash">#</span>
 <a href="#overdraw" class="header-link">Overdraw</a>
 </h2>
 <p>One problem with voxel terrain is that it easily allows for overdraw, where non-visible geometry is passed to the GPU for rendering. Non-visible geometry in this case refers to the traditional cases of geometry being outside of the view frustum and geometry occluded by other geometry.</p>
 
-<p>In voxel engines, however, the second case&mdash;occluded geometry&mdash;can also be very important with regards to inter-chunk, non-visible faces. That is, given a 2x2x2 chunk, there is no need to render the faces that intersect the chunk, i.e. the inner faces. The natural solution to this is to <a href="http://0fps.wordpress.com/2012/06/30/meshing-in-a-minecraft-game/">cull the interior faces</a> by querying the neighbors during chunk geometry generation.</p>
+<p>In voxel engines, however, the second case---occluded geometry---can also be very important with regards to inter-chunk, non-visible faces. That is, given a 2x2x2 chunk, there is no need to render the faces that intersect the chunk, i.e. the inner faces. The natural solution to this is to <a href="http://0fps.wordpress.com/2012/06/30/meshing-in-a-minecraft-game/">cull the interior faces</a> by querying the neighbors during chunk geometry generation.</p>
 
 <p>A further optimization is back-face culling. This can be done on the GPU based on the ordering of the vertices, but it can also be done on the CPU thereby avoiding the unnecessary transfer of the data. A way to accomplish this is to have separate vertex buffers for the different sides of the chunk. Then, depending on the position of the camera, only sending those buffers that are visible.</p>
 
-<p>Another optimization yet is a higher-level one that would occur before most other ones is known as frustum culling: disregarding geometry that isn&rsquo;t within the camera&rsquo;s <a href="http://en.wikipedia.org/wiki/Viewing_frustum">view frustum</a>. This would be performed at chunk-level granularity. An octree can be used to quickly determine chunks that are visible by the camera.</p>
+<p>Another optimization yet is a higher-level one that would occur before most other ones is known as frustum culling: disregarding geometry that isn&#39;t within the camera&#39;s <a href="http://en.wikipedia.org/wiki/Viewing_frustum">view frustum</a>. This would be performed at chunk-level granularity. An octree can be used to quickly determine chunks that are visible by the camera.</p>
 
 <ul>
 <li><a href="http://bytebash.com/2012/03/opengl-volume-rendering/">OpenGL Volume Rendering</a>: very nice modern C++11</li>
@@ -401,7 +403,7 @@ C = R^T &amp;=
 <li><a href="http://0fps.wordpress.com/2012/07/10/smooth-voxel-terrain-part-1/">Smooth Voxel Terrain</a></li>
 <li><a href="http://paulbourke.net/geometry/polygonise/">Polygonising a Scalar field</a></li>
 <li><a href="http://paulbourke.net/papers/triangulate/">Triangulation</a></li>
-<li><a href="http://www.youtube.com/watch?v=dTFkmfnkCfk">Minecraft from a Developer&rsquo;s Perspective</a></li>
+<li><a href="http://www.youtube.com/watch?v=dTFkmfnkCfk">Minecraft from a Developer&#39;s Perspective</a></li>
 <li><a href="http://gamedev.stackexchange.com/questions/3935/in-what-kind-of-variable-type-is-the-player-position-stored-on-a-mmorpg-such-as">In what kind of variable type is the player position stored on a MMORPG such as WoW?</a></li>
 <li><a href="http://scottbilas.com/games/dungeon-siege/">Dungeon Seige Publications</a></li>
 <li><a href="http://gamedev.stackexchange.com/questions/17171/for-voxel-rendering-what-is-more-efficient-pre-made-vbo-or-a-geometry-shader/17225#17225">For voxel rendering, what is more efficient: pre-made VBO or a geometry shader?</a></li>
@@ -452,8 +454,8 @@ C = R^T &amp;=
 <p>The <a href="http://wiki.libsdl.org/SDL_SetWindowFullscreen"><code>SDL_SetWindowFullscreen</code></a> function takes two parameters as is shown in the wiki page:</p>
 
 <ul>
-<li><code>SDL_WINDOW_FULLSCREEN</code>: simply sets the window, with the same display mode (res & rr), to be full screen</li>
-<li><code>SDL_WINDOW_FULLSCREEN_DESKTOP</code>: takes the desktop&rsquo;s display mode and fullscreens; very fast alt-tabbing since it doesn&rsquo;t require video mode change?</li>
+<li><code>SDL_WINDOW_FULLSCREEN</code>: simply sets the window, with the same display mode (res &amp; rr), to be full screen</li>
+<li><code>SDL_WINDOW_FULLSCREEN_DESKTOP</code>: takes the desktop&#39;s display mode and fullscreens; very fast alt-tabbing since it doesn&#39;t require video mode change?</li>
 </ul>
 
 <p>It seems that, to set a specific display mode, it should first be found by enumerating the display modes with <a href="http://wiki.libsdl.org/SDL_GetNumDisplayModes"><code>SDL_GetNumDisplayModes</code></a>, a specific one retrieved with <a href="http://wiki.libsdl.org/SDL_GetDisplayMode"><code>SDL_GetDisplayMode</code></a>, then set with <a href="http://wiki.libsdl.org/SDL_SetWindowDisplayMode"><code>SDL_SetWindowDisplayMode</code></a>, followed by a call to <code>SDL_SetWindowFullscreen</code> with the <code>SDL_WINDOW_FULLSCREEN</code> option to change the video mode to fullscreen.</p>
@@ -463,7 +465,7 @@ C = R^T &amp;=
 </h1>
 <ul>
 <li><a href="http://gameprogrammingpatterns.com/index.html">Design Patterns as they relate to Game Development</a></li>
-<li><a href="http://immersedcode.org/tags/opengl/">SDL & OpenGL</a></li>
+<li><a href="http://immersedcode.org/tags/opengl/">SDL &amp; OpenGL</a></li>
 </ul>
 </div>
   <div class="meta">
@@ -514,7 +516,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -543,10 +545,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

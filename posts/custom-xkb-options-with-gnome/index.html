@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,7 +77,7 @@
     
         <article class="post">
   <h2 class="title"><a href="/posts/custom-xkb-options-with-gnome"><span>Custom XKB Options with Gnome</span></a></h2>
-  <div class="entry-content"><p>As I&rsquo;ve <a href="/posts/xmonad-ignores-bindings/#media-keys">explained before</a>, I use a keyboard without media keys, so I rebind three otherwise-unused keys to act as my media keys. I accomplish this on Gnome by using a custom XKB option that I <a href="/posts/xmonad-ignores-bindings/#workaround">created</a>. I have to do this because the Gnome keyboard settings binder ignores the keys I want to bind for this particular purpose. I used to enable this XKB option by simply running a script at startup that enabled it, but I noticed that it was subject to either a race condition or a precedence issue. I&rsquo;m more convinced it was the latter, as if the option that I enabled was overridden by Gnome&rsquo;s own initialization of XKB. This suspicion seems to be confirmed by the Arch wiki page on <a href="https://wiki.archlinux.org/index.php/Keyboard_Configuration_in_Xorg">keyboard configuration</a>:</p>
+  <div class="entry-content"><p>As I&#39;ve <a href="/posts/xmonad-ignores-bindings/#media-keys">explained before</a>, I use a keyboard without media keys, so I rebind three otherwise-unused keys to act as my media keys. I accomplish this on Gnome by using a custom XKB option that I <a href="/posts/xmonad-ignores-bindings/#workaround">created</a>. I have to do this because the Gnome keyboard settings binder ignores the keys I want to bind for this particular purpose. I used to enable this XKB option by simply running a script at startup that enabled it, but I noticed that it was subject to either a race condition or a precedence issue. I&#39;m more convinced it was the latter, as if the option that I enabled was overridden by Gnome&#39;s own initialization of XKB. This suspicion seems to be confirmed by the Arch wiki page on <a href="https://wiki.archlinux.org/index.php/Keyboard_Configuration_in_Xorg">keyboard configuration</a>:</p>
 
 <blockquote>
 <p>This article describes low-level configuration using XKB which is effective in most cases, but some desktop environments like GNOME override it with its own settings.</p>
@@ -83,7 +85,7 @@
 <p><cite><strong>Arch Wiki</strong></cite></p>
 </blockquote>
 
-<p>As a result, I decided to look for a way to have my solution work alongside Gnome&rsquo;s initialization of XKB. There was <em>very</em> little information on Gnome&rsquo;s interaction with XKB short of reading Gnome&rsquo;s source, but after searching around for a long time, I found that there is indeed a dconf option hidden away at <span class="path">/org/gnome/desktop/input-sources/xkb-options</span>. Before I could use this though, I had to make my XKB option available system-wide.</p>
+<p>As a result, I decided to look for a way to have my solution work alongside Gnome&#39;s initialization of XKB. There was <em>very</em> little information on Gnome&#39;s interaction with XKB short of reading Gnome&#39;s source, but after searching around for a long time, I found that there is indeed a dconf option hidden away at <span class="path">/org/gnome/desktop/input-sources/xkb-options</span>. Before I could use this though, I had to make my XKB option available system-wide.</p>
 
 <p>First the symbol file has to be placed in the symbols directory <span class="path">/usr/share/X11/xkb/symbols</span>. This file simply binds the keys I want to use to the XF86 designated media keys. This way the Gnome binder will pick them up without complaining when I bind them to the volume keys, since it otherwise seems to prevent the binding of these very keys as they are. In other words, with this symbol file, RCTRL will be interpreted by the system as if I had pressed XF86AudioRaiseVolume, which is what an actual volume-up media key would yield:</p>
 <figure class="codeblock">
@@ -95,7 +97,7 @@ xkb_symbols "bottom_right" {
   key <RWIN> { [ XF86AudioMute ] };
 };
 </code></pre></figure>
-<p>Now an option has to be created for this symbol file and then listed in the system-wide options list for the rule set you&rsquo;re using, in my case evdev, at <span class="path">/usr/share/X11/xkb/rules/evdev</span>. Here, <code>volume_keys</code> corresponds to the filename of the symbol file, and <code>bottom_right</code> is the name I gave the group:</p>
+<p>Now an option has to be created for this symbol file and then listed in the system-wide options list for the rule set you&#39;re using, in my case evdev, at <span class="path">/usr/share/X11/xkb/rules/evdev</span>. Here, <code>volume_keys</code> corresponds to the filename of the symbol file, and <code>bottom_right</code> is the name I gave the group:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">volume_keys:bottom_right = +volume_keys(bottom_right)
@@ -105,11 +107,11 @@ xkb_symbols "bottom_right" {
 <pre>
 <code class="highlight language-text">['volume_keys:bottom_right', 'compose:ralt']
 </code></pre></figure>
-<p>You can now go ahead and bind the appropriate keys to volume functions inside Gnome Setting&rsquo;s keyboard section.</p>
+<p>You can now go ahead and bind the appropriate keys to volume functions inside Gnome Setting&#39;s keyboard section.</p>
 
-<p>Given that it&rsquo;s tucked away deep inside dconf, and given Gnome developers' track record of pruning &ldquo;cruft&rdquo; or anything that the lowest common denominator user doesn&rsquo;t use, the future availability of this option is in question. That said, it currently works perfectly fine.</p>
+<p>Given that it&#39;s tucked away deep inside dconf, and given Gnome developers&#39; track record of pruning &quot;cruft&quot; or anything that the lowest common denominator user doesn&#39;t use, the future availability of this option is in question. That said, it currently works perfectly fine.</p>
 
-<p><strong>Update</strong>: On archlinux, <code>pacman -Qo</code> shows that the <span class="path">evdev</span> file is owned by the <a href="https://www.archlinux.org/packages/extra/any/xkeyboard-config/">xkeyboard-config</a> package. Whenever this package is updated, it overwrites this file, necessitating the change to be added once again. I&rsquo;ll have to look into a more resilient way to have this setup.</p>
+<p><strong>Update</strong>: On archlinux, <code>pacman -Qo</code> shows that the <span class="path">evdev</span> file is owned by the <a href="https://www.archlinux.org/packages/extra/any/xkeyboard-config/">xkeyboard-config</a> package. Whenever this package is updated, it overwrites this file, necessitating the change to be added once again. I&#39;ll have to look into a more resilient way to have this setup.</p>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> November  8, 2013</div>
@@ -160,7 +162,7 @@ xkb_symbols "bottom_right" {
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -216,10 +218,8 @@ xkb_symbols "bottom_right" {
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

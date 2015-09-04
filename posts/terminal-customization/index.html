@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -122,9 +124,9 @@
 </ol>
 </nav>
 
-<p>A while back I switched over to <a href="http://en.wikipedia.org/wiki/Z_shell">zsh</a> as my shell and used <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> to get up and running quickly. I barely used any of the features it provided, so I recently decided to do away with it and get zsh setup from scratch. At the same time I decided it&rsquo;d be a good idea to do the same for <a href="http://en.wikipedia.org/wiki/Rxvt-unicode">urxvt</a>. These initiatives had the consequence that I ended up completely redoing the way I maintained my dotfiles which had the effect of greatly improving my overall setup.</p>
+<p>A while back I switched over to <a href="http://en.wikipedia.org/wiki/Z_shell">zsh</a> as my shell and used <a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a> to get up and running quickly. I barely used any of the features it provided, so I recently decided to do away with it and get zsh setup from scratch. At the same time I decided it&#39;d be a good idea to do the same for <a href="http://en.wikipedia.org/wiki/Rxvt-unicode">urxvt</a>. These initiatives had the consequence that I ended up completely redoing the way I maintained my dotfiles which had the effect of greatly improving my overall setup.</p>
 
-<p>Before I go any further I&rsquo;d like to point out that all of the things that I&rsquo;ll talk about in this post are available in my <a href="https://github.com/blaenk/dots">dotfiles</a> repository. I&rsquo;ll make an effort to link to the relevant individual files from the repository for each topic I cover.</p>
+<p>Before I go any further I&#39;d like to point out that all of the things that I&#39;ll talk about in this post are available in my <a href="https://github.com/blaenk/dots">dotfiles</a> repository. I&#39;ll make an effort to link to the relevant individual files from the repository for each topic I cover.</p>
 
 <p>Here is the end result:</p>
 
@@ -133,21 +135,21 @@
 <span class="hash">#</span>
 <a href="#dotfiles" class="header-link">dotfiles</a>
 </h2>
-<p>I previously had a simple Rakefile that symlinked all of the files in the dotfiles directory into my home directory, except for some in an exception list. However, this had the consequence that I had to have ruby installed beforehand, and I didn&rsquo;t like to install ruby through means other than something like <a href="https://github.com/sstephenson/rbenv/">rbenv</a>. I preferred instead to be able to get my dotfiles up and running as soon as possible on a new system. As a result I opted to use a shell script to deploy my dotfiles.</p>
+<p>I previously had a simple Rakefile that symlinked all of the files in the dotfiles directory into my home directory, except for some in an exception list. However, this had the consequence that I had to have ruby installed beforehand, and I didn&#39;t like to install ruby through means other than something like <a href="https://github.com/sstephenson/rbenv/">rbenv</a>. I preferred instead to be able to get my dotfiles up and running as soon as possible on a new system. As a result I opted to use a shell script to deploy my dotfiles.</p>
 
-<p>After looking around in dotfile repositories I found <a href="https://github.com/holman/dotfiles/blob/master/script/bootstrap">hoffman&rsquo;s bootstrap script</a>. The simple script uses <code>find</code> to find files and directories whose names end in &ldquo;.ln&rdquo; and symlinks them into the home directory. I modified it a bit to use the &ldquo;.ln&rdquo; suffix instead of &ldquo;.symlink&rdquo;&mdash;purely cosmetic of course&mdash;as well as some other slight changes. I think I&rsquo;ll change it later so that it can gracefully handle operating system-dependent dotfiles.</p>
+<p>After looking around in dotfile repositories I found <a href="https://github.com/holman/dotfiles/blob/master/script/bootstrap">hoffman&#39;s bootstrap script</a>. The simple script uses <code>find</code> to find files and directories whose names end in &quot;.ln&quot; and symlinks them into the home directory. I modified it a bit to use the &quot;.ln&quot; suffix instead of &quot;.symlink&quot;---purely cosmetic of course---as well as some other slight changes. I think I&#39;ll change it later so that it can gracefully handle operating system-dependent dotfiles.</p>
 <h2 id="urxvt">
 <span class="hash">#</span>
 <a href="#urxvt" class="header-link">urxvt</a>
 </h2>
-<p>My first goal was to get urxvt configured properly. I really didn&rsquo;t like the way stock urxvt looked and operated (e.g. clipboard use), so I set out to learn its configuration format. I ended up defining my own color scheme as well as improving its clipboard support.</p>
+<p>My first goal was to get urxvt configured properly. I really didn&#39;t like the way stock urxvt looked and operated (e.g. clipboard use), so I set out to learn its configuration format. I ended up defining my own color scheme as well as improving its clipboard support.</p>
 <h3 id="colors">
 <span class="hash">#</span>
 <a href="#colors" class="header-link">Colors</a>
 </h3>
-<p>I initially attempted to replicate the color scheme I used in the OS X terminal, however I found that the very same colors didn&rsquo;t look quite the same in the terminals I tried on Linux (GNOME&rsquo;s or urxvt). I have an IPS monitor which I think has made me pretty sensitive to color. As a result I decided to tweak it a little, and I feel that I&rsquo;ve come up with an even better color scheme than before by taking some of the colors from my <a href="https://github.com/blaenk/dots/blob/master/vim/vim.ln/colors/blaenk.vim">vim theme</a>.</p>
+<p>I initially attempted to replicate the color scheme I used in the OS X terminal, however I found that the very same colors didn&#39;t look quite the same in the terminals I tried on Linux (GNOME&#39;s or urxvt). I have an IPS monitor which I think has made me pretty sensitive to color. As a result I decided to tweak it a little, and I feel that I&#39;ve come up with an even better color scheme than before by taking some of the colors from my <a href="https://github.com/blaenk/dots/blob/master/vim/vim.ln/colors/blaenk.vim">vim theme</a>.</p>
 
-<p>I&rsquo;ve come to recognize recently that it&rsquo;s pretty easy to go overboard with the amount of colors used in anything, and that oftentimes things tend to look better with a more restricted color palette. My terminal uses more color than your common terminal or prompt, but I think it&rsquo;s all in good taste and for semantic purposes. In fact, I&rsquo;ve come to really like the <a href="https://github.com/blaenk/dots/blob/master/X11/Xresources.ln#L40">color scheme I chose</a>, it somehow reminds me of SNES game color palettes.</p>
+<p>I&#39;ve come to recognize recently that it&#39;s pretty easy to go overboard with the amount of colors used in anything, and that oftentimes things tend to look better with a more restricted color palette. My terminal uses more color than your common terminal or prompt, but I think it&#39;s all in good taste and for semantic purposes. In fact, I&#39;ve come to really like the <a href="https://github.com/blaenk/dots/blob/master/X11/Xresources.ln#L40">color scheme I chose</a>, it somehow reminds me of SNES game color palettes.</p>
 <h3 id="clipboard">
 <span class="hash">#</span>
 <a href="#clipboard" class="header-link">Clipboard</a>
@@ -156,12 +158,12 @@
 
 <p>The <code>clipboard</code> script allows me to copy and paste using the Alt-keys, as in OS X where one can use the Cmd-keys to copy and paste. These are some nice binds to use without interfering with the terminal by sending signals to the current program.</p>
 
-<p>The <code>keyboard-select</code> script allows me to go into &ldquo;visual mode&rdquo; on the terminal and use vi-bindings to do my copying. This lets me copy text from the terminal without having to leave the keyboard. This paired with my zsh vi-bindings means I never have to leave the home row.</p>
+<p>The <code>keyboard-select</code> script allows me to go into &quot;visual mode&quot; on the terminal and use vi-bindings to do my copying. This lets me copy text from the terminal without having to leave the keyboard. This paired with my zsh vi-bindings means I never have to leave the home row.</p>
 <h2 id="zsh">
 <span class="hash">#</span>
 <a href="#zsh" class="header-link">zsh</a>
 </h2>
-<p>This was the bulk of the work, but I quickly realized that it wasn&rsquo;t all that difficult. I didn&rsquo;t want to have one huge zshrc file. Instead I wanted to have specific files for different parts of the configuration, for example <code>prompt.zsh</code> would contain configuration for the prompt. I had seen such systems in oh-my-zsh as well as certain peoples' dotfile repositories. I took inspiration from <a href="https://github.com/sunaku/home">sunaku&rsquo;s dotfiles</a> in which he has a zsh file that sources all of the zsh files in a directory.</p>
+<p>This was the bulk of the work, but I quickly realized that it wasn&#39;t all that difficult. I didn&#39;t want to have one huge zshrc file. Instead I wanted to have specific files for different parts of the configuration, for example <code>prompt.zsh</code> would contain configuration for the prompt. I had seen such systems in oh-my-zsh as well as certain peoples&#39; dotfile repositories. I took inspiration from <a href="https://github.com/sunaku/home">sunaku&#39;s dotfiles</a> in which he has a zsh file that sources all of the zsh files in a directory.</p>
 <h3 id="prompt">
 <span class="hash">#</span>
 <a href="#prompt" class="header-link">Prompt</a>
@@ -171,14 +173,14 @@
 <span class="hash">#</span>
 <a href="#basic" class="header-link">Basic</a>
 </h4>
-<p>The basic prompt consists of a lambda followed by the path&mdash;which <a href="http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/#current-directory">auto-collapses</a> <code>$HOME</code> to <code>~</code>&mdash;with <a href="http://superuser.com/questions/49092/how-to-format-the-path-in-a-zsh-prompt">highlighted path separators</a> followed by a right arrow. Pretty simple and easy on the colors in my opinion, aside from the unconventional highlighting of the path separators, which was something I had long wanted and took me a while to get right.</p>
+<p>The basic prompt consists of a lambda followed by the path---which <a href="http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/#current-directory">auto-collapses</a> <code>$HOME</code> to <code>~</code>---with <a href="http://superuser.com/questions/49092/how-to-format-the-path-in-a-zsh-prompt">highlighted path separators</a> followed by a right arrow. Pretty simple and easy on the colors in my opinion, aside from the unconventional highlighting of the path separators, which was something I had long wanted and took me a while to get right.</p>
 
 <p>My prompt is inspired by the Haskell <a href="http://www.haskell.org/haskellwiki/Lambda_abstraction">lambda syntax</a> so that it looks like every line is a lambda operating on the current directory whose code is the command you type:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">\</span><span class="n">dir</span> <span class="ow">-&gt;</span> <span class="n">command_in</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
 </code></pre></figure>
-<p>Here&rsquo;s what the actual prompt looks like:</p>
+<p>Here&#39;s what the actual prompt looks like:</p>
 
 <p><img src="/images/posts/terminal-customization/basic-prompt.png" class="center"></p>
 
@@ -194,7 +196,7 @@
 </h4>
 <p>Like any self-respecting modern prompt, mine <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/vcsinfo.zsh">incorporates git information</a> when within a git repository. It shows the current branch, whether there are any untracked files (denoted by <code>.</code>), modified files (denoted by <code>#</code>), or staged files (denoted by <code>+</code>). Another nice little thing I added was a marker for how far ahead and/or behind we are from the remote branch. This is appended to the aforementioned information and only shows up when we <em>are</em> ahead or behind.</p>
 
-<p>All of these features were done using zsh&rsquo;s <a href="http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information">vcsinfo</a> with the help of <a href="http://arjanvandergaag.nl/blog/customize-zsh-prompt-with-vcs-info.html">Arjan van der Gaag</a> and, once again, <a href="https://github.com/sunaku/home/blob/master/.zsh/config/prompt.zsh">sunaku</a>. Here&rsquo;s what it looks like <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>:</p>
+<p>All of these features were done using zsh&#39;s <a href="http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Version-Control-Information">vcsinfo</a> with the help of <a href="http://arjanvandergaag.nl/blog/customize-zsh-prompt-with-vcs-info.html">Arjan van der Gaag</a> and, once again, <a href="https://github.com/sunaku/home/blob/master/.zsh/config/prompt.zsh">sunaku</a>. Here&#39;s what it looks like <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>:</p>
 
 <p><img src="/images/posts/terminal-customization/git-prompt.png" class="center"></p>
 
@@ -203,12 +205,12 @@
 <pre>
 <code class="highlight language-text">λ ~/.dots (master . # +){+1} ➜ 
 </code></pre></figure>
-<p>The branch is <code>master</code> and apparently there&rsquo;s unstaged files, modifed files, and staged files. Furthermore, the <code>{+1}</code> shows that my branch is one commit ahead of the remote branch. It would also show the number of commits we are behind, in red, if that were the case&mdash;which in my opinion can be very handy so that you can avoid conflicts by rebasing or merging before you push. This segment only shows up if either of those conditions is met.</p>
+<p>The branch is <code>master</code> and apparently there&#39;s unstaged files, modifed files, and staged files. Furthermore, the <code>{+1}</code> shows that my branch is one commit ahead of the remote branch. It would also show the number of commits we are behind, in red, if that were the case---which in my opinion can be very handy so that you can avoid conflicts by rebasing or merging before you push. This segment only shows up if either of those conditions is met.</p>
 <h4 id="ssh">
 <span class="hash">#</span>
 <a href="#ssh" class="header-link">SSH</a>
 </h4>
-<p>The prompt also detects if it&rsquo;s being viewed through SSH. I don&rsquo;t like viewing hostname in my prompt on machines I&rsquo;m on locally as I feel it&rsquo;s pointless. However, when I&rsquo;m connected to a remote server via SSH, it&rsquo;s often handy to have the hostname around to differentiate between your computer and the remote host. For this reason my prompt only shows the hostname when it detects that it&rsquo;s being viewed through an SSH connection. Here&rsquo;s what it looks like:</p>
+<p>The prompt also detects if it&#39;s being viewed through SSH. I don&#39;t like viewing hostname in my prompt on machines I&#39;m on locally as I feel it&#39;s pointless. However, when I&#39;m connected to a remote server via SSH, it&#39;s often handy to have the hostname around to differentiate between your computer and the remote host. For this reason my prompt only shows the hostname when it detects that it&#39;s being viewed through an SSH connection. Here&#39;s what it looks like:</p>
 
 <p><img src="/images/posts/terminal-customization/ssh-prompt.png" class="center"></p>
 
@@ -219,7 +221,7 @@
 </code></pre></figure>
 <p><strong>Update: October 28, 2013</strong></p>
 
-<p>I&rsquo;ve actually done away with this component of the prompt. I didn&rsquo;t like how the lambda no longer aligned with the arrow symbol. I&rsquo;ve instead decided to add a pretty simple green <code>R</code> at the end of the current working path, to signify that I am on a &ldquo;remote&rdquo; machine, so it reads something like &ldquo;currently on x path remotely.&rdquo;</p>
+<p>I&#39;ve actually done away with this component of the prompt. I didn&#39;t like how the lambda no longer aligned with the arrow symbol. I&#39;ve instead decided to add a pretty simple green <code>R</code> at the end of the current working path, to signify that I am on a &quot;remote&quot; machine, so it reads something like &quot;currently on x path remotely.&quot;</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">λ ~/.dots R (master)
@@ -228,19 +230,19 @@
 <span class="hash">#</span>
 <a href="#vi-binds" class="header-link">vi-Binds</a>
 </h3>
-<p>One thing that I can&rsquo;t live without now when using vi-bindings is binding <code>jj</code> to vi-mode. The default key for this is Escape, but Escape is <a href="http://unix.stackexchange.com/questions/23138/esc-key-causes-a-small-delay-in-terminal-due-to-its-alt-behavior">used for other hotkeys</a> that the terminal (or shell?) intercepts. For this reason, a single keypress of Escape introduces a bit of lag, which I imagine is required to differentiate a hotkey (i.e. <code>Esc-C</code>) from a simple Escape keypress.</p>
+<p>One thing that I can&#39;t live without now when using vi-bindings is binding <code>jj</code> to vi-mode. The default key for this is Escape, but Escape is <a href="http://unix.stackexchange.com/questions/23138/esc-key-causes-a-small-delay-in-terminal-due-to-its-alt-behavior">used for other hotkeys</a> that the terminal (or shell?) intercepts. For this reason, a single keypress of Escape introduces a bit of lag, which I imagine is required to differentiate a hotkey (i.e. <code>Esc-C</code>) from a simple Escape keypress.</p>
 
-<p>Binding to <code>jj</code> has the consequence of being more accessible. In fact, this is a common bind that people tend to use in vim for this very reason. Before coming to this realization I mainly used Emacs-binds because they didn&rsquo;t introduce lag. However, with this new bind I&rsquo;m able to jump into vi-mode and edit commands very quickly and more intuitively (for a vim user like myself).</p>
+<p>Binding to <code>jj</code> has the consequence of being more accessible. In fact, this is a common bind that people tend to use in vim for this very reason. Before coming to this realization I mainly used Emacs-binds because they didn&#39;t introduce lag. However, with this new bind I&#39;m able to jump into vi-mode and edit commands very quickly and more intuitively (for a vim user like myself).</p>
 <h3 id="highlighting">
 <span class="hash">#</span>
 <a href="#highlighting" class="header-link">Highlighting</a>
 </h3>
-<p>If you&rsquo;ve been wondering how it is that my commands are highlighted, it&rsquo;s made possible by <a href="https://github.com/zsh-users/zsh-syntax-highlighting">this highlighting script</a>. Simply sourcing that script into your zsh environment suddenly colors your commands. In my opinion it makes the terminal look much better without going overboard with the colors. I did have to <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh">tweak some settings</a> though because I felt that the default configuration did go a bit overboard on the styling, such as underlining program names.</p>
+<p>If you&#39;ve been wondering how it is that my commands are highlighted, it&#39;s made possible by <a href="https://github.com/zsh-users/zsh-syntax-highlighting">this highlighting script</a>. Simply sourcing that script into your zsh environment suddenly colors your commands. In my opinion it makes the terminal look much better without going overboard with the colors. I did have to <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh">tweak some settings</a> though because I felt that the default configuration did go a bit overboard on the styling, such as underlining program names.</p>
 <h2 id="conclusion">
 <span class="hash">#</span>
 <a href="#conclusion" class="header-link">Conclusion</a>
 </h2>
-<p>I have to say that I love the way my terminal looks and operates now. This has all been in preparation for setting up <a href="http://en.wikipedia.org/wiki/xmonad">xmonad</a>, which I intend to take a shot at soon. For the curious, I&rsquo;m doing all of this on <a href="http://www.archlinux.org/">arch linux</a>, but I didn&rsquo;t say it earlier because nothing in this post depends on this. In fact, none of the content in this post is all that specific to Linux itself even. I&rsquo;ll try to update this post whenever my setup changes, but I think I&rsquo;m quite comfortable with the way it is, and will be for the foreseeable future.</p>
+<p>I have to say that I love the way my terminal looks and operates now. This has all been in preparation for setting up <a href="http://en.wikipedia.org/wiki/xmonad">xmonad</a>, which I intend to take a shot at soon. For the curious, I&#39;m doing all of this on <a href="http://www.archlinux.org/">arch linux</a>, but I didn&#39;t say it earlier because nothing in this post depends on this. In fact, none of the content in this post is all that specific to Linux itself even. I&#39;ll try to update this post whenever my setup changes, but I think I&#39;m quite comfortable with the way it is, and will be for the foreseeable future.</p>
 
 <p>In my opinion, the benefit of using such tried and proven, mature tools is that once you take the time to configure them to your liking you can use them without modification for a long time. Barring some imminent, majorly disruptive paradigm shift in software development, I can see myself using many of these tools throughout my career as a software developer.</p>
 
@@ -310,7 +312,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -366,10 +368,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

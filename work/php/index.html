@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -79,13 +81,13 @@
 <span class="hash">#</span>
 <a href="#wp-recaptcha" class="header-link">WP-reCAPTCHA</a>
 </h2>
-<p>Back in 2007 I found out about <a href="http://www.google.com/recaptcha">reCAPTCHA</a>, a project started at <a href="http://en.wikipedia.org/wiki/Carnegie_Mellon_University">Carnegie Mellon University</a> in part by the original creator of the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a>. I&rsquo;d bet by now most people have used and are familiar with reCAPTCHA. CAPTCHAs generally consist of random letters and numbers to test if someone was a human or an automated program (usually with intent to spam). reCAPTCHA&rsquo;s innovation was to use actual words, words that had failed automatic digitizing when scanning mass amounts of books and using <a href="http://en.wikipedia.org/wiki/Optical_character_recognition">Optical Character Recognition</a> software.</p>
+<p>Back in 2007 I found out about <a href="http://www.google.com/recaptcha">reCAPTCHA</a>, a project started at <a href="http://en.wikipedia.org/wiki/Carnegie_Mellon_University">Carnegie Mellon University</a> in part by the original creator of the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a>. I&#39;d bet by now most people have used and are familiar with reCAPTCHA. CAPTCHAs generally consist of random letters and numbers to test if someone was a human or an automated program (usually with intent to spam). reCAPTCHA&#39;s innovation was to use actual words, words that had failed automatic digitizing when scanning mass amounts of books and using <a href="http://en.wikipedia.org/wiki/Optical_character_recognition">Optical Character Recognition</a> software.</p>
 
-<p>The consequence of this was that programs couldn&rsquo;t be written, using computer vision techniques, to simply read the image of the word, since industry-grade Optical Character Recognition software&mdash;presumably employing the most bleeding edge and sophisticated computer vision techniques&mdash;had already failed to digitize the words. This way, two problems were solved with reCAPTCHA: it was foolproof against automated attacks and circumvention, and users came to realize that by solving reCAPTCHA challenges they were helping to digitize books and thus was not a waste of time as solving randomly generated CAPTCHAs was.</p>
+<p>The consequence of this was that programs couldn&#39;t be written, using computer vision techniques, to simply read the image of the word, since industry-grade Optical Character Recognition software---presumably employing the most bleeding edge and sophisticated computer vision techniques---had already failed to digitize the words. This way, two problems were solved with reCAPTCHA: it was foolproof against automated attacks and circumvention, and users came to realize that by solving reCAPTCHA challenges they were helping to digitize books and thus was not a waste of time as solving randomly generated CAPTCHAs was.</p>
 
 <p>I also found out about a service they had called <a href="http://en.wikipedia.org/wiki/ReCAPTCHA#Derivative_projects">MailHide</a> in which they would hide part of an email address away from spammers. The full email address could be retrieved by solving a reCAPTCHA challenge, effectively preventing automated programs from harvesting email addresses for the purposes of spamming them.</p>
 
-<p>That same year (2007) I figured it would be neat to write a plugin for <a href="http://wordpress.org/">WordPress</a> which automatically hid any email address in a WordPress site using the MailHide technique. It gained some attention, and the then lead engineer of reCAPTCHA, Ben Maurer, contacted me via email asking if I&rsquo;d be interested in volunteering to work on the then official reCAPTCHA WordPress plugin, with MailHide integrated. I accepted and worked on the plugin for a few years over which it has gotten <a href="http://wordpress.org/extend/plugins/wp-recaptcha/stats/">over 400,000 downloads</a>.</p>
+<p>That same year (2007) I figured it would be neat to write a plugin for <a href="http://wordpress.org/">WordPress</a> which automatically hid any email address in a WordPress site using the MailHide technique. It gained some attention, and the then lead engineer of reCAPTCHA, Ben Maurer, contacted me via email asking if I&#39;d be interested in volunteering to work on the then official reCAPTCHA WordPress plugin, with MailHide integrated. I accepted and worked on the plugin for a few years over which it has gotten <a href="http://wordpress.org/extend/plugins/wp-recaptcha/stats/">over 400,000 downloads</a>.</p>
 
 <p>reCAPTCHA was acquired by Google in 2009, and the original team seems to have largely left the project. I stopped using WordPress and as a result development of the plugin halted. The plugin is open source, however, and available <a href="http://github.com/blaenk/wp-recaptcha">on github</a>.</p>
 </div>
@@ -131,7 +133,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -160,10 +162,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

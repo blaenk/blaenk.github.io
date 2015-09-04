@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -77,7 +79,7 @@
   <h2 class="title"><a href="/notes/haskell"><span>Haskell</span></a></h2>
   <div class="entry-content"><p>I originally chose <a href="/notes/erlang">Erlang</a> as the first functional programming language to attempt learning. However, the combination of different programming paradigm, obscure Prolog-like syntax, and unfamiliar concurrency paradigm made it particularly difficult for me to see the big picture of functional programming.</p>
 
-<p>I&rsquo;m actually familiar with Haskell now. This very site is written in Haskell, and I have worked on a few other Haskell projects. That said, Haskell is also a programming language theory (<abbr title="Programming Language Theory">PLT</abbr>) playground. To that end, <abbr title="Glasgow Haskell Compiler">GHC</abbr> contains various Haskell language extensions which I&rsquo;m not entirely familiar with. This page of notes will therefore not necessarily cover the more basic aspects and instead will cover language extensions, popular libraries, idiomatic patterns, modules, parallelism and concurrency, and so on.</p>
+<p>I&#39;m actually familiar with Haskell now. This very site is written in Haskell, and I have worked on a few other Haskell projects. That said, Haskell is also a programming language theory (PLT) playground. To that end, GHC contains various Haskell language extensions which I&#39;m not entirely familiar with. This page of notes will therefore not necessarily cover the more basic aspects and instead will cover language extensions, popular libraries, idiomatic patterns, modules, parallelism and concurrency, and so on.</p>
 
 <nav id="toc">
 <h3>Contents</h3><ol>
@@ -132,7 +134,7 @@
 </ol>
 </li>
 <li>
-<a href="#abbr-titleglasgow-haskell-compilerghcabbr-extensions"><abbr title="Glasgow Haskell Compiler">GHC</abbr> Extensions</a>
+<a href="#ghc-extensions">GHC Extensions</a>
 <ol>
 <li>
 <a href="#named-field-puns">Named-Field Puns</a>
@@ -195,7 +197,7 @@
 <span class="hash">#</span>
 <a href="#user-guide" class="header-link">User Guide</a>
 </h1>
-<p>It&rsquo;s possible to build an EPUB eBook of the <a href="https://www.haskell.org/ghc/docs/latest/html/users_guide/"><abbr title="Glasgow Haskell Compiler">GHC</abbr> User Guide</a>. You&rsquo;ll need to have the <a href="https://ghc.haskell.org/trac/ghc/wiki/Building/Preparation/Linux">required dependencies</a> to build the documentation. In my experience I ended up having to boot an Ubuntu VM because the xsltproc packages on arch were too new. It&rsquo;s necessary to <a href="https://ghc.haskell.org/trac/ghc/wiki/Building/Docs">build the documentation</a> at least once to generate the necessary files, which unfortunately ends up building <abbr title="Glasgow Haskell Compiler">GHC</abbr> itself it seems. See this <a href="https://www.ibm.com/developerworks/xml/tutorials/x-epubtut/">IBM article</a> for more information on building eBooks with docbook.</p>
+<p>It&#39;s possible to build an EPUB eBook of the <a href="https://www.haskell.org/ghc/docs/latest/html/users_guide/">GHC User Guide</a>. You&#39;ll need to have the <a href="https://ghc.haskell.org/trac/ghc/wiki/Building/Preparation/Linux">required dependencies</a> to build the documentation. In my experience I ended up having to boot an Ubuntu VM because the xsltproc packages on arch were too new. It&#39;s necessary to <a href="https://ghc.haskell.org/trac/ghc/wiki/Building/Docs">build the documentation</a> at least once to generate the necessary files, which unfortunately ends up building GHC itself it seems. See this <a href="https://www.ibm.com/developerworks/xml/tutorials/x-epubtut/">IBM article</a> for more information on building eBooks with docbook.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="nv">$ </span>./configure
@@ -227,7 +229,7 @@
 <span class="hash">#</span>
 <a href="#functors" class="header-link">Functors</a>
 </h2>
-<p>A functor represents a computational context. The functor laws ensure that the <code>fmap</code> operation doesn&rsquo;t change the structure of the container, only its elements. The functor laws aren&rsquo;t enforced at the type level. Actually, satisfying the first law automatically satisfies the second.</p>
+<p>A functor represents a computational context. The functor laws ensure that the <code>fmap</code> operation doesn&#39;t change the structure of the container, only its elements. The functor laws aren&#39;t enforced at the type level. Actually, satisfying the first law automatically satisfies the second.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="kr">class</span> <span class="kt">Functor</span> <span class="n">f</span> <span class="kr">where</span>
@@ -262,7 +264,7 @@
 <code class="highlight language-haskell"><span class="p">(</span><span class="o">$</span><span class="p">)</span>   <span class="ow">::</span>   <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span>   <span class="n">a</span> <span class="ow">-&gt;</span>   <span class="n">b</span>
 <span class="p">(</span><span class="o">&lt;*&gt;</span><span class="p">)</span> <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
 </code></pre></figure>
-<p>It&rsquo;s straightforward enough to create a convenient infix function that can be used like the regular function application <code>$</code> by embedding a regular function in a computational context before applying it to the parameter:</p>
+<p>It&#39;s straightforward enough to create a convenient infix function that can be used like the regular function application <code>$</code> by embedding a regular function in a computational context before applying it to the parameter:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="p">(</span><span class="o">&lt;$&gt;</span><span class="p">)</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
@@ -275,7 +277,7 @@
 <span class="p">(</span><span class="o">&lt;$&gt;</span><span class="p">)</span> <span class="ow">::</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">b</span>
 <span class="p">(</span><span class="o">&lt;$&gt;</span><span class="p">)</span> <span class="ow">=</span> <span class="n">fmap</span>
 </code></pre></figure>
-<p>Note that in a monadic context, the effects are applied sequentially, from left to right. This is makes sense because function application is left-associative, and each application of <code>&lt;*&gt;</code>, which for monads is <code>ap</code> which itself is <code>liftM2 id</code>, has to extract the pure function and value from their respective monad &lsquo;container&rsquo; <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>, thereby performing the monad&rsquo;s effects.</p>
+<p>Note that in a monadic context, the effects are applied sequentially, from left to right. This is makes sense because function application is left-associative, and each application of <code>&lt;*&gt;</code>, which for monads is <code>ap</code> which itself is <code>liftM2 id</code>, has to extract the pure function and value from their respective monad &#39;container&#39; <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>, thereby performing the monad&#39;s effects.</p>
 
 <p>There also exists functions <code>*&gt;</code> and <code>&lt;*</code> that sequence actions while discarding the value of one of the arguments: left and right respectively. These are immensely useful for monadic parser combinators such as those found in the <a href="http://hackage.haskell.org/package/parsec">Parsec</a> library. For example, <code>*&gt;</code> is useful in Parsec to consume the first parser but return the second, similar to <code>&gt;&gt;</code> in a monadic context.</p>
 <figure class="codeblock">
@@ -286,7 +288,7 @@
 <span class="p">(</span><span class="o">&lt;*</span><span class="p">)</span> <span class="ow">::</span> <span class="n">f</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
 <span class="nf">u</span> <span class="o">&lt;*</span> <span class="n">v</span> <span class="ow">=</span> <span class="n">pure</span> <span class="n">const</span> <span class="o">&lt;*&gt;</span> <span class="n">u</span> <span class="o">&lt;*&gt;</span> <span class="n">v</span>
 </code></pre></figure>
-<p>Finally, there&rsquo;s a function that replaces all of the locations in the input context with the provided value. This is useful in Parsec when we want to parse some input, and if the input is successfully consumed, return something else, such as parsing a URL-encoded space with <code>&#39; &#39; &lt;$ char &#39;+&#39;</code>.</p>
+<p>Finally, there&#39;s a function that replaces all of the locations in the input context with the provided value. This is useful in Parsec when we want to parse some input, and if the input is successfully consumed, return something else, such as parsing a URL-encoded space with <code>&#39; &#39; &lt;$ char &#39;+&#39;</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="p">(</span><span class="o">&lt;$</span><span class="p">)</span> <span class="ow">::</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="n">f</span> <span class="n">a</span>
@@ -303,16 +305,16 @@
 <span class="hash">#</span>
 <a href="#parallelism" class="header-link">Parallelism</a>
 </h1>
-<p>Amdahl&rsquo;s law places an upper bound on potential speedup that may be available by adding more processors. The expected speedup \(S\) can be described as a function of the number of processors \(N\) and the percentage of runtime that can be parallelized \(P\). The implications are that the potential speedup increasingly becomes negligible with the increase in processors, but more importantly that most programs have a theoretical maximum amount of parallelism.</p>
+<p>Amdahl&#39;s law places an upper bound on potential speedup that may be available by adding more processors. The expected speedup <script type="math/tex">S</script> can be described as a function of the number of processors <script type="math/tex">N</script> and the percentage of runtime that can be parallelized <script type="math/tex">P</script>. The implications are that the potential speedup increasingly becomes negligible with the increase in processors, but more importantly that most programs have a theoretical maximum amount of parallelism.</p>
 
-<p>\[S(N) = \frac {1} {(1 - P) + \frac P N}\]</p>
+<p><script type="math/tex; mode=display">S(N) = \frac {1} {(1 - P) + \frac P N}</script></p>
 
 <p><img src="/images/notes/haskell/amdahls-law.png" class="center"></p>
 <h2 id="threadscope">
 <span class="hash">#</span>
 <a href="#threadscope" class="header-link">ThreadScope</a>
 </h2>
-<p>The <a href="http://hackage.haskell.org/package/threadscope">ThreadScope</a> tool helps visualize parallel execution, particularly for profiling. To use ThreadScope, the program should be compiled with the <code>-eventlog</code> <abbr title="Glasgow Haskell Compiler">GHC</abbr> option and then run with the <code>+RTS -l</code> option to generate the eventlog. ThreadScope is then run on this event log:</p>
+<p>The <a href="http://hackage.haskell.org/package/threadscope">ThreadScope</a> tool helps visualize parallel execution, particularly for profiling. To use ThreadScope, the program should be compiled with the <code>-eventlog</code> GHC option and then run with the <code>+RTS -l</code> option to generate the eventlog. ThreadScope is then run on this event log:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="nv">$ </span>ghc -O2 program.hs -threaded -rtsopts -eventlog
@@ -322,7 +324,7 @@
 <span class="hash">#</span>
 <a href="#eval-monad" class="header-link">Eval Monad</a>
 </h2>
-<p>The <code>Eval</code> monad from Control.Parallel.Strategies expresses parallelism naturally. The <code>rpar</code> combinator expresses that the argument can be evaluated in parallel, and <code>rseq</code> forces sequential evaluation. Evaluation is to weak head normal form (<abbr title="Weak Head Normal Form">WHNF</abbr>), i.e. the outermost type constructor is evaluated. Notice that the monad is completely pure, with no need for the <code>IO</code> monad.</p>
+<p>The <code>Eval</code> monad from Control.Parallel.Strategies expresses parallelism naturally. The <code>rpar</code> combinator expresses that the argument can be evaluated in parallel, and <code>rseq</code> forces sequential evaluation. Evaluation is to weak head normal form (WHNF), i.e. the outermost type constructor is evaluated. Notice that the monad is completely pure, with no need for the <code>IO</code> monad.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="kr">data</span> <span class="kt">Eval</span> <span class="n">a</span>
@@ -378,14 +380,14 @@
 </tr>
 <tr>
 <td style="text-align: left">overflowed</td>
-<td style="text-align: left">didn&rsquo;t fit in the spark pool</td>
+<td style="text-align: left">didn&#39;t fit in the spark pool</td>
 </tr>
 <tr>
 <td style="text-align: left">dud</td>
 <td style="text-align: left">already evaluated, ignored</td>
 </tr>
 <tr>
-<td style="text-align: left">GC&rsquo;d</td>
+<td style="text-align: left">GC&#39;d</td>
 <td style="text-align: left">unused, garbage collected</td>
 </tr>
 <tr>
@@ -405,7 +407,7 @@
   <span class="n">rnf</span> <span class="ow">::</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="nb">()</span>
   <span class="n">rnf</span> <span class="n">a</span> <span class="ow">=</span> <span class="n">a</span> <span class="p">`</span><span class="n">seq</span><span class="p">`</span> <span class="nb">()</span>
 </code></pre></figure>
-<p>The module also defines a <code>deepseq</code> function which performs a <em>deep</em> evaluation to normal form, similar to <code>seq</code> which performs <em>shallow</em> evaluation to <abbr title="Weak Head Normal Form">WHNF</abbr>. There&rsquo;s also a more convenient <code>force</code> function which evaluates the argument to normal form and then returns the result.</p>
+<p>The module also defines a <code>deepseq</code> function which performs a <em>deep</em> evaluation to normal form, similar to <code>seq</code> which performs <em>shallow</em> evaluation to WHNF. There&#39;s also a more convenient <code>force</code> function which evaluates the argument to normal form and then returns the result.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">deepseq</span> <span class="ow">::</span> <span class="kt">NFData</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="n">b</span>
@@ -443,7 +445,7 @@
 <span class="hash">#</span>
 <a href="#parameterized-strategies" class="header-link">Parameterized Strategies</a>
 </h3>
-<p>The <code>parPair</code> always evaluates the pair components in parallel and always to <abbr title="Weak Head Normal Form">WHNF</abbr>. A parameterized strategy could take as arguments strategies to apply to the type&rsquo;s components. The following <code>evalPair</code> function is so called because it no longer assume parallelism, instead delegating that decision to the passed in strategy.</p>
+<p>The <code>parPair</code> always evaluates the pair components in parallel and always to WHNF. A parameterized strategy could take as arguments strategies to apply to the type&#39;s components. The following <code>evalPair</code> function is so called because it no longer assume parallelism, instead delegating that decision to the passed in strategy.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">evalPair</span> <span class="ow">::</span> <span class="kt">Strategy</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">Strategy</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="kt">Strategy</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
@@ -452,7 +454,7 @@
   <span class="n">b&#39;</span> <span class="ow">&lt;-</span> <span class="n">sb</span> <span class="n">b</span>
   <span class="n">return</span> <span class="p">(</span><span class="n">a&#39;</span><span class="p">,</span> <span class="n">b&#39;</span><span class="p">)</span>
 </code></pre></figure>
-<p>It&rsquo;s then possible to define a <code>parPair</code> function in terms of <code>evalPair</code> that evaluates the pair&rsquo;s components in parallel. However, the <code>rpar</code> strategy only evaluates to <abbr title="Weak Head Normal Form">WHNF</abbr>, restricting the evaluation strategy. We could instead use <code>rdeepseq</code>&mdash;a strategy to evaluate to normal form&mdash;by wrapping <code>rdeepseq</code> with <code>rpar</code>. The <code>rparWith</code> combinator allows the wrapping of strategies in this manner:</p>
+<p>It&#39;s then possible to define a <code>parPair</code> function in terms of <code>evalPair</code> that evaluates the pair&#39;s components in parallel. However, the <code>rpar</code> strategy only evaluates to WHNF, restricting the evaluation strategy. We could instead use <code>rdeepseq</code>---a strategy to evaluate to normal form---by wrapping <code>rdeepseq</code> with <code>rpar</code>. The <code>rparWith</code> combinator allows the wrapping of strategies in this manner:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">rdeepseq</span> <span class="ow">::</span> <span class="kt">NFData</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="kt">Strategy</span> <span class="n">a</span>
@@ -497,7 +499,7 @@
 </h1>
 <p><a href="http://www.haskell.org/haddock/doc/html/">Haddock</a> is the documentation system that is most prevalent in the Haskell community. Documentation can be generated using the <code>haddock</code> command or more commonly <code>cabal haddock</code>.</p>
 
-<p>Declarations can be annotated by beginning comments with <code>-- |</code>, which applies the documentation to the following declaration in the source file. It&rsquo;s also possible to place annotations after a given declaration, in which case the caret <code>^</code> is used instead of the <code>|</code> to denote an annotation.</p>
+<p>Declarations can be annotated by beginning comments with <code>-- |</code>, which applies the documentation to the following declaration in the source file. It&#39;s also possible to place annotations after a given declaration, in which case the caret <code>^</code> is used instead of the <code>|</code> to denote an annotation.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="kr">data</span> <span class="kt">T</span> <span class="n">a</span> <span class="n">b</span>
@@ -510,7 +512,7 @@
   <span class="ow">=</span> <span class="kt">C1</span> <span class="n">a</span> <span class="n">b</span> <span class="c1">-- ^ the C1 constructor is used for foo</span>
   <span class="o">|</span> <span class="kt">C2</span> <span class="n">a</span> <span class="n">b</span> <span class="c1">-- ^ the C2 constructor is used for bar</span>
 </code></pre></figure>
-<p>Annotations can span multiple lines until the first non-comment line is encountered. It&rsquo;s also possible to use multi-line comments by opening them with <code>{-|</code>.</p>
+<p>Annotations can span multiple lines until the first non-comment line is encountered. It&#39;s also possible to use multi-line comments by opening them with <code>{-|</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="c1">-- | this is a comment</span>
@@ -535,22 +537,22 @@
 </h2>
 <p>One or more blank lines separates two paragraphs. Emphasis is denoted by surrounding text with a forward-slash <code>/</code>, whereas bold text is denoted by surrounding the text with two underscores <code>__</code> Monospace text is denoted by surrounding it with <code>@</code>. Other markup is valid inside each of these, for example, <code>@&#39;f&#39;</code> will hyperlink the identifier <code>f</code> within the monospace text.</p>
 
-<p>Links can be inserted using <code>&lt;url label&gt;</code> syntax, although Haddock automatically links free-standing URLs. It&rsquo;s also possible to link to other parts of the same page with <code>#anchor#</code> syntax.</p>
+<p>Links can be inserted using <code>&lt;url label&gt;</code> syntax, although Haddock automatically links free-standing URLs. It&#39;s also possible to link to other parts of the same page with <code>#anchor#</code> syntax.</p>
 
 <p>Images can be embedded with <code>&lt;&lt;path.png title&gt;&gt;</code> syntax.</p>
 
-<p>It&rsquo;s possible to link to Haskell identifiers that are types, classes, constructors, or functions by surrounding them with single quotes. If the target is not in the scope, they may be referenced by fully qualifying them.</p>
+<p>It&#39;s possible to link to Haskell identifiers that are types, classes, constructors, or functions by surrounding them with single quotes. If the target is not in the scope, they may be referenced by fully qualifying them.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">-- | This module defines the type 'T'
 -- It has nothing to do with 'M.T'
 </code></pre></figure>
-<p>Alternatively, it&rsquo;s possible to link to a module entirely by surrounding the name with double quotes.</p>
+<p>Alternatively, it&#39;s possible to link to a module entirely by surrounding the name with double quotes.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">-- | This is a reference to the "Foo" module
 </code></pre></figure>
-<p>Code blocks may be inserted by surrounding the paragraph with <code>@</code> signs, where its content is interpreted as normal markup. Alternatively, it&rsquo;s possible to do so by preceding each line with a <code>&gt;</code>, in which case the text is interpreted literally.</p>
+<p>Code blocks may be inserted by surrounding the paragraph with <code>@</code> signs, where its content is interpreted as normal markup. Alternatively, it&#39;s possible to do so by preceding each line with a <code>&gt;</code>, in which case the text is interpreted literally.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">-- | this is some documentation that includes code
@@ -561,7 +563,7 @@
 --
 -- > g x = x * 42
 </code></pre></figure>
-<p>It&rsquo;s possible to denote REPL examples with <code>&gt;&gt;&gt;</code>, followed by the result.</p>
+<p>It&#39;s possible to denote REPL examples with <code>&gt;&gt;&gt;</code>, followed by the result.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">-- | demonstrating the REPL example syntax
@@ -590,7 +592,7 @@
 <tbody>
 <tr>
 <td style="text-align: left">hide</td>
-<td style="text-align: left">omits module; doesn&rsquo;t affect re-exported definitions</td>
+<td style="text-align: left">omits module; doesn&#39;t affect re-exported definitions</td>
 </tr>
 <tr>
 <td style="text-align: left">prune</td>
@@ -602,7 +604,7 @@
 </tr>
 <tr>
 <td style="text-align: left">not-home</td>
-<td style="text-align: left">module shouldn&rsquo;t be considered to be home module</td>
+<td style="text-align: left">module shouldn&#39;t be considered to be home module</td>
 </tr>
 <tr>
 <td style="text-align: left">show-extensions</td>
@@ -610,11 +612,11 @@
 </tr>
 </tbody>
 </table>
-<h1 id="abbr-titleglasgow-haskell-compilerghcabbr-extensions">
+<h1 id="ghc-extensions">
 <span class="hash">#</span>
-<a href="#abbr-titleglasgow-haskell-compilerghcabbr-extensions" class="header-link"><abbr title="Glasgow Haskell Compiler">GHC</abbr> Extensions</a>
+<a href="#ghc-extensions" class="header-link">GHC Extensions</a>
 </h1>
-<p>Haskell is a <abbr title="Programming Language Theory">PLT</abbr> playground, and as a result <abbr title="Glasgow Haskell Compiler">GHC</abbr> has available a multitude of language extensions. I found a <a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions">series of articles</a> that cover some of the more popular extensions.</p>
+<p>Haskell is a PLT playground, and as a result GHC has available a multitude of language extensions. I found a <a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/guide-to-ghc-extensions">series of articles</a> that cover some of the more popular extensions.</p>
 <h2 id="named-field-puns">
 <span class="hash">#</span>
 <a href="#named-field-puns" class="header-link">Named-Field Puns</a>
@@ -735,7 +737,7 @@
 <span class="hash">#</span>
 <a href="#explicit-universal-quantification" class="header-link">Explicit Universal Quantification</a>
 </h2>
-<p>This allows to explicitly annotate universal quantification in polymorphic type signatures. On its own this extension isn&rsquo;t very useful. Instead, it&rsquo;s required by many other extensions.</p>
+<p>This allows to explicitly annotate universal quantification in polymorphic type signatures. On its own this extension isn&#39;t very useful. Instead, it&#39;s required by many other extensions.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="cm">{-# LANGUAGE ExplicitForAll #-}</span>
@@ -745,7 +747,7 @@
 <span class="hash">#</span>
 <a href="#scoped-type-variables" class="header-link">Scoped Type Variables</a>
 </h2>
-<p>This allows type variables to have scope so that nested scopes' type signatures can close over them and refer to them. Without the extension, the <code>a</code> in the type signature of <code>sorted</code> and <code>nubbed</code> would not only be different from <code>func</code>&rsquo;s type signature, but also different from themselves.</p>
+<p>This allows type variables to have scope so that nested scopes&#39; type signatures can close over them and refer to them. Without the extension, the <code>a</code> in the type signature of <code>sorted</code> and <code>nubbed</code> would not only be different from <code>func</code>&#39;s type signature, but also different from themselves.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="cm">{-# LANGUAGE ScopedTypeVariables #-}</span>
@@ -781,7 +783,7 @@
 
 <p>What this means is that the second signature would accept any function from <code>n -&gt; n</code> that applies for <em>some</em> <code>Num n</code>, but the first signature requires a function from <code>n -&gt; n</code> that applies for <em>every</em> <code>Num n</code>.</p>
 
-<p>For example, <code>(+1)</code> would be valid for both signatures, since every <code>Num</code> defines <code>(+)</code>. However, <code>(/5)</code> would only be valid for the second signature because it&rsquo;s a function from <code>n -&gt; n</code> that only applies for <em>some</em> <code>Num n</code>, particularly the subset of <code>Num n</code> that also implements <code>Fractional</code>. Since not <em>every</em> <code>Num n</code> implements <code>Fractional</code>, that function is <em>not</em> valid for the first signature.</p>
+<p>For example, <code>(+1)</code> would be valid for both signatures, since every <code>Num</code> defines <code>(+)</code>. However, <code>(/5)</code> would only be valid for the second signature because it&#39;s a function from <code>n -&gt; n</code> that only applies for <em>some</em> <code>Num n</code>, particularly the subset of <code>Num n</code> that also implements <code>Fractional</code>. Since not <em>every</em> <code>Num n</code> implements <code>Fractional</code>, that function is <em>not</em> valid for the first signature.</p>
 
 <p><strong>Note</strong>: This extension deprecates the less general extensions <code>Rank2Types</code> and <code>Polymorphic​Components</code>.</p>
 <figure class="codeblock">
@@ -842,7 +844,7 @@
 </h3>
 <p>Phantom types are parameterized types where some of the parameters only appear on the RHS. They are often used to encode information at the type level to make code much more strict, usually paired with empty data types.</p>
 
-<p>Consider an API for <a href="http://blog.jakubarnold.cz/2014/07/08/using-phantom-types-for-extra-safety.html">sending encrypted messages</a>. It&rsquo;s possible to encode&mdash;at the type-system level&mdash;that only <em>encrypted</em> messages may be sent using the <code>send</code> function, thus preventing plain-text messages from being sent. This is further enforced by making the <code>Message</code> constructor private and exposing a single constructor to build a plain-text message, such as <code>newMessage</code>.</p>
+<p>Consider an API for <a href="http://blog.jakubarnold.cz/2014/07/08/using-phantom-types-for-extra-safety.html">sending encrypted messages</a>. It&#39;s possible to encode---at the type-system level---that only <em>encrypted</em> messages may be sent using the <code>send</code> function, thus preventing plain-text messages from being sent. This is further enforced by making the <code>Message</code> constructor private and exposing a single constructor to build a plain-text message, such as <code>newMessage</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="kr">data</span> <span class="kt">Message</span> <span class="n">a</span> <span class="ow">=</span> <span class="kt">Message</span> <span class="kt">String</span>
@@ -933,7 +935,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -962,10 +964,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

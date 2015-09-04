@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -95,7 +97,7 @@
 <a href="#padding">Padding</a>
 </li>
 <li>
-<a href="#letrsquos-roll">Let&rsquo;s Roll</a>
+<a href="#let39s-roll">Let&#39;s Roll</a>
 </li>
 </ol>
 </li>
@@ -130,35 +132,35 @@
 </ol>
 </nav>
 
-<p><a href="http://en.wikipedia.org/wiki/Convolution">Convolution</a> is a mathematical method of combining two signals to form a third signal. Passing the <a href="http://en.wikipedia.org/wiki/Dirac_delta_function">Dirac delta function</a> (unit impulse) \(\delta[n]\) through a linear system results in the impulse response \(h[n]\). The impulse response is simply the signal resulting from passing the unit impulse (Dirac delta function) through a linear system.</p>
+<p><a href="http://en.wikipedia.org/wiki/Convolution">Convolution</a> is a mathematical method of combining two signals to form a third signal. Passing the <a href="http://en.wikipedia.org/wiki/Dirac_delta_function">Dirac delta function</a> (unit impulse) <script type="math/tex">\delta[n]</script> through a linear system results in the impulse response <script type="math/tex">h[n]</script>. The impulse response is simply the signal resulting from passing the unit impulse (Dirac delta function) through a linear system.</p>
 <h2 id="principle">
 <span class="hash">#</span>
 <a href="#principle" class="header-link">Principle</a>
 </h2>
 <p>The properties of <a href="http://www.cns.nyu.edu/%7Edavid/handouts/linear-systems/linear-systems.html">homogeneity</a> and <a href="http://en.wikipedia.org/wiki/Shift-invariant_system">shift-invariance</a> in <a href="http://en.wikipedia.org/wiki/LTI_system_theory">Linear Time-Invariant System Theory</a> hold that scaling and shifting an input signal in a linear system results in the same scaling and shifting in the output signal. Because of these properties, we can represent any impulse as a shifted and scaled delta function and consequently know what the impulse response, i.e. output signal in response to an impulse input signal, will be for that scaled and shifted impulse.</p>
 
-<p>An impulse of \(-3\) at the \(8^{th}\) sample would be represented as a unit impulse \(h\) by scaling the delta function \(\delta\) by \(-3\) and shifting it to the right by \(8\) samples: \(-3\delta[n-8]\), where \(n-8\) means the \(8^{th}\) sample is now the \(0^{th}\). Due to homogeneity and shift invariance, we can determine the impulse response of this impulse by simply scaling and shifting the unit impulse response in the same manner. In other words:</p>
+<p>An impulse of <script type="math/tex">-3</script> at the <script type="math/tex">8^{th}</script> sample would be represented as a unit impulse <script type="math/tex">h</script> by scaling the delta function <script type="math/tex">\delta</script> by <script type="math/tex">-3</script> and shifting it to the right by <script type="math/tex">8</script> samples: <script type="math/tex">-3\delta[n-8]</script>, where <script type="math/tex">n-8</script> means the <script type="math/tex">8^{th}</script> sample is now the <script type="math/tex">0^{th}</script>. Due to homogeneity and shift invariance, we can determine the impulse response of this impulse by simply scaling and shifting the unit impulse response in the same manner. In other words:</p>
 
-<p>\[-3\delta[n-8] \mapsto -3h[n-8]\]</p>
+<p><script type="math/tex; mode=display">-3\delta[n-8] \mapsto -3h[n-8]</script></p>
 
 <p>What this means is that if we know the unit impulse response of a system, we consequently know how the system will react to <em>any</em> impulse, not just a unit impulse. These impulse responses can then be synthesized to form the output signal that would result from running the input signal through the actual system. An example of the powerful implications of this property is <a href="http://en.wikipedia.org/wiki/Convolution_reverb">convolution reverb</a>, in which an impulse response of a physical or virtual space is generated and then convolved with any input signal to simulate the effect of reverberation in that space.</p>
 
-<p>In short, the input signal <em>convolved</em> with the unit impulse response results in the output signal. Convolution of input signal \(x[n]\) with unit impulse \(h[n]\) to generate output signal \(y[n]\) is denoted as:</p>
+<p>In short, the input signal <em>convolved</em> with the unit impulse response results in the output signal. Convolution of input signal <script type="math/tex">x[n]</script> with unit impulse <script type="math/tex">h[n]</script> to generate output signal <script type="math/tex">y[n]</script> is denoted as:</p>
 
-<p>\[x[n] * h[n] = y[n]\]</p>
+<p><script type="math/tex; mode=display">x[n] * h[n] = y[n]</script></p>
 
-<p>Since convolution allows us to go from input signal \(x[n]\) to output signal \(y[n]\), we can conclude that convolution involves the generation of the impulse response for each impulse in the input signal as decomposed by <a href="http://www.dspguide.com/ch5/7.htm">impulse decomposition</a>, <em>as well as</em> the subsequent synthesis of each impulse response, to generate the output signal.</p>
+<p>Since convolution allows us to go from input signal <script type="math/tex">x[n]</script> to output signal <script type="math/tex">y[n]</script>, we can conclude that convolution involves the generation of the impulse response for each impulse in the input signal as decomposed by <a href="http://www.dspguide.com/ch5/7.htm">impulse decomposition</a>, <em>as well as</em> the subsequent synthesis of each impulse response, to generate the output signal.</p>
 <h2 id="definition">
 <span class="hash">#</span>
 <a href="#definition" class="header-link">Definition</a>
 </h2>
 <p>Convolution can be described by the so-called <em>convolution summation</em>. The convolution summation is pretty simple, and is defined as follows:</p>
 
-<p>\[y[i] = \sum_{j=0}^{M-1} h[j]\ x[i-j]\]</p>
+<p><script type="math/tex; mode=display">y[i] = \sum_{j=0}^{M-1} h[j]\ x[i-j]</script></p>
 
-<p>Where the length of the output signal \(y[n]\) is defined as \(M + N - 1\) where \(M\) is the length of the unit impulse response and \(N\) is the length of the input signal.</p>
+<p>Where the length of the output signal <script type="math/tex">y[n]</script> is defined as <script type="math/tex">M + N - 1</script> where <script type="math/tex">M</script> is the length of the unit impulse response and <script type="math/tex">N</script> is the length of the input signal.</p>
 
-<p>All this says is that a given sample \(y[i]\) in the output signal \(y[n]\) is determined by the summation of every \(i^{th}\) sample in every resultant impulse response. In effect, the summation above encodes how different samples in the resulting impulse responses contribute to a single output sample.</p>
+<p>All this says is that a given sample <script type="math/tex">y[i]</script> in the output signal <script type="math/tex">y[n]</script> is determined by the summation of every <script type="math/tex">i^{th}</script> sample in every resultant impulse response. In effect, the summation above encodes how different samples in the resulting impulse responses contribute to a single output sample.</p>
 
 <p>Natural imperative instinct might lead you to conclude that this can be easily implemented using nested iterations and arrays:</p>
 <figure class="codeblock">
@@ -178,7 +180,7 @@
 <span class="hash">#</span>
 <a href="#convolution-machine" class="header-link">Convolution Machine</a>
 </h3>
-<p>The book <a href="http://www.dspguide.com">The Scientist and Engineer&rsquo;s Guide to Digital Signal Processing</a> uses a metaphor known as the <a href="http://www.dspguide.com/ch6/4.htm">Convolution Machine</a> to help conceptualize the convolution operation at a granular level. The convolution machine is simply a theoretical machine in which the unit impulse response is:</p>
+<p>The book <a href="http://www.dspguide.com">The Scientist and Engineer&#39;s Guide to Digital Signal Processing</a> uses a metaphor known as the <a href="http://www.dspguide.com/ch6/4.htm">Convolution Machine</a> to help conceptualize the convolution operation at a granular level. The convolution machine is simply a theoretical machine in which the unit impulse response is:</p>
 
 <ol>
 <li>wrapped onto a roller/cylinder</li>
@@ -186,7 +188,7 @@
 <li>each lined-up pair of samples from input signal and impulse response is multiplied and each product is summed</li>
 </ol>
 
-<p>If you&rsquo;re wondering why step <strong>3</strong> mentions a <em>reversed</em> impulse response, imagine that you have a roller and that the impulse response is on a strip of tape. Now imagine that you apply the impulse response tape over and around the roller, such that the numbers are facing you and are in the correct order. Now, when you roll this roller over and across the input signal, from left to right, the numbers on the impulse response tape will make contact with the input signal in <em>reverse order</em>.</p>
+<p>If you&#39;re wondering why step <strong>3</strong> mentions a <em>reversed</em> impulse response, imagine that you have a roller and that the impulse response is on a strip of tape. Now imagine that you apply the impulse response tape over and around the roller, such that the numbers are facing you and are in the correct order. Now, when you roll this roller over and across the input signal, from left to right, the numbers on the impulse response tape will make contact with the input signal in <em>reverse order</em>.</p>
 
 <p>See <a href="http://www.dspguide.com/ch6/4.htm">this page</a> for an illustration of the convolution machine in Figure 6-8.</p>
 <h2 id="implementation">
@@ -195,7 +197,7 @@
 </h2>
 <p>Implementing the convolution machine is pretty straightforward once we are able to conceptualize what it is actually doing.</p>
 
-<p>Let&rsquo;s start with the type signature. Since we&rsquo;re not using arrays, we&rsquo;ll represent the signals as lists of numbers. Convolution does something with two signals to produce a third signal, so the type signature is pretty straightforward:</p>
+<p>Let&#39;s start with the type signature. Since we&#39;re not using arrays, we&#39;ll represent the signals as lists of numbers. Convolution does something with two signals to produce a third signal, so the type signature is pretty straightforward:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">convolve</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
@@ -208,20 +210,20 @@
 </h3>
 <p>Now for the implementation of <code>convolve</code>. First, consider this component of the convolution summation:</p>
 
-<p>\[x[i-j]\]</p>
+<p><script type="math/tex; mode=display">x[i-j]</script></p>
 
-<p>When we are computing the first sample, such that \(i = 0\), in the output signal \(y[n]\), then at one point we need to refer to the \(x[-(M-1)]\) sample where \(M\) is length of impulse response. However, there are no samples to the left of the first sample.</p>
+<p>When we are computing the first sample, such that <script type="math/tex">i = 0</script>, in the output signal <script type="math/tex">y[n]</script>, then at one point we need to refer to the <script type="math/tex">x[-(M-1)]</script> sample where <script type="math/tex">M</script> is length of impulse response. However, there are no samples to the left of the first sample.</p>
 
-<p>So what we have to do is prepad the input signal with \(M-1\) samples of value \(0\). This padding has the added benefit of allowing us to simply map over the padded input signal to generate the output signal. This is because the convolution operation&rsquo;s output signal length is \(M + N - 1\) where \(M\) is the length of the impulse response and \(N\) is the length of the input signal. The padding can be achieved with:</p>
+<p>So what we have to do is prepad the input signal with <script type="math/tex">M-1</script> samples of value <script type="math/tex">0</script>. This padding has the added benefit of allowing us to simply map over the padded input signal to generate the output signal. This is because the convolution operation&#39;s output signal length is <script type="math/tex">M + N - 1</script> where <script type="math/tex">M</script> is the length of the impulse response and <script type="math/tex">N</script> is the length of the input signal. The padding can be achieved with:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="kr">let</span> <span class="n">pad</span> <span class="ow">=</span> <span class="n">replicate</span> <span class="p">((</span><span class="n">length</span> <span class="n">hs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">0</span>
     <span class="n">ts</span>  <span class="ow">=</span> <span class="n">pad</span> <span class="o">++</span> <span class="n">xs</span>
 </code></pre></figure>
 <p>Once we prepad the input signal with enough zero samples, we can pass the padded input signal and impulse response to a function which simulates the rolling of the convolution machine. This function will be nested within <code>convolve</code> and will simply be used as a recursive helper function.</p>
-<h3 id="letrsquos-roll">
+<h3 id="let39s-roll">
 <span class="hash">#</span>
-<a href="#letrsquos-roll" class="header-link">Let&rsquo;s Roll</a>
+<a href="#let39s-roll" class="header-link">Let&#39;s Roll</a>
 </h3><figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">roll</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
@@ -232,11 +234,11 @@
 
 <p>The <code>roll</code> function is run for every sample in the output signal. This is where the bulk of the implementation comes in. At any given sample in the input signal, we simulate the roll by zipping the input signal from that sample forward along with the impulse response. This generates a list of pairs each consisting of the input signal sample with its corresponding impulse response sample (which is being rolled over it).</p>
 
-<p>If you have trouble conceptualizing this, imagine that the impulse response on the roller is tape, so that when you roll it over the input signal, the impulse response&mdash;which, remember, makes contact with the input signal in reverse&mdash;sticks to the input signal and is lined up such that each sample in the impulse response is directly over a sample of the input signal.</p>
+<p>If you have trouble conceptualizing this, imagine that the impulse response on the roller is tape, so that when you roll it over the input signal, the impulse response---which, remember, makes contact with the input signal in reverse---sticks to the input signal and is lined up such that each sample in the impulse response is directly over a sample of the input signal.</p>
 
 <p>We then need to multiply the components of each pair with each other, i.e. the input sample multiplied by its corresponding impulse response sample. The act of zipping and multiplying the zipped up pairs can be done in one go with <code>zipWith (*)</code>. We then gather all of these products and <code>sum</code> them up. This sum is the latest computed sample in the output signal.</p>
 
-<p>We construct the complete output signal by cons'ing the sample with a recursive call to <code>roll</code>, however this <code>roll</code> will concern only the next sample forward, thereby simulating rolling across the input signal.</p>
+<p>We construct the complete output signal by cons&#39;ing the sample with a recursive call to <code>roll</code>, however this <code>roll</code> will concern only the next sample forward, thereby simulating rolling across the input signal.</p>
 
 <p>With this information, we can finish the definition of <code>roll</code>:</p>
 <figure class="codeblock">
@@ -265,9 +267,9 @@
 </h2>
 <p>Now that we understand the concept behind convolution, we can reduce the above implementation a bit further.</p>
 
-<p>The observation we should make is that the <code>roll</code> function acts like <code>map</code>, specifically over <code>ts</code>. The only detail is that on every element mapped over, the result of that element&rsquo;s mapping concerns the list <code>ts</code> from that element forward. If we are on the third element of <code>ts</code>, we only act on the third element forward. In other words, we are mapping over every <code>tail</code> of <code>ts</code>. Knowing this, we can change the <code>roll</code> function to a straight up <code>map</code> over <code>tails ts</code>.</p>
+<p>The observation we should make is that the <code>roll</code> function acts like <code>map</code>, specifically over <code>ts</code>. The only detail is that on every element mapped over, the result of that element&#39;s mapping concerns the list <code>ts</code> from that element forward. If we are on the third element of <code>ts</code>, we only act on the third element forward. In other words, we are mapping over every <code>tail</code> of <code>ts</code>. Knowing this, we can change the <code>roll</code> function to a straight up <code>map</code> over <code>tails ts</code>.</p>
 
-<p>However, <code>tails</code> considers <code>[]</code> to be a tail of any list&mdash;which is technically correct&mdash;so we&rsquo;ll always have a trailing <code>0</code> element if we do it this way. That&rsquo;s why we simply take the <code>init</code> of the result of <code>tails</code>, which returns every element in a list except the last one. We also still need to prepad the signal, so those lines remain:</p>
+<p>However, <code>tails</code> considers <code>[]</code> to be a tail of any list---which is technically correct---so we&#39;ll always have a trailing <code>0</code> element if we do it this way. That&#39;s why we simply take the <code>init</code> of the result of <code>tails</code>, which returns every element in a list except the last one. We also still need to prepad the signal, so those lines remain:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">convolve</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Num</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
@@ -279,7 +281,7 @@
 <span class="hash">#</span>
 <a href="#parallelization" class="header-link">Parallelization</a>
 </h2>
-<p>There&rsquo;s something to be said about how the various properties of the Haskell language come together to make certain algorithms trivially parallelizable. Green threads, single assignment, function purity and its consequent idempotence/referential transparency, among other things. I think it&rsquo;s interesting to note how easy it can be to parallelize this naive convolution algorithm.</p>
+<p>There&#39;s something to be said about how the various properties of the Haskell language come together to make certain algorithms trivially parallelizable. Green threads, single assignment, function purity and its consequent idempotence/referential transparency, among other things. I think it&#39;s interesting to note how easy it can be to parallelize this naive convolution algorithm.</p>
 <h3 id="parmap">
 <span class="hash">#</span>
 <a href="#parmap" class="header-link">parMap</a>
@@ -289,12 +291,12 @@
 <pre>
 <code class="highlight language-haskell"><span class="nf">parMap</span> <span class="ow">::</span> <span class="kt">Strategy</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">b</span><span class="p">]</span>
 </code></pre></figure>
-<p><code>parMap</code> takes an <a href="http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#t:Strategy">evaluation strategy</a> which is used to actually perform the evaluation in parallel. We use the <a href="http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#v:rdeepseq"><code>rdeepseq</code></a> evaluation strategy, which fully evaluates the argument to Normal Form (i.e. fully evaluated), as opposed to <a href="http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#v:rseq"><code>rseq</code></a> which merely evaluates the argument to <a href="http://en.wikibooks.org/wiki/Haskell/Graph_reduction#Weak_Head_Normal_Form">Weak Head Normal Form</a> (<abbr title="Weak Head Normal Form">WHNF</abbr>). The <code>rdeepseq</code> strategy can only operate on arguments it knows it can fully evaluate, those that conform to the <a href="http://hackage.haskell.org/packages/archive/deepseq/latest/doc/html/Control-DeepSeq.html#t:NFData"><code>NFData</code></a> typeclass from the <a href="http://hackage.haskell.org/package/deepseq">Control.Deepseq</a> module. To conform to this, we add another type constraint to our convolution parameters:</p>
+<p><code>parMap</code> takes an <a href="http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#t:Strategy">evaluation strategy</a> which is used to actually perform the evaluation in parallel. We use the <a href="http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#v:rdeepseq"><code>rdeepseq</code></a> evaluation strategy, which fully evaluates the argument to Normal Form (i.e. fully evaluated), as opposed to <a href="http://hackage.haskell.org/packages/archive/parallel/latest/doc/html/Control-Parallel-Strategies.html#v:rseq"><code>rseq</code></a> which merely evaluates the argument to <a href="http://en.wikibooks.org/wiki/Haskell/Graph_reduction#Weak_Head_Normal_Form">Weak Head Normal Form</a> (WHNF). The <code>rdeepseq</code> strategy can only operate on arguments it knows it can fully evaluate, those that conform to the <a href="http://hackage.haskell.org/packages/archive/deepseq/latest/doc/html/Control-DeepSeq.html#t:NFData"><code>NFData</code></a> typeclass from the <a href="http://hackage.haskell.org/package/deepseq">Control.Deepseq</a> module. To conform to this, we add another type constraint to our convolution parameters:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">parConvolve</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">NFData</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Num</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
 </code></pre></figure>
-<p>Continuing forward, all we have to do now is make a drop-in replacement of <code>map</code> with <code>parMap</code>. Actually, it&rsquo;s not quite a drop-in replacement, because we need to supply <code>parMap</code> with the <code>rdeepseq</code> evaluation strategy:</p>
+<p>Continuing forward, all we have to do now is make a drop-in replacement of <code>map</code> with <code>parMap</code>. Actually, it&#39;s not quite a drop-in replacement, because we need to supply <code>parMap</code> with the <code>rdeepseq</code> evaluation strategy:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">parConvolve</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">NFData</span> <span class="n">a</span><span class="p">,</span> <span class="kt">Num</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="ow">-&gt;</span> <span class="p">[</span><span class="n">a</span><span class="p">]</span>
@@ -334,7 +336,7 @@
 <pre>
 <code class="highlight language-bash"><span class="nv">$ </span>./conv -o bench.html -r out.csv +RTS -N4
 </code></pre></figure>
-<p>The <code>-o</code> parameter specifies an output file for generated <a href="../../../../static/html/convolution-criterion.html">charts and graphs</a>. The <code>-r</code> parameter specifies a comma separated value (<abbr title="Comma Separated Value">CSV</abbr>) file to output relative statistics which we use to measure performance relative to the reference, non-reduced naive implementation.</p>
+<p>The <code>-o</code> parameter specifies an output file for generated <a href="../../../../static/html/convolution-criterion.html">charts and graphs</a>. The <code>-r</code> parameter specifies a comma separated value (CSV) file to output relative statistics which we use to measure performance relative to the reference, non-reduced naive implementation.</p>
 
 <p>The <code>+RTS</code> parameter is a delimiter which begins parameters to the <a href="http://www.haskell.org/ghc/docs/latest/html/users_guide/runtime-control.html">runtime system</a>. The <code>-N#</code> parameter specifies how many cores to utilize. The machine I was using has 6 cores, but I found that using less than that lowered the amount of statistical variance. I imagine this was because the computer was able to continue its own tasks on the other two cores.</p>
 
@@ -364,9 +366,9 @@
 </tbody>
 </table>
 
-<p>The parallel version apparently really boosts performance. An important thing to realize is that when parallelizing things, it&rsquo;s considered best to only parallelize when the benefits outweigh the relative overhead of managing the green threads.</p>
+<p>The parallel version apparently really boosts performance. An important thing to realize is that when parallelizing things, it&#39;s considered best to only parallelize when the benefits outweigh the relative overhead of managing the green threads.</p>
 
-<p>For example, in my tests, changing the impulse response length to 5 and the input signal length to 10 shows the parallel version to be 27% slower than the naive implementation. Also notice that the reduced version is a bit slower, for what I can only imagine to be a <abbr title="Glasgow Haskell Compiler">GHC</abbr> optimization that applies to the naive implementation but not to the reduced version.</p>
+<p>For example, in my tests, changing the impulse response length to 5 and the input signal length to 10 shows the parallel version to be 27% slower than the naive implementation. Also notice that the reduced version is a bit slower, for what I can only imagine to be a GHC optimization that applies to the naive implementation but not to the reduced version.</p>
 
 <table>
 <thead>
@@ -421,7 +423,7 @@
 <span class="hash">#</span>
 <a href="#fusion" class="header-link">Fusion</a>
 </h2>
-<p>As Christian pointed out in the comments, this naive implementation can really benefit from <a href="http://research.microsoft.com/en-us/um/people/simonpj/papers/ndp/haskell-beats-C.pdf">Stream Fusion</a>. It&rsquo;s embarrassingly straightforward to enable stream fusion on this naive algorithm, considering that all we&rsquo;re doing is qualifying the list functions so that the ones from the <a href="http://hackage.haskell.org/package/stream-fusion"><code>stream-fusion</code></a> package are used instead. Doing this yielded a 36% performance increase over the parallel algorithm showcased above, which was already fast. This is quite a bountiful optimization reward indeed.</p>
+<p>As Christian pointed out in the comments, this naive implementation can really benefit from <a href="http://research.microsoft.com/en-us/um/people/simonpj/papers/ndp/haskell-beats-C.pdf">Stream Fusion</a>. It&#39;s embarrassingly straightforward to enable stream fusion on this naive algorithm, considering that all we&#39;re doing is qualifying the list functions so that the ones from the <a href="http://hackage.haskell.org/package/stream-fusion"><code>stream-fusion</code></a> package are used instead. Doing this yielded a 36% performance increase over the parallel algorithm showcased above, which was already fast. This is quite a bountiful optimization reward indeed.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Data.List.Stream</span> <span class="k">as</span> <span class="n">S</span>
@@ -434,19 +436,19 @@
 <span class="hash">#</span>
 <a href="#conclusion" class="header-link">Conclusion</a>
 </h2>
-<p>I&rsquo;m new to Digital Signal Processing, so if you notice any glaring errors please feel free to correct me; I would appreciate it. If you are interested in this subject and would like to read a book to learn more, I wholeheartedly recommend <a href="http://www.dspguide.com">The Scientist and Engineer&rsquo;s Guide to Digital Signal Processing</a>. If you would like to learn more about Convolution, you can check the relevant chapters in that freely available book.</p>
+<p>I&#39;m new to Digital Signal Processing, so if you notice any glaring errors please feel free to correct me; I would appreciate it. If you are interested in this subject and would like to read a book to learn more, I wholeheartedly recommend <a href="http://www.dspguide.com">The Scientist and Engineer&#39;s Guide to Digital Signal Processing</a>. If you would like to learn more about Convolution, you can check the relevant chapters in that freely available book.</p>
 <h3 id="imperative-approach">
 <span class="hash">#</span>
 <a href="#imperative-approach" class="header-link">Imperative Approach</a>
 </h3>
-<p>You can also check out <a href="http://www.songho.ca/dsp/convolution/convolution.html">this page</a> as well, which also covers multidimensional convolution with a concrete example of a <a href="http://en.wikipedia.org/wiki/Gaussian_filter">Gaussian filter</a> applied to an image for the purposes of blurring it. This specific application of the Gaussian filter is known as the <a href="http://en.wikipedia.org/wiki/Gaussian_blur">Gaussian Blur</a>. The Gaussian Blur is pretty popular in realtime image rendering, such as in video games, because of a property it has which allows it be applied in two dimensions, e.g. in an image, as two independent one-dimensional operations. This makes it dramatically faster and more efficient, and is trivial to implement in modern <abbr title="Graphics Processing Unit">GPU</abbr> <a href="http://www.opengl.org/wiki/Compute_Shader">Compute shaders</a> <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. Such shaders can then be used to implement effects such as motion blur in games <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>. The page also provides imperative implementations of convolution in C++.</p>
+<p>You can also check out <a href="http://www.songho.ca/dsp/convolution/convolution.html">this page</a> as well, which also covers multidimensional convolution with a concrete example of a <a href="http://en.wikipedia.org/wiki/Gaussian_filter">Gaussian filter</a> applied to an image for the purposes of blurring it. This specific application of the Gaussian filter is known as the <a href="http://en.wikipedia.org/wiki/Gaussian_blur">Gaussian Blur</a>. The Gaussian Blur is pretty popular in realtime image rendering, such as in video games, because of a property it has which allows it be applied in two dimensions, e.g. in an image, as two independent one-dimensional operations. This makes it dramatically faster and more efficient, and is trivial to implement in modern GPU <a href="http://www.opengl.org/wiki/Compute_Shader">Compute shaders</a> <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. Such shaders can then be used to implement effects such as motion blur in games <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>. The page also provides imperative implementations of convolution in C++.</p>
 <h3 id="optimizations">
 <span class="hash">#</span>
 <a href="#optimizations" class="header-link">Optimizations</a>
 </h3>
 <p>Haskell is known for having many ways of doing any one thing, so if you come up with a better solution feel free to <a href="https://gist.github.com">gist it</a> and post it in the comments.</p>
 
-<p>Of course, this post concerns a <em>naive</em> implementation of convolution. There are other more optimized implementations of convolution, such as <abbr title="Fast Fourier Transform">FFT</abbr> convolution which exploits the Fast Fourier Transform and the principle of duality&mdash;convolution in the time domain is equivalent to multiplication in the frequency domain&mdash;to perform convolution a lot faster in some cases.</p>
+<p>Of course, this post concerns a <em>naive</em> implementation of convolution. There are other more optimized implementations of convolution, such as FFT convolution which exploits the Fast Fourier Transform and the principle of duality---convolution in the time domain is equivalent to multiplication in the frequency domain---to perform convolution a lot faster in some cases.</p>
 
 <div class="footnotes">
 <hr>
@@ -459,7 +461,7 @@
 <li id="fn2">
 <p>Despite this optimization of Gaussian Blurring, many implementations optimize further. Blurring typically involves rendering the scene to a separate buffer (e.g. Render-to-Texture) at a scaled-down resolution. This speeds up the blurring operation as there are less pixels to operate on. Then the result is rendered to the actual screen. Since the point is to blur, the upscaling is usually hardly noticeable.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
 
-<p>Recently I purchased an old game on Steam which I had played circa 2003. This game was developed back when 1280x1024 was a popular resolution, that is 4:3 aspect ratio. I got to a part where the game displayed some sort of blur effect and noticed that the entire screen was completely blurred to the point where I couldn&rsquo;t make anything out. I presume this was not the intended effect. If I had to guess, I imagine they hard-coded a scaled down resolution&mdash;and thus aspect ratio as well&mdash;at which to render the scene for blurring, such that upscaling it to my current 1920x1080 resolution 16:9 <abbr title="Aspect Ratio">AR</abbr> looked horrible. I imagine newer games take into account aspect ratio and some other factor to scale down the current resolution from.</p>
+<p>Recently I purchased an old game on Steam which I had played circa 2003. This game was developed back when 1280x1024 was a popular resolution, that is 4:3 aspect ratio. I got to a part where the game displayed some sort of blur effect and noticed that the entire screen was completely blurred to the point where I couldn&#39;t make anything out. I presume this was not the intended effect. If I had to guess, I imagine they hard-coded a scaled down resolution---and thus aspect ratio as well---at which to render the scene for blurring, such that upscaling it to my current 1920x1080 resolution 16:9 AR looked horrible. I imagine newer games take into account aspect ratio and some other factor to scale down the current resolution from.</p>
 </li>
 
 </ol>
@@ -520,7 +522,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -576,10 +578,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,11 +77,11 @@
     
         <article class="post">
   <h2 class="title"><a href="/notes/angular"><span>Angular.js</span></a></h2>
-  <div class="entry-content"><p>I&rsquo;ve been meaning to learn Google&rsquo;s <a href="http://angularjs.org">Angular.js</a> framework for a while now. I of course have experience with straight up jQuery, but that inevitably becomes a mishmash of code. I do have some experience with <a href="http://backbonejs.org/">Backbone.js</a>, which has been <a href="http://backbonejs.org/#examples">battle tested</a> on many of websites such as Pandora, but something about angular seems a bit cleaner.</p>
+  <div class="entry-content"><p>I&#39;ve been meaning to learn Google&#39;s <a href="http://angularjs.org">Angular.js</a> framework for a while now. I of course have experience with straight up jQuery, but that inevitably becomes a mishmash of code. I do have some experience with <a href="http://backbonejs.org/">Backbone.js</a>, which has been <a href="http://backbonejs.org/#examples">battle tested</a> on many of websites such as Pandora, but something about angular seems a bit cleaner.</p>
 
 <p>At the time of writing I am working on a web project in Go. I intend to make the Go backend serve an API which an Angular app will consume.</p>
 
-<p>My main resources include the <a href="http://docs.angularjs.org/tutorial/step_00">tutorial</a> and a variety of other resources such as <a href="https://egghead.io/lessons">egghead</a>&rsquo;s videos.</p>
+<p>My main resources include the <a href="http://docs.angularjs.org/tutorial/step_00">tutorial</a> and a variety of other resources such as <a href="https://egghead.io/lessons">egghead</a>&#39;s videos.</p>
 
 <nav id="toc">
 <h3>Contents</h3><ol>
@@ -103,7 +105,7 @@
 <span class="hash">#</span>
 <a href="#bootstrapping" class="header-link">Bootstrapping</a>
 </h1>
-<p>Application bootstrapping involves creating an injector used for dependency injection, the injector then creates a root scope to become the context of the application, and then angular compiles the <abbr title="Document Object Model">DOM</abbr> rooted at the <code>ngApp</code> root element, which processes directives and bindings.</p>
+<p>Application bootstrapping involves creating an injector used for dependency injection, the injector then creates a root scope to become the context of the application, and then angular compiles the DOM rooted at the <code>ngApp</code> root element, which processes directives and bindings.</p>
 <h1 id="general-architecture">
 <span class="hash">#</span>
 <a href="#general-architecture" class="header-link">General Architecture</a>
@@ -113,9 +115,9 @@
 <span class="hash">#</span>
 <a href="#scopes" class="header-link">Scopes</a>
 </h2>
-<p>Scopes inherit prototypically from each other. A variable defined in a higher-level scope is accessible to child-scopes. Writing to a variable in a child-scope doesn&rsquo;t propagate up the inheritance chain. Parent scopes can be directly referenced using the <code>$parent</code> property, but it&rsquo;s use is generally discouraged because it embeds an assumption about the overall <abbr title="Document Object Model">DOM</abbr> structure.</p>
+<p>Scopes inherit prototypically from each other. A variable defined in a higher-level scope is accessible to child-scopes. Writing to a variable in a child-scope doesn&#39;t propagate up the inheritance chain. Parent scopes can be directly referenced using the <code>$parent</code> property, but it&#39;s use is generally discouraged because it embeds an assumption about the overall DOM structure.</p>
 
-<p>Because of the asymmetric behavior in reading/writing scope properties at different scopes, it&rsquo;s generally encouraged to bind to object properties, not scope properties. This has the effect of <a href="https://github.com/angular/angular.js/wiki/Understanding-Scopes#javascript-prototypal-inheritance">always consulting the prototype chain</a>, since it first looks up the object, which it finds in its ancestor up the prototype chain, then it changes/sets the value on that object. Whereas <em>setting</em> a single primitive (i.e. non-object) does <em>not</em> consult the prototype chain and simply creates a new value in the child scope that shadows the parent value.</p>
+<p>Because of the asymmetric behavior in reading/writing scope properties at different scopes, it&#39;s generally encouraged to bind to object properties, not scope properties. This has the effect of <a href="https://github.com/angular/angular.js/wiki/Understanding-Scopes#javascript-prototypal-inheritance">always consulting the prototype chain</a>, since it first looks up the object, which it finds in its ancestor up the prototype chain, then it changes/sets the value on that object. Whereas <em>setting</em> a single primitive (i.e. non-object) does <em>not</em> consult the prototype chain and simply creates a new value in the child scope that shadows the parent value.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-html"><span class="nt">&lt;body</span> <span class="na">ng-app</span> <span class="na">ng-init=</span><span class="s">&quot;thing = {name: &#39;World&#39;}&quot;</span><span class="nt">&gt;</span>
@@ -126,16 +128,16 @@
 <span class="nt">&lt;/div&gt;</span>
 <span class="nt">&lt;/body&gt;</span>
 </code></pre></figure>
-<p>Scopes form a tree rooted at the <code>$rootScope</code>, and events can be propagated through the hierarchy. Events are sent up the tree with <code>$emit</code> and down the tree with <code>$broadcast</code>. Scope event handlers are registered with <code>$on</code>, and as with <abbr title="Document Object Model">DOM</abbr> events, we can <code>preventDefault</code> and <code>stopPropagation</code>. It&rsquo;s advised to use scope events sparingly, instead opting for two-way data binding.</p>
+<p>Scopes form a tree rooted at the <code>$rootScope</code>, and events can be propagated through the hierarchy. Events are sent up the tree with <code>$emit</code> and down the tree with <code>$broadcast</code>. Scope event handlers are registered with <code>$on</code>, and as with DOM events, we can <code>preventDefault</code> and <code>stopPropagation</code>. It&#39;s advised to use scope events sparingly, instead opting for two-way data binding.</p>
 
-<p>Scopes pose memory considerations, and are generally destroyed when they&rsquo;re no longer needed. This can be controlled explicitly with <code>$new</code> and <code>$destroy</code>.</p>
+<p>Scopes pose memory considerations, and are generally destroyed when they&#39;re no longer needed. This can be controlled explicitly with <code>$new</code> and <code>$destroy</code>.</p>
 <h1 id="services">
 <span class="hash">#</span>
 <a href="#services" class="header-link">Services</a>
 </h1>
-<p>It&rsquo;s possible to register object-creating recipes that are interpreted by the <code>$injector</code> to provide wired-up instances. Objects created by the <code>$injector</code> are called <em>services</em>, and these are singletons. Only one instance of any given service is created.</p>
+<p>It&#39;s possible to register object-creating recipes that are interpreted by the <code>$injector</code> to provide wired-up instances. Objects created by the <code>$injector</code> are called <em>services</em>, and these are singletons. Only one instance of any given service is created.</p>
 
-<p>There are ways to control how objects are created. The first and simplest way is to register a pre-defined instance with <code>value</code>. Objects registered with <code>value</code> can&rsquo;t express dependencies.</p>
+<p>There are ways to control how objects are created. The first and simplest way is to register a pre-defined instance with <code>value</code>. Objects registered with <code>value</code> can&#39;t express dependencies.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">mod</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;mod&#39;</span><span class="p">,</span> <span class="p">[]);</span>
@@ -150,7 +152,7 @@
 
 <span class="nx">mod</span><span class="p">.</span><span class="nx">service</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="nx">SomeService</span><span class="p">);</span>
 </code></pre></figure>
-<p>The <code>factory</code> method is more flexible than the previous two, since it can be used to register any arbitrary object-creating function. As a result of this flexibility, it&rsquo;s the most common way to register objects into the dependency injection system.</p>
+<p>The <code>factory</code> method is more flexible than the previous two, since it can be used to register any arbitrary object-creating function. As a result of this flexibility, it&#39;s the most common way to register objects into the dependency injection system.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-javascript"><span class="nx">mod</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;someService&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">someDependency</span><span class="p">)</span> <span class="p">{</span>
@@ -193,7 +195,7 @@
   <span class="p">};</span>
 <span class="p">});</span>
 </code></pre></figure>
-<p>Providers can be configured before they produce any object instances. To facilitate this, module lifecycles consist of a <em>configuration phase</em> where recipes are collected and configured, and a <em>run phase</em> where it&rsquo;s possible to execute any post-instantiation logic.</p>
+<p>Providers can be configured before they produce any object instances. To facilitate this, module lifecycles consist of a <em>configuration phase</em> where recipes are collected and configured, and a <em>run phase</em> where it&#39;s possible to execute any post-instantiation logic.</p>
 
 <p>The configuration phase allows providers to be configured as follows:</p>
 <figure class="codeblock">
@@ -257,7 +259,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -286,10 +288,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,7 +77,7 @@
     
         <article class="post">
   <h2 class="title"><a href="/notes/lua"><span>Lua</span></a></h2>
-  <div class="entry-content"><p>LuaJIT has an FFI which allows code to be JIT compiled, whereas regular C API calls aren&rsquo;t <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>:</p>
+  <div class="entry-content"><p>LuaJIT has an FFI which allows code to be JIT compiled, whereas regular C API calls aren&#39;t <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>:</p>
 
 <p><strong>Pros</strong>:</p>
 
@@ -88,7 +90,7 @@
 
 <ul>
 <li>Safety. Third-party scripting can easily crash the application</li>
-<li>Bindings seem to be simpler from a C-language perspective. To this end, C++ programs would presumably have to write C ABI functions to be picked up/wrapped on Lua&rsquo;s end via the FFI <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>. This contrasts with automatically generated SWIG bindings from C++ to Lua&rsquo;s C API. However, I think a benefit is that it ends up being cleaner and more precise/predictable than generated code.</li>
+<li>Bindings seem to be simpler from a C-language perspective. To this end, C++ programs would presumably have to write C ABI functions to be picked up/wrapped on Lua&#39;s end via the FFI <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>. This contrasts with automatically generated SWIG bindings from C++ to Lua&#39;s C API. However, I think a benefit is that it ends up being cleaner and more precise/predictable than generated code.</li>
 </ul>
 <h1 id="using-ffi">
 <span class="hash">#</span>
@@ -137,9 +139,9 @@
 <p>There is a <a href="http://luajit.org/ext_ffi_semantics.html#callback_performance">heavy overhead</a> with C-to-Lua calls, generally found in the form of callbacks in which a C FFI function is provided a callback function written in Lua. The overhead is seemingly similar to the C API calls.</p>
 
 <blockquote>
-<p>Do not use callbacks for performance-sensitive work: e.g. consider a numerical integration routine which takes a user-defined function to integrate over. It&rsquo;s a bad idea to call a user-defined Lua function from C code millions of times. The callback overhead will be absolutely detrimental for performance.</p>
+<p>Do not use callbacks for performance-sensitive work: e.g. consider a numerical integration routine which takes a user-defined function to integrate over. It&#39;s a bad idea to call a user-defined Lua function from C code millions of times. The callback overhead will be absolutely detrimental for performance.</p>
 
-<p>It&rsquo;s considerably faster to write the numerical integration routine itself in Lua — the JIT compiler will be able to inline the user-defined function and optimize it together with its calling context, with very competitive performance.</p>
+<p>It&#39;s considerably faster to write the numerical integration routine itself in Lua — the JIT compiler will be able to inline the user-defined function and optimize it together with its calling context, with very competitive performance.</p>
 </blockquote>
 
 <p>Instead of passing a callback to a C function that applies that function to a sequence, a C function should be created that generates/yields the sequence an element at a time, with the processing done in Lua:</p>
@@ -237,7 +239,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -266,10 +268,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

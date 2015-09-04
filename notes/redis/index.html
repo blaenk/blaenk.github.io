@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -77,7 +79,7 @@
   <h2 class="title"><a href="/notes/redis"><span>Redis</span></a></h2>
   <div class="entry-content"><p><a href="http://redis.io">Redis</a> is a data structure server. It can be used to speed up operations that might be too simple for a heavy handed traditional database. It supports strings, lists, ordered and unordered sets, and hashes. This is meant to provide an overview of the data structures and commands available to Redis. The full list of commands is available in the <a href="http://redis.io/commands">documentation</a>.</p>
 
-<p>There&rsquo;s also a <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Redis_Tips">guide on MDN</a> with suggestions on how to use Redis.</p>
+<p>There&#39;s also a <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Redis_Tips">guide on MDN</a> with suggestions on how to use Redis.</p>
 
 <nav id="toc">
 <h3>Contents</h3><ol>
@@ -116,7 +118,7 @@
 </h1>
 <p>Strings can store values of type byte string, integer (signed platform size), or floating-point (64-bit doubles). Strings support simple key-value store operations such as <code>GET</code>, <code>SET</code>, and <code>DEL</code>. The <code>DEL</code> command returns the number of items that were deleted.</p>
 
-<p>Values can be incremented/decremented by 1 with <code>INCR</code>/<code>DECR</code> or by an arbitrary amount with <code>INCRBY</code>/<code>DECRBY</code>, or <code>INCRYBYFLOAT</code> for floats. If these are used on a key that doesn&rsquo;t exist or is an empty string, it&rsquo;s assumed to have a value of zero.</p>
+<p>Values can be incremented/decremented by 1 with <code>INCR</code>/<code>DECR</code> or by an arbitrary amount with <code>INCRBY</code>/<code>DECRBY</code>, or <code>INCRYBYFLOAT</code> for floats. If these are used on a key that doesn&#39;t exist or is an empty string, it&#39;s assumed to have a value of zero.</p>
 
 <p>Strings also support string operations such as <code>APPEND</code> for concatenation, substring reading and writing with <code>GETRANGE</code> and <code>SETRANGE</code>.</p>
 
@@ -147,9 +149,9 @@
 </h1>
 <p>Ordered sets hold unique keys called members and associated values called scores that are limited to floating-point numbers (doubles) and are used to store the items in ascending order.</p>
 
-<p>Members can be added and removed with <code>ZADD</code> and <code>ZREM</code>. The set&rsquo;s cardinality can be retrieved with <code>ZCARD</code>. More specifically, <code>ZCOUNT</code> can be used to count the number of items whose scores fall within the provided range.</p>
+<p>Members can be added and removed with <code>ZADD</code> and <code>ZREM</code>. The set&#39;s cardinality can be retrieved with <code>ZCARD</code>. More specifically, <code>ZCOUNT</code> can be used to count the number of items whose scores fall within the provided range.</p>
 
-<p>The <code>ZINCRBY</code> command can be used to increment the score of a member by a specific amount. The <code>ZSCORE</code> command can be used to get an item&rsquo;s score. The <code>ZRANGEBYSCORE</code> command can be used to get the items whose scores fall within the provided range. It&rsquo;s also possible to remove items from the set based on whether or not they fall within a provided range of scores or ranks with <code>ZREMRANGEBYSCORE</code> and <code>ZREMRANGEBYRANK</code>.</p>
+<p>The <code>ZINCRBY</code> command can be used to increment the score of a member by a specific amount. The <code>ZSCORE</code> command can be used to get an item&#39;s score. The <code>ZRANGEBYSCORE</code> command can be used to get the items whose scores fall within the provided range. It&#39;s also possible to remove items from the set based on whether or not they fall within a provided range of scores or ranks with <code>ZREMRANGEBYSCORE</code> and <code>ZREMRANGEBYRANK</code>.</p>
 
 <p>The <code>ZRANK</code> command can be used to get the position of an item in the ascending order of the set. The <code>ZRANGE</code> command can be used to retrieve the items whose ranks fall within the provided range, with or without scores.</p>
 
@@ -162,7 +164,7 @@
 </h1>
 <p>Hashes can be thought of as a separate namespace within Redis. They support setting, getting, and deleting values with <code>HSET</code>, <code>HGET</code>, and <code>HDEL</code>. There are <code>HMSET</code> and <code>HMGET</code> variants that allow for <em>multiple</em> fields to be retrieved or key-value pairs to be set. The <code>HLEN</code> command yields the number of key-value pairs in the hash.</p>
 
-<p>The <code>HGETALL</code> command can get all of the key-value pairs, though it&rsquo;s possible to get only one or the other with <code>HKEYS</code> and <code>HVALUES</code>. The existence of a key in a hash can be checked with <code>HEXISTS</code>.</p>
+<p>The <code>HGETALL</code> command can get all of the key-value pairs, though it&#39;s possible to get only one or the other with <code>HKEYS</code> and <code>HVALUES</code>. The existence of a key in a hash can be checked with <code>HEXISTS</code>.</p>
 
 <p><code>HINCRBY</code>/<code>HINCRBYFLOAT</code> can be used to increment a value by a specific amount.</p>
 <h1 id="publish-subscribe">
@@ -176,7 +178,7 @@
 <span class="hash">#</span>
 <a href="#sorting" class="header-link">Sorting</a>
 </h1>
-<p>Sorting can be performed on lists, sets, and ordered sets&mdash;even according to data in other structures.</p>
+<p>Sorting can be performed on lists, sets, and ordered sets---even according to data in other structures.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-python"><span class="n">conn</span><span class="o">.</span><span class="n">rpush</span><span class="p">(</span><span class="s">&#39;sort-input&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
@@ -263,7 +265,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -292,10 +294,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

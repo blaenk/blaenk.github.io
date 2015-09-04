@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -115,27 +117,27 @@
 </ol>
 </nav>
 
-<p>It&rsquo;s become a common practice to keep one&rsquo;s <a href="http://en.wikipedia.org/wiki/Dotfile#Unix_and_Unix-like_environments">dotfiles</a> version controlled, oftentimes mirrored somewhere like Github. A lot of people start their own dotfile collection based (forked) off of someone else', but that never felt right to me. In my view, dotfiles are personal, sensitive configuration files that are explicitly defined to one&rsquo;s own taste. It never made sense to me to want to use a giant wad of files with who knows what configuration directives in there. It seemed a lot like <a href="http://en.wikipedia.org/wiki/Cargo_cult_programming">cargo culting</a> to me.</p>
+<p>It&#39;s become a common practice to keep one&#39;s <a href="http://en.wikipedia.org/wiki/Dotfile#Unix_and_Unix-like_environments">dotfiles</a> version controlled, oftentimes mirrored somewhere like Github. A lot of people start their own dotfile collection based (forked) off of someone else&#39;, but that never felt right to me. In my view, dotfiles are personal, sensitive configuration files that are explicitly defined to one&#39;s own taste. It never made sense to me to want to use a giant wad of files with who knows what configuration directives in there. It seemed a lot like <a href="http://en.wikipedia.org/wiki/Cargo_cult_programming">cargo culting</a> to me.</p>
 
-<p>I do enjoy looking at other peoples' dotfiles from time to time to see what I can pick out and adapt to my own, but otherwise I like to grow mine organically&mdash;that is, only configure what I need, as I need it&mdash;to ensure that I really understand my configuration. As a result, I created <a href="https://github.com/blaenk/dots">my own dotfiles</a> from scratch.</p>
+<p>I do enjoy looking at other peoples&#39; dotfiles from time to time to see what I can pick out and adapt to my own, but otherwise I like to grow mine organically---that is, only configure what I need, as I need it---to ensure that I really understand my configuration. As a result, I created <a href="https://github.com/blaenk/dots">my own dotfiles</a> from scratch.</p>
 <h2 id="file-structure">
 <span class="hash">#</span>
 <a href="#file-structure" class="header-link">File Structure</a>
 </h2>
-<p>The file structure is pretty simple. There&rsquo;s a folder for every type of dotfile collection, for example: zsh, git, vim, and so on. Each of these can contain hidden files and folders that can be deployed by the deploy script.</p>
+<p>The file structure is pretty simple. There&#39;s a folder for every type of dotfile collection, for example: zsh, git, vim, and so on. Each of these can contain hidden files and folders that can be deployed by the deploy script.</p>
 <h2 id="deployment">
 <span class="hash">#</span>
 <a href="#deployment" class="header-link">Deployment</a>
 </h2>
-<p>My deploy script is called <code>sprinkle</code>, which is a heavily modified fork of the deploy script from <a href="https://github.com/holman/dotfiles">holman&rsquo;s dotfiles</a>. I chose this script to start from because I liked that it was a shell script, unlike most other deploy scripts I had seen which were Rakefiles, naturally requiring Ruby to be installed on the system before being able to deploy the dotfiles.</p>
+<p>My deploy script is called <code>sprinkle</code>, which is a heavily modified fork of the deploy script from <a href="https://github.com/holman/dotfiles">holman&#39;s dotfiles</a>. I chose this script to start from because I liked that it was a shell script, unlike most other deploy scripts I had seen which were Rakefiles, naturally requiring Ruby to be installed on the system before being able to deploy the dotfiles.</p>
 
-<p>I also liked that the deploy script had a naming convention such that files and folders with a <code>.symlink</code> suffix were those that were deployed. However, I didn&rsquo;t like that vim and Github wouldn&rsquo;t detect the filetype&mdash;and therefore wouldn&rsquo;t highlight&mdash;due to the misleading file extension. So I ended up heavily customizing the script.</p>
+<p>I also liked that the deploy script had a naming convention such that files and folders with a <code>.symlink</code> suffix were those that were deployed. However, I didn&#39;t like that vim and Github wouldn&#39;t detect the filetype---and therefore wouldn&#39;t highlight---due to the misleading file extension. So I ended up heavily customizing the script.</p>
 
 <p>Now, instead of the <code>.symlink</code>-suffix naming convention, those files and folders that should be deployed are themselves hidden. This allows vim, Github, and others to detect the file type and provide highlighting. Running the deploy script for the first time yields something like this:</p>
 
 <p><img class="center" src="/images/posts/dots/deploy.png"></p>
 
-<p>My zsh files have an alias for the sprinkle script so that it can be run from anywhere, though in this case I was already in my dots directory. Files that haven&rsquo;t been deployed are immediately deployed (symlinked) unless there&rsquo;s an existing file in the destination. In that case, there are options to backup, overwrite, or remove (without deploying) the existing file, as well as skip that file altogether.</p>
+<p>My zsh files have an alias for the sprinkle script so that it can be run from anywhere, though in this case I was already in my dots directory. Files that haven&#39;t been deployed are immediately deployed (symlinked) unless there&#39;s an existing file in the destination. In that case, there are options to backup, overwrite, or remove (without deploying) the existing file, as well as skip that file altogether.</p>
 
 <p>These commands are entered when prompted by simply entering the first letter of the action, i.e. <code>o</code> for overwrite. A capitalized letter performs that action for all remaining files as well. This is what the prompt looks like:</p>
 
@@ -144,7 +146,7 @@
 <span class="hash">#</span>
 <a href="#tmux" class="header-link">tmux</a>
 </h2>
-<p>My tmux configuration is pretty simple I think. I keep the bind at <code>C-b</code> though it kind of interferes with <code>C-f/C-b</code> scrolling, in which case there&rsquo;s a bit of lag for <code>C-b</code> unless I tap it twice. Instead I&rsquo;m getting used to scrolling with <code>C-u/C-d</code> though it&rsquo;s pretty disorienting starting out.</p>
+<p>My tmux configuration is pretty simple I think. I keep the bind at <code>C-b</code> though it kind of interferes with <code>C-f/C-b</code> scrolling, in which case there&#39;s a bit of lag for <code>C-b</code> unless I tap it twice. Instead I&#39;m getting used to scrolling with <code>C-u/C-d</code> though it&#39;s pretty disorienting starting out.</p>
 
 <p>My window list is pretty subtle I think. Active windows are underlined and the current window name is emboldened.</p>
 
@@ -170,7 +172,7 @@ bind -n M-k swap-window -t +1
 <span class="hash">#</span>
 <a href="#zsh" class="header-link">zsh</a>
 </h2>
-<p>My zsh configuration files are created from scratch as well, I don&rsquo;t use something like oh-my-zsh for the same reasons that I stated in the opening paragraph. I do use <a href="https://github.com/zsh-users/antigen">antigen</a>, which is similar to <a href="https://github.com/gmarik/Vundle.vim">vundle</a> but for zsh, mainly to avoid having to either keep stale snapshots or juggle git submodules of zsh plugins I use. I only use two zsh plugins: <a href="https://github.com/zsh-users/zsh-syntax-highlighting">syntax-highlighting</a> and extra/community <a href="https://github.com/zsh-users/zsh-completions">completions</a>.</p>
+<p>My zsh configuration files are created from scratch as well, I don&#39;t use something like oh-my-zsh for the same reasons that I stated in the opening paragraph. I do use <a href="https://github.com/zsh-users/antigen">antigen</a>, which is similar to <a href="https://github.com/gmarik/Vundle.vim">vundle</a> but for zsh, mainly to avoid having to either keep stale snapshots or juggle git submodules of zsh plugins I use. I only use two zsh plugins: <a href="https://github.com/zsh-users/zsh-syntax-highlighting">syntax-highlighting</a> and extra/community <a href="https://github.com/zsh-users/zsh-completions">completions</a>.</p>
 
 <p>I then have a separate zsh sub-folder that stores zsh files that configure different aspects of zsh, such as aliases, completions, functions, bindings, and so on.</p>
 <h3 id="aliases">
@@ -182,7 +184,7 @@ bind -n M-k swap-window -t +1
 <span class="hash">#</span>
 <a href="#completions" class="header-link">Completions</a>
 </h3>
-<p>There&rsquo;s nothing really special about my completions configuration. I do set it up to use my <code>dircolors</code> setup, so that the completion menu uses the correct colors for the different kinds of files. I also set it up for case-insensitive substring completion, so that I can type a bit of text from anywhere in the filename, regardless of case, and have it tab-complete correctly.</p>
+<p>There&#39;s nothing really special about my completions configuration. I do set it up to use my <code>dircolors</code> setup, so that the completion menu uses the correct colors for the different kinds of files. I also set it up for case-insensitive substring completion, so that I can type a bit of text from anywhere in the filename, regardless of case, and have it tab-complete correctly.</p>
 <h3 id="functions">
 <span class="hash">#</span>
 <a href="#functions" class="header-link">Functions</a>
@@ -230,7 +232,7 @@ bind -n M-k swap-window -t +1
 <code class="highlight language-bash">some/dir/here <span class="nv">$ </span><span class="nb">cd </span>b..
 some/ <span class="nv">$ </span><span class="c"># went up two directories</span>
 </code></pre></figure>
-<p>I also have a function for listing the pacman orphan packages on my system, i.e. those that aren&rsquo;t required by any other package. I found a command for doing this but it just dumped a list of every package, so I modified it to also list the description of the package. This requires the <code>expac</code> package, a utility to query the pacman database:</p>
+<p>I also have a function for listing the pacman orphan packages on my system, i.e. those that aren&#39;t required by any other package. I found a command for doing this but it just dumped a list of every package, so I modified it to also list the description of the package. This requires the <code>expac</code> package, a utility to query the pacman database:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="k">function</span> pacorphans<span class="o">()</span> <span class="o">{</span>
@@ -248,9 +250,9 @@ zsh: A very advanced and programmable command interpreter (shell) for UNIX
 
 <p>So I decided to create a command that gets the IP address from <a href="http://ipinfo.io">ipinfo.io</a>, copies the response to my clipboard, and also prints it out to the terminal.</p>
 
-<p>In the past, one would use a command such as <code>ifconfig</code> to list the computer&rsquo;s local addresses. Recently there has been a shift to use the new <a href="http://man7.org/linux/man-pages/man8/ip.8.html"><code>ip</code></a> command which houses many sub-commands such as <code>ip addr</code> which is now the preferred method to list addresses.</p>
+<p>In the past, one would use a command such as <code>ifconfig</code> to list the computer&#39;s local addresses. Recently there has been a shift to use the new <a href="http://man7.org/linux/man-pages/man8/ip.8.html"><code>ip</code></a> command which houses many sub-commands such as <code>ip addr</code> which is now the preferred method to list addresses.</p>
 
-<p>So what I did was create a wrapper for this <code>ip</code> command and create a fake sub-command called <code>get</code> which performs this task of retrieving my external IP address. If the sub-command <code>get</code> wasn&rsquo;t provided, then the wrapper delegates the work to the actual <code>ip</code> command, if it exists.</p>
+<p>So what I did was create a wrapper for this <code>ip</code> command and create a fake sub-command called <code>get</code> which performs this task of retrieving my external IP address. If the sub-command <code>get</code> wasn&#39;t provided, then the wrapper delegates the work to the actual <code>ip</code> command, if it exists.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="k">function</span> ip<span class="o">()</span> <span class="o">{</span>
@@ -278,7 +280,7 @@ copied 123.45.678.90 to clipboard
 <span class="hash">#</span>
 <a href="#cursors" class="header-link">Cursors</a>
 </h3>
-<p>I setup mode-aware cursors in zsh, to better emphasize when I&rsquo;m in vi mode and not. This is pretty straightforward, simply sending the correct terminal control sequence:</p>
+<p>I setup mode-aware cursors in zsh, to better emphasize when I&#39;m in vi mode and not. This is pretty straightforward, simply sending the correct terminal control sequence:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="k">function</span> zle-keymap-select <span class="o">{</span>
@@ -300,13 +302,13 @@ zle -N zle-line-finish
 </code></pre></figure>
 <p>This works perfectly fine in urxvt, but tmux must be configured to allow this because otherwise the setting of the cursor color above by zsh bypasses tmux, applying to tmux as a whole. This means that if one tmux window is in vi mode, the cursor will change, but if one then switches to another tmux window that is in insert mode, the cursor color for that window will remain the same as in the one in vi-mode. That is, the changed cursor color applies to every screen in tmux.</p>
 
-<p>tmux did implement functionality for it to remember the cursor color on a per-window basis back in 2011, but this is only configured out of the box for xterm, since every terminal&rsquo;s control sequences may vary.</p>
+<p>tmux did implement functionality for it to remember the cursor color on a per-window basis back in 2011, but this is only configured out of the box for xterm, since every terminal&#39;s control sequences may vary.</p>
 
-<p>The cursor color is inherently global, so what happens is that tmux remembers the cursor color for every window. When switching to another tmux window, tmux checks if that window&rsquo;s cursor color had been previously changed. If so, tmux sets the global cursor color to that window&rsquo;s saved cursor color. Otherwise, it means that that window&rsquo;s cursor color hasn&rsquo;t been changed, in which case it needs to reset the cursor color to the &ldquo;default&rdquo; cursor color, in case the previous window did change the color.</p>
+<p>The cursor color is inherently global, so what happens is that tmux remembers the cursor color for every window. When switching to another tmux window, tmux checks if that window&#39;s cursor color had been previously changed. If so, tmux sets the global cursor color to that window&#39;s saved cursor color. Otherwise, it means that that window&#39;s cursor color hasn&#39;t been changed, in which case it needs to reset the cursor color to the &quot;default&quot; cursor color, in case the previous window did change the color.</p>
 
-<p>For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the &ldquo;default&rdquo; color.</p>
+<p>For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the &quot;default&quot; color.</p>
 
-<p>The sequence for setting the color is the same in xterm and urxvt: <code>\033]12;color\007</code>. However, there is no sequence I know of&mdash;after looking at <code>man 7 urxvt</code>&mdash;for resetting the cursor color to the default cursor color. For xterm, it is <code>\033]112\007</code>. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).</p>
+<p>The sequence for setting the color is the same in xterm and urxvt: <code>\033]12;color\007</code>. However, there is no sequence I know of---after looking at <code>man 7 urxvt</code>---for resetting the cursor color to the default cursor color. For xterm, it is <code>\033]112\007</code>. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">set -g terminal-overrides ',rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007'
@@ -314,7 +316,7 @@ zle -N zle-line-finish
 <span class="hash">#</span>
 <a href="#misc" class="header-link">Misc</a>
 </h3>
-<p>When one runs a command that doesn&rsquo;t exist, it generally gives an error pointing out that fact. However, the <code>pkgfile</code> package provides a zsh script that, when sourced, provides information about which package such a command may be found in.</p>
+<p>When one runs a command that doesn&#39;t exist, it generally gives an error pointing out that fact. However, the <code>pkgfile</code> package provides a zsh script that, when sourced, provides information about which package such a command may be found in.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="o">[[</span> -e /usr/share/doc/pkgfile/command-not-found.zsh <span class="o">]]</span> <span class="o">&amp;&amp;</span><span class="se">\</span>
@@ -332,7 +334,7 @@ clojure may be found in the following packages:
 
 <p><img class="center" src="/images/posts/dots/less.png"></p>
 
-<p>My prompt is pretty involved and it&rsquo;s discussed more in-depth in my <a href="/posts/terminal-customization/#prompt">customization</a> post, though it&rsquo;s slightly outdated. See my dotfiles for the latest configuration.</p>
+<p>My prompt is pretty involved and it&#39;s discussed more in-depth in my <a href="/posts/terminal-customization/#prompt">customization</a> post, though it&#39;s slightly outdated. See my dotfiles for the latest configuration.</p>
 
 <p>One noteworthy thing however is that I highlight the path separator in a subtle cyan.</p>
 <figure class="codeblock">
@@ -356,7 +358,7 @@ bindkey -M menuselect <span class="s2">&quot;^[[Z&quot;</span> reverse-menu-comp
 <span class="hash">#</span>
 <a href="#vim" class="header-link">vim</a>
 </h2>
-<p>My vim configuration is discussed in other posts, such as <a href="/posts/a-simpler-vim-statusline/">this one</a>. Some noteworthy things are my mode-aware cursors which you can see <a href="/posts/a-simpler-vim-statusline/#redesign">here</a>, where my statusline is also discussed. They&rsquo;re basically color-coded based on the mode. I also made all of the cursors be the block cursor, rather than I-beam for insert mode as is default. I also disabled cursor blinking:</p>
+<p>My vim configuration is discussed in other posts, such as <a href="/posts/a-simpler-vim-statusline/">this one</a>. Some noteworthy things are my mode-aware cursors which you can see <a href="/posts/a-simpler-vim-statusline/#redesign">here</a>, where my statusline is also discussed. They&#39;re basically color-coded based on the mode. I also made all of the cursors be the block cursor, rather than I-beam for insert mode as is default. I also disabled cursor blinking:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-vim"><span class="k">set</span> <span class="nb">gcr</span><span class="p">=</span><span class="k">a</span>:block
@@ -385,7 +387,7 @@ bindkey -M menuselect <span class="s2">&quot;^[[Z&quot;</span> reverse-menu-comp
   autocmd <span class="nb">WinLeave</span> * <span class="k">setlocal</span> <span class="nb">nocursorline</span>
 augroup END
 </code></pre></figure>
-<p>Instead of letting CtrlP generate the list of files, which can be slow, I delegate this work to <code>find</code> and <code>dir</code> on unix and windows respectively. If we&rsquo;re within a git repository, then I take advantage of <code>git ls-files</code> to do this instead.</p>
+<p>Instead of letting CtrlP generate the list of files, which can be slow, I delegate this work to <code>find</code> and <code>dir</code> on unix and windows respectively. If we&#39;re within a git repository, then I take advantage of <code>git ls-files</code> to do this instead.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-vim"><span class="k">let</span> s:ctrlp_fallback <span class="p">=</span>
@@ -402,7 +404,7 @@ augroup END
 <span class="hash">#</span>
 <a href="#conclusion" class="header-link">Conclusion</a>
 </h2>
-<p>All in all it&rsquo;s a pretty simple dotfiles system I think. Feel free to take a look through it to see what you may like to adapt to your own configuration.</p>
+<p>All in all it&#39;s a pretty simple dotfiles system I think. Feel free to take a look through it to see what you may like to adapt to your own configuration.</p>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 16, 2014</div>
@@ -459,7 +461,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -515,10 +517,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

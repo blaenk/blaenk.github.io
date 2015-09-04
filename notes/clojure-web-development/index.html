@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,11 +77,11 @@
     
         <article class="post">
   <h2 class="title"><a href="/notes/clojure-web-development"><span>Clojure Web Development</span></a></h2>
-  <div class="entry-content"><p>I&rsquo;ve noticed a lot of very interesting ideas coming out of the Clojure web development environment lately, so I decided to explore this space after <a href="/notes/clojure/">learning about Clojure</a>.</p>
+  <div class="entry-content"><p>I&#39;ve noticed a lot of very interesting ideas coming out of the Clojure web development environment lately, so I decided to explore this space after <a href="/notes/clojure/">learning about Clojure</a>.</p>
 
 <p>On the server-side, Clojure seems to favor basic libraries to build up applications instead of monolithic, opinionated web frameworks <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. The <a href="https://github.com/cgrand/enlive">Enlive</a> server-side templating library introduces a novel idea of transforming pure HTML for the purpose of dynamically generating content, instead of embedding a language within HTML as has been tradition.</p>
 
-<p>On the client-side, there&rsquo;s the venerable <a href="https://github.com/clojure/clojurescript/">ClojureScript</a> which I consider to be a more appealing JavaScript-based language than the existing ones (e.g. CoffeeScript). This has become a powerful technology to use alongside <a href="https://github.com/swannodette/om">Om</a>, which provides a ClojureScript interface to <a href="/notes/react/">React</a>, and leverages persistent, immutable datastructures for <a href="http://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs/">remarkable performance increases</a>.</p>
+<p>On the client-side, there&#39;s the venerable <a href="https://github.com/clojure/clojurescript/">ClojureScript</a> which I consider to be a more appealing JavaScript-based language than the existing ones (e.g. CoffeeScript). This has become a powerful technology to use alongside <a href="https://github.com/swannodette/om">Om</a>, which provides a ClojureScript interface to <a href="/notes/react/">React</a>, and leverages persistent, immutable datastructures for <a href="http://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs/">remarkable performance increases</a>.</p>
 
 <nav id="toc">
 <h3>Contents</h3><ol>
@@ -142,7 +144,7 @@
 <span class="hash">#</span>
 <a href="#architecture" class="header-link">Architecture</a>
 </h1>
-<p>A general architecture can be one where handlers, routes, models, and views are split off into their own namespaces. Routes relating to specific workflows would be defined in their own namespaces where that behavior is defined. The routes can then be combined into a single handler using Compojure&rsquo;s <code>routes</code> macro.</p>
+<p>A general architecture can be one where handlers, routes, models, and views are split off into their own namespaces. Routes relating to specific workflows would be defined in their own namespaces where that behavior is defined. The routes can then be combined into a single handler using Compojure&#39;s <code>routes</code> macro.</p>
 
 <p>The <span class="path">project.clj</span> file should contain the <code>:ring</code> declaration which defines the application handler and, optionally, functions to run on application startup and shutdown.</p>
 <figure class="codeblock">
@@ -156,7 +158,7 @@
 </h1>
 <p><a href="https://github.com/ring-clojure/ring">Ring</a> is the most popular, lowest-level library for developing web applications. It consists of four components: handlers, requests, responses, and middleware.</p>
 
-<p>Requests and responses are represented as standard Clojure maps. Handlers are functions that process incoming requests, taking request maps and returning response maps. The following response outputs the visitor&rsquo;s IP address.</p>
+<p>Requests and responses are represented as standard Clojure maps. Handlers are functions that process incoming requests, taking request maps and returning response maps. The following response outputs the visitor&#39;s IP address.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">handler</span> <span class="p">[</span><span class="nv">request-map</span><span class="p">]</span>
@@ -164,7 +166,7 @@
    <span class="ss">:headers</span> <span class="p">{</span><span class="s">&quot;Content-Type&quot;</span> <span class="s">&quot;text/html&quot;</span><span class="p">}</span>
    <span class="ss">:body</span> <span class="p">(</span><span class="nb">str </span><span class="s">&quot;ip is &quot;</span> <span class="p">(</span><span class="ss">:remote-addr</span> <span class="nv">request-map</span><span class="p">))})</span>
 </code></pre></figure>
-<p>Middleware can wrap handlers to modify the way the request is processed, or more specifically, a function that accepts an existing handler and returns a new handler with added behavior&mdash;a closure. The following adds a <code>Pragma</code> value to the response headers.</p>
+<p>Middleware can wrap handlers to modify the way the request is processed, or more specifically, a function that accepts an existing handler and returns a new handler with added behavior---a closure. The following adds a <code>Pragma</code> value to the response headers.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">wrap-nocache</span> <span class="p">[</span><span class="nv">handler</span><span class="p">]</span>
@@ -178,7 +180,7 @@
 
 <p>The <a href="https://github.com/noir-clojure/lib-noir">lib-noir</a> library contains a variety of middleware, such as session and cookie handling, redirects, input validation, password hashing, and so on. Each middleware can wrap a previously defined application handler.</p>
 
-<p>Redirection is possible via <span class="path">ring.util.response/redirect</span> which comes with Ring, however, lib-noir also has such a function as <span class="path">noir.response/redirect</span>, which accepts an optional status code to supply. Both functions take a path&mdash;relative to the root&mdash;to which to redirect.</p>
+<p>Redirection is possible via <span class="path">ring.util.response/redirect</span> which comes with Ring, however, lib-noir also has such a function as <span class="path">noir.response/redirect</span>, which accepts an optional status code to supply. Both functions take a path---relative to the root---to which to redirect.</p>
 
 <p>Session management is also provided by the <span class="path">noir.session</span> namespace. The session store is handled by Ring, and a type of store must be specified, such as <span class="path">ring.middleware.session.memory</span>, though there are other available back-ends for the session, such as Redis. The following session management functions are available:</p>
 
@@ -231,7 +233,7 @@
     <span class="p">(</span><span class="nf">error-response</span><span class="p">)</span>
     <span class="p">(</span><span class="nf">normal-response</span><span class="p">)))</span>
 </code></pre></figure>
-<p>The <code>on-error</code> function can be used to format the error messages, if there are any. It takes as first argument the field name as a keyword and as second argument a function which gets passed the errors, and it returns that function&rsquo;s result.</p>
+<p>The <code>on-error</code> function can be used to format the error messages, if there are any. It takes as first argument the field name as a keyword and as second argument a function which gets passed the errors, and it returns that function&#39;s result.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">login-page</span> <span class="p">[]</span>
@@ -243,7 +245,7 @@
 
 <p>There are helper functions for specifying content-type in <span class="path">noir.response</span>. The <code>content-type</code> function can take a MIME type and the response. There is also a <code>json</code> function that can automatically serialize a data structure passed to it.</p>
 
-<p>It&rsquo;s possible to specify access rules for a group of paths by using <span class="path">noir.util.middleware/wrap-access-rules</span> to wrap the access rules around the application handler.</p>
+<p>It&#39;s possible to specify access rules for a group of paths by using <span class="path">noir.util.middleware/wrap-access-rules</span> to wrap the access rules around the application handler.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">user-access</span> <span class="p">[</span><span class="nv">req</span><span class="p">]</span>
@@ -304,7 +306,7 @@
 <code class="highlight language-clojure"><span class="p">((</span><span class="nf">PUT</span> <span class="s">&quot;/:id&quot;</span> <span class="nv">req</span> <span class="p">(</span><span class="nb">str </span><span class="s">&quot;Requested &quot;</span> <span class="p">(</span><span class="ss">:uri</span> <span class="nv">req</span><span class="p">)))</span> <span class="p">{</span><span class="ss">:uri</span> <span class="s">&quot;/foo&quot;</span><span class="p">})</span>
 <span class="p">((</span><span class="nf">PUT</span> <span class="s">&quot;/:id&quot;</span> <span class="p">{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">uri</span><span class="p">]}</span> <span class="p">(</span><span class="nb">str </span><span class="s">&quot;Requested &quot;</span> <span class="nv">uri</span><span class="p">)))</span>
 </code></pre></figure>
-<p>Form parameters are also accessible by name in the parameter list. It&rsquo;s also possible to bind a subset of the parameters and bind the rest to a map, or bind the whole parameter to a map.</p>
+<p>Form parameters are also accessible by name in the parameter list. It&#39;s also possible to bind a subset of the parameters and bind the rest to a map, or bind the whole parameter to a map.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="nf">POST</span> <span class="s">&quot;/&quot;</span> <span class="p">[</span><span class="nb">name </span><span class="nv">message</span><span class="p">]</span> <span class="p">(</span><span class="nf">save-message</span> <span class="nb">name </span><span class="nv">message</span><span class="p">))</span>
@@ -342,7 +344,7 @@
 <span class="p">(</span><span class="nf">defroutes</span> <span class="nv">home-routes</span>
   <span class="p">(</span><span class="nf">ANY</span> <span class="s">&quot;/&quot;</span> <span class="nv">request</span> <span class="nv">home</span><span class="p">))</span>
 </code></pre></figure>
-<p>Resource definitions consist of maps with keys that are either a decision, handler, action, or declaration. The values of these keys are constants or functions, where the functions take the <em>context</em> as their single argument. The context is a map containing keys for the request, resource, and optionally the representation&mdash;the result of content negotiation.</p>
+<p>Resource definitions consist of maps with keys that are either a decision, handler, action, or declaration. The values of these keys are constants or functions, where the functions take the <em>context</em> as their single argument. The context is a map containing keys for the request, resource, and optionally the representation---the result of content negotiation.</p>
 
 <p>Decisions determine how to handle a request Their keys end in a question mark <code>?</code>, and their values must evaluate to a boolean value. If a function is used, the following return values are legal:</p>
 
@@ -375,9 +377,9 @@
   <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">context</span><span class="p">]</span>
     <span class="p">(</span><span class="nb">str </span><span class="p">(</span><span class="nf">get-in</span> <span class="nv">context</span> <span class="p">[</span><span class="ss">:request</span> <span class="ss">:request-method</span><span class="p">])</span> <span class="s">&quot; is not allowed&quot;</span><span class="p">)))</span>
 </code></pre></figure>
-<p>Actions exist for HTTP request methods PUT, POST, and DELETE, and they have a question mark suffix <code>!</code> to denote that they are mutating the application&rsquo;s internal state. When an action occurs, a result can be returned using <code>:handle-created</code>.</p>
+<p>Actions exist for HTTP request methods PUT, POST, and DELETE, and they have a question mark suffix <code>!</code> to denote that they are mutating the application&#39;s internal state. When an action occurs, a result can be returned using <code>:handle-created</code>.</p>
 
-<p>Declarations indicate the resource&rsquo;s capabilities, such as <code>:available-media-types</code> which specifies the MIME types that the resource can be returned as, or <code>:etag</code> for caching.</p>
+<p>Declarations indicate the resource&#39;s capabilities, such as <code>:available-media-types</code> which specifies the MIME types that the resource can be returned as, or <code>:etag</code> for caching.</p>
 
 <p>The <a href="https://github.com/dakrone/cheshire">Chesire</a> library is used for fast and easy JSON parsing and generating.</p>
 <h1 id="templating">
@@ -509,7 +511,7 @@
               <span class="p">(</span><span class="nf">content</span> <span class="p">(</span><span class="nb">str </span><span class="nv">i</span><span class="p">)))))</span>
 <span class="c1">;= &quot;&lt;ul&gt;&lt;li&gt;3&lt;/li&gt;&lt;li&gt;2&lt;/li&gt;&lt;li&gt;1&lt;/li&gt;&lt;/ul&gt;&quot;</span>
 </code></pre></figure>
-<p>The <code>defsnippet</code> form defines a function that loads HTML from a file that can be transformed. Snippets are the equivalent of partials in other frameworks. Its first argument is the name to give the function, the second is the path to the file relative to the classpath, and the third is the selector to treat as the root element&mdash;to which transformations are applied. It returns a sequence of maps representing the HTML elements. These can be added into regular templates using transformation functions like <code>append</code>.</p>
+<p>The <code>defsnippet</code> form defines a function that loads HTML from a file that can be transformed. Snippets are the equivalent of partials in other frameworks. Its first argument is the name to give the function, the second is the path to the file relative to the classpath, and the third is the selector to treat as the root element---to which transformations are applied. It returns a sequence of maps representing the HTML elements. These can be added into regular templates using transformation functions like <code>append</code>.</p>
 
 <p>A single HTML file may contain several snippets, each selecting its own relevant nodes.</p>
 <figure class="codeblock">
@@ -533,12 +535,12 @@
 <span class="hash">#</span>
 <a href="#databases" class="header-link">Databases</a>
 </h1>
-<p>Being <abbr title="Java Virtual Machine">JVM</abbr>-based, Clojure has access to the various Java database libraries such as JDBC, <abbr title="Object Relational Mapping">ORM</abbr>s like Hibernate, and its own libraries like <a href="http://sqlkorma.com/">Korma</a>&mdash;which implements an EDSL for database interaction.</p>
+<p>Being JVM-based, Clojure has access to the various Java database libraries such as JDBC, ORMs like Hibernate, and its own libraries like <a href="http://sqlkorma.com/">Korma</a>---which implements an EDSL for database interaction.</p>
 <h2 id="jdbc">
 <span class="hash">#</span>
 <a href="#jdbc" class="header-link">JDBC</a>
 </h2>
-<p>The <span class="path">clojure.java.jdbc</span> namespace provides a thin layer between Clojure and <a href="http://en.wikipedia.org/wiki/Java_Database_Connectivity">JDBC</a>. A database &ldquo;spec&rdquo; is created that is essentially a map of configuration data to locate the JDBC driver and configure it and its connections. Alternatively, a JDBC data source instance can be used.</p>
+<p>The <span class="path">clojure.java.jdbc</span> namespace provides a thin layer between Clojure and <a href="http://en.wikipedia.org/wiki/Java_Database_Connectivity">JDBC</a>. A database &quot;spec&quot; is created that is essentially a map of configuration data to locate the JDBC driver and configure it and its connections. Alternatively, a JDBC data source instance can be used.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="c1">; example sqlite database spec</span>
@@ -577,7 +579,7 @@
 <span class="c1">;= ({:last_insert_rowid() 1}</span>
 <span class="c1">;=  {:last_insert_rowid() 2})</span>
 </code></pre></figure>
-<p>Records can be updated with <code>update-values</code> or <code>update-or-insert-values</code>, the latter inserts the row if it doesn&rsquo;t already exist.</p>
+<p>Records can be updated with <code>update-values</code> or <code>update-or-insert-values</code>, the latter inserts the row if it doesn&#39;t already exist.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="nf">jdbc/with-connection</span> <span class="nv">db-spec</span>
@@ -595,7 +597,7 @@
 <code class="highlight language-clojure"><span class="p">(</span><span class="nf">jdbc/with-connection</span> <span class="nv">db-spec</span>
   <span class="p">(</span><span class="nf">sql/delete-rows</span> <span class="ss">:users</span> <span class="p">[</span><span class="s">&quot;id=?&quot;</span> <span class="s">&quot;foo&quot;</span><span class="p">]))</span>
 </code></pre></figure>
-<p>The <code>with-query-results</code> function can be used to fetch data, with the result being a lazy sequence which performs the fetching of data until it&rsquo;s actually necessary, so long as the source remains available. For this reason, it&rsquo;s common to use <code>doall</code> on the result to force the data to be fetched.</p>
+<p>The <code>with-query-results</code> function can be used to fetch data, with the result being a lazy sequence which performs the fetching of data until it&#39;s actually necessary, so long as the source remains available. For this reason, it&#39;s common to use <code>doall</code> on the result to force the data to be fetched.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="nf">jdbc/with-connection</span> <span class="nv">db-spec</span>
@@ -732,7 +734,7 @@
 <code class="highlight language-clojure"><span class="c1">; would access obj.prop.value.text</span>
 <span class="p">(</span><span class="nb">.. </span><span class="nv">obj</span> <span class="nv">-prop</span> <span class="nv">-value</span> <span class="nv">-text</span><span class="p">)</span>
 </code></pre></figure>
-<p>Functions that need to be accessible from outside the ClojureScript must be &ldquo;exported&rdquo; to prevent the Google Closure compiler from changing the function name during the minification process.</p>
+<p>Functions that need to be accessible from outside the ClojureScript must be &quot;exported&quot; to prevent the Google Closure compiler from changing the function name during the minification process.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="kd">defn </span><span class="o">^</span><span class="ss">:export</span> <span class="nv">init</span> <span class="p">[]</span>
@@ -752,7 +754,7 @@
 <span class="hash">#</span>
 <a href="#building" class="header-link">Building</a>
 </h2>
-<p>The <a href="https://github.com/emezeske/lein-cljsbuild">lein-cljsbuild</a> plug-in for lein can automate the compilation of ClojureScript by defining&mdash;in the <span class="path">project.clj</span> file&mdash;the namespaces to reference and the JavaScript files to output.</p>
+<p>The <a href="https://github.com/emezeske/lein-cljsbuild">lein-cljsbuild</a> plug-in for lein can automate the compilation of ClojureScript by defining---in the <span class="path">project.clj</span> file---the namespaces to reference and the JavaScript files to output.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="ss">:cljsbuild</span>
@@ -778,7 +780,7 @@
 </code></pre></figure>
 <p>When configured this way, the profile can be specified as the final argument to general <code>cljsbuild</code> commands to specify which profile to use.</p>
 
-<p>With this configuration, it&rsquo;s possible to compile the specified ClojureScript files either one time, or automatically whenever the files are changed. Such commands are &ldquo;namespaced&rdquo; by the <code>cljsbuild</code> command. The <code>clean</code> command can clear previously generated files.</p>
+<p>With this configuration, it&#39;s possible to compile the specified ClojureScript files either one time, or automatically whenever the files are changed. Such commands are &quot;namespaced&quot; by the <code>cljsbuild</code> command. The <code>clean</code> command can clear previously generated files.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="c"># one-off</span>
@@ -790,17 +792,17 @@
 <span class="hash">#</span>
 <a href="#om" class="header-link">Om</a>
 </h1>
-<p><a href="https://github.com/swannodette/om">Om</a> is a ClojureScript interface to <a href="/notes/react/">React</a> leveraging immutable data structures for increased speed. One thing to keep in mind is that Om uses an optimization that always renders on <code>requestAnimationFrame</code>, unlike React, and so the state has to be set even if it&rsquo;s not changed.</p>
+<p><a href="https://github.com/swannodette/om">Om</a> is a ClojureScript interface to <a href="/notes/react/">React</a> leveraging immutable data structures for increased speed. One thing to keep in mind is that Om uses an optimization that always renders on <code>requestAnimationFrame</code>, unlike React, and so the state has to be set even if it&#39;s not changed.</p>
 
-<p>Application state in Om is held in an <code>atom</code>, which is the only reference type in ClojureScript. The application state can be transitioned with the <code>transact!</code> function which takes a transition function that shouldn&rsquo;t rely on information obtained by dereferencing a cursor, <code>get-state</code>, <code>transact!</code>, or <code>update!</code>. Changing the value via <code>swap!</code> or <code>reset!</code> always triggers a re-render of any roots attached to it. Everything in the atom must be an associative data structure, either map or an indexed sequence such as a vector. No lists or lazy sequences should be inside this state.</p>
+<p>Application state in Om is held in an <code>atom</code>, which is the only reference type in ClojureScript. The application state can be transitioned with the <code>transact!</code> function which takes a transition function that shouldn&#39;t rely on information obtained by dereferencing a cursor, <code>get-state</code>, <code>transact!</code>, or <code>update!</code>. Changing the value via <code>swap!</code> or <code>reset!</code> always triggers a re-render of any roots attached to it. Everything in the atom must be an associative data structure, either map or an indexed sequence such as a vector. No lists or lazy sequences should be inside this state.</p>
 
-<p>As in React, components take props, which in Om are actually <a href="/notes/clojure#zippers">cursors</a> into the application state. This is relevant because in Om, the entire application state is stored in an atom, but individual components generally don&rsquo;t care about the entire scope of the application data. Each component gets cursors at construction time and automatically re-render themselves when the value underneath the cursor changes.</p>
+<p>As in React, components take props, which in Om are actually <a href="/notes/clojure#zippers">cursors</a> into the application state. This is relevant because in Om, the entire application state is stored in an atom, but individual components generally don&#39;t care about the entire scope of the application data. Each component gets cursors at construction time and automatically re-render themselves when the value underneath the cursor changes.</p>
 
 <p>During the render phase, cursors can be treated as their underlying value (e.g. map or vector), but outside of the render phase they need to explicitly be dereferenced to yield this underlying value.</p>
 
-<p>It&rsquo;s possible to create sub-cursors <strong>only during the render phase</strong> using the <code>get</code> or <code>get-in</code> functions but if the underlying value is a primitive, then the primitive is returned and not a cursor.</p>
+<p>It&#39;s possible to create sub-cursors <strong>only during the render phase</strong> using the <code>get</code> or <code>get-in</code> functions but if the underlying value is a primitive, then the primitive is returned and not a cursor.</p>
 
-<p>The consequence of this is that it&rsquo;s not possible to create a component that depends on a single string, such as a text-input. A workaround for this would be to make the component depend on a <em>vector</em> of the single string.</p>
+<p>The consequence of this is that it&#39;s not possible to create a component that depends on a single string, such as a text-input. A workaround for this would be to make the component depend on a <em>vector</em> of the single string.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="k">def </span><span class="nv">state</span> <span class="p">(</span><span class="nf">atom</span> <span class="p">{</span><span class="ss">:name</span> <span class="p">[</span><span class="s">&quot;Igor&quot;</span><span class="p">]}))</span>
@@ -812,7 +814,7 @@
   <span class="c1">; yield sub-cursor to vector containing the string</span>
   <span class="p">(</span><span class="nf">om/build</span> <span class="nv">text-input</span> <span class="p">(</span><span class="ss">:name</span> <span class="nv">app-cursor</span><span class="p">)))</span>
 </code></pre></figure>
-<p>Cursors can propagate changes back to the original atom using the <code>transact!</code> function, which is available during and outside of the render phase. During the render phase, the <code>transact!</code>ed changes aren&rsquo;t visible until the next render. Outside of the render phase, <code>deref</code> returns the current value and <code>value</code> returns the last rendered value.</p>
+<p>Cursors can propagate changes back to the original atom using the <code>transact!</code> function, which is available during and outside of the render phase. During the render phase, the <code>transact!</code>ed changes aren&#39;t visible until the next render. Outside of the render phase, <code>deref</code> returns the current value and <code>value</code> returns the last rendered value.</p>
 
 <p>Components can depend on multiple cursors by simply wrapping them in a map or vector.</p>
 <figure class="codeblock">
@@ -823,7 +825,7 @@
   <span class="p">(</span><span class="nf">om/build</span> <span class="nv">table-view</span> <span class="p">{</span><span class="ss">:rows</span> <span class="p">(</span><span class="ss">:courses</span> <span class="nv">state</span><span class="p">)</span>,
                         <span class="ss">:cols</span> <span class="p">(</span><span class="ss">:classes</span> <span class="nv">state</span><span class="p">)}))</span>
 </code></pre></figure>
-<p>The <code>root</code> function is used for mounting a component on a specific element in the DOM, like <code>React.renderComponent</code>. It takes a function that returns an Om component conforming to the <code>IRender</code> interface (like the <code>component</code> macro generates when the owner doesn&rsquo;t need to be accessed) given the application state and the backing React component, the application state atom, and a map containing the <code>:target</code> DOM node and any other options.</p>
+<p>The <code>root</code> function is used for mounting a component on a specific element in the DOM, like <code>React.renderComponent</code>. It takes a function that returns an Om component conforming to the <code>IRender</code> interface (like the <code>component</code> macro generates when the owner doesn&#39;t need to be accessed) given the application state and the backing React component, the application state atom, and a map containing the <code>:target</code> DOM node and any other options.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="nf">om/root</span>
@@ -891,7 +893,7 @@
           <span class="p">(</span><span class="nf">om/build-all</span> <span class="nv">contact-view</span> <span class="p">(</span><span class="ss">:contacts</span> <span class="nv">app</span><span class="p">)</span>
             <span class="p">{</span><span class="ss">:init-state</span> <span class="p">{</span><span class="ss">:delete</span> <span class="nv">delete</span><span class="p">}}))))))</span>
 </code></pre></figure>
-<p>The protocol <code>IWillMount</code> is then implemented to establish a <code>go</code> loop that listens for events from the children contact views. The <code>get-state</code> function can be used to get a component&rsquo;s state. The <code>get-node</code> function can be used to get a reference to a component via a <code>ref</code>.</p>
+<p>The protocol <code>IWillMount</code> is then implemented to establish a <code>go</code> loop that listens for events from the children contact views. The <code>get-state</code> function can be used to get a component&#39;s state. The <code>get-node</code> function can be used to get a reference to a component via a <code>ref</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure">    <span class="nv">om/IWillMount</span>
@@ -906,7 +908,7 @@
 <span class="hash">#</span>
 <a href="#deployment" class="header-link">Deployment</a>
 </h1>
-<p>Clojure web applications are generally packaged and deployed as servlets. Servlets are Java classes that extend the <span class="path">javax.servlet.http.HttpServlet</span> base class, which itself defines an interface for handling HTTP requests. Servlets can be deployed to one of many application servers. Application servers usually provide multitenancy, so that multiple applications can be deployed to the same application server. Most application servers are also web servers, but it&rsquo;s possible to proxy to a dedicated web server as well.</p>
+<p>Clojure web applications are generally packaged and deployed as servlets. Servlets are Java classes that extend the <span class="path">javax.servlet.http.HttpServlet</span> base class, which itself defines an interface for handling HTTP requests. Servlets can be deployed to one of many application servers. Application servers usually provide multitenancy, so that multiple applications can be deployed to the same application server. Most application servers are also web servers, but it&#39;s possible to proxy to a dedicated web server as well.</p>
 
 <p>A Clojure web application using Ring, for example, can produce a servlet wrapper at runtime and hand that to the application server that runs embedded within the same process.</p>
 <figure class="codeblock">
@@ -914,11 +916,11 @@
 <code class="highlight language-clojure"><span class="p">(</span><span class="nf">use</span> <span class="o">&#39;</span><span class="p">[</span><span class="nv">ring.adapter.jetty</span> <span class="ss">:only</span> <span class="p">(</span><span class="nf">run-jetty</span><span class="p">))</span>
 <span class="p">(</span><span class="k">def </span><span class="nv">server</span> <span class="p">(</span><span class="nf">run-jetty</span> <span class="o">#</span><span class="ss">&#39;app</span> <span class="p">{</span><span class="ss">:port</span> <span class="mi">8080</span> <span class="ss">:join?</span> <span class="nv">false</span><span class="p">}))</span>
 </code></pre></figure>
-<p>It&rsquo;s also possible to deploy to a standalone application server, however, by packaging up the web application into a war file. The war files are a variation of jar files. They contain a <span class="path">web.xml</span> file that describes how the war file should be deployed, a <span class="path">lib/</span> directory containing the application&rsquo;s dependencies so as to make the war self-contained, and a <span class="path">classes/</span> directory containing the Clojure source files, <abbr title="Java Virtual Machine">JVM</abbr> class files, and other assets.</p>
+<p>It&#39;s also possible to deploy to a standalone application server, however, by packaging up the web application into a war file. The war files are a variation of jar files. They contain a <span class="path">web.xml</span> file that describes how the war file should be deployed, a <span class="path">lib/</span> directory containing the application&#39;s dependencies so as to make the war self-contained, and a <span class="path">classes/</span> directory containing the Clojure source files, JVM class files, and other assets.</p>
 
 <p>The <span class="path">web.xml</span> file specifies the configuration for the deployment of the war file, including servlet mount points, behavior of user sessions, and app-server specific features.</p>
 
-<p>Leiningen can build war files&mdash;as well as accompanying <span class="path">web.xml</span> files&mdash;using plug-ins such as <code>lein-ring</code>. This plugin requires a <code>:ring :handler</code> slot which specifies the namespace-qualified name of the top-level application request handler.</p>
+<p>Leiningen can build war files---as well as accompanying <span class="path">web.xml</span> files---using plug-ins such as <code>lein-ring</code>. This plugin requires a <code>:ring :handler</code> slot which specifies the namespace-qualified name of the top-level application request handler.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="kd">defproject </span><span class="nv">com.some/project</span> <span class="s">&quot;1.0.0&quot;</span>
@@ -941,7 +943,7 @@
 <span class="hash">#</span>
 <a href="#http-kit" class="header-link">HTTP Kit</a>
 </h2>
-<p><a href="http://http-kit.org/">HTTP kit</a> is a highly-concurrent HTTP server for Clojure. It&rsquo;s a near drop-in replacement for Jetty. A <code>main</code> method must be created that is accessible from Java, and the namespace that defines it must ensure that it is AOT compiled with the <code>:gen-class</code> key in the <code>ns</code> form. It&rsquo;s also necessary to define the entry-point in the <span class="path">project.clj</span> file.</p>
+<p><a href="http://http-kit.org/">HTTP kit</a> is a highly-concurrent HTTP server for Clojure. It&#39;s a near drop-in replacement for Jetty. A <code>main</code> method must be created that is accessible from Java, and the namespace that defines it must ensure that it is AOT compiled with the <code>:gen-class</code> key in the <code>ns</code> form. It&#39;s also necessary to define the entry-point in the <span class="path">project.clj</span> file.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-clojure"><span class="p">(</span><span class="kd">ns </span><span class="nv">app.main</span>
@@ -969,7 +971,7 @@
 </li>
 
 <li id="fn2">
-<p>This is similar to Play&rsquo;s development server.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
+<p>This is similar to Play&#39;s development server.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
 </li>
 
 </ol>
@@ -1023,7 +1025,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -1052,10 +1054,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

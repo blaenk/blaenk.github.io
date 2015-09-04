@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -79,7 +81,7 @@
 <span class="hash">#</span>
 <a href="#levee-web-interface-for-rtorrent" class="header-link">Levee: Web Interface for rtorrent</a>
 </h2>
-<p><a href="https://github.com/blaenk/levee">Levee</a> is a web interface for <a href="http://rakshasa.github.io/rtorrent/">rtorrent</a>. The back-end is written in Clojure using a combination of <a href="http://http-kit.org">http-kit</a> and <a href="https://github.com/weavejester/compojure">compojure</a>, while the front-end is written in ClojureScript using <a href="https://github.com/swannodette/om">Om</a>, which itself is built on top of Facebook&rsquo;s <a href="http://facebook.github.io/react/">React</a>.</p>
+<p><a href="https://github.com/blaenk/levee">Levee</a> is a web interface for <a href="http://rakshasa.github.io/rtorrent/">rtorrent</a>. The back-end is written in Clojure using a combination of <a href="http://http-kit.org">http-kit</a> and <a href="https://github.com/weavejester/compojure">compojure</a>, while the front-end is written in ClojureScript using <a href="https://github.com/swannodette/om">Om</a>, which itself is built on top of Facebook&#39;s <a href="http://facebook.github.io/react/">React</a>.</p>
 
 <p>It consists of a clean, responsive UI with support for drag-and-drop file uploads, WebSockets for up-to-date information, and a simple locking system to facilitate a multi-user environment.</p>
 
@@ -127,7 +129,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -156,10 +158,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

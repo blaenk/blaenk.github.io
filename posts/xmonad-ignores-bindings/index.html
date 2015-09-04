@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,16 +77,16 @@
     
         <article class="post">
   <h2 class="title"><a href="/posts/xmonad-ignores-bindings"><span>xmonad Ignores Bindings</span></a></h2>
-  <div class="entry-content"><p>In my <a href="/posts/terminal-customization/">previous post</a> I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up <a href="http://xmonad.org">xmonad</a>. I&rsquo;ve finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.</p>
+  <div class="entry-content"><p>In my <a href="/posts/terminal-customization/">previous post</a> I talked about how I spent a while configuring my system, specifically urxvt and zsh, in preparation for setting up <a href="http://xmonad.org">xmonad</a>. I&#39;ve finally gotten around to setting up xmonad. One problem in particular stopped me from continuing with the rest of the configuration.</p>
 
 <p><strong>Update</strong>: Shortly after posting in the <a href="https://code.google.com/p/xmonad/issues/detail?id=273">issue tracker entry</a> for this issue relating my experience and affirming that the proposed patch fixed the problem, the gracious developers merged the patch into the main tree. This problem should no longer affect anyone!</p>
 <h2 id="media-keys">
 <span class="hash">#</span>
 <a href="#media-keys" class="header-link">Media Keys</a>
 </h2>
-<p>I have a regular keyboard layout, <a href="http://www.daskeyboard.com/model-s-ultimate/">Das Keyboard Model S Ultimate</a>, which lacks media keys (i.e. volume up, down, etc). This wasn&rsquo;t too much of a problem when I used headsets because most of them have dedicated volume controls. However, I got tired of headsets being rendered useless when any little thing messed up (e.g. microphone, a speaker, etc).</p>
+<p>I have a regular keyboard layout, <a href="http://www.daskeyboard.com/model-s-ultimate/">Das Keyboard Model S Ultimate</a>, which lacks media keys (i.e. volume up, down, etc). This wasn&#39;t too much of a problem when I used headsets because most of them have dedicated volume controls. However, I got tired of headsets being rendered useless when any little thing messed up (e.g. microphone, a speaker, etc).</p>
 
-<p>As a result I ended up buying a <a href="http://amzn.com/B00029MTMQ">cheap standalone mic</a> and now use my iPhone&rsquo;s <a href="http://amzn.com/B004PNZFZ8">Shure SE215-K</a> earbuds for sound on my computer. This is very easy to do given my computer case' front panel audio connector. Of course, the problem now is that there aren&rsquo;t any dedicated media keys and having to use a GUI to change the volume is cumbersome.</p>
+<p>As a result I ended up buying a <a href="http://amzn.com/B00029MTMQ">cheap standalone mic</a> and now use my iPhone&#39;s <a href="http://amzn.com/B004PNZFZ8">Shure SE215-K</a> earbuds for sound on my computer. This is very easy to do given my computer case&#39; front panel audio connector. Of course, the problem now is that there aren&#39;t any dedicated media keys and having to use a GUI to change the volume is cumbersome.</p>
 
 <p>My solution to this problem in Windows and Mac is to bind the bottom right keys to media keys as follows:</p>
 
@@ -142,7 +144,7 @@ add mod4 = Super_R
 </h2>
 <p>The problem was that xmonad would only react to the Right Control key (Volume Up). However, <code>xev</code> correctly interpreted the keys as having been bound to the <code>XF86Audio*</code> keys. I was really confused as to why the binds apparently did work at the system level but only one of them worked at the window manager level.</p>
 
-<p>To rule out that it wasn&rsquo;t something with the system-level (xmodmap) binds, I decided to check if it worked in <a href="http://awesome.naquadah.org/">Awesome</a>:</p>
+<p>To rule out that it wasn&#39;t something with the system-level (xmodmap) binds, I decided to check if it worked in <a href="http://awesome.naquadah.org/">Awesome</a>:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-lua"><span class="n">awful</span><span class="p">.</span><span class="n">key</span><span class="p">({},</span> <span class="s2">&quot;</span><span class="s">XF86AudioLowerVolume&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="n">awful</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">amixer -q set Master,0 5%- unmute&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="k">end</span><span class="p">),</span>
@@ -156,21 +158,21 @@ add mod4 = Super_R
 </h2>
 <p>Eventually I decided to stop by <code>#xmonad</code> on freenode. There I found Paul Fertser who spent the next ~6 hours helping me track down what he figured to be a bug in xmonad. I told him that the system-level binds did work, but not in xmonad. I showed him my binds using <code>xmodmap -pke</code>.</p>
 
-<p>He noticed that the <code>XF86Audio*</code> keys were bound twice: once by default by XKB (<code>xmodmap</code>&rsquo;s more modern replacement) bound to the keycodes I would have if my keyboard had media keys, and bound again to the keys I chose (the bottom right keys). He then hypothesized that xmonad wasn&rsquo;t grabbing the keys at all due to Xlib limitations. Specifically, the <code>XKeysymToKeycode</code> function only returns one keycode per key, biased towards lower keycodes, presumably due to an increasing iterative search of the keycodes for a match.</p>
+<p>He noticed that the <code>XF86Audio*</code> keys were bound twice: once by default by XKB (<code>xmodmap</code>&#39;s more modern replacement) bound to the keycodes I would have if my keyboard had media keys, and bound again to the keys I chose (the bottom right keys). He then hypothesized that xmonad wasn&#39;t grabbing the keys at all due to Xlib limitations. Specifically, the <code>XKeysymToKeycode</code> function only returns one keycode per key, biased towards lower keycodes, presumably due to an increasing iterative search of the keycodes for a match.</p>
 
-<p>This theory accounted for why the Right Control (Volume Up) bind did work and not the others. What happened was that Right Control&rsquo;s keycode was lower than the duplicate bind&rsquo;s keycode. As a result, when xmonad used <code>XKeysymToKeycode</code> it retrieved the correct keycode. The other two binds, however, have higher keycodes than the default-bound ones, and so <code>XKeysymToKeycode</code> returned the first (lower) keycode it found and as a result xmonad never even knew of the other binds' existence.</p>
+<p>This theory accounted for why the Right Control (Volume Up) bind did work and not the others. What happened was that Right Control&#39;s keycode was lower than the duplicate bind&#39;s keycode. As a result, when xmonad used <code>XKeysymToKeycode</code> it retrieved the correct keycode. The other two binds, however, have higher keycodes than the default-bound ones, and so <code>XKeysymToKeycode</code> returned the first (lower) keycode it found and as a result xmonad never even knew of the other binds&#39; existence.</p>
 
 <p>To test this theory, Paul had me run <a href="http://en.wikipedia.org/wiki/Ltrace"><code>ltrace</code></a> on xmonad to see which keys xmonad grabbed. The output of this clearly showed that xmonad only grabbed the keys with the lower keycodes.</p>
 <h2 id="workaround">
 <span class="hash">#</span>
 <a href="#workaround" class="header-link">Workaround</a>
 </h2>
-<p>Now that we were pretty sure of the cause of this, the workaround was to remove the other keycodes (for keys I didn&rsquo;t even have on my keyboard). At this time I decided I might as well switch over to XKB. The first order of business was to <a href="http://unix.stackexchange.com/a/65600/10163">dump my XKB map</a>:</p>
+<p>Now that we were pretty sure of the cause of this, the workaround was to remove the other keycodes (for keys I didn&#39;t even have on my keyboard). At this time I decided I might as well switch over to XKB. The first order of business was to <a href="http://unix.stackexchange.com/a/65600/10163">dump my XKB map</a>:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="nv">$ </span>setxkbmap -print &gt; ~/.xkb/keymap/mymap
 </code></pre></figure>
-<p>Then I created a <code>~/.xkb/symbols/volume_keys</code> file to store my media key binds. It took me a long while to figure out how to remove/unbind the default-bound keys. One problem was that XKB sets different aliases for keys. For example, <code>&lt;I0D&gt;</code> (I guess that&rsquo;s a media key) was aliased to <code>&lt;MUTE&gt;</code>. I looked around in <code>/usr/share/X11/xkb/rules/evdev</code> to see what was aliased and made sure to unbind those too. As for unbinding, at first Paul suggested to bind the keys to <code>NoSymbol</code> but that apparently had no effect. Eventually I found out it was possible with <a href="http://madduck.net/docs/extending-xkb/#attaching_symbols_to_keys"><code>VoidSymbol</code></a>.</p>
+<p>Then I created a <code>~/.xkb/symbols/volume_keys</code> file to store my media key binds. It took me a long while to figure out how to remove/unbind the default-bound keys. One problem was that XKB sets different aliases for keys. For example, <code>&lt;I0D&gt;</code> (I guess that&#39;s a media key) was aliased to <code>&lt;MUTE&gt;</code>. I looked around in <code>/usr/share/X11/xkb/rules/evdev</code> to see what was aliased and made sure to unbind those too. As for unbinding, at first Paul suggested to bind the keys to <code>NoSymbol</code> but that apparently had no effect. Eventually I found out it was possible with <a href="http://madduck.net/docs/extending-xkb/#attaching_symbols_to_keys"><code>VoidSymbol</code></a>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-text">partial modifier_keys
@@ -254,7 +256,7 @@ xkb_symbols "volume_keys" {
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -310,10 +312,8 @@ xkb_symbols "volume_keys" {
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -113,47 +115,47 @@
 </h1>
 <p>The probability of an event is the fraction of times it occurs out of the total possible outcomes:</p>
 
-<p>\[ P(E) = \frac {\text {# of events}} {\text {# total outcomes}} \]</p>
+<p><script type="math/tex; mode=display"> P(E) = \frac {\text {# of events}} {\text {# total outcomes}} </script></p>
 
-<p>The probability is bound in the range of \([0, 1]\). Therefore, the probability of an event not happening&mdash;referred to as the probability of the event&rsquo;s complement&mdash;is simply defined as:</p>
+<p>The probability is bound in the range of <script type="math/tex">[0, 1]</script>. Therefore, the probability of an event not happening---referred to as the probability of the event&#39;s complement---is simply defined as:</p>
 
-<p>\[ P(E^c) = 1 - P(E) \]</p>
+<p><script type="math/tex; mode=display"> P(E^c) = 1 - P(E) </script></p>
 <h2 id="addition-rule">
 <span class="hash">#</span>
 <a href="#addition-rule" class="header-link">Addition Rule</a>
 </h2>
 <p>The probability of the union of multiple <em>mutually exclusive</em> events can be determined by simply adding the probabilities of the individual events:</p>
 
-<p>\[
+<p><script type="math/tex; mode=display">
 P(E_1 \cup E_2) = P(E_1) + P(E_2) = \sum_{i=1}^{N} P(E_i)
-\]</p>
+</script></p>
 
 <p>However, if the events are <em>not mutually exclusive</em>, then the concept of <em>inclusion-exclusion</em> must be practiced in order to avoid <em>double counting</em>, where portions of the probabilities represent the same event:</p>
 
-<p>\[ P(E_1 \cup E_2) = P(E_1) + P(E_2) - P(E_1 \cap E_2) \]</p>
+<p><script type="math/tex; mode=display"> P(E_1 \cup E_2) = P(E_1) + P(E_2) - P(E_1 \cap E_2) </script></p>
 <h2 id="conditional-probability">
 <span class="hash">#</span>
 <a href="#conditional-probability" class="header-link">Conditional Probability</a>
 </h2>
-<p>The <em>conditional probability</em> of an event \(B\) is the probability that the event \(B\) happens given that another event \(A\) occurred, and is written as:</p>
+<p>The <em>conditional probability</em> of an event <script type="math/tex">B</script> is the probability that the event <script type="math/tex">B</script> happens given that another event <script type="math/tex">A</script> occurred, and is written as:</p>
 
-<p>\[ P(B \mid A) \]</p>
+<p><script type="math/tex; mode=display"> P(B \mid A) </script></p>
 
-<p>This is inferred from the problem. For example, in &ldquo;draw without replacement&quot; problems, the probability of \(B\) occurring changes from the mere fact that \(A\) occurred, because the total number of outcomes&mdash;the denominator of the probability&mdash;has decreased by one, since the item from event \(A\) was not returned. The numerator also could have decreased by one if it corresponds to the same group as \(B\)&rsquo;s. On the other hand, in problems that &ldquo;draw with replacement,&ldquo; the fact that \(A\) has already occurred has no effect on any subsequent events because all items are still present.</p>
+<p>This is inferred from the problem. For example, in &quot;draw without replacement&quot; problems, the probability of <script type="math/tex">B</script> occurring changes from the mere fact that <script type="math/tex">A</script> occurred, because the total number of outcomes---the denominator of the probability---has decreased by one, since the item from event <script type="math/tex">A</script> was not returned. The numerator also could have decreased by one if it corresponds to the same group as <script type="math/tex">B</script>&#39;s. On the other hand, in problems that &quot;draw with replacement,&quot; the fact that <script type="math/tex">A</script> has already occurred has no effect on any subsequent events because all items are still present.</p>
 <h2 id="multiplication-rule">
 <span class="hash">#</span>
 <a href="#multiplication-rule" class="header-link">Multiplication Rule</a>
 </h2>
 <p>Conditional probability allows us to compute the probability of one event occurring followed by another. This is solved using the <em>multiplication rule</em>:</p>
 
-<p>\[
+<p><script type="math/tex; mode=display">
 \begin{align}
-P(A \cap B) &amp;= P(A) \times P(B \mid A) \\
-            &amp;= P(B) \times P(A \mid B)
+P(A \cap B) &= P(A) \times P(B \mid A) \\
+            &= P(B) \times P(A \mid B)
 \end{align}
-\]</p>
+</script></p>
 
-<p>This is simply read as the probability of \(A\) occurring followed by \(B\) is the simply the fraction \(P(B \mid A)\) of the probability \(P(A)\) occurring.</p>
+<p>This is simply read as the probability of <script type="math/tex">A</script> occurring followed by <script type="math/tex">B</script> is the simply the fraction <script type="math/tex">P(B \mid A)</script> of the probability <script type="math/tex">P(A)</script> occurring.</p>
 <h2 id="problem-solving-techniques">
 <span class="hash">#</span>
 <a href="#problem-solving-techniques" class="header-link">Problem Solving Techniques</a>
@@ -163,26 +165,26 @@ P(A \cap B) &amp;= P(A) \times P(B \mid A) \\
 <p>Example 1<br>
 A random number generator picks at random from the ten digits 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9. Find the chance that the digit it picks is prime and greater than 5.</p>
 
-<p>There is only one <strong>trial</strong> consisting of picking a single digit. The <strong>conditions</strong> of the event are that it is prime and it is greater than 5. Therefore, only one digit satisfies the conditions, 7, so the answer is \(1/10\).</p>
+<p>There is only one <strong>trial</strong> consisting of picking a single digit. The <strong>conditions</strong> of the event are that it is prime and it is greater than 5. Therefore, only one digit satisfies the conditions, 7, so the answer is <script type="math/tex">1/10</script>.</p>
 
 <p>Example 2<br>
 In a class, 15% of the students have read <em>Hamlet</em> and 40% have read <em>The Merchant of Venice</em>; 5% of the students have read both. What is the chance that a student picked at random has read one of the plays but not the other?</p>
 
-<p>There is only one <strong>trial</strong> consisting of picking a single student at random. The <strong>condition</strong> is simply that the student has read one of the plays but not the other. This can be visualized by drawing a Venn Diagram, with one circle being 15% in size and the other being 40% in size, with an overlap of 5%. Then the areas of interest are either those that don&rsquo;t include the overlap. This can be described as:</p>
+<p>There is only one <strong>trial</strong> consisting of picking a single student at random. The <strong>condition</strong> is simply that the student has read one of the plays but not the other. This can be visualized by drawing a Venn Diagram, with one circle being 15% in size and the other being 40% in size, with an overlap of 5%. Then the areas of interest are either those that don&#39;t include the overlap. This can be described as:</p>
 
-<p>\[
+<p><script type="math/tex; mode=display">
 \text {A: Hamlet but not The Merchant of Venice:}\ 15\% - 5\% = 10\% \\
 \text {B: The Merchant of Venice but not Hamlet:}\ 40\% - 5\% = 35\%
-\]</p>
+</script></p>
 
-<p>We are interested in both outcomes occurring&mdash;the event \(A\) <em>or</em> the event \(B\)&mdash;and since they are mutually exclusive, the addition rule can be used to arrive at the answer:</p>
+<p>We are interested in both outcomes occurring---the event <script type="math/tex">A</script> <em>or</em> the event <script type="math/tex">B</script>---and since they are mutually exclusive, the addition rule can be used to arrive at the answer:</p>
 
-<p>\[
+<p><script type="math/tex; mode=display">
 \begin{alignat*}{3}
-P(A \cup B)\ &amp; = P(A) &amp;&amp; {} + P(B)\ &amp;&amp; {} \\
-P(A \cup B)\ &amp; = 10\% &amp;&amp; {} + 35\%\ &amp;&amp; = 45\%
+P(A \cup B)\ & = P(A) && {} + P(B)\ && {} \\
+P(A \cup B)\ & = 10\% && {} + 35\%\ && = 45\%
 \end{alignat*}
-\]</p>
+</script></p>
 
 <p>Example 3<br>
 In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins at random (without replacement), what is the chance that I pull out more than 15 cents?</p>
@@ -240,7 +242,7 @@ In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins 
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -269,10 +271,8 @@ In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins 
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

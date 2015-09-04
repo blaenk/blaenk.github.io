@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,12 +77,12 @@
     
         <article class="post">
   <h2 class="title"><a href="/notes/cmake"><span>CMake</span></a></h2>
-  <div class="entry-content"><p><a href="http://www.cmake.org/">CMake</a> seems to me like the best available cross-platform build tool. It can generate Visual Studio solutions on Windows and Make files on POSIX systems. While it&rsquo;s widely used and there exists thorough reference documentation for it, I feel like there aren&rsquo;t many resources for getting started. As a result, I&rsquo;ve written up some notes from what I&rsquo;ve been able to infer from a variety of project&rsquo;s CMake configurations as well as the scant introductory information I was able to find.</p>
+  <div class="entry-content"><p><a href="http://www.cmake.org/">CMake</a> seems to me like the best available cross-platform build tool. It can generate Visual Studio solutions on Windows and Make files on POSIX systems. While it&#39;s widely used and there exists thorough reference documentation for it, I feel like there aren&#39;t many resources for getting started. As a result, I&#39;ve written up some notes from what I&#39;ve been able to infer from a variety of project&#39;s CMake configurations as well as the scant introductory information I was able to find.</p>
 <h1 id="general-usage">
 <span class="hash">#</span>
 <a href="#general-usage" class="header-link">General Usage</a>
 </h1>
-<p>CMake directives are stored in files named <span class="path">CMakeLists.txt</span>, and there is usually one such file present for each sub-directory in the source tree, each one conventionally containing directives pertinent to the files in that directory. These separate CMake files are then &ldquo;merged together&rdquo; using the <code>add_subdirectory</code> directive, which immediately makes the CMake interpreter load and evaluate the CMake file in the provided directory.</p>
+<p>CMake directives are stored in files named <span class="path">CMakeLists.txt</span>, and there is usually one such file present for each sub-directory in the source tree, each one conventionally containing directives pertinent to the files in that directory. These separate CMake files are then &quot;merged together&quot; using the <code>add_subdirectory</code> directive, which immediately makes the CMake interpreter load and evaluate the CMake file in the provided directory.</p>
 
 <p>Variables can be set using the <code>set</code> directive in the following format:</p>
 <figure class="codeblock">
@@ -94,7 +96,7 @@
 <pre>
 <code class="highlight language-cmake"><span class="nb">option</span> <span class="p">(</span><span class="s">USE_FFTW</span> <span class="s2">&quot;use the fftw library&quot;</span> <span class="s">OFF</span><span class="p">)</span>
 </code></pre></figure>
-<p>Dependencies are generally found using the <code>find_package</code> directive. These are backed by CMake modules&mdash;either built-in or found in the <code>CMAKE_MODULE_PATH</code>&mdash;and handle the logic of searching for the libraries and headers of the particular package in various common locations.</p>
+<p>Dependencies are generally found using the <code>find_package</code> directive. These are backed by CMake modules---either built-in or found in the <code>CMAKE_MODULE_PATH</code>---and handle the logic of searching for the libraries and headers of the particular package in various common locations.</p>
 
 <p>If the search was successful, these modules typically set a variable of the form <code>PACKAGENAME_FOUND</code> which can be tested. Further, they also set variables such as <code>PACKAGENAME_LIBRARIES</code> and <code>PACKAGENAME_INCLUDE_DIRS</code>, which are sometimes singular and sometimes plural.</p>
 
@@ -123,7 +125,7 @@
 <pre>
 <code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">SRC</span> <span class="s">somefile.cpp</span> <span class="s">anotherfile.cpp</span><span class="p">)</span>
 </code></pre></figure>
-<p>Notice that the header files aren&rsquo;t necessary in the set since the C++ files already <code>#include</code> them. However, when using the Visual Studio generator on Windows, this means that the header files will be absent from the project. This can be resolved by adding a conditional for Windows and adding them in:</p>
+<p>Notice that the header files aren&#39;t necessary in the set since the C++ files already <code>#include</code> them. However, when using the Visual Studio generator on Windows, this means that the header files will be absent from the project. This can be resolved by adding a conditional for Windows and adding them in:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cmake"><span class="nb">if</span> <span class="p">(</span><span class="s">WIN32</span><span class="p">)</span>
@@ -137,9 +139,9 @@
 <pre>
 <code class="highlight language-cmake"><span class="nb">source_group</span> <span class="p">(</span><span class="s">sometarget</span> <span class="s">FILES</span> <span class="o">${</span><span class="nv">SRC</span><span class="o">}</span><span class="p">)</span>
 </code></pre></figure>
-<p>Libraries built in project are automatically found, there&rsquo;s no need for <code>include_directories</code> or <code>find_library</code>. Try to avoid <code>link_directories</code>.</p>
+<p>Libraries built in project are automatically found, there&#39;s no need for <code>include_directories</code> or <code>find_library</code>. Try to avoid <code>link_directories</code>.</p>
 
-<p>It&rsquo;s possible to wire-up what would happen upon invoking <code>make install</code> by using the <code>install</code> directive:</p>
+<p>It&#39;s possible to wire-up what would happen upon invoking <code>make install</code> by using the <code>install</code> directive:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cmake"><span class="nb">install</span> <span class="p">(</span><span class="s">TARGET</span> <span class="s">sometarget</span>
@@ -166,34 +168,34 @@
 <span class="hash">#</span>
 <a href="#rpath" class="header-link">rpath</a>
 </h1>
-<p>One problem is that on POSIX systems, libraries are usually exported as <code>libsomething.so</code> and are searched for in <a href="http://man7.org/linux/man-pages/man8/ld.so.8.html#DESCRIPTION">specified locations</a>. However, it probably makes no sense to install a library used only by a single program to the system&rsquo;s library path. This can be circumvented by loading the file by path, including the SO&rsquo;s full name.</p>
+<p>One problem is that on POSIX systems, libraries are usually exported as <code>libsomething.so</code> and are searched for in <a href="http://man7.org/linux/man-pages/man8/ld.so.8.html#DESCRIPTION">specified locations</a>. However, it probably makes no sense to install a library used only by a single program to the system&#39;s library path. This can be circumvented by loading the file by path, including the SO&#39;s full name.</p>
 
-<p>An alternative is to modify the executable&rsquo;s rpath using the <code>$ORIGIN</code> linker variable, which allows the executable to search relative to <em>its</em> directory, i.e. the <code>$ORIGIN</code>, for shared libraries by name. There are a variety of different ways to accomplish this.</p>
+<p>An alternative is to modify the executable&#39;s rpath using the <code>$ORIGIN</code> linker variable, which allows the executable to search relative to <em>its</em> directory, i.e. the <code>$ORIGIN</code>, for shared libraries by name. There are a variety of different ways to accomplish this.</p>
 
-<p>The simplest way to accomplish this is to use the <code>CMAKE_EXE_LINKER_FLAGS</code> variable to specify the linker flag. Clang will complain if these are defined in <code>CMAKE_CXX_FLAGS</code> because those flags are passed to it even when it&rsquo;s merely compiling <code>-c</code> source files, to which linker flags obviously don&rsquo;t apply.</p>
+<p>The simplest way to accomplish this is to use the <code>CMAKE_EXE_LINKER_FLAGS</code> variable to specify the linker flag. Clang will complain if these are defined in <code>CMAKE_CXX_FLAGS</code> because those flags are passed to it even when it&#39;s merely compiling <code>-c</code> source files, to which linker flags obviously don&#39;t apply.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags&quot;</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,&#39;$ORIGIN&#39;&quot;</span><span class="p">)</span>
 </code></pre></figure>
-<p>There&rsquo;s also a &ldquo;built-in&rdquo; way to accomplish this using CMake. By default, this method only applies to installed files, which means it won&rsquo;t apply until the project&rsquo;s installation procedure is run. This is easily changed so that it applies during regular builds:</p>
+<p>There&#39;s also a &quot;built-in&quot; way to accomplish this using CMake. By default, this method only applies to installed files, which means it won&#39;t apply until the project&#39;s installation procedure is run. This is easily changed so that it applies during regular builds:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cmake"><span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_EXE_LINKER_FLAGS</span> <span class="s2">&quot;${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags&quot;</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_BUILD_WITH_INSTALL_RPATH</span> <span class="s">TRUE</span><span class="p">)</span>
 <span class="nb">set</span> <span class="p">(</span><span class="s">CMAKE_INSTALL_RPATH</span> <span class="s2">&quot;$ORIGIN&quot;</span><span class="p">)</span>
 </code></pre></figure>
-<p>It&rsquo;s important to note that the rpath corresponds to an ELF dynamic section attribute. Historically the attribute has been <code>DT_RPATH</code>, but recently it has fallen out of favor for a more flexible <code>DT_RUNPATH</code> which honors <code>LD_LIBRARY_PATH</code>, allowing for greater user flexibility.</p>
+<p>It&#39;s important to note that the rpath corresponds to an ELF dynamic section attribute. Historically the attribute has been <code>DT_RPATH</code>, but recently it has fallen out of favor for a more flexible <code>DT_RUNPATH</code> which honors <code>LD_LIBRARY_PATH</code>, allowing for greater user flexibility.</p>
 
-<p>The thing with <code>DT_RUNPATH</code> is that it&rsquo;s <a href="https://sourceware.org/bugzilla/show_bug.cgi?id=13945">not transitive</a>, meaning, if your binary with a specified <code>DT_RUNPATH</code> links with a library that itself loads another library via <code>dlopen()</code>, that library load won&rsquo;t honor the <code>DT_RUNPATH</code>, by design.</p>
+<p>The thing with <code>DT_RUNPATH</code> is that it&#39;s <a href="https://sourceware.org/bugzilla/show_bug.cgi?id=13945">not transitive</a>, meaning, if your binary with a specified <code>DT_RUNPATH</code> links with a library that itself loads another library via <code>dlopen()</code>, that library load won&#39;t honor the <code>DT_RUNPATH</code>, by design.</p>
 
-<p>In my case, the reason I wanted to set the rpath was specifically for this use case. The shared object I have exposes a game engine through a C API which is then loaded by LuaJIT&rsquo;s FFI system. This of course performs a <code>dlopen()</code> to load the shared object, so the rpath won&rsquo;t apply. This apparently bit other people as well, including <a href="https://bugzilla.gnome.org/show_bug.cgi?id=670477#c20">gnome</a>.</p>
+<p>In my case, the reason I wanted to set the rpath was specifically for this use case. The shared object I have exposes a game engine through a C API which is then loaded by LuaJIT&#39;s FFI system. This of course performs a <code>dlopen()</code> to load the shared object, so the rpath won&#39;t apply. This apparently bit other people as well, including <a href="https://bugzilla.gnome.org/show_bug.cgi?id=670477#c20">gnome</a>.</p>
 
-<p>A quick fix for this is to revert to using the <code>DT_RPATH</code> attribute, which can be done by explicitly setting the <code>--disable-new-dtags</code> linker flag. Alternative solutions would include hard coding the library name&mdash;which would introduce system dependent naming conventions&mdash;or wrapping the binary in a script that sets <code>LD_LIBRARY_PATH</code>.</p>
+<p>A quick fix for this is to revert to using the <code>DT_RPATH</code> attribute, which can be done by explicitly setting the <code>--disable-new-dtags</code> linker flag. Alternative solutions would include hard coding the library name---which would introduce system dependent naming conventions---or wrapping the binary in a script that sets <code>LD_LIBRARY_PATH</code>.</p>
 
-<p>The solution gnome went with was to link with the shared object that&rsquo;s loaded after the fact, so that its <code>dlopen()</code> is considered to be done by the binary itself, in which case the <code>DT_RUNPATH</code> is honored.</p>
+<p>The solution gnome went with was to link with the shared object that&#39;s loaded after the fact, so that its <code>dlopen()</code> is considered to be done by the binary itself, in which case the <code>DT_RUNPATH</code> is honored.</p>
 
-<p>It&rsquo;s simple to verify that the produced binary contains the attributes by running:</p>
+<p>It&#39;s simple to verify that the produced binary contains the attributes by running:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="nv">$ </span>readelf -d thebinary
@@ -213,7 +215,7 @@
 <span class="hash">#</span>
 <a href="#swig-bindings" class="header-link">SWIG Bindings</a>
 </h1>
-<p>It&rsquo;s possible to automatically generate <a href="http://www.swig.org/">SWIG</a> bindings using built-in CMake modules. The following creates a a dynamic library which a Lua script can subsequently <code>require</code>.</p>
+<p>It&#39;s possible to automatically generate <a href="http://www.swig.org/">SWIG</a> bindings using built-in CMake modules. The following creates a a dynamic library which a Lua script can subsequently <code>require</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cmake"><span class="nb">find_package</span> <span class="p">(</span><span class="s">SWIG</span><span class="p">)</span>
@@ -247,9 +249,9 @@
 <span class="hash">#</span>
 <a href="#visual-studio" class="header-link">Visual Studio</a>
 </h1>
-<p>CMake works fine with Visual Studio but there are a few things to consider. The property for the working directory in the Debugging section should most likely be set to <code>$(OutDir)</code>. Likewise, the start-up project must be set manually as it&rsquo;s set to ALL<em>BUILD by default. ALL</em>BUILD is a project that builds all projects and correctly triggers any scripts. ZERO_CHECK is a project that runs and, if any CMake files have been changed, asks to reload Visual Studio.</p>
+<p>CMake works fine with Visual Studio but there are a few things to consider. The property for the working directory in the Debugging section should most likely be set to <code>$(OutDir)</code>. Likewise, the start-up project must be set manually as it&#39;s set to ALL<em>BUILD by default. ALL</em>BUILD is a project that builds all projects and correctly triggers any scripts. ZERO_CHECK is a project that runs and, if any CMake files have been changed, asks to reload Visual Studio.</p>
 
-<p>Furthermore, if you&rsquo;re making a Windows application, you should add the WIN32 parameter to <code>add_executable</code> to instruct the compiler to use the <code>WinMain</code> <a href="http://msdn.microsoft.com/en-us/library/f9t8842e.aspx">entry-point</a> and WINDOWS <a href="http://msdn.microsoft.com/en-us/library/fcc1zstk%28v=vs.110%29.aspx">subsystem</a>:</p>
+<p>Furthermore, if you&#39;re making a Windows application, you should add the WIN32 parameter to <code>add_executable</code> to instruct the compiler to use the <code>WinMain</code> <a href="http://msdn.microsoft.com/en-us/library/f9t8842e.aspx">entry-point</a> and WINDOWS <a href="http://msdn.microsoft.com/en-us/library/fcc1zstk%28v=vs.110%29.aspx">subsystem</a>:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cmake"><span class="nb">add_executable</span> <span class="p">(</span><span class="s">target</span> <span class="s">WIN32</span> <span class="o">${</span><span class="nv">SOURCES</span><span class="o">}</span><span class="p">)</span>
@@ -307,7 +309,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -336,10 +338,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

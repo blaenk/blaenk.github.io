@@ -339,7 +339,7 @@ article {
         background: #cccccc;
         padding: 0 15px; }
     @media screen and (max-width: 600px) {
-      article .entry-content .mobile-math {
+      article .entry-content .mathjax {
         display: block;
         overflow-x: auto; } }
     article .entry-content .MathJax_Display {

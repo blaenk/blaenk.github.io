@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -85,7 +87,7 @@
 </h2>
 <p>This site is built with <a href="http://jaspervdj.be/hakyll/">Hakyll</a>, the static site generator written in Haskell. The site and its source code are hosted <a href="https://github.com/blaenk/blaenk.github.io">on Github</a>. The site utilizes <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> for converting Markdown (and any of the various other formats Pandoc supports), <a href="http://sass-lang.com/">SCSS</a> for processing stylesheets, <a href="http://pygments.org/">Pygments</a> for syntax highlighting, and <a href="http://www.mathjax.org/">MathJax</a> for math notation.</p>
 
-<p>It is <a href="/tags/hakyll/">heavily modified</a> from plain Hakyll, although that&rsquo;s more or less the point. Hakyll is more of a library for static site generation which one employs how they see fit, rather than a framework that is worked under. I created various Pandoc <a href="AST">abstract syntax tree</a> transformers to implement features such as table of contents generation and pygments syntax highlighting integration. I also implemented a Haskell compiler for automatic abbreviation substitution. Perhaps best of all, I also <a href="/posts/live-editing-with-hakyll/">implemented live editing</a>, where my changes show up instantly in my browser as soon as I save the file&mdash;which has completely changed the way I write content for this site. This is accomplished via Haskell STM Channels piped to HTML5 WebSockets.</p>
+<p>It is <a href="/tags/hakyll/">heavily modified</a> from plain Hakyll, although that&#39;s more or less the point. Hakyll is more of a library for static site generation which one employs how they see fit, rather than a framework that is worked under. I created various Pandoc <a href="AST">abstract syntax tree</a> transformers to implement features such as table of contents generation and pygments syntax highlighting integration. I also implemented a Haskell compiler for automatic abbreviation substitution. Perhaps best of all, I also <a href="/posts/live-editing-with-hakyll/">implemented live editing</a>, where my changes show up instantly in my browser as soon as I save the file---which has completely changed the way I write content for this site. This is accomplished via Haskell STM Channels piped to HTML5 WebSockets.</p>
 
 <p>I originally started this site with <a href="http://jekyllrb.com/">Jekyll</a>, but I had been wanting to switch to Hakyll so that I could keep my knowledge of Haskell fresh. This seemed like the perfect project to use it for. I feel that Haskell maps to the problem very appropriately, especially with amazing tools like Pandoc and Hakyll. The fact that Haskell is compiled also makes for a very appreciable difference in speed.</p>
 
@@ -94,7 +96,7 @@
 <span class="hash">#</span>
 <a href="#operating-system" class="header-link">Operating System</a>
 </h2>
-<p>Exemplifying my belief of non-fanaticism, I have Windows 8, Arch Linux, and Mac OS X 10.8 Mountain Lion installed on my computer. This <a href="http://i.imgur.com/Xa5suXo.jpg">picture</a> shows the custom boot screen I designed which I&rsquo;m greeted with upon booting. This is not just for show; I actually use each one regularly for different things.</p>
+<p>Exemplifying my belief of non-fanaticism, I have Windows 8, Arch Linux, and Mac OS X 10.8 Mountain Lion installed on my computer. This <a href="http://i.imgur.com/Xa5suXo.jpg">picture</a> shows the custom boot screen I designed which I&#39;m greeted with upon booting. This is not just for show; I actually use each one regularly for different things.</p>
 
 <p>The setup consists of SSDs for the OSes and regular HDDs for media. Windows is on a 120 GB SSD and Mac and Linux are on separate 60 GB SSDs. Aside from this I have two 1 TB and one 1.5 TB HDDs for media storage.</p>
 <h3 id="windows">
@@ -106,31 +108,31 @@
 <span class="hash">#</span>
 <a href="#linux" class="header-link">Linux</a>
 </h3>
-<p>This is my primary OS. The distribution I have installed is <a href="http://www.archlinux.org/">arch linux</a>, which is my favorite distribution out of the many I&rsquo;ve used over the years. It offers a compromise between <a href="http://www.linuxfromscratch.org/index.html">LFS</a>/<a href="http://www.gentoo.org/">Gentoo</a> level of flexibility and leanness with very good package management consisting of bleeding-edge packages.</p>
+<p>This is my primary OS. The distribution I have installed is <a href="http://www.archlinux.org/">arch linux</a>, which is my favorite distribution out of the many I&#39;ve used over the years. It offers a compromise between <a href="http://www.linuxfromscratch.org/index.html">LFS</a>/<a href="http://www.gentoo.org/">Gentoo</a> level of flexibility and leanness with very good package management consisting of bleeding-edge packages.</p>
 
-<p>My preferred desktop environment is <a href="http://en.wikipedia.org/wiki/GNOME">gnome</a>; I don&rsquo;t feel the need to posture with obscure tiling managers&mdash;though I genuinely do enjoy using <a href="http://xmonad.org/">xmonad</a>&mdash;I prefer the experience that Gnome provides. I use <a href="https://github.com/fosskers/aura">aura</a> as my <a href="https://wiki.archlinux.org/index.php/Pacman">pacman</a> wrapper for seamless integration with the <a href="https://wiki.archlinux.org/index.php/Arch_User_Repository">AUR</a>. I am very interested in and regularly read about the POSIX standard (<a href="http://en.wikipedia.org/wiki/Single_UNIX_Specification">SUS</a>) and the Linux Userspace Interface.</p>
+<p>My preferred desktop environment is <a href="http://en.wikipedia.org/wiki/GNOME">gnome</a>; I don&#39;t feel the need to posture with obscure tiling managers---though I genuinely do enjoy using <a href="http://xmonad.org/">xmonad</a>---I prefer the experience that Gnome provides. I use <a href="https://github.com/fosskers/aura">aura</a> as my <a href="https://wiki.archlinux.org/index.php/Pacman">pacman</a> wrapper for seamless integration with the <a href="https://wiki.archlinux.org/index.php/Arch_User_Repository">AUR</a>. I am very interested in and regularly read about the POSIX standard (<a href="http://en.wikipedia.org/wiki/Single_UNIX_Specification">SUS</a>) and the Linux Userspace Interface.</p>
 
 <p>I use <a href="http://en.wikipedia.org/wiki/Z_shell">zsh</a> as my shell and <a href="http://en.wikipedia.org/wiki/Rxvt-unicode">urxvt</a> as my terminal. More information on my configuration is available in my <a href="/posts/terminal-customization/">terminal customization</a> post.</p>
 <h3 id="mac-os-x">
 <span class="hash">#</span>
 <a href="#mac-os-x" class="header-link">Mac OS X</a>
 </h3>
-<p>Mac OS X used to be my general development OS because I really liked OS X&rsquo;s font rendering, monospace fonts, and UI aesthetic, but that position has been ceded to Linux for its flexibility and for the various applications becoming available on Linux, mainly Netflix, Air Video Server, myihome, Steam, and Spotify. Now OS X mainly stays around in case I&rsquo;d like to do some iOS development and to make sure my programs and websites work fine on OS X.</p>
+<p>Mac OS X used to be my general development OS because I really liked OS X&#39;s font rendering, monospace fonts, and UI aesthetic, but that position has been ceded to Linux for its flexibility and for the various applications becoming available on Linux, mainly Netflix, Air Video Server, myihome, Steam, and Spotify. Now OS X mainly stays around in case I&#39;d like to do some iOS development and to make sure my programs and websites work fine on OS X.</p>
 <h2 id="editor">
 <span class="hash">#</span>
 <a href="#editor" class="header-link">Editor</a>
 </h2>
-<p>I used to believe that people who boasted about using <a href="http://en.wikipedia.org/wiki/Vim_(text_editor)">vim</a> were just posturing, claiming to work with a seemingly archaic terminal-based editor. However, a friend who first showed me his use of vim through an ssh connection many years ago&mdash;when I was barely starting out with software development&mdash;managed to show me the level of fluent mastery of text editing that could be achieved with the editor. A few years ago I dedicated time to really learning its vocabulary and customization. The result is that I feel to be in complete control over the text that I&rsquo;m manipulating. That said, I don&rsquo;t engage in petty text editor wars nor do I attempt to push it on others. I simply use vim to my benefit.</p>
+<p>I used to believe that people who boasted about using <a href="http://en.wikipedia.org/wiki/Vim_(text_editor)">vim</a> were just posturing, claiming to work with a seemingly archaic terminal-based editor. However, a friend who first showed me his use of vim through an ssh connection many years ago---when I was barely starting out with software development---managed to show me the level of fluent mastery of text editing that could be achieved with the editor. A few years ago I dedicated time to really learning its vocabulary and customization. The result is that I feel to be in complete control over the text that I&#39;m manipulating. That said, I don&#39;t engage in petty text editor wars nor do I attempt to push it on others. I simply use vim to my benefit.</p>
 <h3 id="looks">
 <span class="hash">#</span>
 <a href="#looks" class="header-link">Looks</a>
 </h3>
-<p>The truth is that the default configuration of vim is pretty ugly, and so are most of the themes it comes with. This shouldn&rsquo;t really matter, as its benefits greatly outweigh anything cosmetic, but it does matter to me. I use a customized version of <a href="http://ethanschoonover.com/solarized">solarized</a> light; I really dislike the dark version. I primarily use gui versions of vim such as gvim or <a href="https://code.google.com/p/macvim/">MacVim</a> for their added benefits (e.g. wider range of bindable keys, more colors, etc.). My configuration files <a href="https://github.com/blaenk/dots/blob/master/vim/gvimrc.ln#L2-L4">hide the menus and toolbars</a>, making for pretty compact windows.</p>
+<p>The truth is that the default configuration of vim is pretty ugly, and so are most of the themes it comes with. This shouldn&#39;t really matter, as its benefits greatly outweigh anything cosmetic, but it does matter to me. I use a customized version of <a href="http://ethanschoonover.com/solarized">solarized</a> light; I really dislike the dark version. I primarily use gui versions of vim such as gvim or <a href="https://code.google.com/p/macvim/">MacVim</a> for their added benefits (e.g. wider range of bindable keys, more colors, etc.). My configuration files <a href="https://github.com/blaenk/dots/blob/master/vim/gvimrc.ln#L2-L4">hide the menus and toolbars</a>, making for pretty compact windows.</p>
 <h3 id="plugins">
 <span class="hash">#</span>
 <a href="#plugins" class="header-link">Plugins</a>
 </h3>
-<p>I use <a href="https://github.com/blaenk/dots/blob/master/vim/vim.ln/conf/bundles.vim">many plugins</a>. I believe the most noteworthy are <a href="https://github.com/gmarik/vundle">vundle</a> for plugin management, <a href="http://kien.github.io/ctrlp.vim/">ctrlp</a> for fuzzy file opening/switching, <a href="https://github.com/tpope/vim-surround">surround</a> to easily manipulate text&rsquo;s surrounding delimiters, <a href="https://github.com/vim-pandoc/vim-pandoc-syntax">vim-pandoc-syntax</a> for Pandoc-flavored markdown highlighting and manipulation, and <a href="http://valloric.github.io/YouCompleteMe/">YouCompleteMe</a> for clang-powered auto-complete.</p>
+<p>I use <a href="https://github.com/blaenk/dots/blob/master/vim/vim.ln/conf/bundles.vim">many plugins</a>. I believe the most noteworthy are <a href="https://github.com/gmarik/vundle">vundle</a> for plugin management, <a href="http://kien.github.io/ctrlp.vim/">ctrlp</a> for fuzzy file opening/switching, <a href="https://github.com/tpope/vim-surround">surround</a> to easily manipulate text&#39;s surrounding delimiters, <a href="https://github.com/vim-pandoc/vim-pandoc-syntax">vim-pandoc-syntax</a> for Pandoc-flavored markdown highlighting and manipulation, and <a href="http://valloric.github.io/YouCompleteMe/">YouCompleteMe</a> for clang-powered auto-complete.</p>
 <h2 id="development-tools">
 <span class="hash">#</span>
 <a href="#development-tools" class="header-link">Development Tools</a>
@@ -149,7 +151,7 @@
 <span class="hash">#</span>
 <a href="#hardware" class="header-link">Hardware</a>
 </h2>
-<p>Most of my life I&rsquo;ve had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.</p>
+<p>Most of my life I&#39;ve had pretty average hardware but I decided to indulge myself with my current system. This is also my first desktop with an Intel Processor.</p>
 <h3 id="core">
 <span class="hash">#</span>
 <a href="#core" class="header-link">Core</a>
@@ -211,7 +213,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -240,10 +242,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

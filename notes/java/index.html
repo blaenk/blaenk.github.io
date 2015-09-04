@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,23 +77,31 @@
     
         <article class="post">
   <h2 class="title"><a href="/notes/java"><span>Java</span></a></h2>
-  <div class="entry-content"><p>Java is considered by many to be a very boring language, relegated to insurance applications&mdash;or the enterprise in general. Compared to many other languages, it&rsquo;s dry and monotone. It has a reputation of being over-engineered, being home to the classic <code>FactoryFactory</code> joke <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. In the past, programs written in Java were generally regarded as being slow and bloated resource hogs.</p>
+  <div class="entry-content"><p>Java is considered by many to be a very boring language, relegated to insurance applications---or the enterprise in general. Compared to many other languages, it&#39;s dry and monotone. It has a reputation of being over-engineered, being home to the classic <code>FactoryFactory</code> joke <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>. In the past, programs written in Java were generally regarded as being slow and bloated resource hogs.</p>
 
-<p>When Java was introduced in the 90s, it was hailed as being very portable, giving rise to the famous slogan &ldquo;Write Once, Run Anywhere.&ldquo; Java runtimes became available on various operating systems, cell phones, and even gained traction on websites as Java applets.</p>
+<p>When Java was introduced in the 90s, it was hailed as being very portable, giving rise to the famous slogan &quot;Write Once, Run Anywhere.&quot; Java runtimes became available on various operating systems, cell phones, and even gained traction on websites as Java applets.</p>
 
-<p>Java applets quickly became a very popular attack vector for malicious entities, leading public perception of Java as being insecure, ultimately leading Mozilla to adopt a stance of having Java disabled by default in Firefox&mdash;though this was eventually reverted due to public outcry.</p>
+<p>Java applets quickly became a very popular attack vector for malicious entities, leading public perception of Java as being insecure, ultimately leading Mozilla to adopt a stance of having Java disabled by default in Firefox---though this was eventually reverted due to public outcry.</p>
 
-<p>Despite this negative perception of Java by many, I&rsquo;ve always held a certain respect for it. Throughout all this, real Java applications have and continue to be created, seemingly impervious to this image. Where many are creating virtual machines from scratch, Java has a very robust <abbr title="Java Virtual Machine">JVM</abbr> which is the added experience of the many years that Java has been in existence.</p>
+<p>Despite this negative perception of Java by many, I&#39;ve always held a certain respect for it. Throughout all this, real Java applications have and continue to be created, seemingly impervious to this image. Where many are creating virtual machines from scratch, Java has a very robust JVM which is the added experience of the many years that Java has been in existence.</p>
 
 <p>These notes are a recap of Java and also cover Java 8.</p>
 
 <nav id="toc">
 <h3>Contents</h3><ol>
 <li>
-<a href="#abbr-titlejava-virtual-machinejvmabbr"><abbr title="Java Virtual Machine">JVM</abbr></a>
+<a href="#jvm">JVM</a>
 </li>
 <li>
 <a href="#primitives">Primitives</a>
+<ol>
+<li>
+<a href="#primitive-wrappers">Primitive Wrappers</a>
+</li>
+<li>
+<a href="#supplemental-characters">Supplemental Characters</a>
+</li>
+</ol>
 </li>
 <li>
 <a href="#control-structures">Control Structures</a>
@@ -137,15 +147,30 @@
 </li>
 </ol>
 </li>
+<li>
+<a href="#runtime">Runtime</a>
+</li>
+<li>
+<a href="#process">Process</a>
+</li>
+<li>
+<a href="#system">System</a>
+</li>
+<li>
+<a href="#object">Object</a>
+</li>
+<li>
+<a href="#class">Class</a>
+</li>
 </ol>
 </nav>
-<h1 id="abbr-titlejava-virtual-machinejvmabbr">
+<h1 id="jvm">
 <span class="hash">#</span>
-<a href="#abbr-titlejava-virtual-machinejvmabbr" class="header-link"><abbr title="Java Virtual Machine">JVM</abbr></a>
+<a href="#jvm" class="header-link">JVM</a>
 </h1>
-<p>Java is an interpreted language. Java code is compiled to highly optimized bytecode which is run by the <abbr title="Java Virtual Machine">JVM</abbr>. HotSpot provides a Just-in-Time (<abbr title="Just-in-Time">JIT</abbr>) compiler for Java bytecode. However, this doesn&rsquo;t mean that the entire Java program is compiled into executable code, which would be too complicated since it requires many run-time checks that can only be performed at run-time. Instead, the <abbr title="Just-in-Time">JIT</abbr> compiler compiles parts of the program as it sees fit.</p>
+<p>Java is an interpreted language. Java code is compiled to highly optimized bytecode which is run by the JVM. HotSpot provides a Just-in-Time (JIT) compiler for Java bytecode. However, this doesn&#39;t mean that the entire Java program is compiled into executable code, which would be too complicated since it requires many run-time checks that can only be performed at run-time. Instead, the JIT compiler compiles parts of the program as it sees fit.</p>
 
-<p><abbr title="Java Development Kit">JDK</abbr> 8 adds the concept of compact profiles which contain a subset of the Java API. Profiles go from 1 to 3, where <code>compact1</code> is the smallest profile. When compiling a program, the profile can be specified to determine if the program conforms to the subset specified by the profile.</p>
+<p>JDK 8 adds the concept of compact profiles which contain a subset of the Java API. Profiles go from 1 to 3, where <code>compact1</code> is the smallest profile. When compiling a program, the profile can be specified to determine if the program conforms to the subset specified by the profile.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="c"># ensure Program only uses compact1 subset</span>
@@ -154,7 +179,7 @@
 <span class="hash">#</span>
 <a href="#primitives" class="header-link">Primitives</a>
 </h1>
-<p>Java doesn&rsquo;t support unsigned integers. The <code>double</code> floating-point type is more commonly used than <code>float</code> because all of the standard library&rsquo;s math functions use doubles. The <code>char</code> can hold unsigned 16-bit values and uses UTF-16.</p>
+<p>Java doesn&#39;t support unsigned integers. The <code>double</code> floating-point type is more commonly used than <code>float</code> because all of the standard library&#39;s math functions use doubles. The <code>char</code> can hold unsigned 16-bit values and uses UTF-16.</p>
 
 <p>Underscores can be written within integer or floating-point literals to make them more readable.</p>
 
@@ -174,7 +199,7 @@
 <span class="c1">// 00000000 00000000 00000000 11111111</span>
 <span class="n">a</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">24</span><span class="o">;</span>
 </code></pre></figure>
-<p>The <code>strictfp</code> modifier can be applied to a class, method, or interface to ensure that floating-point calculations perform truncations of certain intermediate values during a computation, as in previous <abbr title="Java Virtual Machine">JVM</abbr> versions.</p>
+<p>The <code>strictfp</code> modifier can be applied to a class, method, or interface to ensure that floating-point calculations perform truncations of certain intermediate values during a computation, as in previous JVM versions.</p>
 
 <p>Array type syntax can place the <code>[]</code> in one of two locations. The latter is better for methods returning arrays and for declaring multiple arrays in one line.</p>
 <figure class="codeblock">
@@ -184,21 +209,49 @@
 
 <span class="c1">// three arrays</span>
 <span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">,</span> <span class="n">nums2</span><span class="o">,</span> <span class="n">nums3</span><span class="o">;</span>
-</code></pre></figure>
+</code></pre></figure><h2 id="primitive-wrappers">
+<span class="hash">#</span>
+<a href="#primitive-wrappers" class="header-link">Primitive Wrappers</a>
+</h2>
 <p>Type wrappers are classes that wrap primitive types, such as <code>Character</code> which wraps <code>char</code>. All numeric type wrappers such as <code>Integer</code> and <code>Float</code> inherit from abstract class <code>Number</code> <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup> which provides conversion methods for all numeric types.</p>
 
-<p>Encapsulating a primitive in an object is referred to as <em>boxing</em>, and the reverse is called <em>unboxing</em>. <em>Autoboxing</em> and <em>auto-unboxing</em> refers to the automatic wrapping and unwrapping of primitive values. <abbr title="Java Development Kit">JDK</abbr> 5 added support for autoboxing and auto-unboxing, which works whenever a primitive type must be converted to an object, such as when passed as parameters to methods or when used in expressions.</p>
+<p>Encapsulating a primitive in an object is referred to as <em>boxing</em>, and the reverse is called <em>unboxing</em>. <em>Autoboxing</em> and <em>auto-unboxing</em> refers to the automatic wrapping and unwrapping of primitive values. JDK 5 added support for autoboxing and auto-unboxing, which works whenever a primitive type must be converted to an object, such as when passed as parameters to methods or when used in expressions.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="n">Integer</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">100</span><span class="o">;</span> <span class="c1">// autoboxed</span>
 
 <span class="n">Integer</span> <span class="n">ib</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
 <span class="o">++</span><span class="n">ib</span><span class="o">;</span> <span class="c1">// auto-unboxed, incremented, re-boxed</span>
-</code></pre></figure><h1 id="control-structures">
+</code></pre></figure>
+<p>There is no way to refer to the same instance of a primitive value. Primitive values can be wrapped into objects using the primitive wrappers---for use in collection classes which only work with objects, for example.</p>
+
+<p><code>Number</code> is an abstract class that is derived by specific numeric type wrappers like <code>Integer</code> and <code>Double</code>. It provides methods for retrieving a given value in any other type format, e.g. <code>doubleValue</code>.</p>
+
+<p>Wrappers can be constructed given the actual primitive value or a string representation of it.</p>
+
+<p>Specific wrapper types also include static methods for parsing strings into primitive types, such as <code>Float.parseFloat(&quot;3.14&quot;)</code>.</p>
+
+<p>Each of these wrapper types include certain constants such as <code>MIN_VALUE</code> and <code>MAX_VALUE</code>.</p>
+
+<p>The <code>Double</code> and <code>Float</code> methods <code>isInfinite</code> and <code>isNaN</code> can be used to test if the values are either of those special values.</p>
+
+<p>The <code>Char</code> methods <code>forDigit</code> and <code>digit</code> can convert a number to a character and vice versa, respectively.</p>
+<h2 id="supplemental-characters">
+<span class="hash">#</span>
+<a href="#supplemental-characters" class="header-link">Supplemental Characters</a>
+</h2>
+<p>Java <code>char</code>s can only hold 16 bits, which means that a single <code>char</code> is unable to represent supplemental characters, those characters which are larger than <code>0xFFFF</code> and thus would require 32 bits to represent. Java resolves this issue by using two <code>char</code>s to represent a supplemental character: a <em>high surrogate</em> and a <em>low surrogate</em>.</p>
+
+<p>Various <code>Character</code> methods provide overloads that accept an <code>int</code>, which is 32 bits and therefore large enough to hold even a supplemental character.</p>
+
+<p>The method <code>codePointAt</code> returns an <code>int</code> containing a particular code point of the provided character sequence location. The method <code>toCodePoint</code> is similar except that it returns the code point of the provided surrogate pair provided a high and low surrogate character argument.</p>
+
+<p>The <code>toChars</code> method performs the reverse operation, taking a code point and returning an array of characters, which may be two elements in length if it&#39;s a supplemental character.</p>
+<h1 id="control-structures">
 <span class="hash">#</span>
 <a href="#control-structures" class="header-link">Control Structures</a>
 </h1>
-<p>Switch statements in Java can operate on expressions of type <code>byte</code>, <code>short</code>, <code>int</code>, <code>char</code>, enumerations, or <code>String</code>. Case statements don&rsquo;t break automatically, and so the <code>break</code> keyword must be used.</p>
+<p>Switch statements in Java can operate on expressions of type <code>byte</code>, <code>short</code>, <code>int</code>, <code>char</code>, enumerations, or <code>String</code>. Case statements don&#39;t break automatically, and so the <code>break</code> keyword must be used.</p>
 
 <p>Labeled break statements can specify exactly which block to break to, causing execution to jump to the <em>end</em> of the specified <em>enclosing</em> block. Blocks can be given names by prefixing the <code>{</code> character with a label in the form of <code>thelabel:</code>.</p>
 
@@ -221,12 +274,12 @@
   <span class="o">}</span>
 <span class="o">}</span> <span class="c1">// execution jumps here</span>
 </code></pre></figure>
-<p>Assertions aren&rsquo;t exactly control structures but they&rsquo;re in this section anyway. The <code>assert</code> keyword takes a condition which is optionally followed by a colon and an expression that is converted to a string and displayed if the assertion fails.</p>
+<p>Assertions aren&#39;t exactly control structures but they&#39;re in this section anyway. The <code>assert</code> keyword takes a condition which is optionally followed by a colon and an expression that is converted to a string and displayed if the assertion fails.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="k">assert</span> <span class="n">divisor</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">:</span> <span class="s">&quot;attempted to divide by zero&quot;</span><span class="o">;</span>
 </code></pre></figure>
-<p>Assertions aren&rsquo;t run by default due to the performance impact, but can be enabled by supplying the <code>-ea</code> option to the <code>java</code> interpreter, or disabled with the <code>-da</code> option. Assertions can be enabled or disabled at the package level by specifying the package and following it by three periods.</p>
+<p>Assertions aren&#39;t run by default due to the performance impact, but can be enabled by supplying the <code>-ea</code> option to the <code>java</code> interpreter, or disabled with the <code>-da</code> option. Assertions can be enabled or disabled at the package level by specifying the package and following it by three periods.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="c"># enable all assertions</span>
@@ -270,7 +323,7 @@
 </code></pre></figure>
 <p>The <code>instanceof</code> operator can test to see if an instance is of a given type or <em>can be</em> cast into a given type, yielding a boolean value.</p>
 
-<p>the <code>native</code> keyword can be used to mark a method as native via the Java Native Interface (<abbr title="Java Native Interface">JNI</abbr>), in which case a method shoudldn&rsquo;t be provided. The library that contains the definition of the function should be linked using the <code>System.loadLibrary</code> method, particularly within a <code>static</code> block to ensure that this only occurs once.</p>
+<p>the <code>native</code> keyword can be used to mark a method as native via the Java Native Interface (JNI), in which case a method shoudldn&#39;t be provided. The library that contains the definition of the function should be linked using the <code>System.loadLibrary</code> method, particularly within a <code>static</code> block to ensure that this only occurs once.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">Test</span> <span class="o">{</span>
@@ -301,7 +354,7 @@
 <span class="hash">#</span>
 <a href="#inheritance" class="header-link">Inheritance</a>
 </h1>
-<p>Inheritance is expressed with the <code>extends</code> keyword. Private members in the superclass can&rsquo;t be accessed by the child class. The superclass can be accessed via the <code>super</code> keyword. A superclass initializer can be called with <code>super</code> as well, which must be the first statement in a subclass constructor.</p>
+<p>Inheritance is expressed with the <code>extends</code> keyword. Private members in the superclass can&#39;t be accessed by the child class. The superclass can be accessed via the <code>super</code> keyword. A superclass initializer can be called with <code>super</code> as well, which must be the first statement in a subclass constructor.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">A</span> <span class="o">{</span>
@@ -325,28 +378,28 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>The <code>final</code> keyword can be used to prevent a method from being overridden in subclasses. Such methods can be inlined by the compiler because it knows that they will not be overridden and thus doesn&rsquo;t need to resolve the call dynamically at run-time.</p>
+<p>The <code>final</code> keyword can be used to prevent a method from being overridden in subclasses. Such methods can be inlined by the compiler because it knows that they will not be overridden and thus doesn&#39;t need to resolve the call dynamically at run-time.</p>
 
 <p>Further, the <code>final</code> keyword can be used to prevent inheriting from a particular class at all.</p>
 
 <p>All classes are subclasses of <code>Object</code>, so that a reference of type <code>Object</code> can refer to any other class.</p>
 
-<p>Overloaded constructors can call other constructors by using the <code>this</code> keyword as a method, but if this is done then it must be the first statement within the constructor. Calling overloaded constructors in this manner imposes a performance impact due to the calla nd return mechanism used when the second constructor is invoked, so this mechanism shouldn&rsquo;t be used simply for the sake of cleaner code.</p>
+<p>Overloaded constructors can call other constructors by using the <code>this</code> keyword as a method, but if this is done then it must be the first statement within the constructor. Calling overloaded constructors in this manner imposes a performance impact due to the calla nd return mechanism used when the second constructor is invoked, so this mechanism shouldn&#39;t be used simply for the sake of cleaner code.</p>
 
-<p>There are two restrictions with calling other constructors. The first is that an instance variable of the constructor&rsquo;s class can&rsquo;t be used in a call to another constructor (i.e. passing it as an argument). The second is that superclass constructor delegation and same-class constructor delegation can&rsquo;t be used in the same constructor, since each has the requirement of being the first statement in the constructor.</p>
+<p>There are two restrictions with calling other constructors. The first is that an instance variable of the constructor&#39;s class can&#39;t be used in a call to another constructor (i.e. passing it as an argument). The second is that superclass constructor delegation and same-class constructor delegation can&#39;t be used in the same constructor, since each has the requirement of being the first statement in the constructor.</p>
 <h1 id="generics">
 <span class="hash">#</span>
 <a href="#generics" class="header-link">Generics</a>
 </h1>
-<p>Java doesn&rsquo;t actually create different versions of parameterized classes or methods, unlike C++ template instantiations. Instead it performs <em>type erasure</em> so all generic type information is substituted by necessary type casts.</p>
+<p>Java doesn&#39;t actually create different versions of parameterized classes or methods, unlike C++ template instantiations. Instead it performs <em>type erasure</em> so all generic type information is substituted by necessary type casts.</p>
 
-<p>With type erasure, all generic type information is erased at compile-time, replacing type parameters with their bound type&mdash;<code>Object</code> if no explicit bound is specified. Appropriate casts are then inserted to maintain compatibility with the types specified by the type arguments, a compatibility which the compiler also enforces.</p>
+<p>With type erasure, all generic type information is erased at compile-time, replacing type parameters with their bound type---<code>Object</code> if no explicit bound is specified. Appropriate casts are then inserted to maintain compatibility with the types specified by the type arguments, a compatibility which the compiler also enforces.</p>
 
-<p>It&rsquo;s possible for methods overridden in subclasses to mismatch the type erasure of the superclass method definition. In this case, the compiler inserts a bridge method that has the same type erasure as the superclass which then calls the method that has the type erasure specified by the override.</p>
+<p>It&#39;s possible for methods overridden in subclasses to mismatch the type erasure of the superclass method definition. In this case, the compiler inserts a bridge method that has the same type erasure as the superclass which then calls the method that has the type erasure specified by the override.</p>
 
-<p>In the following example, <code>getOb</code> in <code>T1&lt;String&gt;</code> results in a return type of <code>Object</code> due to type erasure, so the override isn&rsquo;t actually an override since the return types don&rsquo;t match. For this reason, the compiler would insert a method of the same name with the same return type as <code>T1</code> which itself would call the <code>T2</code> &ldquo;override&rdquo;.</p>
+<p>In the following example, <code>getOb</code> in <code>T1&lt;String&gt;</code> results in a return type of <code>Object</code> due to type erasure, so the override isn&#39;t actually an override since the return types don&#39;t match. For this reason, the compiler would insert a method of the same name with the same return type as <code>T1</code> which itself would call the <code>T2</code> &quot;override&quot;.</p>
 
-<p>In this example the only difference between the two methods with the same name is the return type, which is not a valid overload and would normally yield a compiler error, but it&rsquo;s handled automatically and correctly by the <abbr title="Java Virtual Machine">JVM</abbr>.</p>
+<p>In this example the only difference between the two methods with the same name is the return type, which is not a valid overload and would normally yield a compiler error, but it&#39;s handled automatically and correctly by the JVM.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">T1</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
@@ -364,7 +417,7 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>It&rsquo;s also possible for type erasure to lead to ambiguity errors, where two distinct declarations resolve to the same erased type. This can be fixed by placing strict type bounds or making the method names distinct.</p>
+<p>It&#39;s also possible for type erasure to lead to ambiguity errors, where two distinct declarations resolve to the same erased type. This can be fixed by placing strict type bounds or making the method names distinct.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">T</span><span class="o">&lt;</span><span class="n">X</span><span class="o">,</span> <span class="n">Y</span><span class="o">&gt;</span> <span class="o">{</span>
@@ -378,9 +431,9 @@
 </code></pre></figure>
 <p>Ambiguity errors can also be caused when there are more than one type parameters with no restriction on them being distinct, incompatible types.</p>
 
-<p>Generics only work with reference types, so that a primitive type such as <code>int</code> can&rsquo;t be a type argument to a type parameter, instead necessitating a boxed type such as <code>Integer</code>.</p>
+<p>Generics only work with reference types, so that a primitive type such as <code>int</code> can&#39;t be a type argument to a type parameter, instead necessitating a boxed type such as <code>Integer</code>.</p>
 
-<p>It&rsquo;s not possible to create an instance of a type parameter, since the compiler won&rsquo;t know what type to actually create. By extension, it&rsquo;s not possible to instantiate arrays whose element type is a type parameter or a specific generic type as well. However, it is possible to create arrays of references to a generic type via a wildcard. It&rsquo;s also not possible to create generic exception classes.</p>
+<p>It&#39;s not possible to create an instance of a type parameter, since the compiler won&#39;t know what type to actually create. By extension, it&#39;s not possible to instantiate arrays whose element type is a type parameter or a specific generic type as well. However, it is possible to create arrays of references to a generic type via a wildcard. It&#39;s also not possible to create generic exception classes.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">T</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="o">{</span>
@@ -394,14 +447,14 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>It&rsquo;s also not possible to define static members that use type parameters declared by the enclosing class. There can, however, be generic static methods that define their own type parameters.</p>
+<p>It&#39;s also not possible to define static members that use type parameters declared by the enclosing class. There can, however, be generic static methods that define their own type parameters.</p>
 
 <p>Generic classes are defined in the following form.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">Name</span><span class="o">&lt;</span><span class="n">TypeParameter</span><span class="o">&gt;</span> <span class="o">{}</span>
 </code></pre></figure>
-<p>Bounded types allow the specification of an upper or lower bound on the expected type. An upper bound specifies the superclass from which the type argument must derive and is accomplished using the <code>extends</code> keyword. It&rsquo;s possible to use an interface as a bound, in which case the passed type must implement the given interface. A combination of type and interface(s) may be provided separated by ampersands <code>&amp;</code>, but the type must come first.</p>
+<p>Bounded types allow the specification of an upper or lower bound on the expected type. An upper bound specifies the superclass from which the type argument must derive and is accomplished using the <code>extends</code> keyword. It&#39;s possible to use an interface as a bound, in which case the passed type must implement the given interface. A combination of type and interface(s) may be provided separated by ampersands <code>&amp;</code>, but the type must come first.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="c1">// upper bound: type argument must be or extend SuperClass</span>
@@ -411,7 +464,7 @@
 <span class="c1">//   and extend Interface1 and Interface2</span>
 <span class="o">&lt;</span><span class="n">T</span> <span class="kd">extends</span> <span class="n">SuperClass</span> <span class="o">&amp;</span> <span class="n">Interface1</span> <span class="o">&amp;</span> <span class="n">Interface2</span><span class="o">&gt;</span>
 </code></pre></figure>
-<p>It&rsquo;s possible to specify a wildcard type parameter with the question mark <code>?</code>, which represents an unknown type. This would match any generic type regardless of its type argument, so that <code>Test&lt;A&gt;</code> and <code>Test&lt;B&gt;</code> would match <code>Test&lt;?&gt;</code>.</p>
+<p>It&#39;s possible to specify a wildcard type parameter with the question mark <code>?</code>, which represents an unknown type. This would match any generic type regardless of its type argument, so that <code>Test&lt;A&gt;</code> and <code>Test&lt;B&gt;</code> would match <code>Test&lt;?&gt;</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="c1">// this can take in a Stats&lt;Integer&gt; and Stats&lt;Double&gt;</span>
@@ -425,7 +478,7 @@
 <code class="highlight language-java"><span class="c1">// upper bound</span>
 <span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">SuperClass</span><span class="o">&gt;</span>
 
-<span class="c1">// lower bound: type must be subclass of SubClass</span>
+<span class="c1">// lower bound: type must be superclass of SubClass</span>
 <span class="c1">//   or SubClass itself</span>
 <span class="o">&lt;?</span> <span class="kd">super</span> <span class="n">SubClass</span><span class="o">&gt;</span>
 </code></pre></figure>
@@ -438,7 +491,7 @@
 
 <span class="n">Generic</span><span class="o">.&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Double</span><span class="o">&gt;</span><span class="n">method</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mf">3.0</span><span class="o">);</span>
 </code></pre></figure>
-<p>Constructors can also be generic even if their classes aren&rsquo;t, in which case the type parameter list also precedes the constructor name.</p>
+<p>Constructors can also be generic even if their classes aren&#39;t, in which case the type parameter list also precedes the constructor name.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">DoubleContainer</span> <span class="o">{</span>
@@ -449,9 +502,9 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>Interfaces can also be made generic, in which case their declaration syntax is identical to that of a generic class. In most cases, if a class implements a generic interface then the class itself must be generic in order to pass the type parameter to the interface&rsquo;s type parameter list.</p>
+<p>Interfaces can also be made generic, in which case their declaration syntax is identical to that of a generic class. In most cases, if a class implements a generic interface then the class itself must be generic in order to pass the type parameter to the interface&#39;s type parameter list.</p>
 
-<p>In order to preserve backwards compatibility, Java allows a generic class to be used without any type arguments, in which case it&rsquo;s referred to as a <em>raw type</em>. Type casts, which would normally be substituted automatically during type erasure, must be explicitly included to type check. However, if the type cast fails at run-time, it yields a run-time error.</p>
+<p>In order to preserve backwards compatibility, Java allows a generic class to be used without any type arguments, in which case it&#39;s referred to as a <em>raw type</em>. Type casts, which would normally be substituted automatically during type erasure, must be explicitly included to type check. However, if the type cast fails at run-time, it yields a run-time error.</p>
 
 <p>Due to the danger imposed by raw types, the Java compiler displays unchecked warnings when raw types are used in ways that may break type safety.</p>
 <figure class="codeblock">
@@ -464,7 +517,7 @@
 <span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="o">(</span><span class="n">Double</span><span class="o">)</span><span class="n">raw</span><span class="o">.</span><span class="na">ob</span><span class="o">;</span>
 <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="o">(</span><span class="n">Integer</span><span class="o">)</span><span class="n">raw</span><span class="o">.</span><span class="na">ob</span><span class="o">;</span> <span class="c1">// run-time error</span>
 </code></pre></figure>
-<p>Generic classes may inherit from generic and non-generic classes. It&rsquo;s also possible to inherit from a specific generic type (e.g. <code>T&lt;String&gt;</code>).</p>
+<p>Generic classes may inherit from generic and non-generic classes. It&#39;s also possible to inherit from a specific generic type (e.g. <code>T&lt;String&gt;</code>).</p>
 
 <p>The <code>instanceof</code> operator can be used on generic classes, but since generic type information is not available at run-time, a wildcard must be used to check.</p>
 <figure class="codeblock">
@@ -473,7 +526,7 @@
 
 <span class="k">assert</span> <span class="n">t</span> <span class="k">instanceof</span> <span class="n">Type</span><span class="o">&lt;?&gt;;</span>
 </code></pre></figure>
-<p>It&rsquo;s possible to cast an instance of a generic class into another if the type arguments are the same and the classes are compatible (related).</p>
+<p>It&#39;s possible to cast an instance of a generic class into another if the type arguments are the same and the classes are compatible (related).</p>
 
 <p>the diamond operator <code>&lt;&gt;</code> can be used to instantiate a generic class and infer the type arguments from the types passed to the constructor.</p>
 <figure class="codeblock">
@@ -493,7 +546,7 @@
 </code></pre></figure>
 <p>Multiple source files may contain the same <code>package</code> declaration, allowing packages to be spread across many source files. Packages map to directories on the file system.</p>
 
-<p>The default access specification is that, if a class member doesn&rsquo;t have an explicit access specification, it is visible to subclasses and other classes in the same package. Specifying a member as <code>protected</code> makes it accessible outside of the package but only to subclasses of the class to which they are a member.</p>
+<p>The default access specification is that, if a class member doesn&#39;t have an explicit access specification, it is visible to subclasses and other classes in the same package. Specifying a member as <code>protected</code> makes it accessible outside of the package but only to subclasses of the class to which they are a member.</p>
 
 <p>The following table specifies whether a class member with a particular access modifier is accessible by other package components.</p>
 
@@ -581,14 +634,14 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>As with subclasses, it&rsquo;s possible to create references of interface types that point to objects that implement the interface, such that method calls resolve to those implemented by the object.</p>
+<p>As with subclasses, it&#39;s possible to create references of interface types that point to objects that implement the interface, such that method calls resolve to those implemented by the object.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="n">Callback</span> <span class="n">c</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Client</span><span class="o">();</span>
 <span class="n">c</span><span class="o">.</span><span class="na">callback</span><span class="o">(</span><span class="mi">42</span><span class="o">);</span>
 <span class="c1">// callback called with 42</span>
 </code></pre></figure>
-<p>If a class doesn&rsquo;t fully implement the methods required by the interface it claims to implement, then that class must be declared as <code>abstract</code>.</p>
+<p>If a class doesn&#39;t fully implement the methods required by the interface it claims to implement, then that class must be declared as <code>abstract</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Incomplete</span> <span class="kd">implements</span> <span class="n">Callback</span> <span class="o">{</span>
@@ -613,11 +666,11 @@
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">meth2</span><span class="o">()</span> <span class="o">{</span> <span class="cm">/* ... */</span> <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p><abbr title="Java Development Kit">JDK</abbr> 8 makes it possible to provide default implementations of methods. Such implementations are referred to as <em>default methods</em> or <em>extension methods</em>. Default methods are specified by prefixing the method implementation with the <code>default</code> keyword.</p>
+<p>JDK 8 makes it possible to provide default implementations of methods. Such implementations are referred to as <em>default methods</em> or <em>extension methods</em>. Default methods are specified by prefixing the method implementation with the <code>default</code> keyword.</p>
 
 <p>Class implementations take priority over interface default implementations. If a class implements two interface with the same default method, the method must be overridden to disambiguate the call.</p>
 
-<p>If an interface inherits from another and both define a common default method, the sub-interface&rsquo;s version takes precedence. However, the sub-interface can refer to the super-interface&rsquo;s default implementation by using the <code>super</code> keyword, as in <code>Interface.super.method()</code>.</p>
+<p>If an interface inherits from another and both define a common default method, the sub-interface&#39;s version takes precedence. However, the sub-interface can refer to the super-interface&#39;s default implementation by using the <code>super</code> keyword, as in <code>Interface.super.method()</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">SomeInterface</span> <span class="o">{</span>
@@ -628,7 +681,7 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p><abbr title="Java Development Kit">JDK</abbr> 8 also added the ability to define static methods in interfaces which can only be called off of the interface name, since static interface methods aren&rsquo;t inherited by an implementing class or a subinterface.</p>
+<p>JDK 8 also added the ability to define static methods in interfaces which can only be called off of the interface name, since static interface methods aren&#39;t inherited by an implementing class or a subinterface.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">interface</span> <span class="nc">SomeInterface</span> <span class="o">{</span>
@@ -653,7 +706,7 @@
 
 <span class="k">finally</span> <span class="o">{}</span>
 </code></pre></figure>
-<p>Exception types are subclasses of the built-in class <code>Throwable</code>. Under <code>Throwable</code> there are two subclasses: <code>Exception</code> which is for exceptional conditions that programs should catch, and <code>Error</code> which is for exceptions that aren&rsquo;t expected to be caught under normal circumstances. In particular, exceptions of type <code>Error</code> are used for errors pertaining to the Java run-time environment and are usually created in response to serious failures that usually can&rsquo;t be handled by the program.</p>
+<p>Exception types are subclasses of the built-in class <code>Throwable</code>. Under <code>Throwable</code> there are two subclasses: <code>Exception</code> which is for exceptional conditions that programs should catch, and <code>Error</code> which is for exceptions that aren&#39;t expected to be caught under normal circumstances. In particular, exceptions of type <code>Error</code> are used for errors pertaining to the Java run-time environment and are usually created in response to serious failures that usually can&#39;t be handled by the program.</p>
 
 <p>The <code>throw</code> statement is used to throw instances of exception types, particularly of type <code>Throwable</code> or a subclass of it. Execution immediately stops after the <code>throw</code> statement and jumps to wherever the exception is caught, bubbling out of enclosing <code>try</code> blocks until a handler is found or the run-time catches it.</p>
 <figure class="codeblock">
@@ -664,7 +717,7 @@
   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;caught &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>If a method is capable of throwing an exception that it doesn&rsquo;t handle, then it must be marked with the <code>throws</code> keyword to inform callers that they should put it within a <code>try</code> block. The <code>throws</code> keyword is placed after the parameter list and includes a list of exception types that may be thrown. Failing to do this prevents the program from compiling.</p>
+<p>If a method is capable of throwing an exception that it doesn&#39;t handle, then it must be marked with the <code>throws</code> keyword to inform callers that they should put it within a <code>try</code> block. The <code>throws</code> keyword is placed after the parameter list and includes a list of exception types that may be thrown. Failing to do this prevents the program from compiling.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">Throws</span> <span class="o">{</span>
@@ -688,9 +741,9 @@
 <pre>
 <code class="highlight language-java"><span class="k">catch</span> <span class="o">(</span><span class="n">ArithmeticException</span> <span class="o">|</span> <span class="n">ArrayIndexOutOfBoundsException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{}</span>
 </code></pre></figure>
-<p>More precise rethrow refers to the restriction of the type of exceptions that can be rethrown to only those checked exceptions that the associated <code>try</code> block throws that aren&rsquo;t handled by a preceding <code>catch</code> clause and are a subtype or supertype of the parameter. For this restriction to be enforced, the <code>catch</code> parameter must be treated as or be explicitly declared as <code>final</code>.</p>
+<p>More precise rethrow refers to the restriction of the type of exceptions that can be rethrown to only those checked exceptions that the associated <code>try</code> block throws that aren&#39;t handled by a preceding <code>catch</code> clause and are a subtype or supertype of the parameter. For this restriction to be enforced, the <code>catch</code> parameter must be treated as or be explicitly declared as <code>final</code>.</p>
 
-<p>When working with resources in pre-<abbr title="Java Development Kit">JDK</abbr> 7 environments, it&rsquo;s necessary to leverage exception handling to make sure that resources don&rsquo;t leak if exceptions are thrown.</p>
+<p>When working with resources in pre-JDK 7 environments, it&#39;s necessary to leverage exception handling to make sure that resources don&#39;t leak if exceptions are thrown.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="k">try</span> <span class="o">{</span>
@@ -706,11 +759,11 @@
   <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="cm">/* error closing file */</span> <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p><abbr title="Java Development Kit">JDK</abbr> 7 introduced <em>try-with-resources</em> which allows initializing a resource within a <code>try</code> statement that should be automatically closed if the body ends, whether it threw or not. This can only be used on those resources that implement the <code>AutoCloseable</code> interface which defines a <code>close</code> method. This allows <code>catch</code> clauses to be used for more meaningful reasons.</p>
+<p>JDK 7 introduced <em>try-with-resources</em> which allows initializing a resource within a <code>try</code> statement that should be automatically closed if the body ends, whether it threw or not. This can only be used on those resources that implement the <code>AutoCloseable</code> interface which defines a <code>close</code> method. This allows <code>catch</code> clauses to be used for more meaningful reasons.</p>
 
 <p>Multiple resources can be defined within the same <code>try</code> statement by separating their declarations with semicolons.</p>
 
-<p>Something to note is that the resource declared in the <code>try</code> statement is implicitly <code>final</code>, so that the resource can&rsquo;t be assigned to after it has been created.</p>
+<p>Something to note is that the resource declared in the <code>try</code> statement is implicitly <code>final</code>, so that the resource can&#39;t be assigned to after it has been created.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="k">try</span> <span class="o">(</span><span class="n">FileInputStream</span> <span class="n">fin</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">))</span> <span class="o">{</span>
@@ -724,13 +777,13 @@
 <span class="hash">#</span>
 <a href="#multithreading" class="header-link">Multithreading</a>
 </h1>
-<p>The <code>Runnable</code> interface represents a unit of executable code and consists of a <code>run</code> method. The <code>Runnable</code> object&rsquo;s <code>run</code> method can be executed in a separate thread by instantiating a <code>Thread</code> and passing it a reference to the <code>Runnable</code>. This can be accomplished by using a particular <code>Thread</code> constructor which takes the reference, then calling the <code>Thread</code>&rsquo;s <code>start</code> method.</p>
+<p>The <code>Runnable</code> interface represents a unit of executable code and consists of a <code>run</code> method. The <code>Runnable</code> object&#39;s <code>run</code> method can be executed in a separate thread by instantiating a <code>Thread</code> and passing it a reference to the <code>Runnable</code>. This can be accomplished by using a particular <code>Thread</code> constructor which takes the reference, then calling the <code>Thread</code>&#39;s <code>start</code> method.</p>
 
-<p>It&rsquo;s also possible extend the <code>Thread</code> class and override its <code>run</code> method to more directly specify code that should be run in a separate thread.</p>
+<p>It&#39;s also possible extend the <code>Thread</code> class and override its <code>run</code> method to more directly specify code that should be run in a separate thread.</p>
 
 <p>The <code>join</code> method from <code>Thread</code> can be used to join one thread to another, i.e. wait for another thread to finish.</p>
 
-<p>A monitor is an object that&rsquo;s used as a mutually exclusive lock, and every object has its own implicit monitor that&rsquo;s automatically &ldquo;entered,&rdquo; i.e. acquired, when a <code>synchronized</code> method is called, so that only one thread may enter a <code>synchronized</code> method at a time on a given object.</p>
+<p>A monitor is an object that&#39;s used as a mutually exclusive lock, and every object has its own implicit monitor that&#39;s automatically &quot;entered,&quot; i.e. acquired, when a <code>synchronized</code> method is called, so that only one thread may enter a <code>synchronized</code> method at a time on a given object.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">class</span> <span class="nc">Synchronized</span> <span class="o">{</span>
@@ -739,7 +792,7 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>There is also a <code>synchronized</code> statement which can be used to synchronize sections of code, which can be useful when one doesn&rsquo;t have control over the methods of a class. The statement takes a reference to the object to use as the monitor and contains code that should be synchronized for it.</p>
+<p>There is also a <code>synchronized</code> statement which can be used to synchronize sections of code, which can be useful when one doesn&#39;t have control over the methods of a class. The statement takes a reference to the object to use as the monitor and contains code that should be synchronized for it.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">synchronized</span><span class="o">(</span><span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
@@ -748,7 +801,7 @@
 </code></pre></figure>
 <p>Java threads can communicate with each other via the <code>Object</code> methods <code>wait</code>, <code>notify</code>, and <code>notifyAll</code>. The <code>wait</code> method causes the calling thread to relinquish the monitor and sleep until another thread enters the monitor and calls <code>notify</code> or <code>notifyAll</code>. The <code>notify</code> method wakes up a thread that called <code>wait</code> on the same object, and the <code>notifyAll</code> method wakes up all threads that did so with one gaining access at random.</p>
 
-<p>Despite calling <code>wait</code>, a thread may be woken up for no apparent reason (e.g. interrupted by a signal), which is why it&rsquo;s advised to put the <code>wait</code> call within a loop that checks the overall condition that is being waited upon.</p>
+<p>Despite calling <code>wait</code>, a thread may be woken up for no apparent reason (e.g. interrupted by a signal), which is why it&#39;s advised to put the <code>wait</code> call within a loop that checks the overall condition that is being waited upon.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="k">while</span> <span class="o">(</span><span class="n">condition</span><span class="o">)</span> <span class="o">{</span>
@@ -759,9 +812,9 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>The functionality for suspending, resuming, and stopping threads must be implemented manually, usually in the form of a loop that checks a flag which represents the user&rsquo;s request. A suspend method can&rsquo;t be provided by the standard library because it could end up suspending a thread before it relinquishes its locks, leading to deadlocks. A stop method can&rsquo;t be provided either because it could leave data in an inconsistent state if it&rsquo;s stopped abruptly.</p>
+<p>The functionality for suspending, resuming, and stopping threads must be implemented manually, usually in the form of a loop that checks a flag which represents the user&#39;s request. A suspend method can&#39;t be provided by the standard library because it could end up suspending a thread before it relinquishes its locks, leading to deadlocks. A stop method can&#39;t be provided either because it could leave data in an inconsistent state if it&#39;s stopped abruptly.</p>
 
-<p>Normally in multithreaded programs when two or more threads share the same variable they store thread-local copies and update the &ldquo;master copy&rdquo; at certain points in execution, such as when <code>synchronized</code> methods are entered. Specifying the variable as <code>volatile</code> tells the compiler that it must always use the master copy of the varaible, or to always keep the local copies synchronized with the master copy.</p>
+<p>Normally in multithreaded programs when two or more threads share the same variable they store thread-local copies and update the &quot;master copy&quot; at certain points in execution, such as when <code>synchronized</code> methods are entered. Specifying the variable as <code>volatile</code> tells the compiler that it must always use the master copy of the varaible, or to always keep the local copies synchronized with the master copy.</p>
 <h1 id="enumerations">
 <span class="hash">#</span>
 <a href="#enumerations" class="header-link">Enumerations</a>
@@ -782,7 +835,7 @@
   <span class="kt">int</span> <span class="nf">getNumber</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">number</span><span class="o">;</span> <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>An enumeration constant&rsquo;s position, i.e. its <em>ordinal value</em>, can be retrieved by calling the <code>ordinal</code> method, and it can be compared against another enumeration constant&rsquo;s ordinal using the <code>compareTo</code> method. The <code>equals</code> method can be used to test if two enumeration constants are the same. Since enumeration constants are objects of their enumeration type, they can also be compared using the reference equality operator <code>==</code>.</p>
+<p>An enumeration constant&#39;s position, i.e. its <em>ordinal value</em>, can be retrieved by calling the <code>ordinal</code> method, and it can be compared against another enumeration constant&#39;s ordinal using the <code>compareTo</code> method. The <code>equals</code> method can be used to test if two enumeration constants are the same. Since enumeration constants are objects of their enumeration type, they can also be compared using the reference equality operator <code>==</code>.</p>
 <h1 id="annotations">
 <span class="hash">#</span>
 <a href="#annotations" class="header-link">Annotations</a>
@@ -840,7 +893,7 @@
   <span class="kt">int</span> <span class="nf">val</span><span class="o">();</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>Annotations with <code>RUNTIME</code> retention policies can be obtained at run-time via reflection. First, a <code>Class</code> object must be obtained that represents the class whose annotations we want to obtain, which is usually done with <code>getClass</code> or the <code>class</code> member. Next, it&rsquo;s necessary to obtain an object that represents the item for which we want to obtain annotations, e.g. <code>getMethod</code>. Once one of these objects is obtained, the actual annotation may be obtained with <code>getAnnotation</code> which can then be queried for the values of its members.</p>
+<p>Annotations with <code>RUNTIME</code> retention policies can be obtained at run-time via reflection. First, a <code>Class</code> object must be obtained that represents the class whose annotations we want to obtain, which is usually done with <code>getClass</code> or the <code>class</code> member. Next, it&#39;s necessary to obtain an object that represents the item for which we want to obtain annotations, e.g. <code>getMethod</code>. Once one of these objects is obtained, the actual annotation may be obtained with <code>getAnnotation</code> which can then be queried for the values of its members.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
@@ -862,11 +915,11 @@
 </code></pre></figure>
 <p>Alternatively, the <code>getAnnotations</code> method on a given item, such as <code>Method</code>, yields all annotations associated with the item with a <code>RUNTIME</code> retention. This method is defined by the <code>AnnotatedElement</code> interface, which defines many other annotation introspection methods.</p>
 
-<p>Marker annotations don&rsquo;t have any members, so that their only purpose is to <em>mark</em> the items to which they&rsquo;re applied, which can then be checked using the method <code>isAnnotationPresent</code>. Parentheses are optional with marker annotations.</p>
+<p>Marker annotations don&#39;t have any members, so that their only purpose is to <em>mark</em> the items to which they&#39;re applied, which can then be checked using the method <code>isAnnotationPresent</code>. Parentheses are optional with marker annotations.</p>
 
-<p>Single-member annotations are those that only contain one member. These annotations can leverage a short-hand syntax if the member&rsquo;s name is <code>value</code>, in which case the value of the single member is the only thing within the parentheses.</p>
+<p>Single-member annotations are those that only contain one member. These annotations can leverage a short-hand syntax if the member&#39;s name is <code>value</code>, in which case the value of the single member is the only thing within the parentheses.</p>
 
-<p>It&rsquo;s also possible to use this short-hand if there are other members but they have default values.</p>
+<p>It&#39;s also possible to use this short-hand if there are other members but they have default values.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="nd">@interface</span> <span class="n">MySingle</span> <span class="o">{</span>
@@ -927,37 +980,37 @@
 </tr>
 <tr>
 <td style="text-align: left"><code>TYPE_PARAMETER</code></td>
-<td style="text-align: left">type parameter (<abbr title="Java Development Kit">JDK</abbr> 8)</td>
+<td style="text-align: left">type parameter (JDK 8)</td>
 </tr>
 <tr>
 <td style="text-align: left"><code>TYPE_USE</code></td>
-<td style="text-align: left">type use (<abbr title="Java Development Kit">JDK</abbr> 8)</td>
+<td style="text-align: left">type use (JDK 8)</td>
 </tr>
 </tbody>
 </table>
 
-<p>The <code>@Inherited</code> annotation can only be applied to annotations being applied to class declarations, causing the annotation of a superclass to be inherited by a subclass. That is, if a subclass is searched for a given annotation and it&rsquo;s not found, its superclass is searched.</p>
+<p>The <code>@Inherited</code> annotation can only be applied to annotations being applied to class declarations, causing the annotation of a superclass to be inherited by a subclass. That is, if a subclass is searched for a given annotation and it&#39;s not found, its superclass is searched.</p>
 
-<p>The <code>@Override</code> annotation can only be used on methods in order to declare that the method to which it&rsquo;s applied must be overriding a method from a superclass, yielding a compile-time error if this isn&rsquo;t the case.</p>
+<p>The <code>@Override</code> annotation can only be used on methods in order to declare that the method to which it&#39;s applied must be overriding a method from a superclass, yielding a compile-time error if this isn&#39;t the case.</p>
 
 <p>The <code>@Deprecated</code> annotation is used to mark a declaration obsolete.</p>
 
-<p>The <code>@FunctionalInterface</code> is a marker annotation added by <abbr title="Java Development Kit">JDK</abbr> 8 that indicates that the annotated interface is a functional interface. However, any interface with exactly one abstract method is by definition a functional interface, so that this annotation is purely informational, aside from yielding compile-time errors if the constraint isn&rsquo;t satisfied.</p>
+<p>The <code>@FunctionalInterface</code> is a marker annotation added by JDK 8 that indicates that the annotated interface is a functional interface. However, any interface with exactly one abstract method is by definition a functional interface, so that this annotation is purely informational, aside from yielding compile-time errors if the constraint isn&#39;t satisfied.</p>
 
-<p>Beginning with <abbr title="Java Development Kit">JDK</abbr> 8, annotations can also be placed in most cases in which a type is used&mdash;such as return types, the type of <code>this</code>, a type cast, and so on&mdash;in which case they&rsquo;re referred to as type annotations. These annotations are mainly used for external tools to enforce stricter checks than the Java compiler may perform.</p>
+<p>Beginning with JDK 8, annotations can also be placed in most cases in which a type is used---such as return types, the type of <code>this</code>, a type cast, and so on---in which case they&#39;re referred to as type annotations. These annotations are mainly used for external tools to enforce stricter checks than the Java compiler may perform.</p>
 
-<p>To annotate the type of <code>this</code>, known as the <em>receiver</em>, <abbr title="Java Development Kit">JDK</abbr> 8 allows explicitly declaring <code>this</code> as the first parameter of a method in which case it should take on the type of the class the method belongs to.</p>
+<p>To annotate the type of <code>this</code>, known as the <em>receiver</em>, JDK 8 allows explicitly declaring <code>this</code> as the first parameter of a method in which case it should take on the type of the class the method belongs to.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kt">int</span> <span class="nf">myMeth</span><span class="o">(</span><span class="nd">@TypeAnno</span> <span class="n">SomeClass</span> <span class="k">this</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">)</span> <span class="o">{}</span>
 </code></pre></figure>
-<p>When annotating return types, it&rsquo;s not possible to annotate a return type of <code>void</code>.</p>
+<p>When annotating return types, it&#39;s not possible to annotate a return type of <code>void</code>.</p>
 
-<p><abbr title="Java Development Kit">JDK</abbr> 8 added support for so called <em>repeating annotations</em> which are annotations that can be repeated on the same element. The annotation that is intended to be repeatable must be annotated with the <code>@Repeatable</code> annotation which specifies the annotation&rsquo;s container type, that is, another annotation for which its <code>value</code> field is an array of the repeatable annotation type.</p>
+<p>JDK 8 added support for so called <em>repeating annotations</em> which are annotations that can be repeated on the same element. The annotation that is intended to be repeatable must be annotated with the <code>@Repeatable</code> annotation which specifies the annotation&#39;s container type, that is, another annotation for which its <code>value</code> field is an array of the repeatable annotation type.</p>
 
 <p>These repeated annotations can then be retrieved using <code>getAnnotation</code> to retrieve the container type.</p>
 
-<p>Alternatively, it&rsquo;s more straightforward to use the <code>getAnnotationsByType</code> method.</p>
+<p>Alternatively, it&#39;s more straightforward to use the <code>getAnnotationsByType</code> method.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="nd">@Retention</span><span class="o">(</span><span class="n">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
@@ -988,9 +1041,9 @@
 <span class="hash">#</span>
 <a href="#lambdas" class="header-link">Lambdas</a>
 </h1>
-<p>A functional interface is an interface that contains only one abstract method. This means that the interface can contain other methods so long as they have default implementations. The functional interface&rsquo;s method specifies the target type, and lambda expressions can only be specified in a context in which a target type is defined.</p>
+<p>A functional interface is an interface that contains only one abstract method. This means that the interface can contain other methods so long as they have default implementations. The functional interface&#39;s method specifies the target type, and lambda expressions can only be specified in a context in which a target type is defined.</p>
 
-<p>When a lambda expression does occur in a target type context, an instance of a class is automatically created that implements the functional interface. The parameters and return type of the lambda expression must match those of the abstract method&rsquo;s, and any exceptions thrown by the lambda must be acceptable to the method.</p>
+<p>When a lambda expression does occur in a target type context, an instance of a class is automatically created that implements the functional interface. The parameters and return type of the lambda expression must match those of the abstract method&#39;s, and any exceptions thrown by the lambda must be acceptable to the method.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">interface</span> <span class="nc">Test</span> <span class="o">{</span>
@@ -1002,21 +1055,21 @@
   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;value: &quot;</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
 <span class="o">}</span>
 </code></pre></figure>
-<p>If a lambda expression has only one parameter, it&rsquo;s not necesary to surround the parameters with parentheses. If it&rsquo;s necessary to explicitly declare the type of a parameter, all of them must be specified&mdash;all or nothing. If multiple statements are required within a lambda, they simply need to be surrounded with braces as with a method body and a return statement must be given.</p>
+<p>If a lambda expression has only one parameter, it&#39;s not necesary to surround the parameters with parentheses. If it&#39;s necessary to explicitly declare the type of a parameter, all of them must be specified---all or nothing. If multiple statements are required within a lambda, they simply need to be surrounded with braces as with a method body and a return statement must be given.</p>
 
-<p>Lambdas may only use local variables from their enclosing scope if they&rsquo;re effectively final, that is, their value doesn&rsquo;t change after they&rsquo;re first assigned. As a result, lambdas can&rsquo;t modify local variables from their enclosing scope. However, it <em>may</em> use and modify instance varaibles from its invoking class.</p>
+<p>Lambdas may only use local variables from their enclosing scope if they&#39;re effectively final, that is, their value doesn&#39;t change after they&#39;re first assigned. As a result, lambdas can&#39;t modify local variables from their enclosing scope. However, it <em>may</em> use and modify instance varaibles from its invoking class.</p>
 
-<p>Method references can refer to methods without executing them. Static method references can be obtained using the <code>::</code> separator introduced in <abbr title="Java Development Kit">JDK</abbr> 8. A method reference can then be used anywhere in which it is compatible with the target type.</p>
+<p>Method references can refer to methods without executing them. Static method references can be obtained using the <code>::</code> separator introduced in JDK 8. A method reference can then be used anywhere in which it is compatible with the target type.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="nl">ClassName:</span><span class="o">:</span><span class="n">staticMethod</span><span class="o">;</span>
 </code></pre></figure>
-<p>It&rsquo;s also possible to obtain references to instance methods of a specific object with the same syntax.</p>
+<p>It&#39;s also possible to obtain references to instance methods of a specific object with the same syntax.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="nl">objRef:</span><span class="o">:</span><span class="n">methodName</span><span class="o">;</span>
 </code></pre></figure>
-<p>It&rsquo;s also possible to obtain a reference to an instance method that can be used on any object. In this case, the first parameter of the functional interface should be of the type of the invoking object and the second should be the parameter(s) specified by the method.</p>
+<p>It&#39;s also possible to obtain a reference to an instance method that can be used on any object. In this case, the first parameter of the functional interface should be of the type of the invoking object and the second should be the parameter(s) specified by the method.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">interface</span> <span class="nc">Func</span> <span class="o">{</span>
@@ -1030,7 +1083,7 @@
 <pre>
 <code class="highlight language-java"><span class="nl">ClassName:</span><span class="o">:&lt;</span><span class="n">Type</span><span class="o">,</span> <span class="n">OtherType</span><span class="o">&gt;</span><span class="n">instanceMethod</span><span class="o">;</span>
 </code></pre></figure>
-<p>It&rsquo;s also possible to reference constructors. If the class is generic, then the type parameters are provided as mentioned above. Constructor references for arrays can also be created. A functional interface for a constructor references to arrays should contain a method that takes an integer parameter to refer to an array constructor.</p>
+<p>It&#39;s also possible to reference constructors. If the class is generic, then the type parameters are provided as mentioned above. Constructor references for arrays can also be created. A functional interface for a constructor references to arrays should contain a method that takes an integer parameter to refer to an array constructor.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="nl">ClassName:</span><span class="o">:</span><span class="k">new</span><span class="o">;</span>
@@ -1042,7 +1095,7 @@
 <pre>
 <code class="highlight language-java"><span class="kd">super</span><span class="o">::</span><span class="n">methodName</span><span class="o">;</span>
 </code></pre></figure>
-<p><abbr title="Java Development Kit">JDK</abbr> 8 contains predefined functional interfaces in <span class="path">java.util.function</span>.</p>
+<p>JDK 8 contains predefined functional interfaces in <span class="path">java.util.function</span>.</p>
 <h1 id="io">
 <span class="hash">#</span>
 <a href="#io" class="header-link">IO</a>
@@ -1058,7 +1111,7 @@
 <pre>
 <code class="highlight language-java"><span class="n">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
 </code></pre></figure>
-<p>Likewise, to print characters to the terminal it&rsquo;s preferred to use a <code>PrintWriter</code> which can be created by wrapping the <code>PrintStream</code>.</p>
+<p>Likewise, to print characters to the terminal it&#39;s preferred to use a <code>PrintWriter</code> which can be created by wrapping the <code>PrintStream</code>.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="n">PrintWriter</span> <span class="n">pw</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
@@ -1068,24 +1121,67 @@
 </h1>
 <p>String objects are automatically created from string literals, which means that string literals may be used as if they were String objects themselves. When working with regions, the end index is one-past the last affected index, as with C++ iterators.</p>
 
-<p>Java automatically converts data to strings using the <code>String</code>&rsquo;s static method <code>valueOf</code>, which is overloaded for all primitive types and <code>Object</code>. For other objects, <code>valueOf</code> calls the object&rsquo;s <code>toString</code> method.</p>
+<p>Java automatically converts data to strings using the <code>String</code>&#39;s static method <code>valueOf</code>, which is overloaded for all primitive types and <code>Object</code>. For other objects, <code>valueOf</code> calls the object&#39;s <code>toString</code> method.</p>
 
-<p>The <code>equals</code> and <code>equalsIgnoreCase</code> methods can be used to determine if a string is equal to another. The <code>regionMatches</code> method can be used to determine if separate regions of two different strings match. The <code>startsWith</code> and <code>endsWith</code> methods can be used to determine if a string ends or begins with another string. The <code>Comparable</code> interface&rsquo;s <code>compareTo</code> and <code>compareToIgnoreCase</code> methods can be used to get a less, equal, or greater than result with respect to another string.</p>
+<p>The <code>equals</code> and <code>equalsIgnoreCase</code> methods can be used to determine if a string is equal to another. The <code>regionMatches</code> method can be used to determine if separate regions of two different strings match. The <code>startsWith</code> and <code>endsWith</code> methods can be used to determine if a string ends or begins with another string. The <code>Comparable</code> interface&#39;s <code>compareTo</code> and <code>compareToIgnoreCase</code> methods can be used to get a less, equal, or greater than result with respect to another string.</p>
 
-<p>The <code>indexOf</code> and <code>lastIndexOf</code> methods can be used to obtain the index where the first occurrence of a substring begins. There are overloads which take a starting point as well, which can simplify getting all the positions of all of the occurrences.</p>
+<p>The <code>indexOf</code> and <code>lastIndexOf</code> methods can be used to obtain the index where the first occurrence of a character or string begins. There are overloads which take a starting point as well, which can simplify getting all the positions of all of the occurrences.</p>
 
 <p>Strings are immutable, so operations that appear to modify them simply return new copies of the resulting strings. The <code>substring</code> method can be used to extract a copy of a region of a string given a starting index and optionally en ending index. The <code>replace</code> method can replace all occurrences of a character with another. An overload exists which replaces character sequences. The <code>replaceAll</code> method can replace any substring that matches the given regex with the specified string.</p>
 
-<p><abbr title="Java Development Kit">JDK</abbr> 8 adds a static <code>join</code> method that can join a number of strings with a given delimiter. Conversely, the <code>split</code> method can split a string based on a regex.</p>
+<p>JDK 8 adds a static <code>join</code> method that can join a number of strings with a given string. Conversely, the <code>split</code> method can split a string based on a regex string.</p>
+
+<p>The <code>toLowerCase</code> and <code>toUpperCase</code> methods can be used to convert an entire string to upper or lower case characters.</p>
 <h2 id="stringbuffer">
 <span class="hash">#</span>
 <a href="#stringbuffer" class="header-link">StringBuffer</a>
 </h2>
-<p>The <code>StringBuffer</code> class can represent a growable, mutable string. <abbr title="Java Development Kit">JDK</abbr> 5 added <code>StringBuilder</code> which is similar but not thread-safe, making it inadvertently faster.</p>
+<p>The <code>StringBuffer</code> class represents a growable, thread-safe mutable string. JDK 5 added <code>StringBuilder</code> which is similar but not thread-safe, making it inadvertently faster.</p>
 
-<p>It&rsquo;s possible to ensure a certain capacity is available with the <code>ensureCapacity</code> method which is given the minimum size that the buffer should have. The <code>setLength</code> method can be used to either extend the string by adding null characters or to truncate the string.</p>
+<p>Constructors exist for creating one with a given capacity size or to build one from an existing from an existing string plus an additional 16 characters in capacity. The default constructor only reserves 16 characters for its capacity.</p>
 
-<p><code>StringBuffer</code> provides a <code>setCharAt</code> method that can modify a character at the provided position. The <code>append</code> method can concatenate strings to the buffer while returning the updated buffer, allowing calls to this method to be chained. The <code>insert</code> method can insert a given string at the specified index. The <code>reverse</code> method can reverse the string. The <code>delete</code> and <code>deleteCharAt</code> methods can remove a region of the string or a single character, respectively. The <code>replace</code> method is similar to <code>String</code>&rsquo;s except it&rsquo;s in-place.</p>
+<p>It&#39;s possible to ensure a certain capacity is available with the <code>ensureCapacity</code> method which is given the minimum size that the buffer should have. The <code>setLength</code> method can be used to either extend the string by adding null characters or to truncate the string.</p>
+
+<p><code>StringBuffer</code> provides a <code>setCharAt</code> method that can modify a character at the provided position. The <code>append</code> method can concatenate strings to the buffer while returning the updated buffer, allowing calls to this method to be chained. The <code>insert</code> method can insert a given string at the specified index. The <code>reverse</code> method can reverse the string. The <code>delete</code> and <code>deleteCharAt</code> methods can remove a region of the string or a single character, respectively. The <code>replace</code> method can replace a region of the string with another string, even if it differs in length.</p>
+<h1 id="runtime">
+<span class="hash">#</span>
+<a href="#runtime" class="header-link">Runtime</a>
+</h1>
+<p>The abstract class <code>Process</code> represents an executing program and is derived by objects created by <code>exec</code> in <code>Runtime</code> or <code>start</code> in <code>ProcessBuilder</code>.</p>
+
+<p>The <code>Runtime</code> class represents the Java Virtual Machine&#39;s run-time environment. A reference to the current run-time&#39;s <code>Runtime</code> instance can be retrieved using <code>Runtime.getRuntime()</code>. <code>Runtime</code> defines methods such as <code>exec</code> for executing processes, in which case it returns an object of type <code>Process</code> that describes the process.</p>
+
+<p><code>Runtime</code> provides methods such as <code>gc</code> to manually initiate garbage collection, or <code>runFinalization</code> to initiate the <code>finalize</code> methods of unused but not yet garbage collected objects.</p>
+
+<p>There is also <code>exit</code> for halting execution of the program.</p>
+<h1 id="process">
+<span class="hash">#</span>
+<a href="#process" class="header-link">Process</a>
+</h1>
+<p>The <code>Process</code> class can be used to control a running process. The <code>destroy</code> method can be used to kill the process. The <code>waitFor</code> method waits until the process finishes, whereas <code>exitValue</code> does the same but yields the process&#39; exit value. Access to the input and output streams are available via the <code>getOutputStream</code> and <code>getInputStream</code> methods.</p>
+
+<p>The <code>ProcessBuilder</code> class provides even more control over a process, allowing for example to set the working directory. The constructors accept either a variable argument list of strings or a <code>List&lt;String&gt;</code>. The <code>start</code> method is used to actually start execution of the process.</p>
+
+<p>There is also a static class <code>ProcessBuilder.Redirect</code> which has methods <code>to</code>, <code>from</code>, and <code>appendTo</code> which can be used to redirect the input or output streams to or from a given file. The <code>type</code> method returns a value of the enumeration type <code>ProcessBuilder.Redirect.Type</code> describing the type of redirection, which can be <code>APPEND</code>, <code>INHERIT</code>, <code>PIPE</code>, and <code>WRITE</code>.</p>
+<h1 id="system">
+<span class="hash">#</span>
+<a href="#system" class="header-link">System</a>
+</h1>
+<p>The <code>System</code> class provides a variety of static methods and variables, such as the input, output, and error streams in <code>System.{in,out,err}</code>.</p>
+
+<p>There is also---for some reason---a method for copying arrays, <code>arrayCopy</code>, which takes a reference to the array, its starting index, the same for the other array, and a size.</p>
+<h1 id="object">
+<span class="hash">#</span>
+<a href="#object" class="header-link">Object</a>
+</h1>
+<p>The <code>Object</code> class defines a method <code>clone</code> which generates a duplicate copy of the object, but only if the class implements the <code>Cloneable</code> interface. The <code>Cloneable</code> interface defines no members and is instead used to signal to the system that it is safe to create a bitwise copy of a particular type of object.</p>
+
+<p>Since it may sometimes be dangerous to perform bitwise copies of certain classes, it may be useful to override <code>clone</code>.</p>
+<h1 id="class">
+<span class="hash">#</span>
+<a href="#class" class="header-link">Class</a>
+</h1>
+<p>The <code>Class</code> class represents the run-time state of a class or interface, and objects of this type are created automatically when classes are loaded. A reference to an object&#39;s <code>Class</code> instance can be retrieved using the <code>getClass</code> method defined on <code>Object</code>. A <code>Class</code> instance can also be retrieved using <code>forName</code> static method.</p>
 
 <div class="footnotes">
 <hr>
@@ -1096,7 +1192,7 @@
 </li>
 
 <li id="fn2">
-<p>Reminds me of Objective-C&rsquo;s <code>NSNumber</code>.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
+<p>Reminds me of Objective-C&#39;s <code>NSNumber</code>.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
 </li>
 
 </ol>
@@ -1104,14 +1200,8 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> July  6, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/java.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
-
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/java.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/ae6fcd6" title="more java notes
+">ae6fcd6</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
@@ -1150,7 +1240,7 @@ the toc marker is moved around or its alignment is changed.
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -1179,10 +1269,8 @@ the toc marker is moved around or its alignment is changed.
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>

@@ -20,6 +20,8 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
   <script src='/js/blaenk.js' type='text/javascript'></script>
 </head>
 <body>
@@ -75,18 +77,18 @@
     
         <article class="post">
   <h2 class="title"><a href="/posts/drafts-in-hakyll"><span>Drafts in Hakyll</span></a></h2>
-  <div class="entry-content"><p>In the post about my <a href="/posts/the-switch-to-hakyll">switch to Hakyll</a> I talked about the various features I implemented in my Hakyll blog. One feature that was sorely missing was support for drafts: posts which aren&rsquo;t supposed to be published when the site is deployed.</p>
+  <div class="entry-content"><p>In the post about my <a href="/posts/the-switch-to-hakyll">switch to Hakyll</a> I talked about the various features I implemented in my Hakyll blog. One feature that was sorely missing was support for drafts: posts which aren&#39;t supposed to be published when the site is deployed.</p>
 
-<p>I usually take my time writing posts. Sometimes it can take me days, during which I might want to deploy other minor changes to the site, or perhaps even a shorter, quicker post. Without a draft system, I&rsquo;m forced to manually move the draft post out of the provider directory so that it doesn&rsquo;t get generated and subsequently deployed.</p>
+<p>I usually take my time writing posts. Sometimes it can take me days, during which I might want to deploy other minor changes to the site, or perhaps even a shorter, quicker post. Without a draft system, I&#39;m forced to manually move the draft post out of the provider directory so that it doesn&#39;t get generated and subsequently deployed.</p>
 
-<p>A draft system is able to clearly distinguish draft posts from regular posts. This way, when it comes to deploying the site, draft posts aren&rsquo;t deployed along with it.</p>
+<p>A draft system is able to clearly distinguish draft posts from regular posts. This way, when it comes to deploying the site, draft posts aren&#39;t deployed along with it.</p>
 <h2 id="considerations">
 <span class="hash">#</span>
 <a href="#considerations" class="header-link">Considerations</a>
 </h2>
-<p>I believe that the fundamental problem with draft systems in static site generators is that drafts, like regular posts, come to permeate the entire site. They accomplish this by showing up on index pages, tag pages, and any other place you might expect regular posts to show up in. This is something to keep in mind when creating a draft system because it means that simply deleting the compiled page won&rsquo;t suffice, as there will still be traces in other pages.</p>
+<p>I believe that the fundamental problem with draft systems in static site generators is that drafts, like regular posts, come to permeate the entire site. They accomplish this by showing up on index pages, tag pages, and any other place you might expect regular posts to show up in. This is something to keep in mind when creating a draft system because it means that simply deleting the compiled page won&#39;t suffice, as there will still be traces in other pages.</p>
 
-<p>One approach to this problem is to quarantine the draft posts such that they don&rsquo;t show up on any of these things and instead only show them when you visit them directly. This is not an option for me because when I preview drafts I want to see how they will affect the entire site. I don&rsquo;t preview drafts simply to check how my post is formatted.</p>
+<p>One approach to this problem is to quarantine the draft posts such that they don&#39;t show up on any of these things and instead only show them when you visit them directly. This is not an option for me because when I preview drafts I want to see how they will affect the entire site. I don&#39;t preview drafts simply to check how my post is formatted.</p>
 <h2 id="examples">
 <span class="hash">#</span>
 <a href="#examples" class="header-link">Examples</a>
@@ -97,22 +99,22 @@
 
 <p><a href="http://jekyllrb.com">Jekyll</a> implemented support for this in its 1.0 version by allowing a new directory, <span class="path">_drafts/</span>, to store draft posts which could be previewed by specifying the <code>--drafts</code> flag to most operations. However, it was right after Jekyll 1.0 was released that I decided to switch to Hakyll.</p>
 
-<p>Octopress' draft system was pretty straightforward in my opinion, despite being a pretty hack-ish implementation. I would create drafts in the same directory as all of the other posts, and would simply set metadata <code>published: false</code>. This would allow the draft to show up when I previewed the site, but not when it was ultimately deployed. This was accomplished by regenerating the site on deploy, this time without the preview posts.</p>
+<p>Octopress&#39; draft system was pretty straightforward in my opinion, despite being a pretty hack-ish implementation. I would create drafts in the same directory as all of the other posts, and would simply set metadata <code>published: false</code>. This would allow the draft to show up when I previewed the site, but not when it was ultimately deployed. This was accomplished by regenerating the site on deploy, this time without the preview posts.</p>
 
-<p>The other solution I could think of consisted of detecting when the site was being previewed, and if that were the case, establish a different output directory and a different posts pattern which would include the posts in a separate <span class="path">drafts/</span> directory. When the site <em>wasn&rsquo;t</em> being previewed, the regular output directory would be used.</p>
+<p>The other solution I could think of consisted of detecting when the site was being previewed, and if that were the case, establish a different output directory and a different posts pattern which would include the posts in a separate <span class="path">drafts/</span> directory. When the site <em>wasn&#39;t</em> being previewed, the regular output directory would be used.</p>
 <h2 id="implementation">
 <span class="hash">#</span>
 <a href="#implementation" class="header-link">Implementation</a>
 </h2>
 <p>Both approaches amount to hacks on top of Hakyll, but after some consideration, it seems to me that the second option is a lot less messy.</p>
 
-<p>My solution consists of some code that runs before the Hakyll driver. The code extracts the first argument from the program arguments, which by convention is the action to perform, e.g. build, clean, preview, and checks to see if it&rsquo;s the <strong>preview</strong> action.</p>
+<p>My solution consists of some code that runs before the Hakyll driver. The code extracts the first argument from the program arguments, which by convention is the action to perform, e.g. build, clean, preview, and checks to see if it&#39;s the <strong>preview</strong> action.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-haskell"><span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
   <span class="p">(</span><span class="n">action</span><span class="kt">:</span><span class="kr">_</span><span class="p">)</span> <span class="ow">&lt;-</span> <span class="n">getArgs</span>
 </code></pre></figure>
-<p>If the <strong>preview</strong> action is being run, the Hakyll configuration data structure&rsquo;s <code>destinationDirectory</code> field, i.e. the output directory, is changed to a separate one for previewing purposes. This implies that the field is set to the deployable output directory by default. This is important because it means that all actions other than <strong>preview</strong> will <em>ignore</em> drafts.</p>
+<p>If the <strong>preview</strong> action is being run, the Hakyll configuration data structure&#39;s <code>destinationDirectory</code> field, i.e. the output directory, is changed to a separate one for previewing purposes. This implies that the field is set to the deployable output directory by default. This is important because it means that all actions other than <strong>preview</strong> will <em>ignore</em> drafts.</p>
 
 <p>Furthermore, if we are previewing, the pattern used to fetch posts is changed to also include the posts in the <span class="path">drafts/</span> directory. This is achieved by using the <a href="http://hackage.haskell.org/packages/archive/hakyll/4.2.2.0/doc/html/Hakyll-Core-Identifier-Pattern.html#v:.-38--38-."><code>.||.</code></a> function to compose two <code>Pattern</code> types.</p>
 <figure class="codeblock">
@@ -146,7 +148,7 @@
 <span class="hash">#</span>
 <a href="#usage" class="header-link">Usage</a>
 </h2>
-<p>This drafts system is pretty straightforward. When you run <code>./site preview</code> it&rsquo;ll serve the site with drafts as well. Deployment carries on as usual, i.e. you shouldn&rsquo;t have to modify your deployment routine. With this system, you&rsquo;ll never accidentally deploy drafts because they won&rsquo;t ever show up in that output directory to begin with.</p>
+<p>This drafts system is pretty straightforward. When you run <code>./site preview</code> it&#39;ll serve the site with drafts as well. Deployment carries on as usual, i.e. you shouldn&#39;t have to modify your deployment routine. With this system, you&#39;ll never accidentally deploy drafts because they won&#39;t ever show up in that output directory to begin with.</p>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June  5, 2013</div>
@@ -197,7 +199,7 @@
 
       window.refresh();
 
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, content[0]]);
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
     };
   });
 </script>
@@ -253,10 +255,8 @@
 
   MathJax.Hub.Register.MessageHook('End Process', function() {
     jQuery('#MathJax_Font_Test').empty();
-    jQuery('.MathJax_Display').parent().addClass('mobile-math');
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
   });
-</script>
-<script async="true" type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
 </script>
 
   </div>
