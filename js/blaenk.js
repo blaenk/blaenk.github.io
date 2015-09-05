@@ -78,3 +78,15 @@ $(function() {
 
   window.refresh();
 });
+
+window.scrollDown = function() {
+    $('html, body').scrollTop($(document).height());
+};
+
+window.enablePreview = function() {
+    $('article').bind("DOMSubtreeModified", window.scrollDown);
+};
+
+window.disablePreview = function() {
+    $('article').unbind("DOMSubtreeModified", window.scrollDown);
+};

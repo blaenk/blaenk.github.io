@@ -148,6 +148,9 @@
 </ol>
 </li>
 <li>
+<a href="#java.lang">java.lang</a>
+<ol>
+<li>
 <a href="#runtime">Runtime</a>
 </li>
 <li>
@@ -161,6 +164,151 @@
 </li>
 <li>
 <a href="#class">Class</a>
+</li>
+<li>
+<a href="#package">Package</a>
+</li>
+<li>
+<a href="#comparable">Comparable</a>
+</li>
+<li>
+<a href="#appendable">Appendable</a>
+</li>
+<li>
+<a href="#iterable">Iterable</a>
+</li>
+<li>
+<a href="#autocloseable">AutoCloseable</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#collections">Collections</a>
+<ol>
+<li>
+<a href="#collection-interfaces">Collection Interfaces</a>
+<ol>
+<li>
+<a href="#collection">Collection</a>
+</li>
+<li>
+<a href="#list">List</a>
+</li>
+<li>
+<a href="#set">Set</a>
+</li>
+<li>
+<a href="#sortedset">SortedSet</a>
+</li>
+<li>
+<a href="#navigableset">NavigableSet</a>
+</li>
+<li>
+<a href="#queue">Queue</a>
+</li>
+<li>
+<a href="#deque">Deque</a>
+</li>
+<li>
+<a href="#randomaccess">RandomAccess</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#collection-classes">Collection Classes</a>
+<ol>
+<li>
+<a href="#arraylist">ArrayList</a>
+</li>
+<li>
+<a href="#linkedlist">LinkedList</a>
+</li>
+<li>
+<a href="#hashset">HashSet</a>
+</li>
+<li>
+<a href="#linkedhashset">LinkedHashSet</a>
+</li>
+<li>
+<a href="#treeset">TreeSet</a>
+</li>
+<li>
+<a href="#priorityqueue">PriorityQueue</a>
+</li>
+<li>
+<a href="#arraydeque">ArrayDeque</a>
+</li>
+<li>
+<a href="#enumset">EnumSet</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#iterator">Iterator</a>
+</li>
+<li>
+<a href="#spliterator">Spliterator</a>
+</li>
+<li>
+<a href="#maps">Maps</a>
+<ol>
+<li>
+<a href="#map-interfaces">Map Interfaces</a>
+<ol>
+<li>
+<a href="#map">Map</a>
+</li>
+<li>
+<a href="#sortedmap">SortedMap</a>
+</li>
+<li>
+<a href="#navigablemap">NavigableMap</a>
+</li>
+<li>
+<a href="#map.entry">Map.Entry</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#map-classes">Map Classes</a>
+<ol>
+<li>
+<a href="#hashmap">HashMap</a>
+</li>
+<li>
+<a href="#treemap">TreeMap</a>
+</li>
+<li>
+<a href="#linkedhashmap">LinkedHashMap</a>
+</li>
+<li>
+<a href="#enummap">EnumMap</a>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<a href="#comparators">Comparators</a>
+</li>
+<li>
+<a href="#collection-algorithms">Collection Algorithms</a>
+</li>
+<li>
+<a href="#arrays">Arrays</a>
+<ol>
+<li>
+<a href="#jdk-8">JDK 8</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#legacy-collections">Legacy Collections</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#java.util">java.util</a>
 </li>
 </ol>
 </nav>
@@ -815,12 +963,19 @@
 <p>The functionality for suspending, resuming, and stopping threads must be implemented manually, usually in the form of a loop that checks a flag which represents the user&#39;s request. A suspend method can&#39;t be provided by the standard library because it could end up suspending a thread before it relinquishes its locks, leading to deadlocks. A stop method can&#39;t be provided either because it could leave data in an inconsistent state if it&#39;s stopped abruptly.</p>
 
 <p>Normally in multithreaded programs when two or more threads share the same variable they store thread-local copies and update the &quot;master copy&quot; at certain points in execution, such as when <code>synchronized</code> methods are entered. Specifying the variable as <code>volatile</code> tells the compiler that it must always use the master copy of the varaible, or to always keep the local copies synchronized with the master copy.</p>
+
+<p>The <code>ThreadGroup</code> class can be used to create a group of threads, which is useful when wanting to manage a group of threads as a single unit. Threads are added to the thread group by providing a reference to it as an argument in the <code>Thread</code> constructor. Operations can be performed on each of the threads in a group by enumerating them using the <code>enumerate</code> method on <code>ThreadGroup</code>.</p>
+
+<p>The <code>ThreadLocal</code> class can be used to create thread-local data, and an <code>InheritableThreadLocal</code> can be used to allow them to be inherited.</p>
 <h1 id="enumerations">
 <span class="hash">#</span>
 <a href="#enumerations" class="header-link">Enumerations</a>
 </h1>
-<p>In Java, enumerations define class types that implicitly inherit from the <code>Enum</code> class, meaning that they may define constructors, methods, and instance variables. Despite this, they may not explicitly inherit or be inherited from.</p>
-
+<p>In Java, enumerations define class types that implicitly inherit from the <code>Enum</code> class, meaning that they may define constructors, methods, and instance variables. Despite this, they may not explicitly inherit or be inherited from. The <code>Enum</code> class is defined as:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">class</span> <span class="nc">Enum</span><span class="o">&lt;</span><span class="n">E</span> <span class="kd">extends</span> <span class="n">Enum</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;&gt;</span>
+</code></pre></figure>
 <p>Enumeration constants are implicitly <code>static</code> and <code>final</code>. Each enumeration constant is an object of its enumeration type, and each enumeration constant has its own copy of instance variables.</p>
 
 <p>When defining a constructor, it may be called once for each enumeration constant that is specified by providing the parameters in parentheses after each constant.</p>
@@ -1142,11 +1297,14 @@
 
 <p>It&#39;s possible to ensure a certain capacity is available with the <code>ensureCapacity</code> method which is given the minimum size that the buffer should have. The <code>setLength</code> method can be used to either extend the string by adding null characters or to truncate the string.</p>
 
-<p><code>StringBuffer</code> provides a <code>setCharAt</code> method that can modify a character at the provided position. The <code>append</code> method can concatenate strings to the buffer while returning the updated buffer, allowing calls to this method to be chained. The <code>insert</code> method can insert a given string at the specified index. The <code>reverse</code> method can reverse the string. The <code>delete</code> and <code>deleteCharAt</code> methods can remove a region of the string or a single character, respectively. The <code>replace</code> method can replace a region of the string with another string, even if it differs in length.</p>
-<h1 id="runtime">
+<p><code>StringBuffer</code> provides a <code>setCharAt</code> method that can modify a character at the provided position. The <code>append</code> method can concatenate strings to the buffer while returning the updated buffer, allowing calls to this method to be chained. The <code>insert</code> method can insert a given string at the specified index. The <code>reverse</code> method can reverse the string. The <code>delete</code> and <code>deleteCharAt</code> methods can remove a region of the string or a single character respectively. The <code>replace</code> method can replace a region of the string with another string, even if it differs in length.</p>
+<h1 id="java.lang">
+<span class="hash">#</span>
+<a href="#java.lang" class="header-link">java.lang</a>
+</h1><h2 id="runtime">
 <span class="hash">#</span>
 <a href="#runtime" class="header-link">Runtime</a>
-</h1>
+</h2>
 <p>The abstract class <code>Process</code> represents an executing program and is derived by objects created by <code>exec</code> in <code>Runtime</code> or <code>start</code> in <code>ProcessBuilder</code>.</p>
 
 <p>The <code>Runtime</code> class represents the Java Virtual Machine&#39;s run-time environment. A reference to the current run-time&#39;s <code>Runtime</code> instance can be retrieved using <code>Runtime.getRuntime()</code>. <code>Runtime</code> defines methods such as <code>exec</code> for executing processes, in which case it returns an object of type <code>Process</code> that describes the process.</p>
@@ -1154,35 +1312,519 @@
 <p><code>Runtime</code> provides methods such as <code>gc</code> to manually initiate garbage collection, or <code>runFinalization</code> to initiate the <code>finalize</code> methods of unused but not yet garbage collected objects.</p>
 
 <p>There is also <code>exit</code> for halting execution of the program.</p>
-<h1 id="process">
+<h2 id="process">
 <span class="hash">#</span>
 <a href="#process" class="header-link">Process</a>
-</h1>
+</h2>
 <p>The <code>Process</code> class can be used to control a running process. The <code>destroy</code> method can be used to kill the process. The <code>waitFor</code> method waits until the process finishes, whereas <code>exitValue</code> does the same but yields the process&#39; exit value. Access to the input and output streams are available via the <code>getOutputStream</code> and <code>getInputStream</code> methods.</p>
 
 <p>The <code>ProcessBuilder</code> class provides even more control over a process, allowing for example to set the working directory. The constructors accept either a variable argument list of strings or a <code>List&lt;String&gt;</code>. The <code>start</code> method is used to actually start execution of the process.</p>
 
 <p>There is also a static class <code>ProcessBuilder.Redirect</code> which has methods <code>to</code>, <code>from</code>, and <code>appendTo</code> which can be used to redirect the input or output streams to or from a given file. The <code>type</code> method returns a value of the enumeration type <code>ProcessBuilder.Redirect.Type</code> describing the type of redirection, which can be <code>APPEND</code>, <code>INHERIT</code>, <code>PIPE</code>, and <code>WRITE</code>.</p>
-<h1 id="system">
+<h2 id="system">
 <span class="hash">#</span>
 <a href="#system" class="header-link">System</a>
-</h1>
+</h2>
 <p>The <code>System</code> class provides a variety of static methods and variables, such as the input, output, and error streams in <code>System.{in,out,err}</code>.</p>
 
 <p>There is also---for some reason---a method for copying arrays, <code>arrayCopy</code>, which takes a reference to the array, its starting index, the same for the other array, and a size.</p>
-<h1 id="object">
+<h2 id="object">
 <span class="hash">#</span>
 <a href="#object" class="header-link">Object</a>
-</h1>
+</h2>
 <p>The <code>Object</code> class defines a method <code>clone</code> which generates a duplicate copy of the object, but only if the class implements the <code>Cloneable</code> interface. The <code>Cloneable</code> interface defines no members and is instead used to signal to the system that it is safe to create a bitwise copy of a particular type of object.</p>
 
 <p>Since it may sometimes be dangerous to perform bitwise copies of certain classes, it may be useful to override <code>clone</code>.</p>
-<h1 id="class">
+<h2 id="class">
 <span class="hash">#</span>
 <a href="#class" class="header-link">Class</a>
-</h1>
-<p>The <code>Class</code> class represents the run-time state of a class or interface, and objects of this type are created automatically when classes are loaded. A reference to an object&#39;s <code>Class</code> instance can be retrieved using the <code>getClass</code> method defined on <code>Object</code>. A <code>Class</code> instance can also be retrieved using <code>forName</code> static method.</p>
+</h2>
+<p>The <code>Class</code> class represents the run-time state of a class or interface, and objects of this type are created automatically when classes are loaded. A reference to an object&#39;s <code>Class</code> instance can be retrieved using the <code>getClass</code> method defined on <code>Object</code>. A <code>Class</code> instance can also be retrieved using <code>forName</code> static method. The <code>Class</code> method provides a variety of Run-time Type Information methods such as <code>getName</code>, <code>getSuperClass</code>, and so on.</p>
 
+<p>This class is a good real-world example of the use of wildcards as well as lower and upper bounds.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">forName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span>
+<span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="n">T</span><span class="o">&gt;</span> <span class="nf">getSuperClass</span><span class="o">()</span>
+<span class="o">&lt;</span><span class="n">A</span> <span class="kd">extends</span> <span class="n">Annotation</span><span class="o">&gt;</span> <span class="n">A</span> <span class="nf">getAnnotation</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">annoType</span><span class="o">)</span>
+</code></pre></figure>
+<p>The <code>ClassLoader</code> abstract class defines how classes are loaded, enabling one to alter the way classes are loaded by the JVM by simply deriving from it.</p>
+<h2 id="package">
+<span class="hash">#</span>
+<a href="#package" class="header-link">Package</a>
+</h2>
+<p>The <code>Package</code> class provides information associated with a package.</p>
+<h2 id="comparable">
+<span class="hash">#</span>
+<a href="#comparable" class="header-link">Comparable</a>
+</h2>
+<p>The <code>Comparable</code> interface represents objects that can be compared, and provides a single method <code>compareTo</code> which should return 0 if the values are equal, a negative number if the invoking object is lower, or a positive number if the invoking object is greater.</p>
+<h2 id="appendable">
+<span class="hash">#</span>
+<a href="#appendable" class="header-link">Appendable</a>
+</h2>
+<p>The <code>Appendable</code> interface signifies that a character or character sequences can be appended to an object by means of its <code>append</code> method.</p>
+<h2 id="iterable">
+<span class="hash">#</span>
+<a href="#iterable" class="header-link">Iterable</a>
+</h2>
+<p>The <code>Iterable</code> interface signifies that an object can be used in a for-each loop. It provides an <code>iterator</code> method yielding an <code>Iterator</code> of the object. JDK 8 also provides two default methods <code>forEach</code> and <code>splititerator</code>. The <code>forEach</code> method takes functional interface <code>Consumer</code> and applies it to each element yielded by the iterator.</p>
+<h2 id="autocloseable">
+<span class="hash">#</span>
+<a href="#autocloseable" class="header-link">AutoCloseable</a>
+</h2>
+<p>The <code>AutoCloseable</code> interface signifies that the object can be used with the try-with-resources statement which provides automatic resource management by means of its <code>close</code> method.</p>
+<h1 id="collections">
+<span class="hash">#</span>
+<a href="#collections" class="header-link">Collections</a>
+</h1>
+<p>The Java Collections Framework provides a variety of collections and interfaces for working with them.</p>
+<h2 id="collection-interfaces">
+<span class="hash">#</span>
+<a href="#collection-interfaces" class="header-link">Collection Interfaces</a>
+</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Collection</th>
+<th style="text-align: left">Purpose</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left"><code>Collection</code></td>
+<td style="text-align: left">work with groups of objects</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>List</code></td>
+<td style="text-align: left">extends <code>Collection</code> to handle sequences of objects</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>Queue</code></td>
+<td style="text-align: left">extends <code>Collection</code> to handle lists with removal only from head</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>Deque</code></td>
+<td style="text-align: left">extends <code>Queue</code> to handle double-ended queue</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>Set</code></td>
+<td style="text-align: left">extends <code>Collection</code> to handle sets</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>SortedSet</code></td>
+<td style="text-align: left">extends <code>Set</code> to handle sorted sets</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>NavigableSet</code></td>
+<td style="text-align: left">extends <code>SortedSet</code> to add closest-match retrieval</td>
+</tr>
+</tbody>
+</table>
+<h3 id="collection">
+<span class="hash">#</span>
+<a href="#collection" class="header-link">Collection</a>
+</h3>
+<p>The <code>Collection&lt;E&gt;</code> interface represents a generic collection of elements, and it extends the <code>Iterable</code> interface so that all collections are inherently compatible with for-each loops. The methods of <code>Collection</code> may throw a variety of exceptions:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Exception</th>
+<th style="text-align: left">Cause</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left"><code>UnsupportedOperationException</code></td>
+<td style="text-align: left">attempting to mutate immutable collection</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>ClassCastException</code></td>
+<td style="text-align: left">adding incompatible object</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>NullPointerException</code></td>
+<td style="text-align: left">storing a <code>null</code> when <code>null</code>s aren&#39;t allowed</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>IllegalStateException</code></td>
+<td style="text-align: left">adding element to fixed-length, full collection</td>
+</tr>
+</tbody>
+</table>
+
+<p>The <code>add</code> method adds an object to a collection, returning a boolean indicating whether the object was added or if it already existed and duplicates are not allowed. The <code>addAll</code> method adds all of the objects from another collection.</p>
+
+<p>The <code>remove</code> and <code>removeAll</code> methods are analogous to the <code>add</code> methods. <code>clear</code> removes all elements. The JDK 8 <code>removeIf</code> method removes all elements that satisfy the provided predicate. The <code>retainAll</code> method removes all elements except those in the provided collection.</p>
+
+<p>The <code>size</code> method provides the number of elements in the collection.</p>
+
+<p>The <code>contains</code> method returns <code>true</code> is the object is present in the collection. There is also a <code>containsAll</code> method similar to <code>addAll</code>.</p>
+
+<p>The <code>equals</code> method provides equality checking, whether it&#39;s value or reference equality is up to the implementer. The <code>isEmpty</code> method checks if the collection is empty.</p>
+
+<p>The <code>toArray</code> methods can return an array of the elements in the collection. The first overload returns an array of <code>Object</code> whereas the second takes an array parameter into which the elements are written if they fit, otherwise an array is returned. If they did fit and the array was larger than the amount of elements, the element after the last collection element is set to <code>null</code>.</p>
+<h3 id="list">
+<span class="hash">#</span>
+<a href="#list" class="header-link">List</a>
+</h3>
+<p>The <code>List</code> interface extends <code>Collection</code> to provide behavior for a sequence of elements, which can be inserted or accessed by their zero-based index position. The methods here may throw <code>IndexOutOfBoundsException</code> if an invalid index is used. Overloads are provided for the <code>add</code> methods that take an index argument to specify where to insert the element. The overloads without the index parameter are changed in <code>List</code> to insert the elements at the end of the sequence.</p>
+
+<p>The <code>get</code> method takes an index argument and retrieves the element at that index. Conversely, the <code>set</code> method takes an index parameter and an element with which to replace the element at that index.</p>
+
+<p>The <code>indexOf</code> and <code>lastIndexOf</code> methods can be used to find an element in the sequence and retrieve its index.</p>
+
+<p>A sub-list of the sequence can be obtained using the <code>subList</code> method and specifying beginning and end indices.</p>
+
+<p>The <code>sort</code> method can sort a <code>List</code> using a provided <code>Comparator</code>.</p>
+<h3 id="set">
+<span class="hash">#</span>
+<a href="#set" class="header-link">Set</a>
+</h3>
+<p>The <code>Set</code> interface extends <code>Collection</code> and adds behavior that doesn&#39;t allow duplicate elements. It doesn&#39;t actually provide any additional methods aside from providing this behavior. The <code>add</code> method returns <code>false</code> if the element already existed within the collection.</p>
+<h3 id="sortedset">
+<span class="hash">#</span>
+<a href="#sortedset" class="header-link">SortedSet</a>
+</h3>
+<p>The <code>SortedSet</code> interface extends <code>Set</code> to add the behavior of a set sorted in ascending order. It provides methods such as <code>first</code> and <code>last</code> for getting the first and last elements. A sorted subset can be obtained using <code>subSet</code> and specifying start and end indices, or there are the <code>headSet</code> and <code>tailSet</code> methods that obtain a subset starting with the first element or a subset that ends the set---respectively---up to a certain end index..</p>
+<h3 id="navigableset">
+<span class="hash">#</span>
+<a href="#navigableset" class="header-link">NavigableSet</a>
+</h3>
+<p>The <code>NavigableSet</code> interface extends <code>SortedSet</code> and provides closest match element retrieval. For example, the <code>lower</code> method will find the largest element that is smaller than the provided object, whereas the <code>floor</code> method will find the smallest element that is smaller than or equal to the provided object. There are also <code>higher</code> and <code>ceil</code> analogs to those methods.</p>
+
+<p>There are also methods that behave like priority queues, such as <code>pollFirst</code> which returns the first element---which will be the smallest element since the set is sorted in ascending order---and removes it from the set. There is also a <code>pollLast</code> analog.</p>
+<h3 id="queue">
+<span class="hash">#</span>
+<a href="#queue" class="header-link">Queue</a>
+</h3>
+<p>The <code>Queue</code> interface extends <code>Collection</code> and adds behavior for a FIFO structure. Elements can only be removed from the head of the queue via the methods <code>poll</code> and <code>remove</code>, where the first returns <code>null</code> if the queue is empty and <code>remove</code> throws an exception. The methods <code>peek</code> and <code>element</code> are analogous to <code>poll</code> and <code>remove</code> respectively, but <em>don&#39;t</em> remove the element from the queue. An addition to the queue can be attempted via the <code>offer</code> method, which may fail if the queue is of fixed-size and is full, in which case it returns <code>false</code>.</p>
+<h3 id="deque">
+<span class="hash">#</span>
+<a href="#deque" class="header-link">Deque</a>
+</h3>
+<p>The <code>Deque</code> interface extends <code>Queue</code> to add behavior for a double-ended queue so that a queue can function as a FIFO (queue) as well as a LIFO (stack) thanks to methods <code>push</code> and <code>pop</code>. The <code>descendingIterator</code> returns an iterator that iterates over the elements in reverse. There are also <code>addFirst</code> and <code>addLast</code> methods that are similar to <code>offer</code> except they throw <code>IllegalStateException</code> if the queue is of fixed-size and full.</p>
+<h3 id="randomaccess">
+<span class="hash">#</span>
+<a href="#randomaccess" class="header-link">RandomAccess</a>
+</h3>
+<p>The <code>RandomAccess</code> interface has no members and simply signifies that that the collection supports efficient random access.</p>
+<h2 id="collection-classes">
+<span class="hash">#</span>
+<a href="#collection-classes" class="header-link">Collection Classes</a>
+</h2><h3 id="arraylist">
+<span class="hash">#</span>
+<a href="#arraylist" class="header-link">ArrayList</a>
+</h3>
+<p>The <code>ArrayList</code> class is similar to <code>vector</code> in C++ in that it represents an array that will grow as required. It can be constructed either as an empty array list, from an arbitrary collection, or an empty array list with a reserved capacity. Capacity can be reserved after construction using the <code>ensureCapacity</code> method. The <code>trimToSize</code> method can be used to shrink the array to the minimum size required to store all of the elements.</p>
+
+<p>The <code>toArray</code> method from <code>Collection</code> can be used to yield an array from an <code>ArrayList</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">arrayList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;();</span>
+<span class="n">Integer</span> <span class="n">array</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Integer</span><span class="o">[</span><span class="n">arrayList</span><span class="o">.</span><span class="na">size</span><span class="o">()];</span>
+
+<span class="c1">// fills array with elements if it&#39;s large enough,</span>
+<span class="c1">// otherwise it returns a new array that is large enough</span>
+<span class="n">array</span> <span class="o">=</span> <span class="n">arrayList</span><span class="o">.</span><span class="na">toArray</span><span class="o">(</span><span class="n">array</span><span class="o">);</span>
+</code></pre></figure><h3 id="linkedlist">
+<span class="hash">#</span>
+<a href="#linkedlist" class="header-link">LinkedList</a>
+</h3>
+<p>The <code>LinkedList</code> class extends <code>AbstractSequentialList</code> and implements <code>List</code>, <code>Deque</code>, and <code>Queue</code>, and provides linked-list behavior. The <code>add</code> method would be used to insert elements at a particular location with minimal performance cost.</p>
+<h3 id="hashset">
+<span class="hash">#</span>
+<a href="#hashset" class="header-link">HashSet</a>
+</h3>
+<p>The <code>HashSet</code> class extends <code>AbstractSet</code> and implements <code>Set</code>, and provides hash table behavior. Two of the constructors accept a capacity argument (default 16), with one of them accepting a load capacity argument (default 0.75) known as <em>fill ratio</em>, which determines how full the hash set can be before it is grown, and as such it must be a value between 0.0 and 1.0. In other words, the hash set is grown when:</p>
+
+<p><script type="math/tex; mode=display"> \text{# of elements} \gt \text{capacity} \cdot \text{fill ratio} </script></p>
+<h3 id="linkedhashset">
+<span class="hash">#</span>
+<a href="#linkedhashset" class="header-link">LinkedHashSet</a>
+</h3>
+<p>The <code>LinkedHashSet</code> class extends <code>HashSet</code> and adds no members of its own aside from adding the behavior that it maintains a linked list of elements in order of insertion.</p>
+<h3 id="treeset">
+<span class="hash">#</span>
+<a href="#treeset" class="header-link">TreeSet</a>
+</h3>
+<p>The <code>TreeSet</code> class extends <code>AbstractSet</code> and implements <code>NavigableSet</code> and represents a tree-backed ascending-order sorted set. This class is great when storing many sorted elements that must be accessed quickly. One of the constructors accepts a <code>Comparator</code> to use for sorting the elements. Another constructor can build the <code>TreeSet</code> from another <code>SortedSet</code>.</p>
+<h3 id="priorityqueue">
+<span class="hash">#</span>
+<a href="#priorityqueue" class="header-link">PriorityQueue</a>
+</h3>
+<p>The <code>PriorityQueue</code> class extends <code>AbstractQueue</code> and implements <code>Queue</code> and provides priority queue behavior. One of the JDK 8 constructors accepts a <code>Comparator</code> used to order the elements, which is also possible via another non-JDK 8 constructor that takes a capacity and <code>Comparator</code>. A reference to the <code>Comparator</code> can be obtained using the <code>comparator</code> method, which returns <code>null</code> if the default ascending order is used.</p>
+
+<p>Note that manually iterating over a <code>PriorityQueue</code> yields an undefined order, so <code>offer</code> and <code>poll</code> should be used instead.</p>
+<h3 id="arraydeque">
+<span class="hash">#</span>
+<a href="#arraydeque" class="header-link">ArrayDeque</a>
+</h3>
+<p>The <code>ArrayDeque</code> class extends <code>AbstractCollection</code> and implements <code>Deque</code> and can be used as a growable stack.</p>
+<h3 id="enumset">
+<span class="hash">#</span>
+<a href="#enumset" class="header-link">EnumSet</a>
+</h3>
+<p>The <code>EnumSet</code> class extends <code>AbstractSet</code> and implements <code>Set</code> and is used for enumerations, as enforced by its signature which forces all elements to be of the same enumeration type:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">class</span> <span class="nc">EnumSet</span><span class="o">&lt;</span><span class="n">E</span> <span class="kd">extends</span> <span class="n">Enum</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;&gt;</span>
+</code></pre></figure>
+<p>It provides no constructors and instead has static factory methods. The <code>allOf</code> method creates an <code>EnumSet</code> of all possible enumerations of a given type represented by a <code>Class</code> object. The <code>complementOf</code> method creates a set of all enumerations not present in the given set. More generally, the <code>of</code> method accepts an arbitrary amount of enumerations and constructs an <code>EnumSet</code> from it, providing overloads for efficiency. The <code>range</code> method creates a set from the given range of enumerations.</p>
+<h2 id="iterator">
+<span class="hash">#</span>
+<a href="#iterator" class="header-link">Iterator</a>
+</h2>
+<p>The <code>Iterator</code> interface encapsulates the act of iterating over a collection. It provides methods <code>hasNext</code> and <code>next</code> to both test if a value remains and to obtain that value. The <code>remove</code> method can be used to remove the current element from the collection being iterated over, but may throw <code>IllegalStateException</code> if the call was not preceded by <code>next</code> or if the collection is read-only. The JDK 8 method <code>forEachRemaining</code> takes a <code>Consumer</code> and applies it to each remaining element in the iterator.</p>
+
+<p>The <code>ListIterator</code> interface extends <code>Iterator</code> and adds bidirectional iteration as well as modification of elements. It&#39;s accessible from collections that implement <code>List</code>. The <code>add</code> method inserts an element before the element that will be returned by the next call to <code>next</code>. It also provides bidirectional equivalents to the methods in <code>Iterator</code> such as <code>hasPrevious</code> and <code>previous</code>.</p>
+
+<p>The <code>nextIndex</code> and <code>previousIndex</code> methods return the index of the next or previous element respectively. If there is no such element, it returns the size of the list in the case of <code>nextIndex</code> or -1 in the case of <code>previousIndex</code>, i.e. one past the last element or one before the first element.</p>
+
+<p>The <code>set</code> method can be used to replace the current element, which is the element last returned by <code>next</code> or <code>previous</code>.</p>
+<h2 id="spliterator">
+<span class="hash">#</span>
+<a href="#spliterator" class="header-link">Spliterator</a>
+</h2>
+<p>JDK 8 introduces a new kind of iterator known as a <em>spliterator</em>, represented with the <code>Spliterator</code> interface. Spliterators provide support for parallel iteration, but also provide many more facilities than regular iterators making them useful in non-parallel contexts.</p>
+
+<p>Iterating with a <code>Spliterator</code> is done using the <code>tryAdvance</code> which applies a <code>Consumer</code> to the next element, returning <code>false</code> if there is no element remaining. The <code>forEachRemaining</code> method does the same thing but for every element remaining.</p>
+
+<p>The fact that <code>tryAdvance</code> returns <code>false</code> when no elements remain means that it can be used in a while loop very easily, though the same can be done using <code>forEachRemaining</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="k">while</span> <span class="o">(</span><span class="n">spliterator</span><span class="o">.</span><span class="na">tryAdvance</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">)));</span>
+
+<span class="c1">// order</span>
+<span class="n">spliterator</span><span class="o">.</span><span class="na">forEachRemaining</span><span class="o">((</span><span class="n">e</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">));</span>
+</code></pre></figure>
+<p>The spliterator can be split further using the <code>trySplit</code> method which yields a new spliterator that iterates over a portion of the sequence and the invoking spliterator iterates over the other portion.</p>
+
+<p>Spliterators can contain characteristics which are retrieved using the <code>characteristics</code> method to retrieve them all or the <code>hasCharacteristics</code> method to test for an individual characteristic. Characteristics are defined as static integer fields on <code>Spliterator</code>, such as <code>SORTED</code> and <code>IMMUTABLE</code>.</p>
+<h2 id="maps">
+<span class="hash">#</span>
+<a href="#maps" class="header-link">Maps</a>
+</h2>
+<p>Maps represents associations between keys and values. They <strong>do not</strong> implement <code>Iterable</code> and so the pairs cannot be iterated over.</p>
+<h3 id="map-interfaces">
+<span class="hash">#</span>
+<a href="#map-interfaces" class="header-link">Map Interfaces</a>
+</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Collection</th>
+<th style="text-align: left">Purpose</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left"><code>Map</code></td>
+<td style="text-align: left">maps keys to values</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>Map.Entry</code></td>
+<td style="text-align: left">describes a key-value pair</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>SortedMap</code></td>
+<td style="text-align: left">extends <code>Map</code> to put keys in ascending order</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>NavigableMap</code></td>
+<td style="text-align: left">extends <code>SortedMap</code> for closest-match retrieval</td>
+</tr>
+</tbody>
+</table>
+<h4 id="map">
+<span class="hash">#</span>
+<a href="#map" class="header-link">Map</a>
+</h4>
+<p>The <code>Map</code> interface embodies behavior for key-value stores. The two fundamental methods provided are <code>get</code> and <code>put</code> which are used to retrieve and insert into the map. The <code>remove</code> method takes a key and removes the entry associated with it, returning it.</p>
+
+<p>Though maps aren&#39;t collections since they don&#39;t implement <code>Collection</code>, they do provide collection views for their keys and values via the <code>keySet</code> and <code>values</code> methods respectively, or over the key-value pairs using the <code>entrySet</code> method. Each of the collection views is backed by the map, so changing values through the view changes the values in the map as well.</p>
+
+<p>There are some <code>compute</code> variant methods that facilitate the use of a map as a cache, such as <code>computeIfAbsent</code>, which takes a function and returns the value associated with the key, and if it doesn&#39;t exist, computes the value using the function, stores it in the map, and then returns the computed value <sup id="fnref3"><a href="#fn3" rel="footnote">3</a></sup>.</p>
+
+<p>The <code>containsKey</code> and <code>containsValue</code> methods can be used to test the presence of a key or value respectively. The <code>equals</code> method can be used to check if another map contains the same entries.</p>
+
+<p>The JDK 8 method <code>forEach</code> can be used to apply an action on each entry in the map.</p>
+
+<p>The JDK 8 method <code>merge</code> takes a key and value and inserts it into the map if the key didn&#39;t already exist, otherwise it computes a new value given the old value.</p>
+
+<p>The <code>putAll</code> method puts all the entries from another map into the invoking map.</p>
+<h4 id="sortedmap">
+<span class="hash">#</span>
+<a href="#sortedmap" class="header-link">SortedMap</a>
+</h4>
+<p>The <code>SortedMap</code> interface extends <code>Map</code> and ensures that entries are stored in ascending order. It provides very efficient sub-map manipulations via the <code>headMap</code>, <code>tailMap</code>, and <code>subMap</code> methods. The first and last key can be obtained using <code>firstKey</code> and <code>lastKey</code> respectively.</p>
+<h4 id="navigablemap">
+<span class="hash">#</span>
+<a href="#navigablemap" class="header-link">NavigableMap</a>
+</h4>
+<p>The <code>NavigableMap</code> interface extends <code>SortedMap</code> and provides closest-match retrieval of key(s).</p>
+<h4 id="map.entry">
+<span class="hash">#</span>
+<a href="#map.entry" class="header-link">Map.Entry</a>
+</h4>
+<p>The <code>Map.Entry</code> interface represents a map entry, i.e. a key-value pair. It provides methods for getting the key and value via <code>getKey</code> and <code>getValue</code> respectively as well as setting the value using <code>setValue</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">set</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">entrySet</span><span class="o">();</span>
+
+<span class="k">for</span> <span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">set</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+<span class="o">}</span>
+</code></pre></figure><h3 id="map-classes">
+<span class="hash">#</span>
+<a href="#map-classes" class="header-link">Map Classes</a>
+</h3>
+<p>The <code>WeakHashMap</code> class uses weak keys so that the entry can be garbage collected when the key is otherwise unused.</p>
+<h4 id="hashmap">
+<span class="hash">#</span>
+<a href="#hashmap" class="header-link">HashMap</a>
+</h4>
+<p>The <code>HashMap</code> class extends <code>AbstractMap</code> and implements the <code>Map</code> interface and represents a map backed by a hash table. It provides constructors similar to <code>HashSet</code>&#39;s, such as those that allow to set the capacity and load capacity (fill ratio).</p>
+<h4 id="treemap">
+<span class="hash">#</span>
+<a href="#treemap" class="header-link">TreeMap</a>
+</h4>
+<p>The <code>TreeMap</code> class extends <code>AbstractMap</code> and implements <code>NavigableMap</code>. It&#39;s like <code>TreeSet</code> in that it can store entries in sorted order allowing for efficient retrieval. It has similar methods to <code>TreeSort</code> such as one that takes a <code>Comparator</code>.</p>
+<h4 id="linkedhashmap">
+<span class="hash">#</span>
+<a href="#linkedhashmap" class="header-link">LinkedHashMap</a>
+</h4>
+<p>The <code>LinkedHashMap</code> class extends <code>HashMap</code> and is the map analog to <code>LinkedHashSet</code> in that it maintains a linked list of entries in the order in which they were inserted. This means that iterating over a collection view of the map yields elements in insertion order.</p>
+
+<p>One of the constructors takes an <code>order</code> parameter after the capacity and load capacity which specifies whether the linked list should store elements in insertion order or by last access order.</p>
+
+<p>It also provides a single additional method aside from those defined by <code>HashMap</code> and that is <code>removeEldestEntry</code>. This function is called internally after calling <code>put</code> or <code>putAll</code> and is used to determine whether or not to remove the oldest entry in the map. For that purpose, it returns <code>false</code> by default but can be overridden to provide different behavior, such as a fixed-size LRU cache:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">removeEldestEntry</span><span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">K</span><span class="o">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">entry</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">self</span><span class="o">.</span><span class="na">MAX_SIZE</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></figure><h4 id="enummap">
+<span class="hash">#</span>
+<a href="#enummap" class="header-link">EnumMap</a>
+</h4>
+<p>The <code>EnumMap</code> extends <code>AbstractMap</code> and implements <code>Map</code>. It specifically takes enumerations for keys.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">class</span> <span class="nc">EnumMap</span><span class="o">&lt;</span><span class="n">K</span> <span class="kd">extends</span> <span class="n">Enum</span><span class="o">&lt;</span><span class="n">K</span><span class="o">&gt;,</span> <span class="n">V</span><span class="o">&gt;</span>
+</code></pre></figure><h2 id="comparators">
+<span class="hash">#</span>
+<a href="#comparators" class="header-link">Comparators</a>
+</h2>
+<p>The <code>Comparator</code> interface represents an arbitrary comparison between two values. Prior to JDK 8 it defined two methods <code>compare</code> and <code>equals</code>. JDK 8 adds many more methods as default and static interface methods.</p>
+
+<p>The default method <code>reverse</code> returns a comparator that is the reverse of the invoking comparator.</p>
+
+<p>The static methods <code>naturalOrder</code> and <code>reverseOrder</code> provide comparators for the natural ordering and the reverse of it respectively.</p>
+
+<p>The static methods <code>nullsFirst</code> and <code>nullsLast</code> adapts an existing comparator so that can handle null values and considers them to be first or last in the order respectively. If the comparator passed is <code>null</code>, then all non-<code>null</code> values are considered equivalent.</p>
+
+<p>The default method <code>thenComparing</code> returns a comparator that chains a comparator in the event that the invoking comparator considers two values to be equivalent. Two additional overloads accept a function for selecting the next comparison key to compare as well as the comparator to use. There are also specialized versions for primitives such as <code>thenComparingInt</code>.</p>
+
+<p>The static method <code>comparing</code> takes a function to select a comparison key and returns a comparator that compares based on that key. The second overload accepts an arbitrary comparator and adapts it accordingly. As with <code>thenComparing</code>, there are specialized versions of <code>comparing</code> for primitives, such as <code>comparingInt</code>.</p>
+
+<p>Since <code>Comparator</code> only requires one method to be implemented---the reset being default or static methods---it is possible to use a lambda to instantiate a comparator.</p>
+<h2 id="collection-algorithms">
+<span class="hash">#</span>
+<a href="#collection-algorithms" class="header-link">Collection Algorithms</a>
+</h2>
+<p>The <code>Collections</code> class provides a variety of algorithms as static methods.</p>
+
+<p>The <code>checkedCollection</code> family of methods returns a run-time type-safe collection view which provides run-time checks to ensure that compatible objects are inserted into the collection, throwing <code>ClassCastException</code> if the check fails. There are <code>checkedSet</code>, <code>checkedList</code>, <code>checkedMap</code>, etc.</p>
+
+<p>Thread-safe (synchronized) copies of collections can be obtained using the <code>synchronized</code> family of methods such as <code>synchronizedList</code>. Iteration over synchronized collections must be performed within <code>synchronized</code> blocks.</p>
+
+<p>The <code>unmodifiable</code> family of methods such as <code>unmodifiableSet</code> provides an immutable view over a collection. <code>Collections</code> provides three static methods that yield immutable collections: <code>EMPTY_SET</code>, <code>EMPTY_LIST</code>, and <code>EMPTY_MAP</code>.</p>
+
+<p>The <code>asLifoQueue</code> provides a LIFO (stack) view of a <code>Deque</code> as a <code>Queue</code>.</p>
+
+<p>The <code>binarySearch</code> method takes a list and a search value and performs a binary search on the list, returning the index of the match or a negative value if none was found.</p>
+
+<p>The <code>disjoint</code> method checks if the two collections have no elements in common.</p>
+
+<p>The <code>emptyIterator</code> method yields an empty iterator.</p>
+
+<p>The <code>fill</code> method takes a list and an object and replaces each element in the list with that object.</p>
+
+<p>The <code>frequency</code> method takes a collection and an object and counts the number of occurrences in it.</p>
+
+<p>The <code>indexOfSublist</code> method takes two lists and returns the index of the beginning of the first match or -1 if none was found. There is also <code>lastIndexOfSubList</code>.</p>
+
+<p>The <code>max</code> and <code>min</code> methods return the maximum and minimum element in the collection based on natural order, respectively. Overloads exist that accept a custom comparator.</p>
+
+<p>The <code>replaceAll</code> method replaces all occurrences of one value with another in a given list.</p>
+
+<p>The <code>reverse</code> method reverses a list.</p>
+
+<p>The <code>reverseOrder</code> method returns a comparator that is the reverse of the one that is passed, or the reverse of the natural order if none is given.</p>
+
+<p>The <code>rotate</code> method reverse a list by a given number of places to the right, where a negative number rotates to the left.</p>
+
+<p>The <code>shuffle</code> method shuffles the elements in a list given a <code>Random</code> seed, or an arbitrary seed if none is given.</p>
+
+<p>The <code>sort</code> method sorts a list given a comparator, or uses natural order if none is given.</p>
+
+<p>The <code>swap</code> method swaps two elements of a list at the given indices.</p>
+<h2 id="arrays">
+<span class="hash">#</span>
+<a href="#arrays" class="header-link">Arrays</a>
+</h2>
+<p>The <code>asList</code> method returns a <code>List</code> backed by the invoking array, so that modifying one modifies the other.</p>
+
+<p>The <code>binarySearch</code> method performs binary search on a sorted array for a given value, returning the index if found or a negative value if not found. One overload accepts a custom comparator, while others allow specifying a sub-range.</p>
+
+<p>The <code>copyOf</code> method returns a copy of the array up to a certain size. If the size is shorter then the copy is truncated, and if it&#39;s larger it is padded with zeros for numeric arrays, <code>null</code>s for object arrays, and <code>false</code> for boolean arrays. The <code>copyOfRange</code> method is similar except it allows specifying a sub-range to copy by providing a start and end index.</p>
+
+<p>The <code>equals</code> method tests if two arrays are equivalent. The <code>deepEquals</code> array does the same for arrays that may contain other arrays.</p>
+
+<p>The <code>fill</code> method assigns a value to all elements in the array, with an overload accepting a sub-range to fill.</p>
+
+<p>The <code>sort</code> method sorts an array into ascending order, or one of the overloads accepts a custom comparator. Other overloads allow specifying a sub-range.</p>
+<h3 id="jdk-8">
+<span class="hash">#</span>
+<a href="#jdk-8" class="header-link">JDK 8</a>
+</h3>
+<p>JDK 8 adds a variety of new methods.</p>
+
+<p>The <code>parallelSort</code> method which performs a sort in parallel and then merges the results, which provides similar overloads to <code>sort</code>.</p>
+
+<p>The <code>spliterator</code> method returns a spliterator of an entire array, with an overload accepting a sub-range to iterate over.</p>
+
+<p>The <code>stream</code> method yields a <code>Stream</code> for use with the JDK 8 <code>Stream</code> interface.</p>
+
+<p>The <code>setAll</code> and <code>parallelSetAll</code> methods assign values to all elements based on the result of applying a provided generator function on a given element.</p>
+
+<p>The <code>parallelPrefix</code> method performs an operation on all previous elements for each element <sup id="fnref4"><a href="#fn4" rel="footnote">4</a></sup>. So that if the operation is addition, each element will be the sum of all elements prior to it.</p>
+
+<p>The <code>toString</code> and <code>hashCode</code> methods work on arrays as well as <code>deepToString</code> and <code>deepHashCode</code> variants.</p>
+<h2 id="legacy-collections">
+<span class="hash">#</span>
+<a href="#legacy-collections" class="header-link">Legacy Collections</a>
+</h2>
+<p>The <code>Enumeration</code> interface is a legacy version of <code>Iterator</code>.</p>
+
+<p>The <code>Vector</code> class is a legacy version of <code>ArrayList</code>.</p>
+
+<p>The <code>Stack</code> class is a LIFO subclass of <code>Vector</code>.</p>
+
+<p>The <code>Dictionary</code> abstract class is a legacy version of <code>Map</code>.</p>
+
+<p>The <code>Hashtable</code> class is a legacy version of <code>HashMap</code>.</p>
+
+<p>The <code>Properties</code> class is a subclass of <code>Hashtable</code> and is still used for Java system related functionality, such as <code>System.getProperties</code>. It can retrieve values using <code>getProperty</code> and set properties with <code>setProperty</code>. It&#39;s possible to specify a default value to return if no value is associated with a given key by giving the <code>getProperty</code> a second argument. Alternatively, a constructor can take another <code>Properties</code> object to use as default properties. The <code>store</code> and <code>load</code> methods can be used to serialize and deserialize the properties to to a stream.</p>
+<h1 id="java.util">
+<span class="hash">#</span>
+<a href="#java.util" class="header-link">java.util</a>
+</h1>
 <div class="footnotes">
 <hr>
 <ol>
@@ -1195,13 +1837,21 @@
 <p>Reminds me of Objective-C&#39;s <code>NSNumber</code>.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
 </li>
 
+<li id="fn3">
+<p>This is very much like the Rust <a href="http://doc.rust-lang.org/std/collections/hash_map/enum.Entry.html">Entry API</a>.&nbsp;<a href="#fnref3" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn4">
+<p>This sounds a lot like Haskell&#39;s <a href="https://hackage.haskell.org/package/base-4.8.1.0/docs/Prelude.html#g:16"><code>scan</code></a> family of functions.&nbsp;<a href="#fnref4" rev="footnote">&#8617;</a></p>
+</li>
+
 </ol>
 </div>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> July  6, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/java.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/ae6fcd6" title="more java notes
-">ae6fcd6</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/java.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/ef71719" title="legacy collections section
+">ef71719</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
