@@ -328,6 +328,9 @@ I&#39;m <a href="/lately/#reading">currently reading</a>.</p>
       window.refresh();
 
       MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
+
+      if (window.jumpDown)
+        window.scrollDown();
     };
   });
 </script>

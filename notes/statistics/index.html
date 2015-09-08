@@ -243,6 +243,9 @@ In my pocket I have a quarter, two dimes, and a nickel. If I pull out two coins 
       window.refresh();
 
       MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
+
+      if (window.jumpDown)
+        window.scrollDown();
     };
   });
 </script>

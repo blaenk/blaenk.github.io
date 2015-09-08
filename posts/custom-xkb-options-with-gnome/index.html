@@ -163,6 +163,9 @@ xkb_symbols "bottom_right" {
       window.refresh();
 
       MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
+
+      if (window.jumpDown)
+        window.scrollDown();
     };
   });
 </script>

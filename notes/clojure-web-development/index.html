@@ -1026,6 +1026,9 @@ the toc marker is moved around or its alignment is changed.
       window.refresh();
 
       MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
+
+      if (window.jumpDown)
+        window.scrollDown();
     };
   });
 </script>
