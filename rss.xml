@@ -809,8 +809,7 @@ augroup END
 &lt;ol&gt;
 
 &lt;li id=&quot;fn1&quot;&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/itchyny/lightline.vim&quot;&gt;lightline&lt;/a&gt; is one statusline plugin I know of---but haven&amp;#39;t used---whose philosophy it is to have the user define as much of the statusline as possible in the hopes of remaining light. I haven&amp;#39;t used it, so I can&amp;#39;t comment on it, but in my case defining my own from scratch was simple enough already. That said, this might be useful for others who find themselves in a similar position but who would rather use something maintained by someone else.&amp;nbsp;&lt;a href=&quot;#fnref1&quot; rev=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/itchyny/lightline.vim&quot;&gt;lightline&lt;/a&gt; is one statusline plugin I know of---but haven&amp;#39;t used---whose philosophy it is to have the user define as much of the statusline as possible in the hopes of remaining light. I haven&amp;#39;t used it, so I can&amp;#39;t comment on it, but in my case defining my own from scratch was simple enough already. That said, this might be useful for others who find themselves in a similar position but who would rather use something maintained by someone else.&amp;nbsp;&lt;a href=&quot;#fnref1&quot; title=&quot;continue reading&quot; rev=&quot;footnote&quot;&gt;&lt;i class=&quot;fa fa-level-up&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;/ol&gt;
 &lt;/div&gt;
@@ -1005,8 +1004,7 @@ xkb_symbols &quot;bottom_right&quot; {
 &lt;ol&gt;
 
 &lt;li id=&quot;fn1&quot;&gt;
-&lt;p&gt;If you&amp;#39;re wondering what &lt;code&gt;postsPattern&lt;/code&gt; is, refer to my &lt;a href=&quot;/posts/drafts-in-hakyll&quot;&gt;Drafts in Hakyll&lt;/a&gt; post, in which this value is used to determine from where to pull posts in, in order to facilitate a draft preview system.&amp;nbsp;&lt;a href=&quot;#fnref1&quot; rev=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
+&lt;p&gt;If you&amp;#39;re wondering what &lt;code&gt;postsPattern&lt;/code&gt; is, refer to my &lt;a href=&quot;/posts/drafts-in-hakyll&quot;&gt;Drafts in Hakyll&lt;/a&gt; post, in which this value is used to determine from where to pull posts in, in order to facilitate a draft preview system.&amp;nbsp;&lt;a href=&quot;#fnref1&quot; title=&quot;continue reading&quot; rev=&quot;footnote&quot;&gt;&lt;i class=&quot;fa fa-level-up&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;/ol&gt;
 &lt;/div&gt;
@@ -1756,8 +1754,7 @@ xkb_symbols &quot;volume_keys&quot; {
 &lt;ol&gt;
 
 &lt;li id=&quot;fn1&quot;&gt;
-&lt;p&gt;Ignore the &lt;code&gt;echo&lt;/code&gt; command. I used it to give the current line some padding to make taking a screenshot a little bit easier.&amp;nbsp;&lt;a href=&quot;#fnref1&quot; rev=&quot;footnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
+&lt;p&gt;Ignore the &lt;code&gt;echo&lt;/code&gt; command. I used it to give the current line some padding to make taking a screenshot a little bit easier.&amp;nbsp;&lt;a href=&quot;#fnref1&quot; title=&quot;continue reading&quot; rev=&quot;footnote&quot;&gt;&lt;i class=&quot;fa fa-level-up&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;/ol&gt;
 &lt;/div&gt;

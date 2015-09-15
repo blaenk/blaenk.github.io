@@ -69,8 +69,6 @@ $(function() {
       });
 
     $('a[href^="#fnref"]')
-      .attr('title', 'continue reading')
-      .html('<i class="fa fa-level-up"></i>')
       .click(function() {
         $footnotes.stop(true, true);
       });

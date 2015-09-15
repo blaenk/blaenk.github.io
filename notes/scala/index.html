@@ -2227,56 +2227,43 @@ res0: Boolean = false
 <ol>
 
 <li id="fn1">
-<p>Reminds me of Ruby&#39;s &#39;EigenClasses&#39;, but I&#39;m not quite sure yet if it&#39;s indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
-</li>
+<p>Reminds me of Ruby&#39;s &#39;EigenClasses&#39;, but I&#39;m not quite sure yet if it&#39;s indeed similar, or if companion objects truly are just a separation for specifying class-wide values/methods.&nbsp;<a href="#fnref1" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn2">
-<p>Reminds me of <code>std::bind</code> in C++11, which does the same thing by creating a functor, or <a href="not%20to%20be%20confused%20with%20the%20category%20theory%20%5BFunctor%5D%20more%20common%20in%20%5BHaskell%5D">function object</a>.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
-</li>
+<p>Reminds me of <code>std::bind</code> in C++11, which does the same thing by creating a functor, or <a href="not%20to%20be%20confused%20with%20the%20category%20theory%20%5BFunctor%5D%20more%20common%20in%20%5BHaskell%5D">function object</a>.&nbsp;<a href="#fnref2" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn3">
-<p>Reminds me of Ruby&#39;s modules that can be included.&nbsp;<a href="#fnref3" rev="footnote">&#8617;</a></p>
-</li>
+<p>Reminds me of Ruby&#39;s modules that can be included.&nbsp;<a href="#fnref3" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn4">
-<p>This is of course very similar to setters in Ruby, which take the form <code>attr=(arg)</code>.&nbsp;<a href="#fnref4" rev="footnote">&#8617;</a></p>
-</li>
+<p>This is of course very similar to setters in Ruby, which take the form <code>attr=(arg)</code>.&nbsp;<a href="#fnref4" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn5">
-<p>This reminds me of a <a href="http://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Monoid.html">Monoid</a>&#39;s identity, <code>mempty</code> in the Haskell typeclass, but I doubt that <code>_</code> is backed by a Monoid typeclass because a Monoid would also require an associative binary operation. Perhaps it&#39;s simply more like the <a href="http://hackage.haskell.org/package/data-default">default</a> package&#39;s default typeclass.&nbsp;<a href="#fnref5" rev="footnote">&#8617;</a></p>
-</li>
+<p>This reminds me of a <a href="http://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Monoid.html">Monoid</a>&#39;s identity, <code>mempty</code> in the Haskell typeclass, but I doubt that <code>_</code> is backed by a Monoid typeclass because a Monoid would also require an associative binary operation. Perhaps it&#39;s simply more like the <a href="http://hackage.haskell.org/package/data-default">default</a> package&#39;s default typeclass.&nbsp;<a href="#fnref5" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn6">
-<p>This reminds me of <a href="/notes/go/#interfaces">Go&#39;s interfaces</a>.&nbsp;<a href="#fnref6" rev="footnote">&#8617;</a></p>
-</li>
+<p>This reminds me of <a href="/notes/go/#interfaces">Go&#39;s interfaces</a>.&nbsp;<a href="#fnref6" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn7">
-<p>Now that I&#39;ve learned what implicit conversions are in Scala, I have formed an opinion about them. Implicit conversions are one of the parts that make C++ <a href="/notes/cpp/#conversion-ambiguity">very complex</a>. Scala&#39;s implicit conversions don&#39;t seem as complex as C++&#39;s, here they&#39;re implicit at the site of use, but explicit at the site of definition. In C++ it feels that they&#39;re implicit on both ends, since you can have overloaded conversion operators and conversion constructors on either type, which is further made ambiguous with arithmetic type conversions.&nbsp;<a href="#fnref7" rev="footnote">&#8617;</a></p>
-</li>
+<p>Now that I&#39;ve learned what implicit conversions are in Scala, I have formed an opinion about them. Implicit conversions are one of the parts that make C++ <a href="/notes/cpp/#conversion-ambiguity">very complex</a>. Scala&#39;s implicit conversions don&#39;t seem as complex as C++&#39;s, here they&#39;re implicit at the site of use, but explicit at the site of definition. In C++ it feels that they&#39;re implicit on both ends, since you can have overloaded conversion operators and conversion constructors on either type, which is further made ambiguous with arithmetic type conversions.&nbsp;<a href="#fnref7" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn8">
-<p>I wonder if these are similar to Haskell&#39;s <a href="http://hackage.haskell.org/package/dlist/docs/Data-DList.html">difference lists</a>.&nbsp;<a href="#fnref8" rev="footnote">&#8617;</a></p>
-</li>
+<p>I wonder if these are similar to Haskell&#39;s <a href="http://hackage.haskell.org/package/dlist/docs/Data-DList.html">difference lists</a>.&nbsp;<a href="#fnref8" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn9">
-<p>It seems like Scala uses mutability to leave optimization up to the developer. Contrast this with Haskell, where everything is immutable at the language level and the optimizations are done underneath at compile time or at the runtime level. The cons <code>:</code> in Haskell for example would also reuse the tail, creating a <a href="http://en.wikipedia.org/wiki/Persistent_data_structure#Linked_lists">persistent linked list</a>, but the developer doesn&#39;t have to worry about how to best implement something like this for efficiency. Scala of course affords one more flexibility in how they implement something, but it expects that every developer be mindful of how best to implement things in the unusual functional and imperative environment.&nbsp;<a href="#fnref9" rev="footnote">&#8617;</a></p>
-</li>
+<p>It seems like Scala uses mutability to leave optimization up to the developer. Contrast this with Haskell, where everything is immutable at the language level and the optimizations are done underneath at compile time or at the runtime level. The cons <code>:</code> in Haskell for example would also reuse the tail, creating a <a href="http://en.wikipedia.org/wiki/Persistent_data_structure#Linked_lists">persistent linked list</a>, but the developer doesn&#39;t have to worry about how to best implement something like this for efficiency. Scala of course affords one more flexibility in how they implement something, but it expects that every developer be mindful of how best to implement things in the unusual functional and imperative environment.&nbsp;<a href="#fnref9" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn10">
-<p>Something like this would be implicit in Haskell due to its non-strict nature.&nbsp;<a href="#fnref10" rev="footnote">&#8617;</a></p>
-</li>
+<p>Something like this would be implicit in Haskell due to its non-strict nature.&nbsp;<a href="#fnref10" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn11">
-<p>This is of course very much like <a href="http://golang.org/doc/effective_go.html#slices">Go&#39;s slices</a> and <a href="http://static.rust-lang.org/doc/master/tutorial.html#vectors-and-strings">Rust&#39;s slices</a>.&nbsp;<a href="#fnref11" rev="footnote">&#8617;</a></p>
-</li>
+<p>This is of course very much like <a href="http://golang.org/doc/effective_go.html#slices">Go&#39;s slices</a> and <a href="http://static.rust-lang.org/doc/master/tutorial.html#vectors-and-strings">Rust&#39;s slices</a>.&nbsp;<a href="#fnref11" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn12">
-<p>This reminds me of <a href="http://man7.org/linux/man-pages/man2/open.2.html">open file descriptions</a> which record the file offset and status flags. Duplicate file descriptors <a href="http://man7.org/linux/man-pages/man2/dup.2.html">share this information</a>. To avoid this, it&#39;s necessary to perform a separate <code>open</code> call.&nbsp;<a href="#fnref12" rev="footnote">&#8617;</a></p>
-</li>
+<p>This reminds me of <a href="http://man7.org/linux/man-pages/man2/open.2.html">open file descriptions</a> which record the file offset and status flags. Duplicate file descriptors <a href="http://man7.org/linux/man-pages/man2/dup.2.html">share this information</a>. To avoid this, it&#39;s necessary to perform a separate <code>open</code> call.&nbsp;<a href="#fnref12" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 <li id="fn13">
-<p>This <em>definitely</em> reminds me of Ruby&#39;s EigenClasses.&nbsp;<a href="#fnref13" rev="footnote">&#8617;</a></p>
-</li>
+<p>This <em>definitely</em> reminds me of Ruby&#39;s EigenClasses.&nbsp;<a href="#fnref13" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
 </ol>
 </div>
