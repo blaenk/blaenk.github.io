@@ -82,6 +82,9 @@
 <nav id="toc">
 <h3>Contents</h3><ol>
 <li>
+<a href="#analysis">Analysis</a>
+</li>
+<li>
 <a href="#sorting">Sorting</a>
 <ol>
 <li>
@@ -124,10 +127,10 @@
 <a href="#priority-queues">Priority Queues</a>
 <ol>
 <li>
-<a href="#priority-queue-insertion">Priority Queue Insertion</a>
+<a href="#heap-insertion">Heap Insertion</a>
 </li>
 <li>
-<a href="#priority-queue-removal">Priority Queue Removal</a>
+<a href="#heap-removal">Heap Removal</a>
 </li>
 <li>
 <a href="#heap-sort">Heap Sort</a>
@@ -147,6 +150,11 @@
 <ol>
 <li>
 <a href="#bst-traversal">BST Traversal</a>
+<ol>
+<li>
+<a href="#morris-traversal">Morris Traversal</a>
+</li>
+</ol>
 </li>
 <li>
 <a href="#bst-deletion">BST Deletion</a>
@@ -177,14 +185,6 @@
 <a href="#red-black-tree-balance">Red-Black Tree Balance</a>
 </li>
 </ol>
-</li>
-</ol>
-</li>
-<li>
-<a href="#interval-trees">Interval Trees</a>
-<ol>
-<li>
-<a href="#intersection-queries">Intersection Queries</a>
 </li>
 </ol>
 </li>
@@ -456,8 +456,43 @@
 </li>
 </ol>
 </li>
+<li>
+<a href="#bitwise-operations">Bitwise Operations</a>
+</li>
+<li>
+<a href="#geometric-algorithms">Geometric Algorithms</a>
+<ol>
+<li>
+<a href="#augmented-bst-as-interval-tree">Augmented BST as Interval Tree</a>
+</li>
+<li>
+<a href="#interval-trees">Interval Trees</a>
+</li>
+<li>
+<a href="#intersection-queries">Intersection Queries</a>
+</li>
+<li>
+<a href="#one-dimensional-range-count">One-Dimensional Range Count</a>
+</li>
+<li>
+<a href="#line-segment-intersection">Line Segment Intersection</a>
+</li>
+<li>
+<a href="#rectangle-intersection">Rectangle Intersection</a>
+</li>
+</ol>
+</li>
 </ol>
 </nav>
+<h1 id="analysis">
+<span class="hash">#</span>
+<a href="#analysis" class="header-link">Analysis</a>
+</h1>
+<p>Oftentimes it&#39;s useful to use approximations instead of exact values.</p>
+
+<p>Stirling&#39;s approximation:</p>
+
+<p><script type="math/tex; mode=display"> \ln N! \approx N \ln N - N + \ln \sqrt {2 \pi N} </script></p>
 <h1 id="sorting">
 <span class="hash">#</span>
 <a href="#sorting" class="header-link">Sorting</a>
@@ -677,7 +712,7 @@
 <span class="kd">private</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="o">)</span> <span class="o">{</span>
   <span class="k">if</span> <span class="o">(</span><span class="n">hi</span> <span class="o">&lt;=</span> <span class="n">lo</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
 
-  <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="o">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="o">)/</span><span class="mi">2</span><span class="o">;</span>
+  <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">lo</span> <span class="o">+</span> <span class="o">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
 
   <span class="n">sort</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span>
   <span class="n">sort</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span>
@@ -774,16 +809,16 @@
 <li>swap the partition element <script type="math/tex">v</script> with the final position of the right-side iterator <script type="math/tex">j</script></li>
 </ol>
 
-<p>The sorting algorithm then recurses on the two partitions.</p>
+<p>The sorting algorithm then recurses on the two partitions. Note that <code>i</code> is set to <code>lo</code> and not <code>lo + 1</code> to ensure that the pivot at <code>lo</code> is skipped, since the first operation is <code>++i</code>. However, <code>j</code> is set to <code>hi + 1</code> to ensure that <code>hi</code> is <em>not</em> skipped, since it&#39;s not the pivot.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">private</span> <span class="kt">int</span> <span class="nf">partition</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lo</span><span class="o">,</span> <span class="kt">int</span> <span class="n">hi</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">Comparable</span> <span class="n">v</span> <span class="o">=</span> <span class="n">seq</span><span class="o">[</span><span class="n">lo</span><span class="o">];</span>
   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">lo</span><span class="o">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">hi</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
-  <span class="n">Comparable</span> <span class="n">v</span> <span class="o">=</span> <span class="n">a</span><span class="o">[</span><span class="n">lo</span><span class="o">];</span>
 
   <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">while</span> <span class="o">(</span><span class="n">seq</span><span class="o">[++</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">v</span>       <span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">hi</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
-    <span class="k">while</span> <span class="o">(</span><span class="n">v</span>        <span class="o">&lt;</span> <span class="n">seq</span><span class="o">[--</span><span class="n">j</span><span class="o">])</span> <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">lo</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+    <span class="k">while</span> <span class="o">(</span><span class="n">seq</span><span class="o">[++</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">v</span><span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">hi</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+    <span class="k">while</span> <span class="o">(</span><span class="n">v</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">[--</span><span class="n">j</span><span class="o">])</span> <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">lo</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
 
     <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
 
@@ -841,7 +876,7 @@
 </tbody>
 </table>
 
-<p>One problem with quick sort as it is implemented above is that items with keys equal to that of the partition item are nonetheless swapped, unnecessarily. Three-way partitioning aims to resolve this by partitioning into three separate sub-arrays, the middle of which corresponds to those items with keys equal to the partition point. E. W. Dijkstra popularized this as the <em>Dutch National Flag</em> problem.</p>
+<p>One problem with quick sort as it is implemented above is that items with keys equal to that of the partition item are swapped anyways, unnecessarily. Three-way partitioning aims to resolve this by partitioning into three separate sub-arrays, the middle of which corresponds to those items with keys equal to the partition point. E. W. Dijkstra popularized this as the <em>Dutch National Flag</em> problem.</p>
 
 <p><strong>Performance Factors</strong>: distribution of the keys</p>
 
@@ -891,9 +926,9 @@
 <li>the parent of <script type="math/tex">k</script> is <script type="math/tex">k / 2</script></li>
 <li>the children of <script type="math/tex">k</script> are at <script type="math/tex">2k</script> and <script type="math/tex">2k + 1</script></li>
 </ol>
-<h3 id="priority-queue-insertion">
+<h3 id="heap-insertion">
 <span class="hash">#</span>
-<a href="#priority-queue-insertion" class="header-link">Priority Queue Insertion</a>
+<a href="#heap-insertion" class="header-link">Heap Insertion</a>
 </h3>
 <table>
 <thead>
@@ -910,6 +945,8 @@
 </tr>
 </tbody>
 </table>
+
+<p>Swimming in a heap is when a node is checked to ensure the invariant that every node is smaller than its parent. If a node&#39;s value becomes larger than its parent, the node is swapped with its parent and the process is repeated at the new parent until the tree root is reached. This can be characterized as a new, larger node having to swim up the tree to its proper place.</p>
 
 <p>To insert into the heap:</p>
 
@@ -921,14 +958,19 @@
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">swim</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// go up tree as long as the parent k / 2 is</span>
+  <span class="c1">// smaller than the child</span>
   <span class="k">while</span> <span class="o">(</span><span class="n">k</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">])</span> <span class="o">{</span>
+    <span class="c1">// swap parent and child</span>
     <span class="n">swap</span><span class="o">(</span><span class="n">seq</span><span class="o">[</span><span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="o">],</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">]);</span>
+
+    <span class="c1">// position is now that of previous parent</span>
     <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
   <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></figure><h3 id="priority-queue-removal">
+</code></pre></figure><h3 id="heap-removal">
 <span class="hash">#</span>
-<a href="#priority-queue-removal" class="header-link">Priority Queue Removal</a>
+<a href="#heap-removal" class="header-link">Heap Removal</a>
 </h3>
 <table>
 <thead>
@@ -945,6 +987,8 @@
 </tr>
 </tbody>
 </table>
+
+<p>From a different perspective, if a node&#39;s key becomes smaller than one or both of its children, the heap-order invariant will also be violated, because it conversely means that one or more of its children are larger than the parent. In this case, the node is simply swapped with the larger of its two children, a process known as sinking. This process is repeated for the new child all the way down the tree until the invariant holds.</p>
 
 <p>To remove the maximum from the heap:</p>
 
@@ -958,12 +1002,19 @@
 <pre>
 <code class="highlight language-java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">sink</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
   <span class="k">while</span> <span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// identify child of k</span>
     <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="o">;</span>
 
+    <span class="c1">// choose right child if left child is smaller than right</span>
     <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">])</span> <span class="n">j</span><span class="o">++;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">k</span> <span class="o">&gt;=</span> <span class="n">j</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
 
+    <span class="c1">// if the invariant holds, break</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span><span class="o">])</span> <span class="k">break</span><span class="o">;</span>
+
+    <span class="c1">// otherwise swap with the larger child</span>
     <span class="n">swap</span><span class="o">(</span><span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">],</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+
+    <span class="c1">// position is now that of previously-larger child&#39;s</span>
     <span class="n">k</span> <span class="o">=</span> <span class="n">j</span>
   <span class="o">}</span>
 <span class="o">}</span>
@@ -996,16 +1047,18 @@
 
 <p>However, there are certain details involved to make it operate faster. Usually these operations are performed in place to avoid using extra space.</p>
 
-<p>First, the sequence has to be put into heap order, which is accomplished by walking up the tree (bottom-up) and sinking every root node with more than one child. The starting point for this is always <script type="math/tex">N / 2</script>.</p>
+<p>First, the sequence has to be put into heap order, which is accomplished by walking up the tree (bottom-up) and sinking every root node with more than one child. The starting point for this is always <script type="math/tex">N / 2</script>, which is the last node with two children. It&#39;s important to note that &quot;sinking a node&quot; doesn&#39;t mean that the node will definitively be swapped.</p>
 
 <p>Assuming a maximum-oriented priority queue, the sorting is then accomplished by:</p>
 
 <ol>
-<li>remove the maximum, thus decrementing the heap size</li>
 <li>swap the maximum with the last item in the heap</li>
-<li>sink the new root</li>
+<li>decrease logical heap size</li>
+<li>sink the new root to ensure or repair heap order</li>
 <li>repeat 1-3 until the priority queue becomes empty</li>
 </ol>
+
+<p>Note that the notion of a logical heap size is important, as the sorted sequence is increasingly added to the end of the same array that backs the heap, so it&#39;s necessary to make a distinction between the two regions of the array, to prevent the heap sink or swim operations from corrupting the sorted region. This is accomplished in this code by using a hypothetical <code>sink</code> method that takes an upper bound parameter, which corresponds to the end of the heap region, i.e. the logical heap size.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">)</span> <span class="o">{</span>
@@ -1114,7 +1167,73 @@
 </tr>
 </tbody>
 </table>
-<h3 id="bst-deletion">
+<h4 id="morris-traversal">
+<span class="hash">#</span>
+<a href="#morris-traversal" class="header-link">Morris Traversal</a>
+</h4>
+<p>It&#39;s possible to perform an in-order traversal of a BST without using a stack or recursion by performing a Morris traversal. In essence, this traversal transforms the tree during the traversal so that the entire right branch of the BST forms the in-order traversal. The BST is returned to its original structure as the traversal takes place.</p>
+
+<p><img src="/images/notes/algorithms/morris-traversal.png" class="center" width="75%"></p>
+
+<ol>
+<li><p>if left is <code>null</code></p>
+
+<ol>
+<li>visit <code>current</code></li>
+<li>go right</li>
+</ol></li>
+<li><p>else:</p>
+
+<ol>
+<li>set <code>temp</code> to <code>current</code>&#39;s left</li>
+<li><p>go right of <code>temp</code> until its right is <code>null</code> or <code>current</code></p>
+
+<p>This finds the maximum of <code>current</code>&#39;s left, i.e. the in-order predecessor of <code>current</code>, or it finds the node whose right is <code>current</code>.</p></li>
+<li><p>if <code>temp</code>&#39;s right is <code>null</code>:</p>
+
+<p>This is the in-order predecessor of <code>current</code>. Transform the tree so that <code>temp</code> leads to <code>current</code> and is therefore in-order.</p>
+
+<ol>
+<li>set <code>temp</code>&#39;s right to <code>current</code></li>
+<li><p>go left of <code>current</code></p>
+
+<p>This &quot;rewinds&quot; back to the last known minimum.</p></li>
+</ol></li>
+<li><p>if <code>temp</code>&#39;s right is <code>current</code></p>
+
+<p>This is a node that was previously transformed to be in-order by making its right be <code>current</code>. Repair transformation.</p>
+
+<ol>
+<li>visit <code>current</code></li>
+<li>unset <code>temp</code>&#39;s right (previously <code>current</code>)</li>
+<li>go right of <code>current</code></li>
+</ol></li>
+</ol></li>
+</ol>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="k">while</span> <span class="o">(</span><span class="n">current</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">visit</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+
+        <span class="k">while</span> <span class="o">(</span><span class="n">temp</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">temp</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="n">current</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">temp</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">temp</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">current</span><span class="o">;</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">temp</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="n">visit</span><span class="o">(</span><span class="n">current</span><span class="o">);</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></figure><h3 id="bst-deletion">
 <span class="hash">#</span>
 <a href="#bst-deletion" class="header-link">BST Deletion</a>
 </h3>
@@ -1527,25 +1646,7 @@ C.  new node and parent lean in the same direction</p>
     <span class="n">rotate_right</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">parent</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></figure><h2 id="interval-trees">
-<span class="hash">#</span>
-<a href="#interval-trees" class="header-link">Interval Trees</a>
-</h2>
-<p>Interval trees are useful for efficiently finding all intervals that overlap with any given interval or point.</p>
-
-<p>To construct the tree, the median of the entire range of all of the set of ranges is found. Those ranges in the set that are intersected by the median are stored in the current node. Ranges that fall completely to the left of the median are stored in the left child node, and vice versa with the right node.</p>
-
-<p>At any given node representing the set of ranges intersected by the median at that node, two sorted lists are maintained: one containing all beginning points and the other containing all end points.</p>
-<h3 id="intersection-queries">
-<span class="hash">#</span>
-<a href="#intersection-queries" class="header-link">Intersection Queries</a>
-</h3>
-<p>The general operation for queries is to test the set of ranges in a node and then test those in the appropriate child node if the query isn&#39;t equal to the median.</p>
-
-<p>Given a <em>point</em> query, the current node is compared with the median. If it&#39;s equal, then every range in that node matches and the search is complete. If the query is less than the median, then the list of beginning points is searched for those beginning points that start before the query point, all of which are matches. Then the search continues into the left child.</p>
-
-<p>Given an <em>interval query</em>, the set of beginning and end points are searched to see if they fall within the query interval. These ranges are matches, and they have potential for duplicates if the matched interval begins and ends within the query interval. Finally, to match for ranges which possibly contain the query interval, a point is chosen in the query interval, perhaps the begin or end point, and that point is used as a point query as in the aforementioned point query algorithm.</p>
-<h2 id="hash-tables">
+</code></pre></figure><h2 id="hash-tables">
 <span class="hash">#</span>
 <a href="#hash-tables" class="header-link">Hash Tables</a>
 </h2>
@@ -3732,6 +3833,159 @@ A B C D E F
 <li><strong>graph coloring</strong>: color every vertex--edge in a graph such that no two adjacent vertices--edges have the same color</li>
 <li><strong>knapsack</strong>: given a set of items with different values and a container of a maximum capacity, find the combination of items that fits in the container and has the largest total value.</li>
 </ul>
+<h1 id="bitwise-operations">
+<span class="hash">#</span>
+<a href="#bitwise-operations" class="header-link">Bitwise Operations</a>
+</h1>
+<p>A very important property of XOR is that it a number XORed with itself is 0.</p>
+
+<p><script type="math/tex; mode=display"> N \oplus N = 0 </script></p>
+
+<p>For example, given a list of numbers where each number appears exactly twice <em>except</em> for one number, the number that appears only once can be obtained by XORing each element with the next one, since duplicate elements would cancel themselves out.</p>
+
+<p>More generally, bytes can be treated as a set, where bitwise operations correspond to set operations.</p>
+
+<p>A set can be tested for the presence of a value by using the AND operator. More generally, this can be seen as a set intersection operation, in which the operands may, after all, be singleton sets.</p>
+
+<p><script type="math/tex; mode=display"> S_a \mathrel{\&} S_b </script></p>
+
+<p>A value can be <em>unconditionally</em> added to set <script type="math/tex">S</script> using the OR operator:</p>
+
+<p><script type="math/tex; mode=display"> S \mathrel{|} N </script></p>
+
+<p>A value can be <em>unconditionally</em> removed from set <script type="math/tex">S</script> using the AND operator with the complement of the value to be removed:</p>
+
+<p><script type="math/tex; mode=display"> S \mathrel{\&} \mathord{\sim} N </script></p>
+
+<p>A value can be <em>conditionally</em> added or removed from the set <script type="math/tex">S</script> using the XOR operator. The value will be removed if it is already contained and added if it isn&#39;t.</p>
+
+<p><script type="math/tex; mode=display"> S \oplus N </script></p>
+
+<p>For example, given an array of numbers, each of which appears exactly three times <em>except</em> for one number, the number that appears only once can be obtained using a combination of the above operations.</p>
+
+<p>There will be two sets. The <code>ones</code> set will contain those numbers that have been observed to appear once so far. The <code>twos</code> set will contain those numbers that have been observed to appear twice so far. It&#39;s not necessary to track those numbers that appear three times, as that is implicit.</p>
+
+<p>For each number in the array, it will be added to the <code>ones</code> set if it has been seen exactly once. If a number is already in the <code>ones</code> set and is seen again, it&#39;s removed from the <code>ones</code> set and added to the <code>twos</code> set. If a number is already in the <code>twos</code> set and is seen again, it&#39;s removed from the <code>twos</code> set. Ultimately this will leave the <code>ones</code> set as a singleton set containing the number that appears only once.</p>
+
+<p>First, the number being considered is checked to see if it has already been seen once so far:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span>
+</code></pre></figure>
+<p>This would mean that this is the second time that this number has been seen. If the number is indeed in the <code>ones</code> set, the above expression evaluates to the number itself by nature of the AND operation, otherwise it evaluates to 0.</p>
+
+<p>The result of the above expression can directly be used to add the number to the <code>twos</code> set using the OR operation, which adds the number to the set, or does nothing if the number is 0.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">twos</span> <span class="o">|=</span> <span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span>
+</code></pre></figure>
+<p>The number is then <em>conditionally</em> added to or removed from the <code>ones</code> set using the XOR operation. If the <code>ones</code> set already contained the number, then the previous operation will have added the number to the <code>twos</code> set, in which case it&#39;s no longer needed inside the <code>ones</code> set, since the <code>ones</code> set only contains those numbers that have appeared <em>exactly</em> once. If the <code>ones</code> set didn&#39;t already contain the number, then the above presence check results in 0 which does nothing when added to the <code>twos</code> set.</p>
+
+<p>Therefore, we can add the number to the <code>ones</code> set if it wasn&#39;t already contained, or remove it if it was contained.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">ones</span> <span class="o">^=</span> <span class="n">num</span>
+</code></pre></figure>
+<p>However, if this has been the <em>third</em> time that this number has been seen, then the number will have been in the <code>twos</code> set already but <em>not</em> in the <code>ones</code> set. The above expression would therefore <em>also</em> add it to the <code>ones</code> set. Therefore we can be sure that if the number was present in both the <code>ones</code> and <code>twos</code> sets after the above operation, then this is the <em>third</em> time that this number has been observed.</p>
+
+<p>In this case, the number should be removed from both sets. This would ensure that the <code>ones</code> set really does only contain those numbers that have appeared <em>exactly</em> once, which is what we&#39;re interested in.</p>
+
+<p>However, the <code>ones</code> set and the <code>twos</code> set may contain various numbers. We know that the one that appears in both is the one that has appeared three times, and hence the one we want to remove, so we can obtain this number by intersecting both sets.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kt">int</span> <span class="n">threes</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">&amp;</span> <span class="n">ones</span><span class="o">;</span>
+</code></pre></figure>
+<p>We then want to remove this number from both sets:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">twos</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+<span class="n">ones</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+</code></pre></figure>
+<p>Here is the full algorithm.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">public</span> <span class="kt">int</span> <span class="nf">singleNumber</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+  <span class="kt">int</span> <span class="n">ones</span><span class="o">,</span> <span class="n">twos</span><span class="o">;</span>
+  <span class="n">ones</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">twos</span> <span class="o">|=</span> <span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span><span class="o">;</span>
+    <span class="n">ones</span> <span class="o">^=</span> <span class="n">num</span><span class="o">;</span>
+
+    <span class="kt">int</span> <span class="n">threes</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">&amp;</span> <span class="n">ones</span><span class="o">;</span>
+    <span class="n">twos</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+    <span class="n">ones</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="k">return</span> <span class="n">ones</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></figure><h1 id="geometric-algorithms">
+<span class="hash">#</span>
+<a href="#geometric-algorithms" class="header-link">Geometric Algorithms</a>
+</h1><h2 id="augmented-bst-as-interval-tree">
+<span class="hash">#</span>
+<a href="#augmented-bst-as-interval-tree" class="header-link">Augmented BST as Interval Tree</a>
+</h2>
+<p>An interval search tree stores ranges and provides operations for searching for overlaps of a given range within the tree. A binary search tree can be augmented into an interval search tree. The lower bound of a range is used as the node key. Each node also stores the maximum upper bound of its children, similar to the rank.</p>
+
+<p>For searching, the input interval is checked to see if it overlaps with the current node. If not, and the left node is null, search proceeds on the right child. If the left node&#39;s max upper bound is less than the input interval&#39;s lower bound, search proceeds on the right node. Otherwise search proceeds on the left node.</p>
+
+<ol>
+<li>if input interval <script type="math/tex">[l, r]</script> overlaps current node, return</li>
+<li>if left node is <code>null</code> or left&#39;s max upper &lt; <script type="math/tex">l</script>: go right<br>
+else: go left</li>
+</ol>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">Node</span> <span class="n">current</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+
+<span class="k">while</span> <span class="o">(</span><span class="n">current</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">interval</span><span class="o">.</span><span class="na">overlaps</span><span class="o">(</span><span class="n">lo</span><span class="o">,</span> <span class="n">hi</span><span class="o">))</span> <span class="k">return</span> <span class="n">current</span><span class="o">.</span><span class="na">interval</span><span class="o">;</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>         <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">.</span><span class="na">max</span> <span class="o">&lt;</span> <span class="n">lo</span><span class="o">)</span>        <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+  <span class="k">else</span>                                   <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</code></pre></figure><h2 id="interval-trees">
+<span class="hash">#</span>
+<a href="#interval-trees" class="header-link">Interval Trees</a>
+</h2>
+<p>Interval trees are useful for efficiently finding all intervals that overlap with any given interval or point.</p>
+
+<p>To construct the tree, the median of the entire range of all of the set of ranges is found. Those ranges in the set that are intersected by the median are stored in the current node. Ranges that fall completely to the left of the median are stored in the left child node, and vice versa with the right node.</p>
+
+<p>At any given node representing the set of ranges intersected by the median at that node, two sorted lists are maintained: one containing all beginning points and the other containing all end points.</p>
+<h2 id="intersection-queries">
+<span class="hash">#</span>
+<a href="#intersection-queries" class="header-link">Intersection Queries</a>
+</h2>
+<p>The general operation for queries is to test the set of ranges in a node and then test those in the appropriate child node if the query isn&#39;t equal to the median.</p>
+
+<p>Given a <em>point</em> query, the current node is compared with the median. If it&#39;s equal, then every range in that node matches and the search is complete. If the query is less than the median, then the list of beginning points is searched for those beginning points that start before the query point, all of which are matches. Then the search continues into the left child.</p>
+
+<p>Given an <em>interval query</em>, the set of beginning and end points are searched to see if they fall within the query interval. These ranges are matches, and they have potential for duplicates if the matched interval begins and ends within the query interval. Finally, to match for ranges which possibly contain the query interval, a point is chosen in the query interval, perhaps the begin or end point, and that point is used as a point query as in the aforementioned point query algorithm.</p>
+<h2 id="one-dimensional-range-count">
+<span class="hash">#</span>
+<a href="#one-dimensional-range-count" class="header-link">One-Dimensional Range Count</a>
+</h2>
+<p>This can be modeled as a BST where each node maintains a <em>rank</em>: the count of children that are strictly less than the node. It&#39;s possible to determine how many keys fall within a given range by subtracting the rank of the node containing the lower bound from the rank of the node containing the higher bound, adding one if the current node is the higher bound.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">(</span><span class="n">Key</span> <span class="n">lo</span><span class="o">,</span> <span class="n">Key</span> <span class="n">hi</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">contains</span><span class="o">(</span><span class="n">hi</span><span class="o">))</span> <span class="k">return</span> <span class="n">rank</span><span class="o">(</span><span class="n">hi</span><span class="o">)</span> <span class="o">-</span> <span class="n">rank</span><span class="o">(</span><span class="n">lo</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+  <span class="k">else</span>              <span class="k">return</span> <span class="n">rank</span><span class="o">(</span><span class="n">hi</span><span class="o">)</span> <span class="o">-</span> <span class="n">rank</span><span class="o">(</span><span class="n">lo</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></figure><h2 id="line-segment-intersection">
+<span class="hash">#</span>
+<a href="#line-segment-intersection" class="header-link">Line Segment Intersection</a>
+</h2>
+<p>Given a collection of line segments, it&#39;s possible to determine which pairs of line segments intersect by using a <em>sweep-line</em> algorithm. The coordinates could be sorted by x-coordinate or added to a priority queue. For each distinct x-coordinate encountered, its accompanying y-coordinate is added to a BST. If the same x-coordinate is encountered again, its accompanying y-coordinate is removed from the BST. If a vertical segment is encountered, a range search is performed on the BST to see if any y-coordinates fall within the vertical segment&#39;s y-coordinate endpoints.</p>
+<h2 id="rectangle-intersection">
+<span class="hash">#</span>
+<a href="#rectangle-intersection" class="header-link">Rectangle Intersection</a>
+</h2>
+<p>Checking for rectangle intersection is similar to line segment intersection. The left edge of a rectangle prompts the vertical range of the rectangle is checked for overlaps in an interval search tree, and added if none are detected. The rectangle&#39;s vertical range is removed from the interval search tree when the right edge of the rectangle is encountered.</p>
 
 <div class="footnotes">
 <hr>
