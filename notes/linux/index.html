@@ -107,6 +107,18 @@
 <li>
 <a href="#file-systems">File Systems</a>
 </li>
+<li>
+<a href="#signals">Signals</a>
+</li>
+<li>
+<a href="#process-creation">Process Creation</a>
+</li>
+<li>
+<a href="#process-termination">Process Termination</a>
+</li>
+<li>
+<a href="#process-execution">Process Execution</a>
+</li>
 </ol>
 </nav>
 <h1 id="files">
@@ -235,6 +247,50 @@
 <p>File systems are all mounted under a single directory tree represented by the root <span class="path">/</span> at specific locations known as <em>mount points</em>. The <em>virtual file system</em> (VFS) is an abstraction, a unified representation of a single file system, even if there are multiple different file systems mounted at different points.</p>
 
 <p>A <em>bind mount</em> allows a file or directory to be mounted at multiple locations in the file system. Unlike hard links, bind mounts can cross file-systems and chroot jails, and it&#39;s possible to create a bind mount for a directory.</p>
+<h1 id="signals">
+<span class="hash">#</span>
+<a href="#signals" class="header-link">Signals</a>
+</h1>
+<p>Signals can be sent to a process via <code>kill()</code>. A normal process can only send a signal to another process if the real or effective user ID of the sending process matches the real user ID or saved-set-user-ID of the receiving process. The effective user ID of the receiving process is not consulted to prevent one user from sending signals to another user&#39;s process that is running a set-user-ID program belonging to the user trying to send the signal.</p>
+
+<p>A <em>signal mask</em> is the set of signals whose delivery to the process is currently blocked. Signals are added and removed from the mask via <code>sigprocmask()</code>. If a signal is received while blocked, it remains pending, but is not queued, so that another signal of the same kind may &quot;overwrite&quot; it. The <code>sigpending()</code> call can retrieve the signal set identifying signals that it has pending.</p>
+
+<p>The <code>sigsuspend()</code> call can atomically modify the process signal mask and suspend execution until a signal arrives, which is essential to avoid race conditions when unblocking a signal and then suspending execution until that signal arrives, since it may have arrived in-between.</p>
+
+<p>Re-entrancy affects how one can update global variables and limits the set of functions that can safely be called from a signal handler.</p>
+
+<p>If a signal handler interrupts a blocked system call, the call returns <code>EINTR</code>. The call can be manually restarted or the signal handler can be established with <code>SA_RESTART</code> to cause many, but not all, system calls to automatically restart.</p>
+<h1 id="process-creation">
+<span class="hash">#</span>
+<a href="#process-creation" class="header-link">Process Creation</a>
+</h1>
+<p>The <code>fork()</code> call creates a new process (child) by making an almost exact copy-on-write duplicate. A new process can be executed via <code>exec()</code>, which modifies the process&#39; virtual memory with that new process&#39; data.</p>
+
+<p>There is no guarantee about whether the parent or child continues first after a call to <code>fork()</code>, so it should generally be called as a condition to a <code>switch</code> statement for example:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-c"><span class="kt">pid_t</span> <span class="n">childPid</span><span class="p">;</span>
+
+<span class="k">switch</span> <span class="p">(</span><span class="n">childPid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+<span class="k">case</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span>
+  <span class="c1">// error</span>
+<span class="k">case</span> <span class="mi">0</span><span class="o">:</span>
+  <span class="c1">// child</span>
+<span class="k">default</span><span class="o">:</span>
+  <span class="c1">// parent</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>After the fork, the child receives duplicates of all of the parent&#39;s file descriptors, made in the same manner as <code>dup()</code>, referring to the same file, file offset, and open file status flags. Further, if one updates any of these, the changes are visible to the other.</p>
+<h1 id="process-termination">
+<span class="hash">#</span>
+<a href="#process-termination" class="header-link">Process Termination</a>
+</h1>
+<p>Orphaned children are adopted by init. When a child terminates before a parent has a chance to call <code>wait()</code>, the kernel turns the child into a <em>zombie</em>, which means that most of the resources held by the child are released back to the system: only the child&#39;s process Id, termination status, and resource usage statistics are preserved. Zombies can&#39;t be killed by signals in order to ensure that a parent can <em>always</em> eventually perform a <code>wait()</code>. When the process finally performs the <code>wait()</code>, the kernel removes the zombie since that information is no longer required. If instead the parent terminates before it ever performs a <code>wait()</code>, then init adopts the child and performs a <code>wait()</code> so that the zombie can be removed. If the parent doesn&#39;t terminate but also never performs a <code>wait()</code>, then the zombie entry will remain, taking up resources.</p>
+<h1 id="process-execution">
+<span class="hash">#</span>
+<a href="#process-execution" class="header-link">Process Execution</a>
+</h1>
+<p>The <code>exec()</code> family of functions can be used to replace the currently-running program with a new program. All file descriptors open by the previous program remain open. This is something used by the shell for example for I/O redirection. Signal dispositions are reset because the signal handlers reside in the <code>text</code> region of the previous process, which is now gone and replaced with the new process.</p>
 
 <div class="footnotes">
 <hr>
@@ -248,8 +304,8 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> April 22, 2016</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/linux.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/34395b0" title="bump
-">34395b0</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/linux.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/eb457b5" title="bump
+">eb457b5</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
