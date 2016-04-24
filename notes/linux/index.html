@@ -1,0 +1,329 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Linux - Blaenk Denum</title>
+  <meta name="author" content="Jorge Israel Peña">
+  <meta name="description" content="AKA Blaenk Denum">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="/favicon.png" rel="shortcut icon">
+  <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' />
+  <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+  <script src="https://rawgit.com/ekalinin/typogr.js/master/typogr.min.js"></script>
+  <script src='/js/blaenk.js' type='text/javascript'></script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header id="header">
+  <div id="stamp">
+    <h1 id="name">
+      <a href="/">
+        <span class="emboldened">Jorge</span>.Israel.<span class="emboldened">Peña</span>
+      </a>
+    </h1>
+    <h4 id="pseudonym">
+      AKA <span class="emboldened">Blaenk</span>.Denum
+    </h4>
+  </div>
+  <nav id="main-nav">
+    <ul class="main">
+      <li><a href="/about/">About</a></li>
+      <li><a href="/notes/">Notes</a></li>
+      <li><a href="/work/">Work</a></li>
+      <li><a href="/lately/">Lately</a></li>
+      <li><a id="search_btn">Search</a></li>
+    </ul>
+  </nav>
+  <nav id="mobile-nav">
+    <div class="menu">
+      <a class="button">Menu</a>
+      <div class="container">
+        <ul class="main">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/notes/">Notes</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/lately/">Lately</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="search">
+      <a class="button"></a>
+      <div class="container">
+        <form action="http://google.com/search" method="get">
+          <input type="text" name="q" results="0">
+          <input type="hidden" name="q" value="site:blaenkdenum.com">
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<form class="desk_search" action="http://google.com/search" method="get">
+  <input id="search" type="text" name="q" results="0" placeholder="Search" autocomplete="off" spellcheck="false">
+  <input type="hidden" name="q" value="site:blaenkdenum.com">
+</form>
+
+    
+        <article class="post">
+  <h2 class="title"><a href="/notes/linux"><span>Linux</span></a></h2>
+  <div class="entry-content"><p>What follows are notes on the Linux and POSIX APIs.</p>
+
+<nav id="toc">
+<h3>Contents</h3><ol>
+<li>
+<a href="#files">Files</a>
+<ol>
+<li>
+<a href="#scatter-gather-io">Scatter-Gather I/O</a>
+</li>
+<li>
+<a href="#file-atomicity">File Atomicity</a>
+</li>
+<li>
+<a href="#file-buffering">File Buffering</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#processes">Processes</a>
+</li>
+<li>
+<a href="#process-credentials">Process Credentials</a>
+</li>
+<li>
+<a href="#process-time">Process Time</a>
+</li>
+<li>
+<a href="#file-systems">File Systems</a>
+</li>
+</ol>
+</nav>
+<h1 id="files">
+<span class="hash">#</span>
+<a href="#files" class="header-link">Files</a>
+</h1>
+<p>Each process has its own <em>file descriptor table</em>. Each entry in that table contains:</p>
+
+<ul>
+<li>the set of flags controlling the operation of the file descriptor (e.g. close-on-exec)</li>
+<li>a reference to the open file description.</li>
+</ul>
+
+<p>The kernel maintains a system-wide <em>open file table</em> of all <em>open file descriptions</em>, also known as <em>open file handles</em>. Each entry contains</p>
+
+<ul>
+<li>the current file offset</li>
+<li>the status flags, i.e. flags passed to <code>open()</code></li>
+<li>file access mode (read-only, write-only, or read-write)</li>
+<li>signal-driven I/O settings</li>
+<li>reference to the i-node object for the file</li>
+</ul>
+
+<p>Then each file system has a table of i-nodes for all files on the file system, where each entry contains:</p>
+
+<ul>
+<li>file type (e.g. regular, socket, FIFO) and permissions</li>
+<li>pointer to list of locks held on the file</li>
+<li>file properties (e.g. size, timestamp)</li>
+</ul>
+
+<p>There can be multiple file descriptors associated with a single file in a single process either by duplicating file descriptors with <code>dup()</code> or <code>dup2()</code>, or inheriting them after a <code>fork()</code>. This causes them to point to the same <em>open file description</em>, which means that they both use and update the same file offset and status flags.</p>
+
+<p>There can also be multiple file descriptors associated with the same file that do <em>not</em> share the same <em>open file description</em> by making separate calls to <code>open()</code>.</p>
+<h2 id="scatter-gather-io">
+<span class="hash">#</span>
+<a href="#scatter-gather-io" class="header-link">Scatter-Gather I/O</a>
+</h2>
+<p>The <code>pread()</code> and <code>pwrite()</code> functions can be used to read or write at an explicit offset, without consulting or updating the actual file offset.</p>
+
+<p>The <a href="http://man7.org/linux/man-pages/man2/readv.2.html"><code>readv()</code></a> and <a href="http://man7.org/linux/man-pages/man2/readv.2.html"><code>writev()</code></a> functions can be used to perform scatter-gather I/O. They each take a structure that specifies a list of positions to write to or read from respectively, and how much. For example, the <a href="http://man7.org/linux/man-pages/man2/readv.2.html"><code>readv()</code></a> function reads a contiguous sequence of bytes from a file into the buffers specified. There are also <code>preadv()</code> and <code>pwritev()</code> variants which take an explicit offset.</p>
+<h2 id="file-atomicity">
+<span class="hash">#</span>
+<a href="#file-atomicity" class="header-link">File Atomicity</a>
+</h2>
+<p>The system can provide certain atomicity guarantees. The <code>O_EXCL</code> flag for <code>open()</code> ensures that the caller is the creator of the file. The <code>O_APPEND</code> flag ensures that multiple processes appending data don&#39;t overwrite each other&#39;s output <sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>.</p>
+<h2 id="file-buffering">
+<span class="hash">#</span>
+<a href="#file-buffering" class="header-link">File Buffering</a>
+</h2>
+<p>File buffering occurs at the kernel level as well as the standard library level of many languages, including C and C++&#39;s.</p>
+
+<p>The <code>fsync()</code> call causes the buffered data <em>and</em> all metadata associated with the file descriptor to be flushed to the disk, forcing a <em>synchronized I/O file integrity completion state</em>. The <code>fdatasync()</code> call on the other hand causes only the buffered data to be flushed to the disk, forcing a <em>synchronized I/O data integrity completion state</em>. Using <code>fdatasync()</code> can be much faster if the metadata isn&#39;t as important, because the metadata and the data are usually stored on different parts of the disk.</p>
+
+<p>The <code>sync()</code> call causes <em>all</em> kernel buffers containing updated file information (both data and metadata) to be flushed to disk. On Linux, this call returns until the data has been transferred to the disk or its cache.</p>
+
+<p>The <code>posix_fadvise()</code> call can be used to advise the kernel about the likely file access patterns. For example, if it is advised about random access, then Linux will disable file read-ahead.</p>
+<h1 id="processes">
+<span class="hash">#</span>
+<a href="#processes" class="header-link">Processes</a>
+</h1>
+<p>Each process has a system-wide process ID known as a PID. A process can obtain its PID via <code>getpid()</code>. Each process has a parent process, whose ID can be obtained via <code>getppid()</code>.</p>
+<h1 id="process-credentials">
+<span class="hash">#</span>
+<a href="#process-credentials" class="header-link">Process Credentials</a>
+</h1>
+<p>Each process may have many sets of user and group identifiers (UIDs and GIDs):</p>
+
+<ul>
+<li>real user ID and group ID</li>
+<li>effective user ID and group ID</li>
+<li>saved set-user-ID and saved-set-group ID</li>
+<li>file-system user ID and group ID (Linux-specific)</li>
+<li>supplementary group IDs</li>
+</ul>
+
+<p>The <em>real user ID</em> and <em>real group ID</em> identify the user and group to which the process <em>belongs</em>, and these are inherited from the parent process, all the way back to the IDs read by a login shell from <span class="path">/etc/passwd</span>.</p>
+
+<p>The <em>effective user ID</em> and <em>effective group ID</em> are the IDs consulted to determine the permissions granted to a process when it tries to perform certain operations. These are also used to determine whether a process can send a signal to another.</p>
+
+<p>If a process&#39; effective user ID is 0, which is the UID of root, then it has all of the privileges of the superuser, making it a <em>privileged process</em>.</p>
+
+<p>A set-user-ID program is one which can set its effective user ID to the same value as the user ID (i.e. owner) of the executable file; same with set-group-ID. This is done by way of two special permission bits on an executable file: the set-user-ID and set-group-ID bits. These can be set via <code>chmod</code> for files a user owns or for any file if the user is privileged.</p>
+
+<p>When a set-user-ID program is run, its effective user ID is set to be the same as the user ID of the program&#39;s file, and likewise in the case of set-group-ID. For example, if the file is owned by root then the program&#39;s effective user ID becomes that of root, making it a privileged process.</p>
+
+<p>It&#39;s also possible to use set-user-ID to grant a program access to a particular resource, for example by creating a special-purpose user which has access to that file and setting the set-user-ID bit. This has the benefit of not giving it full, broad superuser privileges.</p>
+
+<p>the <em>saved-set-user-ID</em> and <em>saved-set-group-ID</em> is a saved copy of the effective user ID and effective group ID after having loaded the set-UID and set-GID, if those bits were set, in which case it&#39;s a saved copy of the set-UID and set-GID. These saved copies allow certain system calls to switch between the saved-set-UID and the real UID, for example, allowing privileges to be temporarily dropped or regained, which is a good security practice.</p>
+
+<p>The <em>file-system user ID</em> and <em>file-system group ID</em> are used on Linux instead of the effective user ID and effective group ID equivalents to determine the permissions of a process when performing file-system operations---otherwise the effective IDs are used for all other operations. However, usually the file-system IDs are identical to the effective IDs; the only differ when explicitly made to via <code>setfsuid()</code> and <code>setfsgid()</code>.</p>
+
+<p>The <em>supplementary group IDs</em> are additional groups to which a process belongs which are inherited from its parent.</p>
+<h1 id="process-time">
+<span class="hash">#</span>
+<a href="#process-time" class="header-link">Process Time</a>
+</h1>
+<p>The kernel separates CPU time used by a process into <em>user time</em> (also known as virtual time), which is the amount of time executing in user mode, and <em>system time</em>, which is the amount of time spent executing in kernel mode, i.e. executing system calls or servicing page faults for the program.</p>
+<h1 id="file-systems">
+<span class="hash">#</span>
+<a href="#file-systems" class="header-link">File Systems</a>
+</h1>
+<p>Devices are represented by entries in the <span class="path">/dev</span> directory, and each device has a corresponding device driver which implements the standard operations such as <code>read()</code> and <code>write()</code>.</p>
+
+<p>A <em>character device</em> is one that handles data on a character-by-character basis, such as terminals and keyboards. A <em>block device</em> is one that handles data a block at a time, where the block size depends on the type of device.</p>
+
+<p>Hard disk drives store data on the disk on concentric circles called <em>tracks</em>, which are divided into <em>sectors</em> each containing a series of <em>physical</em> blocks.</p>
+
+<p>The <em>seek time</em> is the time it takes for the disk head must to move to the appropriate track. The <em>rotational latency</em> is the time it takes for the appropriate sector to rotate under the head. The <em>transfer time</em> is the time it takes for the blocks to be transferred.</p>
+
+<p>Disks are divided into partitions, each of which may contain a file system. Each file system contains an <em>i-node</em> (i.e. index node) table and there is one entry for each file on the file system, each entry containing metadata such as:</p>
+
+<ul>
+<li>file type</li>
+<li>user and group owners</li>
+<li>access permissions</li>
+<li>timestamps</li>
+<li>hard link count</li>
+<li>byte size</li>
+<li>allocated block count</li>
+<li>pointers to data blocks</li>
+</ul>
+
+<p>Journaling file systems are ones keep a write-ahead-log (WAL) for metadata updates (and optionally data updates) before the actual file updates are performed, which makes the data more resilient in the event of a crash. This also means that a file system check is not required after a system crash.</p>
+
+<p>File systems are all mounted under a single directory tree represented by the root <span class="path">/</span> at specific locations known as <em>mount points</em>. The <em>virtual file system</em> (VFS) is an abstraction, a unified representation of a single file system, even if there are multiple different file systems mounted at different points.</p>
+
+<p>A <em>bind mount</em> allows a file or directory to be mounted at multiple locations in the file system. Unlike hard links, bind mounts can cross file-systems and chroot jails, and it&#39;s possible to create a bind mount for a directory.</p>
+
+<div class="footnotes">
+<hr>
+<ol>
+
+<li id="fn1">
+<p>Perhaps by making the file offsets a single atomic offset? Check.&nbsp;<a href="#fnref1" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
+
+</ol>
+</div>
+</div>
+  <div class="meta">
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> April 22, 2016</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/linux.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/34395b0" title="bump
+">34395b0</a></span></div>
+    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
+  </div>
+</article>
+
+
+
+    
+    <footer id="footer">
+  <div id="social">
+    <a href="https://github.com/blaenk" title="github"><i class="fa fa-github-alt"></i></a>
+    &middot;
+    <a href="http://stackoverflow.com/users/101090/jorge-israel-pena" title="stackoverflow"><i class="fa fa-stack-overflow"></i></a>
+    &middot;
+    <a href="https://twitter.com/blaenk" title="twitter"><i class="fa fa-twitter"></i></a>
+    &middot;
+    <a href="mailto:jorge.israel.p@gmail.com" title="email"><i class="fa fa-envelope"></i></a>
+    &middot;
+    <a href="/rss.xml" title="feed"><i class="fa fa-rss-square"></i></a>
+  </div>
+  <!-- <div id="credit">
+    Designed by <a href="http://www.blaenkdenum.com">Jorge Israel Peña</a>
+  </div> -->
+</footer>
+
+
+<!-- this should instead be something like connectWS("{{{path}}}") -->
+
+
+<script type="text/javascript">
+  jQuery(function (){
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/linux.markdown');
+
+    ws.onmessage = function (e) {
+      var content = jQuery('article .entry-content');
+      content.html(e.data);
+
+      window.refresh();
+
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, jQuery('article .entry-content')[0]]);
+
+      if (window.jumpDown)
+        window.scrollDown();
+    };
+  });
+</script>
+
+
+
+
+<!-- google analytics -->
+<script async="true" type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37339861-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!--MathJax CDN-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: "none"
+  });
+
+  MathJax.Hub.Register.MessageHook('End Process', function() {
+    jQuery('#MathJax_Font_Test').empty();
+    jQuery('.MathJax_Display').parent().addClass('mathjax');
+  });
+</script>
+
+  </div>
+</body>
+</html>

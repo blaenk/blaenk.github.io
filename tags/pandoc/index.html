@@ -14,7 +14,7 @@
   <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' />
   <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
   <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -76,7 +76,7 @@
 
     
         <h2 id="tag"><span style="color: #999">#</span>Pandoc</h2>
-<!-- <h2 class="archive-year">null</h2> -->
+<!-- <h2 class="archive-year"></h2> -->
 <ul class="archive">
 
   <li class="archive-item">
@@ -114,7 +114,7 @@
 
 <script type="text/javascript">
   jQuery(function (){
-    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/null');
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/');
 
     ws.onmessage = function (e) {
       var content = jQuery('article .entry-content');

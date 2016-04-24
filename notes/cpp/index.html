@@ -14,7 +14,7 @@
   <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' />
   <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
   <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -123,7 +123,13 @@
 <a href="#rule-of-zero">Rule of Zero</a>
 </li>
 <li>
+<a href="#class-initialization">Class Initialization</a>
+</li>
+<li>
 <a href="#member-initialization">Member Initialization</a>
+</li>
+<li>
+<a href="#copy-initialization">Copy-Initialization</a>
 </li>
 <li>
 <a href="#default-constructors">Default Constructors</a>
@@ -222,8 +228,66 @@
 <li>
 <a href="#enumerations">Enumerations</a>
 </li>
+</ol>
+</li>
+<li>
+<a href="#standard-template-library">Standard Template Library</a>
+<ol>
+<li>
+<a href="#initializer-lists">Initializer Lists</a>
+</li>
+<li>
+<a href="#integral_constant">integral_constant</a>
+</li>
+<li>
+<a href="#array">Array</a>
+</li>
+<li>
+<a href="#pairs">Pairs</a>
+</li>
 <li>
 <a href="#tuples">Tuples</a>
+</li>
+<li>
+<a href="#unordered-containers">Unordered Containers</a>
+</li>
+<li>
+<a href="#bitsets">Bitsets</a>
+</li>
+<li>
+<a href="#strings">Strings</a>
+</li>
+<li>
+<a href="#numeric-limits">Numeric Limits</a>
+</li>
+<li>
+<a href="#smart-pointers">Smart Pointers</a>
+<ol>
+<li>
+<a href="#unique_ptr">unique_ptr</a>
+</li>
+<li>
+<a href="#shared_ptr">shared_ptr</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#callables">Callables</a>
+</li>
+<li>
+<a href="#iterators">Iterators</a>
+</li>
+<li>
+<a href="#collection-exception-safety">Collection Exception-Safety</a>
+</li>
+<li>
+<a href="#algorithms">Algorithms</a>
+</li>
+<li>
+<a href="#random">Random</a>
+</li>
+<li>
+<a href="#concurrency">Concurrency</a>
 </li>
 </ol>
 </li>
@@ -340,6 +404,19 @@
 <p>This <a href="http://flamingdangerzone.com/cxx11/2012/08/15/rule-of-zero.html">recent rule</a> is unlike the <a href="http://en.cppreference.com/w/cpp/language/rule_of_three">other two</a> in that it instead says that classes that contain custom destructors, copy/move constructors, or copy/move assignment operators should deal <em>exclusively</em> with ownership, i.e. encapsulating a so called <em>ownership policy</em> which handles the allocation and deallocation of a particular resource (via RAII). All other classes should <strong>not have</strong> custom destructors, copy/move constructors, or copy/move assignment operators.</p>
 
 <p>This rule is enforceable out-of-the-box in C++11 through the use of smart pointers such as <code>shared_ptr</code> and <code>unique_ptr</code> along with custom deleters when necessary.</p>
+<h2 id="class-initialization">
+<span class="hash">#</span>
+<a href="#class-initialization" class="header-link">Class Initialization</a>
+</h2>
+<p>Classes are initialized as follows:</p>
+
+<ol>
+<li>virtual base classes in depth-first, left-to-right order</li>
+<li>direct base classes in left-to-right order</li>
+<li>in-class initializers top-to-bottom</li>
+<li>constructor initializer lists in top-to-bottom member definition order</li>
+<li>constructor body initialization</li>
+</ol>
 <h2 id="member-initialization">
 <span class="hash">#</span>
 <a href="#member-initialization" class="header-link">Member Initialization</a>
@@ -348,7 +425,7 @@
 
 <ol>
 <li>in-class initializers</li>
-<li>constructor initializer lists</li>
+<li>constructor initializer lists in top-to-bottom member definition order</li>
 <li>constructor body initialization</li>
 </ol>
 
@@ -365,6 +442,41 @@
 </ul>
 
 <p>Member functions defined inside the class definition are inlined.</p>
+<h2 id="copy-initialization">
+<span class="hash">#</span>
+<a href="#copy-initialization" class="header-link">Copy-Initialization</a>
+</h2>
+<p>Copy-initialization occurs when:</p>
+
+<ul>
+<li><p>Assigning to a new object with the equals sign (not assignment operator):</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">T</span> <span class="n">object</span> <span class="o">=</span> <span class="n">other</span><span class="p">;</span>
+</code></pre></figure></li>
+<li><p>Passing a parameter by-value:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">f</span><span class="p">(</span><span class="n">other</span><span class="p">);</span>
+</code></pre></figure></li>
+<li><p>Returning a by-value:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">return</span> <span class="n">other</span><span class="p">;</span>
+</code></pre></figure></li>
+<li><p>Throwing or catching by-value:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">throw</span> <span class="n">object</span><span class="p">;</span>
+
+<span class="k">catch</span> <span class="p">(</span><span class="n">T</span> <span class="n">object</span><span class="p">)</span> <span class="p">{</span> <span class="err">…</span> <span class="p">}</span>
+</code></pre></figure></li>
+<li><p>Placing an object in a brace-initializer:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">T</span> <span class="n">array</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">other</span><span class="p">};</span>
+</code></pre></figure></li>
+</ul>
 <h2 id="default-constructors">
 <span class="hash">#</span>
 <a href="#default-constructors" class="header-link">Default Constructors</a>
@@ -654,6 +766,13 @@
 <code class="highlight language-cpp"><span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
   <span class="kt">void</span> <span class="n">Perform</span><span class="p">()</span> <span class="k">final</span><span class="p">;</span>
 <span class="p">};</span>
+</code></pre></figure>
+<p>An abstract base class is one that contains a pure abstract method, which is one that <em>must</em> be implemented by children.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">func</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></figure><h3 id="constructors">
 <span class="hash">#</span>
 <a href="#constructors" class="header-link">Constructors</a>
@@ -699,7 +818,9 @@
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="n">B</span><span class="o">&amp;</span> <span class="n">B</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">B</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// delegate to base copy</span>
   <span class="n">A</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>
+
   <span class="c1">// assign members of derived class</span>
   <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 <span class="p">}</span>
@@ -950,16 +1071,1219 @@
 <code class="highlight language-cpp"><span class="k">enum</span> <span class="k">class</span> <span class="nc">EventType</span> <span class="o">:</span> <span class="kt">uint8_t</span> <span class="p">{</span> <span class="n">STATUS</span><span class="p">,</span> <span class="n">LOG</span><span class="p">,</span> <span class="n">ERROR</span> <span class="p">};</span>
 
 <span class="n">EventType</span> <span class="n">type</span> <span class="o">=</span> <span class="n">EventType</span><span class="o">::</span><span class="n">STATUS</span><span class="p">;</span>
+</code></pre></figure><h1 id="standard-template-library">
+<span class="hash">#</span>
+<a href="#standard-template-library" class="header-link">Standard Template Library</a>
+</h1><h2 id="initializer-lists">
+<span class="hash">#</span>
+<a href="#initializer-lists" class="header-link">Initializer Lists</a>
+</h2>
+<p>The <code>std::initializer_list</code> type is a lightweight proxy object wrapping an array of objects of type <code>const T</code>. For this reason, it&#39;s normal and expected to pass it around by-value, since it&#39;s already essentially a pointer to the underlying array.</p>
+<h2 id="integral_constant">
+<span class="hash">#</span>
+<a href="#integral_constant" class="header-link">integral_constant</a>
+</h2>
+<p>The <code>std::integral_constant&lt;T, T v&gt;</code> type from <code>type_traits</code> takes an integral type and a constant value for it. Two typedefs for these exist which are <code>true_type</code> (i.e. <code>std::integral_constant&lt;bool, true&gt;</code>) and <code>false_type</code>. That can be used to refine the selection of a function overload.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// integrals</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">foo_impl</span><span class="p">(</span><span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="n">true_type</span><span class="p">);</span>
+
+<span class="c1">// floats</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">foo_impl</span><span class="p">(</span><span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="n">false_type</span><span class="p">);</span>
+
+<span class="c1">// Use is_integral to select the appropriate overload.</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">foo</span><span class="p">(</span><span class="n">T</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">foo_impl</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">is_integral</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></figure><h2 id="array">
+<span class="hash">#</span>
+<a href="#array" class="header-link">Array</a>
+</h2>
+<p>The <code>std::array&lt;N, T&gt;</code> type is a wrapper around regular <code>T[N]</code> arrays. It provides typical STL collection functionality such as iterators and copy and assignment operators. It has no user-provided constructors, no base classes, no virtual member functions, no in-class initializers, and only contains a regular public array. This means that <code>std::array</code> is an aggregate type, which allows it to be initialized like a regular array, via aggregate-initialization:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="mi">3</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+</code></pre></figure><h2 id="pairs">
+<span class="hash">#</span>
+<a href="#pairs" class="header-link">Pairs</a>
+</h2>
+<p>An <code>std::pair</code> is essentially a tuple with two components, accessible via members <code>first</code> and <code>second</code>. It is used to denote, for example, key-value pairs in maps.</p>
+
+<p>Pairs can be constructed using list-initialization when the type can be inferred or explicitly with the helper free-function <code>std:make_pair</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">auto</span> <span class="n">keyval</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="s">&quot;test&quot;</span><span class="p">);</span>
+</code></pre></figure>
+<p>When emplacing a new key-value pair into a map, it can become ambiguous as to which parameters correspond to which constructor: either the key&#39;s or the value&#39;s.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&gt;</span> <span class="n">map</span><span class="p">;</span>
+
+<span class="c1">// &quot;key&quot; should be the parameter for the string constructor</span>
+<span class="c1">// 3.4, 7.8 should be the parameters for the complex constructor</span>
+<span class="n">map</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">,</span> <span class="mf">7.8</span><span class="p">);</span>
+</code></pre></figure>
+<p>To disambiguate these situations, there is <code>std::piecewise_construct</code> which can forward the respective pair components as a tuple:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">map</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">piecewise_construct</span><span class="p">,</span>
+            <span class="c1">// used to construct the first pair component</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">forward_as_tuple</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">),</span>
+            <span class="c1">// used to construct the second pair component</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">forward_as_tuple</span><span class="p">(</span><span class="mf">3.4</span><span class="p">,</span> <span class="mf">7.8</span><span class="p">));</span>
 </code></pre></figure><h2 id="tuples">
 <span class="hash">#</span>
 <a href="#tuples" class="header-link">Tuples</a>
 </h2>
-<p>The <code>std::tuple</code> type is similar to tuples in other languages. <code>get&lt;index&gt;(tuple)</code> retrieves the value at a given index. Tuples can easily be created with the <code>make_tuple</code> function. As in other languages, tuples can be &quot;unpacked&quot; into multiple values using the <code>tie</code> function:</p>
+<p>The <code>std::tuple</code> type is similar to tuples in other languages. <code>get&lt;index&gt;(tuple)</code> retrieves the value at a given index. Tuples can easily be created with the <code>make_tuple</code> function.</p>
+
+<p>Note that tuples cannot be copy-list-initialized because the corresponding constructor is marked explicit in order to prevent a single value from being implicitly converted to a tuple.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-cpp"><span class="n">tie</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">ignore</span><span class="p">,</span> <span class="n">letter</span><span class="p">)</span> <span class="o">=</span> <span class="n">make_tuple</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">4.23</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">wrong</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">};</span> <span class="c1">// error</span>
+<span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">correct</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">};</span>  <span class="c1">// ok</span>
 </code></pre></figure>
-<p>Uniform initialization allows for constructing any type using the <code>{}</code> syntax that was previously used for arrays for example. If a class defines a constructor that takes an <code>std::initializer_list</code> then that constructor takes precedence when using initializer list construction. Initializer lists cause an error if a construction would narrow a type.</p>
+<p>As in other languages, tuples can be &quot;unpacked&quot; into multiple values using the <code>tie</code> function:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">tie</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">ignore</span><span class="p">,</span> <span class="n">letter</span><span class="p">)</span> <span class="o">=</span> <span class="n">make_tuple</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">4.23</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>std::tie</code> function works by essentially creating an ephemeral tuple of references and copy-assigning the source tuple to the ephemeral tuple, causing those values to be set via reference.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">string</span><span class="o">&gt;</span> <span class="n">source</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;test&quot;</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">first</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">second</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ref</span><span class="p">(</span><span class="n">first</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">ref</span><span class="p">(</span><span class="n">second</span><span class="p">))</span> <span class="o">=</span> <span class="n">source</span><span class="p">;</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">first</span><span class="p">);</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="n">second</span><span class="p">);</span>
+</code></pre></figure>
+<p>Tuples implement comparison operators to perform lexicographical comparisons, this makes it possible to use <code>tie</code> to perform lexicographical comparisons of multiple fields:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">struct</span> <span class="n">Record</span> <span class="p">{</span>
+ <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+ <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">floor</span><span class="p">;</span>
+ <span class="kt">double</span> <span class="n">weight</span><span class="p">;</span>
+
+ <span class="c1">// First compare names to each other, and if equal, then floor, finally weight.</span>
+ <span class="k">friend</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Record</span><span class="o">&amp;</span> <span class="n">l</span><span class="p">,</span> <span class="k">const</span> <span class="n">Record</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">floor</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">weight</span><span class="p">)</span>
+       <span class="o">&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">.</span><span class="n">floor</span><span class="p">,</span> <span class="n">r</span><span class="p">.</span><span class="n">weight</span><span class="p">);</span>
+ <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></figure>
+<p>If a class defines a constructor that takes an <code>std::initializer_list</code> then that constructor takes precedence when using initializer list construction. Initializer lists cause an error if a construction would narrow a type.</p>
+<h2 id="unordered-containers">
+<span class="hash">#</span>
+<a href="#unordered-containers" class="header-link">Unordered Containers</a>
+</h2>
+<p>Custom hashers and key-equality functions can be used on a given unordered container.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">struct</span> <span class="n">S</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">hash_func</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">hash</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">()(</span><span class="n">t</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">equality</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">lhs</span><span class="p">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">rhs</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span>
+              <span class="k">decltype</span><span class="p">(</span><span class="n">hash_func</span><span class="p">),</span>
+              <span class="k">decltype</span><span class="p">(</span><span class="n">equality</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">m</span><span class="p">(</span><span class="n">S</span><span class="p">{</span><span class="mi">10</span><span class="p">},</span> <span class="n">hash_func</span><span class="p">,</span> <span class="n">equality</span><span class="p">);</span>
+</code></pre></figure><h2 id="bitsets">
+<span class="hash">#</span>
+<a href="#bitsets" class="header-link">Bitsets</a>
+</h2>
+<p>Bitsets can be instantiated from an integer source or a string. They are parameterized by their capacity, i.e. they are not dynamic: their capacity must be stated up-front. For a dynamic bitset there exists an <code>std::vector&lt;bool&gt;</code> specialization.</p>
+
+<p>The indexing operator <code>operator[]</code> is overloaded to test a bit, and there is also a method <code>test</code> to do the same.</p>
+
+<p>There are <code>all</code>, <code>any</code>, and <code>none</code> methods, as well as <code>count</code> to see how many bits are set.</p>
+
+<p>Bits can be turned on (set) via the index <code>operator[]</code> or via the <code>set</code> method, which can set all bits if no parameters are given, a specific bit, or can set a specific bit to an explicit value. The <code>reset</code> method does the opposite, turning off bits. The <code>flip</code> method negates bits.</p>
+<h2 id="strings">
+<span class="hash">#</span>
+<a href="#strings" class="header-link">Strings</a>
+</h2>
+<p>A constructor overload exists for creating a string consisting of a certain number of a single character.</p>
+
+<p>Arbitrary strings or characters can be inserted anywhere into the string via the <code>insert</code> method, likewise they can be removed with <code>erase</code>.</p>
+
+<p>Strings can be appended to via <code>push_back</code> (there&#39;s also <code>pop_back</code>) or <code>append</code> and <code>operator+=</code>, but an <code>std::stringstream</code> is preferred if there&#39;s going to be many append calls.</p>
+
+<p>The <code>substr</code> function takes a starting position and a <em>count</em>, not one-past last, but a <em>count</em>, and returns the substring denoted by the range [begin, begin + count].</p>
+
+<p>The <code>replace</code> function can replace a given range in the string with another string.</p>
+
+<p>The <code>find</code> method searches for the occurrence of a needle in the string, optionally starting from a given position, and returns the starting position of the first match, or <code>std::string::npos</code> if there was none.</p>
+
+<p>There is also <code>rfind</code> which does the same but starting from the right of the string.</p>
+
+<p>The <code>find_first_of</code> method is like the algorithm of the same name: it looks for the first occurrence of one of the characters in the input string. There is also <code>find_first_not_of</code>, as well as <code>find_last_of</code> and <code>find_last_not_of</code> which search from right-to-left.</p>
+<h2 id="numeric-limits">
+<span class="hash">#</span>
+<a href="#numeric-limits" class="header-link">Numeric Limits</a>
+</h2>
+<p>The <code>limits</code> header contains numeric limits, such as <code>std::numeric_limits&lt;int&gt;::max()</code> for the largest representable number with the <code>int</code> type.</p>
+<h2 id="smart-pointers">
+<span class="hash">#</span>
+<a href="#smart-pointers" class="header-link">Smart Pointers</a>
+</h2>
+<p>Both <code>unique_ptr</code> and <code>shared_ptr</code> are explicit (or contextually, i.e. in an if-condition) convertible operators to <code>bool</code>, denoting whether the managed pointer is <code>nullptr</code> or not.</p>
+<h3 id="unique_ptr">
+<span class="hash">#</span>
+<a href="#unique_ptr" class="header-link">unique_ptr</a>
+</h3>
+<p>A <code>unique_ptr</code> can relinquish ownership of the managed object with the <code>release</code> method.</p>
+
+<p>One <code>unique_ptr</code> can transfer ownership to another <code>unique_ptr</code> via move construction or assignment.</p>
+<h3 id="shared_ptr">
+<span class="hash">#</span>
+<a href="#shared_ptr" class="header-link">shared_ptr</a>
+</h3>
+<p>Each <code>shared_ptr</code> has an associated <em>control block</em> which consists of:</p>
+
+<ul>
+<li>managed object or a pointer to it</li>
+<li>reference count</li>
+<li>weak reference count</li>
+<li>type-erased deleter</li>
+<li>type-erased allocator</li>
+</ul>
+
+<p>Depending on the way a <code>shared_ptr</code> is constructed, there can be a potential for memory leaks. Imaging the following code:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">processWidget</span><span class="p">(</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">Widget</span><span class="p">),</span> <span class="n">dangerous</span><span class="p">());</span>
+</code></pre></figure>
+<p>The compiler can generate the above code as:</p>
+
+<ol>
+<li>allocate <code>Widget</code></li>
+<li>call <code>dangerous</code></li>
+<li>construct <code>shared_ptr</code> from <code>Widget</code></li>
+</ol>
+
+<p>This can be a problem if the call to <code>dangerous</code> in step 2 throws an exception, because the <code>shared_ptr</code> didn&#39;t have a chance to take ownership of the <code>Widget</code>. If it had taken ownership, the exception would&#39;ve destroyed the <code>shared_ptr</code> which also would&#39;ve deallocated <code>Widget</code>. Otherwise the memory leaks.</p>
+
+<p>For this reason, it&#39;s preferable to use <code>std::make_shared</code> to construct <code>shared_ptr</code>s. It&#39;s also faster because it is usually able to perform a single allocation for both the managed object and the <code>shared_ptr</code>&#39;s control block, whereas when the managed object is explicitly allocated, the <code>shared_ptr</code> has no choice but to perform another allocation for the control block.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">processWidget</span><span class="p">(</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span><span class="p">(),</span> <span class="n">dangerous</span><span class="p">());</span>
+</code></pre></figure>
+<p>This way, the compiler now has two things that it may rearrange:</p>
+
+<ul>
+<li>call <code>make_shared</code></li>
+<li>call <code>dangerous</code></li>
+</ul>
+
+<p>Regardless of their arrangement, there is no possibility for memory leaks.</p>
+
+<p>However, the use of <code>std::make_shared</code> prevents specifying a custom deleter. For that, the regular constructor is necessary:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">c_type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">new_c_type</span><span class="p">(),</span> <span class="n">free_c_type</span><span class="p">);</span>
+</code></pre></figure>
+<p>A <code>shared_ptr</code> can change the object it manages by calling its <code>reset</code> method with a pointer to the new object to manage. If the <code>shared_ptr</code> was the last owner of the previously managed object, its deleter is called.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">thing</span><span class="p">;</span>
+<span class="n">thing</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;other&quot;</span><span class="p">));</span>
+</code></pre></figure>
+<p>The raw pointer that a <code>shared_ptr</code> manages can be accessed without relinquishing ownership via the <code>get</code> method.</p>
+
+<p>The &quot;alias constructor&quot; of <code>shared_ptr</code> is one that accepts a raw pointer to manage and whose lifetime is tied to another <code>shared_ptr</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">struct</span> <span class="n">X</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="n">px</span><span class="p">(</span><span class="k">new</span> <span class="n">X</span><span class="p">);</span>
+<span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="n">pi</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">px</span><span class="o">-&gt;</span><span class="n">a</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">pi</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">px</span><span class="o">-&gt;</span><span class="n">a</span><span class="p">);</span>
+</code></pre></figure>
+<p>There are casting functions equivalent to <code>static_cast</code> et al which operate on <code>shared_ptr</code>:</p>
+
+<ul>
+<li><code>static_pointer_cast</code></li>
+<li><code>dynamic_pointer_cast</code></li>
+<li><code>const_pointer_cast</code></li>
+</ul>
+
+<p>Sometimes it&#39;s necessary to be able to create a type which should be able to give <code>shared_ptr</code>s of itself (i.e. of its <code>this</code> pointer) to other types.</p>
+
+<p>For example, this can be useful or even necessary when creating a tree where the nodes have pointers to their parents. If the children are wrapped in <code>shared_ptr</code>, then the parent pointers must also be <code>shared_ptr</code> so that all paths from which the pointers may be referenced go through a <code>shared_ptr</code>. However, this poses a problem because it would entail giving a child a copy of the parent&#39;s <code>this</code> pointer for it to store in its <code>shared_ptr</code> of its parent. What&#39;s really needed is a <code>shared_ptr</code> of the <code>this</code> pointer.</p>
+
+<p>This can be achieved by having the class derive from <code>std::enable_shared_from_this&lt;T&gt;</code>, where <code>T</code> is the type in question. This inherits a method <code>shared_from_this</code> which returns a <code>shared_ptr</code> of the <code>this</code> pointer.</p>
+
+<p>However, something has to have created a <code>shared_ptr</code> of the <code>this</code> pointer, i.e. of the class. For this reason, there is usually a factory method which constructs <code>shared_ptr</code>s of the class.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_shared_from_this</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
+  <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="n">Ts</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">params</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></figure>
+<p>To prevent reference-cycles, the <code>std::weak_ptr</code> represents a pointer that can share but not own a resource. In order to be used, it must first attempt to elevate itself to a <code>shared_ptr</code> via the <code>lock</code> method.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Thing</span><span class="o">&gt;</span> <span class="n">shared</span> <span class="o">=</span> <span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Thing</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Thing</span><span class="o">&gt;</span> <span class="n">weak</span><span class="p">(</span><span class="n">shared</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Thing</span><span class="o">&gt;</span> <span class="n">locked</span> <span class="o">=</span> <span class="n">weak</span><span class="p">.</span><span class="n">lock</span><span class="p">())</span> <span class="p">{</span>
+  <span class="c1">// object still exists</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="c1">// object no longer exists</span>
+<span class="p">}</span>
+</code></pre></figure><h2 id="callables">
+<span class="hash">#</span>
+<a href="#callables" class="header-link">Callables</a>
+</h2>
+<p>The type <code>std::function</code> can store a type-erased pointer to any callable: function, lambda, bind expression, function object, pointer to member function, pointer to data member.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="kt">void</span> <span class="nf">print_int</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">display_int</span> <span class="o">=</span> <span class="n">print_int</span><span class="p">;</span>
+
+<span class="n">print_int</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+</code></pre></figure>
+<p>If the callable is a member function, then the target object must be explicitly passed when invoked.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">const</span> <span class="n">Class</span> <span class="n">obj</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="k">const</span> <span class="n">Class</span><span class="o">&amp;</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">print_num</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">Class</span><span class="o">::</span><span class="n">show_num</span><span class="p">;</span>
+
+<span class="n">print_num</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>std::bind</code> function can wrap a function with certain parameters pre-bound. Parameters that aren&#39;t intended to be bound must pass-through using a placeholder in <code>std::placeholders</code>. It&#39;s much easier and less error-prone to use lambdas. For example, arguments to the <code>bind</code> call are copied or moved unless explicitly placed in a reference wrapper such as <code>std::ref</code> or <code>std::cref</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="kt">void</span> <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// func(8, 4, 2) == 8</span>
+
+<span class="c1">// pre-bind first and second parameter to 0 and 1</span>
+<span class="k">auto</span> <span class="n">reverse_params</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_3</span><span class="p">);</span>
+
+<span class="c1">// func(8, 4, 2) == -2</span>
+</code></pre></figure>
+<p>The <code>functional</code> header contains a variety of function objects for primitive operations, such as <code>std::plus&lt;T&gt;</code> which is a function object for <code>operator+(T a, T b)</code>.</p>
+
+<p>There are also <code>std::not1</code> and <code>std::not2</code> functions which negate the result of a unary or binary predicate, respectively.</p>
+<h2 id="iterators">
+<span class="hash">#</span>
+<a href="#iterators" class="header-link">Iterators</a>
+</h2>
+<p>The free-functions <code>std::begin</code> and <code>std::end</code> are specialized to return the respective iterators for different types. For example, usually one would just use the methods of the same name on actual collection objects. However, regular arrays don&#39;t have methods, and so these free-functions have specializations to do the correct thing for arrays.</p>
+
+<p>Additionally, if the parameters are const-qualified, they return constant iterators, like the equivalent <code>cbegin</code> and <code>cend</code> methods.</p>
+
+<p>The <code>distance</code> function can be used to get the number of elements between first and last.</p>
+
+<p>The <code>next</code> and <code>prev</code> function returns a new iterator that is advanced forward or backward respectively by a given number of steps, or a single step by default.</p>
+
+<p>The <code>advance</code> function is similar but it modifies the passed iterator, and it can take a signed integer so that a negative step steps backward.</p>
+
+<p>The functions <code>std::back_inserter</code> and <code>std::front_inserter</code> take a collection and return iterator adapters whose assignment operator automatically calls <code>push_back</code> or <code>push_front</code> on the collection.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">expect</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">fill_n</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expect</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>Function <code>std::inserter</code> is a generalization of the above functions. It takes a collection and an iterator position. Assigning to the iterator (dereferenced or not) calls the corresponding <code>insert</code> method at that position.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">expect</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">fill_n</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">inserter</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">next</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">())),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expect</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>std::make_reverse_iterator</code> function returns an iterator adapter that reverses the direction of the iterator. However, with C++14 and above it&#39;s simpler to call the <code>rbegin</code> and <code>rend</code> methods.</p>
+
+<p>The <code>std::make_move_iterator</code> function returns an iterator adapter that overloads its deference operator to convert the returned value into an rvalue, allowing the underlying value to be moved from. Note that there is also an algorithm <code>std::move</code> that can be used.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{</span><span class="s">&quot;one&quot;</span><span class="p">,</span> <span class="s">&quot;two&quot;</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_move_iterator</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">()),</span>
+                           <span class="n">std</span><span class="o">::</span><span class="n">make_move_iterator</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">s_expect</span><span class="p">{</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">v_expect</span><span class="p">{</span><span class="s">&quot;one&quot;</span><span class="p">,</span> <span class="s">&quot;two&quot;</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">};</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">s_expect</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">v_expect</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>std::ostream_iterator</code> and <code>std::istream_iterator</code> iterator types are iterators which write to an <code>ostream</code> or read from an <code>istream</code>, respectively. These can be used, for example, to read a sequence of delimited numbers from standard input, or write a sequence of numbers to standard output. In the case of <code>std::istream_iterator</code>, the end-point iterator can be constructed by passing no parameters.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// Read the input stream into a vector.</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span> <span class="n">input</span><span class="p">(</span><span class="s">&quot;1 2 3 4 5&quot;</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">,</span> <span class="n">v_expect</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">istream_iterator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">input</span><span class="p">),</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">istream_iterator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(),</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">v_expect</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+
+<span class="c1">// Write the vector to an output stream (could be std::cout)</span>
+<span class="n">std</span><span class="o">::</span><span class="n">ostringstream</span> <span class="n">output</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">ostream_iterator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">));</span>
+
+<span class="c1">// Note trailing space.</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="s">&quot;1 2 3 4 5 &quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">.</span><span class="n">str</span><span class="p">());</span>
+</code></pre></figure><h2 id="collection-exception-safety">
+<span class="hash">#</span>
+<a href="#collection-exception-safety" class="header-link">Collection Exception-Safety</a>
+</h2>
+<p>Most functions and collections which are able to perform moves only do so if the moves are <code>noexcept</code>, otherwise copies are performed.</p>
+<h2 id="algorithms">
+<span class="hash">#</span>
+<a href="#algorithms" class="header-link">Algorithms</a>
+</h2>
+<p>There are a couple of conventions that algorithms follow:</p>
+
+<ul>
+<li><p>most algorithms take at least one iterator range specifying the range of operation, where the range is exclusive on its end-point, i.e. [begin, end).</p>
+
+<p>Some algorithms take two ranges, and sometimes the end-point of the second can be omitted, which automatically assumes the same distance as the first range.</p></li>
+<li><p>algorithms whose names end in <code>_n</code> take a beginning iterator position and a count of elements to affect from that point onward, instead of the regular [begin, end) iterator range.</p></li>
+<li><p>algorithms whose names end in <code>_if</code> take a predicate instead of a value to compare against.</p></li>
+<li><p>algorithms whose names end in <code>_until</code> return an iterator to one-past the last &quot;qualifying&quot; element. For example, <code>is_sorted_until</code> returns one-past the last sorted element.</p></li>
+<li><p>algorithms whose names end in <code>_backward</code> perform their operation from right-to-left. For example,  <code>copy_backward</code> copies to to the last source element to the last destination iterator position, then the penultimate, etc. <strong>Don&#39;t</strong> confuse this with the operation being performed in reverse. The elements are still in the same order; they were simply copied from right-to-left.</p></li>
+<li><p>algorithms whose names contain <code>_copy</code> perform their operation to elements as they are being copied into another range. Conversely, their counterparts which <em>don&#39;t</em> have <code>_copy</code> in their name operate in-place, modifying the elements of the range.</p></li>
+<li><p>algorithms that take a comparison function expect a function which returns <code>true</code> if the first parameter is <em>less</em> than the second, and <code>false</code> otherwise. Comparison functions must not modify the parameters.</p>
+
+<p>Equality can be checked with such a comparison function by ensuring that it doesn&#39;t yield true for either one with respect to the other, i.e. a and b are equal if <code>!cmp(a, b) &amp;&amp; !cmp(b, a)</code>, e.g. if <code>!(a &lt; b) &amp;&amp; !(b &lt; a)</code>.</p></li>
+<li><p>algorithms that concern &quot;order&quot; or &quot;equality&quot; accept an optional comparison function</p></li>
+<li><p>algorithms usually return one-past the last element that was operated on.</p></li>
+</ul>
+
+<p>The <code>exchange</code> function replaces the value of an object with that of another and returns the old value.</p>
+
+<p>The <code>all_of</code>, <code>any_of</code>, and <code>none_of</code> functions specify whether the elements of a given iterator range satisfy the given predicate for all, any, or none of the elements respectively.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+<span class="kt">bool</span> <span class="n">all_even</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">all_of</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="k">auto</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                  <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="p">});</span>
+
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">all_even</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>for_each</code> function applies a function to each element in the range, potentially mutating the element. It returns the provided function object, allowing for the accumulation of a result.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">expect</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">for_each</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="kt">int</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span> <span class="o">++</span><span class="n">n</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">expect</span><span class="p">,</span> <span class="n">vec</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>count</code> function counts all elements in the range which equals a given value, whereas <code>count_if</code> counts those which satisfy a given predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">twos</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">2</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">odds</span> <span class="o">=</span> <span class="n">count_if</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                    <span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">twos</span><span class="p">);</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">odds</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>mismatch</code> function takes two iterator ranges and finds and returns the first mismatching positions as determined by equality or a given predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">mismatch</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">pos</span><span class="p">.</span><span class="n">first</span><span class="p">);</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="o">*</span><span class="p">(</span><span class="n">pos</span><span class="p">.</span><span class="n">first</span><span class="p">));</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="o">*</span><span class="p">(</span><span class="n">pos</span><span class="p">.</span><span class="n">second</span><span class="p">));</span>
+</code></pre></figure>
+<p>The <code>equal</code> function checks if two iterator ranges are equivalent by equality or predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;radar&quot;</span><span class="p">;</span>
+
+<span class="c1">// Compare forward range to backward range</span>
+<span class="kt">bool</span> <span class="n">is_palindrome</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">equal</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+                                <span class="n">s</span><span class="p">.</span><span class="n">rbegin</span><span class="p">());</span>
+
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">is_palindrome</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>find</code> function gets the iterator position of the first element equal to the given value, whereas the <code>find_if</code> and <code>find_if_not</code> functions find the first element that does or does not satisfy the given predicate, respectively.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">two_position</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">2</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">even_position</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_if</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                                  <span class="p">[](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+                                    <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+                                  <span class="p">});</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">two_position</span><span class="p">);</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">even_position</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>find_end</code> function gets the iterator position of beginning of the last occurrence of the subsequence denoted by the second iterator range within the sequence denoted by the first iterator range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">needle</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_end</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">seq</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">seq</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">pos</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>find_first_of</code> function gets the iterator position of the first element found that&#39;s one of the elements in the second range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">els</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find_first_of</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">els</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">els</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">pos</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>adjacent_find</code> method finds the position of the first two consecutive elements that are equal to each other or both satisfy a predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">adjacent_find</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">pos</span><span class="p">);</span>
+
+<span class="c1">// If it&#39;s sorted, each pair should satisfy std::less&lt;int&gt;()(left, right)</span>
+<span class="c1">// Conversely, if any pair satisfies std::greater&lt;int&gt;(left, right), then</span>
+<span class="c1">// that is the first pair of elements that is unsorted.</span>
+<span class="k">auto</span> <span class="n">unsorted</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">adjacent_find</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">greater</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">pos</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>search</code> function finds the second range within the first range using equality or a given predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;one two three&quot;</span><span class="p">;</span>
+<span class="n">string</span> <span class="n">needle</span> <span class="o">=</span> <span class="s">&quot;two&quot;</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">needle</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">needle</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">pos</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>search_n</code> function finds the a sequence of <code>n</code> elements of <code>value</code>, e.g. three 4&#39;s, within the first range using equality or a given predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">search_n</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">&amp;*</span><span class="n">pos</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>copy</code> function copies elements from the given range into the range beginning at a given iterator position. The <code>copy_if</code> does the same only if the element satisfies a given predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">odds</span><span class="p">,</span> <span class="n">odds_expect</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">copy_if</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">odds</span><span class="p">),</span>
+             <span class="p">[](</span><span class="k">auto</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">odds_expect</span><span class="p">,</span> <span class="n">odds</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>copy_n</code> function copies <code>n</code> elements from the range starting at the first parameter to the range starting at the third parameter.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mi">5</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">copy_n</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="mi">3</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">back_inserter</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">b</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>max_element</code> and <code>min_element</code> find the position of the largest or smallest element in the range, respectively. A comparison function can be passed.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min_element</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">pos</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>minmax_element</code> function simultaneously finds the smallest and largest element in the range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">min_max</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">minmax_element</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">min_max</span><span class="p">.</span><span class="n">first</span><span class="p">);</span>
+<span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="o">*</span><span class="n">min_max</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+</code></pre></figure>
+<p>There is also a <code>minmax</code> function which operates on two operands or an initializer list. This can be used to simultaneously find the lesser and greater of two numbers, such as for randomly setting some bounds:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">srand</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">minmax</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span>
+                                         <span class="n">std</span><span class="o">::</span><span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+</code></pre></figure>
+<p>The <code>swap_ranges</code> function swaps elements from the first range with the corresponding elements of the second range, and returns one-past the last swapped element of the <em>second</em> range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">l</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+<span class="c1">// Swap the first two elements of v with first two elements of l</span>
+<span class="n">std</span><span class="o">::</span><span class="n">swap_ranges</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">l</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span> <span class="n">l</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>swap</code> function swaps two parameters with each other. It&#39;s also overloaded for arrays. It&#39;s important to note that it should usually be called in an unqualified manner. That is, use a using-declaration to bring the <code>std::swap</code> definitions into scope, but call it as <code>swap</code> and not <code>std::swap</code>. This enables additional, perhaps more specialized overloads of <code>swap</code> to be used when appropriate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="kt">void</span> <span class="nf">Function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">;</span>
+
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>The <code>iota</code> function can be used to fill a range with sequentially incremented values, starting with the given value.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>copy_backward</code> function copies elements right-to-left from the given range into the range ending with the third parameter. Note that the elements are <em>not</em> copied in reverse, that is, the order of the elements is preserved. Instead, this function copies starting from the right end, which is why the end iterator is provided.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">source</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">destination</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">copy_backward</span><span class="p">(</span><span class="n">source</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">source</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">destination</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">destination</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>fill</code> function sets every element in the range to a given value. There is also <code>fill_n</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">7</span><span class="p">);</span>
+
+<span class="n">EXPECT_E1</span><span class="p">({</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>generate</code> function assigns each element in the range the value generated by the provided function, which takes no arguments. There is also <code>generate_n</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">generate</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">n</span><span class="p">]()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">n</span><span class="o">++</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>move</code> function moves elements from the range into the range beginning with the third parameter.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kr">thread</span><span class="o">&gt;</span> <span class="n">ths</span><span class="p">;</span>
+<span class="n">ths</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">arg</span><span class="p">);</span>
+<span class="n">ths</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">arg</span><span class="p">);</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="kr">thread</span><span class="o">&gt;</span> <span class="n">dest</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="c1">// Could just dest = move(ths) in this case, but w/e</span>
+<span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">ths</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">ths</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">dest</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+</code></pre></figure>
+<p>The <code>move_backward</code> function is equivalent to <code>copy_backward</code> but moves its elements instead of copying them. That is, it moves elements from the range into the range ending with the third parameter, moving the last element first, then the penultimate one, and so on.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">src</span><span class="p">{</span><span class="s">&quot;one&quot;</span><span class="p">,</span> <span class="s">&quot;two&quot;</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">dest</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">move_backward</span><span class="p">(</span><span class="n">src</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">src</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">dest</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;one&quot;</span><span class="p">,</span> <span class="s">&quot;two&quot;</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">},</span> <span class="n">dest</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>remove_copy</code> function copies elements from the range into the beginning of the range denoted by the third parameter, skipping any elements equal to the provided value or satisfying a given predicate (with <code>remove_copy_if</code>). In other words, this is the opposite of <code>copy</code> and <code>copy_if</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">not_one</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">odds</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">remove_copy</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">not_one</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">not_one</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">remove_copy</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">odds</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+                 <span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">});</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">odds</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>replace</code> function replaces the elements in the range that match the given value or satisfy the predicate (with <code>replace_if</code>) with another value.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="c1">// Replace even numbers with 0.</span>
+<span class="n">std</span><span class="o">::</span><span class="n">replace_if</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                <span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">},</span>
+                <span class="mi">0</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>replace_copy</code> function copies elements from the range into the range beginning at the third parameter, mapping those that match the given value or satisfy a predicate (with <code>replace_copy_if</code>) to another value.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+<span class="c1">// Copy v into b, mapping values of 1 → 0</span>
+<span class="n">std</span><span class="o">::</span><span class="n">replace_copy</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="n">b</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>iter_swap</code> function simply swaps the elements pointed to by the iterators.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="c1">// Swap the 1 and the 3</span>
+<span class="n">std</span><span class="o">::</span><span class="n">iter_swap</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+
+<span class="c1">// Can also explicitly just dereference iterators and call std::swap</span>
+<span class="n">swap</span><span class="p">(</span><span class="o">*</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="o">*</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+</code></pre></figure>
+<p>The <code>reverse</code> function reverses the order of the elements in the range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>reverse_copy</code> function copies elements from the range into another range beginning with the third parameter in reverse order.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">d</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">reverse_copy</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">d</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>rotate</code> function rotates all elements in the range to the left such that the middle parameter becomes the first element in the range. Note that this function breaks convention in that there is a parameter (the &quot;new-left&quot;) in between the [begin, end) iterator pair parameters. As per convention, <code>rotate_copy</code> does the same but copies the result into another range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+
+<span class="c1">// Rotate v to the left so that the 3 (v[2]) become the first element.</span>
+<span class="n">std</span><span class="o">::</span><span class="n">rotate</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>random_shuffle</code> function shuffles all elements in the range given a random number generator.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="n">random_device</span> <span class="n">rd</span><span class="p">;</span>
+<span class="n">mt19937</span> <span class="nf">g</span><span class="p">(</span><span class="n">rd</span><span class="p">());</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">shuffle</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">g</span><span class="p">);</span>
+
+<span class="c1">// e.g. v = {3, 1, 2}</span>
+</code></pre></figure>
+<p>The <code>unique</code> function removes all <em>consecutive duplicates</em> (and thus expects a sorted input) from the range, returning one-past the new logical end of the range. Consecutive duplicates are checked by equality or a given predicate. There is also <code>unique_copy</code>.</p>
+
+<p>Note that the elements are <em>not</em> physically removed from the container, so this call is usually followed by a call to the <code>erase</code> method of the collection with the iterator returned by <code>unique</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">last</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// v = {1, 2, 3, 4, x, x, x} where x = indeterminate</span>
+
+<span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="n">EXPECT_EQ</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="n">v</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>is_partitioned</code> function checks if all elements in the range are partitioned based on the given predicate, so that all elements that satisfy the predicate come before all of those that don&#39;t.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">};</span>
+
+<span class="kt">bool</span> <span class="n">is_parted</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_partitioned</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                                     <span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">;</span> <span class="p">});</span>
+</code></pre></figure>
+<p>The <code>partition</code> function partitions the elements of a range so that all elements that satisfy the predicate come before all of those that don&#39;t. There is also <code>partition_copy</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+<span class="k">auto</span> <span class="n">partition_func</span> <span class="o">=</span> <span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">partition</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">partition_func</span><span class="p">);</span>
+
+<span class="kt">bool</span> <span class="n">is_parted</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_partitioned</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                                     <span class="n">partition_func</span><span class="p">;</span>
+</code></pre></figure>
+<p>The <code>stable_partition</code> function is a stable version of the <code>partition</code> function, so that the relative order of equal elements is preserved.</p>
+
+<p>The <code>partition_point</code> function returns one-past the end of the first partition, i.e. the first element that doesn&#39;t satisfy the predicate.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="k">auto</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">partition_point</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                                <span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span>
+</code></pre></figure>
+<p>The <code>is_sorted</code> function checks if the range is sorted in ascending order or given a comparison function.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="kt">bool</span> <span class="n">sorted</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">is_sorted</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+</code></pre></figure>
+<p>The <code>is_sorted_until</code> function returns one-past the last sorted element, i.e. the first element that is not sorted.</p>
+
+<p>The <code>sort</code> function sorts the range in ascending order or based on a given comparison function. The <code>stable_sort</code> variant preserves the relative order of equal elements.</p>
+
+<p>The <code>partial_sort</code> function rearranges the elements of the range so that the [begin, middle) contains the elements of the sorted order of the entire array, i.e. the first (middle - begin) smallest elements. There is also <code>partial_sort_copy</code> which only copies enough elements that fit in the destination.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">partial_sort</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// v = {0, 1, 2, 7, 8, 6, 5, 9, 4, 3}</span>
+<span class="c1">//      |-----|</span>
+<span class="c1">//      sorted</span>
+</code></pre></figure>
+<p>The <code>nth_element</code> function selects the <script type="math/tex">n^\text {th}</script> element from the sorted order of the range, i.e. the <script type="math/tex">n^\text {th}</script>-order statistic. A comparison function can be specified.</p>
+
+<p>This is like Quicksort&#39;s partitioning, so the range is modified so that the element pointed to by <code>nth</code> becomes the <code>nth</code> element of the sorted order of the range. All elements to the left of the iterator are less than or equal to that element and all elements to the right of the iterator are greater than that element.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">nth_element</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">mid</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="c1">// median is v[mid] = 5</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">nth_element</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="c1">// max is v.back()</span>
+</code></pre></figure>
+<p>The <code>lower_bound</code> function returns an iterator to the first element in the partially or fully sorted range that is greater than or equal to the value or comparison function. There is also an <code>upper_bound</code> function.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">lower</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">lower_bound</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">4</span><span class="p">);</span>
+
+<span class="c1">// lower = idx 3</span>
+</code></pre></figure>
+<p>The <code>equal_range</code> function returns an iterator range (pair) of the sub-range of elements in the input range that contains values equivalent to the provided value based on an optional comparison function.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">range</span> <span class="o">=</span> <span class="n">equal_range</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="kt">bool</span> <span class="n">all_twos</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">all_of</span><span class="p">(</span><span class="n">range</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">range</span><span class="p">.</span><span class="n">second</span><span class="p">,</span>
+                            <span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">all_twos</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>binary_search</code> function does a membership check by performing a binary search for the value in the partially or fully sorted range using an optional comparison function.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">};</span>
+
+<span class="kt">bool</span> <span class="n">found_four</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">binary_search</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">4</span><span class="p">);</span>
+</code></pre></figure>
+<p>The <code>merge</code> function merges two sorted ranges together into a destination.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="n">b</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dest</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">merge</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+           <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+           <span class="n">dest</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="c1">// dest = {1, 2, 3, 4, 5, 6}</span>
+</code></pre></figure>
+<p>The <code>inplace_merge</code> function is an in-place variant of the <code>merge</code> function, merging two sorted ranges denoted by [begin, middle) and [middle, end) into a single sorted range, in-place.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">inplace_merge</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// v = {1, 2, 3, 4, 5, 6}</span>
+</code></pre></figure>
+<p>The <code>includes</code> function checks if every element of the second sorted range is found within the first sorted range, reads as &quot;first range includes second.&quot;</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="n">b</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+
+<span class="c1">// true</span>
+<span class="n">std</span><span class="o">::</span><span class="n">includes</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// true</span>
+<span class="n">std</span><span class="o">::</span><span class="n">includes</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+</code></pre></figure>
+<p>The <code>set_difference</code> function performs a set difference operation on the two ranges and outputs the result into the destination iterator.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">difference</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">set_difference</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                    <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                    <span class="n">difference</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="c1">// difference = {1, 3, 5};</span>
+</code></pre></figure>
+<p>There is also <code>set_intersection</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">intersection</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">set_intersection</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                      <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                      <span class="n">intersection</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="c1">// intersection = {1, 2, 3, 4, 5, 6};</span>
+</code></pre></figure>
+<p>There is also <code>set_union</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="k">union</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">set_union</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+               <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+               <span class="k">union</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="c1">// union = {1, 2, 3, 4, 5};</span>
+</code></pre></figure>
+<p>The <code>set_symmetric_difference</code> function computes the set of elements that are in either of the sets but <em>not</em> in both (not in their intersection).</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">symmetric_difference</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">set_union</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+               <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+               <span class="n">symmetric_difference</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="c1">// symmetric_difference = {1, 2, 4};</span>
+<span class="c1">// not 3 because it&#39;s in both</span>
+</code></pre></figure>
+<p>The <code>make_heap</code> function constructs a max-heap from the elements in the range, i.e. it&#39;s a &quot;heapify&quot; operation. A heap with a different order can be created using an optional comparison function, for example with <code>std::greater&lt;in&gt;()</code> a min-heap can be created.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">make_heap</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// v = {9, 5, 4, 1, 1, 3}</span>
+</code></pre></figure>
+<p>The <code>push_heap</code> function is used to <em>logically push</em> the last element in the range onto the logical heap. This means that the element must already be present in the range, added for example via something like <code>push_back</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">make_heap</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// physically push</span>
+<span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="c1">// v = {9, 5, 4, 1, 1, 3, 6}</span>
+
+<span class="c1">// logically push</span>
+<span class="n">std</span><span class="o">::</span><span class="n">push_heap</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="c1">// v = {9, 5, 6, 1, 1, 3, 4}</span>
+</code></pre></figure>
+<p>The <code>pop_heap</code> function is used to <em>logically pop</em> the top element from the heap by swapping the top element of the logical heap with the last element in the heap, then re-heapifying to preserve heap-order. If an optional comparison function was used with <code>make_heap</code> or <code>push_heap</code>, it should also be used here.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">make_heap</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="kt">int</span> <span class="n">largest</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+
+<span class="c1">// logically remove</span>
+<span class="n">std</span><span class="o">::</span><span class="n">pop_heap</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="c1">// physically remove</span>
+<span class="n">v</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span> <span class="c1">// actually remove</span>
+</code></pre></figure>
+<p>The <code>sort_heap</code> function essentially performs a heap sort, that is, it sorts the elements into the heap in ascending order or given a comparison function, destroying the logical heap.</p>
+
+<p>The <code>is_heap</code> function checks to see if the range is in heap-order given some optional comparison function. There is an <code>is_heap_until</code> function which returns one-past the last heap-ordered element.</p>
+
+<p>The <code>lexicographical_compare</code> function checks to see if the first range is lexicographically less than the second range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="n">b</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">lexicographical_compare</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                             <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="c1">// a &lt; b = true</span>
+</code></pre></figure>
+<p>The <code>is_permutation</code> function checks to see if the first range is a permutation of the second range.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="n">b</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">};</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">is_permutation</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+                    <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="c1">// true</span>
+</code></pre></figure>
+<p>The <code>next_permutation</code> function rearranges the elements of the range into the lexicographically-next permutation and returns true. If a next permutation doesn&#39;t exist, it wraps around and produces the first permutation (i.e sorted order) and returns false. There is also <code>prev_permutation</code> which does the opposite.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;aba&quot;</span><span class="p">;</span>
+
+<span class="c1">// produce first permutation</span>
+<span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="k">do</span> <span class="p">{</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">next_permutation</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">()));</span>
+
+<span class="c1">// aab, aba, baa</span>
+</code></pre></figure>
+<p>The <code>accumulate</code> function reduces the elements in the range given an initial value and an optional binary function which produces the reduction of two elements. By default, the binary function is addition, so <code>accumulate</code> produces the sum of the elements.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+<span class="c1">// sum = 15</span>
+
+<span class="kt">int</span> <span class="n">product</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span>
+                              <span class="p">[](</span><span class="kt">int</span> <span class="n">prod</span><span class="p">,</span> <span class="kt">int</span> <span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="k">return</span> <span class="n">prod</span> <span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+                              <span class="p">});</span>
+<span class="c1">// product = 120</span>
+
+<span class="c1">// can also be</span>
+<span class="kt">int</span> <span class="n">product</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">accumulate</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">multiplies</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">());</span>
+</code></pre></figure>
+<p>The <code>inner_product</code> function computes the sum of the pair-wise products of the elements of the two ranges, which is the <em>dot product</em>. Custom sum and product functions can be provided, in which case the &quot;product&quot; function is applied in a pair-wise manner to the elements of the two ranges, and the &quot;sum&quot; function is applied to those results.</p>
+
+<p>This is like an <code>transform</code>/<code>for_each</code> of pair-wise elements with the &quot;product&quot; function and an <code>accumulate</code> of those results with the &quot;sum&quot; function.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">dot_product</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">inner_product</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">b</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+<span class="c1">// dot_product = 21</span>
+</code></pre></figure>
+<p>The <code>adjacent_difference</code> function computes the difference of each element in the range and its predecessor, writing each element into the output iterator. Since the first element doesn&#39;t have a predecessor, the predecessor is treated as 0.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">};</span>
+
+<span class="c1">// v = {2, 2, 2, 2};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">adjacent_difference</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+
+<span class="c1">// v = {1, 1, 2, 3}</span>
+<span class="p">.</span><span class="n">adjacent_difference</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                     <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                     <span class="p">[](</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">});</span>
+</code></pre></figure>
+<p>The <code>partial_sum</code> function successively computes the sums of increasing sub-ranges of the input range and copies each sum into the output iterator. A custom sum function can be provided. Specifically, the result is such that:</p>
+
+<p><script type="math/tex; mode=display"> \text {dest}[i] = \sum_0^i src[i] </script></p>
+
+<p>This can be useful for example to compute the <a href="https://en.wikipedia.org/wiki/Maximum_subarray_problem">maximal sub-array</a>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">};</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">dest</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">partial_sum</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">dest</span><span class="p">.</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dest</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;sum of sub-range [0, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">dest</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// dest = {2, 4, 6, 8}</span>
+</code></pre></figure>
+<p>The <code>transform</code> function applies a given unary function to each element in the array, or a given binary function to each pair of elements in two ranges, and writes each result to the output iterator.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">string</span> <span class="nf">s</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="o">::</span><span class="n">toupper</span><span class="p">);</span>
+
+<span class="c1">// s = &quot;HELLO&quot;</span>
+</code></pre></figure>
+<p>The <code>remove</code> function rearranges the elements of the range so that those equal to a given value or satisfying a given predicate are moved to the end of the range, allowing them to easily be erased from their container.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+
+<span class="k">auto</span> <span class="n">new_end</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">remove</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="n">v</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">new_end</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+</code></pre></figure><h2 id="random">
+<span class="hash">#</span>
+<a href="#random" class="header-link">Random</a>
+</h2>
+<p>Random engines are a stateful source of randomness, and random distributions use a random engine to generate random numbers distributed over a range.</p>
+
+<p>The <code>shuffle</code> method can be used to shuffle a range based on a given random number generator.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">default_random_engine</span> <span class="n">engine</span><span class="p">;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">shuffle</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">engine</span><span class="p">);</span>
+</code></pre></figure>
+<p>Random numbers can be generated with, for example, <code>uniform_int_distribution</code>. The constructor takes the inclusive bounds.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">default_random_engine</span> <span class="n">engine</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">uniform_int_distribution</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">distribution</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">distribution</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</code></pre></figure><h2 id="concurrency">
+<span class="hash">#</span>
+<a href="#concurrency" class="header-link">Concurrency</a>
+</h2>
+<p>Threads are represented by <code>std::thread&lt;F, Args...&gt;</code> and they run on a separate thread. These can be instantiated with a lambda:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="kr">thread</span> <span class="nf">print</span><span class="p">([]()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;other thread&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">});</span>
+</code></pre></figure>
+<p>Threads can be <code>join</code>ed and <code>detach</code>ed.</p>
+
+<p>The <code>std::mutex</code> type represents a mutex, which can be <code>lock</code>ed and <code>unlock</code>ed.</p>
+
+<p>An <code>std::lock_guard</code> is a type that provides RAII ownership of an <code>std::mutex</code>, so that the lock is automatically unlocked when the <code>lock_guard</code> is destroyed.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">global_mutex</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">func</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">global_mutex</span><span class="p">);</span>
+
+  <span class="c1">// unlocked here</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>An <code>std::unique_lock</code> is similar except that it may not necessarily be associated with a mutex, and locking and unlocking can be done explicitly, essentially it simply guarantees that if the mutex is locked when the <code>unique_lock</code> is destroyed, it unlocks it.</p>
+
+<p>Ownership of the associated lock can be <code>release</code>ed.</p>
+
+<p>The <code>std::lock</code> function can lock an arbitrary number of locks (passed as parameters) in such a way that deadlocks are avoided. If an exception occurs, all so-far locked mutexes are unlocked.</p>
+
+<p>An <code>std::condition_variable</code> represents a condition variable which can be used to notify others of being ready via <code>notify_one</code> and <code>notify_all</code>, and others to wait on the condition variable via <code>wait</code>. One of the overloads of <code>wait</code> can accept a lambda which is used to test the condition, in order to guard against spurious wake-ups, in which case the wait is repeated.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="n">ready</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+<span class="c1">// thread 1 runs first</span>
+<span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
+
+<span class="c1">// notify waiting threads</span>
+<span class="n">cv</span><span class="p">.</span><span class="n">notify_one</span><span class="p">();</span>
+
+<span class="c1">// thread 2 runs after, and waits on the condition variable</span>
+<span class="c1">// to guard against spurious wake-ups, a lambda is run to ensure</span>
+<span class="c1">// that the actual condition holds. if it doesn&#39;t, it waits again</span>
+<span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
+<span class="n">cv</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="p">[]</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ready</span><span class="p">;</span> <span class="p">});</span>
+</code></pre></figure>
+<p>An <code>std::promise&lt;T&gt;</code> is the push/write-end of the promise-future communication channel. It can be used to store a value that is later acquired asynchronously via an <code>std::future</code> created by the promise via <code>get_future</code>. A promise is made ready by writing a value to it via <code>set_value</code>.</p>
+
+<p>A value can be obtained from the future via <code>get</code>, which blocks until a result is received, then returns that value. There&#39;s also <code>wait</code> that simply waits until the value is received, but doesn&#39;t actually retrieve it.</p>
+
+<p>The <code>std::async</code> function wraps a function and calls it asynchronously, possibly on another thread, and returns a future representing the result.</p>
+
+<p>The <code>std::packaged_task&lt;R(Args...)&gt;</code> type is similar in that it wraps any callable so that it can be invoked asynchronously and its return value obtained via a future. It does this by overloading the call operator so that when the function returns, its value is written to a promise.</p>
+
+<p>The future is obtained via <code>get_future</code>. The <code>packaged_task</code> can then be run on a separate thread, for example.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="kt">int</span> <span class="nf">fib</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+ <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+ <span class="k">else</span> <span class="k">return</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fib</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">packaged_task</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">task</span><span class="p">(</span><span class="o">&amp;</span><span class="n">fib</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">task</span><span class="p">.</span><span class="n">get_future</span><span class="p">();</span>
+
+<span class="kr">thread</span> <span class="nf">t</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">task</span><span class="p">),</span> <span class="mi">40</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+
+<span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+</code></pre></figure>
+<p>Atomic types are represented by <code>std::atomic&lt;T&gt;</code> and they can be either integral types or pointers. Their constructor takes their initial value.</p>
+
+<p>Atomic replacement of the value is done via <code>store</code>, and atomic reading can be done with <code>load</code>, which is also aliased to a conversion operator for the underlying type.</p>
+
+<p>The <code>exchange</code> method atomically exchanges the current value with another, and returns the old value.</p>
+
+<p>Similarly, there are <code>fetch_</code> methods such as <code>fetch_add</code> which atomically adds an operand to the atomic variable and returns the original value. The increment and decrement operators are also overloaded to perform atomic increments and decrements.</p>
 <h1 id="resources">
 <span class="hash">#</span>
 <a href="#resources" class="header-link">Resources</a>
@@ -970,14 +2294,8 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September 10, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cpp.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
-
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cpp.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/34395b0" title="bump
+">34395b0</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>

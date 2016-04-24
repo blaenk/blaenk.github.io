@@ -14,7 +14,7 @@
   <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Merriweather:900italic,900,700italic,400italic,700,400,300italic,300' rel='stylesheet' type='text/css'>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href='/css/screen.css' rel='stylesheet' type='text/css' media='screen' />
+  <link href='/css/screen.css' rel='stylesheet' type='text/css' />
   <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
   <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -83,6 +83,14 @@
 <h3>Contents</h3><ol>
 <li>
 <a href="#analysis">Analysis</a>
+<ol>
+<li>
+<a href="#master-theorem">Master Theorem</a>
+</li>
+<li>
+<a href="#approximations">Approximations</a>
+</li>
+</ol>
 </li>
 <li>
 <a href="#sorting">Sorting</a>
@@ -124,7 +132,7 @@
 </ol>
 </li>
 <li>
-<a href="#priority-queues">Priority Queues</a>
+<a href="#heaps">Heaps</a>
 <ol>
 <li>
 <a href="#heap-insertion">Heap Insertion</a>
@@ -134,6 +142,9 @@
 </li>
 <li>
 <a href="#heap-sort">Heap Sort</a>
+</li>
+<li>
+<a href="#median-maintenance">Median Maintenance</a>
 </li>
 </ol>
 </li>
@@ -158,6 +169,9 @@
 </li>
 <li>
 <a href="#bst-deletion">BST Deletion</a>
+</li>
+<li>
+<a href="#bst-select">BST Select</a>
 </li>
 </ol>
 </li>
@@ -195,16 +209,22 @@
 <a href="#hash-functions">Hash Functions</a>
 </li>
 <li>
+<a href="#pathological-data-sets">Pathological Data Sets</a>
+</li>
+<li>
+<a href="#load-factor">Load Factor</a>
+</li>
+<li>
 <a href="#separate-chaining">Separate Chaining</a>
+</li>
+<li>
+<a href="#double-hashing">Double Hashing</a>
 </li>
 <li>
 <a href="#linear-probing">Linear Probing</a>
 <ol>
 <li>
-<a href="#hash-table-deletion">Hash Table Deletion</a>
-</li>
-<li>
-<a href="#hash-table-load-factor">Hash Table Load Factor</a>
+<a href="#linear-probing-deletion">Linear Probing Deletion</a>
 </li>
 </ol>
 </li>
@@ -214,6 +234,9 @@
 </ol>
 </li>
 </ol>
+</li>
+<li>
+<a href="#bloom-filters">Bloom Filters</a>
 </li>
 <li>
 <a href="#graphs">Graphs</a>
@@ -430,6 +453,9 @@
 </ol>
 </li>
 <li>
+<a href="#greedy-algorithms">Greedy Algorithms</a>
+</li>
+<li>
 <a href="#context">Context</a>
 <ol>
 <li>
@@ -457,9 +483,6 @@
 </ol>
 </li>
 <li>
-<a href="#bitwise-operations">Bitwise Operations</a>
-</li>
-<li>
 <a href="#geometric-algorithms">Geometric Algorithms</a>
 <ol>
 <li>
@@ -482,12 +505,75 @@
 </li>
 </ol>
 </li>
+<li>
+<a href="#bitwise-operations">Bitwise Operations</a>
+</li>
+<li>
+<a href="#integers">Integers</a>
+</li>
+<li>
+<a href="#dynamic-programming">Dynamic Programming</a>
+<ol>
+<li>
+<a href="#maximum-weight-independent-set">Maximum-Weight Independent Set</a>
+</li>
+<li>
+<a href="#knapsack-problem">Knapsack Problem</a>
+</li>
+</ol>
+</li>
 </ol>
 </nav>
 <h1 id="analysis">
 <span class="hash">#</span>
 <a href="#analysis" class="header-link">Analysis</a>
-</h1>
+</h1><h2 id="master-theorem">
+<span class="hash">#</span>
+<a href="#master-theorem" class="header-link">Master Theorem</a>
+</h2>
+<p>The master theorem provides a straightforward, &quot;black-box&quot; way of determining the running time of a recursive, divide-and-conquer algorithm. It&#39;s stated as:</p>
+
+<p><script type="math/tex; mode=display"> T(n) = a T \left(\frac n b\right) + f\left(n^d\right) </script></p>
+
+<p>where:</p>
+
+<ul>
+<li><script type="math/tex">n</script> is the size of the problem</li>
+<li><script type="math/tex">a</script> is the number of recursive calls per level</li>
+<li><script type="math/tex">\frac n b</script> is the size of each subproblem</li>
+<li><script type="math/tex">f\left(n^d\right)</script> is the work done outside of the recursive calls, e.g. the merge in mergesort</li>
+</ul>
+
+<p>Then the run-time complexity of an algorithm can be determined based on the values of <script type="math/tex">a</script>, <script type="math/tex">b</script>, and <script type="math/tex">d</script>.</p>
+
+<ul>
+<li><p>when <script type="math/tex">a = b^d</script>, the complexity is <script type="math/tex">O\left(n^d \log n\right)</script></p>
+
+<p>The same amount of work <script type="math/tex">n^d</script> is being done at each level, of which there are <script type="math/tex">\log n</script>.</p>
+
+<p><img src="https://i.imgur.com/MPsr8vI.png" /></p></li>
+<li><p>when <script type="math/tex">a < b^d</script>, the complexity is <script type="math/tex">O\left(n^d\right)</script></p>
+
+<p>Most of the work is done at the root, as if only at a single level.</p>
+
+<p><img src="https://i.imgur.com/01nnPMf.png" /></p></li>
+<li><p>when <script type="math/tex">a > b^d</script>, the complexity is <script type="math/tex">O\left(n^{\log_b a}\right)</script></p>
+
+<p>It&#39;s equivalent to the number of leaves in the recursion tree, since most of the work is done at the bottom of the tree.</p>
+
+<p><img src="https://i.imgur.com/R2poF7S.png" /></p></li>
+</ul>
+
+<p>Essentially, the master theorem is a tug-of-war between:</p>
+
+<ul>
+<li><script type="math/tex">a</script>: the rate of subproblem proliferation</li>
+<li><script type="math/tex">b^d</script>: the rate of work shrinkage per subproblem</li>
+</ul>
+<h2 id="approximations">
+<span class="hash">#</span>
+<a href="#approximations" class="header-link">Approximations</a>
+</h2>
 <p>Oftentimes it&#39;s useful to use approximations instead of exact values.</p>
 
 <p>Stirling&#39;s approximation:</p>
@@ -914,17 +1000,17 @@
   <span class="n">sort</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">lt</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
   <span class="n">sort</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">gt</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span>
 <span class="o">}</span>
-</code></pre></figure><h2 id="priority-queues">
+</code></pre></figure><h2 id="heaps">
 <span class="hash">#</span>
-<a href="#priority-queues" class="header-link">Priority Queues</a>
+<a href="#heaps" class="header-link">Heaps</a>
 </h2>
 <p>A priority queue is an abstract data type that allows adding elements and retrieving the smallest or largest element. Priority queues are useful for an unbounded sequence for which we want to retrieve the <script type="math/tex">M</script> smallest elements at any given moment.</p>
 
-<p>The data structure commonly used to back a priority queue is an array, with the first element <code>seq[0]</code> unused, embedding the contents of a <strong>complete binary tree</strong> in level-order that maintains two invariants:</p>
+<p>The data structure commonly used to back a priority queue is an array embedding the contents of a <strong>complete binary tree</strong> in level-order that maintains two invariants:</p>
 
 <ol>
-<li>the parent of <script type="math/tex">k</script> is <script type="math/tex">k / 2</script></li>
-<li>the children of <script type="math/tex">k</script> are at <script type="math/tex">2k</script> and <script type="math/tex">2k + 1</script></li>
+<li>the parent of <script type="math/tex">k</script> is <script type="math/tex">\left\lfloor (k - 1)/2 \right\rfloor</script></li>
+<li>the children of <script type="math/tex">k</script> are at <script type="math/tex">2k + 1</script> and <script type="math/tex">2k + 2</script></li>
 </ol>
 <h3 id="heap-insertion">
 <span class="hash">#</span>
@@ -957,15 +1043,15 @@
 </ol>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">swim</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
-  <span class="c1">// go up tree as long as the parent k / 2 is</span>
+<code class="highlight language-java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">swim</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// go up tree as long as the parent `target / 2` is</span>
   <span class="c1">// smaller than the child</span>
-  <span class="k">while</span> <span class="o">(</span><span class="n">k</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">])</span> <span class="o">{</span>
+  <span class="k">while</span> <span class="o">(</span><span class="n">target</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">seq</span><span class="o">[(</span><span class="n">target</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">[</span><span class="n">target</span><span class="o">])</span> <span class="o">{</span>
     <span class="c1">// swap parent and child</span>
-    <span class="n">swap</span><span class="o">(</span><span class="n">seq</span><span class="o">[</span><span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="o">],</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">]);</span>
+    <span class="n">swap</span><span class="o">(</span><span class="n">seq</span><span class="o">[(</span><span class="n">target</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">],</span> <span class="n">seq</span><span class="o">[</span><span class="n">target</span><span class="o">]);</span>
 
     <span class="c1">// position is now that of previous parent</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="o">(</span><span class="n">target</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></figure><h3 id="heap-removal">
@@ -1000,24 +1086,27 @@
 </ol>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">sink</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">while</span> <span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">N</span><span class="o">)</span> <span class="o">{</span>
-    <span class="c1">// identify child of k</span>
-    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="o">;</span>
+<code class="highlight language-cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">Sink</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">vec</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">;</span>
+
+  <span class="k">while</span> <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">target</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// identify child of target</span>
+    <span class="kt">int</span> <span class="n">child</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">target</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
 
     <span class="c1">// choose right child if left child is smaller than right</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">])</span> <span class="n">j</span><span class="o">++;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">child</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">vec</span><span class="p">[</span><span class="n">child</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">vec</span><span class="p">[</span><span class="n">child</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="n">child</span><span class="o">++</span><span class="p">;</span>
 
     <span class="c1">// if the invariant holds, break</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span><span class="o">])</span> <span class="k">break</span><span class="o">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">vec</span><span class="p">[</span><span class="n">child</span><span class="p">])</span> <span class="k">break</span><span class="p">;</span>
 
     <span class="c1">// otherwise swap with the larger child</span>
-    <span class="n">swap</span><span class="o">(</span><span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">],</span> <span class="n">seq</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+    <span class="n">swap</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="n">child</span><span class="p">]);</span>
 
     <span class="c1">// position is now that of previously-larger child&#39;s</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="n">j</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">child</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></figure><h3 id="heap-sort">
 <span class="hash">#</span>
 <a href="#heap-sort" class="header-link">Heap Sort</a>
@@ -1047,7 +1136,7 @@
 
 <p>However, there are certain details involved to make it operate faster. Usually these operations are performed in place to avoid using extra space.</p>
 
-<p>First, the sequence has to be put into heap order, which is accomplished by walking up the tree (bottom-up) and sinking every root node with more than one child. The starting point for this is always <script type="math/tex">N / 2</script>, which is the last node with two children. It&#39;s important to note that &quot;sinking a node&quot; doesn&#39;t mean that the node will definitively be swapped.</p>
+<p>First, the sequence has to be put into heap order, which is accomplished by walking up the tree (bottom-up) and sinking every root node with more than one child. The starting point for this is always <script type="math/tex">(N - 1) / 2</script>, which is the last node with two children. It&#39;s important to note that &quot;sinking a node&quot; doesn&#39;t mean that the node will definitively be swapped.</p>
 
 <p>Assuming a maximum-oriented priority queue, the sorting is then accomplished by:</p>
 
@@ -1061,18 +1150,39 @@
 <p>Note that the notion of a logical heap size is important, as the sorted sequence is increasingly added to the end of the same array that backs the heap, so it&#39;s necessary to make a distinction between the two regions of the array, to prevent the heap sink or swim operations from corrupting the sorted region. This is accomplished in this code by using a hypothetical <code>sink</code> method that takes an upper bound parameter, which corresponds to the end of the heap region, i.e. the logical heap size.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">)</span> <span class="o">{</span>
-  <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+<code class="highlight language-cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">Sort</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">vec</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">;</span>
 
-  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span> <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">k</span><span class="o">--)</span>
-    <span class="n">sink</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">k</span><span class="o">,</span> <span class="n">N</span><span class="o">);</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
 
-  <span class="k">while</span> <span class="o">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">swap</span><span class="o">(</span><span class="n">seq</span><span class="o">[</span><span class="mi">1</span><span class="o">],</span> <span class="n">seq</span><span class="o">[</span><span class="n">N</span><span class="o">--]);</span>
-    <span class="n">sink</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="n">N</span><span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></figure><h2 id="selection">
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">kLastElement</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">kParentOfLastElement</span> <span class="o">=</span> <span class="p">(</span><span class="n">kLastElement</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="c1">// Arrange array into heap-order, starting from the last</span>
+  <span class="c1">// node with two children and climbing up from there.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">kParentOfLastElement</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">--</span><span class="p">)</span>
+    <span class="n">sink</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+
+  <span class="c1">// Move max to end of sorted region, which is to the right of</span>
+  <span class="c1">// the unsorted region. Then sink the root node to ensure</span>
+  <span class="c1">// heap order is preserved, but don&#39;t sink past the end of the</span>
+  <span class="c1">// unsorted region, as that would corrupt the sorted region.</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">swap</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="n">N</span><span class="o">--</span><span class="p">]);</span>
+    <span class="n">sink</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure><h3 id="median-maintenance">
+<span class="hash">#</span>
+<a href="#median-maintenance" class="header-link">Median Maintenance</a>
+</h3>
+<p>The median of a streaming sequence of numbers can be computed in constant time by maintaining two heaps: a max-heap for the lower/left half and a min-heap for the upper/right half. This has the effect of keeping the elements sorted, and the top of the max-heap yields one of the overall middle elements, whereas the top of the min-heap yields the other middle element.</p>
+
+<p>The elements must be kept equal in size, or the min-heap may be larger by one element, in which case there are an odd number of numbers, so the top of the min-heap is the middle element alone.</p>
+
+<p>If one of the heaps grows larger, its top element should be popped and pushed onto the other heap to balance them.</p>
+<h2 id="selection">
 <span class="hash">#</span>
 <a href="#selection" class="header-link">Selection</a>
 </h2>
@@ -1138,6 +1248,10 @@
 <p>This is the classical data structure consisting of a binary tree where each node has two children. The sub-tree to the left of each node consists of elements smaller than the node and the sub-tree to the right of each node consists of elements greater than the node.</p>
 
 <p>The performance of BSTs greatly depends on the shape of the tree, which is a result of the distribution and order of the elements that are input.</p>
+
+<p>The rank operation counts how many keys are less than or equal to the given value.</p>
+
+<p>The predecessor of any node can be obtained easily if it has a left child, in which case the predecessor of the node is the maximum of the subtree rooted at the left child. If there is no left child, the predecessor is the first ancestor larger than the node (in other words, the first parent found for which the child is the right child). The successor can be found similarly, flipping left⟷right and maximum⟷minimum.</p>
 <h3 id="bst-traversal">
 <span class="hash">#</span>
 <a href="#bst-traversal" class="header-link">BST Traversal</a>
@@ -1239,16 +1353,18 @@
 </h3>
 <p>Most operations such as insertion and lookup are very straightforward. Deletion is somewhat more involved.</p>
 
-<p>To delete node <script type="math/tex">z</script>:</p>
+<p>To delete node <script type="math/tex">k</script>:</p>
 
 <ol>
-<li><script type="math/tex">z</script> <strong>has no children</strong>: transplant it with a child, which is <script type="math/tex">nil</script></li>
-<li><script type="math/tex">z</script> <strong>has just one child</strong>: transplant it with the child</li>
-<li><script type="math/tex">z</script> <strong>has two children</strong>: find successor <script type="math/tex">y</script>, which must be in <script type="math/tex">z</script>&#39;s right subtree
+<li><script type="math/tex">k</script> <strong>has no children</strong>: remove it</li>
+<li><script type="math/tex">k</script> <strong>has just one child</strong>: swap it with child and delete it</li>
+<li><script type="math/tex">k</script> <strong>has two children</strong>:
 
 <ol>
-<li>if <script type="math/tex">y</script> is <script type="math/tex">z</script>&#39;s right child then transplant <script type="math/tex">z</script> by <script type="math/tex">y</script>, leaving <script type="math/tex">y</script>&#39;s right child alone</li>
-<li>else transplant <script type="math/tex">y</script> by its own right child, then transplant <script type="math/tex">z</script> by <script type="math/tex">y</script></li>
+<li>compute <script type="math/tex">k</script>&#39;s predecessor <script type="math/tex">l</script>, i.e. maximum of left subtree</li>
+<li>swap <script type="math/tex">k</script> and <script type="math/tex">l</script></li>
+<li>delete <script type="math/tex">k</script></li>
+<li>now <script type="math/tex">k</script> has no right child, recurse starting at 1</li>
 </ol></li>
 </ol>
 
@@ -1266,6 +1382,47 @@
   <span class="c1">// ignore this check in red-black trees</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
     <span class="n">v</span><span class="o">-&gt;</span><span class="n">p</span> <span class="o">=</span> <span class="n">u</span><span class="o">-&gt;</span><span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure><h3 id="bst-select">
+<span class="hash">#</span>
+<a href="#bst-select" class="header-link">BST Select</a>
+</h3>
+<p>The BST can be augmented so that each node contains the count of notes rooted at it, including itself. Then the count can be computed for node <script type="math/tex">x</script> base by adding the count of left child <script type="math/tex">y</script> and right child <script type="math/tex">z</script> plus one for <script type="math/tex">x</script>:</p>
+
+<p><script type="math/tex; mode=display">size(x) = size(y) + size(z) + 1</script></p>
+
+<p>It&#39;s important to keep this augmented information up-to-date with the operations on the tree, such as insertion or deletion, by traversing up the parents from the affected node to increment or decrement their counts.</p>
+
+<p>Selection of the <script type="math/tex">i^\text{th}</script> order statistic can be found easily by guiding the traversal of the tree with the augmented size information.</p>
+
+<ul>
+<li>the node in question is itself the ith order statistic, because <script type="math/tex">a = i - 1</script></li>
+<li>the <script type="math/tex">i^\text{th}</script> order is somewhere in the left subtree, recurse</li>
+<li>the <script type="math/tex">i^\text{th}</script> order is somewhere in the right subtree, recurse. Since the right
+subtree only knows about itself, shift <script type="math/tex">i</script> to discard the left subtree and the
+root node.</li>
+</ul>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">T</span> <span class="nf">Select</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">left_size</span> <span class="o">=</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">?</span> <span class="n">size</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="c1">// The current node is itself the ith order statistic</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">left_size</span> <span class="o">==</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">node</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// The ith order statistic is in the left subtree</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">left_size</span> <span class="o">&gt;=</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">Select</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// The ith order statistic is in the right subtree.</span>
+  <span class="c1">// The right subtree only knows about itself, so shift the ith order</span>
+  <span class="c1">// appropriately.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">left_size</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">Select</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">left_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></figure><h2 id="search-trees">
 <span class="hash">#</span>
@@ -1364,7 +1521,7 @@
 <li>a node is either <strong>red</strong> or <strong>black</strong></li>
 <li>root is <strong>black</strong></li>
 <li>all leaves---represented as nil---are <strong>black</strong></li>
-<li>both children of every red node are <strong>black</strong></li>
+<li>both children of every <strong>red</strong> node are <strong>black</strong>, i.e. there must not be more than one <strong>red</strong> node in a row in any vertical path</li>
 <li>every path from a given node to any of its descendant leaves contains the same number of <strong>black</strong> nodes</li>
 </ol>
 
@@ -1378,7 +1535,7 @@
 <p>There are three main scenarios that may arise from adding a node:</p>
 
 <ol>
-<li>first node added creates a <strong>red</strong> root, violating property <strong>2</strong> (root is <strong>black</strong>) </li>
+<li>first node added creates a <strong>red</strong> root, violating property <strong>2</strong> (root is <strong>black</strong>)</li>
 <li>node is added as child of <strong>black</strong> node, operation completes successfully</li>
 <li>consecutive <strong>red</strong> nodes, violating properties <strong>4</strong> (both children of <strong>red</strong> nodes are <strong>black</strong>) and <strong>5</strong> (equal number of <strong>black</strong> nodes per path)</li>
 </ol>
@@ -1405,11 +1562,13 @@
     <span class="n">insert_case3</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></figure>
-<p><strong>Third</strong>, it is possible that the inserted node creates two consecutive <strong>red</strong> nodes, violating property <strong>3</strong> (both children of <strong>red</strong> nodes are <strong>black</strong>). For this, there are three different scenarios:</p>
+<p><strong>Third</strong>, it is possible that the inserted node creates two consecutive <strong>red</strong> nodes, violating property <strong>5</strong> (equal number of <strong>black</strong> nodes per path). For this, there are three different scenarios:</p>
 
-<p>A.  parent and uncle are both red
-B.  direction in which new node and parent lean differ
-C.  new node and parent lean in the same direction</p>
+<ol type="a">
+ <li>parent and uncle are both red</li>
+ <li>direction in which new node and parent lean differ</li>
+ <li>new node and parent lean in the same direction</li>
+</ol>
 
 <p><strong>First</strong>, if the parent and its uncle are <strong>red</strong>, flip their colors and make the grandparent <strong>red</strong> instead. This allows the newly added <strong>red</strong> node to satisfy all properties, since its parent is <strong>black</strong>. However, making the grandparent <strong>red</strong> may possibly violate properties <strong>2</strong> (root is <strong>black</strong>) and <strong>4</strong> (both children of <strong>red</strong> nodes are <strong>black</strong>), so recurse the enforcement algorithm on the grandparent starting from case 1:</p>
 
@@ -1543,7 +1702,7 @@ C.  new node and parent lean in the same direction</p>
     <span class="k">if</span> <span class="p">(</span><span class="n">child</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">==</span> <span class="n">RED</span><span class="p">)</span>
       <span class="n">child</span><span class="o">-&gt;</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span><span class="p">;</span>
 </code></pre></figure>
-<p><strong>Third</strong>, the most complex case is when both <script type="math/tex">M</script> and <script type="math/tex">C</script> are <strong>black</strong>. Replacing one with the other effectively removes one black node along that path, unbalancing the tree. Begin by replacing <script type="math/tex">M</script> with its child <script type="math/tex">C</script>, then proceed to the first re-balancing case:</p>
+<p><strong>Third</strong>, the most complex case is when both <script type="math/tex">M</script> and <script type="math/tex">C</script> are <strong>black</strong>. Replacing one with the other effectively removes one <strong>black</strong> node along that path, unbalancing the tree. Begin by replacing <script type="math/tex">M</script> with its child <script type="math/tex">C</script>, then proceed to the first re-balancing case:</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-c">    <span class="k">else</span>
@@ -1651,6 +1810,16 @@ C.  new node and parent lean in the same direction</p>
 <a href="#hash-tables" class="header-link">Hash Tables</a>
 </h2>
 <p>Hash tables consist of an array coupled with a <em>hash function</em>---such as <a href="http://en.wikipedia.org/wiki/MurmurHash">MurmurHash</a> or <a href="http://en.wikipedia.org/wiki/CityHash">CityHash</a>---and a <em>collision resolution</em> scheme, both of which help map the key to an index within the array.</p>
+
+<p>Hash Tables can be used for de-duplication, as well as keeping track of what states have already been seen in search algorithms, especially for those applications where it&#39;s not feasible to store all of the nodes.</p>
+
+<p>In the 2-SUM problem, given an unsorted array of <script type="math/tex">n</script> integers and a target sum <script type="math/tex">t</script>, we need to find if there is a pair of integers that sum to <script type="math/tex">t</script>.</p>
+
+<p>The brute-force approach is to check all possible pairs in <script type="math/tex">O(n^2)</script> to see if they add up to the target <script type="math/tex">t</script>.</p>
+
+<p>Alternatively, we can sort the array in <script type="math/tex">O(n \log n)</script> and scan through the array, for each element <script type="math/tex">x</script> determine the required summand <script type="math/tex">r = t - x</script>, then look for <script type="math/tex">r</script> in the array using binary search <script type="math/tex">O(n \log n)</script>. If <script type="math/tex">r</script> is found, then there&#39;s a match, i.e. <script type="math/tex">x + r = t</script>.</p>
+
+<p>This can be improved further by using a hash table. Put each element of the array into a hash table, then for each element <script type="math/tex">x</script> in the array compute the required summand <script type="math/tex">r = t - x</script> and check if <script type="math/tex">r</script> is present in the hash table. If so, then there&#39;s a match.</p>
 <h3 id="hash-functions">
 <span class="hash">#</span>
 <a href="#hash-functions" class="header-link">Hash Functions</a>
@@ -1698,7 +1867,40 @@ C.  new node and parent lean in the same direction</p>
 <span class="kt">int</span> <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span> <span class="o">*</span> <span class="n">R</span> <span class="o">+</span> <span class="n">year</span><span class="o">;</span>
 
 <span class="kt">int</span> <span class="n">hash</span> <span class="o">=</span> <span class="o">((</span><span class="n">R</span> <span class="o">+</span> <span class="n">day</span><span class="o">)</span> <span class="o">*</span> <span class="n">R</span> <span class="o">+</span> <span class="n">month</span><span class="o">)</span> <span class="o">*</span> <span class="n">R</span> <span class="o">+</span> <span class="n">year</span><span class="o">;</span>
-</code></pre></figure><h3 id="separate-chaining">
+</code></pre></figure><h3 id="pathological-data-sets">
+<span class="hash">#</span>
+<a href="#pathological-data-sets" class="header-link">Pathological Data Sets</a>
+</h3>
+<p>It&#39;s possible to craft a pathological data set that can cause a denial of service attack on a hash table.</p>
+
+<p>One way to mitigate this is to use a cryptographic hash function, which also has pathological data sets but it&#39;s less feasible to discover them.</p>
+
+<p>Alternatively, design a family of hash functions and choose one randomly.</p>
+<h3 id="load-factor">
+<span class="hash">#</span>
+<a href="#load-factor" class="header-link">Load Factor</a>
+</h3>
+<p>The <em>load factor</em> is defined by <script type="math/tex">\alpha = N/M</script> where <script type="math/tex">\alpha</script> is the percentage of table entries that are occupied, <script type="math/tex">N</script> is the number of objects in the hash table, and <script type="math/tex">M</script> is the number of buckets in the hash table.</p>
+
+<p><script type="math/tex; mode=display">
+\text {load factor}\ \alpha =
+  \frac {\text {# of objects in hash table}}
+        {\text {# of buckets in hash table}}
+</script></p>
+
+<p>Note that a load factor is still relevant in an open addressing scheme, in which case each bucket can only hold one value.</p>
+
+<p>In linear probing, <script type="math/tex">\alpha</script> can never be 1 because if the table becomes full, a search miss would go into an infinite loop. Instead, array resizing is performed to ensure that the load factor is between <script type="math/tex">\frac {1} {8}</script> and <script type="math/tex">\frac {1} {2}</script>.</p>
+
+<p>The average number of compares, or <em>probes</em>, in a linear-probing hash table of size <script type="math/tex">M</script> and <script type="math/tex">N = \alpha M</script> keys is:</p>
+
+<p><script type="math/tex; mode=display">
+\text {hits: ~} \frac {1} {2} \left( 1 + \frac {1} {1 - \alpha} \right) \\
+\text {misses: ~} \frac {1} {2} \left( 1 + \frac {1} {\left( 1 - \alpha \right)^2} \right)
+</script></p>
+
+<p>Based on this, when <script type="math/tex">\alpha</script> is about 0.5 there will be 1.5 compares for a search hit and 2.5 compares for a search miss on average. For this reason, <script type="math/tex">\alpha</script> should be kept under 0.5 through the use of array resizing.</p>
+<h3 id="separate-chaining">
 <span class="hash">#</span>
 <a href="#separate-chaining" class="header-link">Separate Chaining</a>
 </h3>
@@ -1728,6 +1930,11 @@ C.  new node and parent lean in the same direction</p>
 </ol>
 
 <p>A property of separate chaining is that the average length of the lists is always <script type="math/tex">N/M</script> in a hash table with <script type="math/tex">M</script> lists and <script type="math/tex">N</script> keys.</p>
+<h3 id="double-hashing">
+<span class="hash">#</span>
+<a href="#double-hashing" class="header-link">Double Hashing</a>
+</h3>
+<p>Double hashing is a form of open addressing in which two hash functions are used. If the first hash function incurs a collision, then the result of the second hash function serves as an offset at which to try insertion. For example, if <script type="math/tex">h_1(x) = 17</script> caused a collision, and <script type="math/tex">h_2(x) = 23</script>, then it will try inserting at position <script type="math/tex">17 + 23 = 40</script>, then <script type="math/tex">40 + 23 = 63</script>, and so on.</p>
 <h3 id="linear-probing">
 <span class="hash">#</span>
 <a href="#linear-probing" class="header-link">Linear Probing</a>
@@ -1760,27 +1967,13 @@ C.  new node and parent lean in the same direction</p>
 <li>if the key is not equal, try the next entry and repeat until it can be inserted</li>
 </ol></li>
 </ol>
-<h4 id="hash-table-deletion">
+<h4 id="linear-probing-deletion">
 <span class="hash">#</span>
-<a href="#hash-table-deletion" class="header-link">Hash Table Deletion</a>
+<a href="#linear-probing-deletion" class="header-link">Linear Probing Deletion</a>
 </h4>
 <p>The insert and retrieval operations retrieve the index and perform the same operation until the entry is null. This has the consequence that deleting a node cannot <em>simply</em> entail setting the entry to null, or it would prematurely stop the lookup of other keys.</p>
 
 <p>As a result, after setting the entry to null, every key to the right of the removed key also has to be removed, i.e. set to null, and then re-inserted into the hash table using the regular insertion operation.</p>
-<h4 id="hash-table-load-factor">
-<span class="hash">#</span>
-<a href="#hash-table-load-factor" class="header-link">Hash Table Load Factor</a>
-</h4>
-<p>The <em>load factor</em> is defined by <script type="math/tex">\alpha = N/M</script> where <script type="math/tex">\alpha</script> is the percentage of table entries that are occupied, which can never be 1 since, if the table becomes full, a search miss would go into an infinite loop. Instead, array resizing is performed to ensure that the load factor is between <script type="math/tex">\frac {1} {8}</script> and <script type="math/tex">\frac {1} {2}</script>.</p>
-
-<p>The average number of compares, or <em>probes</em>, in a linear-probing hash table of size <script type="math/tex">M</script> and <script type="math/tex">N = \alpha M</script> keys is:</p>
-
-<p><script type="math/tex; mode=display">
-\text {hits: ~} \frac {1} {2} \left( 1 + \frac {1} {1 - \alpha} \right) \\
-\text {misses: ~} \frac {1} {2} \left( 1 + \frac {1} {\left( 1 - \alpha \right)^2} \right)
-</script></p>
-
-<p>Based on this, when <script type="math/tex">\alpha</script> is about 0.5 there will be 1.5 compares for a search hit and 2.5 compares for a search miss on average. For this reason, <script type="math/tex">\alpha</script> should be kept under 0.5 through the use of array resizing.</p>
 <h3 id="sparse-vectors">
 <span class="hash">#</span>
 <a href="#sparse-vectors" class="header-link">Sparse Vectors</a>
@@ -1788,6 +1981,39 @@ C.  new node and parent lean in the same direction</p>
 <p>An application of hash tables can be to implement sparse vectors for the purpose of performing matrix-vector multiplications. In certain situations, the row-vector from a matrix can have a very small amount of non-zero elements. If the matrix was stored in a naive array format it would amount to an immense waste of space and computation.</p>
 
 <p>Instead, sparse vectors are vectors backed by hash tables where the keys correspond to the index of a given element and the value corresponds to that element&#39;s value. This solution is used in Google&#39;s PageRank algorithm.</p>
+<h1 id="bloom-filters">
+<span class="hash">#</span>
+<a href="#bloom-filters" class="header-link">Bloom Filters</a>
+</h1>
+<p>Bloom filters are useful for remembering which values have been seen; they don&#39;t store the actual values or keys, so they use very little space. There are no deletions.</p>
+
+<p>Membership lookups can yield false-positives, but <em>not</em> false-negatives. So a bloom filter can answer if an element is <strong>possibly in the set</strong> or <strong>definitely not in the set</strong>.</p>
+
+<p>For example, a bloom filter could be used to back a spell-checker. All correctly spelled words are inserted into the bloom filter, then a word can be checked for correct spelling by checking if it&#39;s in the bloom filter. However, since there is a small possibility of a false-positive, it may incorrectly determine that the word is correctly spelled even if it&#39;s not.</p>
+
+<p>Bloom filters are often used in network routers for tasks such as keeping track of blocked IP addresses, the contents of a cache to avoid spurious lookups, and maintaining statistics to prevent denial of service attacks.</p>
+
+<p>Bloom filters consist of a bitset, where each entry uses <script type="math/tex">\frac n {|S|}</script> bits. The bloom filter has <script type="math/tex">k</script> hash functions.</p>
+
+<p>Insertion is accomplished by hashing the input with each of the <script type="math/tex">k</script> hash functions and turning on the bit at that position, regardless of whether that bit was already on.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">hash_function</span> <span class="p">:</span> <span class="n">hash_functions</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">bits</span> <span class="o">|=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">hash_function</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Lookup is accomplished by hashing the input with each hash function and checking if <em>all</em> of those positions is on.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">hash_function</span> <span class="p">:</span> <span class="n">hash_functions</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">bits</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">hash_function</span><span class="p">(</span><span class="n">x</span><span class="p">))))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</code></pre></figure>
+<p>Therefore the false-positives come about if other insertions set the same bits as those used by other elements.</p>
 <h1 id="graphs">
 <span class="hash">#</span>
 <a href="#graphs" class="header-link">Graphs</a>
@@ -1847,15 +2073,40 @@ C.  new node and parent lean in the same direction</p>
 <p>Depth-First Search (DFS) is a graph traversal algorithm that visits a vertex, marks that vertex as visited, then visits all unmarked adjacent vertices.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-cpp"><span class="kt">void</span> <span class="nf">dfs</span><span class="p">(</span><span class="k">const</span> <span class="n">Graph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">,</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">marked</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-  <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<code class="highlight language-cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Pre</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Post</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">DFS</span><span class="p">(</span><span class="n">Pre</span> <span class="n">pre</span><span class="p">,</span> <span class="n">Post</span> <span class="n">post</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">explored</span><span class="p">;</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">w</span> <span class="p">:</span> <span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">marked</span><span class="p">[</span><span class="n">w</span><span class="p">])</span> <span class="p">{</span>
-      <span class="n">edgeTo</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span> <span class="c1">// v connects to w, i.e. v-w</span>
-      <span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">edges_</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">edges_</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">T</span> <span class="o">&amp;</span><span class="n">node</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">explored</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">==</span> <span class="n">explored</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">DFS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">explored</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">post</span><span class="p">);</span>
     <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Pre</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Post</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">DFS</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">explored</span><span class="p">,</span> <span class="n">T</span> <span class="n">node</span><span class="p">,</span> <span class="n">Pre</span> <span class="n">pre</span><span class="p">,</span> <span class="n">Post</span> <span class="n">post</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">explored</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">edges_</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">==</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">edges_</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">neighbors</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+
+  <span class="n">pre</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">Edge</span> <span class="o">&amp;</span><span class="nl">neighbor</span> <span class="p">:</span> <span class="n">neighbors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">explored</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">(</span><span class="n">neighbor</span><span class="p">.</span><span class="n">to</span><span class="p">)</span> <span class="o">==</span> <span class="n">explored</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">this</span><span class="o">-&gt;</span><span class="n">DFS</span><span class="p">(</span><span class="n">explored</span><span class="p">,</span> <span class="n">neighbor</span><span class="p">.</span><span class="n">to</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">post</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">post</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>To trace the paths in the graph, an array can be kept of size <script type="math/tex">V</script> indexed by a given vertex whose value is the vertex that connects to it. This array of edges represents a tree rooted at the source vertex.</p>
@@ -1898,25 +2149,29 @@ C.  new node and parent lean in the same direction</p>
 <p>A run of DFS finds, and thus marks, every vertex in a connected component. Upon completing such a run, a counter variable signifying the connected componenet identifier is incremented and then it is called on the next unmarked vertex in the graph, i.e. a vertex not in a connected component found so far.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-cpp"><span class="kt">void</span> <span class="nf">findConnectedComponents</span><span class="p">(</span><span class="k">const</span> <span class="n">Graph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">id</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">());</span>
-  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">marked</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">());</span>
+<code class="highlight language-cpp"><span class="kt">void</span> <span class="nf">FindConnectedComponents</span><span class="p">(</span><span class="k">const</span> <span class="n">Graph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">components</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">explored</span><span class="p">;</span>
+
+  <span class="n">components</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">());</span>
+  <span class="n">explored</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">());</span>
+
   <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">G</span><span class="p">.</span><span class="n">V</span><span class="p">();</span> <span class="n">s</span><span class="o">++</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">marked</span><span class="p">[</span><span class="n">s</span><span class="p">])</span> <span class="p">{</span>
-      <span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">explored</span><span class="p">[</span><span class="n">s</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">explored</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+      <span class="n">DFS</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">explored</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">components</span><span class="p">);</span>
       <span class="n">count</span><span class="o">++</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="nf">dfs</span><span class="p">(</span><span class="k">const</span> <span class="n">Graph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">,</span> <span class="kt">int</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">marked</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-  <span class="n">id</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span> <span class="c1">// set connected component identifier</span>
+<span class="kt">void</span> <span class="nf">DFS</span><span class="p">(</span><span class="k">const</span> <span class="n">Graph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">,</span> <span class="kt">int</span> <span class="n">v</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">explored</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">components</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">(</span><span class="o">*</span><span class="n">components</span><span class="p">)[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span> <span class="c1">// set connected component identifier</span>
 
   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">w</span> <span class="p">:</span> <span class="n">G</span><span class="p">.</span><span class="n">adj</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">marked</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
-      <span class="n">dfs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">explored</span><span class="p">)[</span><span class="n">w</span><span class="p">])</span>
+      <span class="n">DFS</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">explored</span><span class="p">,</span> <span class="n">components</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></figure>
 <p>Compared to <a href="#dynamic-connectivity">Union-Find</a>, the DFS approach is theoretically faster because it provides a constant-time guarantee. However, in practice the difference is negligible and Union-Find tends to be faster because it doesn&#39;t have to build a full representation of a graph. Perhaps more importantly, the DFS approach has to preprocess the graph by running DFS on the separate connected components. As a result, Union-Find is an online algorithm where it can be queried even while new edges are added without having to re-preprocess the graph.</p>
@@ -2026,13 +2281,28 @@ C.  new node and parent lean in the same direction</p>
 </ul>
 
 <p>This ability of DFS follows from the fact that DFS covers each vertex exactly once when run on digraphs.</p>
-<h3 id="strong-connectivity">
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">TopologicalOrder</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">reverse_post_order</span><span class="p">;</span>
+  <span class="n">reverse_post_order</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">edges_</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+  <span class="k">this</span><span class="o">-&gt;</span><span class="n">DFS</span><span class="p">([](</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="p">)</span> <span class="p">{},</span>
+            <span class="p">[</span><span class="o">&amp;</span><span class="n">reverse_post_order</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">node</span><span class="p">)</span> <span class="p">{</span>
+              <span class="n">reverse_post_order</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+            <span class="p">});</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">reverse_post_order</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">reverse_post_order</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+  <span class="k">return</span> <span class="n">reverse_post_order</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure><h3 id="strong-connectivity">
 <span class="hash">#</span>
 <a href="#strong-connectivity" class="header-link">Strong Connectivity</a>
 </h3>
 <p>Two vertices <script type="math/tex">v</script> and <script type="math/tex">w</script> are <em>strongly connected</em> if they are mutually reachable, i.e. <script type="math/tex">v \leftrightarrow w</script>. Consequently, an entire digraph is <em>strongly connected</em> if <em>all</em> of its vertices are strongly connected to one another. Further, <em>strong components</em> are connected components of a graph that are strongly connected.</p>
 
-<p>The <a href="http://en.wikipedia.org/wiki/Kosaraju%27s_algorithm">Kosaraju-Sharir</a> algorithm is able to find strongly connected components in digraphs. The algorithm operates as follows:</p>
+<p>The <a href="http://en.wikipedia.org/wiki/Kosaraju%27s_algorithm">Kosaraju-Sharir</a> algorithm is able to find strongly connected components in digraphs in <script type="math/tex">O(m + n)</script>. The algorithm operates as follows:</p>
 
 <ol>
 <li>given digraph <script type="math/tex">G</script> and its reverse digraph <script type="math/tex">G^R</script>, compute the reverse postorder of <script type="math/tex">G^R</script></li>
@@ -2310,29 +2580,69 @@ C.  new node and parent lean in the same direction</p>
 <p>The act of adding an edge to the tree corresponds to adding a vertex to the tree. When this occurs, all edges from the newly added vertex to all vertices not in the tree must be added to the crossing edges priority queue. Furthermore, any edges previously in the priority queue that connected the newly added vertex to a vertex already in the tree become <em>ineligible</em>---otherwise they would create a cycle---and should be ignored or removed.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-java"><span class="kt">void</span> <span class="nf">prim</span><span class="o">(</span><span class="n">EdgeWeightedGraph</span> <span class="n">G</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">visit</span><span class="o">(</span><span class="n">G</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span> <span class="c1">// start at arbitrary vertex</span>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">prim</span><span class="p">(</span><span class="n">EdgeWeightedGraph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">explored</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">mst</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">Edge</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">greater</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;&gt;</span> <span class="n">frontier</span><span class="p">;</span>
 
-  <span class="k">while</span> <span class="o">(!</span><span class="n">pq</span><span class="o">.</span><span class="na">empty</span><span class="o">())</span> <span class="o">{</span>
-    <span class="n">Edge</span> <span class="n">e</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="na">delMin</span><span class="o">();</span> <span class="c1">// fetch lowest weight edge from frontier</span>
-    <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">either</span><span class="o">(),</span> <span class="n">w</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">other</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+  <span class="n">visit</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">explored</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">frontier</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 
-    <span class="k">if</span> <span class="o">(</span><span class="n">marked</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">marked</span><span class="o">[</span><span class="n">w</span><span class="o">])</span> <span class="k">continue</span><span class="o">;</span> <span class="c1">// skip ineligible edges</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">frontier</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">Edge</span> <span class="n">e</span> <span class="o">=</span> <span class="n">frontier</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+    <span class="n">frontier</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
 
-    <span class="n">mst</span><span class="o">.</span><span class="na">enqueue</span><span class="o">(</span><span class="n">e</span><span class="o">);</span> <span class="c1">// add edge to result</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">explored</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">)</span> <span class="o">!=</span> <span class="n">explored</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    <span class="c1">// visit either v or w</span>
-    <span class="k">if</span> <span class="o">(!</span><span class="n">marked</span><span class="o">[</span><span class="n">v</span><span class="o">])</span> <span class="n">visit</span><span class="o">(</span><span class="n">G</span><span class="o">,</span> <span class="n">v</span><span class="o">);</span>
-    <span class="k">if</span> <span class="o">(!</span><span class="n">marked</span><span class="o">[</span><span class="n">w</span><span class="o">])</span> <span class="n">visit</span><span class="o">(</span><span class="n">G</span><span class="o">,</span> <span class="n">w</span><span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+    <span class="n">mst</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+    <span class="n">visit</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">explored</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">frontier</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">);</span>
+  <span class="p">}</span>
 
-<span class="kt">void</span> <span class="nf">visit</span><span class="o">(</span><span class="n">EdgeWeightedGraph</span> <span class="n">G</span><span class="o">,</span> <span class="kt">int</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">marked</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+  <span class="k">return</span> <span class="n">mst</span><span class="p">;</span>
+<span class="p">}</span>
 
-  <span class="k">for</span> <span class="o">(</span><span class="n">Edge</span> <span class="n">e</span> <span class="o">:</span> <span class="n">G</span><span class="o">.</span><span class="na">adj</span><span class="o">(</span><span class="n">v</span><span class="o">))</span>
-    <span class="k">if</span> <span class="o">(!</span><span class="n">marked</span><span class="o">[</span><span class="n">e</span><span class="o">.</span><span class="na">other</span><span class="o">(</span><span class="n">v</span><span class="o">)])</span> <span class="n">pq</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
-<span class="o">}</span>
+<span class="kt">void</span> <span class="n">visit</span><span class="p">(</span><span class="n">EdgeWeightedGraph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">,</span>
+           <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">explored</span><span class="p">,</span>
+           <span class="n">std</span><span class="o">::</span><span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">Edge</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">greater</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="n">frontier</span><span class="p">,</span>
+           <span class="n">Node</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">explored</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">Edge</span> <span class="nl">e</span> <span class="p">:</span> <span class="n">G</span><span class="p">.</span><span class="n">adjacent</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">explored</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">)</span> <span class="o">==</span> <span class="n">explored</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">())</span>
+      <span class="n">frontier</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Instead of storing edges in the priority queue, it&#39;s faster to store vertices that have not been explored/spanned yet which are on the other end of edges crossing the cut. If a new vertex is visited which has incident edges which are shorter to reach a vertex <script type="math/tex">w</script> for which an edge-to already existed in the heap, that edge must be replaced with the new shorter edge. This way, the shortest edge is always at the top of the heap.</p>
+
+<p>This is very similar to what is done in Dijkstra&#39;s algorithm.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="kt">void</span> <span class="nf">visit</span><span class="p">(</span><span class="n">EdgeWeightedGraph</span> <span class="o">&amp;</span><span class="n">G</span><span class="p">,</span>
+           <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">explored</span><span class="p">,</span>
+           <span class="n">std</span><span class="o">::</span><span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">Edge</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">greater</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="n">frontier</span><span class="p">,</span>
+           <span class="n">Node</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">explored</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="n">Edge</span> <span class="nl">e</span> <span class="p">:</span> <span class="n">G</span><span class="p">.</span><span class="n">adjacent</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">explored</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">)</span> <span class="o">==</span> <span class="n">explored</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+      <span class="c1">// check if an edge to this adjacent node already exists</span>
+      <span class="kt">int</span> <span class="n">found</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">([</span><span class="o">&amp;</span><span class="n">e</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">edge</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">edge</span><span class="p">.</span><span class="n">to</span> <span class="o">==</span> <span class="n">e</span><span class="p">.</span><span class="n">to</span><span class="p">;</span>
+      <span class="p">});</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">found</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="n">Edge</span> <span class="n">old</span> <span class="o">=</span> <span class="n">frontier</span><span class="o">-&gt;</span><span class="k">delete</span><span class="p">(</span><span class="n">found</span><span class="p">);</span>
+
+      <span class="c1">// if so, we must ensure that shortest of the two edges is kept</span>
+      <span class="k">const</span> <span class="n">Edge</span> <span class="o">&amp;</span><span class="n">shortest</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">old</span><span class="p">);</span>
+
+      <span class="n">frontier</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">old</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></figure><h4 id="eager-prim39s-algorithm">
 <span class="hash">#</span>
 <a href="#eager-prim39s-algorithm" class="header-link">Eager Prim&#39;s Algorithm</a>
@@ -2505,6 +2815,65 @@ C.  new node and parent lean in the same direction</p>
 <p>Dijkstra&#39;s algorithm <em>requires</em> that edges be non-negative.</p>
 <figure class="codeblock">
 <pre>
+<code class="highlight language-cpp"><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">Dijkstra</span><span class="p">(</span><span class="n">T</span> <span class="n">start</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">distances</span><span class="p">{{</span><span class="n">start</span><span class="p">,</span> <span class="mi">0</span><span class="p">}};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">explored</span><span class="p">{</span><span class="n">start</span><span class="p">};</span>
+  <span class="n">Heap</span><span class="o">&lt;</span><span class="n">Edge</span><span class="o">&gt;</span> <span class="n">edges</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">edge</span> <span class="p">:</span> <span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Incident</span><span class="p">(</span><span class="n">start</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">edges</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">edge</span><span class="p">);</span>
+    <span class="n">log</span><span class="o">-&gt;</span><span class="n">trace</span><span class="p">(</span><span class="s">&quot;added incident edge to frontier: {}&quot;</span><span class="p">,</span> <span class="n">edge</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">edges</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">Edge</span> <span class="n">edge</span> <span class="o">=</span> <span class="n">edges</span><span class="p">.</span><span class="n">Top</span><span class="p">();</span>
+    <span class="n">edges</span><span class="p">.</span><span class="n">Pop</span><span class="p">();</span>
+
+    <span class="n">explored</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">edge</span><span class="p">.</span><span class="n">to</span><span class="p">);</span>
+
+    <span class="c1">// Record the distance to the target from this shortest edge.</span>
+    <span class="n">distances</span><span class="p">[</span><span class="n">edge</span><span class="p">.</span><span class="n">to</span><span class="p">]</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[</span><span class="n">edge</span><span class="p">.</span><span class="n">from</span><span class="p">]</span> <span class="o">+</span> <span class="n">edge</span><span class="p">.</span><span class="n">weight</span><span class="p">;</span>
+
+    <span class="c1">// After absorbing the new node, there may now be more more suitable edges</span>
+    <span class="c1">// that can be used to reach other nodes.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="nl">neighbor</span> <span class="p">:</span> <span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Incident</span><span class="p">(</span><span class="n">edge</span><span class="p">.</span><span class="n">to</span><span class="p">))</span> <span class="p">{</span>
+      <span class="c1">// See if there&#39;s an edge already in the heap which also goes to</span>
+      <span class="c1">// neighbor.to</span>
+      <span class="kt">int</span> <span class="n">found</span> <span class="o">=</span> <span class="n">edges</span><span class="p">.</span><span class="n">Find</span><span class="p">(</span>
+          <span class="p">[</span><span class="o">&amp;</span><span class="n">neighbor</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">e</span><span class="p">.</span><span class="n">to</span> <span class="o">==</span> <span class="n">neighbor</span><span class="p">.</span><span class="n">to</span><span class="p">;</span> <span class="p">});</span>
+
+      <span class="c1">// There wasn&#39;t any such edge, so this one simply goes into the heap.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">found</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">edges</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">neighbor</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="c1">// There was an edge in the heap already which also goes to neighbor.to</span>
+      <span class="c1">// This means that we must compare them to determine which is the</span>
+      <span class="c1">// shortest one, so that the one in the heap is the shortest one.</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Obtain the edge from the heap that also goes to neighbor.to</span>
+        <span class="n">Edge</span> <span class="n">old</span> <span class="o">=</span> <span class="n">edges</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="n">found</span><span class="p">);</span>
+
+        <span class="c1">// Remove it from the heap for now.</span>
+        <span class="n">edges</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="n">found</span><span class="p">);</span>
+
+        <span class="c1">// Determine if the pre-existing edge is shorter than the new edge</span>
+        <span class="c1">// `neighbor` which is incident to the edge we just explored.</span>
+        <span class="k">const</span> <span class="n">Edge</span> <span class="o">&amp;</span><span class="n">shortest</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span>
+            <span class="n">neighbor</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">distances</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">edge</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">,</span> <span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">o</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="n">distances</span><span class="p">[</span><span class="n">edge</span><span class="p">.</span><span class="n">to</span><span class="p">]</span> <span class="o">+</span> <span class="n">n</span><span class="p">.</span><span class="n">weight</span> <span class="o">&lt;</span> <span class="n">o</span><span class="p">.</span><span class="n">weight</span><span class="p">;</span>
+            <span class="p">});</span>
+
+        <span class="c1">// Insert the shorter of the two edges back into the heap.</span>
+        <span class="n">edges</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">shortest</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">distances</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
 <code class="highlight language-java"><span class="kt">void</span> <span class="nf">dijkstra</span><span class="o">(</span><span class="n">EdgeWeightedDigraph</span> <span class="n">G</span><span class="o">,</span> <span class="kt">int</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
   <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">G</span><span class="o">.</span><span class="na">V</span><span class="o">();</span> <span class="n">v</span><span class="o">++)</span>
     <span class="n">distTo</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">POSITIVE_INFINITY</span><span class="o">;</span>
@@ -2559,7 +2928,7 @@ C.  new node and parent lean in the same direction</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kt">void</span> <span class="nf">shortestPathAcyclic</span><span class="o">(</span><span class="n">EdgeWeightedDigraph</span> <span class="n">G</span><span class="o">,</span> <span class="kt">int</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">G</span><span class="o">.</span><span class="na">V</span><span class="o">();</span> <span class="n">v</span><span class="o">++)</span> 
+  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">G</span><span class="o">.</span><span class="na">V</span><span class="o">();</span> <span class="n">v</span><span class="o">++)</span>
     <span class="n">distTo</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">POSITIVE_INFINITY</span><span class="o">;</span>
   <span class="n">distTo</span><span class="o">[</span><span class="n">s</span><span class="o">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
 
@@ -3619,9 +3988,11 @@ A B C D E F
   <span class="k">return</span> <span class="n">pq</span><span class="o">.</span><span class="na">delMin</span><span class="o">();</span>
 <span class="o">}</span>
 </code></pre></figure>
+<p>Then label left branches with a 0 and right edges with a 1. The path of this bitstring to a leaf represents that leaf&#39;s Huffman code.</p>
+
 <p>The way in which the trie is constructed ensures that the more frequent characters (nodes) are closer to the root, and as a result are encoded with fewer bits.</p>
 
-<p>One thing to recognize is that the trie has to somehow be encoded in the compressed data so that it can then be decompressed. The trie can be encoded in a bitstream by performing pre-order traversal (root - left - right), and at each node:</p>
+<p>One thing to recognize is that the trie has to somehow be encoded in the compressed data so that it can then be decompressed. The trie can be encoded in a bitstream by performing pre-order traversal (root → left → right), and at each node:</p>
 
 <ul>
 <li>if the node is a leaf, output a <code>1</code> and then the binary representation of the character</li>
@@ -3633,6 +4004,8 @@ A B C D E F
 <p><em>Decompression</em> consists of simply traversing the trie as each bit is read. If a leaf is encountered, output the character and restart traversal from the root.</p>
 
 <p><em>Compression</em> requires the existence of a code table mapping each character to the appropriate code. This table is derived from the trie by traversing the trie, keeping track of the bitstring along its path, and when a leaf node is encountered, the bitstring is associated with that character in the code table. Compression then simply requires looking up each character from the data in the code table and outputting the appropriate code.</p>
+
+<p>Alternatively, left child edges are 0 and right child edges are 1.</p>
 <h3 id="lzw-compression">
 <span class="hash">#</span>
 <a href="#lzw-compression" class="header-link">LZW Compression</a>
@@ -3710,7 +4083,14 @@ A B C D E F
 
   <span class="n">BinaryStdOut</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 <span class="o">}</span>
-</code></pre></figure><h1 id="context">
+</code></pre></figure><h1 id="greedy-algorithms">
+<span class="hash">#</span>
+<a href="#greedy-algorithms" class="header-link">Greedy Algorithms</a>
+</h1>
+<p>Greedy algorithms are ones which make &quot;myopic&quot; decisions, i.e. they seemed like good decisions at the time and there&#39;s a hope that everything works out in the end.</p>
+
+<p>Dijkstra&#39;s shortest-path algorithm is greedy for example because it processes each destination once, it doesn&#39;t backtrack to find a different path.</p>
+<h1 id="context">
 <span class="hash">#</span>
 <a href="#context" class="header-link">Context</a>
 </h1>
@@ -3833,6 +4213,73 @@ A B C D E F
 <li><strong>graph coloring</strong>: color every vertex--edge in a graph such that no two adjacent vertices--edges have the same color</li>
 <li><strong>knapsack</strong>: given a set of items with different values and a container of a maximum capacity, find the combination of items that fits in the container and has the largest total value.</li>
 </ul>
+<h1 id="geometric-algorithms">
+<span class="hash">#</span>
+<a href="#geometric-algorithms" class="header-link">Geometric Algorithms</a>
+</h1><h2 id="augmented-bst-as-interval-tree">
+<span class="hash">#</span>
+<a href="#augmented-bst-as-interval-tree" class="header-link">Augmented BST as Interval Tree</a>
+</h2>
+<p>An interval search tree stores ranges and provides operations for searching for overlaps of a given range within the tree. A binary search tree can be augmented into an interval search tree. The lower bound of a range is used as the node key. Each node also stores the maximum upper bound of its children, similar to the rank.</p>
+
+<p>For searching, the input interval is checked to see if it overlaps with the current node. If not, and the left node is null, search proceeds on the right child. If the left node&#39;s max upper bound is less than the input interval&#39;s lower bound, search proceeds on the right node. Otherwise search proceeds on the left node.</p>
+
+<ol>
+<li>if input interval <script type="math/tex">[l, r]</script> overlaps current node, return</li>
+<li>if left node is <code>null</code> or left&#39;s max upper &lt; <script type="math/tex">l</script>: go right<br>
+else: go left</li>
+</ol>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">Node</span> <span class="n">current</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+
+<span class="k">while</span> <span class="o">(</span><span class="n">current</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">interval</span><span class="o">.</span><span class="na">overlaps</span><span class="o">(</span><span class="n">lo</span><span class="o">,</span> <span class="n">hi</span><span class="o">))</span> <span class="k">return</span> <span class="n">current</span><span class="o">.</span><span class="na">interval</span><span class="o">;</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>         <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">.</span><span class="na">max</span> <span class="o">&lt;</span> <span class="n">lo</span><span class="o">)</span>        <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+  <span class="k">else</span>                                   <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</code></pre></figure><h2 id="interval-trees">
+<span class="hash">#</span>
+<a href="#interval-trees" class="header-link">Interval Trees</a>
+</h2>
+<p>Interval trees are useful for efficiently finding all intervals that overlap with any given interval or point.</p>
+
+<p>To construct the tree, the median of the entire range of all of the set of ranges is found. Those ranges in the set that are intersected by the median are stored in the current node. Ranges that fall completely to the left of the median are stored in the left child node, and vice versa with the right node.</p>
+
+<p>At any given node representing the set of ranges intersected by the median at that node, two sorted lists are maintained: one containing all beginning points and the other containing all end points.</p>
+<h2 id="intersection-queries">
+<span class="hash">#</span>
+<a href="#intersection-queries" class="header-link">Intersection Queries</a>
+</h2>
+<p>The general operation for queries is to test the set of ranges in a node and then test those in the appropriate child node if the query isn&#39;t equal to the median.</p>
+
+<p>Given a <em>point</em> query, the current node is compared with the median. If it&#39;s equal, then every range in that node matches and the search is complete. If the query is less than the median, then the list of beginning points is searched for those beginning points that start before the query point, all of which are matches. Then the search continues into the left child.</p>
+
+<p>Given an <em>interval query</em>, the set of beginning and end points are searched to see if they fall within the query interval. These ranges are matches, and they have potential for duplicates if the matched interval begins and ends within the query interval. Finally, to match for ranges which possibly contain the query interval, a point is chosen in the query interval, perhaps the begin or end point, and that point is used as a point query as in the aforementioned point query algorithm.</p>
+<h2 id="one-dimensional-range-count">
+<span class="hash">#</span>
+<a href="#one-dimensional-range-count" class="header-link">One-Dimensional Range Count</a>
+</h2>
+<p>This can be modeled as a BST where each node maintains a <em>rank</em>: the count of children that are strictly less than the node. It&#39;s possible to determine how many keys fall within a given range by subtracting the rank of the node containing the lower bound from the rank of the node containing the higher bound, adding one if the current node is the higher bound.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">(</span><span class="n">Key</span> <span class="n">lo</span><span class="o">,</span> <span class="n">Key</span> <span class="n">hi</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">contains</span><span class="o">(</span><span class="n">hi</span><span class="o">))</span> <span class="k">return</span> <span class="n">rank</span><span class="o">(</span><span class="n">hi</span><span class="o">)</span> <span class="o">-</span> <span class="n">rank</span><span class="o">(</span><span class="n">lo</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+  <span class="k">else</span>              <span class="k">return</span> <span class="n">rank</span><span class="o">(</span><span class="n">hi</span><span class="o">)</span> <span class="o">-</span> <span class="n">rank</span><span class="o">(</span><span class="n">lo</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></figure><h2 id="line-segment-intersection">
+<span class="hash">#</span>
+<a href="#line-segment-intersection" class="header-link">Line Segment Intersection</a>
+</h2>
+<p>Given a collection of line segments, it&#39;s possible to determine which pairs of line segments intersect by using a <em>sweep-line</em> algorithm. The coordinates could be sorted by x-coordinate or added to a priority queue. For each distinct x-coordinate encountered, its accompanying y-coordinate is added to a BST. If the same x-coordinate is encountered again, its accompanying y-coordinate is removed from the BST. If a vertical segment is encountered, a range search is performed on the BST to see if any y-coordinates fall within the vertical segment&#39;s y-coordinate endpoints.</p>
+<h2 id="rectangle-intersection">
+<span class="hash">#</span>
+<a href="#rectangle-intersection" class="header-link">Rectangle Intersection</a>
+</h2>
+<p>Checking for rectangle intersection is similar to line segment intersection. The left edge of a rectangle prompts the vertical range of the rectangle is checked for overlaps in an interval search tree, and added if none are detected. The rectangle&#39;s vertical range is removed from the interval search tree when the right edge of the rectangle is encountered.</p>
 <h1 id="bitwise-operations">
 <span class="hash">#</span>
 <a href="#bitwise-operations" class="header-link">Bitwise Operations</a>
@@ -3919,74 +4366,151 @@ A B C D E F
 
   <span class="k">return</span> <span class="n">ones</span><span class="o">;</span>
 <span class="o">}</span>
-</code></pre></figure><h1 id="geometric-algorithms">
+</code></pre></figure><h1 id="integers">
 <span class="hash">#</span>
-<a href="#geometric-algorithms" class="header-link">Geometric Algorithms</a>
-</h1><h2 id="augmented-bst-as-interval-tree">
-<span class="hash">#</span>
-<a href="#augmented-bst-as-interval-tree" class="header-link">Augmented BST as Interval Tree</a>
-</h2>
-<p>An interval search tree stores ranges and provides operations for searching for overlaps of a given range within the tree. A binary search tree can be augmented into an interval search tree. The lower bound of a range is used as the node key. Each node also stores the maximum upper bound of its children, similar to the rank.</p>
+<a href="#integers" class="header-link">Integers</a>
+</h1>
+<p>It&#39;s possible to &quot;shift&quot; a number to the left by <script type="math/tex">n</script> digits by multiplying it with <script type="math/tex">\text {base}^\text {digits}</script>. For example, the number <script type="math/tex">321</script> can be shifted to the left by 2 digits to <script type="math/tex">32100</script> by multiplying it by <script type="math/tex">10^2</script>.</p>
 
-<p>For searching, the input interval is checked to see if it overlaps with the current node. If not, and the left node is null, search proceeds on the right child. If the left node&#39;s max upper bound is less than the input interval&#39;s lower bound, search proceeds on the right node. Otherwise search proceeds on the left node.</p>
+<p><script type="math/tex; mode=display">\text {shifted left by n} = x * \text {base}^\text {digits}</script></p>
+
+<p>Similarly, it&#39;s possible to get the last <script type="math/tex">n</script> digits of a number by getting the remainder of dividing it by <script type="math/tex">\text {base}^\text {digits}</script>. For example, the last 2 digits of <script type="math/tex">321</script> can be obtained by getting the remainder of dividing it (i.e. the modulo) by <script type="math/tex">10^2</script>.</p>
+
+<p><script type="math/tex; mode=display">\text {right-most n digits} = x \bmod \text {base}^\text {digits}</script></p>
+<h1 id="dynamic-programming">
+<span class="hash">#</span>
+<a href="#dynamic-programming" class="header-link">Dynamic Programming</a>
+</h1>
+<p>It&#39;s important to reason about the structure of an optimal solution, in terms of optimal solutions of smaller subproblems. In other words, imagine that optimal solutions to two subproblems were already provided.</p>
+
+<p>First it&#39;s important to identify a suitable <em>small</em> collection of subproblems.</p>
+
+<p>Second it&#39;s important to quickly and correctly solve &quot;larger&quot; subproblems given solutions to &quot;smaller&quot; subproblems.</p>
+
+<p>Third it&#39;s important to compute the final solution after solving all subproblems.</p>
+<h2 id="maximum-weight-independent-set">
+<span class="hash">#</span>
+<a href="#maximum-weight-independent-set" class="header-link">Maximum-Weight Independent Set</a>
+</h2>
+<p>Example problem: given a path graph <script type="math/tex">G = (V, E)</script> with non-negative weights on the vertices, produce a subset of the graph&#39;s vertices so that <strong>no two vertices are adjacent</strong> and that the subset has the <strong>maximum total weight</strong> of every such subset.</p>
+
+<p><img src="http://i.imgur.com/kQkyCTD.png" class="center" /></p>
+
+<p>A brute-force search would be exponential in the number of vertices.</p>
+
+<p>A greedy approach would be to iteratively choose the maximum-weight vertex that is not adjacent to any previously chosen vertex. However, this wouldn&#39;t give the correct answer (consider above it would choose the first and third vertices, although the second and fourth is the answer).</p>
+
+<p>A divide-and-conquer approach would be problematic when attempting to combine the results of subproblems.</p>
+
+<p>Let <script type="math/tex">S \subseteq V</script> be a max-weight independent set (IS). Let <script type="math/tex">v_n</script> be the last/right-most/final vertex of the path. Either <script type="math/tex">v_n</script> is in <script type="math/tex">S</script> or it isn&#39;t.</p>
+
+<p>Suppose <script type="math/tex">v_n \not\in S</script> and let <script type="math/tex">G'</script> be the graph with <script type="math/tex">v_n</script> deleted off of the end (since <script type="math/tex">v_n</script> is the last vertex on the path). Then <script type="math/tex">S</script> is also an independent set of <script type="math/tex">G'</script>, specifically a max-weight independent set.</p>
+
+<p>Suppose <script type="math/tex">v_n \in S</script>, then the penultimate vertex <script type="math/tex">v_{n - 1} \not\in S</script>, since it is adjacent to <script type="math/tex">v_n</script>. Then let <script type="math/tex">G''</script> be the graph with <script type="math/tex">v_{n - 1}</script> and <script type="math/tex">v_n</script> deleted.</p>
+
+<p><img src="http://i.imgur.com/J0oxqD1.png" class="center" /></p>
+
+<p>Unlike the earlier claim that if <script type="math/tex">v_n \not\in S</script> then <script type="math/tex">S</script> is also an independent set of <script type="math/tex">G'</script>, it&#39;s not true that if <script type="math/tex">v_{n - 1} \not\in S</script> then <script type="math/tex">S</script> is also an independent set of <script type="math/tex">G''</script>, because the <script type="math/tex">v_n \in S</script> but <script type="math/tex">v_n \not\in G''</script>.</p>
+
+<p>However <script type="math/tex">S - \{v_n\}</script> is an independent set of <script type="math/tex">G''</script>, specifically a max-weight independent set.</p>
+
+<p>This means that if we knew whether or not <script type="math/tex">v_n</script> was in the max-weight independent set, we could recursively compute the max-weight independent set of <script type="math/tex">G'</script> or <script type="math/tex">G''</script>. We can try both possibilities and return the better solution.</p>
+
+<p>Essentially, recursively compute <script type="math/tex">S_1</script> as the max-weight independent set of <script type="math/tex">G'</script> as well as <script type="math/tex">S_2</script> as the max-weight independent set of <script type="math/tex">G''</script>. Then return max of <script type="math/tex">S_1</script> or <script type="math/tex">S_2 \cup v_n</script>.</p>
+
+<p>However, this would take exponential time because very little work is done before recursing.</p>
+
+<p>A realization is that there is only a linear number of distinct subproblems, one for each prefix of the graph since the recursion only plucks vertices off from the right. This causes repeated work for the same prefixes.</p>
+
+<p>This can be mitigated by caching the solution to the subproblem in a global table for subsequent <script type="math/tex">O(1)</script>-time lookup, i.e. <em>memoization</em>, where there is an array of solutions to subproblems where index <script type="math/tex">i</script> holds the solution to the <script type="math/tex">i^\text{th}</script> subproblem.</p>
+
+<p>This is more straightforward if it&#39;s reformulated as a bottom-up iterative algorithm.</p>
+
+<p>Let <script type="math/tex">G_i</script> be the first <script type="math/tex">i</script> vertices of <script type="math/tex">G</script>. Then populate an array <code>A</code> from left-to-right with <code>A[i]</code> set to the value of the max-weight independent set of <script type="math/tex">G_i</script>. Naturally <code>A[0]</code> is an empty set so it&#39;s set to weight 0, and <code>A[1]</code> is a single-vertex graph so it&#39;s set to the weight of the first vertex.</p>
+
+<p>After adding another vertex, determine the max-weight independent set for this new <script type="math/tex">G</script>. This will be the maximum of either <script type="math/tex">A[i - 1]</script> or <script type="math/tex">A[i - 1] + w_i</script>. If it&#39;s <script type="math/tex">A[i - 1]</script> then it means that the max-weight independent set is of <script type="math/tex">G_{i - 1}</script>. If it&#39;s <script type="math/tex">A[i - 2] + w_i</script> then it means that the max-weight independent set is of <script type="math/tex">G_{i - 2}</script>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">for</span> <span class="n">i</span> <span class="n">from</span> <span class="mi">2</span> <span class="n">to</span> <span class="n">and</span> <span class="n">including</span> <span class="nl">n</span><span class="p">:</span>
+  <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">w_i</span><span class="p">)</span>
+</code></pre></figure>
+<p>One problem is that this only produces a total weight, but not the actual set of vertices. This can be reconstructed from the completed array by walking backwards from right-to-left starting at the last element, since that was the answer/result.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">let</span> <span class="n">S</span> <span class="o">=</span> <span class="err">∅</span>
+
+<span class="k">while</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">:</span>
+  <span class="c1">// case 1 wins: skip v_i and go back to the chosen vertex v_{i - 1}</span>
+  <span class="k">if</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="nl">w_i</span><span class="p">:</span>
+    <span class="o">--</span><span class="n">i</span>
+
+  <span class="c1">// case 2 wins: v_i was indeed used, add it to S and go back to v_{i - 2}</span>
+  <span class="k">else</span><span class="o">:</span>
+    <span class="n">S</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">v_i</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">-=</span> <span class="mi">2</span>
+
+<span class="k">return</span> <span class="n">S</span>
+</code></pre></figure><h2 id="knapsack-problem">
+<span class="hash">#</span>
+<a href="#knapsack-problem" class="header-link">Knapsack Problem</a>
+</h2>
+<p>There are <script type="math/tex">n</script> items and each has a value:</p>
+
+<ul>
+<li>value <script type="math/tex">v_i</script> (non-negative)</li>
+<li>size <script type="math/tex">w_i</script> (non-negative and integral)</li>
+<li>capacity <script type="math/tex">W</script> (non-negative and integral)</li>
+</ul>
+
+<p>The output should be a subset <script type="math/tex">S \subset \{1, 2, 3, \ldots, n\}</script> that maximizes the sum of the values that are selected <script type="math/tex">\sum_{i \in S} v_i</script> while preventing the sum of the weights from exceeding the capacity <script type="math/tex">\sum_{i \in S} w_i \le W</script>.</p>
+
+<p>This is useful for whenever we have a budget of a resource that we can use and we want to use it in the smartest way possible.</p>
+
+<p>First we&#39;ll formulate a recurrence---an optimal solution as a function of solutions to smaller subproblems---based on the structure of an optimal solution.</p>
+
+<p>Let <script type="math/tex">S</script> be the max-value solution to an instance of knapsack, and let <script type="math/tex">n</script> be the final selected item.</p>
+
+<p>Suppose <script type="math/tex">n \not\in S</script>, then <script type="math/tex">S</script> must be optimal with the first <script type="math/tex">(n - 1)</script> items.</p>
+
+<p>Suppose <script type="math/tex">n \in S</script>, then <script type="math/tex">S - \{n\}</script> must be an optimal solution with respect to the first <script type="math/tex">(n - 1)</script> items with capacity <script type="math/tex">W - w_n</script>.</p>
+
+<p>The solution <script type="math/tex">V_{i,x}</script> is the value of the best solution that:</p>
 
 <ol>
-<li>if input interval <script type="math/tex">[l, r]</script> overlaps current node, return</li>
-<li>if left node is <code>null</code> or left&#39;s max upper &lt; <script type="math/tex">l</script>: go right<br>
-else: go left</li>
+<li>uses only the first <script type="math/tex">i</script> items</li>
+<li>has total capacity <script type="math/tex">\le x</script></li>
 </ol>
+
+<p>Therefore:</p>
+
+<p><script type="math/tex; mode=display">
+V_{i,x} = \max
+\begin{cases}
+V_{(i - 1), x} & \text {case 1, item i excluded} \\
+v_i + V_{(i - 1), x - w_i} & \text {case 2, item i included}
+\end{cases}
+</script></p>
+
+<p>However, an edge case exists in that if <script type="math/tex">w_i > x</script>, then we must use case 1.</p>
+
+<p>Now given the above recurrence, the <script type="math/tex">O(nW)</script> algorithm can be implemented.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-java"><span class="n">Node</span> <span class="n">current</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+<code class="highlight language-cpp"><span class="n">A</span> <span class="o">=</span> <span class="mi">2</span><span class="n">D</span><span class="o">-</span><span class="n">array</span><span class="p">.</span> <span class="n">first</span> <span class="n">dimension</span> <span class="n">is</span> <span class="n">item</span> <span class="n">count</span><span class="p">,</span> <span class="n">second</span> <span class="n">is</span> <span class="n">capacity</span>
 
-<span class="k">while</span> <span class="o">(</span><span class="n">current</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">interval</span><span class="o">.</span><span class="na">overlaps</span><span class="o">(</span><span class="n">lo</span><span class="o">,</span> <span class="n">hi</span><span class="o">))</span> <span class="k">return</span> <span class="n">current</span><span class="o">.</span><span class="na">interval</span><span class="o">;</span>
-  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>         <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
-  <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">.</span><span class="na">max</span> <span class="o">&lt;</span> <span class="n">lo</span><span class="o">)</span>        <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
-  <span class="k">else</span>                                   <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
-<span class="o">}</span>
+<span class="c1">// if no items are used selected, the weight is 0 regardless</span>
+<span class="c1">// of total capacity</span>
+<span class="n">Set</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">...,</span> <span class="n">W</span>
 
-<span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-</code></pre></figure><h2 id="interval-trees">
-<span class="hash">#</span>
-<a href="#interval-trees" class="header-link">Interval Trees</a>
-</h2>
-<p>Interval trees are useful for efficiently finding all intervals that overlap with any given interval or point.</p>
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">...,</span> <span class="nl">n</span><span class="p">:</span>
+  <span class="k">for</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">...,</span> <span class="nl">w</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">w_i</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">)</span><span class="o">:</span>
+      <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+    <span class="k">else</span><span class="o">:</span>
+      <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">w_i</span><span class="p">]</span> <span class="o">+</span> <span class="n">v_i</span><span class="p">)</span>
 
-<p>To construct the tree, the median of the entire range of all of the set of ranges is found. Those ranges in the set that are intersected by the median are stored in the current node. Ranges that fall completely to the left of the median are stored in the left child node, and vice versa with the right node.</p>
-
-<p>At any given node representing the set of ranges intersected by the median at that node, two sorted lists are maintained: one containing all beginning points and the other containing all end points.</p>
-<h2 id="intersection-queries">
-<span class="hash">#</span>
-<a href="#intersection-queries" class="header-link">Intersection Queries</a>
-</h2>
-<p>The general operation for queries is to test the set of ranges in a node and then test those in the appropriate child node if the query isn&#39;t equal to the median.</p>
-
-<p>Given a <em>point</em> query, the current node is compared with the median. If it&#39;s equal, then every range in that node matches and the search is complete. If the query is less than the median, then the list of beginning points is searched for those beginning points that start before the query point, all of which are matches. Then the search continues into the left child.</p>
-
-<p>Given an <em>interval query</em>, the set of beginning and end points are searched to see if they fall within the query interval. These ranges are matches, and they have potential for duplicates if the matched interval begins and ends within the query interval. Finally, to match for ranges which possibly contain the query interval, a point is chosen in the query interval, perhaps the begin or end point, and that point is used as a point query as in the aforementioned point query algorithm.</p>
-<h2 id="one-dimensional-range-count">
-<span class="hash">#</span>
-<a href="#one-dimensional-range-count" class="header-link">One-Dimensional Range Count</a>
-</h2>
-<p>This can be modeled as a BST where each node maintains a <em>rank</em>: the count of children that are strictly less than the node. It&#39;s possible to determine how many keys fall within a given range by subtracting the rank of the node containing the lower bound from the rank of the node containing the higher bound, adding one if the current node is the higher bound.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-java"><span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">(</span><span class="n">Key</span> <span class="n">lo</span><span class="o">,</span> <span class="n">Key</span> <span class="n">hi</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">contains</span><span class="o">(</span><span class="n">hi</span><span class="o">))</span> <span class="k">return</span> <span class="n">rank</span><span class="o">(</span><span class="n">hi</span><span class="o">)</span> <span class="o">-</span> <span class="n">rank</span><span class="o">(</span><span class="n">lo</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
-  <span class="k">else</span>              <span class="k">return</span> <span class="n">rank</span><span class="o">(</span><span class="n">hi</span><span class="o">)</span> <span class="o">-</span> <span class="n">rank</span><span class="o">(</span><span class="n">lo</span><span class="o">);</span>
-<span class="o">}</span>
-</code></pre></figure><h2 id="line-segment-intersection">
-<span class="hash">#</span>
-<a href="#line-segment-intersection" class="header-link">Line Segment Intersection</a>
-</h2>
-<p>Given a collection of line segments, it&#39;s possible to determine which pairs of line segments intersect by using a <em>sweep-line</em> algorithm. The coordinates could be sorted by x-coordinate or added to a priority queue. For each distinct x-coordinate encountered, its accompanying y-coordinate is added to a BST. If the same x-coordinate is encountered again, its accompanying y-coordinate is removed from the BST. If a vertical segment is encountered, a range search is performed on the BST to see if any y-coordinates fall within the vertical segment&#39;s y-coordinate endpoints.</p>
-<h2 id="rectangle-intersection">
-<span class="hash">#</span>
-<a href="#rectangle-intersection" class="header-link">Rectangle Intersection</a>
-</h2>
-<p>Checking for rectangle intersection is similar to line segment intersection. The left edge of a rectangle prompts the vertical range of the rectangle is checked for overlaps in an interval search tree, and added if none are detected. The rectangle&#39;s vertical range is removed from the interval search tree when the right edge of the rectangle is encountered.</p>
-
+<span class="k">return</span> <span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">W</span><span class="p">]</span>
+</code></pre></figure>
 <div class="footnotes">
 <hr>
 <ol>
@@ -4017,14 +4541,8 @@ else: go left</li>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> July 15, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/algorithms.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
-
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/algorithms.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/34395b0" title="bump
+">34395b0</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
