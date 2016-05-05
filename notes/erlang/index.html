@@ -115,8 +115,8 @@
 <p>This can be compiled from the shell with the <code>c(modulename)</code> command. However, it&#39;s more likely to be compiled with the Erlang compiler <code>erlc</code>, which produces a <code>beam</code> file. It&#39;s possible to then run the program can then be run on the Erlang virtual machine with the <code>erl</code> command, which uses <code>-s</code> to specify the functions to evaluate, in order.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>erlc hello.erl
-<span class="nv">$ </span>erl -noshell -s hello start -s init stop
+<code class="highlight language-console"><span class="gp">$</span> erlc hello.erl
+<span class="gp">$</span> erl -noshell -s hello start -s init stop
 </code></pre></figure>
 <p>The following describes a file server. It defines a convenience function <code>start</code> which spawns a process that forever performs the <code>loop</code> function inside a particular directory, which simply waits for a message to be received and processes it. Notice that <code>loop</code> performs a tail-recursive call; Erlang has tail-call optimization, so there&#39;s no need to worry about overflowing the stack.</p>
 
@@ -213,14 +213,10 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 26, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/erlang.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/erlang.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/feee1ca" title="use console instead of bash for shell sessions
 
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+There's also shell-session but I think console suffices.
+">feee1ca</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>

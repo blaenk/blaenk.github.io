@@ -407,7 +407,7 @@
 <figure class="codeblock">
 <pre>
 <code class="highlight language-html"><span class="c">&lt;!-- preview push --&gt;</span>
-<span class="nt">&lt;script </span><span class="na">async=</span><span class="s">&quot;true&quot;</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">async</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span><span class="p">&gt;</span>
   <span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span> <span class="p">(){</span>
     <span class="kd">var</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://localhost:9160/$path$&#39;</span><span class="p">);</span>
     <span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
@@ -419,7 +419,7 @@
       <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">.</span><span class="nx">Queue</span><span class="p">([</span><span class="s2">&quot;Typeset&quot;</span><span class="p">,</span> <span class="nx">MathJax</span><span class="p">.</span><span class="nx">Hub</span><span class="p">,</span> <span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]]);</span>
     <span class="p">};</span>
   <span class="p">});</span>
-<span class="nt">&lt;/script&gt;</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 </code></pre></figure><h1 id="conclusion">
 <span class="hash">#</span>
 <a href="#conclusion" class="header-link">Conclusion</a>

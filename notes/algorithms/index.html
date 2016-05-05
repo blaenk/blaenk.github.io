@@ -82,8 +82,45 @@
 <nav id="toc">
 <h3>Contents</h3><ol>
 <li>
+<a href="#approaches">Approaches</a>
+<ol>
+<li>
+<a href="#strategies">Strategies</a>
+</li>
+<li>
+<a href="#modeling">Modeling</a>
+</li>
+<li>
+<a href="#techniques">Techniques</a>
+</li>
+<li>
+<a href="#intractability">Intractability</a>
+</li>
+</ol>
+</li>
+<li>
 <a href="#analysis">Analysis</a>
 <ol>
+<li>
+<a href="#summations">Summations</a>
+</li>
+<li>
+<a href="#logarithms">Logarithms</a>
+</li>
+<li>
+<a href="#bounds">Bounds</a>
+</li>
+<li>
+<a href="#dominance-relations">Dominance Relations</a>
+<ol>
+<li>
+<a href="#sum-of-bounds">Sum of Bounds</a>
+</li>
+<li>
+<a href="#product-of-bounds">Product of Bounds</a>
+</li>
+</ol>
+</li>
 <li>
 <a href="#master-theorem">Master Theorem</a>
 </li>
@@ -91,6 +128,23 @@
 <a href="#approximations">Approximations</a>
 </li>
 </ol>
+</li>
+<li>
+<a href="#bitwise-operations">Bitwise Operations</a>
+<ol>
+<li>
+<a href="#parity">Parity</a>
+</li>
+<li>
+<a href="#bitwise-set-operations">Bitwise Set Operations</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#integers">Integers</a>
+</li>
+<li>
+<a href="#arrays">Arrays</a>
 </li>
 <li>
 <a href="#sorting">Sorting</a>
@@ -131,6 +185,8 @@
 </li>
 </ol>
 </li>
+</ol>
+</li>
 <li>
 <a href="#heaps">Heaps</a>
 <ol>
@@ -151,14 +207,12 @@
 <li>
 <a href="#selection">Selection</a>
 </li>
-</ol>
-</li>
-<li>
-<a href="#searching">Searching</a>
-<ol>
 <li>
 <a href="#binary-search-trees">Binary Search Trees</a>
 <ol>
+<li>
+<a href="#bst-structure">BST Structure</a>
+</li>
 <li>
 <a href="#bst-traversal">BST Traversal</a>
 <ol>
@@ -233,8 +287,6 @@
 </li>
 </ol>
 </li>
-</ol>
-</li>
 <li>
 <a href="#bloom-filters">Bloom Filters</a>
 </li>
@@ -301,6 +353,9 @@
 </ol>
 </li>
 <li>
+<a href="#minimum-cut">Minimum Cut</a>
+</li>
+<li>
 <a href="#minimum-spanning-trees">Minimum Spanning Trees</a>
 <ol>
 <li>
@@ -358,6 +413,9 @@
 <li>
 <a href="#strings">Strings</a>
 <ol>
+<li>
+<a href="#string-rotation">String Rotation</a>
+</li>
 <li>
 <a href="#string-sorting">String Sorting</a>
 <ol>
@@ -456,9 +514,6 @@
 <a href="#greedy-algorithms">Greedy Algorithms</a>
 </li>
 <li>
-<a href="#context">Context</a>
-<ol>
-<li>
 <a href="#b-trees">B-Trees</a>
 <ol>
 <li>
@@ -474,11 +529,6 @@
 <ol>
 <li>
 <a href="#ford-fulkerson">Ford-Fulkerson</a>
-</li>
-</ol>
-</li>
-<li>
-<a href="#np-complete-problems">NP-Complete Problems</a>
 </li>
 </ol>
 </li>
@@ -506,12 +556,6 @@
 </ol>
 </li>
 <li>
-<a href="#bitwise-operations">Bitwise Operations</a>
-</li>
-<li>
-<a href="#integers">Integers</a>
-</li>
-<li>
 <a href="#dynamic-programming">Dynamic Programming</a>
 <ol>
 <li>
@@ -522,12 +566,189 @@
 </li>
 </ol>
 </li>
+<li>
+<a href="#np-complete-problems">NP-Complete Problems</a>
+</li>
 </ol>
 </nav>
+<h1 id="approaches">
+<span class="hash">#</span>
+<a href="#approaches" class="header-link">Approaches</a>
+</h1><h2 id="strategies">
+<span class="hash">#</span>
+<a href="#strategies" class="header-link">Strategies</a>
+</h2>
+<p>Some general strategies to approaching a given problem:</p>
+
+<ul>
+<li><strong>concrete examples</strong>: manually solve concrete instances and build a general solution</li>
+<li><strong>case analysis</strong>: split the input/execution into a number of cases and solve each in isolation</li>
+<li><strong>iterative refinement</strong>: brute-force and improve upon it</li>
+<li><strong>reduction</strong>: use well-known solution to another problem as subroutine</li>
+<li><strong>graph modeling</strong>: model the problem as a graph</li>
+</ul>
+<h2 id="modeling">
+<span class="hash">#</span>
+<a href="#modeling" class="header-link">Modeling</a>
+</h2>
+<ul>
+<li><strong>permutations</strong>: arrangements, tours, orderings, or sequences</li>
+<li><strong>subsets</strong>: clusters, collections, committees, groups, packagings, or selections</li>
+<li><strong>trees</strong>: hierarchies, dominance relationships, ancestor/descendant relationships, or taxonomies</li>
+<li><strong>graphs</strong>: networks, circuits, webs, relationships</li>
+<li><strong>points</strong>: sites, positions, data records, locations</li>
+<li><strong>polygons</strong>: shapes, regions, configurations, boundaries</li>
+<li><strong>strings</strong>: text, characters, patterns, labels</li>
+</ul>
+<h2 id="techniques">
+<span class="hash">#</span>
+<a href="#techniques" class="header-link">Techniques</a>
+</h2>
+<ul>
+<li><strong>divide-and-conquer</strong>: decompose the problem into two or more sub-problems until they are simple enough to solve directly, <strong>then combine the results</strong></li>
+<li><strong>greedy algorithms</strong>: make locally optimum, seemed-like-a-good-idea-at-the-time decisions in stages and never change them (don&#39;t backtrack). This won&#39;t always yield the optimum solution.</li>
+</ul>
+
+<p>In divide-and-conquer, the problem is often solved in the combination phase. For example, merge sort divides the problem and actually solves (i.e. sorts) it during the merge phase.</p>
+<h2 id="intractability">
+<span class="hash">#</span>
+<a href="#intractability" class="header-link">Intractability</a>
+</h2>
+<p>An intractable problem is one that has no efficient solution. It can be proved that a problem is intractable if a known intractable problem can be reduced to the given problem.</p>
+
+<ul>
+<li>change the problem formulation such that it still achieves the higher goal</li>
+<li>brute-force or dynamic programming: acceptable if instances or exponential parameter is small</li>
+<li>search: prune search-space via backtracking, branch-and-bound, hill-climbing</li>
+<li>heuristics: insight, common case analysis</li>
+<li>parallelization: solve subparts in parallel</li>
+<li>approximation: solution that is provably close to optimum</li>
+</ul>
 <h1 id="analysis">
 <span class="hash">#</span>
 <a href="#analysis" class="header-link">Analysis</a>
-</h1><h2 id="master-theorem">
+</h1>
+<p>The goal of asymptotic analysis is to suppress the constant factors and lower-order terms. This is because the constant factors are very system-dependent, such as how many cycles a certain operation may take between different pieces of hardware. The lower-order terms are also not as important because they are rendered irrelevant for very large inputs, where the higher-order terms dominate.</p>
+<h2 id="summations">
+<span class="hash">#</span>
+<a href="#summations" class="header-link">Summations</a>
+</h2>
+<p>The summation of a constant is simply the product of the constant and the range:</p>
+
+<p><script type="math/tex; mode=display"> \sum_{i = 1}^n 1 = n </script></p>
+
+<p>The sum of the first <script type="math/tex">n</script> integers can be visualized as folding the range of values at the middle so that the first integer is paired with the last, or more generally: the <script type="math/tex">i^\text{th}</script> paired with the <script type="math/tex">(n - i + 1)\text{th}</script>. Below, the bound of <script type="math/tex">n/2</script> refers to the &quot;folding at the middle,&quot; then each pair is added. <strong>Note</strong> that the sum is quadratic!</p>
+
+<p><script type="math/tex; mode=display"> \sum_{i = 1}^n i = \sum_{i = 1}^{n/2} (i + (n - i + 1)) = \frac {n (n + 1)} 2 </script></p>
+
+<p>The sum of a <em>harmonic series</em> is approximately equal to the logarithm of the bound.</p>
+
+<p><script type="math/tex; mode=display"> H(n) = \sum_{i = 1}^n \frac 1 i \approx \log n </script></p>
+<h2 id="logarithms">
+<span class="hash">#</span>
+<a href="#logarithms" class="header-link">Logarithms</a>
+</h2>
+<p>The exponent of a logarithm operand can be extracted:</p>
+
+<p><script type="math/tex; mode=display"> \log_a n^b = b \cdot \log_a n </script></p>
+<h2 id="bounds">
+<span class="hash">#</span>
+<a href="#bounds" class="header-link">Bounds</a>
+</h2>
+<p><img src="http://i.imgur.com/fMlyzap.png" class="center" /></p>
+
+<p>The upper-bound <script type="math/tex">f(n) = O(g(n))</script> means that there exists some constant <script type="math/tex">c</script> such that <script type="math/tex">f(n)</script> is <em>always</em> <script type="math/tex">\le c \cdot g(n)</script> for a large enough <script type="math/tex">n</script>, that is, for some offset <script type="math/tex">n_0</script> such that <script type="math/tex">n \ge n_0</script>.</p>
+
+<p><img src="https://i.imgur.com/L5oa2vN.png" class="center" /></p>
+
+<p>The lower-bound <script type="math/tex">f(n) = \Omega(g(n))</script> is similar except that it is a lower-bound, so that there exists some constant <script type="math/tex">c</script> such that <script type="math/tex">f(n)</script> is <em>always</em> <script type="math/tex">\ge c \cdot g(n)</script> for <script type="math/tex">n \ge n_0</script>.</p>
+
+<p><img src="https://i.imgur.com/GzSDZW7.png" class="center" /></p>
+
+<p>There is also <script type="math/tex">f(n) = \Theta(g(n))</script> which means that <script type="math/tex">c_1 \cdot g(n)</script> is an upper-bound and <script type="math/tex">c_2 \cdot g(n)</script> is a lower-bound on <script type="math/tex">f(n)</script> for <script type="math/tex">n \ge n_0</script>. This is a tighter bound on <script type="math/tex">f(n)</script> than simply a lower or upper-bound alone would provide.</p>
+
+<p><img src="https://i.imgur.com/mdfglLj.png" class="center" /></p>
+
+<p>Constant factors are ignored since they can easily be beaten out by a different chosen value of <script type="math/tex">c</script>.</p>
+<h2 id="dominance-relations">
+<span class="hash">#</span>
+<a href="#dominance-relations" class="header-link">Dominance Relations</a>
+</h2>
+<p>A faster-growing function <script type="math/tex">f(n)</script> <em>dominates</em> a slower-growing one <script type="math/tex">g(n)</script>, i.e. <script type="math/tex"> f \gg g</script>. In order of increasing dominance:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Name</th>
+<th style="text-align: left">Complexity</th>
+<th style="text-align: left">Examples</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">Constant</td>
+<td style="text-align: left"><script type="math/tex">1</script></td>
+<td style="text-align: left">adding two numbers</td>
+</tr>
+<tr>
+<td style="text-align: left">Logarithmic</td>
+<td style="text-align: left"><script type="math/tex">\log n</script></td>
+<td style="text-align: left">binary search</td>
+</tr>
+<tr>
+<td style="text-align: left">Linear</td>
+<td style="text-align: left"><script type="math/tex">n</script></td>
+<td style="text-align: left">incrementing each element in an array</td>
+</tr>
+<tr>
+<td style="text-align: left">Linearithmic</td>
+<td style="text-align: left"><script type="math/tex">n \log n</script></td>
+<td style="text-align: left">QuickSort and MergeSort</td>
+</tr>
+<tr>
+<td style="text-align: left">Quadratic</td>
+<td style="text-align: left"><script type="math/tex">n^2</script></td>
+<td style="text-align: left">looking at all/most pairs of an array</td>
+</tr>
+<tr>
+<td style="text-align: left">Cubic</td>
+<td style="text-align: left"><script type="math/tex">c^n</script></td>
+<td style="text-align: left">looking at all/most triples of an array</td>
+</tr>
+<tr>
+<td style="text-align: left">Exponential</td>
+<td style="text-align: left"><script type="math/tex">c^n</script></td>
+<td style="text-align: left">looking at all subsets of an array</td>
+</tr>
+<tr>
+<td style="text-align: left">Factorial</td>
+<td style="text-align: left"><script type="math/tex">n!</script></td>
+<td style="text-align: left">looking at all permutations or orderings of n items</td>
+</tr>
+</tbody>
+</table>
+
+<p>When analyzing an algorithm it is common to produce an expression of bounds which can easily be simplified by keeping in mind the principle of dominance relations.</p>
+<h3 id="sum-of-bounds">
+<span class="hash">#</span>
+<a href="#sum-of-bounds" class="header-link">Sum of Bounds</a>
+</h3>
+<p>For example, is an algorithm first sorts its input and then prints each element, then that&#39;s a sorting operation of <script type="math/tex">O(n \log n)</script> followed by a linear printing operation of <script type="math/tex">O(n)</script>, essentially becoming <script type="math/tex">O(n \log n + n)</script>. However, the linearithmic term clearly dominates the linear term, so simplifying it to <script type="math/tex">O(n \log n)</script> still leaves an accurate bound.</p>
+
+<p><script type="math/tex; mode=display"> O(f(n)) + O(g(n)) → O(\max (f(n), g(n))) </script></p>
+<h3 id="product-of-bounds">
+<span class="hash">#</span>
+<a href="#product-of-bounds" class="header-link">Product of Bounds</a>
+</h3>
+<p>Constant factors are ignored since a different value of the constant <script type="math/tex">c</script> can be chosen to compensate for any arbitrary constant factor.</p>
+
+<p><script type="math/tex; mode=display"> O(c \cdot f(n)) → O(f(n)) </script></p>
+
+<p>However, the product of functions is important. For example, a linear scan of an array in <script type="math/tex">O(n)</script> where for each element another linear scan of the array is made in <script type="math/tex">O(n)</script> produces a product of <script type="math/tex">O(n \cdot n) = O(n^2)</script>.</p>
+
+<p><script type="math/tex; mode=display"> O(f(n)) \cdot O(g(n)) → O(f(n) \cdot g(n)) </script></p>
+<h2 id="master-theorem">
 <span class="hash">#</span>
 <a href="#master-theorem" class="header-link">Master Theorem</a>
 </h2>
@@ -579,7 +800,199 @@
 <p>Stirling&#39;s approximation:</p>
 
 <p><script type="math/tex; mode=display"> \ln N! \approx N \ln N - N + \ln \sqrt {2 \pi N} </script></p>
-<h1 id="sorting">
+<h1 id="bitwise-operations">
+<span class="hash">#</span>
+<a href="#bitwise-operations" class="header-link">Bitwise Operations</a>
+</h1>
+<p>Bits can be unconditionally turned on by ORing with 1:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// set third bit</span>
+<span class="n">bits</span> <span class="o">|=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></figure>
+<p>Bits can be unconditionally turned off by ANDing with 0:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// unset third bit</span>
+<span class="n">bits</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></figure>
+<p>Bits can be toggled by XORing with 1:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// toggle third bit</span>
+<span class="n">bits</span> <span class="o">^=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></figure>
+<p>XOR can be replicated without actually using XOR by simply writing out what XOR means, i.e. exclusive OR: (a AND NOT b) OR (NOT a AND b)</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// emulate XOR</span>
+<span class="n">x</span> <span class="o">^</span> <span class="n">y</span> <span class="o">==</span> <span class="p">(</span><span class="n">x</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">y</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span> <span class="o">&amp;</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></figure>
+<p>The least significant set bit can be obtained with:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">x</span> <span class="o">=</span> <span class="mo">0101</span> <span class="mo">0100</span>
+<span class="n">least_significant_set_bit</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></figure>
+<p>The way this works is:</p>
+
+<ol>
+<li><p>all bits up-to-and-including the least significant set bit are flipped</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="o">=</span> <span class="mo">0101</span> <span class="mo">0011</span>
+                 <span class="err">→</span>
+</code></pre></figure></li>
+<li><p>flip <em>all</em> bits so that only the previously-least significant set bit will pass when ANDed with the original value</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="o">~</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1010</span> <span class="mi">1100</span>
+</code></pre></figure></li>
+<li><p>AND with the original value so that only the least significant set bit passes</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">x</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mo">0000</span> <span class="mo">0100</span>
+</code></pre></figure></li>
+</ol>
+
+<p>Likewise, the least significant set bit can be unset with:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">x</span> <span class="o">=</span> <span class="mo">0101</span> <span class="mo">0100</span>
+<span class="n">least_significant_set_bit_unset</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></figure>
+<p>This works because all bits up-to-and-including the least significant set bit are flipped, such that the least significant set bit is now unset (0) and all prior bits are set (1). All other more significant bits remain unchanged. This way, ANDing both causes the previously least significant set bit to fail.</p>
+<h2 id="parity">
+<span class="hash">#</span>
+<a href="#parity" class="header-link">Parity</a>
+</h2>
+<p>The parity can be computed by continuously right-shifting and ANDing the shifted bit with 1 and adding the result to the running parity. However, only the 1 bits will have an effect on the parity, so a quicker way is to continuously be accessing and turning off the next lowest set bit. Finally, lookup tables of e.g. 16-bit chunks can be precomputed so that on a given input, the parity for each 16-bit chunk of the input is looked up and added together.</p>
+<h2 id="bitwise-set-operations">
+<span class="hash">#</span>
+<a href="#bitwise-set-operations" class="header-link">Bitwise Set Operations</a>
+</h2>
+<p>A very important property of XOR is that it a number XORed with itself is 0.</p>
+
+<p><script type="math/tex; mode=display"> N \oplus N = 0 </script></p>
+
+<p>For example, given a list of numbers where each number appears exactly twice <em>except</em> for one number, the number that appears only once can be obtained by XORing each element with the next one, since duplicate elements would cancel themselves out.</p>
+
+<p>More generally, bytes can be treated as a set, where bitwise operations correspond to set operations.</p>
+
+<p>A set can be tested for the presence of a value by using the AND operator. More generally, this can be seen as a set intersection operation, in which the operands may, after all, be singleton sets.</p>
+
+<p><script type="math/tex; mode=display"> S_a \mathrel{\&} S_b </script></p>
+
+<p>A value can be <em>unconditionally</em> added to set <script type="math/tex">S</script> using the OR operator:</p>
+
+<p><script type="math/tex; mode=display"> S \mathrel{|} N </script></p>
+
+<p>A value can be <em>unconditionally</em> removed from set <script type="math/tex">S</script> using the AND operator with the complement of the value to be removed:</p>
+
+<p><script type="math/tex; mode=display"> S \mathrel{\&} \mathord{\sim} N </script></p>
+
+<p>A value can be <em>conditionally</em> added or removed from the set <script type="math/tex">S</script> using the XOR operator. The value will be removed if it is already contained and added if it isn&#39;t.</p>
+
+<p><script type="math/tex; mode=display"> S \oplus N </script></p>
+
+<p>For example, given an array of numbers, each of which appears exactly three times <em>except</em> for one number, the number that appears only once can be obtained using a combination of the above operations.</p>
+
+<p>There will be two sets. The <code>ones</code> set will contain those numbers that have been observed to appear once so far. The <code>twos</code> set will contain those numbers that have been observed to appear twice so far. It&#39;s not necessary to track those numbers that appear three times, as that is implicit.</p>
+
+<p>For each number in the array, it will be added to the <code>ones</code> set if it has been seen exactly once. If a number is already in the <code>ones</code> set and is seen again, it&#39;s removed from the <code>ones</code> set and added to the <code>twos</code> set. If a number is already in the <code>twos</code> set and is seen again, it&#39;s removed from the <code>twos</code> set. Ultimately this will leave the <code>ones</code> set as a singleton set containing the number that appears only once.</p>
+
+<p>First, the number being considered is checked to see if it has already been seen once so far:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span>
+</code></pre></figure>
+<p>This would mean that this is the second time that this number has been seen. If the number is indeed in the <code>ones</code> set, the above expression evaluates to the number itself by nature of the AND operation, otherwise it evaluates to 0.</p>
+
+<p>The result of the above expression can directly be used to add the number to the <code>twos</code> set using the OR operation, which adds the number to the set, or does nothing if the number is 0.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">twos</span> <span class="o">|=</span> <span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span>
+</code></pre></figure>
+<p>The number is then <em>conditionally</em> added to or removed from the <code>ones</code> set using the XOR operation. If the <code>ones</code> set already contained the number, then the previous operation will have added the number to the <code>twos</code> set, in which case it&#39;s no longer needed inside the <code>ones</code> set, since the <code>ones</code> set only contains those numbers that have appeared <em>exactly</em> once. If the <code>ones</code> set didn&#39;t already contain the number, then the above presence check results in 0 which does nothing when added to the <code>twos</code> set.</p>
+
+<p>Therefore, we can add the number to the <code>ones</code> set if it wasn&#39;t already contained, or remove it if it was contained.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">ones</span> <span class="o">^=</span> <span class="n">num</span>
+</code></pre></figure>
+<p>However, if this has been the <em>third</em> time that this number has been seen, then the number will have been in the <code>twos</code> set already but <em>not</em> in the <code>ones</code> set. The above expression would therefore <em>also</em> add it to the <code>ones</code> set. Therefore we can be sure that if the number was present in both the <code>ones</code> and <code>twos</code> sets after the above operation, then this is the <em>third</em> time that this number has been observed.</p>
+
+<p>In this case, the number should be removed from both sets. This would ensure that the <code>ones</code> set really does only contain those numbers that have appeared <em>exactly</em> once, which is what we&#39;re interested in.</p>
+
+<p>However, the <code>ones</code> set and the <code>twos</code> set may contain various numbers. We know that the one that appears in both is the one that has appeared three times, and hence the one we want to remove, so we can obtain this number by intersecting both sets.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kt">int</span> <span class="n">threes</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">&amp;</span> <span class="n">ones</span><span class="o">;</span>
+</code></pre></figure>
+<p>We then want to remove this number from both sets:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="n">twos</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+<span class="n">ones</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+</code></pre></figure>
+<p>Here is the full algorithm.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-java"><span class="kd">public</span> <span class="kt">int</span> <span class="nf">singleNumber</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+  <span class="kt">int</span> <span class="n">ones</span><span class="o">,</span> <span class="n">twos</span><span class="o">;</span>
+  <span class="n">ones</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">twos</span> <span class="o">|=</span> <span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span><span class="o">;</span>
+    <span class="n">ones</span> <span class="o">^=</span> <span class="n">num</span><span class="o">;</span>
+
+    <span class="kt">int</span> <span class="n">threes</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">&amp;</span> <span class="n">ones</span><span class="o">;</span>
+    <span class="n">twos</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+    <span class="n">ones</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="k">return</span> <span class="n">ones</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></figure><h1 id="integers">
+<span class="hash">#</span>
+<a href="#integers" class="header-link">Integers</a>
+</h1>
+<p>It&#39;s possible to &quot;shift&quot; a number to the left by <script type="math/tex">n</script> digits by multiplying it with <script type="math/tex">\text {base}^\text {digits}</script>. For example, the number <script type="math/tex">321</script> can be shifted to the left by 2 digits to <script type="math/tex">32100</script> by multiplying it by <script type="math/tex">10^2</script>.</p>
+
+<p><script type="math/tex; mode=display">\text {shifted left by n} = x * \text {base}^\text {digits}</script></p>
+
+<p>Similarly, it&#39;s possible to get the last <script type="math/tex">n</script> digits of a number by getting the remainder of dividing it by <script type="math/tex">\text {base}^\text {digits}</script>. For example, the last 2 digits of <script type="math/tex">321</script> can be obtained by getting the remainder of dividing it (i.e. the modulo) by <script type="math/tex">10^2</script>.</p>
+
+<p><script type="math/tex; mode=display">\text {right-most n digits} = x \bmod \text {base}^\text {digits}</script></p>
+
+<p>The square root of a number can be found via binary search by searching from <script type="math/tex">[1.0, n]</script> for a number which, squared, is equal to the input (given some tolerance or until convergence). If the input is real and less than 1, the bounds change to <script type="math/tex">[n, 1.0]</script>.</p>
+
+<p>The logarithm of a number can naively be computed by counting how many times the operand can be divided by the base without going below 1. For example, <script type="math/tex">\log_2 64</script> can divide <script type="math/tex">64 / 2</script> a total of six times until it reaches 1, doing it a seventh time causes the value to go below 1.</p>
+<h1 id="arrays">
+<span class="hash">#</span>
+<a href="#arrays" class="header-link">Arrays</a>
+</h1>
+<p>The 2-SUM problem is one where the input is a sorted array of integers and a target value <script type="math/tex">k</script> and the objective is to determine if there is a pair of entries <script type="math/tex">i</script> and <script type="math/tex">j</script> such that:</p>
+
+<p><script type="math/tex; mode=display">A[i] + A[j] = k</script></p>
+
+<p>The brute-force approach would be to check if this is true for all possible pairs of values in the array, of which there are <script type="math/tex">n^2</script>. Alternatively, a <a href="#hash-tables">hash table</a> can be used.</p>
+
+<p>Another approach is to iterate from both ends of the array. For example, at first, the first and last elements will be used. If their sum is greater than the target, the right end will be iterated leftward so as to attempt to obtain a smaller element. If instead their sum is less than the target, the left end will be iterated rightward in hopes of increasing their sum.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">sum</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">sum</span> <span class="o">&gt;</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">right</span><span class="o">--</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">sum</span> <span class="o">&lt;</span> <span class="n">K</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">left</span><span class="o">++</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure><h1 id="sorting">
 <span class="hash">#</span>
 <a href="#sorting" class="header-link">Sorting</a>
 </h1>
@@ -594,6 +1007,8 @@
 <p>For example, selection sort backed by a priority queue or balanced binary tree can help to speed up the operation of finding the smallest element in the unsorted region. Instead of being linear, the operation would be <script type="math/tex">\lg(n)</script>. Given that this is done at every element in the sequence, of which there are <script type="math/tex">N</script>, this means that selection sort backed by such a structure can be improved from <script type="math/tex">O(n^2)</script> to <script type="math/tex">O(n\lg(n))</script> <sup id="fnref4"><a href="#fn4" rel="footnote">4</a></sup>.</p>
 
 <p>A sorting algorithm is known as <em>stable</em> if it maintains the same relative order of equal keys as it was before the sorting operation.</p>
+
+<p>The best case complexity of comparison-based sorting is <script type="math/tex">O(n \log n)</script>. If the distribution of the data is known, sorting can be done much faster using counting or bucket sort, for example.</p>
 <h2 id="selection-sort">
 <span class="hash">#</span>
 <a href="#selection-sort" class="header-link">Selection Sort</a>
@@ -783,6 +1198,41 @@
     <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">aux</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">aux</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">aux</span><span class="o">[</span><span class="n">j</span><span class="o">++];</span>
     <span class="k">else</span>                      <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">aux</span><span class="o">[</span><span class="n">i</span><span class="o">++];</span>
 <span class="o">}</span>
+</code></pre></figure>
+<p>The complexity is <script type="math/tex">O(n \log n)</script> because the number of subproblems is doubling at each level (i.e. the two recursive calls), but the work to be done by those subproblems is halving. That is, for a given level <script type="math/tex">j</script>, the amount of work done is:</p>
+
+<p><script type="math/tex; mode=display"> 2^j \left( \frac n 2^j \right) = n </script></p>
+
+<p>Given an input size of <script type="math/tex">n</script>, the number of levels in the recursion tree is <script type="math/tex">\log_2 n</script>, which means that at each of the <script type="math/tex">\log_2 n</script> levels in the tree there is <script type="math/tex">n</script> work being done, hence <script type="math/tex">n \log n</script>.</p>
+
+<p>The number of <em>inversions</em> in an array can be counted in <script type="math/tex">O(n \log n)</script> by reducing the problem to merge sort. Specifically, during a merge, each time an element from the right half is merged and there are elements remaining in the left half, then the chosen element from the right half represents an inversion between each of the elements remaining on the left half.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="nl">left</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span> <span class="nl">right</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+
+<span class="c1">// after merging two from the left</span>
+<span class="nl">merged</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">]</span>
+
+<span class="nl">left</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span> <span class="nl">right</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+
+<span class="c1">// the ones on the right are lesser, e.g. merge 6</span>
+<span class="nl">merged</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">]</span>
+
+<span class="nl">left</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span> <span class="nl">right</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+
+<span class="c1">// the act of having merged 6 instead of [12, 13] means that</span>
+<span class="c1">// the original array had two inversions concerning 6: 12⟷6 and 13⟷6</span>
+</code></pre></figure>
+<p>A possible implementation would have merge return the inversions it encountered, which has to be passed up the recursion tree by having the sort functions return the sum of the recursive sorts and merges.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">SortAndCount</span><span class="p">(</span><span class="n">array</span> <span class="n">A</span><span class="p">,</span> <span class="n">length</span> <span class="n">n</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">return</span> <span class="mi">0</span>
+  <span class="k">else</span>
+    <span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">SortAndCount</span><span class="p">(</span><span class="mi">1</span><span class="n">st</span> <span class="n">half</span> <span class="n">of</span> <span class="n">A</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="n">SortAndCount</span><span class="p">(</span><span class="mi">2</span><span class="n">nd</span> <span class="n">half</span> <span class="n">of</span> <span class="n">A</span><span class="p">,</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="n">MergeAndCountSplitInv</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span>
 </code></pre></figure><h3 id="top-down">
 <span class="hash">#</span>
 <a href="#top-down" class="header-link">Top-Down</a>
@@ -852,16 +1302,18 @@
 <tbody>
 <tr>
 <td style="text-align: left">Worst</td>
-<td style="text-align: left"><script type="math/tex">O(n\lg{n})</script></td>
+<td style="text-align: left"><script type="math/tex">O(n \log n)</script></td>
 </tr>
 <tr>
 <td style="text-align: left">Space</td>
-<td style="text-align: left"><script type="math/tex">O(\lg{n})</script></td>
+<td style="text-align: left"><script type="math/tex">O(\log n)</script></td>
 </tr>
 </tbody>
 </table>
 
-<p>This is a divide-and-conquer algorithm that works by essentially partitioning the array into two sub-arrays and sorting them independently. It is typically faster than merge sort because it does less data movement.</p>
+<p>QuickSort works by choosing an element in the array---the pivot---and partitioning the array such that all elements <em>less than</em> the pivot are moved to its left and all elements <em>greater than</em> the pivot are moved to its right. This has the effect that, at the end of this operation, the chosen element will be at its &quot;sorted order position,&quot; i.e. the position in which it would be if the entire array were already sorted.</p>
+
+<p>Note that the elements are simply moved to the correct side of the pivot, but the order of neither side is defined, i.e. neither the left nor the right side are necessarily sorted after partitioning.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">)</span> <span class="o">{</span>
@@ -1000,10 +1452,10 @@
   <span class="n">sort</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">lt</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
   <span class="n">sort</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">gt</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span>
 <span class="o">}</span>
-</code></pre></figure><h2 id="heaps">
+</code></pre></figure><h1 id="heaps">
 <span class="hash">#</span>
 <a href="#heaps" class="header-link">Heaps</a>
-</h2>
+</h1>
 <p>A priority queue is an abstract data type that allows adding elements and retrieving the smallest or largest element. Priority queues are useful for an unbounded sequence for which we want to retrieve the <script type="math/tex">M</script> smallest elements at any given moment.</p>
 
 <p>The data structure commonly used to back a priority queue is an array embedding the contents of a <strong>complete binary tree</strong> in level-order that maintains two invariants:</p>
@@ -1012,10 +1464,10 @@
 <li>the parent of <script type="math/tex">k</script> is <script type="math/tex">\left\lfloor (k - 1)/2 \right\rfloor</script></li>
 <li>the children of <script type="math/tex">k</script> are at <script type="math/tex">2k + 1</script> and <script type="math/tex">2k + 2</script></li>
 </ol>
-<h3 id="heap-insertion">
+<h2 id="heap-insertion">
 <span class="hash">#</span>
 <a href="#heap-insertion" class="header-link">Heap Insertion</a>
-</h3>
+</h2>
 <table>
 <thead>
 <tr>
@@ -1054,10 +1506,10 @@
     <span class="n">target</span> <span class="o">=</span> <span class="o">(</span><span class="n">target</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
   <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></figure><h3 id="heap-removal">
+</code></pre></figure><h2 id="heap-removal">
 <span class="hash">#</span>
 <a href="#heap-removal" class="header-link">Heap Removal</a>
-</h3>
+</h2>
 <table>
 <thead>
 <tr>
@@ -1107,10 +1559,10 @@
     <span class="n">target</span> <span class="o">=</span> <span class="n">child</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></figure><h3 id="heap-sort">
+</code></pre></figure><h2 id="heap-sort">
 <span class="hash">#</span>
 <a href="#heap-sort" class="header-link">Heap Sort</a>
-</h3>
+</h2>
 <table>
 <thead>
 <tr>
@@ -1173,19 +1625,19 @@
     <span class="n">sink</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></figure><h3 id="median-maintenance">
+</code></pre></figure><h2 id="median-maintenance">
 <span class="hash">#</span>
 <a href="#median-maintenance" class="header-link">Median Maintenance</a>
-</h3>
+</h2>
 <p>The median of a streaming sequence of numbers can be computed in constant time by maintaining two heaps: a max-heap for the lower/left half and a min-heap for the upper/right half. This has the effect of keeping the elements sorted, and the top of the max-heap yields one of the overall middle elements, whereas the top of the min-heap yields the other middle element.</p>
 
 <p>The elements must be kept equal in size, or the min-heap may be larger by one element, in which case there are an odd number of numbers, so the top of the min-heap is the middle element alone.</p>
 
 <p>If one of the heaps grows larger, its top element should be popped and pushed onto the other heap to balance them.</p>
-<h2 id="selection">
+<h1 id="selection">
 <span class="hash">#</span>
 <a href="#selection" class="header-link">Selection</a>
-</h2>
+</h1>
 <table>
 <thead>
 <tr>
@@ -1202,33 +1654,36 @@
 </tbody>
 </table>
 
-<p>Selecting the <script type="math/tex">k</script> smallest items in a sequence can be accomplished by using the quick sort algorithm&#39;s partition algorithm. This is guaranteed by the invariant held by quick sort&#39;s partition algorithm which states that given the partition index <script type="math/tex">j</script>, all elements to the left are less than or equal to <script type="math/tex">j</script> and all elements to the right are greater than or equal to <script type="math/tex">j</script>, effectively making the sub-sequence up to <script type="math/tex">j</script> consist of the smallest <script type="math/tex">j</script> elements in the sequence.</p>
+<p>Selecting the <script type="math/tex">k^\text{th}</script> smallest item in a sequence can be accomplished by using QuickSort&#39;s partition algorithm. This is guaranteed by the invariant held by QuickSort&#39;s partition algorithm which states that given the partition index <script type="math/tex">j</script>, all elements to the left are less than or equal to <script type="math/tex">j</script> and all elements to the right are greater than or equal to <script type="math/tex">j</script>, effectively making the sub-sequence up to <script type="math/tex">j</script> consist of the smallest <script type="math/tex">j</script> elements in the sequence.</p>
+
+<p>With that in mind, the desired index <script type="math/tex">k</script> is input to QuickSelect. After partitioning in <script type="math/tex">O(n)</script>, the resulting position <script type="math/tex">j</script> of the <script type="math/tex">k^\text{th}</script> element is compared to the input <script type="math/tex">k</script>. If the resulting position <script type="math/tex">j</script> is less than the desired <script type="math/tex">k</script> then QuickSelect is repeated on the right region <script type="math/tex">A[j ..]</script> with a compensated <script type="math/tex">k</script>, i.e. <script type="math/tex">k - j</script>. If the resulting position <script type="math/tex">j</script> is greater than the desired <script type="math/tex">k</script> then QuickSelect is repeated on the left region <script type="math/tex">A[.. j]</script> with the same <script type="math/tex">k</script>.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-java"><span class="kd">public</span> <span class="n">Comparable</span> <span class="nf">select</span><span class="o">(</span><span class="n">Comparable</span><span class="o">[]</span> <span class="n">seq</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">shuffle</span><span class="o">(</span><span class="n">seq</span><span class="o">);</span>
+<code class="highlight language-cpp"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Iter</span><span class="o">&gt;</span>
+<span class="k">auto</span> <span class="n">QuickSelect</span><span class="p">(</span><span class="n">Iter</span> <span class="n">begin</span><span class="p">,</span> <span class="n">Iter</span> <span class="n">end</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="o">*</span><span class="n">begin</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">length</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
 
-  <span class="kt">int</span> <span class="n">lo</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">*</span><span class="n">begin</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  <span class="k">while</span> <span class="o">(</span><span class="n">hi</span> <span class="o">&gt;</span> <span class="n">lo</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">seq</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">hi</span><span class="o">);</span>
+  <span class="n">Iter</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">Partition</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
 
-    <span class="k">if</span>      <span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">k</span><span class="o">)</span> <span class="k">return</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
-    <span class="k">else</span> <span class="k">if</span>  <span class="o">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="n">k</span><span class="o">)</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
-    <span class="k">else</span> <span class="k">if</span>  <span class="o">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">)</span> <span class="n">lo</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
-  <span class="o">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">pivot</span><span class="p">);</span>
 
-  <span class="k">return</span> <span class="n">seq</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
-<span class="o">}</span>
-</code></pre></figure><h1 id="searching">
-<span class="hash">#</span>
-<a href="#searching" class="header-link">Searching</a>
-</h1>
-<p><strong>Answers</strong>: Finding a certain element in a collection.</p>
-<h2 id="binary-search-trees">
+  <span class="k">if</span> <span class="p">(</span><span class="n">distance</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">*</span><span class="n">pivot</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">distance</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// -1 to shift past pivot</span>
+    <span class="k">return</span> <span class="n">QuickSelect</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">next</span><span class="p">(</span><span class="n">pivot</span><span class="p">),</span> <span class="n">end</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">distance</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">QuickSelect</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">pivot</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure><h1 id="binary-search-trees">
 <span class="hash">#</span>
 <a href="#binary-search-trees" class="header-link">Binary Search Trees</a>
-</h2>
+</h1>
 <table>
 <thead>
 <tr>
@@ -1252,10 +1707,25 @@
 <p>The rank operation counts how many keys are less than or equal to the given value.</p>
 
 <p>The predecessor of any node can be obtained easily if it has a left child, in which case the predecessor of the node is the maximum of the subtree rooted at the left child. If there is no left child, the predecessor is the first ancestor larger than the node (in other words, the first parent found for which the child is the right child). The successor can be found similarly, flipping left⟷right and maximum⟷minimum.</p>
-<h3 id="bst-traversal">
+<h2 id="bst-structure">
+<span class="hash">#</span>
+<a href="#bst-structure" class="header-link">BST Structure</a>
+</h2>
+<p>A perfect binary tree is one where every level has the maximum number of nodes.</p>
+
+<p>The depth of a tree node is the number of edges from the root to the node, i.e. the level - 1, so the depth of the root node is 0. The level of a node in a tree is its depth + 1. The difference between levels and depth is that levels are the visual levels whereas depth is the number of edges from the root to the node.</p>
+
+<p>The height of a tree node is the number of edges on the longest path from the node to a leaf. The height of an entire tree is the height of its root, i.e. the depth of the deepest node.</p>
+
+<p>The number of levels in a binary tree with <script type="math/tex">n</script> nodes is <script type="math/tex">\log_2 n</script>.</p>
+
+<p>In a perfect binary tree, the number of nodes at depth <script type="math/tex">d</script> is <script type="math/tex">2^d</script>.</p>
+
+<p>In a perfect binary tree with <script type="math/tex">L</script> levels, the total number of nodes is <script type="math/tex">2^L - 1</script>. So if there are 3 levels, <script type="math/tex">2^3 - 1 = 7</script> total nodes.</p>
+<h2 id="bst-traversal">
 <span class="hash">#</span>
 <a href="#bst-traversal" class="header-link">BST Traversal</a>
-</h3>
+</h2>
 <p>There are three main forms of traversing a BST. The <em>order</em> refers to the order in which the current node <script type="math/tex">C</script> is visited, that is, the time at which <script type="math/tex">C</script> is visited is the only thing that varies, so <script type="math/tex">L</script> is always visited before <script type="math/tex">R</script>.</p>
 
 <table>
@@ -1281,10 +1751,10 @@
 </tr>
 </tbody>
 </table>
-<h4 id="morris-traversal">
+<h3 id="morris-traversal">
 <span class="hash">#</span>
 <a href="#morris-traversal" class="header-link">Morris Traversal</a>
-</h4>
+</h3>
 <p>It&#39;s possible to perform an in-order traversal of a BST without using a stack or recursion by performing a Morris traversal. In essence, this traversal transforms the tree during the traversal so that the entire right branch of the BST forms the in-order traversal. The BST is returned to its original structure as the traversal takes place.</p>
 
 <p><img src="/images/notes/algorithms/morris-traversal.png" class="center" width="75%"></p>
@@ -1347,10 +1817,10 @@
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></figure><h3 id="bst-deletion">
+</code></pre></figure><h2 id="bst-deletion">
 <span class="hash">#</span>
 <a href="#bst-deletion" class="header-link">BST Deletion</a>
-</h3>
+</h2>
 <p>Most operations such as insertion and lookup are very straightforward. Deletion is somewhat more involved.</p>
 
 <p>To delete node <script type="math/tex">k</script>:</p>
@@ -1383,10 +1853,10 @@
   <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
     <span class="n">v</span><span class="o">-&gt;</span><span class="n">p</span> <span class="o">=</span> <span class="n">u</span><span class="o">-&gt;</span><span class="n">p</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></figure><h3 id="bst-select">
+</code></pre></figure><h2 id="bst-select">
 <span class="hash">#</span>
 <a href="#bst-select" class="header-link">BST Select</a>
-</h3>
+</h2>
 <p>The BST can be augmented so that each node contains the count of notes rooted at it, including itself. Then the count can be computed for node <script type="math/tex">x</script> base by adding the count of left child <script type="math/tex">y</script> and right child <script type="math/tex">z</script> plus one for <script type="math/tex">x</script>:</p>
 
 <p><script type="math/tex; mode=display">size(x) = size(y) + size(z) + 1</script></p>
@@ -1424,10 +1894,10 @@ root node.</li>
     <span class="k">return</span> <span class="n">Select</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">left_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></figure><h2 id="search-trees">
+</code></pre></figure><h1 id="search-trees">
 <span class="hash">#</span>
 <a href="#search-trees" class="header-link">2-3 Search Trees</a>
-</h2>
+</h1>
 <p>While <strong>2-3 search tree</strong> can be implemented, they&#39;re mainly used to help understand the implementation of <a href="#red-black-trees">Red-Black Trees</a>, which have better performance.</p>
 
 <p>A <strong>2-3 tree</strong> is either empty or:</p>
@@ -1447,10 +1917,10 @@ root node.</li>
 <li>right for keys larger than the right key</li>
 </ul></li>
 </ul>
-<h3 id="tree-searching">
+<h2 id="tree-searching">
 <span class="hash">#</span>
 <a href="#tree-searching" class="header-link">2-3 Tree Searching</a>
-</h3>
+</h2>
 <p>Searching follows simply from the structure of the tree.</p>
 
 <ol>
@@ -1458,10 +1928,10 @@ root node.</li>
 <li>if not, recurse into the appropriate link</li>
 <li><strong>search miss</strong> if a null link is reached</li>
 </ol>
-<h3 id="tree-insertion">
+<h2 id="tree-insertion">
 <span class="hash">#</span>
 <a href="#tree-insertion" class="header-link">2-3 Tree Insertion</a>
-</h3>
+</h2>
 <p>Insertion needs to take into consideration the fact that the tree must remain balanced after the operation. The general procedure is that the key is searched for until a node with a null link is reached at the bottom of the tree.</p>
 
 <ul>
@@ -1495,10 +1965,10 @@ root node.</li>
 <p>Perfect balance is preserved because tree height increase occurs at the root, and additions at the bottom of the tree are performed in the form of splitting existing nodes such that the height remains the same.</p>
 
 <p>The <strong>problem</strong> with implementing a direct representation of 2-3 trees is that there are many cases to handle and nodes have to be converted between various types. These operations can incur overhead that nullifies or even makes worse the performance of 2-3 trees compared to regular BSTs.</p>
-<h2 id="red-black-trees">
+<h1 id="red-black-trees">
 <span class="hash">#</span>
 <a href="#red-black-trees" class="header-link">Red-Black Trees</a>
-</h2>
+</h1>
 <table>
 <thead>
 <tr>
@@ -1525,11 +1995,13 @@ root node.</li>
 <li>every path from a given node to any of its descendant leaves contains the same number of <strong>black</strong> nodes</li>
 </ol>
 
+<p><img src="/images/notes/algorithms/red-black-trees/red-black-tree.png" class="center" /></p>
+
 <p>These properties allow red-black trees to be nearly balanced in even the worst case, allowing them more performance than regular BSTs. A very neat implementation is <a href="https://github.com/prasanthmadhavan/Red-Black-Tree/blob/master/rbtree.c">available here</a>.</p>
-<h3 id="red-black-tree-insertion">
+<h2 id="red-black-tree-insertion">
 <span class="hash">#</span>
 <a href="#red-black-tree-insertion" class="header-link">Red-Black Tree Insertion</a>
-</h3>
+</h2>
 <p>The inserted node is attached in the same manner as for BSTs, except that every node is painted <strong>red</strong> on insertion. However, the inserted node has the possibility of violating any one of the 5 invariants, in which case the situation must be remedied. The following code representing the different cases that must be remedied are split into corresponding individual functions for didactic purposes.</p>
 
 <p>There are three main scenarios that may arise from adding a node:</p>
@@ -1633,10 +2105,10 @@ root node.</li>
   <span class="k">else</span>
     <span class="n">rotate_left</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
 <span class="p">}</span>
-</code></pre></figure><h3 id="red-black-tree-deletion">
+</code></pre></figure><h2 id="red-black-tree-deletion">
 <span class="hash">#</span>
 <a href="#red-black-tree-deletion" class="header-link">Red-Black Tree Deletion</a>
-</h3>
+</h2>
 <p>Deletion is handled similar to deletion in BSTs, but is a <em>lot</em> more complicated because the tree has to be re-balanced if removing a node from the tree causes it to become unbalanced.</p>
 
 <p>Every resource I looked at---books, sites, university slides---simply hand-waived the deletion process presumably due to its complexity. The one place that managed to somewhat explain it well was the classic CLRS book, but its implementation consisted of a big, difficult-to-follow while-loop. Instead I decided to go with <a href="http://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Removal">wikipedia&#39;s</a> long and dense explanation of its relatively simple implementation which even the <a href="https://github.com/torvalds/linux/blob/master/lib/rbtree.c">Linux kernel uses</a>.</p>
@@ -1672,10 +2144,10 @@ root node.</li>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></figure><h4 id="red-black-tree-balance">
+</code></pre></figure><h3 id="red-black-tree-balance">
 <span class="hash">#</span>
 <a href="#red-black-tree-balance" class="header-link">Red-Black Tree Balance</a>
-</h4>
+</h3>
 <p>If the node is replaced with a successor, that successor is essentially removed from its original location, thereby possibly causing tree unbalanced. For this reason, the original successor node is removed using <code>delete_one_child</code> which re-balances the tree if necessary.</p>
 
 <ul>
@@ -1805,10 +2277,10 @@ root node.</li>
     <span class="n">rotate_right</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">parent</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></figure><h2 id="hash-tables">
+</code></pre></figure><h1 id="hash-tables">
 <span class="hash">#</span>
 <a href="#hash-tables" class="header-link">Hash Tables</a>
-</h2>
+</h1>
 <p>Hash tables consist of an array coupled with a <em>hash function</em>---such as <a href="http://en.wikipedia.org/wiki/MurmurHash">MurmurHash</a> or <a href="http://en.wikipedia.org/wiki/CityHash">CityHash</a>---and a <em>collision resolution</em> scheme, both of which help map the key to an index within the array.</p>
 
 <p>Hash Tables can be used for de-duplication, as well as keeping track of what states have already been seen in search algorithms, especially for those applications where it&#39;s not feasible to store all of the nodes.</p>
@@ -1820,10 +2292,10 @@ root node.</li>
 <p>Alternatively, we can sort the array in <script type="math/tex">O(n \log n)</script> and scan through the array, for each element <script type="math/tex">x</script> determine the required summand <script type="math/tex">r = t - x</script>, then look for <script type="math/tex">r</script> in the array using binary search <script type="math/tex">O(n \log n)</script>. If <script type="math/tex">r</script> is found, then there&#39;s a match, i.e. <script type="math/tex">x + r = t</script>.</p>
 
 <p>This can be improved further by using a hash table. Put each element of the array into a hash table, then for each element <script type="math/tex">x</script> in the array compute the required summand <script type="math/tex">r = t - x</script> and check if <script type="math/tex">r</script> is present in the hash table. If so, then there&#39;s a match.</p>
-<h3 id="hash-functions">
+<h2 id="hash-functions">
 <span class="hash">#</span>
 <a href="#hash-functions" class="header-link">Hash Functions</a>
-</h3>
+</h2>
 <p>Hash functions need to be consistent, efficient, and should uniformly distribute the set of keys.</p>
 
 <p>A popular and simple hashing function is modular hashing of the form:</p>
@@ -1867,19 +2339,19 @@ root node.</li>
 <span class="kt">int</span> <span class="n">hash</span> <span class="o">=</span> <span class="n">hash</span> <span class="o">*</span> <span class="n">R</span> <span class="o">+</span> <span class="n">year</span><span class="o">;</span>
 
 <span class="kt">int</span> <span class="n">hash</span> <span class="o">=</span> <span class="o">((</span><span class="n">R</span> <span class="o">+</span> <span class="n">day</span><span class="o">)</span> <span class="o">*</span> <span class="n">R</span> <span class="o">+</span> <span class="n">month</span><span class="o">)</span> <span class="o">*</span> <span class="n">R</span> <span class="o">+</span> <span class="n">year</span><span class="o">;</span>
-</code></pre></figure><h3 id="pathological-data-sets">
+</code></pre></figure><h2 id="pathological-data-sets">
 <span class="hash">#</span>
 <a href="#pathological-data-sets" class="header-link">Pathological Data Sets</a>
-</h3>
+</h2>
 <p>It&#39;s possible to craft a pathological data set that can cause a denial of service attack on a hash table.</p>
 
 <p>One way to mitigate this is to use a cryptographic hash function, which also has pathological data sets but it&#39;s less feasible to discover them.</p>
 
 <p>Alternatively, design a family of hash functions and choose one randomly.</p>
-<h3 id="load-factor">
+<h2 id="load-factor">
 <span class="hash">#</span>
 <a href="#load-factor" class="header-link">Load Factor</a>
-</h3>
+</h2>
 <p>The <em>load factor</em> is defined by <script type="math/tex">\alpha = N/M</script> where <script type="math/tex">\alpha</script> is the percentage of table entries that are occupied, <script type="math/tex">N</script> is the number of objects in the hash table, and <script type="math/tex">M</script> is the number of buckets in the hash table.</p>
 
 <p><script type="math/tex; mode=display">
@@ -1900,10 +2372,10 @@ root node.</li>
 </script></p>
 
 <p>Based on this, when <script type="math/tex">\alpha</script> is about 0.5 there will be 1.5 compares for a search hit and 2.5 compares for a search miss on average. For this reason, <script type="math/tex">\alpha</script> should be kept under 0.5 through the use of array resizing.</p>
-<h3 id="separate-chaining">
+<h2 id="separate-chaining">
 <span class="hash">#</span>
 <a href="#separate-chaining" class="header-link">Separate Chaining</a>
-</h3>
+</h2>
 <table>
 <thead>
 <tr>
@@ -1930,15 +2402,15 @@ root node.</li>
 </ol>
 
 <p>A property of separate chaining is that the average length of the lists is always <script type="math/tex">N/M</script> in a hash table with <script type="math/tex">M</script> lists and <script type="math/tex">N</script> keys.</p>
-<h3 id="double-hashing">
+<h2 id="double-hashing">
 <span class="hash">#</span>
 <a href="#double-hashing" class="header-link">Double Hashing</a>
-</h3>
+</h2>
 <p>Double hashing is a form of open addressing in which two hash functions are used. If the first hash function incurs a collision, then the result of the second hash function serves as an offset at which to try insertion. For example, if <script type="math/tex">h_1(x) = 17</script> caused a collision, and <script type="math/tex">h_2(x) = 23</script>, then it will try inserting at position <script type="math/tex">17 + 23 = 40</script>, then <script type="math/tex">40 + 23 = 63</script>, and so on.</p>
-<h3 id="linear-probing">
+<h2 id="linear-probing">
 <span class="hash">#</span>
 <a href="#linear-probing" class="header-link">Linear Probing</a>
-</h3>
+</h2>
 <table>
 <thead>
 <tr>
@@ -1967,17 +2439,17 @@ root node.</li>
 <li>if the key is not equal, try the next entry and repeat until it can be inserted</li>
 </ol></li>
 </ol>
-<h4 id="linear-probing-deletion">
+<h3 id="linear-probing-deletion">
 <span class="hash">#</span>
 <a href="#linear-probing-deletion" class="header-link">Linear Probing Deletion</a>
-</h4>
+</h3>
 <p>The insert and retrieval operations retrieve the index and perform the same operation until the entry is null. This has the consequence that deleting a node cannot <em>simply</em> entail setting the entry to null, or it would prematurely stop the lookup of other keys.</p>
 
 <p>As a result, after setting the entry to null, every key to the right of the removed key also has to be removed, i.e. set to null, and then re-inserted into the hash table using the regular insertion operation.</p>
-<h3 id="sparse-vectors">
+<h2 id="sparse-vectors">
 <span class="hash">#</span>
 <a href="#sparse-vectors" class="header-link">Sparse Vectors</a>
-</h3>
+</h2>
 <p>An application of hash tables can be to implement sparse vectors for the purpose of performing matrix-vector multiplications. In certain situations, the row-vector from a matrix can have a very small amount of non-zero elements. If the matrix was stored in a naive array format it would amount to an immense waste of space and computation.</p>
 
 <p>Instead, sparse vectors are vectors backed by hash tables where the keys correspond to the index of a given element and the value corresponds to that element&#39;s value. This solution is used in Google&#39;s PageRank algorithm.</p>
@@ -2042,9 +2514,13 @@ root node.</li>
 
 <p>A <em>spanning tree</em> of a connected graph is a subgraph that contains all of the vertices as a single tree. A <em>spanning forest</em> of a graph is the union of all spanning trees of its connected components.</p>
 
-<p>A graph&#39;s <em>density</em> is its proportion of possible paris of vertices that are connected. A <em>sparse</em> graph has relatively few of the possible edges present, compared to a <em>dense</em> one.</p>
+<p>A graph&#39;s <em>density</em> is its proportion of possible paris of vertices that are connected. A <em>sparse</em> graph has relatively few of the possible edges present compared to a <em>dense</em> one.</p>
+
+<p>As a rule of thumb, a graph is considered sparse if it has an edge count closer to the number of its vertices <script type="math/tex">O(N)</script> and it&#39;s considered dense if it has an edge count closer to the number of vertices squared <script type="math/tex">O(N^2)</script>.</p>
 
 <p>A <em>bipartite graph</em> is one whose vertices can be divided into two sets such that all edges connect a vertex in one set with a vertex in the other.</p>
+
+<p>Oftentimes, the number of nodes/vertices is represented by <script type="math/tex">N</script> and the number of edges is represented by <script type="math/tex">M</script>.</p>
 
 <p><strong>Answers</strong>:</p>
 
@@ -2066,6 +2542,8 @@ root node.</li>
 </ul>
 
 <p>Adjacency lists have the best balance between space and time performance. They have space usage proportional to <script type="math/tex">V + E</script>, constant time to add an edge, and time proportional to the degree of <script type="math/tex">v</script> to iterate through adjacent vertices.</p>
+
+<p>An undirected graph can have a minimum of <script type="math/tex">n - 1</script> edges and a maximum of <script type="math/tex">\binom N 2 = \frac {n (n - 1)} 2</script> edges.</p>
 <h3 id="depth-first-search">
 <span class="hash">#</span>
 <a href="#depth-first-search" class="header-link">Depth-First Search</a>
@@ -2268,7 +2746,9 @@ root node.</li>
 
   <span class="n">onStack</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></figure><h3 id="topological-order">
+</code></pre></figure>
+<p>Currency arbitrage can be discovered if the problem is modeled as a graph where the nodes are the different kinds of currency and the edge weights are the logarithm of the exchange rate. In this case, an instance of arbitrage is one where there is a cycle with positive weight.</p>
+<h3 id="topological-order">
 <span class="hash">#</span>
 <a href="#topological-order" class="header-link">Topological Order</a>
 </h3>
@@ -2296,7 +2776,15 @@ root node.</li>
 
   <span class="k">return</span> <span class="n">reverse_post_order</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre></figure><h3 id="strong-connectivity">
+</code></pre></figure>
+<p>For example, consider an alien or unknown alphabet and we&#39;re given an array of words which are <em>sorted</em> according to the lexigraphical order of the alphabet. In order to to reconstruct, or extract, the lexicographical order of this unknown alphabet, first treat the lexicographical order simply as a &quot;relationship&quot;. Graphs can model relationships, so start by creating a node for each character.</p>
+
+<p>Information about the lexicographical order of the alphabet can be inferred from the sorted order of the input. Word <script type="math/tex">A</script> comes before <script type="math/tex">B</script> because <script type="math/tex">A</script> mismatches with <script type="math/tex">B</script> at some character position <script type="math/tex">i</script> such that <script type="math/tex">A[i] < B[i]</script>, by definition of a lexicographical sorted order.</p>
+
+<p>What&#39;s necessary then is to determine the mismatching characters <script type="math/tex">A[i]</script> and <script type="math/tex">B[i]</script> for each pair of adjacent words in the input and to establish a relationship between those two characters which denotes precedence, i.e. a directed edge <script type="math/tex">A[i] \to B[i]</script> to mean that <script type="math/tex">A[i]</script> comes before <script type="math/tex">B[i]</script> in the alphabet.</p>
+
+<p>Once this is all done, the topological order of the graph can be obtained to determine the full order of the alphabet.</p>
+<h3 id="strong-connectivity">
 <span class="hash">#</span>
 <a href="#strong-connectivity" class="header-link">Strong Connectivity</a>
 </h3>
@@ -2540,15 +3028,32 @@ root node.</li>
 
   <span class="k">return</span> <span class="n">id</span><span class="o">[</span><span class="n">p</span><span class="o">];</span>
 <span class="o">}</span>
-</code></pre></figure><h2 id="minimum-spanning-trees">
+</code></pre></figure><h2 id="minimum-cut">
+<span class="hash">#</span>
+<a href="#minimum-cut" class="header-link">Minimum Cut</a>
+</h2>
+<p>Adding an edge to a tree creates a cycle and removing an edge from a tree breaks it into two separate subtrees. Knowing this, a <em>cut</em> of a graph is a partition of its vertices into two nonempty disjoint sets, connected by a <em>crossing edge</em>. A graph with <script type="math/tex">n</script> vertices has <script type="math/tex">2^n</script> cuts because each vertex <script type="math/tex">n</script> has two choices as to which set it&#39;s placed in, left or right, i.e. <script type="math/tex">n</script> blanks to be filled with one of two values.</p>
+
+<p>A minimum cut (min-cut) is the cut with the fewest number of crossing edges, with parallel edges allowed, i.e. edges which connect the same vertices. Min-cuts are useful for identifying weaknesses in networks (i.e. hotspots), identifying tightly-knit communities in social networks, and image segmentation.</p>
+
+<p>The minimum cut can (potentially) be obtained through a randomized algorithm known as random contraction. It works by, as long as more than 2 vertices remain in the graph, picking a random remaining edge and merging or &quot;contracting&quot; them into a single vertex, removing any self-loops. When only 2 vertices remain, the cut represented by them is returned.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">while</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">:</span>
+  <span class="n">edge</span> <span class="o">=</span> <span class="n">random_edge</span><span class="p">()</span>
+  <span class="n">node</span> <span class="o">=</span> <span class="n">merge_vertices</span><span class="p">(</span><span class="n">edge</span><span class="p">.</span><span class="n">from</span><span class="p">,</span> <span class="n">edge</span><span class="p">.</span><span class="n">to</span><span class="p">)</span>
+  <span class="n">remove_self_loops</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+<span class="k">return</span> <span class="n">cut</span>
+</code></pre></figure>
+<p>It&#39;s possible that random contraction will not find the minimum cut. This is mitigated by running it a large number of times, since it is very fast, and returning the smallest cut found. The largest number of min-cuts that a graph with <script type="math/tex">n</script> vertices can have is <script type="math/tex">\binom n 2 = \frac {n (n - 1)} 2</script>.</p>
+<h2 id="minimum-spanning-trees">
 <span class="hash">#</span>
 <a href="#minimum-spanning-trees" class="header-link">Minimum Spanning Trees</a>
 </h2>
 <p>An <em>edge-weighted graph</em> is a graph where the edges have associated weights or costs. Edge-weighted graphs can be represented with adjacency lists containing edge objects which contain the two vertices, one of which is the index of the adjacency list, as well as the weight for that edge.</p>
 
 <p>A <em>spanning tree</em> is a connected subgraph with no cycles that includes all of the vertices in the graph. A <em>minimum spanning tree</em> (MST) is a spanning tree whose weight---the sum of all of its edges&#39; weights---is no larger than the weight of any other spanning tree for that graph.</p>
-
-<p>Adding an edge to a tree creates a cycle and removing an edge from a tree breaks it into two separate subtrees. Knowing this, a <em>cut</em> of a graph is a partition of its vertices into two nonempty disjoint sets, connected by a <em>crossing edge</em>.</p>
 <h3 id="prim39s-algorithm">
 <span class="hash">#</span>
 <a href="#prim39s-algorithm" class="header-link">Prim&#39;s Algorithm</a>
@@ -3213,6 +3718,11 @@ root node.</li>
 <a href="#strings" class="header-link">Strings</a>
 </h1>
 <p>Strings have special properties which necessitate more efficient algorithms for sorting and searching. Other subjects concerning strings include tries, regular expressions, and data compression.</p>
+<h2 id="string-rotation">
+<span class="hash">#</span>
+<a href="#string-rotation" class="header-link">String Rotation</a>
+</h2>
+<p>A string such as <code>&quot;house&quot;</code> can be rotated as <code>&quot;sehou&quot;</code>. An quick way to determine if a string is a rotation of another is by concatenating the original string to itself and then looking for the rotated string within it. For example, the concatenation would be <code>&quot;househouse&quot;</code>, which clearly contains <code>&quot;sehou&quot;</code> as a substring.</p>
 <h2 id="string-sorting">
 <span class="hash">#</span>
 <a href="#string-sorting" class="header-link">String Sorting</a>
@@ -3626,19 +4136,9 @@ root node.</li>
 <p>In a normal brute-force algorithm when a pattern matching a segment of the text starting at <code>t[i]</code> mismatches at position <code>j</code>, the entire pattern is re-checked starting on the character to the right: <code>t[i + 1]</code>, effectively having to re-check characters <code>t[i + 1]</code> to <code>t[i + j - 1]</code>.</p>
 
 <p>For example, the following mismatches at position 4:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">0 1 2 3 4 5
-A B C D E F
-A B C D F
-</code></pre></figure>
+
 <p>So in a brute-force algorithm the pattern would have to be shifted to the right by one position:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">0 1 2 3 4 5
-A B C D E F
-  A B C D F
-</code></pre></figure>
+
 <p>However, this essentially means that the text segment from position 1 to 3 has to be rechecked, which we would prefer to avoid. The important observation to make is that the text had <em>already matched</em> the pattern <em>up to</em> (but not including) position <code>j</code> where the mismatch occurred. That is, the text segment <code>t[i .. i + j - 1]</code> is equal to <code>p[0 .. j - 1]</code> where <code>p</code> is the pattern. Since we would have to shift to the right one character, this means that the text that would have to be rechecked corresponds to <code>p[1 .. j - 1]</code>. Feeding this to the DFA takes us to the state where we can appropriately handle <code>t[i + j]</code>.</p>
 
 <p><em>Based on this observation</em>, we can conclude that at every state we can add transitions for mismatch cases based on the transitions that would be made for the equivalent mismatch that would occur at the state we would arrive at if we had fed the input <code>p[0 .. j - 1]</code> to the DFA. For this reason, a &quot;pointer&quot; to this state is kept at every iteration of the DFA construction, where each iteration is comprised of defining all transitions for a given state.</p>
@@ -3945,15 +4445,9 @@ A B C D E F
 <a href="#run-length-encoding" class="header-link">Run-Length Encoding</a>
 </h3>
 <p>Run-Length Encoding (RLE) is a classic method of encryption that replaces repeat occurrences of characters with their repeat count. For example, the following consists of 15 zeros, 7 ones, 7 zeros, and 11 ones:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">0000000000000001111111000000011111111111
-</code></pre></figure>
+
 <p>With RLE, given a count size of 4 bits, it can be replaced with 15 (<code>1111</code>), 7 (<code>0111</code>), 7, and 11 (<code>1011</code>):</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">1111011101111011
-</code></pre></figure>
+
 <p>In general, each count is encoded in one byte. If a run of repeated characters is greater than the maximum size representable by the count size (i.e. 255), the first 255 is encoded, then a zero-lengthed run of the alternate character, then again the next chunk of the original long repeated character.</p>
 <h3 id="huffman-compression">
 <span class="hash">#</span>
@@ -4090,20 +4584,15 @@ A B C D E F
 <p>Greedy algorithms are ones which make &quot;myopic&quot; decisions, i.e. they seemed like good decisions at the time and there&#39;s a hope that everything works out in the end.</p>
 
 <p>Dijkstra&#39;s shortest-path algorithm is greedy for example because it processes each destination once, it doesn&#39;t backtrack to find a different path.</p>
-<h1 id="context">
-<span class="hash">#</span>
-<a href="#context" class="header-link">Context</a>
-</h1>
-<p>Miscellaneous algorithms follow.</p>
-<h2 id="b-trees">
+<h1 id="b-trees">
 <span class="hash">#</span>
 <a href="#b-trees" class="header-link">B-Trees</a>
-</h2>
+</h1>
 <p>A B-Trees of order <script type="math/tex">M</script> is a tree consisting of internal and external <script type="math/tex">k</script>-nodes each consisting of <script type="math/tex">k</script> keys where <script type="math/tex">2 \leq k \leq M - 1</script> at the root and <script type="math/tex">M/2 \leq k \leq M - 1</script> at every other node. <em>Internal nodes</em> contain copies of keys, where every key is greater than or equal to its parent node&#39;s associated key, but not greater than the parent node&#39;s next largest key. <em>External nodes</em> are the leaves of the tree that associate keys with data. A <em>sentinel key</em> is created to be less than all other keys and is the first key in the root node.</p>
-<h3 id="b-tree-insertion">
+<h2 id="b-tree-insertion">
 <span class="hash">#</span>
 <a href="#b-tree-insertion" class="header-link">B-Tree Insertion</a>
-</h3>
+</h2>
 <p>To insert a key, the tree is recursively descended by following the link pertaining to the interval upon which the inserted key falls until an external node is reached. The tree is balanced on the way up the tree after the recursive call. If a node is full it is split into two <script type="math/tex">M/2</script>-nodes and attached to a parent 2-node (if at the root) or a <script type="math/tex">(k + 1)</script>-node where <script type="math/tex">k</script> was the original size of the full node&#39;s parent. Whenever a node is split, the smallest key in the new node (or both smallest keys from both nodes if at the root) is inserted into the parent node.</p>
 <figure class="codeblock">
 <pre>
@@ -4131,10 +4620,10 @@ A B C D E F
 
   <span class="n">next</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
 <span class="o">}</span>
-</code></pre></figure><h2 id="suffix-arrays">
+</code></pre></figure><h1 id="suffix-arrays">
 <span class="hash">#</span>
 <a href="#suffix-arrays" class="header-link">Suffix Arrays</a>
-</h2>
+</h1>
 <p>Suffix arrays are arrays of suffixes of a given text which help with procedures such as finding the longest repeated substring in some text.</p>
 <figure class="codeblock">
 <pre>
@@ -4178,17 +4667,17 @@ A B C D E F
 
   <span class="n">StdOut</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">lrs</span><span class="o">);</span>
 <span class="o">}</span>
-</code></pre></figure><h2 id="network-flow">
+</code></pre></figure><h1 id="network-flow">
 <span class="hash">#</span>
 <a href="#network-flow" class="header-link">Network-Flow</a>
-</h2>
+</h1>
 <p>The Network-Flow problem concerns itself with finding the settings in a network that maximize the flow from source to sink. At each junction in the network there are switches that control the flow&#39;s distribution between it&#39;s outgoing edges. The problem can be modeled as an edge-weighted digraph with a single source and sink pair, where the weights correspond to the capacity of the edge.</p>
 
 <p>An <em>st-flow</em> is a set of edge flows for the network that represent the distribution of flow values for each edge. An <em>st-flow value</em> is the sink&#39;s inflow. The network-flow problem can be described as finding an st-flow such that no other st-flow has a larger st-flow value. Such an st-flow can be referred to as a <em>maxflow</em>.</p>
-<h3 id="ford-fulkerson">
+<h2 id="ford-fulkerson">
 <span class="hash">#</span>
 <a href="#ford-fulkerson" class="header-link">Ford-Fulkerson</a>
-</h3>
+</h2>
 <p>The Ford-Fulkerson algorithm, also known as the <em>augmenting-path algorithm</em>, works by increasing flows incrementally along paths from the source to the sink. It works by considering that each edge consists of a <em>forward edge</em> and a <em>backward edge</em>.</p>
 
 <p>A path is found in the network in which there are no full forward edges and no empty backward edges. The flow of the network can then be increased by an amount <script type="math/tex">X</script>, by increasing flow in forward edges by <script type="math/tex">X</script> and decreasing flow in backward edges by <script type="math/tex">X</script> in this path. The value of <script type="math/tex">X</script> is the minimum of the unused capacities in forward edges and backward edges in the path. This path that can be used to increase flow in the network is known as an <em>augmenting path</em>.</p>
@@ -4202,17 +4691,6 @@ A B C D E F
 <p>The residual network is useful because any path in it from source to sink corresponds directly to an augmenting path in the original network. As an augmenting path&#39;s flow is incremented, when an edge in the path becomes full or empty, it corresponds to changing direction or disappearing in the residual network.</p>
 
 <p>The <em>shortest-augmenting-path</em> method finds the maxflow by finding an augmenting path using BFS and incrementing it.</p>
-<h2 id="np-complete-problems">
-<span class="hash">#</span>
-<a href="#np-complete-problems" class="header-link">NP-Complete Problems</a>
-</h2>
-<ul>
-<li><strong>clique problem</strong>: find complete subgraphs, or <em>cliques</em>, in a graph</li>
-<li><strong>vertex cover</strong>: find a set of vertices in a graph such that each edge in the graph is incident to at least one vertex in the set</li>
-<li><strong>travelling salesman problem</strong>: find the shortest possible path cycle that visits every vertex in a graph</li>
-<li><strong>graph coloring</strong>: color every vertex--edge in a graph such that no two adjacent vertices--edges have the same color</li>
-<li><strong>knapsack</strong>: given a set of items with different values and a container of a maximum capacity, find the combination of items that fits in the container and has the largest total value.</li>
-</ul>
 <h1 id="geometric-algorithms">
 <span class="hash">#</span>
 <a href="#geometric-algorithms" class="header-link">Geometric Algorithms</a>
@@ -4280,103 +4758,6 @@ else: go left</li>
 <a href="#rectangle-intersection" class="header-link">Rectangle Intersection</a>
 </h2>
 <p>Checking for rectangle intersection is similar to line segment intersection. The left edge of a rectangle prompts the vertical range of the rectangle is checked for overlaps in an interval search tree, and added if none are detected. The rectangle&#39;s vertical range is removed from the interval search tree when the right edge of the rectangle is encountered.</p>
-<h1 id="bitwise-operations">
-<span class="hash">#</span>
-<a href="#bitwise-operations" class="header-link">Bitwise Operations</a>
-</h1>
-<p>A very important property of XOR is that it a number XORed with itself is 0.</p>
-
-<p><script type="math/tex; mode=display"> N \oplus N = 0 </script></p>
-
-<p>For example, given a list of numbers where each number appears exactly twice <em>except</em> for one number, the number that appears only once can be obtained by XORing each element with the next one, since duplicate elements would cancel themselves out.</p>
-
-<p>More generally, bytes can be treated as a set, where bitwise operations correspond to set operations.</p>
-
-<p>A set can be tested for the presence of a value by using the AND operator. More generally, this can be seen as a set intersection operation, in which the operands may, after all, be singleton sets.</p>
-
-<p><script type="math/tex; mode=display"> S_a \mathrel{\&} S_b </script></p>
-
-<p>A value can be <em>unconditionally</em> added to set <script type="math/tex">S</script> using the OR operator:</p>
-
-<p><script type="math/tex; mode=display"> S \mathrel{|} N </script></p>
-
-<p>A value can be <em>unconditionally</em> removed from set <script type="math/tex">S</script> using the AND operator with the complement of the value to be removed:</p>
-
-<p><script type="math/tex; mode=display"> S \mathrel{\&} \mathord{\sim} N </script></p>
-
-<p>A value can be <em>conditionally</em> added or removed from the set <script type="math/tex">S</script> using the XOR operator. The value will be removed if it is already contained and added if it isn&#39;t.</p>
-
-<p><script type="math/tex; mode=display"> S \oplus N </script></p>
-
-<p>For example, given an array of numbers, each of which appears exactly three times <em>except</em> for one number, the number that appears only once can be obtained using a combination of the above operations.</p>
-
-<p>There will be two sets. The <code>ones</code> set will contain those numbers that have been observed to appear once so far. The <code>twos</code> set will contain those numbers that have been observed to appear twice so far. It&#39;s not necessary to track those numbers that appear three times, as that is implicit.</p>
-
-<p>For each number in the array, it will be added to the <code>ones</code> set if it has been seen exactly once. If a number is already in the <code>ones</code> set and is seen again, it&#39;s removed from the <code>ones</code> set and added to the <code>twos</code> set. If a number is already in the <code>twos</code> set and is seen again, it&#39;s removed from the <code>twos</code> set. Ultimately this will leave the <code>ones</code> set as a singleton set containing the number that appears only once.</p>
-
-<p>First, the number being considered is checked to see if it has already been seen once so far:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-java"><span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span>
-</code></pre></figure>
-<p>This would mean that this is the second time that this number has been seen. If the number is indeed in the <code>ones</code> set, the above expression evaluates to the number itself by nature of the AND operation, otherwise it evaluates to 0.</p>
-
-<p>The result of the above expression can directly be used to add the number to the <code>twos</code> set using the OR operation, which adds the number to the set, or does nothing if the number is 0.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-java"><span class="n">twos</span> <span class="o">|=</span> <span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span>
-</code></pre></figure>
-<p>The number is then <em>conditionally</em> added to or removed from the <code>ones</code> set using the XOR operation. If the <code>ones</code> set already contained the number, then the previous operation will have added the number to the <code>twos</code> set, in which case it&#39;s no longer needed inside the <code>ones</code> set, since the <code>ones</code> set only contains those numbers that have appeared <em>exactly</em> once. If the <code>ones</code> set didn&#39;t already contain the number, then the above presence check results in 0 which does nothing when added to the <code>twos</code> set.</p>
-
-<p>Therefore, we can add the number to the <code>ones</code> set if it wasn&#39;t already contained, or remove it if it was contained.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-java"><span class="n">ones</span> <span class="o">^=</span> <span class="n">num</span>
-</code></pre></figure>
-<p>However, if this has been the <em>third</em> time that this number has been seen, then the number will have been in the <code>twos</code> set already but <em>not</em> in the <code>ones</code> set. The above expression would therefore <em>also</em> add it to the <code>ones</code> set. Therefore we can be sure that if the number was present in both the <code>ones</code> and <code>twos</code> sets after the above operation, then this is the <em>third</em> time that this number has been observed.</p>
-
-<p>In this case, the number should be removed from both sets. This would ensure that the <code>ones</code> set really does only contain those numbers that have appeared <em>exactly</em> once, which is what we&#39;re interested in.</p>
-
-<p>However, the <code>ones</code> set and the <code>twos</code> set may contain various numbers. We know that the one that appears in both is the one that has appeared three times, and hence the one we want to remove, so we can obtain this number by intersecting both sets.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-java"><span class="kt">int</span> <span class="n">threes</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">&amp;</span> <span class="n">ones</span><span class="o">;</span>
-</code></pre></figure>
-<p>We then want to remove this number from both sets:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-java"><span class="n">twos</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
-<span class="n">ones</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
-</code></pre></figure>
-<p>Here is the full algorithm.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-java"><span class="kd">public</span> <span class="kt">int</span> <span class="nf">singleNumber</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
-  <span class="kt">int</span> <span class="n">ones</span><span class="o">,</span> <span class="n">twos</span><span class="o">;</span>
-  <span class="n">ones</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-
-  <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">num</span> <span class="o">:</span> <span class="n">nums</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">twos</span> <span class="o">|=</span> <span class="n">ones</span> <span class="o">&amp;</span> <span class="n">num</span><span class="o">;</span>
-    <span class="n">ones</span> <span class="o">^=</span> <span class="n">num</span><span class="o">;</span>
-
-    <span class="kt">int</span> <span class="n">threes</span> <span class="o">=</span> <span class="n">twos</span> <span class="o">&amp;</span> <span class="n">ones</span><span class="o">;</span>
-    <span class="n">twos</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
-    <span class="n">ones</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">threes</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="k">return</span> <span class="n">ones</span><span class="o">;</span>
-<span class="o">}</span>
-</code></pre></figure><h1 id="integers">
-<span class="hash">#</span>
-<a href="#integers" class="header-link">Integers</a>
-</h1>
-<p>It&#39;s possible to &quot;shift&quot; a number to the left by <script type="math/tex">n</script> digits by multiplying it with <script type="math/tex">\text {base}^\text {digits}</script>. For example, the number <script type="math/tex">321</script> can be shifted to the left by 2 digits to <script type="math/tex">32100</script> by multiplying it by <script type="math/tex">10^2</script>.</p>
-
-<p><script type="math/tex; mode=display">\text {shifted left by n} = x * \text {base}^\text {digits}</script></p>
-
-<p>Similarly, it&#39;s possible to get the last <script type="math/tex">n</script> digits of a number by getting the remainder of dividing it by <script type="math/tex">\text {base}^\text {digits}</script>. For example, the last 2 digits of <script type="math/tex">321</script> can be obtained by getting the remainder of dividing it (i.e. the modulo) by <script type="math/tex">10^2</script>.</p>
-
-<p><script type="math/tex; mode=display">\text {right-most n digits} = x \bmod \text {base}^\text {digits}</script></p>
 <h1 id="dynamic-programming">
 <span class="hash">#</span>
 <a href="#dynamic-programming" class="header-link">Dynamic Programming</a>
@@ -4510,7 +4891,18 @@ v_i + V_{(i - 1), x - w_i} & \text {case 2, item i included}
       <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">w_i</span><span class="p">]</span> <span class="o">+</span> <span class="n">v_i</span><span class="p">)</span>
 
 <span class="k">return</span> <span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">W</span><span class="p">]</span>
-</code></pre></figure>
+</code></pre></figure><h1 id="np-complete-problems">
+<span class="hash">#</span>
+<a href="#np-complete-problems" class="header-link">NP-Complete Problems</a>
+</h1>
+<ul>
+<li><strong>clique problem</strong>: find complete subgraphs, or <em>cliques</em>, in a graph</li>
+<li><strong>vertex cover</strong>: find a set of vertices in a graph such that each edge in the graph is incident to at least one vertex in the set</li>
+<li><strong>travelling salesman problem</strong>: find the shortest possible path cycle that visits every vertex in a graph</li>
+<li><strong>graph coloring</strong>: color every vertex--edge in a graph such that no two adjacent vertices--edges have the same color</li>
+<li><strong>knapsack</strong>: given a set of items with different values and a container of a maximum capacity, find the combination of items that fits in the container and has the largest total value.</li>
+</ul>
+
 <div class="footnotes">
 <hr>
 <ol>
@@ -4541,8 +4933,8 @@ v_i + V_{(i - 1), x - w_i} & \text {case 2, item i included}
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> July 15, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/algorithms.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/34395b0" title="bump
-">34395b0</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/algorithms.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/d43064c" title="polishing up and adding new sections
+">d43064c</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>

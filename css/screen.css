@@ -731,6 +731,20 @@ article.page h1.title {
 .entry-content pre {
   font-family: Menlo, Monaco, "DejaVu Sans Mono", Consolas, monospace; }
 
+.language-console, .language-shell-session {
+  /* regular command lines, lighter output */
+  /* .gp { color: $solar-cyan; } */
+  /* .go { color: rgba(85, 85, 85, 0.8); } */
+  /* bold command lines, regular output */
+  font-weight: bold; }
+  .language-console .gp, .language-shell-session .gp {
+    color: #3E999F; }
+  .language-console .go, .language-shell-session .go {
+    color: inherit;
+    font-weight: normal; }
+  .language-console .c1, .language-shell-session .c1 {
+    font-weight: normal; }
+
 .language-javascript .kd {
   color: #3E999F; }
 

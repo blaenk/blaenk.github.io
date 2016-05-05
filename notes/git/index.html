@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Python - Blaenk Denum</title>
+  <title>Git - Blaenk Denum</title>
   <meta name="author" content="Jorge Israel Peña">
   <meta name="description" content="AKA Blaenk Denum">
 
@@ -76,32 +76,43 @@
 
     
         <article class="post">
-  <h2 class="title"><a href="/work/python"><span>Python</span></a></h2>
-  <div class="entry-content"><h2 id="learning-from-data">
-<span class="hash">#</span>
-<a href="#learning-from-data" class="header-link">Learning From Data</a>
-</h2>
-<p>The code for the <a href="http://work.caltech.edu/homeworks.html">homework assignments</a> for the Cal Tech CS 1156x class offered on edX.org. The class was about Machine Learning, focusing on the theory. My class notes are <a href="/notes/machine-learning-theory/">also available</a>. I decided to do the assignments in Python to gain some experience with <a href="http://numpy.scipy.org/">NumPy</a>, which is quickly becoming the industry choice for scientific computing. I had experience with R, but I preferred to use a &quot;real&quot; language.</p>
+  <h2 class="title"><a href="/notes/git"><span>Git</span></a></h2>
+  <div class="entry-content"><p>When merging a feature branch it&#39;s generally preferable to preserve the fact that the commits come from the feature branch for historical purposes. However, if the destination branch (e.g. master) hasn&#39;t diverged, a merge by default will be fast-forward, essentially resetting the master to the feature branch, thereby erasing any trace of a merge ever taking place, let alone from which branch.</p>
 
-<p>I created a simple testing mechanism to automate testing of the experiments that were developed, allowing me to do something like:</p>
+<p>To force git to perform a non-fast-forwarding merge, use the <code>--no-ff</code> option:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-python"><span class="c1"># constructor is Question(question_str, choices, answer)</span>
-<span class="n">question8</span> <span class="o">=</span> <span class="n">Question</span><span class="p">(</span><span class="s2">&quot;8. in sample error&quot;</span><span class="p">,</span>
-                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
-
-<span class="n">in_sample_error</span> <span class="o">=</span> <span class="n">experiment</span><span class="p">()</span>
-<span class="n">question8</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">in_sample_error</span><span class="p">)</span>
+<code class="highlight language-console"><span class="gp">$</span> git merge --no-ff feature-branch
 </code></pre></figure>
-<p>Which would output something like:</p>
+<p>To ensure a fast-forwarding merge, the destination branch must not have diverged from the base of the source branch. If it did, the destination branch must be rebased on top of the destination branch.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-console"><span class="gp">$</span> git rebase new-base <span class="nb">source</span>
+</code></pre></figure>
+<p>The history range available for an interactive rebase is the range beginning with the specified commit. For example, to rebase local commits on top of a remote branch that may have diverged, it suffices to specify the refspec of the remote branch.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-console"><span class="gp">$</span> git rebase -i origin/experiment
+</code></pre></figure>
+<p>An interactive rebase shows commits in the order that they will be applied one by one, i.e. in chronological order from top-to-bottom, starting with the first commit at the top.</p>
 
-<p>The homework assignments covered many topics such as the simple perceptron learning algorithm, support vector machines, logistic regression via stochastic gradient descent, regularization, and validation.</p>
+<p>Squashing a commit during an interactive rebase causes it to be &quot;squashed into&quot; the commit that precedes if chronologically (i.e. the one above it), combining both commits&#39; messages.</p>
+
+<p>Marking a commit as a fixup during an interactive rebase is like squashing a commit except the commit&#39;s message is discarded, essentially adopting the message of the commit being squashed into.</p>
+
+<p>Editing a commit during an interactive rebase has the effect of applying the changes of the commit on the working tree, allowing one to create separate commits from the changes as needed (via <code>add -p</code>) before continuing the rebase operation. This is useful for splitting a larger commit into smaller ones. It&#39;s even possible to completely change the commit.</p>
+
+<p>Rewording a commit during an interactive rebase has the effect of picking it for the rebase, but having the rebase process pause to give one a chance to edit the commit message.</p>
+
+<p>Commits can be deleted or even reordered during an interactive rebase by deleting or rearranging the lines.</p>
+
+<p>The <code>@</code> symbol is an alias for <code>HEAD</code>.</p>
 </div>
   <div class="meta">
-    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> August 27, 2015</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/work/python.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/960a474" title="break the work page into separate work pages
-">960a474</a></span></div>
-    <div class="meta-component"><i class="fa fa-wrench fa-fw"></i> <a href="..">Work</a></div>
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> May  4, 2016</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/git.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/617e1b9" title="add git notes
+">617e1b9</a></span></div>
+    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
 
@@ -131,7 +142,7 @@
 
 <script type="text/javascript">
   jQuery(function (){
-    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/work/python.markdown');
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/git.markdown');
 
     ws.onmessage = function (e) {
       var content = jQuery('article .entry-content');

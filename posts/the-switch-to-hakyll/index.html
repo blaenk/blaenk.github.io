@@ -329,28 +329,15 @@
 <a href="#pygments" class="header-link">Pygments</a>
 </h3>
 <p><strong>Update</strong>: This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I&#39;ve created a pygments server that the site opens alongside it at launch, and this Pandoc AST transformer communicates with it through its stdout/stdin handles. It works perfectly and the site compiles a lot quicker. It also fully supports UTF-8:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹
-</code></pre></figure>
+
 <p>One of the first things I wanted to implement right away was syntax highlighting with <a href="http://pygments.org/">Pygments</a>. There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for <a href="http://johnmacfarlane.net/highlighting-kate/">kate</a>: a Haskell package for syntax highlighting written by the author of Pandoc. However, I don&#39;t find it to be on par with Pygments. In the past, I simply posted code to <a href="https://gist.github.com/">gist</a> and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.</p>
 
 <p>Eventually I realized that github just uses Pygments underneath, so I implemented a Pandoc AST transformer that finds every <a href="http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Definition.html#t:Block"><code>CodeBlock</code></a>, extracts the code within it, passes it to Pygments, and replaces that <code>CodeBlock</code> with a <code>RawBlock</code> containing the raw HTML output by Pygments. I also implemented a way to specify an optional caption which is shown under the code block. I use <a href="http://jaspervdj.be/blaze/">blaze-html</a> for the parts where I need to hand-craft HTML.</p>
 
 <p>Ultimately, this all means that I can write code blocks like this in markdown:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">``` haskell
-testFunction :: String -> Integer
-```
-</code></pre></figure>
+
 <p>Or, with a caption:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">``` ruby: some caption
-args.map! {|arg| arg.upcase}
-```
-</code></pre></figure>
+
 <p>One thing I had to do was invoke <a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/System-IO-Unsafe.html#v:unsafePerformIO"><code>unsafePerformIO</code></a> in the function I created which runs the code through <code>pygmentize</code>, an end-user binary for the Pygments library. I&#39;m not sure if there&#39;s a better way to do this, but my justification for using it is that Pygments should return the same output for any given input. If it doesn&#39;t, then there are probably larger problems.</p>
 <figure class="codeblock">
 <pre>
@@ -418,10 +405,7 @@ args.map! {|arg| arg.upcase}
 <p>This <code>Tree</code> is finally passed to a recursive function that folds every level of the <code>Tree</code>---known as a <code>Forest</code>---into a numbered, unordered list. While that may sound like an oxymoron, the point is that I wanted to have nested numbering in my table of contents. For this reason, I create an unordered list with a <code>span</code> containing the section number concatenated to the parent&#39;s section number. This function generates the HTML.</p>
 
 <p>The final problem was finding a way to insert the table of contents on-demand, in a location of my choosing. In kramdown, this is achieved by writing <code>{:toc}</code>, which gets substituted with the table of contents. Pandoc has no such thing, however. For this reason, I chose a list with a single item, &quot;toc,&quot; as the place holder for the table of contents. This means that I write the following wherever I want the table of contents to show up:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">* toc
-</code></pre></figure>
+
 <p>You can take a look at the beginning of this post to see what the generated table of contents looks like, especially the nested numbering I was referring to.</p>
 <h2 id="deploying">
 <span class="hash">#</span>

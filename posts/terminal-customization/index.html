@@ -185,10 +185,7 @@
 <p><img src="/images/posts/terminal-customization/basic-prompt.png" class="center"></p>
 
 <p>Here it is in text:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">λ ~/code/haskell ➜
-</code></pre></figure>
+
 <p><strong>Update</strong>: I have changed my prompt to be multiline. All that has changed is that the ➜ is on its own line.</p>
 <h4 id="git">
 <span class="hash">#</span>
@@ -201,10 +198,7 @@
 <p><img src="/images/posts/terminal-customization/git-prompt.png" class="center"></p>
 
 <p>Again in text:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">λ ~/.dots (master . # +){+1} ➜ 
-</code></pre></figure>
+
 <p>The branch is <code>master</code> and apparently there&#39;s unstaged files, modifed files, and staged files. Furthermore, the <code>{+1}</code> shows that my branch is one commit ahead of the remote branch. It would also show the number of commits we are behind, in red, if that were the case---which in my opinion can be very handy so that you can avoid conflicts by rebasing or merging before you push. This segment only shows up if either of those conditions is met.</p>
 <h4 id="ssh">
 <span class="hash">#</span>
@@ -215,18 +209,11 @@
 <p><img src="/images/posts/terminal-customization/ssh-prompt.png" class="center"></p>
 
 <p>Once again in text:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">[someserver] λ ~/.dots (master) ➜ 
-</code></pre></figure>
+
 <p><strong>Update: October 28, 2013</strong></p>
 
 <p>I&#39;ve actually done away with this component of the prompt. I didn&#39;t like how the lambda no longer aligned with the arrow symbol. I&#39;ve instead decided to add a pretty simple green <code>R</code> at the end of the current working path, to signify that I am on a &quot;remote&quot; machine, so it reads something like &quot;currently on x path remotely.&quot;</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">λ ~/.dots R (master)
-➜
-</code></pre></figure><h3 id="vi-binds">
+<h3 id="vi-binds">
 <span class="hash">#</span>
 <a href="#vi-binds" class="header-link">vi-Binds</a>
 </h3>

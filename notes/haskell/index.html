@@ -200,26 +200,26 @@
 <p>It&#39;s possible to build an EPUB eBook of the <a href="https://www.haskell.org/ghc/docs/latest/html/users_guide/">GHC User Guide</a>. You&#39;ll need to have the <a href="https://ghc.haskell.org/trac/ghc/wiki/Building/Preparation/Linux">required dependencies</a> to build the documentation. In my experience I ended up having to boot an Ubuntu VM because the xsltproc packages on arch were too new. It&#39;s necessary to <a href="https://ghc.haskell.org/trac/ghc/wiki/Building/Docs">build the documentation</a> at least once to generate the necessary files, which unfortunately ends up building GHC itself it seems. See this <a href="https://www.ibm.com/developerworks/xml/tutorials/x-epubtut/">IBM article</a> for more information on building eBooks with docbook.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>./configure
-<span class="nv">$ </span><span class="nb">cd </span>docs/users_guide
-<span class="nv">$ </span>make html <span class="nv">stage</span><span class="o">=</span><span class="m">0</span> <span class="nv">FAST</span><span class="o">=</span>YES
-<span class="nv">$ </span><span class="nb">cd</span> ..
-<span class="nv">$ </span>/usr/bin/xsltproc <span class="se">\</span>
-    --stringparam base.dir docs/users_guide/users_guide/ <span class="se">\</span>
-    --stringparam use.id.as.filename <span class="m">1</span> <span class="se">\</span>
-    --stringparam html.stylesheet fptools.css <span class="se">\</span>
-    --nonet <span class="se">\</span>
-    --stringparam toc.section.depth <span class="m">3</span> <span class="se">\</span>
-    --stringparam section.autolabel <span class="m">1</span> <span class="se">\</span>
-    --stringparam section.label.includes.component.label <span class="m">1</span> <span class="se">\</span>
-    http://docbook.sourceforge.net/release/xsl/current/epub3/chunk.xsl <span class="se">\</span>
-    docs/users_guide/users_guide.xml
-<span class="nv">$ </span><span class="nb">cd </span>docs/users_guide
-<span class="nv">$ </span>rm *.html
-<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">&quot;application/epub+zip&quot;</span> &gt; mimetype
-<span class="nv">$ </span>zip -0Xq ghc.epub mimetype
-<span class="nv">$ </span>zip -Xr9D ghc.epub *
-<span class="nv">$ </span>stat ghc.epub
+<code class="highlight language-console"><span class="gp">$</span> ./configure
+<span class="gp">$</span> <span class="nb">cd</span> docs/users_guide
+<span class="gp">$</span> make html <span class="nv">stage</span><span class="o">=</span><span class="m">0</span> <span class="nv">FAST</span><span class="o">=</span>YES
+<span class="gp">$</span> <span class="nb">cd</span> ..
+<span class="gp">$</span> /usr/bin/xsltproc <span class="se">\</span>
+<span class="gp">&gt;</span>   --stringparam base.dir docs/users_guide/users_guide/ <span class="se">\</span>
+<span class="gp">&gt;</span>   --stringparam use.id.as.filename <span class="m">1</span> <span class="se">\</span>
+<span class="gp">&gt;</span>   --stringparam html.stylesheet fptools.css <span class="se">\</span>
+<span class="gp">&gt;</span>   --nonet <span class="se">\</span>
+<span class="gp">&gt;</span>   --stringparam toc.section.depth <span class="m">3</span> <span class="se">\</span>
+<span class="gp">&gt;</span>   --stringparam section.autolabel <span class="m">1</span> <span class="se">\</span>
+<span class="gp">&gt;</span>   --stringparam section.label.includes.component.label <span class="m">1</span> <span class="se">\</span>
+<span class="gp">&gt;</span>   http://docbook.sourceforge.net/release/xsl/current/epub3/chunk.xsl <span class="se">\</span>
+<span class="gp">&gt;</span>   docs/users_guide/users_guide.xml
+<span class="gp">$</span> <span class="nb">cd</span> docs/users_guide
+<span class="gp">$</span> rm *.html
+<span class="gp">$</span> <span class="nb">echo</span> <span class="s2">&quot;application/epub+zip&quot;</span> &gt; mimetype
+<span class="gp">$</span> zip -0Xq ghc.epub mimetype
+<span class="gp">$</span> zip -Xr9D ghc.epub *
+<span class="gp">$</span> stat ghc.epub
 </code></pre></figure><h1 id="type-classes">
 <span class="hash">#</span>
 <a href="#type-classes" class="header-link">Type Classes</a>
@@ -317,9 +317,9 @@
 <p>The <a href="http://hackage.haskell.org/package/threadscope">ThreadScope</a> tool helps visualize parallel execution, particularly for profiling. To use ThreadScope, the program should be compiled with the <code>-eventlog</code> GHC option and then run with the <code>+RTS -l</code> option to generate the eventlog. ThreadScope is then run on this event log:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>ghc -O2 program.hs -threaded -rtsopts -eventlog
-<span class="nv">$ </span>./program +RTS -N2 -l
-<span class="nv">$ </span>threadscope program.eventlog
+<code class="highlight language-console"><span class="gp">$</span> ghc -O2 program.hs -threaded -rtsopts -eventlog
+<span class="gp">$</span> ./program +RTS -N2 -l
+<span class="gp">$</span> threadscope program.eventlog
 </code></pre></figure><h2 id="eval-monad">
 <span class="hash">#</span>
 <a href="#eval-monad" class="header-link">Eval Monad</a>
@@ -361,10 +361,7 @@
 <a href="#sparks" class="header-link">Sparks</a>
 </h2>
 <p>An argument to <code>rpar</code> is called a <em>spark</em>. The runtime collects sparks in a pool and distributes them to available processors using a technique known as <em>work stealing</em>. These sparks are to be <em>converted</em>, i.e. evaluated in parallel, though this may fail in a variety of ways. The <code>+RTS -s</code> option provides information about the sparks and what became of them during the execution of the program in the following form:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">SPARKS: 100 (100 converted, 0 overflowed, 0 dud, 0 GC'd, 0 fizzled)
-</code></pre></figure>
+
 <table>
 <thead>
 <tr>
@@ -542,35 +539,13 @@
 <p>Images can be embedded with <code>&lt;&lt;path.png title&gt;&gt;</code> syntax.</p>
 
 <p>It&#39;s possible to link to Haskell identifiers that are types, classes, constructors, or functions by surrounding them with single quotes. If the target is not in the scope, they may be referenced by fully qualifying them.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">-- | This module defines the type 'T'
--- It has nothing to do with 'M.T'
-</code></pre></figure>
+
 <p>Alternatively, it&#39;s possible to link to a module entirely by surrounding the name with double quotes.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">-- | This is a reference to the "Foo" module
-</code></pre></figure>
+
 <p>Code blocks may be inserted by surrounding the paragraph with <code>@</code> signs, where its content is interpreted as normal markup. Alternatively, it&#39;s possible to do so by preceding each line with a <code>&gt;</code>, in which case the text is interpreted literally.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">-- | this is some documentation that includes code
---
--- @
---     f x = x + x
--- @
---
--- > g x = x * 42
-</code></pre></figure>
+
 <p>It&#39;s possible to denote REPL examples with <code>&gt;&gt;&gt;</code>, followed by the result.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">-- | demonstrating the REPL example syntax
---
--- >>> fib 10
--- 55
-</code></pre></figure>
+
 <p>Unordered lists are possible by simply preceding the paragraph with a <code>*</code> or <code>-</code>. Ordered lists are possible by preceding each item with <code>(n)</code> or <code>n.</code>.</p>
 <h2 id="haddock-options">
 <span class="hash">#</span>
@@ -888,14 +863,10 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> March  5, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/haskell.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/haskell.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/feee1ca" title="use console instead of bash for shell sessions
 
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+There's also shell-session but I think console suffices.
+">feee1ca</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>

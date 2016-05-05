@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Python - Blaenk Denum</title>
+  <title>Cryptography - Blaenk Denum</title>
   <meta name="author" content="Jorge Israel Peña">
   <meta name="description" content="AKA Blaenk Denum">
 
@@ -76,32 +76,43 @@
 
     
         <article class="post">
-  <h2 class="title"><a href="/work/python"><span>Python</span></a></h2>
-  <div class="entry-content"><h2 id="learning-from-data">
-<span class="hash">#</span>
-<a href="#learning-from-data" class="header-link">Learning From Data</a>
-</h2>
-<p>The code for the <a href="http://work.caltech.edu/homeworks.html">homework assignments</a> for the Cal Tech CS 1156x class offered on edX.org. The class was about Machine Learning, focusing on the theory. My class notes are <a href="/notes/machine-learning-theory/">also available</a>. I decided to do the assignments in Python to gain some experience with <a href="http://numpy.scipy.org/">NumPy</a>, which is quickly becoming the industry choice for scientific computing. I had experience with R, but I preferred to use a &quot;real&quot; language.</p>
+  <h2 class="title"><a href="/notes/cryptography"><span>Cryptography</span></a></h2>
+  <div class="entry-content"><p>Diffie-Hellman key exchange works by agreeing on two publicly shared values: a large prime number <script type="math/tex">q</script> and a primitive root <script type="math/tex">g</script>. Alice and Bob each generate a <em>secret key</em>---a large random number---<script type="math/tex">x_a</script> and <script type="math/tex">x_b</script> respectively, and each raise the <em>primitive root</em> to the power of the <em>secret key</em>, modulo the <em>large prime number</em>.</p>
 
-<p>I created a simple testing mechanism to automate testing of the experiments that were developed, allowing me to do something like:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-python"><span class="c1"># constructor is Question(question_str, choices, answer)</span>
-<span class="n">question8</span> <span class="o">=</span> <span class="n">Question</span><span class="p">(</span><span class="s2">&quot;8. in sample error&quot;</span><span class="p">,</span>
-                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<p><script type="math/tex; mode=display">
+\begin{align*}
+y_a &= g^{x_a} \bmod q \\
+y_b &= g^{x_b} \bmod q
+\end{align*}
+</script></p>
 
-<span class="n">in_sample_error</span> <span class="o">=</span> <span class="n">experiment</span><span class="p">()</span>
-<span class="n">question8</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">in_sample_error</span><span class="p">)</span>
-</code></pre></figure>
-<p>Which would output something like:</p>
+<p>The results are sent to each other and the shared key is computed by raising the received value to the <em>secret key</em> modulo the <em>primitive root</em>.</p>
 
-<p>The homework assignments covered many topics such as the simple perceptron learning algorithm, support vector machines, logistic regression via stochastic gradient descent, regularization, and validation.</p>
+<p><script type="math/tex; mode=display">
+\begin{align*}
+k_{ab} &= y_b^{x_a} \bmod q \\
+k_{ab} &= y_a^{x_b} \bmod q
+\end{align*}
+</script></p>
+
+<p>Given a prime number <script type="math/tex">q</script>, a primitive root <script type="math/tex">g</script> is a number such that every number from 1 up to <script type="math/tex">q - 1</script> can be computed by raising the primitive root to some number <script type="math/tex">k</script>.</p>
+
+<p><script type="math/tex; mode=display">
+\forall x \in \{1, 2, ..., q - 1\}\ \mathbb{Z}_q \\
+\exists k \text { such that } g^k = x
+</script></p>
+
+<p><img src="http://i.imgur.com/aAnzCCF.png" class="center" /></p>
+
+<p>A common analogy is that of mixing paint.</p>
+
+<p><img src="http://i.imgur.com/Cp3ZKm4.png" class="center" /></p>
 </div>
   <div class="meta">
-    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> August 27, 2015</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/work/python.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/960a474" title="break the work page into separate work pages
-">960a474</a></span></div>
-    <div class="meta-component"><i class="fa fa-wrench fa-fw"></i> <a href="..">Work</a></div>
+    <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> May  4, 2016</div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cryptography.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/810c444" title="add cryptography notes
+">810c444</a></span></div>
+    <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
 
@@ -131,7 +142,7 @@
 
 <script type="text/javascript">
   jQuery(function (){
-    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/work/python.markdown');
+    var ws = new WebSocket('ws://' + window.location.hostname + ':9160/notes/cryptography.markdown');
 
     ws.onmessage = function (e) {
       var content = jQuery('article .entry-content');

@@ -74,22 +74,9 @@
 &lt;p&gt;&lt;img class=&quot;center&quot; src=&quot;/images/posts/dots/tmux.png&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;I have binds for creating new windows with &lt;code&gt;M-n&lt;/code&gt; and renaming a window with &lt;code&gt;M-r&lt;/code&gt;:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;bind -n M-r command-prompt &apos;rename-window %%&apos;
-bind -n M-n command-prompt -p &quot;Name of new window:&quot; &quot;new-window -n &apos;%%&apos;&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-&lt;p&gt;I also created simple binds for navigating and moving windows around. &lt;code&gt;M-h/M-l&lt;/code&gt; moves to the left and right window respectively, and &lt;code&gt;M-j/M-k&lt;/code&gt; moves the current window left and right, respectively.&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;# switch between windows left/right
-bind -n M-h previous-window
-bind -n M-l next-window
 
-# move windows left/right
-bind -n M-j swap-window -t -1
-bind -n M-k swap-window -t +1
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;&lt;h2 id=&quot;zsh&quot;&gt;
+&lt;p&gt;I also created simple binds for navigating and moving windows around. &lt;code&gt;M-h/M-l&lt;/code&gt; moves to the left and right window respectively, and &lt;code&gt;M-j/M-k&lt;/code&gt; moves the current window left and right, respectively.&lt;/p&gt;
+&lt;h2 id=&quot;zsh&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
 &lt;a href=&quot;#zsh&quot; class=&quot;header-link&quot;&gt;zsh&lt;/a&gt;
 &lt;/h2&gt;
@@ -121,37 +108,31 @@ bind -n M-k swap-window -t +1
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
 &lt;code class=&quot;highlight language-bash&quot;&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; ls&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;ls -lh --color&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;nv&quot;&gt;$@&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; ls -lh --color&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;nv&quot;&gt;$@&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
     awk &lt;span class=&quot;s1&quot;&gt;&amp;#39;{k=0;for(i=0;i&amp;lt;=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)\&lt;/span&gt;
 &lt;span class=&quot;s1&quot;&gt;         *2^(8-i));if(k)printf(&amp;quot;%0o &amp;quot;,k);print}&amp;#39;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;Example output:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;total 32K
-755 drwxr-xr-x 2 jorge users 4.0K Feb 15 20:05 git
-644 -rw-r--r-- 1 jorge users    0 Jan 27  2013 README.md
-755 drwxr-xr-x 2 jorge users 4.0K Feb 13 00:54 ruby
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;I also created a wrapper around the built-in &lt;code&gt;cd&lt;/code&gt; function that accepts parameters of the form &lt;code&gt;b...&lt;/code&gt; where the number of dots is arbitrary. If the wrapper detects a parameter of that form, it removes the &lt;code&gt;b&lt;/code&gt; prefix and expands each of the dots to &lt;code&gt;../&lt;/code&gt;. This makes for very quick navigation up an arbitrary amount of directories. The actual change-directory work is delegated to the original built-in &lt;code&gt;cd&lt;/code&gt; function:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
-&lt;code class=&quot;highlight language-bash&quot;&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;code class=&quot;highlight language-bash&quot;&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; cd&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
   emulate -LR zsh
 
   &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;b.&amp;#39;&lt;/span&gt;* &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;builtin cd&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;${${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;../&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;builtin&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;${${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;../&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;builtin cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$*&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;builtin&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$*&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;Example usage:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
-&lt;code class=&quot;highlight language-bash&quot;&gt;some/dir/here &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;b..
-some/ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# went up two directories&lt;/span&gt;
+&lt;code class=&quot;highlight language-shell-session&quot;&gt;&lt;span class=&quot;gp&quot;&gt;user@host some/dir/here $&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; b..
+&lt;span class=&quot;gp&quot;&gt;user@host some/ $&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# went up two directories&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;I also have a function for listing the pacman orphan packages on my system, i.e. those that aren&amp;#39;t required by any other package. I found a command for doing this but it just dumped a list of every package, so I modified it to also list the description of the package. This requires the &lt;code&gt;expac&lt;/code&gt; package, a utility to query the pacman database:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
@@ -162,11 +143,7 @@ some/ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;c&quo
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;Example output:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;yasm: A rewrite of NASM to allow for multiple syntax supported (NASM, TASM, GAS, etc.)
-zsh: A very advanced and programmable command interpreter (shell) for UNIX
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;Finally, another function I recently created that I find very useful is one to fetch my external IP address and both copy it to my clipboard and print it out to the terminal. This is very useful because my IP address does change from time to time, usually if I restart my router. Considering that I host a &lt;a href=&quot;http://mumble.sourceforge.net/&quot;&gt;mumble&lt;/a&gt; and &lt;a href=&quot;http://syncplay.pl/&quot;&gt;syncplay&lt;/a&gt; server, whenever this happens I have to inform my friends of the change, which usually requires me to manually determine my external IP by going to some website that provides the information.&lt;/p&gt;
 
 &lt;p&gt;So I decided to create a command that gets the IP address from &lt;a href=&quot;http://ipinfo.io&quot;&gt;ipinfo.io&lt;/a&gt;, copies the response to my clipboard, and also prints it out to the terminal.&lt;/p&gt;
@@ -184,9 +161,9 @@ zsh: A very advanced and programmable command interpreter (shell) for UNIX
     &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -n &lt;span class=&quot;nv&quot;&gt;$res&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; xsel --clipboard
     &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;copied &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$res&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; to clipboard&amp;quot;&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;# only run ip if it exists&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$+&lt;/span&gt;commands&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ip&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
-      &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;ip &lt;span class=&quot;nv&quot;&gt;$*&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# only run ip if it exists&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt; $+commands&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ip&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; ip &lt;span class=&quot;nv&quot;&gt;$*&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
@@ -194,9 +171,8 @@ zsh: A very advanced and programmable command interpreter (shell) for UNIX
 &lt;p&gt;Example output:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
-&lt;code class=&quot;highlight language-bash&quot;&gt;λ ~/some/place
-» ip get
-copied 123.45.678.90 to clipboard
+&lt;code class=&quot;highlight language-console&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$&lt;/span&gt; ip get
+&lt;span class=&quot;go&quot;&gt;copied 123.45.678.90 to clipboard&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;&lt;h3 id=&quot;cursors&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
 &lt;a href=&quot;#cursors&quot; class=&quot;header-link&quot;&gt;Cursors&lt;/a&gt;
@@ -230,10 +206,7 @@ zle -N zle-line-finish
 &lt;p&gt;For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the &amp;quot;default&amp;quot; color.&lt;/p&gt;
 
 &lt;p&gt;The sequence for setting the color is the same in xterm and urxvt: &lt;code&gt;\033]12;color\007&lt;/code&gt;. However, there is no sequence I know of---after looking at &lt;code&gt;man 7 urxvt&lt;/code&gt;---for resetting the cursor color to the default cursor color. For xterm, it is &lt;code&gt;\033]112\007&lt;/code&gt;. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;set -g terminal-overrides &apos;,rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;&lt;h3 id=&quot;misc&quot;&gt;
+&lt;h3 id=&quot;misc&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
 &lt;a href=&quot;#misc&quot; class=&quot;header-link&quot;&gt;Misc&lt;/a&gt;
 &lt;/h3&gt;
@@ -246,10 +219,9 @@ zle -N zle-line-finish
 &lt;p&gt;Example output:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
-&lt;code class=&quot;highlight language-bash&quot;&gt;λ ~/some/place
-» clojure
-clojure may be found in the following packages:
-  community/clojure 1.5.1-2     /usr/bin/clojure
+&lt;code class=&quot;highlight language-console&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$&lt;/span&gt; clojure
+&lt;span class=&quot;go&quot;&gt;clojure may be found in the following packages:&lt;/span&gt;
+&lt;span class=&quot;go&quot;&gt;  community/clojure 1.5.1-2     /usr/bin/clojure&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;I also configured &lt;a href=&quot;https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh&quot;&gt;highlighting&lt;/a&gt; for the &lt;code&gt;less&lt;/code&gt; pager.&lt;/p&gt;
 
@@ -656,7 +628,7 @@ augroup END
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
 &lt;code class=&quot;highlight language-html&quot;&gt;&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- preview push --&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;async=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;script&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;async&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;text/javascript&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
   &lt;span class=&quot;nx&quot;&gt;jQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;WebSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;ws://localhost:9160/$path$&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onmessage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -668,7 +640,7 @@ augroup END
       &lt;span class=&quot;nx&quot;&gt;MathJax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Hub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Queue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Typeset&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;MathJax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Hub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]);&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;&lt;h1 id=&quot;conclusion&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
 &lt;a href=&quot;#conclusion&quot; class=&quot;header-link&quot;&gt;Conclusion&lt;/a&gt;
@@ -683,7 +655,7 @@ augroup END
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
 &lt;a href=&quot;#patched-fonts&quot; class=&quot;header-link&quot;&gt;Patched Fonts&lt;/a&gt;
 &lt;/h2&gt;
-&lt;p&gt;First there was the annoyance of having to use patched fonts to achieve the &amp;quot;powerline look&amp;quot;. This isn&amp;#39;t a huge problem since it&amp;#39;s pretty straightforward to track down, download, and install pre-patched fonts. This has only become somewhat more annoying due to the fact that the new powerline rewrite patches fonts differently, so you have to find the patched font for the version of powerline you use, and different plugins adopt different versions. Now do this for every OS you use, in my case, Windows, Linux, and OSX.&lt;/p&gt;
+&lt;p&gt;First there was the annoyance of having to use patched fonts to achieve the &amp;quot;powerline look&amp;quot;. This isn&amp;#39;t a huge problem since it&amp;#39;s pretty straightforward to track down, download, and install pre-patched fonts. This has only become somewhat more annoying due to the fact that the new powerline rewrite patches fonts differently, so you have to find the patched font for the version of powerline you use, and different plugins adopt different versions. Now do this for every OS you use, in my case, Windows, Linux, and OS&amp;nbsp;X.&lt;/p&gt;
 
 &lt;p&gt;The point is that in the grand scheme of things, when you take a step back, you realize you&amp;#39;re doing all of this for a mere statusline in a particular application (or two).&lt;/p&gt;
 &lt;h2 id=&quot;noise&quot;&gt;
@@ -824,25 +796,11 @@ augroup END
 &lt;p&gt;As a result, I decided to look for a way to have my solution work alongside Gnome&amp;#39;s initialization of XKB. There was &lt;em&gt;very&lt;/em&gt; little information on Gnome&amp;#39;s interaction with XKB short of reading Gnome&amp;#39;s source, but after searching around for a long time, I found that there is indeed a dconf option hidden away at &lt;span class=&quot;path&quot;&gt;/org/gnome/desktop/input-sources/xkb-options&lt;/span&gt;. Before I could use this though, I had to make my XKB option available system-wide.&lt;/p&gt;
 
 &lt;p&gt;First the symbol file has to be placed in the symbols directory &lt;span class=&quot;path&quot;&gt;/usr/share/X11/xkb/symbols&lt;/span&gt;. This file simply binds the keys I want to use to the XF86 designated media keys. This way the Gnome binder will pick them up without complaining when I bind them to the volume keys, since it otherwise seems to prevent the binding of these very keys as they are. In other words, with this symbol file, RCTRL will be interpreted by the system as if I had pressed XF86AudioRaiseVolume, which is what an actual volume-up media key would yield:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;partial hidden modifier_keys
-xkb_symbols &quot;bottom_right&quot; {
-  key &lt;RCTL&gt; { [ XF86AudioRaiseVolume ] };
-  key &lt;MENU&gt; { [ XF86AudioLowerVolume ] };
-  key &lt;RWIN&gt; { [ XF86AudioMute ] };
-};
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;Now an option has to be created for this symbol file and then listed in the system-wide options list for the rule set you&amp;#39;re using, in my case evdev, at &lt;span class=&quot;path&quot;&gt;/usr/share/X11/xkb/rules/evdev&lt;/span&gt;. Here, &lt;code&gt;volume_keys&lt;/code&gt; corresponds to the filename of the symbol file, and &lt;code&gt;bottom_right&lt;/code&gt; is the name I gave the group:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;volume_keys:bottom_right = +volume_keys(bottom_right)
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;Now the option can be referenced system-wide, so it can be entered into the the Gnome XKB options dconf key at &lt;span class=&quot;path&quot;&gt;/org/gnome/desktop/input-sources/xkb-options&lt;/span&gt;. Put it inside the list as &lt;code&gt;&amp;#39;volume_keys:bottom_right&amp;#39;&lt;/code&gt;, for example mine is set to:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;[&apos;volume_keys:bottom_right&apos;, &apos;compose:ralt&apos;]
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;You can now go ahead and bind the appropriate keys to volume functions inside Gnome Setting&amp;#39;s keyboard section.&lt;/p&gt;
 
 &lt;p&gt;Given that it&amp;#39;s tucked away deep inside dconf, and given Gnome developers&amp;#39; track record of pruning &amp;quot;cruft&amp;quot; or anything that the lowest common denominator user doesn&amp;#39;t use, the future availability of this option is in question. That said, it currently works perfectly fine.&lt;/p&gt;
@@ -1332,28 +1290,15 @@ xkb_symbols &quot;bottom_right&quot; {
 &lt;a href=&quot;#pygments&quot; class=&quot;header-link&quot;&gt;Pygments&lt;/a&gt;
 &lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;: This has been through two redesigns since this was written. The first involved an fs-backed caching system, but this was still too slow, since the bottleneck seemed to be caused by continuously spawning a new pygmentize process. Most recently I&amp;#39;ve created a pygments server that the site opens alongside it at launch, and this Pandoc AST transformer communicates with it through its stdout/stdin handles. It works perfectly and the site compiles a lot quicker. It also fully supports UTF-8:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;¥ · £ · € · $ · ¢ · ₡ · ₢ · ₣ · ₤ · ₥ · ₦ · ₧ · ₨ · ₩ · ₪ · ₫ · ₭ · ₮ · ₯ · ₹
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;One of the first things I wanted to implement right away was syntax highlighting with &lt;a href=&quot;http://pygments.org/&quot;&gt;Pygments&lt;/a&gt;. There are a variety of options for syntax highlighting. In fact, Pandoc comes with support for &lt;a href=&quot;http://johnmacfarlane.net/highlighting-kate/&quot;&gt;kate&lt;/a&gt;: a Haskell package for syntax highlighting written by the author of Pandoc. However, I don&amp;#39;t find it to be on par with Pygments. In the past, I simply posted code to &lt;a href=&quot;https://gist.github.com/&quot;&gt;gist&lt;/a&gt; and then embedded it into posts. This caused unnecessary overhead and more importantly, would break my site when github made changes to the service.&lt;/p&gt;
 
 &lt;p&gt;Eventually I realized that github just uses Pygments underneath, so I implemented a Pandoc AST transformer that finds every &lt;a href=&quot;http://hackage.haskell.org/packages/archive/pandoc-types/latest/doc/html/Text-Pandoc-Definition.html#t:Block&quot;&gt;&lt;code&gt;CodeBlock&lt;/code&gt;&lt;/a&gt;, extracts the code within it, passes it to Pygments, and replaces that &lt;code&gt;CodeBlock&lt;/code&gt; with a &lt;code&gt;RawBlock&lt;/code&gt; containing the raw HTML output by Pygments. I also implemented a way to specify an optional caption which is shown under the code block. I use &lt;a href=&quot;http://jaspervdj.be/blaze/&quot;&gt;blaze-html&lt;/a&gt; for the parts where I need to hand-craft HTML.&lt;/p&gt;
 
 &lt;p&gt;Ultimately, this all means that I can write code blocks like this in markdown:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;``` haskell
-testFunction :: String -&gt; Integer
-```
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;Or, with a caption:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;``` ruby: some caption
-args.map! {|arg| arg.upcase}
-```
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;One thing I had to do was invoke &lt;a href=&quot;http://www.haskell.org/ghc/docs/latest/html/libraries/base/System-IO-Unsafe.html#v:unsafePerformIO&quot;&gt;&lt;code&gt;unsafePerformIO&lt;/code&gt;&lt;/a&gt; in the function I created which runs the code through &lt;code&gt;pygmentize&lt;/code&gt;, an end-user binary for the Pygments library. I&amp;#39;m not sure if there&amp;#39;s a better way to do this, but my justification for using it is that Pygments should return the same output for any given input. If it doesn&amp;#39;t, then there are probably larger problems.&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
@@ -1421,10 +1366,7 @@ args.map! {|arg| arg.upcase}
 &lt;p&gt;This &lt;code&gt;Tree&lt;/code&gt; is finally passed to a recursive function that folds every level of the &lt;code&gt;Tree&lt;/code&gt;---known as a &lt;code&gt;Forest&lt;/code&gt;---into a numbered, unordered list. While that may sound like an oxymoron, the point is that I wanted to have nested numbering in my table of contents. For this reason, I create an unordered list with a &lt;code&gt;span&lt;/code&gt; containing the section number concatenated to the parent&amp;#39;s section number. This function generates the HTML.&lt;/p&gt;
 
 &lt;p&gt;The final problem was finding a way to insert the table of contents on-demand, in a location of my choosing. In kramdown, this is achieved by writing &lt;code&gt;{:toc}&lt;/code&gt;, which gets substituted with the table of contents. Pandoc has no such thing, however. For this reason, I chose a list with a single item, &amp;quot;toc,&amp;quot; as the place holder for the table of contents. This means that I write the following wherever I want the table of contents to show up:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;* toc
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;You can take a look at the beginning of this post to see what the generated table of contents looks like, especially the nested numbering I was referring to.&lt;/p&gt;
 &lt;h2 id=&quot;deploying&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
@@ -1494,18 +1436,7 @@ git commit -m &lt;span class=&quot;s2&quot;&gt;&amp;quot;generated from &lt;/spa
 &lt;p&gt;Creating these binds is possible on Windows via a registry hack, facilitated using a program such as &lt;a href=&quot;http://www.randyrants.com/sharpkeys/&quot;&gt;SharpKeys&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;On Linux I initially did this using &lt;code&gt;xmodmap&lt;/code&gt;:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;remove Control = Control_R
-keycode 105 = XF86AudioRaiseVolume
-add Control = Control_R
 
-keycode 135 = XF86AudioLowerVolume
-
-remove mod4 = Super_R
-keycode 134 = XF86AudioMute
-add mod4 = Super_R
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;Binding to these &lt;code&gt;XF86Audio*&lt;/code&gt; keys automatically adds support for these keys in different applications like &lt;a href=&quot;http://www.mplayer2.org/&quot;&gt;mplayer2&lt;/a&gt;, but I wanted system-wide volume support. This is typically accomplished by wiring them up in your given Desktop Environment or Window Manager. So I went ahead and did so in &lt;code&gt;xmonad.hs&lt;/code&gt;:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
@@ -1544,35 +1475,14 @@ add mod4 = Super_R
 &lt;p&gt;Now that we were pretty sure of the cause of this, the workaround was to remove the other keycodes (for keys I didn&amp;#39;t even have on my keyboard). At this time I decided I might as well switch over to XKB. The first order of business was to &lt;a href=&quot;http://unix.stackexchange.com/a/65600/10163&quot;&gt;dump my XKB map&lt;/a&gt;:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
-&lt;code class=&quot;highlight language-bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;setxkbmap -print &amp;gt; ~/.xkb/keymap/mymap
+&lt;code class=&quot;highlight language-console&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$&lt;/span&gt; setxkbmap -print &amp;gt; ~/.xkb/keymap/mymap
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;Then I created a &lt;code&gt;~/.xkb/symbols/volume_keys&lt;/code&gt; file to store my media key binds. It took me a long while to figure out how to remove/unbind the default-bound keys. One problem was that XKB sets different aliases for keys. For example, &lt;code&gt;&amp;lt;I0D&amp;gt;&lt;/code&gt; (I guess that&amp;#39;s a media key) was aliased to &lt;code&gt;&amp;lt;MUTE&amp;gt;&lt;/code&gt;. I looked around in &lt;code&gt;/usr/share/X11/xkb/rules/evdev&lt;/code&gt; to see what was aliased and made sure to unbind those too. As for unbinding, at first Paul suggested to bind the keys to &lt;code&gt;NoSymbol&lt;/code&gt; but that apparently had no effect. Eventually I found out it was possible with &lt;a href=&quot;http://madduck.net/docs/extending-xkb/#attaching_symbols_to_keys&quot;&gt;&lt;code&gt;VoidSymbol&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;partial modifier_keys
-xkb_symbols &quot;volume_keys&quot; {
-  // mute
-  replace key &lt;MUTE&gt; { [ VoidSymbol ] };
-  replace key &lt;I0D&gt; { [ VoidSymbol ] };
 
-  // lower volume
-  replace key &lt;VOL-&gt; { [ VoidSymbol ] };
-  replace key &lt;I0E&gt; { [ VoidSymbol ] };
-
-  // raise volume
-  replace key &lt;VOL+&gt; { [ VoidSymbol ] };
-  replace key &lt;I0F&gt; { [ VoidSymbol ] };
-
-  replace key &lt;RCTL&gt; { [ XF86AudioRaiseVolume ] };
-  replace key &lt;MENU&gt; { [ XF86AudioLowerVolume ] };
-  replace key &lt;RWIN&gt; { [ XF86AudioMute ] };
-  replace key &lt;RALT&gt; { [ Multi_key ] };
-};
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;Now I loaded my XKB map in &lt;code&gt;~/.xinitrc&lt;/code&gt;:&lt;/p&gt;
 &lt;figure class=&quot;codeblock&quot;&gt;
 &lt;pre&gt;
-&lt;code class=&quot;highlight language-bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;xkbcomp -I&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/.xkb ~/.xkb/keymap/mymap &lt;span class=&quot;nv&quot;&gt;$DISPLAY&lt;/span&gt;
+&lt;code class=&quot;highlight language-console&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$&lt;/span&gt; xkbcomp -I&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/.xkb ~/.xkb/keymap/mymap &lt;span class=&quot;nv&quot;&gt;$DISPLAY&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;I restarted xmonad with &lt;code&gt;Mod-Shift-Q&lt;/code&gt; (so that &lt;code&gt;~/.xinitrc&lt;/code&gt; is rerun) and everything now worked perfectly.&lt;/p&gt;
 &lt;h2 id=&quot;bug-report&quot;&gt;
@@ -1688,10 +1598,7 @@ xkb_symbols &quot;volume_keys&quot; {
 &lt;p&gt;&lt;img src=&quot;/images/posts/terminal-customization/basic-prompt.png&quot; class=&quot;center&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;Here it is in text:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;λ ~/code/haskell ➜
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;: I have changed my prompt to be multiline. All that has changed is that the ➜ is on its own line.&lt;/p&gt;
 &lt;h4 id=&quot;git&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
@@ -1704,10 +1611,7 @@ xkb_symbols &quot;volume_keys&quot; {
 &lt;p&gt;&lt;img src=&quot;/images/posts/terminal-customization/git-prompt.png&quot; class=&quot;center&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;Again in text:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;λ ~/.dots (master . # +){+1} ➜ 
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;The branch is &lt;code&gt;master&lt;/code&gt; and apparently there&amp;#39;s unstaged files, modifed files, and staged files. Furthermore, the &lt;code&gt;{+1}&lt;/code&gt; shows that my branch is one commit ahead of the remote branch. It would also show the number of commits we are behind, in red, if that were the case---which in my opinion can be very handy so that you can avoid conflicts by rebasing or merging before you push. This segment only shows up if either of those conditions is met.&lt;/p&gt;
 &lt;h4 id=&quot;ssh&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
@@ -1718,18 +1622,11 @@ xkb_symbols &quot;volume_keys&quot; {
 &lt;p&gt;&lt;img src=&quot;/images/posts/terminal-customization/ssh-prompt.png&quot; class=&quot;center&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;Once again in text:&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;[someserver] λ ~/.dots (master) ➜ 
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;p&gt;&lt;strong&gt;Update: October 28, 2013&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;I&amp;#39;ve actually done away with this component of the prompt. I didn&amp;#39;t like how the lambda no longer aligned with the arrow symbol. I&amp;#39;ve instead decided to add a pretty simple green &lt;code&gt;R&lt;/code&gt; at the end of the current working path, to signify that I am on a &amp;quot;remote&amp;quot; machine, so it reads something like &amp;quot;currently on x path remotely.&amp;quot;&lt;/p&gt;
-&lt;figure class=&quot;codeblock&quot;&gt;
-&lt;pre&gt;
-&lt;code class=&quot;highlight language-text&quot;&gt;λ ~/.dots R (master)
-➜
-&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;&lt;h3 id=&quot;vi-binds&quot;&gt;
+&lt;h3 id=&quot;vi-binds&quot;&gt;
 &lt;span class=&quot;hash&quot;&gt;#&lt;/span&gt;
 &lt;a href=&quot;#vi-binds&quot; class=&quot;header-link&quot;&gt;vi-Binds&lt;/a&gt;
 &lt;/h3&gt;

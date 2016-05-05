@@ -181,18 +181,18 @@
 <p>Sorting can be performed on lists, sets, and ordered sets---even according to data in other structures.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-python"><span class="n">conn</span><span class="o">.</span><span class="n">rpush</span><span class="p">(</span><span class="s">&#39;sort-input&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<code class="highlight language-python"><span class="n">conn</span><span class="o">.</span><span class="n">rpush</span><span class="p">(</span><span class="s1">&#39;sort-input&#39;</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
 
-<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-7&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-15&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-23&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;d-110&#39;</span><span class="p">,</span> <span class="s">&#39;field&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s1">&#39;d-7&#39;</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s1">&#39;d-15&#39;</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s1">&#39;d-23&#39;</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s1">&#39;d-110&#39;</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
-<span class="n">conn</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s">&#39;sort-input&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s">&#39;d-*-&gt;field&#39;</span><span class="p">)</span>
-<span class="c"># [&#39;15&#39;, &#39;110&#39;, &#39;7&#39;, &#39;23&#39;]</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;sort-input&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;d-*-&gt;field&#39;</span><span class="p">)</span>
+<span class="c1"># [&#39;15&#39;, &#39;110&#39;, &#39;7&#39;, &#39;23&#39;]</span>
 
-<span class="n">conn</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s">&#39;sort-input&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s">&#39;d-*-&gt;field&#39;</span><span class="p">,</span> <span class="n">get</span><span class="o">=</span><span class="s">&#39;d-*-&gt;field&#39;</span><span class="p">)</span>
-<span class="c"># [&#39;1&#39;, &#39;3&#39;, &#39;5&#39;, &#39;9&#39;]</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;sort-input&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;d-*-&gt;field&#39;</span><span class="p">,</span> <span class="n">get</span><span class="o">=</span><span class="s1">&#39;d-*-&gt;field&#39;</span><span class="p">)</span>
+<span class="c1"># [&#39;1&#39;, &#39;3&#39;, &#39;5&#39;, &#39;9&#39;]</span>
 </code></pre></figure><h1 id="transactions">
 <span class="hash">#</span>
 <a href="#transactions" class="header-link">Transactions</a>

@@ -236,32 +236,9 @@
 <p>The <span class="path">conf/application.conf</span> file is the master configuration file in Play. From there all aspects of Play and other third-party libraries like Akka can be configured. The configuration format is based on the <a href="https://github.com/typesafehub/config">config</a> library which supports a superset of JSON, Java Properties, comments, file includes, file merging, units (e.g. days, MB, etc.), and so on.</p>
 
 <p>Environment variables are often used for operating system-independent, machine-specific configuration. The <code>${}</code> syntax is used to interpolate environment variables and other properties as well. These can be interpolated into other values.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">db.default.url = ${DATABASE_URL}
 
-log.directory = /var/log
-log.access = ${log.directory}/access.log
-log.error  = ${log.directory}/error.log
-</code></pre></figure>
 <p>It&#39;s also possible to include other files, which allows to create context-specific configuration files that are then included into the larger configuration file. Objects can be merged together as well based on the order in which they appear.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">db: {
-  default: {
-    driver: "org.h2.Driver",
-    url: "jdbc:h2:mem:play",
-    user: "sa",
-    password: "",
-  }
-}
-</code></pre></figure><figure class="codeblock">
-<pre>
-<code class="highlight language-text">include "db.conf"
 
-db.default.user = products
-db.default.password = clippy
-</code></pre></figure>
 <p>There&#39;s also a configuration API for type-safe access to configuration properties. Currently the supported types are <code>String</code>, <code>Int</code>, and <code>Boolean</code>, where <code>Boolean</code> can take on <code>true</code>, <code>yes</code>, and <code>enabled</code> (and their opposites).</p>
 <figure class="codeblock">
 <pre>
@@ -284,30 +261,7 @@ db.default.password = clippy
 <a href="#routing" class="header-link">Routing</a>
 </h2>
 <p>The <span class="path">conf/routes</span> file contains the mapping of routes to controller actions.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">GET /         controllers.Products.home()
 
-# if parameter not passed, assume to be 1
-GET /products controllers.Products.list(page: Int ?= 1)
-
-# parameter is optional; may or may not appear
-GET /apples   controllers.Apples.show(page: Option[Int])
-
-# parameter is fixed to 1
-GET /oranges  controllers.Oranges.show(page: Int = 1)
-
-# route variable
-GET /product/:ean controllers.Products.details(ean: Long)
-
-# path parameter
-GET /photo/*filepath controllers.Media.photo(file: String)
-
-# path parameter with different external prefix
-GET /assets/*filepath controllers.Assets.at(path="/public", file)
-
-GET /product/$ean<\d{13}> controllers.Products.details(ean: Long)
-</code></pre></figure>
 <p>Reverse routing is a means of programmatically generating routes for a given action method invocation.</p>
 <figure class="codeblock">
 <pre>
@@ -321,12 +275,7 @@ GET /product/$ean<\d{13}> controllers.Products.details(ean: Long)
 <a href="#environments" class="header-link">Environments</a>
 </h2>
 <p>It&#39;s straightforward to setup different configuration environments by using the <code>include</code> directive in configuration files. Production configuration files would need to use the <code>classpath</code> function to refer to files within the deployed archive. This can be used to define a configuration file at a system path such as <span class="path">/etc/paperclips/production.conf</span>, which can then be imported with the <code>-Dconfig.file</code> parameter.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">include classpath("application.conf")
-
-email.override.enabled=false
-</code></pre></figure><h1 id="models">
+<h1 id="models">
 <span class="hash">#</span>
 <a href="#models" class="header-link">Models</a>
 </h1>
@@ -360,7 +309,7 @@ email.override.enabled=false
 
 <span class="o">#</span> <span class="c1">--- !Downs</span>
 
-<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">products</span><span class="p">;</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">products</span><span class="p">;</span>
 </code></pre></figure>
 <p>Play comes with Squeryl, a DSL for generating SQL in a type-safe manner, and Anorm, which allows raw SQL queries to be written explicitly.</p>
 
@@ -529,14 +478,7 @@ email.override.enabled=false
 <p>Templates in Play are type-safe and consist of interspersed Scala, avoiding the need to learn a template DSL. Templates can specify a parameter list as the first line, which can be used to provide data from the controller&#39;s end.</p>
 
 <p>The <code>@</code> character is used to denote the start of a Scala expression, where the parser <em>conservatively</em> determines the extent of the expression. Sometimes it may be necessary to explicitly define this range, which is possible by using parentheses. If it&#39;s necessary to print a <code>@</code> character verbatim, it must be escaped by another <code>@</code>. Comments are delimited with <code>@* *@</code>.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">Hello @name!
 
-@* output the year *@
-
-Next year, your age will be @(user.age + 1)
-</code></pre></figure>
 <p>The template parser encloses all template expressions in curly braces, so it&#39;s not possible to define a variable in one expression and use it in another in the same level. More specifically, the bodies of functions, for comprehensions, and so on are treated as &quot;sub-templates,&quot; so the body isn&#39;t treated as XML literals in the case of HTML templates.</p>
 <figure class="codeblock">
 <pre>
@@ -579,12 +521,12 @@ Next year, your age will be @(user.age + 1)
 <figure class="codeblock">
 <pre>
 <code class="highlight language-html">@()
-<span class="nt">&lt;strong&gt;</span>This is a partial<span class="nt">&lt;/strong&gt;</span>
+<span class="p">&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>This is a partial<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;</span>
 </code></pre></figure><figure class="codeblock">
 <pre>
-<code class="highlight language-html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;announcement&quot;</span><span class="nt">&gt;</span>
+<code class="highlight language-html"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;announcement&quot;</span><span class="p">&gt;</span>
   @navigation()
-<span class="nt">&lt;/div&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></figure><h2 id="layouts">
 <span class="hash">#</span>
 <a href="#layouts" class="header-link">Layouts</a>
@@ -594,18 +536,18 @@ Next year, your age will be @(user.age + 1)
 <pre>
 <code class="highlight language-html">@(title=&quot;Default Title&quot;)(content: Html)
 <span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-  <span class="nt">&lt;head&gt;</span>
-    <span class="nt">&lt;title&gt;</span>@title<span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;/head&gt;</span>
-<span class="nt">&lt;body&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>@title<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
   @content
-<span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre></figure><figure class="codeblock">
 <pre>
 <code class="highlight language-html">@main(&quot;Products&quot;) {
-  <span class="nt">&lt;strong&gt;</span>Some Products<span class="nt">&lt;/strong&gt;</span>
+  <span class="p">&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>Some Products<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;</span>
 }
 </code></pre></figure>
 <p>It&#39;s possible to define implicit parameters on template parameter lists to avoid having to explicitly pass parameters to the templates. A common pattern is to define a reusable trait with the appropriate implicit values. The <code>WrappedRequest</code> class wraps a <code>Request</code> and can be extended by a class that defines other values that should be accessible by a template.</p>
@@ -614,10 +556,7 @@ Next year, your age will be @(user.age + 1)
 <a href="#localization" class="header-link">Localization</a>
 </h2>
 <p>Localization is pretty straightforward in Play. The <span class="path">application.conf</span> file can take an <span class="path">application.langs</span> option that defines a comma-separated list of languages in ISO 639-2 format optionally followed by an ISO 3166-1 alpha-2 country code.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">application.langs="en,en-US,nl"
-</code></pre></figure>
+
 <p>For each of these languages there should be a corresponding <span class="path">conf/messages.lang</span> file which defines localized messages. These messages can then be referenced using the <code>Messages</code> object which takes the message&#39;s key as well as an implicit <code>Lang</code> value which can be implicitly converted from a <code>Request</code> in the scope.</p>
 
 <p>Messages in the file are patterns formatted using <a href="http://docs.oracle.com/javase/8/docs/api/java/text/MessageFormat.html"><span class="path">java.text.MessageFormat</span></a>, so that arguments can be inserted with <code>{#}</code> where the <code>#</code> is the position of the argument. It&#39;s also possible to define different messages for zero, one, more items:</p>
@@ -907,7 +846,7 @@ Next year, your age will be @(user.age + 1)
 <figure class="codeblock">
 <pre>
 <code class="highlight language-scala"><span class="nd">@helper</span><span class="o">.</span><span class="n">repeat</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;tags&quot;</span><span class="o">),</span> <span class="n">min</span> <span class="k">=</span> <span class="mi">3</span><span class="o">)</span> <span class="o">{</span> <span class="n">tagField</span> <span class="k">=&gt;</span>
-  <span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">tagField</span><span class="o">,</span> <span class="-Symbol">&#39;_label</span> <span class="o">-&gt;</span> <span class="s">&quot;Tag&quot;</span><span class="o">)</span>
+  <span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">tagField</span><span class="o">,</span> <span class=" -Symbol">&#39;_label</span> <span class="o">-&gt;</span> <span class="s">&quot;Tag&quot;</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></figure><h2 id="nested-mappings">
 <span class="hash">#</span>
@@ -1001,7 +940,7 @@ Next year, your age will be @(user.age + 1)
 <figure class="codeblock">
 <pre>
 <code class="highlight language-scala"><span class="nd">@helper</span><span class="o">.</span><span class="n">form</span><span class="o">(</span><span class="n">action</span> <span class="k">=</span> <span class="n">routes</span><span class="o">.</span><span class="nc">FileUpload</span><span class="o">.</span><span class="n">upload</span><span class="o">,</span>
-             <span class="-Symbol">&#39;enctype</span> <span class="o">-&gt;</span> <span class="s">&quot;multipart/form-data&quot;</span><span class="o">)</span> <span class="o">{</span>
+             <span class=" -Symbol">&#39;enctype</span> <span class="o">-&gt;</span> <span class="s">&quot;multipart/form-data&quot;</span><span class="o">)</span> <span class="o">{</span>
   <span class="nd">@helper</span><span class="o">.</span><span class="n">inputText</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;description&quot;</span><span class="o">))</span>
   <span class="nd">@helper</span><span class="o">.</span><span class="n">inputFile</span><span class="o">(</span><span class="n">form</span><span class="o">(</span><span class="s">&quot;image&quot;</span><span class="o">))</span>
 <span class="o">}</span>

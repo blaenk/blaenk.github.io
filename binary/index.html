@@ -84,66 +84,23 @@
 <p>Binary is a base 2 numbering system that computers use. When we do something in the computer, for example, if we press the letter N, it will receive the binary equivalent, in ASCII most likely (<em>This is not entirely true, but for the sake of simplicity...</em>). I will try to teach you binary as well as I possibly can.</p>
 
 <p>First of all, you know base 10, the numbering system we use, it goes from 0-9. With the numbers 0-9 we can write any number, right? Also remember this?</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">Hundreds | Tens | Ones
-   9        5      1     = 951
-</code></pre></figure>
+
 <p>We will use this in our learning process, so I hope you understood that.</p>
 
 <p>So we know that base 10 has numbers 0-9, which uses 10 numbers (count them, 0 to 9), hence, base 10. Guess what, Binary uses 2 numbers! 0 and 1. 0 means false, and 1 means true. So, for example, (for you fast learners, you might learn binary the second you see this), instead of making columns like in the example I used earlier with base 10, we will use numbers, powers of 2. A bit in binary is one digit, for example, 1010 = 4 bits. An octet is 8 bits, or a byte.</p>
 
 <p>Lets write the number 24 in binary:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
- 0    0     0   1    1   0   0   0 = 0001 1000
-</code></pre></figure>
+
 <p>(<strong>NOTE</strong>: When we write in binary, please write in 4 bits separation, which gives a more organized look.)</p>
 
 <p>Let me explain, I put 1s under the numbers we used, and 0s for the ones we didn&#39;t (remember, 1 = true, 0 = false). So to make the number 24, we don&#39;t need a 128, so put a 0, we don&#39;t either need a 64, put another 0, we don&#39;t need a 32...but ah! We do need 16! So we put a 1 under it, and we also put a 1 under 8, 16 + 8 = 24. So we put 0s under the rest.</p>
 
 <p>I&#39;ll show you a tip that will make your decimal to binary conversions much easier. Lets say you want to write the number 224 in binary. You would subtract 224 by the biggest power of two that fits in there, in this case, 128 (256 is the next, and that doesn&#39;t fit in 224). And you would then subtract by the power of two before the power of two you just used. Keep this going until you were left with 0, watch:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">  224
- -128 <----We use a 128, so circle that on your paper
- ----
-  96
- -64  <----We use a 64, so circle that on your paper
- ----
-  32
- -32  <----We use a 32, so circle that on your paper
- ----
-  0
-</code></pre></figure>
+
 <p>Okay, so we used a 128, 64, and 32. Now, it&#39;s so easy to put this into binary, watch:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
- 1     1    1    0   0   0   0   0 = 1110 0000
-</code></pre></figure>
+
 <p>That seemed easy, but what if the next power of 2 doesn&#39;t fit in the number? Watch, lets write 165 in binary:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">  165
- -128 <----We use a 128, so circle that on your paper.
- ---- (NOTE: 64 is the power of 2 before 128, but it doesn't)
-  37  (fit in 37, so we use the next, 32)
- -32  <----We use a 32, so circle that on your paper.
- ----
-  5
- -4   <----We use a 4, so circle that on your paper.
- ----
-  1
- -1   <----We use a 1, so circle that on your paper.
- ----
-  0
-</code></pre></figure><figure class="codeblock">
-<pre>
-<code class="highlight language-text">128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
-  1    0    1    0   0   1   0   1 = 1010 0101
-</code></pre></figure>
+
 <p>When I mean the next power of two, I mean as in a power of two going down, I&#39;m sorry for sounding confusing, for example, the next power of two after 128 would be 64, in our example, at least. Since we are subtracting the &#39;next power of two&#39; from the result.</p>
 <h3 id="hexadecimal">
 <span class="hash">#</span>
@@ -152,25 +109,7 @@
 <p>I hope you read the binary section, I expect you did, if you don&#39;t understand something, read the binary section.</p>
 
 <p>Hexadecimal is a base 16 numbering system, it uses numbers (and letters) 0-F, 0 being 0 and F being 15. Read the table and memorize it:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">0 = 0
-1 = 1
-2 = 2
-3 = 3
-4 = 4
-5 = 5
-6 = 6
-7 = 7
-8 = 8
-9 = 9
-A = 10
-B = 11
-C = 12
-D = 13
-E = 14
-F = 15
-</code></pre></figure>
+
 <p>First of all, you must understand a common convention in hexadecimal notation. You&#39;ll typically see hexadecimal numbers preceded by <strong>0x</strong>, it just means that the number is hexadecimal, but the actual <strong>0x</strong> is irrelevant to the number. So <strong>0x42FE</strong> means that <strong>42FE</strong> is a hexadecimal number, we know that because of the <strong>0x</strong>, but again, ignore the <strong>0x</strong> when you&#39;re actually working with the number.</p>
 
 <p>To convert from binary to hexadecimal is very easy, you first separate the binary number into nibble (4 bits). For example, the number 24, which is 00011000 in binary, you would set it up as 0001 1000. Then, what you do, is you convert each nibble into decimal, for example, for the first nibble, 0001, since it equals one in decimal, you would then convert the decimal into hexadecimal, and since in hex 1 is 1, you would write 1. Now, for the second nibble, 1000, in decimal is 8, and in hex its 8, so 0001 1000 in hexadecimal is 0x18.</p>
@@ -178,25 +117,9 @@ F = 15
 <p>Lets do another one, the number 224 which is 11100000 in binary, would be 1110 0000. The first nibble, 1110, in decimal is 14. So you would see what 14 is in hexadecimal, 14 in hex is E. Now the second nibble is 0000, so in decimal its 0, and in hex its 0. The final number in hex would be 0xE0.</p>
 
 <p>To convert from hexadecimal to binary, all you do is get the number, for example, 0xE0, that we did in the last example. We then read from left to right, or right to left, it doesn&#39;t matter, as long as we maintain the order. So let&#39;s do it from right to left, since I know most of you would say that, okay, the first digit is 0, and in binary 0 is 0000. Note that each digit in hexadecimal is 4 bits, so even though we can express 0 in 000000, and also 0, we have to fill up 4 bits, so it would be 0000. The next digit, which is E, in decimal is 14, so in binary it would be:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text"> 14
-- 8 <----Using an eight.
----
-  6
-- 4 <----Using a four
----
-  2
-- 2 <----Using a 2
----
-  0
-</code></pre></figure>
+
 <p>Since we are using nibbles, we only need four bits, so:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">8 | 4 | 2 | 1
-1   1   1   0
-</code></pre></figure>
+
 <p>I know that finding out 14 in binary was very easy, but I just did the whole thing so that others could understand the process.</p>
 
 <p>So 0xE0 in binary is 1110 0000. Note that we converted the hex number from right to left, so we write it the same way, right to left. We found out the 0000 first, so we put it on the right, and we work our way to the left, in this case, 1110, which is 14. So again, the answer is 1110 0000.</p>
@@ -204,11 +127,7 @@ F = 15
 <p>To convert from hexadecimal to decimal, don&#39;t be tempted to just do the following:</p>
 
 <p>Considering 0xE0, you would say, okay, from right to left. 0 in decimal is 0. And E in decimal in 14, so you&#39;d think the answer is 140. WRONG! Please remember the right way to do it. First, you convert it to binary, and from the last example, we found out its 1110 0000. okay, now you set up the columns, unless you&#39;re a master at binary:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">128 | 64 | 32 | 16 | 8 | 4 | 2 | 1
-  1    1    1    0   0   0   0   0
-</code></pre></figure>
+
 <p>So it&#39;s 128 plus 64 plus 32, in other words, it&#39;s the hexadecimal number in binary, to decimal. Lol. Which is 224 !</p>
 <h3 id="tips">
 <span class="hash">#</span>

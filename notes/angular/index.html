@@ -120,13 +120,13 @@
 <p>Because of the asymmetric behavior in reading/writing scope properties at different scopes, it&#39;s generally encouraged to bind to object properties, not scope properties. This has the effect of <a href="https://github.com/angular/angular.js/wiki/Understanding-Scopes#javascript-prototypal-inheritance">always consulting the prototype chain</a>, since it first looks up the object, which it finds in its ancestor up the prototype chain, then it changes/sets the value on that object. Whereas <em>setting</em> a single primitive (i.e. non-object) does <em>not</em> consult the prototype chain and simply creates a new value in the child scope that shadows the parent value.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-html"><span class="nt">&lt;body</span> <span class="na">ng-app</span> <span class="na">ng-init=</span><span class="s">&quot;thing = {name: &#39;World&#39;}&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;h1&gt;</span>Hello, {{thing.name}}<span class="nt">&lt;/h1&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;Ctrl&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;thing.name&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;h2&gt;</span>Hello, {{thing.name}}<span class="nt">&lt;/h2&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/body&gt;</span>
+<code class="highlight language-html"><span class="p">&lt;</span><span class="nt">body</span> <span class="na">ng-app</span> <span class="na">ng-init</span><span class="o">=</span><span class="s">&quot;thing = {name: &#39;World&#39;}&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, {{thing.name}}<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">ng-controller</span><span class="o">=</span><span class="s">&quot;Ctrl&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model</span><span class="o">=</span><span class="s">&quot;thing.name&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Hello, {{thing.name}}<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
 </code></pre></figure>
 <p>Scopes form a tree rooted at the <code>$rootScope</code>, and events can be propagated through the hierarchy. Events are sent up the tree with <code>$emit</code> and down the tree with <code>$broadcast</code>. Scope event handlers are registered with <code>$on</code>, and as with DOM events, we can <code>preventDefault</code> and <code>stopPropagation</code>. It&#39;s advised to use scope events sparingly, instead opting for two-way data binding.</p>
 

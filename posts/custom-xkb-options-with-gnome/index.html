@@ -88,25 +88,11 @@
 <p>As a result, I decided to look for a way to have my solution work alongside Gnome&#39;s initialization of XKB. There was <em>very</em> little information on Gnome&#39;s interaction with XKB short of reading Gnome&#39;s source, but after searching around for a long time, I found that there is indeed a dconf option hidden away at <span class="path">/org/gnome/desktop/input-sources/xkb-options</span>. Before I could use this though, I had to make my XKB option available system-wide.</p>
 
 <p>First the symbol file has to be placed in the symbols directory <span class="path">/usr/share/X11/xkb/symbols</span>. This file simply binds the keys I want to use to the XF86 designated media keys. This way the Gnome binder will pick them up without complaining when I bind them to the volume keys, since it otherwise seems to prevent the binding of these very keys as they are. In other words, with this symbol file, RCTRL will be interpreted by the system as if I had pressed XF86AudioRaiseVolume, which is what an actual volume-up media key would yield:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">partial hidden modifier_keys
-xkb_symbols "bottom_right" {
-  key <RCTL> { [ XF86AudioRaiseVolume ] };
-  key <MENU> { [ XF86AudioLowerVolume ] };
-  key <RWIN> { [ XF86AudioMute ] };
-};
-</code></pre></figure>
+
 <p>Now an option has to be created for this symbol file and then listed in the system-wide options list for the rule set you&#39;re using, in my case evdev, at <span class="path">/usr/share/X11/xkb/rules/evdev</span>. Here, <code>volume_keys</code> corresponds to the filename of the symbol file, and <code>bottom_right</code> is the name I gave the group:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">volume_keys:bottom_right = +volume_keys(bottom_right)
-</code></pre></figure>
+
 <p>Now the option can be referenced system-wide, so it can be entered into the the Gnome XKB options dconf key at <span class="path">/org/gnome/desktop/input-sources/xkb-options</span>. Put it inside the list as <code>&#39;volume_keys:bottom_right&#39;</code>, for example mine is set to:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">['volume_keys:bottom_right', 'compose:ralt']
-</code></pre></figure>
+
 <p>You can now go ahead and bind the appropriate keys to volume functions inside Gnome Setting&#39;s keyboard section.</p>
 
 <p>Given that it&#39;s tucked away deep inside dconf, and given Gnome developers&#39; track record of pruning &quot;cruft&quot; or anything that the lowest common denominator user doesn&#39;t use, the future availability of this option is in question. That said, it currently works perfectly fine.</p>

@@ -82,6 +82,9 @@
 <nav id="toc">
 <h3>Contents</h3><ol>
 <li>
+<a href="#system-calls">System Calls</a>
+</li>
+<li>
 <a href="#files">Files</a>
 <ol>
 <li>
@@ -96,31 +99,131 @@
 </ol>
 </li>
 <li>
-<a href="#processes">Processes</a>
-</li>
-<li>
-<a href="#process-credentials">Process Credentials</a>
-</li>
-<li>
-<a href="#process-time">Process Time</a>
-</li>
-<li>
 <a href="#file-systems">File Systems</a>
+</li>
+<li>
+<a href="#io-devices">I/O Devices</a>
+</li>
+<li>
+<a href="#memory">Memory</a>
+</li>
+<li>
+<a href="#virtual-memory">Virtual Memory</a>
+</li>
+<li>
+<a href="#processes">Processes</a>
+<ol>
+<li>
+<a href="#credentials">Credentials</a>
+</li>
+<li>
+<a href="#execution-time">Execution Time</a>
+</li>
+<li>
+<a href="#creation">Creation</a>
+</li>
+<li>
+<a href="#termination">Termination</a>
+</li>
+<li>
+<a href="#execution">Execution</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#threads">Threads</a>
+</li>
+<li>
+<a href="#scheduling">Scheduling</a>
+<ol>
+<li>
+<a href="#o1-scheduler">O(1) Scheduler</a>
+</li>
+<li>
+<a href="#completely-fair-scheduler">Completely Fair Scheduler</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#concurrency">Concurrency</a>
+<ol>
+<li>
+<a href="#strategies">Strategies</a>
+</li>
+<li>
+<a href="#mutexes">Mutexes</a>
+</li>
+<li>
+<a href="#condition-variables">Condition Variables</a>
+</li>
+<li>
+<a href="#semaphores">Semaphores</a>
+</li>
+<li>
+<a href="#read-write-locks">Read-Write Locks</a>
+</li>
+<li>
+<a href="#barriers">Barriers</a>
+</li>
+<li>
+<a href="#atomics">Atomics</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#inter-process-communication">Inter-Process Communication</a>
+<ol>
+<li>
+<a href="#shared-memory">Shared Memory</a>
+</li>
+<li>
+<a href="#message-queues">Message Queues</a>
+</li>
+</ol>
 </li>
 <li>
 <a href="#signals">Signals</a>
 </li>
 <li>
-<a href="#process-creation">Process Creation</a>
+<a href="#interrupts">Interrupts</a>
 </li>
 <li>
-<a href="#process-termination">Process Termination</a>
+<a href="#networking">Networking</a>
 </li>
 <li>
-<a href="#process-execution">Process Execution</a>
+<a href="#virtualization">Virtualization</a>
+<ol>
+<li>
+<a href="#device-virtualization">Device Virtualization</a>
+</li>
+<li>
+<a href="#full-virtualization">Full Virtualization</a>
+</li>
+<li>
+<a href="#paravirtualization">Paravirtualization</a>
+</li>
+<li>
+<a href="#hypervisor-based-virtualization">Hypervisor-based Virtualization</a>
+</li>
+<li>
+<a href="#hosted-virtualization">Hosted Virtualization</a>
+</li>
+<li>
+<a href="#live-migration">Live Migration</a>
+</li>
+</ol>
 </li>
 </ol>
 </nav>
+<h1 id="system-calls">
+<span class="hash">#</span>
+<a href="#system-calls" class="header-link">System Calls</a>
+</h1>
+<p>System calls can negatively impact user-mode application performance by evicting user-mode cache entries.</p>
+
+<p>Processors often have various protection levels. For example x86 has 4, where ring 3 is the lowest privilege (for applications) and ring 0 is the highest privilege (for operating systems). Some instructions trap into the operating system which swtiches to ring 0, which can access all resources and execute all instructions.</p>
+
+<p>Processors often also have various protection modes. For example x86 has root and non-root modes, each of which has the 4 protection levels state above. The root mode allows everything, while non-root mode has restrictions.</p>
 <h1 id="files">
 <span class="hash">#</span>
 <a href="#files" class="header-link">Files</a>
@@ -128,8 +231,8 @@
 <p>Each process has its own <em>file descriptor table</em>. Each entry in that table contains:</p>
 
 <ul>
-<li>the set of flags controlling the operation of the file descriptor (e.g. close-on-exec)</li>
-<li>a reference to the open file description.</li>
+<li>set of flags controlling the operation of the file descriptor, for example close-on-exec</li>
+<li>reference to the open file description.</li>
 </ul>
 
 <p>The kernel maintains a system-wide <em>open file table</em> of all <em>open file descriptions</em>, also known as <em>open file handles</em>. Each entry contains</p>
@@ -139,10 +242,10 @@
 <li>the status flags, i.e. flags passed to <code>open()</code></li>
 <li>file access mode (read-only, write-only, or read-write)</li>
 <li>signal-driven I/O settings</li>
-<li>reference to the i-node object for the file</li>
+<li>reference to the inode object for the file</li>
 </ul>
 
-<p>Then each file system has a table of i-nodes for all files on the file system, where each entry contains:</p>
+<p>Then each file system has a table of inodes for all files on the file system, where each entry contains:</p>
 
 <ul>
 <li>file type (e.g. regular, socket, FIFO) and permissions</li>
@@ -171,20 +274,237 @@
 </h2>
 <p>File buffering occurs at the kernel level as well as the standard library level of many languages, including C and C++&#39;s.</p>
 
+<p>Disk buffer caches are caches that reside in main memory and are used to cache disk data. Data is read from and written to the disk buffer cache, which is periodically flushed to disk.</p>
+
 <p>The <code>fsync()</code> call causes the buffered data <em>and</em> all metadata associated with the file descriptor to be flushed to the disk, forcing a <em>synchronized I/O file integrity completion state</em>. The <code>fdatasync()</code> call on the other hand causes only the buffered data to be flushed to the disk, forcing a <em>synchronized I/O data integrity completion state</em>. Using <code>fdatasync()</code> can be much faster if the metadata isn&#39;t as important, because the metadata and the data are usually stored on different parts of the disk.</p>
 
 <p>The <code>sync()</code> call causes <em>all</em> kernel buffers containing updated file information (both data and metadata) to be flushed to disk. On Linux, this call returns until the data has been transferred to the disk or its cache.</p>
 
 <p>The <code>posix_fadvise()</code> call can be used to advise the kernel about the likely file access patterns. For example, if it is advised about random access, then Linux will disable file read-ahead.</p>
+<h1 id="file-systems">
+<span class="hash">#</span>
+<a href="#file-systems" class="header-link">File Systems</a>
+</h1>
+<p>Devices are represented by entries in the <span class="path">/dev</span> directory, and each device has a corresponding device driver which implements the standard operations such as <code>read()</code> and <code>write()</code>.</p>
+
+<p>A <em>character device</em> is one that handles data on a character-by-character basis, such as terminals and keyboards. A <em>block device</em> is one that handles data a block at a time, where the block size depends on the type of device.</p>
+
+<p>Hard disk drives store data on the disk on concentric circles called <em>tracks</em>, which are divided into <em>sectors</em> each containing a series of <em>physical</em> blocks.</p>
+
+<p>The <em>seek time</em> is the time it takes for the disk head must to move to the appropriate track. The <em>rotational latency</em> is the time it takes for the appropriate sector to rotate under the head. The <em>transfer time</em> is the time it takes for the blocks to be transferred.</p>
+
+<p><em>I/O scheduling</em> aims to schedule disk access operations so as to reduce disk head movement. This is accomplished by striving to maximize sequential accesses over random accesses, possibly by reordering disk accesses so as to coalesce (nearly) sequential accesses together before jumping to random accesses. For example, the sequence &quot;write block 25, write block 17&quot; can be reordered to &quot;write block 17, write block 25.&quot;</p>
+
+<p><em>Disk prefetching</em> refers to prefetching more than one block when reading so as to increase cache hits by leveraging locality, similar to how a CPU reads an entire cache line is read at a time from main memory.</p>
+
+<p>Disks are divided into partitions, each of which may contain a file system. Each file system contains an <em>inode</em> (i.e. index node) table and there is one entry for each file on the file system, each entry containing metadata such as:</p>
+
+<ul>
+<li>file type</li>
+<li>user and group owners</li>
+<li>access permissions</li>
+<li>timestamps</li>
+<li>hard link count</li>
+<li>byte size</li>
+<li>allocated block count</li>
+<li>pointers to data blocks</li>
+</ul>
+
+<p>Since inodes contain pointers to data blocks and an inode&#39;s size is fixed, inodes inherently limit how many data blocks there can be, and by extension they limit the maximum size that a file may be. This maximum can be increased by using indirect pointers, which are pointers to other blocks that are full of pointers to data blocks. There can be multiple levels of these indirect pointers, similar to a hierarchical page table, essentially creating a tree.</p>
+
+<p><img src="https://i.imgur.com/QMqFCdO.png" class="center" /></p>
+
+<p>A superblock is an abstraction that provides file system-specific information regarding the file system&#39;s layout. It maintains an overall map of all disk blocks, specifying whether each block is an inode, data, or free.</p>
+
+<p>Journaling file systems are ones keep a write-ahead-log (WAL) for metadata updates (and optionally data updates) before the actual file updates are actually performed, which makes the data more resilient in the event of a crash. This also means that a file system check is not required after a system crash. Each entry may contain the block, offset, and value to write. Entries are periodically committed (written) to disk.</p>
+
+<p>I/O overhead is mitigated by caching/buffering to reduce the number of actual disk accesses, I/O scheduling to reduce disk head movement, prefetching to increase cache hits, and journaling to reduce random access <sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup> and prevent data loss.</p>
+
+<p>File systems are all mounted under a single directory tree represented by the root <span class="path">/</span> at specific locations known as <em>mount points</em>. The <em>virtual file system</em> (VFS) is an abstraction, a unified representation of a single file system, even if there are multiple different file systems mounted at different points.</p>
+
+<p>A <em>bind mount</em> allows a file or directory to be mounted at multiple locations in the file system. Unlike hard links, bind mounts can cross file-systems and chroot jails, and it&#39;s possible to create a bind mount for a directory.</p>
+<h1 id="io-devices">
+<span class="hash">#</span>
+<a href="#io-devices" class="header-link">I/O Devices</a>
+</h1>
+<p>I/O devices typically have a variety of features such as <em>control registers</em>, which are registers that are accessed by the CPU to allow CPU⟷device interactions. <em>Command registers</em> are registers that can be used to control what the device does. <em>Data registers</em> are registers that control data transfer into and out of the device. <em>Status registers</em> are registers that can be used to find out what&#39;s happening on the device. A <em>microcontroller</em> is like the device&#39;s CPU and it processes the actual device operations.</p>
+
+<p>The CPU and devices communicate via an interconnect such as <em>Peripheral Component Interconnect</em> (PCI). In particular, PCI makes devices accessible in a manner similar to how CPUs access memory, so that device registers appear to the CPU as memory locations at a specific physical address. When a CPU writes to such a memory location, the PCI controller will route that particular access to the appropriate device.</p>
+
+<p>The <em>memory-mapped I/O model</em> consists of dedicating part of the host physical memory for device interactions. The base address registers (BAR) control which region of memory is dedicated to device interactions, specifically, how much memory and starting at which address. Base address registers are configured during the boot process.</p>
+
+<p>The <em>I/O port model</em> consists of using dedicated in/out CPU instructions to send and receive data from a particular device. The target device is the I/O port and the value to write or read is specified in a register.</p>
+
+<p>Communication from device to CPU can be initiated when the device interrupts the CPU or the CPU polls the device status registers. Device interrupts can be generated as soon as possible, but interrupt handling has overhead, complexity, and causes cache pollution. CPU polling of device state can be chosen at a convenient time by the CPU, but there is a delay in responding to the event as well as CPU overhead if there is constant polling.</p>
+
+<p>Programmed I/O (PIO) is an I/O interaction method that requires no additional hardware support, in which the CPU &quot;programs&quot; the device by writing into its command registers and controlling data movement by accessing its data registers. PIO can be inefficient because it could require many I/O operations in order to exchange a lot of data.</p>
+
+<p>Direct Memory Access (DMA) requires special hardware support in the form of a DMA controller, and works similar to PIO in that the CPU programs the device via its command registers, but the data to transfer is specified via the DMA controls by specifying the in-memory address and size of the buffer to send. For this to work, the memory in the buffer needs to remain there in physical memory until the transfer completes, which can be accomplished by pinning the pages so that they&#39;re not swapped to disk.</p>
+
+<p>Since DMA has an upfront setup cost, PIO can be more efficient for very small payloads.</p>
+
+<p>Operating system bypass for I/O allows the user-level to directly access the device registers and data. This requires device support in the form of extra registers for it to give to additional user processes and the operating system, as well as demultiplexing support for determining which processes to respond to. This requires a &quot;user-level driver&quot; which is often a library. The kernel retains coarse-grain control, such as enabling and disabling of the device.</p>
+<h1 id="memory">
+<span class="hash">#</span>
+<a href="#memory" class="header-link">Memory</a>
+</h1>
+<p>Memory latency is even more of an issue in shared memory systems because there is contention on the memory, which further increases latency.</p>
+
+<p>There are a few policies the CPU can adopt when writing to memory with respect to updating the actual data in memory:</p>
+
+<ul>
+<li><strong>no-write</strong>: cache is bypassed and any reference to that address in the cache is invalidated</li>
+<li><strong>write-through</strong>: write is applied to both cache and memory</li>
+<li><strong>write-back</strong>: write to the cache and eventually write to memory when the cache line is evicted</li>
+</ul>
+
+<p>A <em>Non-Cache-Coherent</em> (NCC) architecture is one where multiple copies of the same data in multiple CPU caches can diverge if one of the CPUs modifies it. This divergence must be remedied in software.</p>
+
+<p>A <em>Cache-Coherent</em> (CC) architecture is one where the hardware ensures that the caches remain coherent, so that if one cache is updated, any other caches with copies of the same data do not diverge by keeping stale copies.</p>
+
+<p>The <em>write-invalidate</em> (WI) cache-coherence strategy works by invalidating the cache entries of other CPUs which had copies of the updated data.</p>
+
+<p>The <em>write-update</em> (WU) cache-coherence strategy works by updating the cache entries of other CPUs with the new data.</p>
+
+<p>Write-invalidate has a performance benefit over write-update because only the address of the data has to be sent to the other caches for them to invalidate the corresponding entries. As a result, future writes to the same value on the original CPU will not trigger additional communications to the other caches, since the entries will no longer exist on the other caches.</p>
+
+<p>On the other hand, write-update has the benefit that the updates are immediately available on the other CPU caches, whereas with write-invalidate the other CPUs must access main memory in order to obtain the latest value.</p>
+
+<p>To ensure cache coherence, atomic operations will always issue to the memory controller, completely bypassing caches. This ensures that all operations are ordered and synchronized <sup id="fnref3"><a href="#fn3" rel="footnote">3</a></sup>. A consequence of this is that atomic operations take longer due to memory latency and contention, and they generate coherence traffic to update or invalidate cache references in order to preserve coherence, <em>even if the value didn&#39;t change</em>. In total, bus/interconnect contention, cache bypassing, and coherence traffic cause atomic operations to be especially expensive on shared memory processor architectures.</p>
+<h1 id="virtual-memory">
+<span class="hash">#</span>
+<a href="#virtual-memory" class="header-link">Virtual Memory</a>
+</h1>
+<p>Virtual addresses are considered virtual because they don&#39;t have to correspond to actual locations in physical memory.</p>
+
+<p>Virtual addresses decouple the process data layout (virtual memory) from the physical memory layout, so that it doesn&#39;t matter how the compiler chooses to lay out the program data.</p>
+
+<p><em>Internal fragmentation</em> refers to gaps <em>within</em> a sparsely populated page leading to wasted space. <em>External fragmentation</em> refers to non-contiguous holes of free memory which can prevent continuous memory allocations of that size from being allocated.</p>
+
+<p>In order to minimize external page fragmentation, it&#39;s important to coalesce/aggregate free areas, in order to increase the size of the holes.</p>
+
+<p>There is a trade-off with respect to the virtual page size: a larger page size means fewer page table entries which means smaller page tables, which means more TLB hits. However, larger page tables increases the likelihood of internal fragmentation which results in wasted memory, because even a small memory allocation might allocate an entire large page for it.</p>
+
+<p>Page tables maintain a mapping between virtual addresses and physical addresses. Specifically, it maps the <em>virtual page number</em> (VPN) to the <em>physical frame number</em> (PFN), that is, the <em>first</em> virtual address in a page to the <em>first</em> physical address in a page frame. This is sufficient instead of needing the entire virtual and physical addresses because the page table maps pages, not individual addressable units; an offset can be used to index within the actual page frame.</p>
+
+<p>A page table exists for each and every process. On a context-switch, the page table pointer is updated by updating the page table register, which points to the currently active page table (e.g. CR3 on x86), to point to the new process&#39; page table.</p>
+
+<p>The number of page table entries is all of the virtual page numbers that can exist in a virtual address space, which is <script type="math/tex">2^{N} / M</script> where <script type="math/tex">N</script> is the virtual address size and <script type="math/tex">M</script> is the page size. For example, on a 32-bit architecture with 4 KB page size, that means that <script type="math/tex">N = 2^{32}</script> and <script type="math/tex">M = 4096</script>, so <script type="math/tex">2^{32} / 4096</script> = 1,048,576 virtual page numbers (and thus, one page table entry for each one).</p>
+
+<p>This means that there would need to be 1,048,576 entries in a page table, where each entry would contain for example 4 bytes to store the page frame number and additional bits. This amounts to <script type="math/tex">1,048,576 * 4\ \text {bytes}</script>, or about 4 MB per-process.</p>
+
+<p>On a larger virtual address space, such as a 64-bit system, the virtual address space would be <script type="math/tex">2^{64}</script> with a page table entry of 8 bytes and a page size of 4096 bytes would amount to <script type="math/tex">2^{32} / 4096 * 8\ \text {bytes}</script>, or about 36 petabytes per-process. This is clearly prohibitively expensive, especially considering that the vast majority of the address space is unused, meaning that the vast majority of the page table entries are not necessary.</p>
+
+<p>For this reason, a level of indirection is introduced in order to facilitate a sparse page table. Specifically, an outer page table contains pointers to internal (real) page tables. The internal page tables are only created for valid virtual memory regions, allowing holes to exist.</p>
+
+<p><img src="http://i.imgur.com/hcTHpmE.png" class="center" /></p>
+
+<p>This is known as a <em>hierarchical page table</em>. It is indexed by:</p>
+
+<ol>
+<li>obtaining the virtual address prefixes <script type="math/tex">p_1</script> and <script type="math/tex">p_2</script> and the offset <script type="math/tex">d</script>.</li>
+<li>index into the outer table with <script type="math/tex">p_1</script> to obtain the internal page table</li>
+<li>index into the internal page table with <script type="math/tex">p_2</script> to obtain the page</li>
+<li>index into the page with the offset <script type="math/tex">d</script> to obtain the physical address</li>
+</ol>
+
+<p><img src="https://i.imgur.com/pNJ2kfY.png" class="center" /></p>
+
+<p>The actual virtual-to-physical address translation is done by hardware (the MMU), which means that the hardware has certain expectations about the structure of the tables, and consequently dictates what kinds of memory management modes are supported, the kind of pages there can be, and the virtual and physical address format.</p>
+
+<p>More table levels can be introduced but there is a trade-off. More table levels means smaller internal page tables, increasing the likelihood that the virtual address space has gaps that match the needed granularity. However, more table levels means that more memory accesses are required per translation, increasing translation latency.</p>
+
+<p>Page tables can also contain a validity bit (aka presence bit) which specifies whether the access represented by the mapping is valid, e.g. whether the content of the virtual memory is actually present in physical memory.</p>
+
+<p>A valid bit of 1 means that the page is indeed in memory and the mapping is valid. A valid bit of 0 means that the page is not in memory. In this case, the MMU will raise a fault. If the MMU determines that the mapping is invalid, then it decides if the access should be permitted, where the page is actually located (e.g. on disk), and where the physical memory should be placed. More specifically:</p>
+
+<ol>
+<li>MMU generates an error code on the kernel stack</li>
+<li>MMU generates a trap into the kernel, triggering a page fault handler</li>
+<li>Page fault handler determines action based on error code and faulting address. It can decide to bring the page from disk to memory or send a <code>SIGSEV</code> signal if there is a protection error.</li>
+</ol>
+
+<p>Since virtual memory is often much larger than physical memory, there&#39;s a possibility that a virtual memory page is not present in physical memory. <em>Demand paging</em> allows pages to be swapped in and out of memory and a swap partition on the disk, which handles this situation.</p>
+
+<p><img src="http://i.imgur.com/0KOnKwo.png" class="center" /></p>
+
+<p>A page can be pinned to physical memory so that it won&#39;t be swapped to disk. This is useful for when interacting with devices via direct memory access (DMA).</p>
+
+<p>If the MMU determines that the access is invalid but the virtual address is valid, the mapping will be re-established on re-access between the valid virtual address and a valid physical address.</p>
+
+<p>Page tables can also contain a dirty bit which represents whether the page has been written to. This can indicate that the cache needs to be flushed to disk.</p>
+
+<p>Page tables can also contain an access bit which represents whether the page has been accessed at all (i.e. read or write).</p>
+
+<p>Page tables can also contain protection bits which specify whether the page can be read, written, and/or executed (RWX). For example, on x86, the R/W bit set to 0 means that it&#39;s read-only, and 1 means its&#39; read-write. The U/S bit specifies whether the page is accessible from user-mode (0) or supervisor-mode only (1). The MMU would then check these bits to determine the validity of a page access.</p>
+
+<p>The <em>translation look-aside buffer</em> (TLB) is a cache of valid virtual-to-physical address translations kept by the MMU. The TLB also contains protection and validity bits, like the page tables do. If there&#39;s a TLB (cache) miss, then the translation is made by consulting the page table. Even a small number of addresses cahced in the TLB results in a high cache hit-rate when there is high temporal and spatial locality of memory addresses.</p>
+
+<p>To convert a virtual address to a physical address, the virtual page number of the address is used to index into the page table to obtain the physical frame number. Then the virtual address&#39; offset if concatenated to the physical frame number to arrive at the complete physical address.</p>
+
+<p><img src="http://i.imgur.com/txR0SJ0.png" class="center" /></p>
+
+<p>A common operating system optimization is <em>allocation on first touch</em>, where the memory for a virtual address space is allocated until it&#39;s first accessed.</p>
+
+<p>The kernel decides which parts of the address space and allocated and where. If a portion of the process address space is on disk and is required, it will be swapped into physical memory, potentially causing another portion that was previously in physical memory to be moved to the disk. Conversely, if some pages are going unused, they may be swapped out to disk to allow other data to use that memory.</p>
+
+<p>Specifically, a page(out) daemon swaps out pages when memory usage is above some threshold (the high watermark) or CPU usage is below some threshold (low watermark). The pages chosen for swapping out should be those that can&#39;t be used (e.g. due to some LRU policy, determined by access bit) and those that don&#39;t need to be written out (determined by dirty bit), while avoiding non-swappable pages containing important kernel state, I/O operations, etc.</p>
+
+<p>Shared memory IPC is facilitated by mapping certain virtual addresses from each participating process to the same physical addresses.</p>
+
+<p><em>Page frames</em> are chunks of physical memory the same size as virtual pages. A page frame essentially &quot;contains&quot; a virtual page, just like a cache line holds a cache block.</p>
+
+<p>A <em>memory management unit</em> (MMU) is a hardware component that receives virtual addresses from the CPU and translates them into physical addresses. An MMU may report a fault for any of:</p>
+
+<ul>
+<li>an access is illegal (e.g. physical address hasn&#39;t been allocated)</li>
+<li>permissions aren&#39;t satisfied for this access</li>
+<li>referenced page isn&#39;t present in memory and must be fetched from disk</li>
+</ul>
+
+<p>A user-level memory allocator is responsible for the dynamic process state, such as the heap.</p>
+
+<p>A kernel-level memory allocator is responsible for allocating memory regions for the kernel as well as the static state of a process, such as the code, stack, and initialized data regions, as well as keeping track of the free memory that&#39;s available on the system.</p>
+
+<p>The kernel-level <em>buddy allocator</em> works by starting with <script type="math/tex">2^x</script> chunk of pages. On each request, one of the chunks is subdivided into another <script type="math/tex">2^y</script> chunk until the smallest such chunk is found that can satisfy the request. When freeing, the &quot;buddy,&quot; the adjacent chunk, is checked to see if it&#39;s also free in order to aggregate them both into a larger chunk.</p>
+
+<p><img src="https://i.imgur.com/VHwkAhY.png" class="center" /></p>
+
+<p>In the example above, an allocation request of size 8 is received. The region is subdivided until a chunk of size 8 is found to allocate. Then another chunk of size 8 is allocated (on the buddy of the previously allocated chunk). Then an allocation request of size 4 is received which requires subdividing other chunks. Then the second allocated chunk of 8 is deallocated and its buddy is checked to see if it&#39;s free in order to merge with it, but it&#39;s not. Then the first allocated chunk of 8 is deallocated and its buddy is checked to see if it&#39;s free in order to merge with it. It is, so they merge into a chunk of 16.</p>
+
+<p>Since the buddy allocator specifically allocates at a <script type="math/tex">2^x</script> granularity, it increases the likelihood of internal fragmentation, since not a lot of kernel data structures are near the size of a power of 2.</p>
+
+<p>The kernel-level <em>slab allocator</em> works by using object caches backed by physically contiguous pages, or <em>slabs</em>, of a size that is a multiple of the object size.</p>
+
+<p><img src="https://i.imgur.com/UKovDuV.png" class="center" /></p>
+
+<p><em>Checkpointing</em> is the process of taking a snapshot of a running application in order to resume it at a later point or transfer it to another machine. This can work by Copy-on-Write&#39;ing the process&#39; virtual memory and then periodically storing diffs of the dirtied pages for incremental checkpoints.</p>
 <h1 id="processes">
 <span class="hash">#</span>
 <a href="#processes" class="header-link">Processes</a>
 </h1>
 <p>Each process has a system-wide process ID known as a PID. A process can obtain its PID via <code>getpid()</code>. Each process has a parent process, whose ID can be obtained via <code>getppid()</code>.</p>
-<h1 id="process-credentials">
+
+<p>The <code>setcontext()</code> family of functions can be used to save and load execution contexts, which can be used to implement coroutines, iterators, and fibers.</p>
+
+<p>The <em>process control block</em> (PCB) is a data structure maintained by the kernel for each process. It contains process state such as:</p>
+
+<ul>
+<li>process ID</li>
+<li>program counter (PC)</li>
+<li>registers</li>
+<li>memory limits</li>
+<li>list of open files</li>
+<li>priority</li>
+<li>signal mask</li>
+<li>CPU scheduling information</li>
+</ul>
+
+<p>Forking a process causes the PCB to be copied so that both processes continue executing at the instruction after the fork.</p>
+<h2 id="credentials">
 <span class="hash">#</span>
-<a href="#process-credentials" class="header-link">Process Credentials</a>
-</h1>
+<a href="#credentials" class="header-link">Credentials</a>
+</h2>
 <p>Each process may have many sets of user and group identifiers (UIDs and GIDs):</p>
 
 <ul>
@@ -212,59 +532,18 @@
 <p>The <em>file-system user ID</em> and <em>file-system group ID</em> are used on Linux instead of the effective user ID and effective group ID equivalents to determine the permissions of a process when performing file-system operations---otherwise the effective IDs are used for all other operations. However, usually the file-system IDs are identical to the effective IDs; the only differ when explicitly made to via <code>setfsuid()</code> and <code>setfsgid()</code>.</p>
 
 <p>The <em>supplementary group IDs</em> are additional groups to which a process belongs which are inherited from its parent.</p>
-<h1 id="process-time">
+<h2 id="execution-time">
 <span class="hash">#</span>
-<a href="#process-time" class="header-link">Process Time</a>
-</h1>
+<a href="#execution-time" class="header-link">Execution Time</a>
+</h2>
 <p>The kernel separates CPU time used by a process into <em>user time</em> (also known as virtual time), which is the amount of time executing in user mode, and <em>system time</em>, which is the amount of time spent executing in kernel mode, i.e. executing system calls or servicing page faults for the program.</p>
-<h1 id="file-systems">
+<h2 id="creation">
 <span class="hash">#</span>
-<a href="#file-systems" class="header-link">File Systems</a>
-</h1>
-<p>Devices are represented by entries in the <span class="path">/dev</span> directory, and each device has a corresponding device driver which implements the standard operations such as <code>read()</code> and <code>write()</code>.</p>
-
-<p>A <em>character device</em> is one that handles data on a character-by-character basis, such as terminals and keyboards. A <em>block device</em> is one that handles data a block at a time, where the block size depends on the type of device.</p>
-
-<p>Hard disk drives store data on the disk on concentric circles called <em>tracks</em>, which are divided into <em>sectors</em> each containing a series of <em>physical</em> blocks.</p>
-
-<p>The <em>seek time</em> is the time it takes for the disk head must to move to the appropriate track. The <em>rotational latency</em> is the time it takes for the appropriate sector to rotate under the head. The <em>transfer time</em> is the time it takes for the blocks to be transferred.</p>
-
-<p>Disks are divided into partitions, each of which may contain a file system. Each file system contains an <em>i-node</em> (i.e. index node) table and there is one entry for each file on the file system, each entry containing metadata such as:</p>
-
-<ul>
-<li>file type</li>
-<li>user and group owners</li>
-<li>access permissions</li>
-<li>timestamps</li>
-<li>hard link count</li>
-<li>byte size</li>
-<li>allocated block count</li>
-<li>pointers to data blocks</li>
-</ul>
-
-<p>Journaling file systems are ones keep a write-ahead-log (WAL) for metadata updates (and optionally data updates) before the actual file updates are performed, which makes the data more resilient in the event of a crash. This also means that a file system check is not required after a system crash.</p>
-
-<p>File systems are all mounted under a single directory tree represented by the root <span class="path">/</span> at specific locations known as <em>mount points</em>. The <em>virtual file system</em> (VFS) is an abstraction, a unified representation of a single file system, even if there are multiple different file systems mounted at different points.</p>
-
-<p>A <em>bind mount</em> allows a file or directory to be mounted at multiple locations in the file system. Unlike hard links, bind mounts can cross file-systems and chroot jails, and it&#39;s possible to create a bind mount for a directory.</p>
-<h1 id="signals">
-<span class="hash">#</span>
-<a href="#signals" class="header-link">Signals</a>
-</h1>
-<p>Signals can be sent to a process via <code>kill()</code>. A normal process can only send a signal to another process if the real or effective user ID of the sending process matches the real user ID or saved-set-user-ID of the receiving process. The effective user ID of the receiving process is not consulted to prevent one user from sending signals to another user&#39;s process that is running a set-user-ID program belonging to the user trying to send the signal.</p>
-
-<p>A <em>signal mask</em> is the set of signals whose delivery to the process is currently blocked. Signals are added and removed from the mask via <code>sigprocmask()</code>. If a signal is received while blocked, it remains pending, but is not queued, so that another signal of the same kind may &quot;overwrite&quot; it. The <code>sigpending()</code> call can retrieve the signal set identifying signals that it has pending.</p>
-
-<p>The <code>sigsuspend()</code> call can atomically modify the process signal mask and suspend execution until a signal arrives, which is essential to avoid race conditions when unblocking a signal and then suspending execution until that signal arrives, since it may have arrived in-between.</p>
-
-<p>Re-entrancy affects how one can update global variables and limits the set of functions that can safely be called from a signal handler.</p>
-
-<p>If a signal handler interrupts a blocked system call, the call returns <code>EINTR</code>. The call can be manually restarted or the signal handler can be established with <code>SA_RESTART</code> to cause many, but not all, system calls to automatically restart.</p>
-<h1 id="process-creation">
-<span class="hash">#</span>
-<a href="#process-creation" class="header-link">Process Creation</a>
-</h1>
+<a href="#creation" class="header-link">Creation</a>
+</h2>
 <p>The <code>fork()</code> call creates a new process (child) by making an almost exact copy-on-write duplicate. A new process can be executed via <code>exec()</code>, which modifies the process&#39; virtual memory with that new process&#39; data.</p>
+
+<p>Copy-on-Write (COW) refers to write-protecting the original page and mapping the new process&#39; virtual address to it. Then if the original page is written to, a page fault occurs, the page is copied, and the page table is updated so that the virtual address points to the copy.</p>
 
 <p>There is no guarantee about whether the parent or child continues first after a call to <code>fork()</code>, so it should generally be called as a condition to a <code>switch</code> statement for example:</p>
 <figure class="codeblock">
@@ -281,16 +560,447 @@
 <span class="p">}</span>
 </code></pre></figure>
 <p>After the fork, the child receives duplicates of all of the parent&#39;s file descriptors, made in the same manner as <code>dup()</code>, referring to the same file, file offset, and open file status flags. Further, if one updates any of these, the changes are visible to the other.</p>
-<h1 id="process-termination">
+<h2 id="termination">
 <span class="hash">#</span>
-<a href="#process-termination" class="header-link">Process Termination</a>
-</h1>
+<a href="#termination" class="header-link">Termination</a>
+</h2>
 <p>Orphaned children are adopted by init. When a child terminates before a parent has a chance to call <code>wait()</code>, the kernel turns the child into a <em>zombie</em>, which means that most of the resources held by the child are released back to the system: only the child&#39;s process Id, termination status, and resource usage statistics are preserved. Zombies can&#39;t be killed by signals in order to ensure that a parent can <em>always</em> eventually perform a <code>wait()</code>. When the process finally performs the <code>wait()</code>, the kernel removes the zombie since that information is no longer required. If instead the parent terminates before it ever performs a <code>wait()</code>, then init adopts the child and performs a <code>wait()</code> so that the zombie can be removed. If the parent doesn&#39;t terminate but also never performs a <code>wait()</code>, then the zombie entry will remain, taking up resources.</p>
-<h1 id="process-execution">
+<h2 id="execution">
 <span class="hash">#</span>
-<a href="#process-execution" class="header-link">Process Execution</a>
-</h1>
+<a href="#execution" class="header-link">Execution</a>
+</h2>
 <p>The <code>exec()</code> family of functions can be used to replace the currently-running program with a new program. All file descriptors open by the previous program remain open. This is something used by the shell for example for I/O redirection. Signal dispositions are reset because the signal handlers reside in the <code>text</code> region of the previous process, which is now gone and replaced with the new process.</p>
+<h1 id="threads">
+<span class="hash">#</span>
+<a href="#threads" class="header-link">Threads</a>
+</h1>
+<p>Threads share the same virtual address space (e.g. code, data, files), but they have separate execution contexts, so they need a separate stack, registers, etc. The increased sharing increases cache utilization.</p>
+
+<p>It can be beneficial to have more threads than CPUs if the threads otherwise wait on I/O and the wait is longer than context-switching twice (away and back), then the kernel can context-switch to another thread in order to remain busy.</p>
+
+<p>It&#39;s faster to context-switch threads than context-switching processes because of the amount of data that threads share, including virtual address space, so the virtual address mappings don&#39;t have to be updated as they would have to be when context-switching to an entirely different process.</p>
+
+<p>A detached thread is one that has become detached from its parent, so that it can continue executing even after the parent exits. This means that the parent can no longer join the child. When the child wants to exit, it can simply call <code>pthread_exit()</code>.</p>
+
+<p>In the many-to-one threading model, the user-level thread management library decides which user-level threads are mapped to individual kernel-level threads. This means that the kernel has no insights into application needs. For example, the kernel could block the entire process if one user-level thread blocks on I/O, since that would block the entire kernel-level thread on to which the process&#39; threads are mapped onto.</p>
+
+<p>Also, with the process-scope of multi-threading, the kernel isn&#39;t aware that the process has many threads, so it ends up giving it the same amount of resources as if it only had one thread, which can negatively impact performance.</p>
+
+<p>User-level thread stacks often contain a <em>red zone</em> which is a region of memory at the end of the stack region which is configured so that if a thread&#39;s stack grows into the red zone region, a system fault is triggered, preventing the stack from overflowing into the next user-level thread&#39;s data structure.</p>
+
+<p>Thread library implementations may avoid outright destroying threads because thread destruction and subsequent thread creation is relatively expensive. Instead finished threads are placed on &quot;death row,&quot; i.e. marked to be destroyed but not actually destroyed. If another thread is requested for creation and a marked thread exists, its data structures are re-used in order to avoid re-allocation. Otherwise, a reaper thread periodically destroys marked threads.</p>
+
+<p>Designated threads can be used for blocking I/O operations in a situation where there are no asynchronous equivalents and blocking the main thread(s) is not viable.</p>
+<h1 id="scheduling">
+<span class="hash">#</span>
+<a href="#scheduling" class="header-link">Scheduling</a>
+</h1>
+<p>The CPU scheduler determines which one of the currently ready processes will be dispatched to the CPU to begin execution and how long it should run for. Process preemption refers to interrupting the currently running process and saving its current context.</p>
+
+<p>In order to run a different process, the operating system must preempt the current process and save its context, then choose the next process based on the scheduling algorithm, then dispatch the new process and load its context.</p>
+
+<p>A <em>timeslice</em> is the maximum amount of uninterrupted time given to a task, aka a <em>quantum</em>.</p>
+
+<p><img src="http://i.imgur.com/kvGf7P3.png" class="center" /></p>
+
+<p>A process can be deferred and placed on a ready queue if:</p>
+
+<ul>
+<li>it performs an I/O request</li>
+<li>its timeslice expires</li>
+<li>it&#39;s forked</li>
+<li>it&#39;s waiting for an interrupt</li>
+</ul>
+
+<p><em>Run-to-completion scheduling</em> refers to running a process to completion once it&#39;s scheduled onto a CPU.</p>
+
+<p><em>First-come, first-serve</em> (FCFS) scheduling works by scheduling tasks onto CPUs in the same order in which they arrive on the run-queue.</p>
+
+<p><em>Shortest Job First</em> (SFJ) scheduling works by scheduling tasks in order of their execution time duration, shortest first. The duration of a task can be based on heuristics or previous executions.</p>
+
+<p><em>Preemptive scheduling</em> refers to a scheduling policy in which processes can be interrupted. To facilitate this, the scheduler should be invoked whenever a new task arrives on the run-queue.</p>
+
+<p><em>Round-robin scheduling</em> works by picking processes from the front of a run-queue, similar to first-come first-serve (FCFS) except that processes don&#39;t run to completion. Instead, processes may yield to others, such as when waiting on I/O.</p>
+
+<p><em>Priority scheduling</em> works by running the highest-priority task next. <em>Priority aging</em> is a way to mitigate process starvation of low-priority processes in priority scheduling. It specifies that the priority of a process is a function of its actual priority and the amount of time it has spent in the run-queue, so that the more time it has spent in a run-queue, the higher priority it has.</p>
+
+<p><em>Priority inversion</em> is a condition in which the priority of threads effectively becomes inverted because a high-priority thread requires a lock held by a low-priority thread. The high-priority (e.g. 1) thread gets scheduled, but the low-priority (e.g. 3) thread still holds the lock, so it suspends to continue waiting and another low-priority (e.g. 2) thread is scheduled instead since it&#39;s of higher priority than the lock-holding thread. This prevents the lock-holding thread from completing its critical section and thus starves the high-priority thread, effectively &quot;inverting&quot; the priority levels of the high-priority 1 thread and the lower-priority 2 thread.</p>
+
+<p>One solution to priority inversion is <em>priority inheritance</em>: temporarily boost the priority of the lock-holding thread to essentially the same level as the higher-priority thread contending the lock. This prevents other lower-priority threads from getting scheduled before the high-priority task. Also see random boosting.</p>
+
+<p>CPU-bound tasks prefer longer timeslices to avoid/amortize the overhead of context-switching on timeslice boundaries, keeping high CPU utilization and high throughput.</p>
+
+<p>I/O-bound tasks prefer shorter timeslices because they&#39;re able to issue and respond to I/O operations earlier/quicker.</p>
+
+<p>A <em>Multi-Level Feedback Queue</em> is a run-queue data structure that adaptively gives different timeslices and scheduling policies to different processes based on their needs. For example:</p>
+
+<ul>
+<li>new tasks enter the top-most, shortest timeslice queue</li>
+<li>if the task yields voluntarily, it&#39;s kept at the same timeslice level</li>
+<li>tasks in lower queues get priority boosts when repeatedly releasing the CPU due to I/O waits</li>
+</ul>
+
+<p><img src="http://i.imgur.com/vOS2Wcp.png" class="center" /></p>
+
+<p><em>Cache affinity</em> refers to keeping a task on the same CPU as much as possible in order to keep that cache hot. This can be achieved by scheduling processes so that there are per-CPU run-queues and schedulers onto which processes are load-balanced. The per-CPU schedulers try to repeatedly schedule tasks onto the same CPU. Load-balancing can be based on the per-CPU run-queue length, or when the CPU is idle it can <a href="https://en.wikipedia.org/wiki/Work_stealing"><em>steal work</em></a> from other per-CPU run-queues.</p>
+
+<p><em>Non-Uniform Memory Access</em> (NUMA) refers to a system which has multiple memory nodes and access to the local memory node is faster than access to a remote node. NUMA-aware scheduling binds tasks to CPUs that are closer to the memory nodes containing the tasks&#39; states.</p>
+
+<p><em>Hyper-threading</em> (aka <em>Simultaneous MultiThreading</em> (SMT)) has multiple hardware-supported execution contexts within a single CPU, such as multiple sets of registers, enabling very fast context-switches. This can be used to hide memory access latency by quickly context-switching</p>
+<h2 id="o1-scheduler">
+<span class="hash">#</span>
+<a href="#o1-scheduler" class="header-link">O(1) Scheduler</a>
+</h2>
+<p>The <em>Linux O(1) scheduler</em> has 140 priority levels. It separates process priority levels into two categories: real-time tasks with priority 0-99 and time-sharing tasks with priority 100-139. User processes have a default priority level of 120, but can change their priority anywhere in the range of 100-139 by specifying a <em>nice value</em> which is added to the priority level, which can be anywhere in the range of [-20, 19]. This way, the priority can be increased by specifying a negative nice value.</p>
+
+<p>With the Linux O(1) scheduler, a process&#39; timeslice depends on its priority level: high-priority processes get longer timeslices and low-priority processes get shorter timeslices.</p>
+
+<p>In order for the Linux O(1) scheduler to determine a process&#39; priority, it monitors the amount of time that a process spends sleeping (i.e. waiting/idling). A smaller sleep time means the process is compute-intensive, so the priority is shifted towards a lower priority by 5. A longer sleep time means that the process is interactive, so the priority is shifted towards a higher priority by 5.</p>
+
+<p>The run-queue data structure for the Linux O(1) scheduler essentially has two arrays of 140 (one for each priority level) queues. There are two arrays because one is for active processes and the other is for expired processes whose timeslices have expired.</p>
+
+<p>As each processes&#39; timeslice expires, it&#39;s queued onto the corresponding queue in the expired array. However, if the process yields (e.g. to I/O) <em>before</em> its timeslice expires, it remains on the active array. Once all processes expire and there are no remaining processes in the queues of the active array, the the pointers to the active and expired arrays are swapped (like a double-buffer swap) and the process is repeated on the newly active array.</p>
+
+<p>The Linux O(1) scheduler gets its name because it can achieve constant time <script type="math/tex">O(1)</script> process selection by using a bitmap to index into the first (thus highest-priority) non-empty run-queue, and accessing the head of the run-queue is itself a <script type="math/tex">O(1)</script> operation.</p>
+
+<p>The Linux O(1) scheduler mitigates process starvation by ensuring that all tasks in the active array are run until their timeslices expire, <em>including</em> lower-priority tasks, which has shorter timeslices in order to minimize interfering with higher-priority tasks.</p>
+<h2 id="completely-fair-scheduler">
+<span class="hash">#</span>
+<a href="#completely-fair-scheduler" class="header-link">Completely Fair Scheduler</a>
+</h2>
+<p>The Linux Completely Fair Scheduler (CFS) works by ordering processes by their <em>virtual run-time</em> (aka <em>vruntime</em>), which is the amount of time in nanoseconds that the process has spent running on the CPU. To keep processes ordered by vruntime, it uses a <a href="/notes/algorithms#red-black-trees">red-black tree</a>. CFS always schedules the left-most node, the one which has spent the least amount of time running, by removing it from the tree and sending it for execution.</p>
+
+<p><img src="https://i.stack.imgur.com/ZlNeJ.png" class="center" /></p>
+
+<p>Periodically, CFS updates the current process&#39; vruntime and compares it to the left-most node in the tree. If the current process&#39; vruntime is less than the left-most node&#39;s vruntime, the current process continues running. Otherwise if the current process&#39; vruntime is now greater than the left-most node&#39;s vruntime, the current process is preempted and re-inserted into the red-black tree, and the left-most node is scheduled.</p>
+
+<p>CFS handles priority and niceness by adjusting the progress rate of a process&#39; vruntime. In other words, low-priority processes will have a faster rate of increase in their vruntime, whereas high-priority processes will have a slower rate of increase in their vruntime. This has the effect that low-priority processes run for less time, because they more quickly reach the point at which the left-most process has a smaller vruntime than theirs, and vice versa.</p>
+
+<p>The performance characteristics of CFS are determined by the performance characteristics of the red-black tree that backs it: <script type="math/tex">O(\text {height})</script> for selecting a task and <script type="math/tex">O(\log n)</script> for adding a task.</p>
+<h1 id="concurrency">
+<span class="hash">#</span>
+<a href="#concurrency" class="header-link">Concurrency</a>
+</h1><h2 id="strategies">
+<span class="hash">#</span>
+<a href="#strategies" class="header-link">Strategies</a>
+</h2>
+<p>The pipeline pattern consists of a sequence of stages, each processed by a single or group of threads, producing the result into the next stage&#39;s work queue.</p>
+<h2 id="mutexes">
+<span class="hash">#</span>
+<a href="#mutexes" class="header-link">Mutexes</a>
+</h2>
+<p>An <em>adaptive mutex</em> is one that acts as a spinlock if the critical section is short, otherwise it follows the regular behavior.</p>
+
+<p>A spinlock is one that contiguously checks if the lock has been released, i.e. within a busy-loop, though not necessarily in the most naive way possible.</p>
+
+<p>For example, a test-and-set spinlock can be implemented with:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">spinlock_init</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">lock</span> <span class="o">=</span> <span class="n">FREE</span>
+
+<span class="n">spinlock_lock</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span><span class="o">:</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">test_and_set</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span> <span class="o">==</span> <span class="n">BUSY</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// spin</span>
+  <span class="p">}</span>
+
+<span class="n">spinlock_unlock</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">lock</span> <span class="o">=</span> <span class="n">FREE</span>
+</code></pre></figure>
+<p>A test-and-test-and-set spinlock is one which doesn&#39;t spin on the expensive atomic operation in the regular case that the lock is not free, which decreases memory contention. Instead it spins on the cached value, which will eventually be updated either due to write-update or because of write-invalidation. When a change is detected, the atomic operation is performed to determine if the lock can indeed be acquired <sup id="fnref4"><a href="#fn4" rel="footnote">4</a></sup>.</p>
+
+<p>However, the test-and-test-and-set spinlock also has some performance disadvantages because everyone sees that the lock is free at the same time, which causes everyone to try to acquire the lock at the same time. This creates <script type="math/tex">O(n^2)</script> cache-coherence contention because each processor will attempt to acquire the lock via the atomic operation, which produces coherence traffic to invalidate all other caches.</p>
+
+<p>A possible implementation could be:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="n">spinlock_lock</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span><span class="o">:</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">lock</span> <span class="o">==</span> <span class="n">BUSY</span> <span class="o">||</span> <span class="n">test_and_set</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span> <span class="o">==</span> <span class="n">BUSY</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// spin</span>
+  <span class="p">}</span>
+</code></pre></figure>
+<p>It&#39;s possible to share pthread synchronization primitives like mutexes and condition variables by placing them in shared memory and initializing their attributes with <code>PTHREAD_PROCESS_SHARED</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="k">struct</span> <span class="n">shm_data_struct_t</span> <span class="p">{</span>
+  <span class="n">pthread_mutex_t</span> <span class="n">mutex</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">seg</span> <span class="o">=</span> <span class="n">shmget</span><span class="p">(</span><span class="n">ftok</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">120</span><span class="p">),</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">IPC_CREATE</span> <span class="o">|</span> <span class="n">IPC_EXCL</span><span class="p">);</span>
+<span class="n">shm_address</span> <span class="o">=</span> <span class="n">shmat</span><span class="p">(</span><span class="n">seg</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// cast shared memory segment pointer to struct</span>
+<span class="n">shm_ptr</span> <span class="o">=</span> <span class="p">(</span><span class="n">shm_data_struct_t</span> <span class="o">*</span><span class="p">)</span><span class="n">shm_address</span><span class="p">;</span>
+
+<span class="n">pthread_mutexattr_t</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_attr</span><span class="p">);</span>
+<span class="n">pthread_mutex_attr_set_pshared</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_attr</span><span class="p">,</span> <span class="n">PTHREAD_PROCESS_SHARED</span><span class="p">);</span>
+
+<span class="c1">// initialize mutex residing in shared memory segment</span>
+<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">shm_ptr</span><span class="p">.</span><span class="n">mutex</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m_attr</span><span class="p">);</span>
+</code></pre></figure><h2 id="condition-variables">
+<span class="hash">#</span>
+<a href="#condition-variables" class="header-link">Condition Variables</a>
+</h2>
+<p>Condition variable implementations need to keep track of the threads waiting to be notified and the mutex associated with the condition.</p>
+
+<p>The <code>wait()</code> function for waiting on a condition variable notification requires a mutex as a parameter because it needs to unlock the mutex before suspending the process. Upon receiving the signal, it has to acquire the mutex in order to re-test the condition.</p>
+
+<p>Specifically, the <code>wait()</code> function performs these steps:</p>
+
+<ol>
+<li>atomically:
+
+<ol>
+<li>release mutex</li>
+<li>add self to condition variable&#39;s wait queue</li>
+<li>sleep until notification</li>
+</ol></li>
+<li>after receiving signal:
+
+<ol>
+<li>remove self from condition variable&#39;s wait queue</li>
+<li>re-acquire lock</li>
+<li>return</li>
+</ol></li>
+</ol>
+
+<p>It&#39;s important to re-test the condition after waking up from a <code>wait()</code> to ensure that the condition has indeed been met, in case it was previously met but no longer holds, or in case of spurious wake-ups.</p>
+
+<p>A <em>spurious wake-up</em> is when a thread is woken up knowing that it may not be able to proceed. This can happen if a signal occurs while the lock is still held. If the signaling doesn&#39;t depend on the mutex-guarded data, it can be done after the lock is released.</p>
+
+<p>It&#39;s possible to have multiple readers OR a single writer by mutex-protecting a counter used for keeping track of whether there is a writer or how many readers there are. The actual read or write code is not protected by a lock to allow for multiple readers.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// GLOBAL</span>
+<span class="n">mutex</span> <span class="n">counter_mutex</span><span class="p">;</span>
+<span class="n">condition_variable</span> <span class="n">read_phase</span><span class="p">,</span> <span class="n">write_phase</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">resource_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// READERS</span>
+<span class="n">lock</span> <span class="p">(</span><span class="n">counter_mutex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// -1 means writer exists</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">resource_counter</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">wait</span><span class="p">(</span><span class="n">counter_mutex</span><span class="p">,</span> <span class="n">read_phase</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">resource_counter</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// READ DATA</span>
+
+<span class="c1">// unlock</span>
+<span class="n">lock</span> <span class="p">(</span><span class="n">counter_mutex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">resource_counter</span><span class="o">--</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">readers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">signal</span><span class="p">(</span><span class="n">write_phase</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-cpp"><span class="c1">// WRITER</span>
+<span class="n">lock</span> <span class="p">(</span><span class="n">counter_mutex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">resource_counter</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">wait</span><span class="p">(</span><span class="n">counter_mutex</span><span class="p">,</span> <span class="n">write_phase</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// -1 means writer</span>
+  <span class="n">resource_counter</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// WRITE DATA</span>
+
+<span class="c1">// unlock</span>
+<span class="n">lock</span> <span class="p">(</span><span class="n">counter_mutex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">resource_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="c1">// signal readers first to give them a chance</span>
+  <span class="n">broadcast</span><span class="p">(</span><span class="n">read_phase</span><span class="p">);</span>
+  <span class="n">signal</span><span class="p">(</span><span class="n">write_phase</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></figure><h2 id="semaphores">
+<span class="hash">#</span>
+<a href="#semaphores" class="header-link">Semaphores</a>
+</h2>
+<p>Semaphores are a synchronization primitive represented by a count. Acquisition of a semaphore is represented by decrementing the count; imagine it as acquiring one of the resources the semaphore is controlling access to. When the count reaches 0 (i.e. no remaining resources), any other process which attempts to acquire the semaphore blocks until the count goes above 0.</p>
+
+<p>To attempt to acquire a semaphore is to <em>wait</em> on the semaphore and releasing a semaphore is to <em>post</em> the semaphore. This corresponds to system calls <code>sem_wait()</code> and <code>sem_post()</code>.</p>
+
+<p>Semaphores can be used to synchronize shared memory access by having the writer and reader decrement/acquire the semaphore before the critical section and incrementing/releasing the semaphore after.</p>
+<h2 id="read-write-locks">
+<span class="hash">#</span>
+<a href="#read-write-locks" class="header-link">Read-Write Locks</a>
+</h2>
+<p>A read-write locks is one which allows shared read access but exclusive write access. That is, if there is a writer then there can be no other writer or reader. If there is a reader, there can be many other readers.</p>
+<h2 id="barriers">
+<span class="hash">#</span>
+<a href="#barriers" class="header-link">Barriers</a>
+</h2>
+<p>Barriers are a synchronization construct that are essentially the reverse of a semaphore. All threads wait at the barrier until all other threads have reached it, then they continue.</p>
+<h2 id="atomics">
+<span class="hash">#</span>
+<a href="#atomics" class="header-link">Atomics</a>
+</h2>
+<p>Atomic instructions are ones which provide atomicity and mutual exclusion. They are atomic because either the whole operation succeeds or not at all. They provide mutual exclusion because several atomic instructions are queued up and executed sequentially, and not concurrently.</p>
+<h1 id="inter-process-communication">
+<span class="hash">#</span>
+<a href="#inter-process-communication" class="header-link">Inter-Process Communication</a>
+</h1>
+<p>The physical pages that back a shared memory buffer aren&#39;t necessarily contiguous.</p>
+
+<p>There is a trade-off between sending messages (copy the data) and sharing memory (map the data). Since there is a non-negligible upfront cost to mapping memory into both process&#39; virtual address spaces, it can be much faster to simply send messages (copy the data) for small payloads. Otherwise, for much larger data it is definitely more efficient to map data.</p>
+<h2 id="shared-memory">
+<span class="hash">#</span>
+<a href="#shared-memory" class="header-link">Shared Memory</a>
+</h2>
+<p>The kernel places limits on the number of segments and total size of System V shared memory, e.g. 4096 on modern kernels.</p>
+
+<p>When a System V shared memory segment is created, the kernel returns an identifier so that other processes can attach the shared memory region to their virtual address space.</p>
+
+<p>When a process no longer requires a System V shared memory segment, it should detach it, which invalidates the virtual address mappings for that memory region. The shared memory segment won&#39;t be deallocated until a process explicitly requests that the kernel destroy it, otherwise it will continue to exist <em>even if no processes use it</em>.</p>
+
+<p>Instead of shared memory segments from System V, POSIX shared memory uses files that reside in memory (tmpfs), therefore all operations are done on file descriptors. POSIX shared memory can be attached with <code>mmap()</code> and detached with <code>unmmap()</code>.</p>
+<h2 id="message-queues">
+<span class="hash">#</span>
+<a href="#message-queues" class="header-link">Message Queues</a>
+</h2>
+<p>Message queues can be used to synchronize shared memory access by having the writer send a &quot;ready&quot; message after writing to shared memory, with the reader responding with &quot;ok&quot; to acknowledge that it has read the data.</p>
+<h1 id="signals">
+<span class="hash">#</span>
+<a href="#signals" class="header-link">Signals</a>
+</h1>
+<p>Signals can be sent to a process via <code>kill()</code>. A normal process can only send a signal to another process if the real or effective user ID of the sending process matches the real user ID or saved-set-user-ID of the receiving process. The effective user ID of the receiving process is not consulted to prevent one user from sending signals to another user&#39;s process that is running a set-user-ID program belonging to the user trying to send the signal.</p>
+
+<p>A <em>signal mask</em> is the set of signals whose delivery to the process is currently blocked. Signals are added and removed from the mask via <code>sigprocmask()</code>. If a signal is received while blocked, it remains pending, but is not queued, so that another signal of the same kind may &quot;overwrite&quot; it. The <code>sigpending()</code> call can retrieve the signal set identifying signals that it has pending.</p>
+
+<p>Contrary to this, <em>real-time signals</em> are queued so that handlers are called the correct amount of times.</p>
+
+<p>The <code>sigsuspend()</code> call can atomically modify the process signal mask and suspend execution until a signal arrives, which is essential to avoid race conditions when unblocking a signal and then suspending execution until that signal arrives, since it may have arrived in-between.</p>
+
+<p>Re-entrancy affects how one can update global variables and limits the set of functions that can safely be called from a signal handler.</p>
+
+<p>If a signal handler interrupts a blocked system call, the call returns <code>EINTR</code>. The call can be manually restarted or the signal handler can be established with <code>SA_RESTART</code> to cause many, but not all, system calls to automatically restart.</p>
+
+<p>A one-shot signal is one that explicitly sets the signal handler which is then removed once handled.</p>
+
+<p>A deadlock can occur if a signal handler attempts to acquire a lock that is already held by the interrupted/handling thread. The same can happen with <a href="#interrupt">interrupt handlers</a>.</p>
+<h1 id="interrupts">
+<span class="hash">#</span>
+<a href="#interrupts" class="header-link">Interrupts</a>
+</h1>
+<p>An interrupt is an event generated externally by components other than the CPU that receives it asynchronously, components such as I/O devices, timers, or other CPUs.</p>
+
+<p>Interrupt masks apply to CPUs, since interrupts are received by CPUs, and can be used to control which CPUs to ignore or allow.</p>
+
+<p>Interrupt handlers are set by the kernel for the entire system, compared to signal handlers which are set on a per-process basis.</p>
+
+<p>When a device wants to send a notification to a CPU it sends an interrupt, for example via message signal interrupt (MSI).</p>
+
+<p>Interrupts are uniquely identified based on the pins on which the interrupt occurs, or the MSI message.</p>
+
+<p>When an interrupt is received by a CPU, the CPU looks up the interrupt identifier int he <em>interrupt handler table</em> to obtain the interrupt handler&#39;s start address, then jumps to that location to begin executing the handler.</p>
+
+<p>On multi-core systems, interrupts are only delivered to the CPUs that have them enabled. It can be beneficial to specify that only one CPU handles interrupts and block interrupts on all other CPUs using the interrupt mask, in order to avoid the overhead of handling interrupts on each core.</p>
+
+<p>Interrupt handlers can be run on a separate thread, which avoids the possibility of deadlocks if the handler needs to acquire a mutex. If the handler doesn&#39;t need to acquire any locks then it&#39;ll simply execute on the interrupted thread&#39;s stack.</p>
+
+<p>The <em>top-half</em> of an interrupt handler refers to the part that is fast, non-blocking, and performs the minimum amount of processing. It should execute immediately when the interrupt occurs.</p>
+
+<p>The <em>bottom-half</em> of an interrupt handler refers to the part that can contain arbitrary complexity and executes on a separate thread.</p>
+
+<p>To minimize the cost of thread creation, the kernel may pre-create and pre-initialize thread structures for interrupt routines.</p>
+<h1 id="networking">
+<span class="hash">#</span>
+<a href="#networking" class="header-link">Networking</a>
+</h1>
+<p>A common optimization is that if the kernel recognizes that the end-point network sockets of some connection both reside on the local system, the network bypasses the full protocol stack.</p>
+<h1 id="virtualization">
+<span class="hash">#</span>
+<a href="#virtualization" class="header-link">Virtualization</a>
+</h1>
+<p><em>Virtualization</em> is a way to allow concurrent execution of multiple operating systems and their applications on the same physical machine. A <em>virtual machine</em> (VM) is an operating system, its applications, and virtual resources. <em>Virtual resources</em> are subsets of hardware resources that a virtual machine believes that it owns.</p>
+
+<p>A <em>virtualization layer</em> (aka <em>virtual machine monitor</em> (VMM), aka <em>hypervisor</em>) provides an environment to virtual machines that closely resembles the host machine, with only a minor decrease in speed. It manages access of the system resources to the virtual machines, providing safety and isolation.</p>
+
+<p>It&#39;s important to understand that guest VM instructions are executed directly by the hardware, they are not emulated.</p>
+
+<p>Virtualization provides consolidation so that multiple virtual machines can run on a single physical platform, decreasing costs and improving manageability. It also provides migration, increasing encapsulation, availability, and reliability. Virtualization provides security containment. It also improves debuggability, and allows legacy operating systems to run where otherwise the hardware required may not be easily accessible.</p>
+
+<p>The two main models of virtualization are Type 1: base-metal/hypervisor, and Type 2: hosted.</p>
+
+<p>Isolation of VMs can be provided by having the hypervisor utilize protection modes and levels/rings to compartmentalize the hypervisor and guest VMs. Specifically, the hypervisor can use root protection mode with ring0 protection level, whereas the non-root VMs can use non-root protection mode and ring0 for the VM&#39;s operating system and ring3 for the VM&#39;s applications.</p>
+
+<p>When a guest VM running at ring0 in non-root mode runs certain instructions that are only accessible by root mode, it causes a VMexit which triggers a switch to root mode, after which control is passed to the hypervisor. When the hypervisor is done, it performs a VMentry to switch back to non-root mode, after which control is returned to the VM. This sequence may be initiated as a result of a <em>hypercall</em>, which is essentially the system call analogue to hypervisors, i.e. a system call to the hypervisor.</p>
+
+<p><em>Trap-and-emulate</em> is a way for privileged operations to trap into the hypervisor. If the operation is illegal, the VM is terminated, otherwise the expected behavior is emulated by the hypervisor for the guest.</p>
+
+<p><em>Dynamic binary translation</em> consists of modifying the guest VM code as it&#39;s running. In particular, it inspects code blocks to be executed and if necessary, translates them into an alternate instruction sequence, such as to emulate the desired behavior (possibly even avoiding a trap). Otherwise the code block runs directly, at hardware speeds.</p>
+<h2 id="device-virtualization">
+<span class="hash">#</span>
+<a href="#device-virtualization" class="header-link">Device Virtualization</a>
+</h2>
+<p>The <em>pass-through model of virtualization</em> is one where a hypervisor-level driver configures device access permissions so that a VM can be given exclusive, direct access to a device, completely bypassing the hypervisor. This is useful for example to give a VM direct access to the mapped memory of a device, such as NIC.</p>
+
+<p>The <em>hypervisor-direct model of virtualization</em> is one where the hypervisor intercepts all device accesses performed by a guest. The device operation can then be emulated. For example, the device access can be translated to a generic representation of the I/O operation, sent up the hypervisor-resident I/O stack, and used to invoke the hypervisor-resident driver. This way the VM is decoupled from the physical device so that sharing and migration becomes easier, for example. This adds latency, however.</p>
+
+<p>The <em>split-device driver model of virtualization</em> is one where device access control is split between a front-end driver in the guest VM (device API) and a back-end driver in the service VM or host. This only applies to paravirtualized guests because the front-end driver needs to interface with the back-end driver. This eliminates emulation overhead because there&#39;s no need to guess what the guest OS is trying to do, since the guest OS explicitly specifies what it needs to do. This also allows for better management of shared devices.</p>
+
+<p>One way to reclaim memory from a guest VM is to install a <em>balloon driver</em> which is given commands by the hypervisor. When memory needs to be reclaimed from the VM, the balloon is told to &quot;inflate&quot; which causes memory to be paged out to disk in order to give the balloon enough memory. Once the memory has been pushed to disk, it can be returned to the hypervisor. Conversely, this can also be used to release memory to the guest VM by instructing the balloon driver to reduce its memory footprint, leaving the rest of the guest VM more memory to use.</p>
+
+<p>Memory pages can be shared between multiple virtual machines via VM-oblivious page sharing, in which the hypervisor maintains a hash table indexed by the page contents. If a page matches an existing entry in the hash table, a full comparison of the pages is done to make certain that there is a match, since the entry in the table can represent a page that has since been modified. If there&#39;s indeed a match, then the pages are made to map to the same machine page, the reference count in the hash table entry is incremented, the page is marked Copy-on-Write, and the old page can be freed. This should be done in the background when there is light load, as with compaction/defragmentation.</p>
+<h2 id="full-virtualization">
+<span class="hash">#</span>
+<a href="#full-virtualization" class="header-link">Full Virtualization</a>
+</h2>
+<p><em>Full virtualization</em> is when the guest operating system runs as-is without modification.</p>
+
+<p>In full virtualization, memory virtualization provides all guests with an appearance of contiguous physical memory starting at physical address 0. Conceptually, this requires three different kinds of addresses and page frame numbers:</p>
+
+<ul>
+<li>virtual addresses: used by applications in the guests</li>
+<li>physical addresses: those that the guest thinks are the physical addresses</li>
+<li>machine addresses: the actual physical addresses</li>
+</ul>
+
+<p>One way of providing memory virtualization is to have the guest OS page tables map virtual-to-physical addresses, and have the hypervisor&#39;s page tables map physical-to-machine addresses. However, this can be expensive since it introduces another layer to address translation.</p>
+
+<p>Another option is to have the hypervisor maintain a <em>shadow page table</em> of virtual-to-machine addresses which can be used by the MMU. It can write-protect the guest OS page table to track new mappings, but it must then be invalidated on context-switch since the virtual addresses will no longer be valid.</p>
+<h2 id="paravirtualization">
+<span class="hash">#</span>
+<a href="#paravirtualization" class="header-link">Paravirtualization</a>
+</h2>
+<p><em>Paravirtualization</em> works by modifying the guest operating system so that it becomes <em>aware</em> of the fact that it is being virtualized. The guest OS can make explicit calls to the hypervisor (<em>hypercalls</em>) which trap into the hypervisor. This is used by Xen.</p>
+
+<p>Memory virtualization is achieved explicitly. The guest OS can explicitly register page tables with the hypervisor, since it&#39;s aware that it is being virtualized. The guest must not have write permissions for the page table, since that would circumvent isolation. This means that each update requires a trap to the hypervisor, so that the hypervisor can mediate the process.</p>
+<h2 id="hypervisor-based-virtualization">
+<span class="hash">#</span>
+<a href="#hypervisor-based-virtualization" class="header-link">Hypervisor-based Virtualization</a>
+</h2>
+<p>In Type 1 bare-metal/hypervisor-based virtualization, a virtual machine monitor (VMM)/hypervisor manages all hardware resources and execution of VMs by running a privileged service VM which manages the physical hardware resources directly. This privileged service VM runs a &quot;regular&quot; operating systems which has the necessary device drivers, which avoids requiring each VM to have device drivers for the particular operating system running on that VM.</p>
+
+<p>Examples of hypervisor-based virtualization include Xen and VMware ESX. In Xen, virtual machines are called domains (DomU&#39;s), and the privileged service VM (domain) which runs the drivers is dom0 (domain zero). Xen is the actual hypervisor. With VMware ESX, a dedicated service VM that runs drivers isn&#39;t as necessary because drivers are made specifically for ESX by many hardware vendors due to VMware&#39;s market share.</p>
+<h2 id="hosted-virtualization">
+<span class="hash">#</span>
+<a href="#hosted-virtualization" class="header-link">Hosted Virtualization</a>
+</h2>
+<p>In Type 2 hosted virtualization, the host operating system owns all of the hardware and it has a special virtual machine monitor (VMM) module which produces hardware interfaces to VMs and handles VM context switching. This can leverage all services and features of the host operating system, avoiding the need to reinvent functionality as in a hypervisor.</p>
+
+<p>An example of hosted virtualization is <a href="https://en.wikipedia.org/wiki/Kernel-based_Virtual_Machine">Kernel-based VM</a> (KVM) which transforms the host operating system into a hypervisor-like mode. Guest VMs are run via <a href="https://en.wikipedia.org/wiki/QEMU">QEMU</a> in virtualizer mode.</p>
+<h2 id="live-migration">
+<span class="hash">#</span>
+<a href="#live-migration" class="header-link">Live Migration</a>
+</h2>
+<p><a href="#virtual-memory">Checkpointing</a> can be useful in the area of virtualization so that a virtual machine can be transferred to another server so that the original host can be brought down for maintenance, for example. In this context, the process is referred to as <a href="https://en.wikipedia.org/wiki/Live_migration"><em>live migration</em></a>.</p>
+
+<p>The <em>warm-up phase</em> of a <em>pre-copy memory migration</em> of a virtual machine consists of copying all of its memory from the source to the destination while the VM is still running, while continuously re-copying dirtied pages until the rate of re-copied pages is greater-than-or-equal-to the page dirtying rate.</p>
+
+<p><script type="math/tex; mode=display"> \text {Rate of re-copying} \ge \text {Rate of dirtying} </script></p>
+
+<p>Once this condition is met, the <em>stop-and-copy phase</em> of a pre-copy memory migration begins. The VM is stopped in order to copy the (relatively few) remaining dirty pages to the destination. Then the VM is resumed at the destination.</p>
+
+<p>In this pre-copy memory migration process, the down-time is equal to the time between stopping the VM at the source and resuming it at the destination.</p>
 
 <div class="footnotes">
 <hr>
@@ -299,13 +1009,22 @@
 <li id="fn1">
 <p>Perhaps by making the file offsets a single atomic offset? Check.&nbsp;<a href="#fnref1" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
 
+<li id="fn2">
+<p>This reminds me of how <a href="https://en.wikipedia.org/wiki/Log-structured_merge-tree">log-structured merge trees</a> (LSM-trees) are also used by some databases to reduce random access.&nbsp;<a href="#fnref2" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
+
+<li id="fn3">
+<p>This reminds me of distributed systems, where some systems decide to execute sequentially in the interest of avoiding race conditions.&nbsp;<a href="#fnref3" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
+
+<li id="fn4">
+<p>This reminds me of the <code>wait()</code> call on <a href="#condition-variables">condition variables</a>, where the condition is checked after a wake-up to ensure that the condition still holds.&nbsp;<a href="#fnref4" title="continue reading" rev="footnote"><i class="fa fa-level-up"></i></a></p></li>
+
 </ol>
 </div>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> April 22, 2016</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/linux.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/eb457b5" title="bump
-">eb457b5</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/linux.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/030c182" title="finish up transcribing cards
+">030c182</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>

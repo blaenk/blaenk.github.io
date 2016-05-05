@@ -153,22 +153,9 @@
 <p><img class="center" src="/images/posts/dots/tmux.png"></p>
 
 <p>I have binds for creating new windows with <code>M-n</code> and renaming a window with <code>M-r</code>:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">bind -n M-r command-prompt 'rename-window %%'
-bind -n M-n command-prompt -p "Name of new window:" "new-window -n '%%'"
-</code></pre></figure>
-<p>I also created simple binds for navigating and moving windows around. <code>M-h/M-l</code> moves to the left and right window respectively, and <code>M-j/M-k</code> moves the current window left and right, respectively.</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text"># switch between windows left/right
-bind -n M-h previous-window
-bind -n M-l next-window
 
-# move windows left/right
-bind -n M-j swap-window -t -1
-bind -n M-k swap-window -t +1
-</code></pre></figure><h2 id="zsh">
+<p>I also created simple binds for navigating and moving windows around. <code>M-h/M-l</code> moves to the left and right window respectively, and <code>M-j/M-k</code> moves the current window left and right, respectively.</p>
+<h2 id="zsh">
 <span class="hash">#</span>
 <a href="#zsh" class="header-link">zsh</a>
 </h2>
@@ -200,37 +187,31 @@ bind -n M-k swap-window -t +1
 <figure class="codeblock">
 <pre>
 <code class="highlight language-bash"><span class="k">function</span> ls<span class="o">()</span> <span class="o">{</span>
-  <span class="nb">command </span>ls -lh --color<span class="o">=</span>always <span class="nv">$@</span> <span class="p">|</span><span class="se">\</span>
+  <span class="nb">command</span> ls -lh --color<span class="o">=</span>always <span class="nv">$@</span> <span class="p">|</span><span class="se">\</span>
     awk <span class="s1">&#39;{k=0;for(i=0;i&lt;=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)\</span>
 <span class="s1">         *2^(8-i));if(k)printf(&quot;%0o &quot;,k);print}&#39;</span>
 <span class="o">}</span>
 </code></pre></figure>
 <p>Example output:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">total 32K
-755 drwxr-xr-x 2 jorge users 4.0K Feb 15 20:05 git
-644 -rw-r--r-- 1 jorge users    0 Jan 27  2013 README.md
-755 drwxr-xr-x 2 jorge users 4.0K Feb 13 00:54 ruby
-</code></pre></figure>
+
 <p>I also created a wrapper around the built-in <code>cd</code> function that accepts parameters of the form <code>b...</code> where the number of dots is arbitrary. If the wrapper detects a parameter of that form, it removes the <code>b</code> prefix and expands each of the dots to <code>../</code>. This makes for very quick navigation up an arbitrary amount of directories. The actual change-directory work is delegated to the original built-in <code>cd</code> function:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="k">function</span> <span class="nb">cd</span><span class="o">()</span> <span class="o">{</span>
+<code class="highlight language-bash"><span class="k">function</span> cd<span class="o">()</span> <span class="o">{</span>
   emulate -LR zsh
 
   <span class="k">if</span> <span class="o">[[</span> <span class="nv">$1</span> <span class="o">==</span> <span class="s1">&#39;b.&#39;</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
-    <span class="nb">builtin cd</span> <span class="si">${${</span><span class="nv">1</span><span class="p">/</span><span class="s2">&quot;b&quot;</span><span class="si">}</span><span class="p">//</span><span class="s2">&quot;.&quot;</span><span class="p">/</span><span class="s2">&quot;../&quot;</span><span class="si">}</span>
+    <span class="nb">builtin</span> <span class="nb">cd</span> <span class="si">${${</span><span class="nv">1</span><span class="p">/</span><span class="s2">&quot;b&quot;</span><span class="si">}</span><span class="p">//</span><span class="s2">&quot;.&quot;</span><span class="p">/</span><span class="s2">&quot;../&quot;</span><span class="si">}</span>
   <span class="k">else</span>
-    <span class="nb">builtin cd</span> <span class="nv">$*</span>
+    <span class="nb">builtin</span> <span class="nb">cd</span> <span class="nv">$*</span>
   <span class="k">fi</span>
 <span class="o">}</span>
 </code></pre></figure>
 <p>Example usage:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash">some/dir/here <span class="nv">$ </span><span class="nb">cd </span>b..
-some/ <span class="nv">$ </span><span class="c"># went up two directories</span>
+<code class="highlight language-shell-session"><span class="gp">user@host some/dir/here $</span> <span class="nb">cd</span> b..
+<span class="gp">user@host some/ $</span> <span class="c1"># went up two directories</span>
 </code></pre></figure>
 <p>I also have a function for listing the pacman orphan packages on my system, i.e. those that aren&#39;t required by any other package. I found a command for doing this but it just dumped a list of every package, so I modified it to also list the description of the package. This requires the <code>expac</code> package, a utility to query the pacman database:</p>
 <figure class="codeblock">
@@ -241,11 +222,7 @@ some/ <span class="nv">$ </span><span class="c"># went up two directories</span>
 <span class="o">}</span>
 </code></pre></figure>
 <p>Example output:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">yasm: A rewrite of NASM to allow for multiple syntax supported (NASM, TASM, GAS, etc.)
-zsh: A very advanced and programmable command interpreter (shell) for UNIX
-</code></pre></figure>
+
 <p>Finally, another function I recently created that I find very useful is one to fetch my external IP address and both copy it to my clipboard and print it out to the terminal. This is very useful because my IP address does change from time to time, usually if I restart my router. Considering that I host a <a href="http://mumble.sourceforge.net/">mumble</a> and <a href="http://syncplay.pl/">syncplay</a> server, whenever this happens I have to inform my friends of the change, which usually requires me to manually determine my external IP by going to some website that provides the information.</p>
 
 <p>So I decided to create a command that gets the IP address from <a href="http://ipinfo.io">ipinfo.io</a>, copies the response to my clipboard, and also prints it out to the terminal.</p>
@@ -263,9 +240,9 @@ zsh: A very advanced and programmable command interpreter (shell) for UNIX
     <span class="nb">echo</span> -n <span class="nv">$res</span> <span class="p">|</span> xsel --clipboard
     <span class="nb">echo</span> <span class="s2">&quot;copied </span><span class="nv">$res</span><span class="s2"> to clipboard&quot;</span>
   <span class="k">else</span>
-    <span class="c"># only run ip if it exists</span>
-    <span class="k">if</span> <span class="o">((</span> <span class="nv">$+</span>commands<span class="o">[</span>ip<span class="o">]</span> <span class="o">))</span><span class="p">;</span> <span class="k">then</span>
-      <span class="nb">command </span>ip <span class="nv">$*</span>
+    <span class="c1"># only run ip if it exists</span>
+    <span class="k">if</span> <span class="o">((</span> $+commands<span class="o">[</span>ip<span class="o">]</span> <span class="o">))</span><span class="p">;</span> <span class="k">then</span>
+      <span class="nb">command</span> ip <span class="nv">$*</span>
     <span class="k">fi</span>
   <span class="k">fi</span>
 <span class="o">}</span>
@@ -273,9 +250,8 @@ zsh: A very advanced and programmable command interpreter (shell) for UNIX
 <p>Example output:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash">λ ~/some/place
-» ip get
-copied 123.45.678.90 to clipboard
+<code class="highlight language-console"><span class="gp">$</span> ip get
+<span class="go">copied 123.45.678.90 to clipboard</span>
 </code></pre></figure><h3 id="cursors">
 <span class="hash">#</span>
 <a href="#cursors" class="header-link">Cursors</a>
@@ -309,10 +285,7 @@ zle -N zle-line-finish
 <p>For this, two terminal escape sequences have to be defined, or overridden: the first tells tmux how to set the cursor color and the other tells tmux how to reset it to the &quot;default&quot; color.</p>
 
 <p>The sequence for setting the color is the same in xterm and urxvt: <code>\033]12;color\007</code>. However, there is no sequence I know of---after looking at <code>man 7 urxvt</code>---for resetting the cursor color to the default cursor color. For xterm, it is <code>\033]112\007</code>. So instead what I decided to do was tell tmux that the sequence was simply the one to set the color, but with the default cursor color explicitly defined, which for me is the 6th ANSI color code (cyan).</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">set -g terminal-overrides ',rxvt*:Cs=\E]12;%p1%s\007:Cr=\E]12;6\007'
-</code></pre></figure><h3 id="misc">
+<h3 id="misc">
 <span class="hash">#</span>
 <a href="#misc" class="header-link">Misc</a>
 </h3>
@@ -325,10 +298,9 @@ zle -N zle-line-finish
 <p>Example output:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash">λ ~/some/place
-» clojure
-clojure may be found in the following packages:
-  community/clojure 1.5.1-2     /usr/bin/clojure
+<code class="highlight language-console"><span class="gp">$</span> clojure
+<span class="go">clojure may be found in the following packages:</span>
+<span class="go">  community/clojure 1.5.1-2     /usr/bin/clojure</span>
 </code></pre></figure>
 <p>I also configured <a href="https://github.com/blaenk/dots/blob/master/zsh/zsh/highlight.zsh">highlighting</a> for the <code>less</code> pager.</p>
 
@@ -408,14 +380,10 @@ augroup END
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 16, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/dots.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/posts/dots.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/feee1ca" title="use console instead of bash for shell sessions
 
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+There's also shell-session but I think console suffices.
+">feee1ca</a></span></div>
     <div class="meta-component"><i class="fa fa-tags fa-fw"></i> <a href="/tags/linux">Linux</a></div>
   </div>
 </article>

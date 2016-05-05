@@ -174,14 +174,14 @@
 <p>GDB is usually started by passing it the name of the program we want to debug:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>gdb program_to_debug
+<code class="highlight language-console"><span class="gp">$</span> gdb program_to_debug
 </code></pre></figure>
 <p>Processes with curses-like interfaces can be debugged by running them in a separate terminal and then attaching to them with the <code>-p</code> switch (or using the <code>attach</code> command):</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>gdb -p PID
-<span class="c"># or</span>
-<span class="nv">$ </span>gdb programname PID
+<code class="highlight language-console"><span class="gp">$</span> gdb -p PID
+
+<span class="gp">$</span> gdb programname PID <span class="c1"># other way</span>
 </code></pre></figure>
 <p>Another thing that can be done is to run GDB and tell it that the program should be run on a different terminal. This is accomplished with the <code>tty</code> command. For example, assuming the program should be on <code>/dev/pts/8</code>---perhaps because we have another window paired with that pseudoterminal---we would run the following:</p>
 <figure class="codeblock">
@@ -191,7 +191,7 @@
 <p>Then the following should be entered so that the keyboard input to the window will go to the program rather than to the shell, by making the shell go to sleep:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>sleep 100000
+<code class="highlight language-console"><span class="gp">$</span> sleep 100000
 </code></pre></figure>
 <p>Entering nothing at this prompt re-runs the previous command, which is very useful when stepping with <code>next</code>.</p>
 
@@ -217,7 +217,7 @@ Breakpoint <span class="mh">1</span>, function_containing_breakpoint(ac<span cla
 <p>However, if exiting is necessary, the commands entered can be saved to a GDB startup file of name <code>.gdbinit</code>. This can then be loaded when GDB loads with:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>gdb -command<span class="o">=</span>.gdbinit program
+<code class="highlight language-console"><span class="gp">$</span> gdb -command<span class="o">=</span>.gdbinit program
 </code></pre></figure>
 <p>Breakpoints can be saved to a file with:</p>
 <figure class="codeblock">
@@ -226,11 +226,7 @@ Breakpoint <span class="mh">1</span>, function_containing_breakpoint(ac<span cla
 <span class="kt">(gdb)</span> <span class="nb">source</span> filename
 </code></pre></figure>
 <p>History can be saved by putting this in <code>~/.gdbinit</code>:</p>
-<figure class="codeblock">
-<pre>
-<code class="highlight language-text">set history filename ~/.gdb_history
-set history save
-</code></pre></figure><h1 id="breakpoints">
+<h1 id="breakpoints">
 <span class="hash">#</span>
 <a href="#breakpoints" class="header-link">Breakpoints</a>
 </h1>
@@ -631,25 +627,23 @@ type <span class="o">=</span> int
 <p>Usually when a core dump file is generated, it&#39;s placed in the current directory named <code>core</code> or some variation of it. It may be necessary to increase the shell&#39;s core dump resource limit with the command:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span><span class="nb">ulimit</span> -c unlimited
+<code class="highlight language-console"><span class="gp">$</span> <span class="nb">ulimit</span> -c unlimited
 </code></pre></figure>
 <p>On systems that use <a href="http://en.wikipedia.org/wiki/Systemd">systemd</a>, such as mine, these files are instead managed by systemd&#39;s journal; they won&#39;t show up in the current directory regardless of the resource limit. The helper program <code>systemd-coredumpctl</code> can be used to extract the core dumps from the journal into individual files:</p>
 
 <p><strong>June 23rd, 2014</strong>: It seems this may no longer be the case as of arch package <a href="https://projects.archlinux.org/svntogit/packages.git/commit/trunk?h=packages/systemd&amp;id=20f65088398622522bb33e6f53dfde83d31a2208">systemd-214-2</a>.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="c"># based on PID</span>
-<span class="nv">$ </span>systemd-coredumpctl dump PID -o outname
+<code class="highlight language-console"><span class="gp">$</span> systemd-coredumpctl dump PID -o outname <span class="c1"># based on PID</span>
 
-<span class="c"># based on binary name</span>
-<span class="nv">$ </span>systemd-coredumpctl dump urxvt -o outname
+<span class="gp">$</span> systemd-coredumpctl dump urxvt -o outname <span class="c1"># based on binary name</span>
 </code></pre></figure>
 <p>Core files are useful from a debugging perspective because they provide a starting point for dissecting the program to determine the cause of the crash. They are more useful than simply re-running the program within GDB because it would be that the bug that caused the crash occurs rarely and randomly.</p>
 
 <p>Core files can be loaded into GDB by supplying them as a second argument, after the name of the program that generated the core file:</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>gdb crasher corefile
+<code class="highlight language-console"><span class="gp">$</span> gdb crasher corefile
 </code></pre></figure>
 <p>Once loaded, we can run a <code>backtrace</code> to determine the point at which the program crashed. The <code>frame</code> command can be used to navigate the call stack, and typical inspecting commands can be used to analyze the program&#39;s state as it was when it crashed. Breakpoints and similar tools can be established, then the program can be run normally.</p>
 <h1 id="threads">
@@ -725,9 +719,9 @@ type <span class="o">=</span> int
 <p>It&#39;s <a href="http://billiob.net/blog/20140330_vgdb.html">possible</a> to load a GDB session inside of a valgrind session.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-bash"><span class="nv">$ </span>valgrind --vgdb<span class="o">=</span>yes --vgdb-error<span class="o">=</span><span class="m">0</span> ./prog
-<span class="nv">$ </span>gdb ./prog
-<span class="o">(</span>gdb<span class="o">)</span> target remote <span class="p">|</span> vgdb
+<code class="highlight language-console"><span class="gp">$</span> valgrind --vgdb<span class="o">=</span>yes --vgdb-error<span class="o">=</span><span class="m">0</span> ./prog
+<span class="gp">$</span> gdb ./prog
+<span class="go">(gdb) target remote | vgdb</span>
 </code></pre></figure>
 <p>It&#39;s possible to then send commands to valgrind from within GDB using the <code>monitor</code> command. The <code>leak_check</code> valgrind command for example can be used when paused at a GDB breakpoint to manually perform a memory leak check. Other useful valgrind commands are <code>block_list</code> and <code>who_points_at</code>.</p>
 <figure class="codeblock">
@@ -738,14 +732,10 @@ type <span class="o">=</span> int
 </code></pre></figure></div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> February 18, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/gdb.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/dc6ff87" title="new table marker syntax; no need for metadata
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/gdb.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/feee1ca" title="use console instead of bash for shell sessions
 
-This means there's no need to separate the toc marker from its
-configuration, i.e. alignment. This never should've been necessary.
-
-This has the nice side-effect of naturally invalidating the cache when
-the toc marker is moved around or its alignment is changed.
-">dc6ff87</a></span></div>
+There's also shell-session but I think console suffices.
+">feee1ca</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
