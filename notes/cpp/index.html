@@ -1119,15 +1119,15 @@
 <figure class="codeblock">
 <pre>
 <code class="highlight language-cpp"><span class="c1">// integrals</span>
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">foo_impl</span><span class="p">(</span><span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="n">true_type</span><span class="p">);</span>
 
 <span class="c1">// floats</span>
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">foo_impl</span><span class="p">(</span><span class="n">T</span> <span class="n">val</span><span class="p">,</span> <span class="n">false_type</span><span class="p">);</span>
 
 <span class="c1">// Use is_integral to select the appropriate overload.</span>
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">foo</span><span class="p">(</span><span class="n">T</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
  <span class="n">foo_impl</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">is_integral</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="p">}</span>
@@ -1369,7 +1369,7 @@
 <pre>
 <code class="highlight language-cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_shared_from_this</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
  <span class="k">public</span><span class="o">:</span>
-  <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
+  <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
   <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="n">Ts</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">params</span><span class="p">);</span>
 <span class="p">};</span>
 </code></pre></figure>
@@ -2300,8 +2300,7 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September 10, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cpp.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/c771669" title="make an attempt at categorizing STL algorithms
-">c771669</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cpp.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/e10dd20" title="some spacing fixes">e10dd20</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>

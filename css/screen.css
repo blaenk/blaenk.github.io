@@ -309,6 +309,8 @@ article {
     article .entry-content ul li p, article .entry-content ol li p {
       margin-top: 0;
       margin-bottom: 10px; }
+    article .entry-content ul li ul, article .entry-content ol li ul {
+      margin-bottom: 10px; }
     article .entry-content ul > li {
       list-style-type: none; }
       article .entry-content ul > li:before {
