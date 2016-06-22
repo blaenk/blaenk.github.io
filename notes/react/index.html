@@ -264,7 +264,7 @@
 <span class="hash">#</span>
 <a href="#dom" class="header-link">DOM</a>
 </h1>
-<p>React maintains a fast in-memory DOM representation known as the virtual DOM. The <code>render</code> method returns a description of the DOM which can then be diffed with the virtual DOM to compute the fastest way to update the browser DOM to reflect any changes.</p>
+<p>React maintains a fast in-memory DOM representation known as the virtual DOM. The <code>render</code> method returns a description of the DOM which can then be diff&#39;ed with the virtual DOM to compute the fastest way to update the browser DOM to reflect any changes.</p>
 
 <p>Sometimes it may be necessary to interact directly with the DOM, either to interoperate with third-party libraries or to perform non-reactive changes such as setting focus, which can&#39;t easily be inferred via React&#39;s data flow (props and state).</p>
 
@@ -332,7 +332,7 @@
 <p>If an <code>input</code> component has a <code>value</code> property set, then it is considered a <em>controlled component</em>, so that the rendered component <em>always</em> reflects the <code>value</code> property; user input has no effect. In order for a controlled component to reflect user input, it should explicitly set the value in response to the change.</p>
 <figure class="codeblock">
 <pre>
-<code class="highlight language-javascript"><span class="nx">getInitialState</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="p">{</span><span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;Hello1&#39;</span><span class="p">}</span> <span class="p">},</span>
+<code class="highlight language-javascript"><span class="nx">getInitialState</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="p">{</span><span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;Hello!&#39;</span><span class="p">}</span> <span class="p">},</span>
 <span class="nx">handleChange</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="nx">value</span><span class="o">:</span> <span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">})</span> <span class="p">},</span>
 <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
@@ -363,7 +363,7 @@
 <span class="kd">var</span> <span class="nx">MyComponent</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createClass</span><span class="p">({</span><span class="cm">/* ... */</span><span class="p">});</span>
 <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">MyComponent</span> <span class="nx">someProperty</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">;</span>
 </code></pre></figure>
-<p>JavaScript expressions---both attribute and child---can be embedded into JSX with curly braces <code>{}</code>. Comments should also be contained within expressions.</p>
+<p>JavaScript expressions can be embedded into JSX with curly braces <code>{}</code> within attributes and as children. Comments should also be contained within expressions.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-javascript"><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">Person</span> <span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nb">window</span><span class="p">.</span><span class="nx">isLoggedIn</span> <span class="o">?</span> <span class="nb">window</span><span class="p">.</span><span class="nx">name</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">;</span>
@@ -389,7 +389,7 @@
 <li><strong>Views</strong>: listen to &quot;change&quot; events and re-render accordingly either implicitly or explicitly; <strong>back to #1</strong></li>
 </ol>
 
-<p>All data flows through the dispatcher which acts as a central hub. Actions are calls into the dispatcher and usually originate from user interactions with views. The dispatcher then invokes callbacks that the stores registered with it, thereby dispatching the data payloads contained within the actions to all stores. Within the registered callbacks, stores respond to the actions they&#39;re interested in and then emit a &quot;change&quot; event to alert controller-views to the fact that the data layer has been modified. The Controller-views listen to the change events and retrieve data from stores in an event handler, then call their own <code>rende</code> method via <code>setState</code> or <code>forceUpdate</code> to update themselves and all of their children.</p>
+<p>All data flows through the dispatcher which acts as a central hub. Actions are calls into the dispatcher and usually originate from user interactions with views. The dispatcher then invokes callbacks that the stores registered with it, thereby dispatching the data payloads contained within the actions to all stores. Within the registered callbacks, stores respond to the actions they&#39;re interested in and then emit a &quot;change&quot; event to alert controller-views to the fact that the data layer has been modified. The Controller-views listen to the change events and retrieve data from stores in an event handler, then call their own <code>render</code> method via <code>setState</code> or <code>forceUpdate</code> to update themselves and all of their children.</p>
 <h2 id="dispatcher">
 <span class="hash">#</span>
 <a href="#dispatcher" class="header-link">Dispatcher</a>
@@ -425,7 +425,7 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> July 25, 2014</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/react.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/5dc4ef1" title="minor word changes">5dc4ef1</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/react.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/737d5d9" title="fix certain mistakes">737d5d9</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
