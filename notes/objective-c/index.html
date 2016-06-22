@@ -103,6 +103,9 @@
 <li>
 <a href="#inheritance">Inheritance</a>
 </li>
+<li>
+<a href="#ownership">Ownership</a>
+</li>
 </ol>
 </nav>
 <h1 id="types">
@@ -278,6 +281,7 @@
 <span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">copy</span><span class="p">)</span> <span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
 
 <span class="p">{</span>
+  <span class="err">…</span>
 <span class="p">}</span>
 
 <span class="k">@end</span>
@@ -294,12 +298,52 @@
 
 <span class="k">@end</span>
 </code></pre></figure>
-<p>However, as of XCode 4.4 this is no longer necessary as the compiler does this for you.</p>
+<p>However, as of XCode 4.4 this is no longer necessary as the compiler does this for you. It&#39;s still necessary to do if the compiler ends up not generating any of the methods, for example if a property is marked <code>readonly</code> but the getter is manually overridden, then the <code>_variable</code> won&#39;t be defined, in which case it&#39;s necessary to explicitly <code>@synthesize</code> to define it or declare it manually in the <code>@interface</code>.</p>
 
 <p>Properties are also usable using dot notation as in C++ and Java. However, rather than simply accessing a field in a struct as in C++, dot notation translates to a message sent to the corresponding accessor method.</p>
 <figure class="codeblock">
 <pre>
 <code class="highlight language-objective-c"><span class="bp">NSString</span> <span class="o">*</span><span class="n">theName</span> <span class="o">=</span> <span class="n">person</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+</code></pre></figure>
+<p>It&#39;s possible to define a property with a different type than a manually defined member variable of the same name. For example, the class below defines and uses a mutable array internally, but publicly exposes an immutable array.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@interface</span> <span class="nc">MYPerson</span> : <span class="bp">NSObject</span>
+<span class="p">{</span>
+  <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">_names</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">copy</span><span class="p">)</span> <span class="bp">NSArray</span> <span class="o">*</span><span class="n">names</span><span class="p">;</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">n</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></figure>
+<p>Notice that the accessor methods are overridden to handle the translation between mutable and immutable arrays. Specifically, the setter sets the internal variable to a mutable copy of the passed immutable array, while the getter returns an immutable copy of the internal immutable array.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@implementation</span> <span class="nc">MYPerson</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setNames:</span><span class="p">(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">n</span>
+<span class="p">{</span>
+  <span class="n">_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="n">mutableCopy</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nf">names</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">_names</span> <span class="k">copy</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addName:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">n</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_names</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_names</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSMutableArray</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="p">[</span><span class="n">_names</span> <span class="nl">addObject</span><span class="p">:</span><span class="n">n</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
 </code></pre></figure><h1 id="inheritance">
 <span class="hash">#</span>
 <a href="#inheritance" class="header-link">Inheritance</a>
@@ -323,10 +367,19 @@
 <span class="p">}</span>
 
 <span class="k">@end</span>
-</code></pre></figure></div>
+</code></pre></figure>
+<p>Forward declarations are possible with the <code>@class</code> keyword.</p>
+<h1 id="ownership">
+<span class="hash">#</span>
+<a href="#ownership" class="header-link">Ownership</a>
+</h1>
+<p>An object that contains a pointer to another object is said to own that object. Due to reference counting, the owned object knows how many owners it has through its reference count.</p>
+
+<p>The <code>dealloc</code> method is run when an instance of a class is deallocated because it has no owners.</p>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June 21, 2016</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/8af8706" title="more notes on classes, inheritance">8af8706</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/0e30dce" title="cover up to inheritance">0e30dce</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
