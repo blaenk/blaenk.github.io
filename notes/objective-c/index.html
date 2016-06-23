@@ -114,6 +114,38 @@
 <li>
 <a href="#reference-counting">Reference Counting</a>
 </li>
+<li>
+<a href="#collections">Collections</a>
+</li>
+<li>
+<a href="#enumerations">Enumerations</a>
+</li>
+<li>
+<a href="#nserror">NSError</a>
+</li>
+<li>
+<a href="#nsdata">NSData</a>
+</li>
+<li>
+<a href="#callbacks">Callbacks</a>
+<ol>
+<li>
+<a href="#selectors">Selectors</a>
+</li>
+<li>
+<a href="#target-action">Target-action</a>
+</li>
+<li>
+<a href="#helper-objects">Helper Objects</a>
+</li>
+<li>
+<a href="#notifications">Notifications</a>
+</li>
+</ol>
+</li>
+<li>
+<a href="#blocks">Blocks</a>
+</li>
 </ol>
 </nav>
 <h1 id="types">
@@ -512,10 +544,235 @@
 </ul>
 
 <p>This explains why the <code>NSString</code> returned by <code>description</code> is <code>autorelease</code>d: because although it created the object via <code>alloc</code>-<code>init</code> and thus gained ownership of it, it is giving it away by returning it. Sending it a <code>release</code> message would immediately decrement its refcount, thereby deallocating it, so instead it is <code>autorelease</code>d.</p>
-</div>
+<h1 id="collections">
+<span class="hash">#</span>
+<a href="#collections" class="header-link">Collections</a>
+</h1>
+<p>Sets are represented by <code>NSSet</code> and <code>NSMutableSet</code>.</p>
+
+<p>Collection methods which test for equality contain variants containing the word <code>Identical</code> which test if the objects are the same object by testing the pointers for equality, e.g. <code>indexOfObject:</code> vs <code>indexOfObjectIdenticalTo:</code>.</p>
+
+<p>Dictionaries are represented by <code>NSDictionary</code> and <code>NSMutableDictionary</code>. Dictionaries can be created from literal syntax <code>@{…}</code>. A dictionary can be keyed using subscript notation, for example:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSDictionary</span> <span class="o">*</span><span class="n">ages</span> <span class="o">=</span> <span class="l">@{</span>
+  <span class="s">@&quot;John&quot;</span><span class="o">:</span> <span class="mi">@20</span><span class="p">,</span>
+  <span class="s">@&quot;Jane&quot;</span><span class="o">:</span> <span class="mi">@21</span><span class="p">,</span>
+<span class="l">}</span><span class="p">;</span>
+
+<span class="bp">NSNumber</span> <span class="n">johnAge</span> <span class="o">=</span> <span class="n">ages</span><span class="p">[</span><span class="s">@&quot;John&quot;</span><span class="p">];</span>
+</code></pre></figure>
+<p>Mutable arrays can be sorted using:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sortUsingDescriptors:</span><span class="p">(</span><span class="bp">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">sortDescriptors</span><span class="p">;</span>
+</code></pre></figure>
+<p>A sort descriptor is an object of type <code>NSSortDescriptor</code> which specifies a property of the sorted element---any instance variable or the result of any method of the object---and whether to sort it in ascending or descending order. <code>sortUsingDescriptors:</code> takes an array of sort descriptors so that in the event of equality, the next descriptor is used. For example, to sort by the property <code>lastName</code> in ascending order, the following descriptor may be used:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSSortDescriptor</span> <span class="o">*</span><span class="n">lastAscending</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSSortDescriptor</span> <span class="nl">sortDescriptorWithKey</span><span class="p">:</span><span class="s">@&quot;lastName&quot;</span>
+                                                                <span class="nl">ascending</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+</code></pre></figure>
+<p>Collections can be filtered given a predicate of type <code>NSPredicate</code>. The filtering is done in-place on an <code>NSMutableArray</code> via <code>filterUsingPredicate:</code> whereas a copy is created for <code>NSArray</code> via <code>filteredArrayUsingPredicate:</code>. The predicate can be constructed <a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html">from a string</a> representing the condition:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSPredicate</span> <span class="o">*</span><span class="n">pred</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSPredicate</span> <span class="nl">predicateWithFormat</span><span class="p">:</span><span class="s">@&quot;person.age &gt; 18&quot;</span><span class="p">];</span>
+<span class="bp">NSArray</span> <span class="o">*</span><span class="n">adults</span> <span class="o">=</span> <span class="p">[</span><span class="n">people</span> <span class="nl">filteredArrayUsingPredicate</span><span class="p">:</span><span class="n">pred</span><span class="p">];</span>
+</code></pre></figure>
+<p>An <code>NSNumber</code> is essentially a boxed number type which is used to wrap numbers so that they can be stored in collections such as <code>NSDictionary</code>. They can be constructed using <code>NSNumber</code> literals such as <code>@2</code>.</p>
+
+<p>The <code>NSValue</code> type can be used to box/wrap arbitrary types such as structs.</p>
+
+<p>It&#39;s not possible to insert <code>nil</code> into a collection. In order to represent a &quot;hole&quot; in a collection, the <code>NSNull</code> class can be used.</p>
+<h1 id="enumerations">
+<span class="hash">#</span>
+<a href="#enumerations" class="header-link">Enumerations</a>
+</h1>
+<p>The <code>NS_ENUM()</code> preprocessor macro can be used to specify the enumeration&#39;s backing data type and name.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">typedef</span> <span class="nf">NS_ENUM</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="n">Color</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">ColorRed</span><span class="p">,</span>
+  <span class="n">ColorBlue</span><span class="p">,</span>
+  <span class="n">ColorGreen</span>
+<span class="p">};</span>
+</code></pre></figure><h1 id="nserror">
+<span class="hash">#</span>
+<a href="#nserror" class="header-link">NSError</a>
+</h1>
+<p>Some methods may fail for any reason. By convention, the error is returned through a parameter which is a pointer to a pointer to an <code>NSError</code>. That is, the parameter type is <code>NSError **</code>, but the caller can simply create a <code>NSError *</code> and return a pointer to it via <code>&amp;error</code>. Methods that can take an <code>NSError</code> pointer parameter always return a value indicating whether or not there was an error.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+
+<span class="kt">BOOL</span> <span class="n">success</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="nl">someArgument</span><span class="p">:</span><span class="s">@&quot;test&quot;</span> <span class="nl">error</span><span class="p">:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;failed: %@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">error</span> <span class="n">localizedDescription</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></figure><h1 id="nsdata">
+<span class="hash">#</span>
+<a href="#nsdata" class="header-link">NSData</a>
+</h1>
+<p>The <code>NSData</code> class represents a buffer of bytes. The data can be written to a file using <code>writeToFile:options:error</code>. The option <code>NSDataWritingAtomic</code> ensures an atomic write operation.</p>
+
+<p>It&#39;s possible to obtain the standard path for a given task by using the <code>NSSearchPathForDirectoriesInDomains</code> method. For example, to get the desktop directory:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSArray</span> <span class="o">*</span><span class="n">desktops</span> <span class="o">=</span>
+  <span class="n">NSSearchPathForDirectoriesInDomains</span><span class="p">(</span><span class="n">NSDesktopDirectory</span><span class="p">,</span> <span class="n">NSUserDomainMask</span><span class="p">,</span> <span class="nb">YES</span><span class="p">);</span>
+
+<span class="bp">NSString</span> <span class="o">*</span><span class="n">desktopPath</span> <span class="o">=</span> <span class="n">desktops</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</code></pre></figure><h1 id="callbacks">
+<span class="hash">#</span>
+<a href="#callbacks" class="header-link">Callbacks</a>
+</h1>
+<p>Callbacks in Objective-C can take on four forms:</p>
+
+<ol>
+<li><em>Target-action</em>: Specify an object (target) and a message to send it (action).</li>
+<li><em>Helper objects</em>: Specify objects which do the required work. These objects are also known as <em>delegates</em> or <em>data sources</em>.</li>
+<li><em>Notifications</em>: An object subscribes to the notification center for a particular kind of notification.</li>
+<li><em>Blocks</em>: Essentially a lambda meant to run when the event is triggered.</li>
+</ol>
+
+<p>Events happen within the context of a run loop of type <code>NSRunLoop</code>.</p>
+
+<p>The potential for strong reference cycles is high in most callback schemes. For example, an object may have a pointer to the object that will call it back, and that object contains a pointer to the object so that it <em>can</em> call it back. To mitigate this:</p>
+
+<ul>
+<li><p>Notifications don&#39;t own their observers. Observers remove themselves from the notification center in their <code>dealloc</code> method via <code>removeObserver:</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span> <span class="p">{</span>
+  <span class="p">[[</span><span class="bp">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">removeObserver</span><span class="p">:</span><span class="nb">self</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></figure></li>
+<li><p>Objects don&#39;t own their delegates/data sources. Delegates/data sources remove themselves in their <code>dealloc</code> method.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span> <span class="p">{</span>
+  <span class="p">[</span><span class="n">delegator</span> <span class="nl">setDelegate</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></figure></li>
+<li><p>Objects don&#39;t own their targets. Target objects should remove themselves in their <code>dealloc</code> method.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span> <span class="p">{</span>
+  <span class="p">[</span><span class="n">button</span> <span class="nl">setTarget</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></figure></li>
+</ul>
+<h2 id="selectors">
+<span class="hash">#</span>
+<a href="#selectors" class="header-link">Selectors</a>
+</h2>
+<p>Each method name that the compiler encounters is given a unique number known as a <em>selector</em> which is used to perform method lookup. The <code>@selector(…)</code> directive is replaced by the compiler with the selector for the given method.</p>
+<h2 id="target-action">
+<span class="hash">#</span>
+<a href="#target-action" class="header-link">Target-action</a>
+</h2>
+<p>Action methods are the methods invoked by a target-action combination, and they always take a single argument consisting of the object that sent the message.</p>
+
+<p>Timers of type <code>NSTimer</code> use the target-action pattern to specify what message to send to what object every time the timer triggers. For example, the timer below will send the message <code>actionMethod</code> to <code>someObject</code> every 2 seconds.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSTimer</span> <span class="o">*</span><span class="n">timer</span> <span class="o">=</span>
+  <span class="p">[</span><span class="bp">NSTimer</span> <span class="nl">scheduledTimerWithTimeInterval</span><span class="p">:</span><span class="mf">2.0</span>
+                                   <span class="nl">target</span><span class="p">:</span><span class="n">someObject</span>
+                                 <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">actionMethod</span><span class="p">:)</span>
+                                 <span class="nl">userInfo</span><span class="p">:</span><span class="nb">nil</span>
+                                  <span class="nl">repeats</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+</code></pre></figure>
+<p>Unused variable warnings can be explicitly silenced by using the <code>__unused</code> keyword as a prefix to the type:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="n">__unused</span> <span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;John&quot;</span><span class="p">;</span>
+</code></pre></figure>
+<p>When sending one callback to one object, Apple uses target-action.</p>
+<h2 id="helper-objects">
+<span class="hash">#</span>
+<a href="#helper-objects" class="header-link">Helper Objects</a>
+</h2>
+<p>Helper objects implement methods used to do different kinds of work. For example, asynchronous usage of <code>NSURLConnection</code> requires a helper object which defines methods to do work in response to new data, authentication, handle failure, etc.</p>
+
+<p>For example, in the code below, the connection is configured to use object <code>logger</code> as its delegate, which defines methods which are invoked in response to specific events, such as <code>connectionDidFinishLoading:</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSURLConnection</span> <span class="o">*</span><span class="n">conn</span> <span class="o">=</span>
+  <span class="p">[[</span><span class="bp">NSURLConnection</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithRequest</span><span class="p">:</span><span class="n">request</span>
+                                  <span class="nl">delegate</span><span class="p">:</span><span class="n">logger</span>
+                          <span class="nl">startImmediately</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+</code></pre></figure>
+<p>The methods expected by an <code>NSURLConnection</code> are defined in a protocol---a list of method declarations. A protocol is implemented by specifying its name in angle brackets following the superclass in the <code>@interface</code> line:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@interface</span> <span class="nc">MYLogger</span> : <span class="bp">NSObject</span> <span class="o">&lt;</span><span class="bp">NSURLConnectionDelegate</span><span class="p">,</span> <span class="bp">NSURLConnectionDataDelegate</span><span class="o">&gt;</span>
+<span class="p">{</span>
+  <span class="err">…</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>When sending various callbacks to one object, Apple uses a helper object with a protocol.</p>
+<h2 id="notifications">
+<span class="hash">#</span>
+<a href="#notifications" class="header-link">Notifications</a>
+</h2>
+<p>Various objects can subscribe to certain notifications using the notification center <code>NSNotificationCenter</code>. For example, the code below subscribes the <code>logger</code> object to a notification for when the time zone is changed, and it&#39;s configured to invoke the <code>zoneChange:</code> method. It&#39;s also possible to specify that only notifications sent from a particular object are to be considered.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">[[</span><span class="bp">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span>
+  <span class="nl">addObserver</span><span class="p">:</span><span class="n">logger</span>
+     <span class="nl">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">zoneChange</span><span class="p">:)</span>
+         <span class="nl">name</span><span class="p">:</span><span class="n">NSSystemTimeZoneDidChangeNotification</span>
+       <span class="nl">object</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+</code></pre></figure><h1 id="blocks">
+<span class="hash">#</span>
+<a href="#blocks" class="header-link">Blocks</a>
+</h1>
+<p>Blocks are essentially lambdas. They are prefixed by a caret <code>^</code> followed by optional parameter list and, followed by braces surrounding the body.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="o">^</span><span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;No parameters.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">^</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">){</span>
+ <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Blocks can be stored in a variable, in which case their type must be explicitly typed. Block types look like function pointer types except that they use <code>^</code> to denote a block rather than <code>*</code> to denote a pointer.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">devowelizer</span><span class="p">)(</span><span class="kt">id</span><span class="p">,</span> <span class="n">NSUInteger</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span><span class="p">);</span>
+</code></pre></figure>
+<p>Anonymous blocks are ones that are passed directly to a method without first giving them a name by storing them in a variable.</p>
+
+<p><em>External variables</em> are those that are captured by the block from the outer scopes. Primitive variables are copied as local variables within the block. Pointers are kept as strong references to ensure that they live at least as long as the block itself.</p>
+
+<p>Since pointers are captured as strong references, it&#39;s easy to inadvertently create a strong reference cycle. This can happen implicitly when an instance variable is used directly within a block, because directly accessing an instance variable <code>_var</code> gets translated to <code>self-&gt;_var</code> by the compiler.</p>
+
+<p>The cycle can be broken by first creating a <code>__weak</code> pointer to <code>self</code>, then using that within the block. However, this would mean that <code>self</code> could be deallocated while the block is executing. To prevent that, a strong reference to the <code>__weak</code> pointer can be created:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">__weak</span> <span class="n">MYPerson</span> <span class="o">*</span><span class="n">weakSelf</span> <span class="o">=</span> <span class="nb">self</span><span class="p">;</span>
+
+<span class="n">block</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span>
+  <span class="n">MYPerson</span> <span class="o">*</span><span class="n">innerSelf</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">;</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Person: %@&quot;</span><span class="p">,</span> <span class="n">innerSelf</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></figure>
+<p>Instance variables should be accessed through the <code>innerSelf</code> to avoid implicitly and inadvertently capturing <code>self</code>.</p>
+
+<p>Variables captured by a block are constant within the block. In order to modify an external variable within a block, it must be declared as an external variable by using the <code>__block</code> keyword prefix:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">__block</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">incrementBlock</span><span class="p">)()</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span> <span class="n">count</span><span class="o">++</span> <span class="p">};</span>
+</code></pre></figure></div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June 21, 2016</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/a05b65d" title="notes up to reference counting">a05b65d</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/a3b3ded" title="blocks">a3b3ded</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
