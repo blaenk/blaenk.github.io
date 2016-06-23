@@ -77,7 +77,9 @@
     
         <article class="post">
   <h2 class="title"><a href="/notes/objective-c"><span>Objective-C</span></a></h2>
-  <div class="entry-content"><nav id="toc">
+  <div class="entry-content"><p>Although <a href="/notes/swift">Swift</a> has been released, there is still a considerable iOS/Cocoa ecosystem which is built on Objective-C.</p>
+
+<nav id="toc">
 <h3>Contents</h3><ol>
 <li>
 <a href="#types">Types</a>
@@ -105,6 +107,12 @@
 </li>
 <li>
 <a href="#ownership">Ownership</a>
+</li>
+<li>
+<a href="#class-extensions">Class Extensions</a>
+</li>
+<li>
+<a href="#reference-counting">Reference Counting</a>
 </li>
 </ol>
 </nav>
@@ -369,17 +377,145 @@
 <span class="k">@end</span>
 </code></pre></figure>
 <p>Forward declarations are possible with the <code>@class</code> keyword.</p>
-<h1 id="ownership">
+
+<p>When a <code>@property</code> is defined on a class without a corresponding manually-defined instance variable, subclasses aren&#39;t able to access the synthesized instance variable directly; they must do so via the accessors. For example, given:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@interface</span> <span class="nc">MYPerson</span> : <span class="bp">NSObject</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">)</span> <span class="bp">NSMutableArray</span> <span class="o">*</span><span class="n">friends</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="nc">MYEmployee</span> : <span class="nc">MYPerson</span>
+<span class="p">{</span>
+  <span class="err">…</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></figure>
+<p>Then a subclass <code>MYEmployee</code> cannot access <code>_friends</code> directly; it must do so via an explicit accessor or dot notation.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@implementation</span> <span class="nc">MYEmployee</span>
+
+<span class="err">…</span>
+
+<span class="p">[</span><span class="n">_friends</span> <span class="nl">addObject</span><span class="p">:</span><span class="s">@&quot;Bob&quot;</span><span class="p">];</span>     <span class="c1">// Error</span>
+
+<span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">friends</span> <span class="nl">addObject</span><span class="p">:</span><span class="s">@&quot;Bob&quot;</span><span class="p">];</span> <span class="c1">// Ok</span>
+</code></pre></figure><h1 id="ownership">
 <span class="hash">#</span>
 <a href="#ownership" class="header-link">Ownership</a>
 </h1>
 <p>An object that contains a pointer to another object is said to own that object. Due to reference counting, the owned object knows how many owners it has through its reference count.</p>
 
 <p>The <code>dealloc</code> method is run when an instance of a class is deallocated because it has no owners.</p>
+<h1 id="class-extensions">
+<span class="hash">#</span>
+<a href="#class-extensions" class="header-link">Class Extensions</a>
+</h1>
+<p>Private internal methods, instance variables, and properties should be defined in a <em>class extension</em>, which is a set of private declarations that only the class or instances of it can use. A class interface is denoted by a typical <code>@interface</code> block with an empty parentheses pair at the end. By convention class extensions are declared in the implementation file, before the <code>@implementation</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="cp">#import &quot;MYPerson.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">MYPerson</span> <span class="p">()</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">)</span> <span class="kt">int</span> <span class="n">somePrivateVariable</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">MYPerson</span>
+
+<span class="err">…</span>
+
+<span class="k">@end</span>
+</code></pre></figure>
+<p>An <a href="#classes">earlier example</a> demonstrated that it&#39;s possible to have a manually-defined instance variable differ in the type of a separate property of the same name. However, doing that can be confusing, and instead it&#39;s recommended to use a private class extension to define the manually-defined instance variable.</p>
+
+<p>Since the class extension is defined in the implementation file, and subclasses <code>#import</code> the header file, subclasses won&#39;t have access to the superclass&#39; class extensions.</p>
+<h1 id="reference-counting">
+<span class="hash">#</span>
+<a href="#reference-counting" class="header-link">Reference Counting</a>
+</h1>
+<p>A Strong reference cycle represents a potential for a memory leak, because the garbage collector cannot deallocate either side of the cycle. A strong reference cycle can be weakened with a <em>weak reference</em> which is a pointer that does not imply ownership. This is useful in a parent-child relationship, in which case the child should hold a weak reference to the parent, since the parent is what owns the child.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@interface</span> <span class="nc">TreeNode</span> : <span class="bp">NSObject</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">weak</span><span class="p">)</span> <span class="n">TreeNode</span> <span class="o">*</span><span class="n">parent</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></figure>
+<p>When the targets of weak pointers are deallocated, the weak pointer is set to <code>nil</code>.</p>
+
+<p>Weak points can be explicitly created with the <code>__weak</code> keyword:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">__weak</span> <span class="n">MYPerson</span> <span class="o">*</span><span class="n">parent</span><span class="p">;</span>
+</code></pre></figure>
+<p>Before ARC, manual reference counting was necessary using the <code>retain</code> and <code>release</code> methods. For example, in a setter, the passed object was <code>retain</code>ed to increment its reference count and the previously-held object was <code>release</code>d to decrease its reference count, then the pointer was set to the new object:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setPerson:</span><span class="p">(</span><span class="n">MYPerson</span> <span class="o">*</span><span class="p">)</span><span class="nv">newPerson</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="n">newPerson</span> <span class="k">retain</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">_person</span> <span class="k">release</span><span class="p">];</span>
+  <span class="n">_person</span> <span class="o">=</span> <span class="n">newPerson</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Furthermore, the <code>dealloc</code> call had the responsibility of <code>release</code>ing all held objects and <code>dealloc</code>ating the immediate superclass.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="n">_holder</span> <span class="k">release</span><span class="p">];</span>
+  <span class="p">[</span><span class="nb">super</span> <span class="n">dealloc</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Newly created and returned objects would be marked as <code>autorelease</code>, i.e. <code>release</code> sometime in the future. For example, the <code>description</code> method creates and returns a new <code>NSString</code>, so it was marked for <code>autorelease</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">description</span>
+<span class="p">{</span>
+  <span class="bp">NSString</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFormat</span><span class="p">:</span><span class="s">@&quot;Person: %@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nb">self</span> <span class="n">name</span><span class="p">]];</span>
+
+  <span class="p">[</span><span class="n">result</span> <span class="n">autorelease</span><span class="p">];</span>
+  <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>Specifically the object was sent the <code>release</code> message when the current autorelease pool was drained:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSAutoreleasePool</span> <span class="o">*</span><span class="n">arp</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">NSAutoreleasePool</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+
+<span class="bp">NSString</span> <span class="o">*</span><span class="n">desc</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">MyPerson</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">]</span> <span class="n">description</span><span class="p">];</span>
+
+<span class="p">[</span><span class="n">arp</span> <span class="n">drain</span><span class="p">];</span> <span class="c1">// `desc` sent `release` message</span>
+</code></pre></figure>
+<p>The syntax sugar <code>@autoreleasepool</code> can be used to automatically create an autorelease pool and drain it at the end of the provided block.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@autoreleasepool</span> <span class="p">{</span>
+  <span class="bp">NSString</span> <span class="o">*</span><span class="n">desc</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">MyPerson</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">]</span> <span class="n">description</span><span class="p">];</span>
+<span class="p">}</span> <span class="c1">// drained here</span>
+</code></pre></figure>
+<p>There are a couple of rules of thumb for manual reference counting:</p>
+
+<ul>
+<li><p>Creating an object using a method starting with <code>alloc</code>, <code>new</code>, or containing <code>copy</code> gives you ownership of it. Assume refcount = 1, not in autorelease pool.</p></li>
+<li><p>Objects created by any other means are not owned by you. Assume refcount = 1, in autorelease pool.</p></li>
+<li><p>Take ownership by <code>retain</code>ing it.</p></li>
+<li><p>Relinquish ownership by using <code>release</code> or <code>autorelease</code>.</p></li>
+<li><p>Objects exist as long as they have an owner.</p></li>
+</ul>
+
+<p>This explains why the <code>NSString</code> returned by <code>description</code> is <code>autorelease</code>d: because although it created the object via <code>alloc</code>-<code>init</code> and thus gained ownership of it, it is giving it away by returning it. Sending it a <code>release</code> message would immediately decrement its refcount, thereby deallocating it, so instead it is <code>autorelease</code>d.</p>
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June 21, 2016</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/0e30dce" title="cover up to inheritance">0e30dce</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/a05b65d" title="notes up to reference counting">a05b65d</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
