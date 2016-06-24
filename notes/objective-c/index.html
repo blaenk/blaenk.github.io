@@ -146,6 +146,33 @@
 <li>
 <a href="#blocks">Blocks</a>
 </li>
+<li>
+<a href="#protocols">Protocols</a>
+</li>
+<li>
+<a href="#property-lists">Property Lists</a>
+</li>
+<li>
+<a href="#ios-applications">iOS Applications</a>
+</li>
+<li>
+<a href="#initializers">Initializers</a>
+</li>
+<li>
+<a href="#properties">Properties</a>
+</li>
+<li>
+<a href="#key-value-coding">Key-Value Coding</a>
+</li>
+<li>
+<a href="#key-value-observing">Key-Value Observing</a>
+</li>
+<li>
+<a href="#categories">Categories</a>
+</li>
+<li>
+<a href="#runtime">Runtime</a>
+</li>
 </ol>
 </nav>
 <h1 id="types">
@@ -199,7 +226,7 @@
 </code></pre></figure>
 <p>Convenience methods are those which perform an allocation-initialization sequence in a conveniently expected manner. For example, since <code>NSDate</code>&#39;s <code>init</code> method initializes the <code>NSDate</code> to the current date and time, the <code>date</code> class method is considered a convenience method since it&#39;s more convenient than an explicit <code>alloc</code>-<code>init</code> chain.</p>
 
-<p>Objective-C has <code>nil</code> to represent a pointer to no object. Sending a message to <code>nil</code> has no effect and it is completely legal.</p>
+<p>Objective-C has <code>nil</code> to represent a pointer to no object. Sending a message to <code>nil</code> has no effect and it is completely legal. However, sending a message to an object that doesn&#39;t implement that method <em>does</em> crash the program.</p>
 
 <p>The <code>id</code> type is a pointer to an Objective-C object:</p>
 <figure class="codeblock">
@@ -338,7 +365,7 @@
 
 <span class="k">@end</span>
 </code></pre></figure>
-<p>However, as of XCode 4.4 this is no longer necessary as the compiler does this for you. It&#39;s still necessary to do if the compiler ends up not generating any of the methods, for example if a property is marked <code>readonly</code> but the getter is manually overridden, then the <code>_variable</code> won&#39;t be defined, in which case it&#39;s necessary to explicitly <code>@synthesize</code> to define it or declare it manually in the <code>@interface</code>.</p>
+<p>However, as of Xcode 4.4 this is no longer necessary as the compiler does this for you. It&#39;s still necessary to do if the compiler ends up not generating any of the methods, for example if a property is marked <code>readonly</code> but the getter is manually overridden, then the <code>_variable</code> won&#39;t be defined, in which case it&#39;s necessary to explicitly <code>@synthesize</code> to define it or declare it manually in the <code>@interface</code>.</p>
 
 <p>Properties are also usable using dot notation as in C++ and Java. However, rather than simply accessing a field in a struct as in C++, dot notation translates to a message sent to the corresponding accessor method.</p>
 <figure class="codeblock">
@@ -769,10 +796,329 @@
 <code class="highlight language-objective-c"><span class="k">__block</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
 <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">incrementBlock</span><span class="p">)()</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span> <span class="n">count</span><span class="o">++</span> <span class="p">};</span>
-</code></pre></figure></div>
+</code></pre></figure><h1 id="protocols">
+<span class="hash">#</span>
+<a href="#protocols" class="header-link">Protocols</a>
+</h1>
+<p>A <em>protocol</em> is a list of method declarations which may be required or optional. Any object that wants to conform to a protocol must implement the required methods.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@protocol</span> <span class="bp">UITableViewDataSource</span> <span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
+
+<span class="k">@required</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nl">tableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tv</span> <span class="nl">numberOfRowsInSection</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="n">section</span><span class="p">;</span>
+
+<span class="err">…</span>
+
+<span class="k">@optional</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nl">numberOfSectionsInTableView</span><span class="p">:(</span><span class="bp">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">tv</span><span class="p">;</span>
+
+<span class="err">…</span>
+
+<span class="k">@end</span>
+</code></pre></figure>
+<p>It&#39;s then possible to specify the type of any object that conforms to a particular protocol:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">,</span> <span class="k">assign</span><span class="p">)</span> <span class="kt">id</span><span class="o">&lt;</span><span class="bp">UITableViewDataSource</span><span class="o">&gt;</span> <span class="n">dataSource</span><span class="p">;</span>
+</code></pre></figure>
+<p>In order to make a class conform to a protocol, the protocol name must be mentioned in the <code>@interface</code>:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@interface</span> <span class="nc">SomeViewController</span> : <span class="bp">UIViewController</span> <span class="o">&lt;</span><span class="bp">UITableViewDataSource</span><span class="o">&gt;</span>
+
+<span class="err">…</span>
+
+<span class="k">@end</span>
+</code></pre></figure>
+<p>To avoid crashing the program when attempting to call an optional method that an object didn&#39;t implement, it&#39;s necessary to first check if the object did implement the method by using <code>NSObject</code>&#39;s <code>respondsToSelector:</code> which returns a <code>BOOL</code> indicating if the object does respond to that message.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">if</span> <span class="p">([</span><span class="n">_dataSource</span> <span class="nl">respondsToSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">numberOfSectionsInTableView</span><span class="p">:)])</span> <span class="p">{</span>
+  <span class="c1">// call it here</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="c1">// don&#39;t call it; use some default value</span>
+<span class="p">}</span>
+</code></pre></figure><h1 id="property-lists">
+<span class="hash">#</span>
+<a href="#property-lists" class="header-link">Property Lists</a>
+</h1>
+<p>A property list (aka P-list) is an XML file format which is used to serialize Objective-C objects such as <code>NSArray</code>, <code>NSDictionary</code>, <code>NSString</code>, <code>NSData</code>, <code>NSDate</code>, and <code>NSNumber</code>.</p>
+
+<p>Writing a property list can be achieved by using <code>NSMutableArray</code>&#39;s <code>writeToFile:atomically:</code>. It can then be read in by using <code>arrayWithContentsOfFile</code>.</p>
+<h1 id="ios-applications">
+<span class="hash">#</span>
+<a href="#ios-applications" class="header-link">iOS Applications</a>
+</h1>
+<p>GUI applications start a run loop which listens for events.</p>
+
+<p>The <em>company identifier</em> is used to generate a <em>bundle identifier</em> which is used to uniquely identify each app in the App Store.</p>
+
+<p>Every iOS application has an app delegate which is a subclass of <code>UIResponder</code> which conforms to <code>UIApplicationDelegate</code>. The app delegate has a property of type <code>UIWindow</code> which fills the screen of the iOS application. Other controls can be added onto the window.</p>
+
+<p>When an iOS application launches, an instance of <code>UIApplication</code> is created to control the application state and liaison with the operating system. An instance of the application delegate serves as the <code>UIApplication</code>&#39;s delegate. For example, the <code>application:didFinishLaunchingWithOptions</code> method is invoked when the application becomes ready.</p>
+
+<p>A control is created by specifying the a <code>CGRect</code> to specify its frame (positions and dimensions) and then it&#39;s added to the <code>UIWindow</code> as a sub-view.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">application:</span><span class="p">(</span><span class="bp">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span>
+        <span class="nf">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="bp">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span>
+<span class="p">{</span>
+  <span class="c1">// CGRect is (x, y, width, height)</span>
+
+  <span class="bp">CGRect</span> <span class="n">winFrame</span> <span class="p">[[</span><span class="bp">UIScreen</span> <span class="n">mainScreen</span><span class="p">]</span> <span class="n">bounds</span><span class="p">];</span>
+  <span class="bp">UIWindow</span> <span class="o">*</span><span class="n">theWindow</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">UIWindow</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame</span><span class="p">:</span><span class="n">winFrame</span><span class="p">];</span>
+  <span class="nb">self</span><span class="p">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">theWindow</span><span class="p">;</span>
+
+  <span class="bp">CGRect</span> <span class="n">buttonFrame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">228</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">31</span><span class="p">);</span>
+  <span class="nb">self</span><span class="p">.</span><span class="n">button</span> <span class="o">=</span> <span class="p">[</span><span class="bp">UIButton</span> <span class="nl">buttonWithType</span><span class="p">:</span><span class="n">UIButtonTypeRoundedRect</span><span class="p">];</span>
+  <span class="nb">self</span><span class="p">.</span><span class="n">button</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">buttonFrame</span><span class="p">;</span>
+
+  <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">button</span> <span class="nl">setTitle</span><span class="p">:</span><span class="s">@&quot;Click me&quot;</span> <span class="nl">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+
+  <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">window</span> <span class="nl">addSubview</span><span class="p">:</span><span class="nb">self</span><span class="p">.</span><span class="n">button</span><span class="p">];</span>
+  <span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">window</span> <span class="n">makeKeyAndVisible</span><span class="p">];</span>
+
+  <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>A <code>UIButton</code> uses the target-action callback pattern to send a message when it receives certain events. For example, to send the <code>addTask:</code> message to the application delegate:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">[</span><span class="nb">self</span><span class="p">.</span><span class="n">button</span> <span class="nl">addTarget</span><span class="p">:</span><span class="nb">self</span>
+                <span class="nl">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">addTask</span><span class="p">:)</span>
+      <span class="nl">forControlEvents</span><span class="p">:</span><span class="n">UIControlEvenTouchUpInside</span><span class="p">];</span>
+</code></pre></figure>
+<p>The <a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/Introduction/Introduction.html">App Distribution Guide</a> details Apple&#39;s process of distributing an application.</p>
+
+<p>When using the Interface Builder, the <code>IBOutlet</code> keyword is actually an empty <code>#define</code> which only serves to tell Xcode that the pointer to the object will be set by Interface Builder and not manually in code. The <code>IBAction</code> keyword is actually an alias for <code>void</code> that tells Xcode that a method is an action method that will be used in a target-action pair configured in Interface Builder and not manually in code.</p>
+
+<p>Interface Builder files <code>.xib</code> are XML files representing the UI.</p>
+<h1 id="initializers">
+<span class="hash">#</span>
+<a href="#initializers" class="header-link">Initializers</a>
+</h1>
+<p>When a class does not override the <code>init</code> method, <code>NSObject</code>&#39;s <code>init</code> method will be called which zeroes out all of the subclass&#39; instance variables.</p>
+
+<p>When overriding the <code>init</code> method, the first line should call <code>super</code>&#39;s <code>init</code>, then the return value should be checked to determine if a valid object was returned.</p>
+
+<p>The return type of <code>init</code> should be <code>instancetype</code>, a keyword represents the type of an instance to which the method belongs. This is preferred over returning an explicit type such as <code>MYPerson *</code> so that subclasses can continue to use the same initializer to initialize objects of the subclass type. Previously this was done by returning <code>id</code>, but <code>instancetype</code> is preferred because it more narrowly restricts the type to the type of the receiver.</p>
+
+<p>It&#39;s necessary to set <code>self</code> to the value returned by <code>super</code>&#39;s <code>init</code> because a superclass <code>init</code> may have deallocated <code>self</code> and allocated a new object. Then it&#39;s necessary to check that the returned value is not <code>nil</code>, in which case we can forego further initialization and simply return <code>nil</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">init</span>
+<span class="p">{</span>
+  <span class="c1">// initialize superclass object, e.g. NSObject</span>
+  <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="n">init</span><span class="p">];</span>
+
+  <span class="c1">// above may return nil</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">_instance_variable</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>It&#39;s also common to do the three things in one step: initializing the superclass object, assigning it to <code>self</code>, and checking its value:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">init</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="n">init</span><span class="p">])</span> <span class="p">{</span>
+    <span class="n">_instance_variable</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></figure>
+<p>It&#39;s also possible to create initializers which take arguments in the same manner.</p>
+
+<p>In initializers it&#39;s common to simply use instance variables directly rather than through accessors because it is more semantically correct, since accessors may assume that the object is already initialized. However, using accessors usually works fine.</p>
+
+<p>It&#39;s often necessary to override superclass initializers to account for the subclass&#39; additional variables, otherwise users may initialize a subclass using a superclass initializer which will not initialize the rest of the subclass variables, leaving the object in an inconsistent state.</p>
+
+<p>A <em>designated initializer</em> is a single initializer in a class that all other initializers in the class directly or indirectly call and rely upon for complete initialization of the object.</p>
+
+<p>If the subclass&#39; designated initializer has a different name than the designated initializer of its superclass, the superclass&#39; designated initializer should be overridden to call the new subclass&#39; designated initializer.</p>
+
+<p>When there is no good default initialization of an object, <code>init</code> can be overridden to raise an exception that will crash the program:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">init</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="bp">NSException</span> <span class="nl">raise</span><span class="p">:</span><span class="s">@&quot;MYNoDefaultUserPass&quot;</span>
+              <span class="nl">format</span><span class="p">:</span><span class="s">@&quot;Use initWithUser:Pass:, not init&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></figure><h1 id="properties">
+<span class="hash">#</span>
+<a href="#properties" class="header-link">Properties</a>
+</h1>
+<p>The <code>@property</code> directive accepts a list of attributes that affects how the accessors are created.</p>
+
+<p>The <code>readwrite</code> and <code>readonly</code> attributes specify whether to create both setters and getters or just getters, respectively.</p>
+
+<p>The <code>assign</code> attribute is the default attribute for non-object types. It simply assigns the passed value to the property.</p>
+
+<p>The <code>strong</code> attribute is the default for object pointers. It ensures that a strong reference is kept to the passed object, releasing ownership of the old object.</p>
+
+<p>The <code>weak</code> attribute represents a weak reference to the passed object. IF the pointed-to object is deallocated, the property is set to <code>nil</code>.</p>
+
+<p>The <code>unsafe_unretained</code> attribute acts like the <code>weak</code> attribute <em>except</em> that the property is <em>not</em> automatically set to <code>nil</code> when the pointed-to object is deallocated.</p>
+
+<p>The <code>copy</code> attribute creates a copy of an object and then makes the pointer point to the copy. This is commonly used with objects that have mutable subclasses. This ensures that if an <code>NSMutableString</code> is passed, an immutable <code>NSString</code> copy will be created and pointed to, and if an immutable <code>NSString</code> is passed, no copy is actually performed because <code>NSString</code> overrides <code>copyWithZone:</code>, called by <code>copy</code>, to just return the pointer to itself.</p>
+
+<p>The <code>atomic</code> attribute ensures that the setters are atomic. This is the default attribute but is rarely needed, so most properties should be explicitly marked <code>nonatomic</code>.</p>
+<h1 id="key-value-coding">
+<span class="hash">#</span>
+<a href="#key-value-coding" class="header-link">Key-Value Coding</a>
+</h1>
+<p>Key-Value Coding allows reading and setting a property using its name, for example the following two are equivalent:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">[</span><span class="n">person</span> <span class="nl">setName</span><span class="p">:</span><span class="s">@&quot;John&quot;</span><span class="p">];</span>
+<span class="p">[</span><span class="n">person</span> <span class="nl">setValue</span><span class="p">:</span><span class="s">@&quot;John&quot;</span> <span class="nl">forKey</span><span class="p">:</span><span class="s">@&quot;name&quot;</span><span class="p">];</span>
+</code></pre></figure>
+<p>The <code>setValue:forKey:</code> method is defined in <code>NSObject</code> and looks for a setter method, property, or instance variable of the given name.</p>
+
+<p>Similarly, the <code>valueForKey:</code> method can be used to read a value.</p>
+
+<p>Key-value coding is used by general frameworks that need to read or push data to one&#39;s own custom objects, since it provides a uniform way of accessing that information regardless of the object&#39;s layout and capabilities.</p>
+
+<p>It&#39;s possible to use key-value coding to set primitive types by for example using <code>NSNumber</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">[</span><span class="n">person</span> <span class="nl">setAge</span><span class="p">:[</span><span class="bp">NSNumber</span> <span class="nl">numberWithInt</span><span class="p">:</span><span class="mi">18</span><span class="p">]</span> <span class="nl">forKey</span><span class="p">:</span><span class="s">@&quot;age&quot;</span><span class="p">];</span>
+</code></pre></figure>
+<p>A <em>key path</em> is a way to use dot notation to specify a property in a given object hierarchy. For example:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="bp">NSString</span> <span class="o">*</span><span class="n">schoolName</span> <span class="o">=</span> <span class="p">[</span><span class="n">person</span> <span class="nl">valueForKeyPath</span><span class="p">:</span><span class="s">@&quot;class.school.name&quot;</span><span class="p">];</span>
+</code></pre></figure>
+<p>There is also <code>setValue:forKeyPath:</code>.</p>
+<h1 id="key-value-observing">
+<span class="hash">#</span>
+<a href="#key-value-observing" class="header-link">Key-Value Observing</a>
+</h1>
+<p>Key-value observing (KVO) is a way of subscribing to notifications that are emitted when an object&#39;s property changes. KVO enables Cocoa bindings and Core Data.</p>
+
+<p>KVO is accomplished by using <code>NSObject</code>&#39;s <code>addObserver:forKeyPath:options:context:</code> to specify an observer object which implements a method called when the property changes.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@implementation</span> <span class="nc">MYObserver</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">observeValueForKeyPath:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">keyPath</span>
+                      <span class="nf">ofObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">object</span>
+                        <span class="nf">change:</span><span class="p">(</span><span class="bp">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">change</span>
+                       <span class="nf">context:</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span>
+<span class="p">{</span>
+  <span class="bp">NSString</span> <span class="o">*</span><span class="n">oldValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">change</span> <span class="nl">objectForKey</span><span class="p">:</span><span class="n">NSKeyValueChangeOldKey</span><span class="p">];</span>
+  <span class="bp">NSString</span> <span class="o">*</span><span class="n">newValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">change</span> <span class="nl">objectForKey</span><span class="p">:</span><span class="n">NSKeyValueChangeNewKey</span><span class="p">];</span>
+
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Property %@ on object %@ changed: %@ → %@&quot;</span><span class="p">,</span>
+        <span class="n">keyPath</span><span class="p">,</span> <span class="n">object</span><span class="p">,</span> <span class="n">oldValue</span><span class="p">,</span> <span class="n">newValue</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="n">__unused</span> <span class="n">MYObserver</span> <span class="o">*</span><span class="n">observer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MYObserver</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+
+<span class="p">[</span><span class="n">person</span> <span class="nl">addObserver</span><span class="p">:</span><span class="n">observer</span>
+         <span class="nl">forKeyPath</span><span class="p">:</span><span class="s">@&quot;name&quot;</span>
+            <span class="nl">options</span><span class="p">:</span><span class="n">NSKeyValueObservingOptionNew</span> <span class="o">|</span> <span class="n">NSKeyValueObservingOptionOld</span>
+            <span class="nl">context</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+</code></pre></figure>
+<p>Since a superclass may itself use KVO, it may be necessary for the subclass to determine if the notification was meant for it or its superclass, in which case it would need to be forwarded to the superclass. This differentiation can be accomplished by passing a class-unique pointer to the <code>context:</code> parameter. This class-unique pointer is often accomplished by creating a static variable.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="c1">// pass as context:&amp;contextForKVO</span>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">contextForKVO</span><span class="p">;</span>
+
+<span class="k">@implementation</span> <span class="nc">MYObserver</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">observeValueForKeyPath:</span><span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">keyPath</span>
+                      <span class="nf">ofObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">object</span>
+                        <span class="nf">change:</span><span class="p">(</span><span class="bp">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">change</span>
+                       <span class="nf">context:</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nv">context</span>
+<span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">context</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">contextForKVO</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// notification is for superclass</span>
+    <span class="p">[</span><span class="nb">super</span> <span class="nl">observeValueforkeypath</span><span class="p">:</span><span class="n">keyPath</span>
+                         <span class="nl">ofObject</span><span class="p">:</span><span class="n">object</span>
+                           <span class="nl">change</span><span class="p">:</span><span class="n">change</span>
+                          <span class="nl">context</span><span class="p">:</span><span class="n">context</span><span class="p">];</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// notification is for us</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></figure>
+<p>If the accessor method is not used, the notification will have to be sent explicitly by using <code>NSObject</code>&#39;s <code>willChangeValueForKey:</code> and <code>didChangeValueForKey:</code>.</p>
+
+<p>It&#39;s possible to specify that a given property is changed whenever another one is changed. For example, if an <code>ageString</code> property is recomputed whenever the <code>age</code> property is changed, KVO can be configured to send notifications whenever <code>age</code> changes. This is accomplished by implementing a method named <code>keyPathsForValuesAffecting</code> concatenated with the name of the property in camel case. This method returns an <code>NSSet</code> of properties that, when changed, lead to a change in the named property:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="p">+</span> <span class="p">(</span><span class="bp">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="nf">keyPathsForValuesAffectingAgeString</span>
+<span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="bp">NSSet</span> <span class="nl">setWithObject</span><span class="p">:</span><span class="s">@&quot;age&quot;</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></figure><h1 id="categories">
+<span class="hash">#</span>
+<a href="#categories" class="header-link">Categories</a>
+</h1>
+<p>Categories are a way of adding new methods to existing classes. By convention, categories are declared in files named as a combination of the target class and the category name. For example, <code>NSString+MYVowelCounting.{h,m}</code> would contain a category for <code>NSString</code> named <code>MYVowelCounting</code>:</p>
+
+<p>By convention, to avoid clobbering existing methods---including private ones that we may not know about---we prefix category method names with the namespace we use and an underscore, e.g. <code>my_</code>.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">@interface</span> <span class="bp">NSString</span> <span class="nl">(MYVowelCounting)</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nf">my_vowelCount</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="cp">#import &quot;NSString+MYVowelCounting.h&quot;</span>
+
+<span class="k">@implementation</span> <span class="bp">NSString</span> <span class="nl">(MYVowelCounting)</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nf">my_vowelCount</span>
+<span class="p">{</span>
+  <span class="err">…</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></figure><figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="cp">#import &quot;NSString+MYVowelCounting.h&quot;</span>
+
+<span class="bp">NSString</span> <span class="o">*</span><span class="n">string</span> <span class="o">=</span> <span class="s">@&quot;testing&quot;</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">vowelCount</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span> <span class="n">my_vowelCount</span><span class="p">];</span>
+</code></pre></figure><h1 id="runtime">
+<span class="hash">#</span>
+<a href="#runtime" class="header-link">Runtime</a>
+</h1>
+<p>The <code>respondsToSelector:</code> method is an example of run-time introspection.</p>
+
+<p>The C function <code>objc_msgSend</code> is the function that performs the lookup and execution of an Objective-C method.</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="cp">#import &lt;objc/message.h&gt;</span>
+
+<span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;John&quot;</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">objc_msgSend</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="k">@selector</span><span class="p">(</span><span class="n">length</span><span class="p">));</span>
+</code></pre></figure>
+<p>KVO works by creating a subclass of the observed object at run-time and changing the object&#39;s <code>isa</code> pointer to point to that new subclass (effectively changing the type of the object) and overriding the accessors for the observed properties so that the <code>willChangeValueForKey:</code> and <code>didChangeValueForKey</code> methods are invoked around the property change.</p>
+
+<p>See the <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">Objective-C Runtime Programming Guide</a> and <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/">Objective-C Runtime Reference</a> for more information.</p>
+</div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June 21, 2016</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/a3b3ded" title="blocks">a3b3ded</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/4d675de" title="runtime section">4d675de</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
