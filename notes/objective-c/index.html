@@ -184,6 +184,8 @@
 <p>Explicit integer types can be used such as <code>UInt32</code> for an unsigned 32-bit integer or <code>SInt16</code> for a signed 16-bit integer.</p>
 
 <p>The <code>NSInteger</code> and <code>NSUInteger</code> types are aliases for the integer width of the system, e.g. 32-bit on 32-bit systems.</p>
+
+<p>It&#39;s possible to create a boxed expression using the <code>@(…)</code> literal syntax.</p>
 <h1 id="objects">
 <span class="hash">#</span>
 <a href="#objects" class="header-link">Objects</a>
@@ -246,6 +248,8 @@
 <pre>
 <code class="highlight language-objective-c"><span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;John&quot;</span><span class="p">;</span>
 </code></pre></figure>
+<p>It&#39;s also possible to box named C strings using boxed expressions.</p>
+
 <p><code>NSString</code>s can contain Unicode characters by escaping them with <code>\u</code>.</p>
 
 <p>It&#39;s possible to create an <code>NSString</code> from a given format:</p>
@@ -275,6 +279,8 @@
 <pre>
 <code class="highlight language-objective-c"><span class="bp">NSString</span> <span class="o">*</span><span class="n">john</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
 </code></pre></figure>
+<p>This syntax is desugared into a call to <code>objectAtIndexedSubscript:</code>. When the subscript notation is used to set an element, it&#39;s desugared into a call to <code>setObject:atIndexedSubscript:</code>.</p>
+
 <p>Before subscripting was introduced, the method <code>objectAtIndex:</code> was used to access a particular element.</p>
 
 <p>The size of the array can be obtained with the <code>count</code> method.</p>
@@ -589,6 +595,8 @@
 
 <span class="bp">NSNumber</span> <span class="n">johnAge</span> <span class="o">=</span> <span class="n">ages</span><span class="p">[</span><span class="s">@&quot;John&quot;</span><span class="p">];</span>
 </code></pre></figure>
+<p>This syntax is desugared into <code>objectForKeyedSubscript:</code>. When an entry is being set, it&#39;s desugared into <code>setObject:forKeyedSubscript:</code>.</p>
+
 <p>Mutable arrays can be sorted using:</p>
 <figure class="codeblock">
 <pre>
@@ -608,8 +616,14 @@
 </code></pre></figure>
 <p>An <code>NSNumber</code> is essentially a boxed number type which is used to wrap numbers so that they can be stored in collections such as <code>NSDictionary</code>. They can be constructed using <code>NSNumber</code> literals such as <code>@2</code>.</p>
 
-<p>The <code>NSValue</code> type can be used to box/wrap arbitrary types such as structs.</p>
+<p>The <code>NSValue</code> type can be used to box/wrap arbitrary types such as structs. C structures with the <code>objc_boxable</code> attribute can be boxed into <code>NSValue</code> via boxed expressions. Structures without this attribute can add the attribute via a typedef:</p>
+<figure class="codeblock">
+<pre>
+<code class="highlight language-objective-c"><span class="k">typedef</span> <span class="k">struct</span> <span class="nf">__attribute__</span><span class="p">((</span><span class="n">objc_boxable</span><span class="p">))</span> <span class="n">_OldThing</span> <span class="n">Thing</span><span class="p">;</span>
 
+<span class="n">Thing</span> <span class="n">thing</span><span class="p">;</span>
+<span class="bp">NSValue</span> <span class="o">*</span><span class="n">myThing</span> <span class="o">=</span> <span class="l">@(</span><span class="n">thing</span><span class="l">)</span><span class="p">;</span>
+</code></pre></figure>
 <p>It&#39;s not possible to insert <code>nil</code> into a collection. In order to represent a &quot;hole&quot; in a collection, the <code>NSNull</code> class can be used.</p>
 <h1 id="enumerations">
 <span class="hash">#</span>
@@ -623,7 +637,9 @@
   <span class="n">ColorBlue</span><span class="p">,</span>
   <span class="n">ColorGreen</span>
 <span class="p">};</span>
-</code></pre></figure><h1 id="nserror">
+</code></pre></figure>
+<p>Enumerations can be boxed using boxed expressions. For example, <code>@(AVAudioQualityMax)</code> converts the enumeration to an integer type and boxes the value.</p>
+<h1 id="nserror">
 <span class="hash">#</span>
 <a href="#nserror" class="header-link">NSError</a>
 </h1>
@@ -1118,7 +1134,7 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> June 21, 2016</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/4d675de" title="runtime section">4d675de</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/objective-c.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/8cc795b" title="discuss boxed expressions and subscript desugaring">8cc795b</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
