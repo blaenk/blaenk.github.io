@@ -249,7 +249,7 @@
 <span class="hash">#</span>
 <a href="#visual-studio" class="header-link">Visual Studio</a>
 </h1>
-<p>CMake works fine with Visual Studio but there are a few things to consider. The property for the working directory in the Debugging section should most likely be set to <code>$(OutDir)</code>. Likewise, the start-up project must be set manually as it&#39;s set to ALL<em>BUILD by default. ALL</em>BUILD is a project that builds all projects and correctly triggers any scripts. ZERO_CHECK is a project that runs and, if any CMake files have been changed, asks to reload Visual Studio.</p>
+<p>CMake works fine with Visual Studio but there are a few things to consider. The property for the working directory in the Debugging section should most likely be set to <code>$(OutDir)</code>. Likewise, the start-up project must be set manually as it&#39;s set to <code>ALL_BUILD</code> by default. <code>ALL_BUILD</code> is a project that builds all projects and correctly triggers any scripts. <code>ZERO_CHECK</code> is a project that runs and, if any CMake files have been changed, asks to reload Visual Studio.</p>
 
 <p>Furthermore, if you&#39;re making a Windows application, you should add the WIN32 parameter to <code>add_executable</code> to instruct the compiler to use the <code>WinMain</code> <a href="http://msdn.microsoft.com/en-us/library/f9t8842e.aspx">entry-point</a> and WINDOWS <a href="http://msdn.microsoft.com/en-us/library/fcc1zstk%28v=vs.110%29.aspx">subsystem</a>:</p>
 <figure class="codeblock">
@@ -269,7 +269,7 @@
 </div>
   <div class="meta">
     <div class="meta-component"><i class="fa fa-calendar fa-fw"></i> September  1, 2013</div>
-    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cmake.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/feee1ca" title="use console instead of bash for shell sessions">feee1ca</a></span></div>
+    <div class="meta-component"><i class="fa fa-code-fork fa-fw"></i> <a href="https://github.com/blaenk/site/commits/master/input/notes/cmake.markdown">History</a><span class="hash">, <a href="https://github.com/blaenk/site/commit/91ca50a" title="fix incorrect emphasis">91ca50a</a></span></div>
     <div class="meta-component"><i class="fa fa-pencil fa-fw"></i> <a href="..">Notes</a></div>
   </div>
 </article>
