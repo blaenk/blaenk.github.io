@@ -45,7 +45,6 @@ contentCompiler content channels streams =
 sassCompiler :: Compiler (Item String)
 sassCompiler = loadBody (fromFilePath "scss/screen.scss")
                  >>= makeItem
-                 >>= withItemBody (unixFilter "scss" args)
-  where args = ["-s", "-I", "provider/scss/",
-                "--cache-location", "generated/scss"]
+                 >>= withItemBody (unixFilter "sassc" args)
+  where args = ["-s", "-I", "provider/scss/"]
 

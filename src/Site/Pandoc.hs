@@ -32,8 +32,6 @@ import qualified Data.Map as Map
 
 import Control.Monad ((>=>))
 
-import Control.Applicative ((<$>))
-
 pandocFeedCompiler :: Compiler (Item String)
 pandocFeedCompiler =
   pandocCompilerWithTransform readerOptions writerOptions' (walk ignoreTOC . walk removeTOCMarker)

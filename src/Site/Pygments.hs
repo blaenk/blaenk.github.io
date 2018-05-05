@@ -13,7 +13,6 @@ import Hakyll
 import Text.Pandoc
 import Text.Pandoc.Walk (walkM)
 
-import Control.Applicative ((<$>))
 import Control.Monad ((>=>))
 
 import Data.Maybe (fromMaybe, fromJust)

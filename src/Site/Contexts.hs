@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Site.Contexts (
   defaultCtx,
@@ -11,15 +12,15 @@ module Site.Contexts (
 ) where
 
 import Hakyll hiding (titleField)
-import Data.Monoid (mconcat, (<>))
+import Data.Monoid ((<>))
 import System.Process
 import System.FilePath
 
 import Data.List (groupBy, intersperse, intersperse)
 import Data.Maybe (catMaybes)
 import Control.Monad (forM)
-import Control.Applicative ((<$>), empty)
-import System.Locale (defaultTimeLocale)
+import Control.Applicative (empty)
+import Data.Time.Locale.Compat (defaultTimeLocale)
 import Data.Time.Clock
 import Data.Time.Calendar
 
@@ -229,7 +230,7 @@ yearlyArchives pat =
   listField "archives" (year <> items) (groupedArchives pat)
   where
     year = field "year" (return . show . fst . itemBody)
-    items = Context $ \k i ->
+    items = Context $ \k _ i ->
               if k == "items"
                 then return $ ListField (postCtx False) (snd . itemBody $ i)
                 else empty
